@@ -35,6 +35,7 @@ con <- DBI::dbConnect(RPostgres::Postgres(),
                       user = "postgres",
                       password = "postgres")
 dbListTables(con)
+dbListObjects(con)
 
 dbWriteTable(con, "mtcars", mtcars)
 

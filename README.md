@@ -38,6 +38,14 @@ The use case for this repo is:
 
    `$ docker exec sql-pet_postgres9_1 /src/get_dvdrental.sh`
 
+    `psql -U postgres -c CREATE DATABASE dvdrental;`
+
+no complaint, but it doesn't seem to have done anything
+
+`pg_restore -U postgres -d dvdrental /src/dvdrental.tar`
+
+gets: `database "dvdrental" does not exist`
+
 # Resources
 
 * Picking up ideas and tips from Ed Borasky's [Data Science pet containers]( https://github.com/hackoregon/data-science-pet-containers).  This repo creates a framework based on that Hack Oregon example.
