@@ -30,15 +30,39 @@ The use case for this repo is:
 
     `$ docker-compose stop`
 
-* get a command prompt inside the docker container running Postgres
-
-    `$ docker exec -ti sql-pet_postgres9_1 sh`
-
 * Download the backup file for the dvdrental test database by executing a command inside the docker container with:
 
    `$ docker exec sql-pet_postgres9_1 /src/get_dvdrental.sh`
 
+* get a command prompt inside the docker container running Postgres
+
+    `$ docker exec -ti sql-pet_postgres9_1 sh`
+
+    To exit Docker enter:
+
+    `# exit`
+
+* Inside Docker, you can enter the Postgres command-line utility psql by entering 
+
+    `# psql -U postgres`
+
+    Handy commands in side psql include:
+
+    + `postgres=# \h`          # psql help
+    + `postgres=# \dt`         # list Postgres tables
+    + `postgres=# \c dbname`   # connect to databse dbname
+    + `postgres=# \l`          # list Postgres databases
+    + `postgres=# \conninfo`   # list Postgres databases
+    + `postgres=# \q`          # exit psql
+
+----
+running out of steam here.
+
     `psql -U postgres -c CREATE DATABASE dvdrental;`
+
+to create a tar file use:
+
+    `$ tar -c -f dvdrental.gz dvdrental/`
 
 no complaint, but it doesn't seem to have done anything
 
