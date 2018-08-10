@@ -14,19 +14,29 @@ The use case for this repo is:
 
 # Instructions
 
-* Install Docker and verify that it's running with
+* Install Docker. Verify that it's running with
 
-  `$ docker -v`
+     `$ docker -v`
 
-* Download this repo
-* From terminal, run: 
+* Download this repo and cd to the directory in which you've downloaded the repo
 
-  `$ docker-compose up`
+* From terminal, run `docker-compose`. Your container will be named `ql-pet_postgres9_1`: 
 
-* Use `test_postgres.Rmd` to demonstrate that you have a persistent database by uploading `mtcars`
+     `$ docker-compose up`
 
-docker-compose stop
+* Use `test_postgres.Rmd` to demonstrate that you have a persistent database by uploading `mtcars` to Postgres, then stopping the Docker container, restarting it, and finally determining that `mtcars` is still there.
 
+* In another terminal session, use the `stop` command to stop the container (and the Postgres database).  You should get a 0 return code.  If you forgot to disconnect from Postres in R, you will get a 137 return code.
+
+    `$ docker-compose stop`
+
+* get a command prompt inside the docker container running Postgres
+
+    `$ docker exec -ti sql-pet_postgres9_1 sh`
+
+* Download the backup file for the dvdrental test database by executing a command inside the docker container with:
+
+   `$ docker exec sql-pet_postgres9_1 /src/get_dvdrental.sh`
 
 # Resources
 
