@@ -28,27 +28,47 @@ library(RPostgres)
 # docker$volume
 ```
 Running examples from: https://richfitz.github.io/stevedore/articles/examples.html
+
+This can run before the dvdrental database is installed
 ```{r}
 
 con <- DBI::dbConnect(RPostgres::Postgres(),
                       host = "localhost",
                       port = "5432",
                       user = "postgres",
-                      password = "postgres",
-                      dbname = "dvdrental" )
+                      password = "postgres")
 dbListTables(con)
-dbListObjects(con)
 
 dbWriteTable(con, "mtcars", mtcars)
 
+dbListFields(con, "mtcars")
+dbReadTable(con, "mtcars")
 
 dbRemoveTable(con, "mtcars")
 dbExistsTable(con, "mtcars")
 
-dbListFields(con, "mtcars")
-dbReadTable(con, "mtcars")
-dbListFields(con, "actor_info")
-dbReadTable(con, "actor_info")
 
 dbDisconnect(con)
 ```
+This runs after the dvdrental database is created
+```{r}
+con <- DBI::dbConnect(RPostgres::Postgres(),
+                      host = "localhost",
+                      port = "5432",
+                      user = "postgres",
+                      password = "postgres",
+                      dbname = "dvdrental" )
+
+dbListTables(con)
+
+dbListFields(con, "actor_info")
+dbReadTable(con, "actor_info")
+dbDisconnect(con)
+```
+Now explore dplyr and sql magic
+
+Begin lessons on password hygiene, etc.
+```{r}
+
+```
+

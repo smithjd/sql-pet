@@ -74,4 +74,5 @@ It doesn't give you any feedback when it works, but now dvdrental database is th
 * Picking up ideas and tips from Ed Borasky's [Data Science pet containers]( https://github.com/hackoregon/data-science-pet-containers).  This repo creates a framework based on that Hack Oregon example.
 * A very good [introductory Docker tutorial](https://docker-curriculum.com/)
 * Usage examples of [Postgres with Docker](https://amattn.com/p/tutorial_postgresql_usage_examples_with_docker.html)
+* Description of the [dvdrental database](http://www.postgresqltutorial.com/postgresql-sample-database/)
 * Loading the [dvdrental database into Postgres](http://www.postgresqltutorial.com/load-postgresql-sample-database/)
