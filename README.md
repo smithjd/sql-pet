@@ -57,7 +57,7 @@ The use case for this repo is:
 
 * Back on the command line (inside Docker) you would create the database with:
 
-    `psql -U postgres -c CREATE DATABASE dvdrental;`
+    `psql -U postgres -c "CREATE DATABASE dvdrental;"`
 
 * after unzipping the download, create a tar file use:
 
