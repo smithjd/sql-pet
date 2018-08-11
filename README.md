@@ -36,7 +36,7 @@ The use case for this repo is:
 
 * get a command prompt inside the docker container running Postgres
 
-    `$ docker exec -ti sql-pet_postgres9_1 sh`
+    `$ docker exec -ti sql-pet_postgres9_1 /bin/bash`
 
     To exit Docker enter:
 
