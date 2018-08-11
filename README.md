@@ -46,7 +46,7 @@ The use case for this repo is:
 
     `# psql -U postgres`
 
-    Handy commands in side psql include:
+    Handy commands inside psql include:
 
     + `postgres=# \h`          # psql help
     + `postgres=# \dt`         # list Postgres tables
@@ -55,24 +55,23 @@ The use case for this repo is:
     + `postgres=# \conninfo`   # list Postgres databases
     + `postgres=# \q`          # exit psql
 
-----
-running out of steam here.
+* Back on the command line (inside Docker) you would create the database with:
 
     `psql -U postgres -c CREATE DATABASE dvdrental;`
 
-to create a tar file use:
+* after unzipping the download, create a tar file use:
 
     `$ tar -c -f dvdrental.gz dvdrental/`
 
-no complaint, but it doesn't seem to have done anything
+* to load it into Postgres:
 
-`pg_restore -U postgres -d dvdrental /src/dvdrental.tar`
+    `pg_restore -U postgres -d dvdrental /src/dvdrental.tar`
 
-gets: `database "dvdrental" does not exist`
+It doesn't give you any feedback when it works, but now dvdrental database is there and it has data in it.
 
 # Resources
 
 * Picking up ideas and tips from Ed Borasky's [Data Science pet containers]( https://github.com/hackoregon/data-science-pet-containers).  This repo creates a framework based on that Hack Oregon example.
-* An [introductory tutorial](https://docker-curriculum.com/)
+* A very good [introductory Docker tutorial](https://docker-curriculum.com/)
 * Usage examples of [Postgres with Docker](https://amattn.com/p/tutorial_postgresql_usage_examples_with_docker.html)
-
+* Loading the [dvdrental database into Postgres](http://www.postgresqltutorial.com/load-postgresql-sample-database/)
