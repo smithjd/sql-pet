@@ -1,0 +1,15 @@
+---
+title: "Get data zipfile"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Download the data zipfile
+```{r}
+if (!require(downloader)) install.packages("downloader")
+library(downloader)
+download("http://www.postgresqltutorial.com/wp-content/uploads/2017/10/dvdrental.zip", destfile = "dvdrental.zip")
+```
