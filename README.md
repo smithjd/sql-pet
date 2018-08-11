@@ -59,9 +59,9 @@ The use case for this repo is:
 
     `psql -U postgres -c "CREATE DATABASE dvdrental;"`
 
-* after unzipping the download, create a tar file use:
+* unzip the zip archive to create the `tar` archive `dvdrental.tar`:
 
-    `$ tar -c -f dvdrental.gz dvdrental/`
+    `# cd src; unzip dvdrental.zip; cd ..`
 
 * to load it into Postgres:
 
