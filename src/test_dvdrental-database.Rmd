@@ -1,0 +1,49 @@
+---
+title: "Test the dvdrental database in Postgres"
+author: "John D. Smith"
+date: "7/19/2018"
+output: html_document
+---
+This runs after the dvdrental database is created by \src\install_dvdrental-in-postgres.Rmd
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(DBI)
+library(RPostgres)
+library(here)
+```
+Bring up Docker-compose and Postgres:
+```{r}
+
+system("docker-compose up -d")
+
+```
+
+Connect to Postgres
+
+```{r}
+con <- DBI::dbConnect(RPostgres::Postgres(),
+                      host = "localhost",
+                      port = "5432",
+                      user = "postgres",
+                      password = "postgres",
+                      dbname = "dvdrental" ) # note that the dbname is specified
+
+dbListTables(con)
+
+dbListFields(con, "actor_info")
+actor_info <- dbReadTable(con, "actor_info") %>% collect(n = 100)
+dbDisconnect(con)
+system("docker-compose stop")
+```
+
+
+```{r}
+```
+Now explore dplyr and sql magic
+
+Begin lessons on password hygiene, etc.
+```{r}
+
+```
+
