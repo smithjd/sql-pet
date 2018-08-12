@@ -49,6 +49,8 @@ dbExistsTable(con, "mtcars")
 
 
 dbDisconnect(con)
+#  security issue
+#  dba friendly
 ```
 This runs after the dvdrental database is created
 ```{r}
@@ -62,7 +64,7 @@ con <- DBI::dbConnect(RPostgres::Postgres(),
 dbListTables(con)
 
 dbListFields(con, "actor_info")
-dbReadTable(con, "actor_info")
+actor_info <- dbReadTable(con, "actor_info") %>% collect(n = 100)
 dbDisconnect(con)
 ```
 Now explore dplyr and sql magic
