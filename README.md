@@ -44,7 +44,7 @@ The use case for this repo is:
 
 * get a command prompt inside the docker container running Postgres
 
-    `$ docker exec -ti sql-pet_postgres9_1 sh`
+    `$ docker exec -ti sql-pet_postgres9_1 /bin/bash`
 
     To exit Docker enter:
 
@@ -65,11 +65,11 @@ The use case for this repo is:
 
 * Back on the command line (inside Docker) you would create the database with:
 
-    `psql -U postgres -c CREATE DATABASE dvdrental;`
+    `psql -U postgres -c "CREATE DATABASE dvdrental;"`
 
-* after unzipping the download, create a tar file use:
+* unzip the zip archive to create the `tar` archive `dvdrental.tar`:
 
-    `$ tar -c -f dvdrental.gz dvdrental/`
+    `# cd src; unzip dvdrental.zip; cd ..`
 
 * to load it into Postgres:
 
