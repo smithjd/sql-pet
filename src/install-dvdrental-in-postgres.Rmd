@@ -10,6 +10,8 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
+if (!require(here)) install.packages("here")
+library(here)
 
 # verify that Docker is up and running and that a container named sql-pet_postgres9_1 is running:
 
@@ -28,5 +30,6 @@ system("docker exec sql-pet_postgres9_1 pg_restore -U postgres -d dvdrental /src
 
 file.remove(here("src", "dvdrental.tar"))
 
+system("docker-compose stop")
 ```
 
