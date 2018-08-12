@@ -1,0 +1,76 @@
+---
+title: "Docker postgress test"
+author: "John D. Smith"
+date: "7/19/2018"
+output: html_document
+---
+
+Trying to improve upon:
+  https://github.com/Cascadia-R/Using_R_With_Databases/blob/master/Intro_To_R_With_Databases.Rmd
+
+Using tips provided by Noam Ross:
+  https://github.com/noamross/nyhackr-docker-talk
+
+Install stevedore with:
+  devtools::install_github("richfitz/stevedore", upgrade_dependencies = FALSE)
+  
+General documentation is here:
+  https://richfitz.github.io/stevedore/articles/stevedore.html
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(DBI)
+library(RPostgres)
+
+# docker <- stevedore::docker_client()
+# docker
+# docker$volume
+```
+Running examples from: https://richfitz.github.io/stevedore/articles/examples.html
+
+This can run before the dvdrental database is installed
+```{r}
+
+con <- DBI::dbConnect(RPostgres::Postgres(),
+                      host = "localhost",
+                      port = "5432",
+                      user = "postgres",
+                      password = "postgres")
+dbListTables(con)
+
+dbWriteTable(con, "mtcars", mtcars)
+
+dbListFields(con, "mtcars")
+dbReadTable(con, "mtcars")
+
+dbRemoveTable(con, "mtcars")
+dbExistsTable(con, "mtcars")
+
+
+dbDisconnect(con)
+#  security issue
+#  dba friendly
+```
+This runs after the dvdrental database is created
+```{r}
+con <- DBI::dbConnect(RPostgres::Postgres(),
+                      host = "localhost",
+                      port = "5432",
+                      user = "postgres",
+                      password = "postgres",
+                      dbname = "dvdrental" )
+
+dbListTables(con)
+
+dbListFields(con, "actor_info")
+actor_info <- dbReadTable(con, "actor_info") %>% collect(n = 100)
+dbDisconnect(con)
+```
+Now explore dplyr and sql magic
+
+Begin lessons on password hygiene, etc.
+```{r}
+
+```
+
