@@ -22,15 +22,54 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(DBI)
 library(RPostgres)
-library(here)
-
-# docker <- stevedore::docker_client()
-# docker
-# docker$volume
 ```
-Running examples from: https://richfitz.github.io/stevedore/articles/examples.html
 
-This can run before the dvdrental database is installed
+This demonstrates connecting, reading and writing to postgres -- using the default database.
+
+Most useful if you run a line or two at a time, rather than the chunks in their entirety.
+
+```{r}
+# First bring up the docker container with Postgres running in it
+
+system("docker-compose up -d")
+```
+
+Connect with Postgres
+ 
+```{r}
+con <- DBI::dbConnect(RPostgres::Postgres(),
+                      host = "localhost",
+                      port = "5432",
+                      user = "postgres",
+                      password = "postgres")
+
+# At first Postgres won't contain any tables:
+dbListTables(con)
+
+dbWriteTable(con, "mtcars", mtcars)
+
+dbListTables(con)
+
+# demonstrate that mtcars is really there:
+dbListFields(con, "mtcars")
+dbReadTable(con, "mtcars")
+
+# be sure to disconnect from Postgres before shutting down
+dbDisconnect(con)
+
+# close down the Docker container
+system("docker-compose stop")
+
+```
+
+Now verify that tables persist in the Postgres database when Docker has shut down and then started up.
+```{r}
+# Bring up Docker-compose and Postgres:
+
+system("docker-compose up -d")
+```
+
+Connect to Postgres
 ```{r}
 
 con <- DBI::dbConnect(RPostgres::Postgres(),
@@ -38,40 +77,14 @@ con <- DBI::dbConnect(RPostgres::Postgres(),
                       port = "5432",
                       user = "postgres",
                       password = "postgres")
+
+# Postgres should still have mtcars in it:
 dbListTables(con)
 
-dbWriteTable(con, "mtcars", mtcars)
-
-dbListFields(con, "mtcars")
-dbReadTable(con, "mtcars")
-
+# Might as well delete mtcars, since there are enough copies of it in the world.
 dbRemoveTable(con, "mtcars")
 dbExistsTable(con, "mtcars")
 
-
 dbDisconnect(con)
-#  security issue
-#  dba friendly
+system("docker-compose stop")
 ```
-This runs after the dvdrental database is created
-```{r}
-con <- DBI::dbConnect(RPostgres::Postgres(),
-                      host = "localhost",
-                      port = "5432",
-                      user = "postgres",
-                      password = "postgres",
-                      dbname = "dvdrental" )
-
-dbListTables(con)
-
-dbListFields(con, "actor_info")
-actor_info <- dbReadTable(con, "actor_info") %>% collect(n = 100)
-dbDisconnect(con)
-```
-Now explore dplyr and sql magic
-
-Begin lessons on password hygiene, etc.
-```{r}
-
-```
-
