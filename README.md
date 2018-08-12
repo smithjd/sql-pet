@@ -14,19 +14,37 @@ The use case for this repo is:
     
     ![Entity Relationship diagram for the dvdrental database](fig/dvdrental-er-diagram.png)
 
-* You want to run PostgresSQL on a Docker container, avoiding any problems that might come up from running 
+* You want to run PostgresSQL on a Docker container, avoiding any OS or system dependencies  that might come up. 
 
 # Instructions
 
+## Download the repo
+
+First step: download [this repo](https://github.com/smithjd/sql-pet).  It contains source code to build a Docker container that has the dvdrental database in Postgress and shows how to interact with the database from R.
+
 ## Docker & Postgres
 
-* Install Docker. Verify that it's running with
+Noam Ross's "[Docker for the UseR](https://nyhackr.blob.core.windows.net/presentations/Docker-for-the-UseR_Noam-Ross.pdf)" suggests the following use-cases for useRs:
+
+* Make a fixed working environment
+* Access a service outside of R **(e.g., Postgres)**
+* Create an R based service
+* Send our compute job somewhere else
+
+There's a lot to learn about Docker and many uses for it, here we just cut to the chase. (Later you might come back to study this [ROpensci Docker tutorial](https://ropenscilabs.github.io/r-docker-tutorial/))
+
+* Install Docker.  
+
+  + [On a Mac](https://docs.docker.com/docker-for-mac/install/)
+  + [On Windows](https://docs.docker.com/docker-for-windows/install/)
+  + [On UNIX flavors](https://docs.docker.com/install/#supported-platforms)
+  
+
+* Verify that it's running on your machine with
 
      `$ docker -v`
 
-* Download this repo and cd to the directory in which you've downloaded the repo
-
-* From terminal, run `docker-compose`. Your container will be named `sql-pet_postgres9_1`: 
+* From the directory that contains this repo, open a terminal, run `docker-compose`. Your container will be named `sql-pet_postgres9_1`: 
 
      `$ docker-compose up`
 
@@ -36,21 +54,15 @@ The use case for this repo is:
 
     `$ docker-compose stop`
 
-## DVD Rental database installation
+* When you have time explore the Postgres environment by browsing around inside the Docker command with a shell
 
-* Download the backup file for the dvdrental test database by executing a command inside the docker container with:
+    `$ docker exec -ti sql-pet_postgres9_1 sh`
 
-   `$ docker exec sql-pet_postgres9_1 /src/get_dvdrental.sh`
-
-* get a command prompt inside the docker container running Postgres
-
-    `$ docker exec -ti sql-pet_postgres9_1 /bin/bash`
-
-    To exit Docker enter:
+  + To exit Docker enter:
 
     `# exit`
 
-* Inside Docker, you can enter the Postgres command-line utility psql by entering 
+  + Inside Docker, you can enter the Postgres command-line utility psql by entering 
 
     `# psql -U postgres`
 
@@ -63,19 +75,16 @@ The use case for this repo is:
     + `postgres=# \conninfo`   # list Postgres databases
     + `postgres=# \q`          # exit psql
 
-* Back on the command line (inside Docker) you would create the database with:
 
-    `psql -U postgres -c "CREATE DATABASE dvdrental;"`
+## DVD Rental database installation
 
-* unzip the zip archive to create the `tar` archive `dvdrental.tar`:
+* Download the backup file for the dvdrental test database and convert it to a .tar file with:
 
-    `# cd src; unzip dvdrental.zip; cd ..`
+   [./src/get-dvdrental-zipfile.Rmd](./src/get-dvdrental-zipfile.Rmd)
 
-* to load it into Postgres:
+* Create the dvdrental database in Postgres and restore the data in the .tar file with:
 
-    `pg_restore -U postgres -d dvdrental /src/dvdrental.tar`
-
-It doesn't give you any feedback when it works, but now dvdrental database is there and it has data in it.
+   [./src/install-dvdrental-in-postgres.Rmd](./src/install-dvdrental-in-postgres.Rmd)
 
 ## Interacting with Postgres from R
 
