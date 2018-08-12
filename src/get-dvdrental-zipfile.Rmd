@@ -1,0 +1,21 @@
+---
+title: "Get dvdrental zipfile and conver to a .tar file"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Download the data zipfile
+```{r}
+if (!require(downloader)) install.packages("downloader")
+if (!require(here)) install.packages("here")
+library(downloader, here)
+
+download("http://www.postgresqltutorial.com/wp-content/uploads/2017/10/dvdrental.zip", destfile = here("src", "dvdrental.zip"))
+
+unzip(here("src", "dvdrental.zip"))
+
+file.remove( here("src", "dvdrental.zip"))
+```
