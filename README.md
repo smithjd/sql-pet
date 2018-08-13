@@ -1,4 +1,4 @@
-SQL Pet
+SQL Pet Tutorial
 =======
 
 # Goals
@@ -10,11 +10,15 @@ The use case for this repo is:
     + requires passwords and other features found in an organizational environment
     + mostly read but sometimes write to the database
 
-    This example use [the Postgres version of "dvd rental" database](http://www.postgresqltutorial.com/postgresql-sample-database/), which can be  [downloaded here](http://www.postgresqltutorial.com/wp-content/uploads/2017/10/dvdrental.zip).  Here's a glimpse of it's structure:
+    Here is how R and Docker fit on your operating system in this tutorial:
+    
+    ![R and Docker](fig/r-and-docker.png)
+
+    This tutorial uses [the Postgres version of "dvd rental" database](http://www.postgresqltutorial.com/postgresql-sample-database/), which can be  [downloaded here](http://www.postgresqltutorial.com/wp-content/uploads/2017/10/dvdrental.zip).  Here's a glimpse of it's structure:
     
     ![Entity Relationship diagram for the dvdrental database](fig/dvdrental-er-diagram.png)
 
-* You want to run PostgresSQL on a Docker container, avoiding any OS or system dependencies  that might come up. 
+* You want to run PostgresSQL on a Docker container, avoiding any OS or system dependencies that might come up. 
 
 Trying to build on [ideas that Aaron Makubuya demonstrated](https://github.com/Cascadia-R/Using_R_With_Databases/blob/master/Intro_To_R_With_Databases.Rmd) at the Cascadia R Conf.  Noam Ross's "[Docker for the UseR](https://nyhackr.blob.core.windows.net/presentations/Docker-for-the-UseR_Noam-Ross.pdf)" suggests that there are four distinct use-cases for useRs.  This repo explores #2.
 
@@ -31,7 +35,6 @@ First step: download [this repo](https://github.com/smithjd/sql-pet).  It contai
 
 ## Docker & Postgres
 
-
 There's a lot to learn about Docker and many uses for it, here we just cut to the chase. 
 
 * Install Docker.  
@@ -42,9 +45,40 @@ There's a lot to learn about Docker and many uses for it, here we just cut to th
 
 The following .yml file contains the instructions for creating a Docker container that runs Postgres:
 
-* [docker-compose.yml](docker-compose.yml)
+* [docker-compose.yml](docker-compose.yml) (Note that if you are running Postgres locally, you'll have to close it down to avoid a port conflict.)
 
 * Use [./src/test_postgres.Rmd](./src/test_postgres.Rmd) to demonstrate that you have a persistent database by uploading `mtcars` to Postgres, then stopping the Docker container, restarting it, and finally determining that `mtcars` is still there.
+
+## DVD Rental database installation
+
+* Download the backup file for the dvdrental test database and convert it to a .tar file with:
+
+   [./src/get_dvdrental-zipfile.Rmd](./src/get_dvdrental-zipfile.Rmd)
+
+* Create the dvdrental database in Postgres and restore the data in the .tar file with:
+
+   [./src/install_dvdrental-in-postgres.Rmd](./src/install_dvdrental-in-postgres.Rmd)
+
+## Verify that the dvdrental database is running and browse some tables
+
+* Notice the process of bringing the Postgres container up in Docker, connecting to Docker from R and then closing it all down at the end:
+
+   [./src/test_postgres.Rmd](./src/test_postgres.Rmd)
+
+## Interacting with Postgres from R
+
+* passwords
+* overview investigation
+* memory considerations?  creating temporary Postgres tables?
+* dplyr queries
+* what goes on the database side vs what goes on the R side
+* examining dplyr queries (explain on the R side v on the Postges side)
+* rewriting SQL
+* differences between production and data warehouse environments
+* performance considerations: get it to work, then optimize
+* learning to keep your DBAs happy
+
+# More about Docker & Postgres
 
 * When you have time explore the Postgres environment it's worth browsing around inside the Docker command with a shell. (Later you might come back to study this [ROpensci Docker tutorial](https://ropenscilabs.github.io/r-docker-tutorial/))
 
@@ -69,34 +103,7 @@ The following .yml file contains the instructions for creating a Docker containe
     + `postgres=# \conninfo`   # list Postgres databases
     + `postgres=# \q`          # exit psql
 
-
-## DVD Rental database installation
-
-* Download the backup file for the dvdrental test database and convert it to a .tar file with:
-
-   [./src/get_dvdrental-zipfile.Rmd](./src/get_dvdrental-zipfile.Rmd)
-
-* Create the dvdrental database in Postgres and restore the data in the .tar file with:
-
-   [./src/install_dvdrental-in-postgres.Rmd](./src/install_dvdrental-in-postgres.Rmd)
-
-## Verify that the dvdrental database is running and browse some tables
-
-* Notice the process of bringing the Postgres container up in Docker, connecting to Docker from R and then closing it all down at the end:
-
-   [./src/test_postgres.Rmd](./src/test_postgres.Rmd)
-
-## Interacting with Postgres from R
-
-* passwords
-* overview investigation
-* dplyr queries
-* what goes on the database side vs what goes on the R side
-* examining dplyr queries
-* rewriting SQL
-* performance considerations
-
-# Resources
+# More Resources
 * Noam Ross' [talk on Docker for the UseR](https://www.youtube.com/watch?v=803oZI5dvAU&t=1) and his [Slides](https://github.com/noamross/nyhackr-docker-talk) give a lot of context and tips.
 * A very good [introductory Docker tutorial](https://docker-curriculum.com/)
 * Usage examples of [Postgres with Docker](https://amattn.com/p/tutorial_postgresql_usage_examples_with_docker.html)
