@@ -16,7 +16,12 @@ The use case for this repo is:
 
 * You want to run PostgresSQL on a Docker container, avoiding any OS or system dependencies  that might come up. 
 
-Trying to build on [ideas that Aaron Makubuya demonstrated](https://github.com/Cascadia-R/Using_R_With_Databases/blob/master/Intro_To_R_With_Databases.Rmd) at the Cascadia R Conf.
+Trying to build on [ideas that Aaron Makubuya demonstrated](https://github.com/Cascadia-R/Using_R_With_Databases/blob/master/Intro_To_R_With_Databases.Rmd) at the Cascadia R Conf.  Noam Ross's "[Docker for the UseR](https://nyhackr.blob.core.windows.net/presentations/Docker-for-the-UseR_Noam-Ross.pdf)" suggests that there are four distinct use-cases for useRs.  This repo explores #2.
+
+1. Make a fixed working environment
+2. Access a service outside of R **(e.g., Postgres)**
+3. Create an R based service
+4. Send our compute job somewhere else
 
 # Instructions
 
@@ -26,12 +31,6 @@ First step: download [this repo](https://github.com/smithjd/sql-pet).  It contai
 
 ## Docker & Postgres
 
-Noam Ross's "[Docker for the UseR](https://nyhackr.blob.core.windows.net/presentations/Docker-for-the-UseR_Noam-Ross.pdf)" suggests that there are four distinct use-cases for useRs.  This repo explores #2.
-
-1. Make a fixed working environment
-2. Access a service outside of R **(e.g., Postgres)**
-3. Create an R based service
-4. Send our compute job somewhere else
 
 There's a lot to learn about Docker and many uses for it, here we just cut to the chase. 
 
@@ -40,9 +39,12 @@ There's a lot to learn about Docker and many uses for it, here we just cut to th
   + [On a Mac](https://docs.docker.com/docker-for-mac/install/)
   + [On Windows](https://docs.docker.com/docker-for-windows/install/)
   + [On UNIX flavors](https://docs.docker.com/install/#supported-platforms)
-  
 
-* Use [src\test_postgres.Rmd](src\test_postgres.Rmd) to demonstrate that you have a persistent database by uploading `mtcars` to Postgres, then stopping the Docker container, restarting it, and finally determining that `mtcars` is still there.
+The following .yml file contains the instructions for creating a Docker container that runs Postgres:
+
+* [docker-compose.yml](docker-compose.yml)
+
+* Use [./src/test_postgres.Rmd](./src/test_postgres.Rmd) to demonstrate that you have a persistent database by uploading `mtcars` to Postgres, then stopping the Docker container, restarting it, and finally determining that `mtcars` is still there.
 
 * When you have time explore the Postgres environment it's worth browsing around inside the Docker command with a shell. (Later you might come back to study this [ROpensci Docker tutorial](https://ropenscilabs.github.io/r-docker-tutorial/))
 
@@ -72,11 +74,11 @@ There's a lot to learn about Docker and many uses for it, here we just cut to th
 
 * Download the backup file for the dvdrental test database and convert it to a .tar file with:
 
-   [./src/get-dvdrental-zipfile.Rmd](./src/get-dvdrental-zipfile.Rmd)
+   [./src/get_dvdrental-zipfile.Rmd](./src/get_dvdrental-zipfile.Rmd)
 
 * Create the dvdrental database in Postgres and restore the data in the .tar file with:
 
-   [./src/install-dvdrental-in-postgres.Rmd](./src/install-dvdrental-in-postgres.Rmd)
+   [./src/install_dvdrental-in-postgres.Rmd](./src/install_dvdrental-in-postgres.Rmd)
 
 ## Verify that the dvdrental database is running and browse some tables
 
