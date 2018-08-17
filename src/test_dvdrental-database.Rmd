@@ -4,7 +4,10 @@ author: "John D. Smith"
 date: "7/19/2018"
 output: html_document
 ---
-This runs after the dvdrental database is created by \src\install_dvdrental-in-postgres.Rmd
+
+This runs after the dvdrental database is created 
+  by \src\install_dvdrental-in-postgres.Rmd
+  
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
@@ -12,7 +15,7 @@ library(DBI)
 library(RPostgres)
 library(here)
 ```
-Bring up Docker-compose and Postgres:
+Bring up Docker-compose with Postgres running the dvdrental database
 ```{r}
 
 system("docker-compose up -d")
@@ -20,7 +23,6 @@ system("docker-compose up -d")
 ```
 
 Connect to Postgres
-
 ```{r}
 con <- DBI::dbConnect(RPostgres::Postgres(),
                       host = "localhost",
@@ -31,19 +33,36 @@ con <- DBI::dbConnect(RPostgres::Postgres(),
 
 dbListTables(con)
 
-dbListFields(con, "actor_info")
-actor_info <- dbReadTable(con, "actor_info") %>% collect(n = 100)
+dbListFields(con, "rental")
+
+```
+
+Explore one table a bit, starting with "rental"
+```{r}
+rental <- tbl(con,  "rental")
+
+rental %>% count() %>% collect(n = Inf)
+
+rental %>% 
+  summarize(start_date = min(rental_date, na.rm = TRUE),
+            end_date = max(return_date, na.rm = TRUE)) %>% 
+  collect(n = Inf)
+
+rental %>% collect(n = 50) %>% View()
+
+rental %>% 
+  count(customer_id) %>% 
+  collect(n = Inf) %>% 
+  mutate(n = as.numeric(n)) %>% 
+  ggplot(aes(n)) + 
+    geom_bar() + 
+    ggtitle("Customer activity - number of lifetime rentals per customer")
+```
+
+Always disconnect from the database and close down docker:
+```{r}
 dbDisconnect(con)
 system("docker-compose stop")
-```
-
-
-```{r}
-```
-Now explore dplyr and sql magic
-
-Begin lessons on password hygiene, etc.
-```{r}
 
 ```
 
