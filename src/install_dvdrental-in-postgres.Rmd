@@ -13,9 +13,11 @@ knitr::opts_chunk$set(echo = TRUE)
 if (!require(here)) install.packages("here")
 library(here)
 
+# run get_dvdrental-zipfile.Rmd first
+
 # verify that Docker is up and running:
 
-system("docker ps")
+system("docker version")
 
 # run docker-compose to bring up postgres.  The first time it runs it will take a minute to create the Postgres environment.
 
