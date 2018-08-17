@@ -65,6 +65,12 @@ The following .yml file contains the instructions for creating a Docker containe
 
    [./src/test_postgres.Rmd](./src/test_postgres.Rmd)
 
+* Explore the dvdrental database:
+
+   [./src/test_dvdrental-database.Rmd](./src/test_dvdrental-database.Rmd)
+
+Need to incorporate more of the [ideas that Aaron Makubuya demonstrated](https://github.com/Cascadia-R/Using_R_With_Databases/blob/master/Intro_To_R_With_Databases.Rmd) at the Cascadia R Conf.
+
 ## Interacting with Postgres from R
 
 * passwords
