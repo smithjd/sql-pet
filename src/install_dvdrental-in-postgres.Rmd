@@ -34,6 +34,10 @@ system("pwd")
 
 system("docker exec sql-pet_postgres9_1 pg_restore -U postgres -d dvdrental /src/dvdrental.tar")
 
+
+# verify that the dvdrental database exists
+system('docker exec sql-pet_postgres9_1 psql -U postgres -c "\\l"')
+
 file.remove(here("src", "dvdrental.tar"))
 
 system("docker-compose stop")
