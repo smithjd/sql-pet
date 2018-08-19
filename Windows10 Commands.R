@@ -3,4 +3,7 @@
 system ("docker run postgres:9.4")
 system("docker ps -a")
 system("docker-compose up -d")
-system("docker -rm {containerid}")
+
+#Trouble Shooting Help
+system("docker stop {containerid")
+system("docker rm {containerid}")
