@@ -4,7 +4,6 @@
 #' date: "7/19/2018"
 #' output: md_document
 #' ---
-
 library(tidyverse)
 library(DBI)
 library(RPostgres)
@@ -17,6 +16,7 @@ library(RPostgres)
 #'
 
 # (Note that Knitr doesn't always capture the output of these system commands in its output.)
+system ("docker run postgres:9.4")
 system("docker ps -a")
 
 #' Docker should return a response containing CONTAINER, ID, etc.
@@ -49,7 +49,8 @@ system("docker-compose up -d")
 #' Connect with Postgres
 #'
 
-Sys.sleep(5) # need to wait for Docker & Postgres to come up before connecting.
+
+Sys.sleep(5) # ned to wait for Docker & Postgres to come up before connecting.
 
 con <- DBI::dbConnect(RPostgres::Postgres(),
                       host = "localhost",
