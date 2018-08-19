@@ -47,27 +47,23 @@ The following .yml file contains the instructions for creating a Docker containe
 
 * [docker-compose.yml](docker-compose.yml) (Note that if you are running Postgres locally, you'll have to close it down to avoid a port conflict.)
 
-* Use [./src/test_postgres.Rmd](./src/test_postgres.Rmd) to demonstrate that you have a persistent database by uploading `mtcars` to Postgres, then stopping the Docker container, restarting it, and finally determining that `mtcars` is still there.
+* Use [./src/1_test_postgres.R](./src/1_test_postgres.R) to demonstrate that you have a persistent database by uploading `mtcars` to Postgres, then stopping the Docker container, restarting it, and finally determining that `mtcars` is still there.
 
 ## DVD Rental database installation
 
 * Download the backup file for the dvdrental test database and convert it to a .tar file with:
 
-   [./src/get_dvdrental-zipfile.Rmd](./src/get_dvdrental-zipfile.Rmd)
+   [./src/2_get_dvdrental-zipfile.Rmd](./src/2_get_dvdrental-zipfile.Rmd)
 
 * Create the dvdrental database in Postgres and restore the data in the .tar file with:
 
-   [./src/install_dvdrental-in-postgres.Rmd](./src/install_dvdrental-in-postgres.Rmd)
+   [./src/3_install_dvdrental-in-postgres.Rmd](./src/3_install_dvdrental-in-postgres.Rmd)
 
 ## Verify that the dvdrental database is running and browse some tables
 
-* Notice the process of bringing the Postgres container up in Docker, connecting to Docker from R and then closing it all down at the end:
-
-   [./src/test_postgres.Rmd](./src/test_postgres.Rmd)
-
 * Explore the dvdrental database:
 
-   [./src/test_dvdrental-database.Rmd](./src/test_dvdrental-database.Rmd)
+   [./src/4_test_dvdrental-database.Rmd](./src/4_test_dvdrental-database.Rmd)
 
 Need to incorporate more of the [ideas that Aaron Makubuya demonstrated](https://github.com/Cascadia-R/Using_R_With_Databases/blob/master/Intro_To_R_With_Databases.Rmd) at the Cascadia R Conf.
 
