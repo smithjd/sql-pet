@@ -14,6 +14,7 @@ library(tidyverse)
 library(DBI)
 library(RPostgres)
 library(here)
+library(DT)
 ```
 Bring up Docker-compose with Postgres running the dvdrental database
 ```{r}
@@ -39,8 +40,10 @@ dbListFields(con, "rental")
 ```
 
 Explore one table a bit, starting with "rental"
+
 ```{r}
-rental <- tbl(con,  "rental")
+
+rental <- tbl(con,  "rental") 
 
 rental %>% count() %>% collect(n = Inf)
 
@@ -49,14 +52,14 @@ rental %>%
             end_date = max(return_date, na.rm = TRUE)) %>% 
   collect(n = Inf)
 
-rental %>% collect(n = 50) %>% View()
+rental %>% collect(n = 50) %>% DT::datatable() # or `View()` in an interactive environment
 
-rental %>% 
-  count(customer_id) %>% 
-  collect(n = Inf) %>% 
-  mutate(n = as.numeric(n)) %>% 
-  ggplot(aes(n)) + 
-    geom_bar() + 
+rental %>%
+  count(customer_id) %>%
+  collect(n = Inf) %>%
+  mutate(n = as.numeric(n)) %>%
+  ggplot(aes(n)) +
+    geom_bar() +
     ggtitle("Customer activity - number of lifetime rentals per customer")
 ```
 
