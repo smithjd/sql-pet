@@ -25,15 +25,12 @@ in their entirety.
 First, verify that Docker is up and running and that it responds to your
 commands:
 
+    system("docker ps -a")
+
 (The following is a rather exotic way of calling the system command,
 used here to capture the output in the knitr output)
 
-    cat(system("docker ps -a", intern = TRUE), sep = '\n')
-
-    ## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                      PORTS               NAMES
-    ## 7762be071e2c        postgres:9.4        "docker-entrypoint.s…"   6 days ago          Exited (0) 10 minutes ago                       sql-pet_postgres9_1
-    ## fbceb5e21f9a        alpine:latest       "true"                   6 days ago          Exited (0) 10 minutes ago                       sql-pet_pg_data_1
-    ## 85721813ac4c        alpine:latest       "true"                   6 days ago          Exited (0) 10 minutes ago                       sql-pet_dat_1
+    # cat(system("docker ps -a", intern = TRUE), sep = '\n')
 
 Docker should return a response containing CONTAINER, ID, etc.
 
@@ -67,11 +64,9 @@ the process from your window:
 
     cat(system("docker-compose up -d", intern = TRUE), sep = '\n')
 
-    # system("//z")
-
 Connect with Postgres
 
-    Sys.sleep(5)
+    Sys.sleep(5) # need to wait for Docker & Postgres to come up before connecting.
 
     con <- DBI::dbConnect(RPostgres::Postgres(),
                           host = "localhost",
@@ -85,6 +80,7 @@ At first Postgres won’t contain any tables:
 
     ## character(0)
 
+    # Write data frame to Postgres:
     dbWriteTable(con, "mtcars", mtcars)
 
     dbListTables(con)
@@ -139,8 +135,8 @@ At first Postgres won’t contain any tables:
     # close down the Docker container
     cat(system("docker-compose stop", intern = TRUE), sep = '\n')
 
-Now verify that tables persist in the Postgres database when Docker has
-shut down and then started up.
+After closing Docker down, bring it up again and verify that tables are
+still there.
 
     # Bring up Docker-compose and Postgres:
 
