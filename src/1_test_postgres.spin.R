@@ -16,7 +16,7 @@ library(RPostgres)
 #'
 
 # (Note that Knitr doesn't always capture the output of these system commands in its output.)
-
+system ("docker run postgres:9.4")
 system("docker ps -a")
 
 #' Docker should return a response containing CONTAINER, ID, etc.
