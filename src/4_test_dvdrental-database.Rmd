@@ -1,0 +1,69 @@
+---
+title: "Test the dvdrental database in Postgres"
+author: "John D. Smith"
+date: "7/19/2018"
+output: md_document
+---
+
+This runs after the dvdrental database is created 
+  by \src\install_dvdrental-in-postgres.Rmd
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(DBI)
+library(RPostgres)
+library(here)
+```
+Bring up Docker-compose with Postgres running the dvdrental database
+```{r}
+
+system("docker-compose up -d")
+
+```
+
+Connect to Postgres
+```{r}
+Sys.sleep(5) # need to wait for Docker & Postgres to come up before connecting.
+con <- DBI::dbConnect(RPostgres::Postgres(),
+                      host = "localhost",
+                      port = "5432",
+                      user = "postgres",
+                      password = "postgres",
+                      dbname = "dvdrental" ) # note that the dbname is specified
+
+dbListTables(con)
+
+dbListFields(con, "rental")
+
+```
+
+Explore one table a bit, starting with "rental"
+```{r}
+rental <- tbl(con,  "rental")
+
+rental %>% count() %>% collect(n = Inf)
+
+rental %>% 
+  summarize(start_date = min(rental_date, na.rm = TRUE),
+            end_date = max(return_date, na.rm = TRUE)) %>% 
+  collect(n = Inf)
+
+rental %>% collect(n = 50) %>% View()
+
+rental %>% 
+  count(customer_id) %>% 
+  collect(n = Inf) %>% 
+  mutate(n = as.numeric(n)) %>% 
+  ggplot(aes(n)) + 
+    geom_bar() + 
+    ggtitle("Customer activity - number of lifetime rentals per customer")
+```
+
+Always disconnect from the database and close down docker:
+```{r}
+dbDisconnect(con)
+system("docker-compose stop")
+
+```
+
