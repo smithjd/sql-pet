@@ -47,7 +47,7 @@ The following .yml file contains the instructions for creating a Docker containe
 
 * [docker-compose.yml](docker-compose.yml) (Note that if you are running Postgres locally, you'll have to close it down to avoid a port conflict.)
 
-* Use [./src/test_postgres.Rmd](./src/test_postgres.Rmd) to demonstrate that you have a persistent database by uploading `mtcars` to Postgres, then stopping the Docker container, restarting it, and finally determining that `mtcars` is still there.
+* Use [./src/test_postgres.R](./src/test_postgres.R) to demonstrate that you have a persistent database by uploading `mtcars` to Postgres, then stopping the Docker container, restarting it, and finally determining that `mtcars` is still there.
 
 ## DVD Rental database installation
 
