@@ -20,7 +20,7 @@ The use case for this repo is:
 
 * You want to run PostgresSQL on a Docker container, avoiding any OS or system dependencies that might come up. 
 
-Trying to build on [ideas that Aaron Makubuya demonstrated](https://github.com/Cascadia-R/Using_R_With_Databases/blob/master/Intro_To_R_With_Databases.Rmd) at the Cascadia R Conf.  Noam Ross's "[Docker for the UseR](https://nyhackr.blob.core.windows.net/presentations/Docker-for-the-UseR_Noam-Ross.pdf)" suggests that there are four distinct use-cases for useRs.  This repo explores #2.
+Noam Ross's "[Docker for the UseR](https://nyhackr.blob.core.windows.net/presentations/Docker-for-the-UseR_Noam-Ross.pdf)" suggests that there are four distinct use-cases for useRs.  This repo explores #2.
 
 1. Make a fixed working environment
 2. Access a service outside of R **(e.g., Postgres)**
@@ -69,17 +69,31 @@ Need to incorporate more of the [ideas that Aaron Makubuya demonstrated](https:/
 
 ## Interacting with Postgres from R
 
-* passwords
-* overview investigation
-* memory considerations?  creating temporary Postgres tables?
-* dplyr queries
-* what goes on the database side vs what goes on the R side
-* examining dplyr queries (explain on the R side v on the Postges side)
-* rewriting SQL
+* keeping passwords secure
 * differences between production and data warehouse environments
+* overview investigation: do you understand your data
+  + documentation and its limits
+  + find out how the data is used by those who enter it and others who've used it before
+  + what's *missing* from the database: (columns, records, cells)
+  + why is there missing data?
+* dplyr queries
+* examining dplyr queries (show_query on the R side v EXPLAIN on the Postges side)
 * performance considerations: get it to work, then optimize
+* Tradeoffs between leaving the data in Postgres vs what's kept in R: 
+  + browsing the data
+  + larger samples and complete tables
+  + using what you know to write efficient queries that do most of the work on the server
 * learning to keep your DBAs happy
 
+* more topics from [Aaron Makubuya's workshop](https://github.com/Cascadia-R/Using_R_With_Databases/blob/master/Intro_To_R_With_Databases.Rmd) at the Cascadia R Conf.
+
+  + SELECT * vs SELECT list of columns
+  + controlling the number of rows returned with WHERE 
+  + Glue for constructing SQL statements vs dplyr
+  + JOIN flavors
+  + parameterizing SQL queries
+  + show_query and EXPLAIN
+  
 # More about Docker & Postgres
 
 * When you have time explore the Postgres environment it's worth browsing around inside the Docker command with a shell. (Later you might come back to study this [ROpensci Docker tutorial](https://ropenscilabs.github.io/r-docker-tutorial/))
@@ -96,18 +110,20 @@ Need to incorporate more of the [ideas that Aaron Makubuya demonstrated](https:/
 
     `# psql -U postgres`
 
-    Handy commands inside psql include:
+    Handy [psql commands](https://gpdb.docs.pivotal.io/gs/43/pdf/PSQLQuickRef.pdf) include:
 
     + `postgres=# \h`          # psql help
     + `postgres=# \dt`         # list Postgres tables
     + `postgres=# \c dbname`   # connect to databse dbname
     + `postgres=# \l`          # list Postgres databases
-    + `postgres=# \conninfo`   # list Postgres databases
+    + `postgres=# \conninfo`   # display information about current connection
     + `postgres=# \q`          # exit psql
 
 # More Resources
 * Noam Ross' [talk on Docker for the UseR](https://www.youtube.com/watch?v=803oZI5dvAU&t=1) and his [Slides](https://github.com/noamross/nyhackr-docker-talk) give a lot of context and tips.
-* A very good [introductory Docker tutorial](https://docker-curriculum.com/)
+* Good Docker tutorials
+  + [An introductory Docker tutorial](https://docker-curriculum.com/)
+  + [A Docker curriculum](https://katacoda.com/courses/docker)
 * Scott Came's materials about Docker and R [on his website](http://www.cascadia-analytics.com/2018/07/21/docker-r-p1.html) and at the 2018 UseR Conference focus on **R inside Docker**.
 * Usage examples of [Postgres with Docker](https://amattn.com/p/tutorial_postgresql_usage_examples_with_docker.html)
 * David Severski describes some [key elements of connecting to databases with R](https://github.com/davidski/database_connections) for MacOS users
