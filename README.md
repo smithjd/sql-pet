@@ -29,19 +29,21 @@ Noam Ross's "[Docker for the UseR](https://nyhackr.blob.core.windows.net/present
 
 # Instructions
 
-## Download the repo
+## Install Docker
 
-First step: download [this repo](https://github.com/smithjd/sql-pet).  It contains source code to build a Docker container that has the dvdrental database in Postgress and shows how to interact with the database from R.
-
-## Docker & Postgres
-
-There's a lot to learn about Docker and many uses for it, here we just cut to the chase. 
-
-* Install Docker.  
+Install Docker.  
 
   + [On a Mac](https://docs.docker.com/docker-for-mac/install/)
   + [On Windows](https://docs.docker.com/docker-for-windows/install/)
   + [On UNIX flavors](https://docs.docker.com/install/#supported-platforms)
+
+## Download the repo
+
+First step: download [this repo](https://github.com/smithjd/sql-pet).  It contains source code to build a Docker container that has the dvdrental database in Postgress and shows how to interact with the database from R.
+
+# Docker & Postgres
+
+There's a lot to learn about Docker and many uses for it, here we just cut to the chase. 
 
 The following .yml file contains the instructions for creating a Docker container that runs Postgres:
 
