@@ -3,8 +3,7 @@ postgres9:
   ports:
     - 5432:5432
   volumes_from:
- # links the two data volumes specified below
-    - pg_data
+ # links the data volume specified below
     - dat
   environment:
 # parameters passed to postgres when it loads
@@ -12,16 +11,9 @@ postgres9:
     POSTGRES_USER: postgres
     PGDATA : /var/lib/postgresql/data/pgdata
 
-pg_data:
-  image: alpine:latest
-  volumes:
-    - ./data:/var/lib/postgresql/data/pgdata
-  command: "true"
 # holds source code and used as a staging area to download dvdrental
-
 dat:
   image: alpine:latest
   volumes:
     - ./src:/src
   command: "true"
-# will hold postgres data
