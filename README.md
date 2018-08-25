@@ -131,4 +131,4 @@ Need to incorporate more of the [ideas that Aaron Makubuya demonstrated](https:/
 * David Severski describes some [key elements of connecting to databases with R](https://github.com/davidski/database_connections) for MacOS users
 * Loading the [dvdrental database into Postgres](http://www.postgresqltutorial.com/load-postgresql-sample-database/)
 * This tutorial picks up ideas and tips from Ed Borasky's [Data Science pet containers]( https://github.com/hackoregon/data-science-pet-containers), which creates a framework based on that Hack Oregon example.
-
+* Chosing [between Docker and Vagrant](https://medium.com/@Mahmoud_Zalt/vagrant-vs-docker-679c9ce4231b)
