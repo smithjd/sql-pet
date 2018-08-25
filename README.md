@@ -41,6 +41,10 @@ Install Docker.
 
 First step: download [this repo](https://github.com/smithjd/sql-pet).  It contains source code to build a Docker container that has the dvdrental database in Postgress and shows how to interact with the database from R.
 
+**Note: when running the scripts in this repo, there's a difference between "sourcing" a file and "source with echo".  Use "source with echo":
+
+![](./fig/rstudio-source-with-echo.png)
+
 # Docker & Postgres
 
 There's a lot to learn about Docker and many uses for it, here we just cut to the chase. 
