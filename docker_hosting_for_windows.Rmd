@@ -51,4 +51,4 @@ In particular, executable `sh` or `bash` scripts will fail in a Docker container
 So you need a way to tell Git that some files need to be checked out with Linux line endings. See <https://help.github.com/articles/dealing-with-line-endings/> for the details. Summary:
 
 1. You'll need a `.gitattributes` file in the root of the repository.
-2. In that file, all text files (scripts, program source, data, etc.) will need to have the designator `<spec> text eol=lf`, where `<spec>` is the file name specifier, for example, `*.sh`.
+2. In that file, all text files (scripts, program source, data, etc.) that are destined for a Docker container will need to have the designator `<spec> text eol=lf`, where `<spec>` is the file name specifier, for example, `*.sh`.

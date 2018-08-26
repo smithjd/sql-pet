@@ -92,5 +92,6 @@ details. Summary:
 
 1.  You’ll need a `.gitattributes` file in the root of the repository.
 2.  In that file, all text files (scripts, program source, data, etc.)
-    will need to have the designator `<spec> text eol=lf`, where
-    `<spec>` is the file name specifier, for example, `*.sh`.
+    that are destined for a Docker container will need to have the
+    designator `<spec> text eol=lf`, where `<spec>` is the file name
+    specifier, for example, `*.sh`.
