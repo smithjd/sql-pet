@@ -1,6 +1,9 @@
 SQL Pet Tutorial
 =======
 
+# Next Meeting 9/8 @10am
+Location: SW 2730 SW Moody Ave, Portland, OR 97201  
+
 # Goals
 
 The use case for this repo is:
