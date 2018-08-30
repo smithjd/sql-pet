@@ -25,8 +25,8 @@
     system2("docker", "ps -a", stdout = TRUE, stderr = TRUE)
 
     ## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS                    NAMES"                  
-    ## [2] "f8f2eb335f6d        postgres:9.4        \"docker-entrypoint.s…\"   9 minutes ago       Exited (0) 8 minutes ago                                     determined_montalcini"
-    ## [3] "c1c11654b012        postgres:9.4        \"docker-entrypoint.s…\"   10 minutes ago      Exited (0) 10 minutes ago                                    jovial_pike"          
+    ## [2] "f8f2eb335f6d        postgres:9.4        \"docker-entrypoint.s…\"   15 minutes ago      Exited (0) 14 minutes ago                                    determined_montalcini"
+    ## [3] "c1c11654b012        postgres:9.4        \"docker-entrypoint.s…\"   16 minutes ago      Exited (0) 16 minutes ago                                    jovial_pike"          
     ## [4] "128a4299a222        postgres:9.4        \"docker-entrypoint.s…\"   5 days ago          Up Less than a second               0.0.0.0:5432->5432/tcp   sql-pet_postgres9_1"  
     ## [5] "58be504c00f3        alpine:latest       \"true\"                   11 days ago         Exited (0) Less than a second ago                            sql-pet_dat_1"        
     ## [6] "eb4237180959        alpine:latest       \"true\"                   11 days ago         Exited (0) 11 days ago                                       sql-pet_pg_data_1"
@@ -72,7 +72,9 @@ Connect with Postgres
                           user = "postgres",
                           password = "postgres")
 
-—–Write mtcars table—– At first Postgres won’t contain any tables:
+—–Write mtcars table—–
+
+Show that at first Postgres database doesn’t contain any tables:
 
     dbListTables(con)
 
@@ -88,7 +90,7 @@ List the tables in the Postgres database again:
 
     ## [1] "mtcars"
 
-demonstrate that mtcars is really there:
+Demonstrate that mtcars is really there:
 
     dbListFields(con, "mtcars")
 
@@ -131,14 +133,16 @@ demonstrate that mtcars is really there:
     ## 31 15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8
     ## 32 21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2
 
-be sure to disconnect from Postgres before shutting down
+Be sure to disconnect from Postgres before shutting down
 
     dbDisconnect(con)
 
-close down the Docker container. Note that there’s a big difference
-between “stop” and “down”. `docker-compose stop` will keeps the contents
-of the Postgres database `docker-compose down` will delete the contents
-of the Postgres database in this case use:
+Close down the Docker container. Note that there’s a big difference
+between “stop” and “down”.
+
+`docker-compose stop` will keeps the contents of the Postgres database
+`docker-compose down` will delete the contents of the Postgres database
+in this case use:
 
     system2("docker-compose", "stop", stdout = TRUE, stderr = TRUE)
 
@@ -150,7 +154,7 @@ of the Postgres database in this case use:
 After closing Docker down, bring it up again and verify that tables are
 still there.
 
-    # Bring up Docker-compose and Postgres:
+Bring up Docker-compose and Postgres:
 
     system2("docker-compose", "up -d", stdout = TRUE, stderr = TRUE)
 
@@ -188,7 +192,7 @@ world.
     ## [1] "Stopping sql-pet_postgres9_1 ... \r"                                          
     ## [2] "\033[1A\033[2K\rStopping sql-pet_postgres9_1 ... \033[32mdone\033[0m\r\033[1B"
 
-Troubleshooting commands
+Troubleshooting commands:
 
     # This section needs work, depending on what we are trying to accomplish
 
