@@ -8,11 +8,11 @@ library(tidyverse)
 library(DBI)
 library(RPostgres)
 
-#-----Start Docker-----
+#' #Start Docker
 system2("docker-compose", "up -d", stdout = TRUE, stderr = TRUE)
 system2("docker", "ps -a", stdout = TRUE, stderr = TRUE)
 
-#' Docker should return a response containing CONTAINER, ID, etc.
+#' Docker should return a response containing CONTAINER ID, IMAGE, etc.
 #'
 #' Next bring up the docker container with Postgres running in it.
 #'
@@ -49,32 +49,32 @@ con <- DBI::dbConnect(RPostgres::Postgres(),
                       user = "postgres",
                       password = "postgres")
 
-#-----Write mtcars table-----
+#' -----Write mtcars table-----
 #' At first Postgres won't contain any tables:
 dbListTables(con)
 
-# Write data frame to Postgres:
+#' Write data frame to Postgres:
 dbWriteTable(con, "mtcars", mtcars)
 
-# List the tables in the Postgres database again:
+#' List the tables in the Postgres database again:
 dbListTables(con)
 
-# demonstrate that mtcars is really there:
+#' demonstrate that mtcars is really there:
 dbListFields(con, "mtcars")
 dbReadTable(con, "mtcars")
 
-# be sure to disconnect from Postgres before shutting down
+#' be sure to disconnect from Postgres before shutting down
 dbDisconnect(con)
 
-# close down the Docker container.
-# Note that there's a big difference between "stop" and "down".
-#  `docker-compose stop` will keeps the contents of the Postgres database
-#  `docker-compose down` will delete the contents of the Postgres database
-# in this case use:
+#' close down the Docker container.
+#' Note that there's a big difference between "stop" and "down".
+#'  `docker-compose stop` will keeps the contents of the Postgres database
+#'  `docker-compose down` will delete the contents of the Postgres database
+#' in this case use:
 
 system2("docker-compose", "stop", stdout = TRUE, stderr = TRUE)
 
-#-----Database Persistence Check-----
+#' -----Database Persistence Check-----
 #'
 #' After closing Docker down, bring it up again and verify that tables are still there.
 #'
@@ -92,10 +92,10 @@ con <- DBI::dbConnect(RPostgres::Postgres(),
                       user = "postgres",
                       password = "postgres")
 
-# Postgres should still have mtcars in it:
+#' Postgres should still have mtcars in it:
 dbListTables(con)
 
-# Might as well delete mtcars, since there are enough copies of it in the world.
+#' Might as well delete mtcars, since there are enough copies of it in the world.
 dbRemoveTable(con, "mtcars")
 dbExistsTable(con, "mtcars")
 
@@ -103,7 +103,8 @@ dbDisconnect(con)
 system2("docker-compose", "stop", stdout = TRUE, stderr = TRUE)
 
 
-#-----Troubleshooting-----
+#' Troubleshooting commands
+# This section needs work, depending on what we are trying to accomplish
 
 #Start Docker PostgreSQL manually, without access to the `/src` directory:
 # system2("docker", "run postgres:9.4", , stdout = TRUE, stderr = TRUE)

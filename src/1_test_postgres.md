@@ -14,21 +14,24 @@
     library(DBI)
     library(RPostgres)
 
+\#Start Docker
+
     system2("docker-compose", "up -d", stdout = TRUE, stderr = TRUE)
 
-    ## [1] "Starting sql-pet_dat_1 ... \r"                                                                           
-    ## [2] "\033[1A\033[2K\rStarting sql-pet_dat_1 ... \033[32mdone\033[0m\r\033[1Bsql-pet_postgres9_1 is up-to-date"
+    ## [1] "Starting sql-pet_dat_1 ... \r"                                                                             
+    ## [2] "\033[1A\033[2K\rStarting sql-pet_dat_1 ... \033[32mdone\033[0m\r\033[1BStarting sql-pet_postgres9_1 ... \r"
+    ## [3] "\033[1A\033[2K\rStarting sql-pet_postgres9_1 ... \033[32mdone\033[0m\r\033[1B"
 
     system2("docker", "ps -a", stdout = TRUE, stderr = TRUE)
 
-    ## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED              STATUS                          PORTS                    NAMES"                  
-    ## [2] "f8f2eb335f6d        postgres:9.4        \"docker-entrypoint.s…\"   About a minute ago   Exited (0) 41 seconds ago                                determined_montalcini"
-    ## [3] "c1c11654b012        postgres:9.4        \"docker-entrypoint.s…\"   2 minutes ago        Exited (0) About a minute ago                            jovial_pike"          
-    ## [4] "128a4299a222        postgres:9.4        \"docker-entrypoint.s…\"   5 days ago           Up 20 seconds                   0.0.0.0:5432->5432/tcp   sql-pet_postgres9_1"  
-    ## [5] "58be504c00f3        alpine:latest       \"true\"                   11 days ago          Up Less than a second                                    sql-pet_dat_1"        
-    ## [6] "eb4237180959        alpine:latest       \"true\"                   11 days ago          Exited (0) 11 days ago                                   sql-pet_pg_data_1"
+    ## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS                    NAMES"                  
+    ## [2] "f8f2eb335f6d        postgres:9.4        \"docker-entrypoint.s…\"   9 minutes ago       Exited (0) 8 minutes ago                                     determined_montalcini"
+    ## [3] "c1c11654b012        postgres:9.4        \"docker-entrypoint.s…\"   10 minutes ago      Exited (0) 10 minutes ago                                    jovial_pike"          
+    ## [4] "128a4299a222        postgres:9.4        \"docker-entrypoint.s…\"   5 days ago          Up Less than a second               0.0.0.0:5432->5432/tcp   sql-pet_postgres9_1"  
+    ## [5] "58be504c00f3        alpine:latest       \"true\"                   11 days ago         Exited (0) Less than a second ago                            sql-pet_dat_1"        
+    ## [6] "eb4237180959        alpine:latest       \"true\"                   11 days ago         Exited (0) 11 days ago                                       sql-pet_pg_data_1"
 
-Docker should return a response containing CONTAINER, ID, etc.
+Docker should return a response containing CONTAINER ID, IMAGE, etc.
 
 Next bring up the docker container with Postgres running in it.
 
@@ -69,21 +72,24 @@ Connect with Postgres
                           user = "postgres",
                           password = "postgres")
 
-At first Postgres won’t contain any tables:
+—–Write mtcars table—– At first Postgres won’t contain any tables:
 
     dbListTables(con)
 
     ## character(0)
 
-    # Write data frame to Postgres:
+Write data frame to Postgres:
+
     dbWriteTable(con, "mtcars", mtcars)
 
-    # List the tables in the Postgres database again:
+List the tables in the Postgres database again:
+
     dbListTables(con)
 
     ## [1] "mtcars"
 
-    # demonstrate that mtcars is really there:
+demonstrate that mtcars is really there:
+
     dbListFields(con, "mtcars")
 
     ##  [1] "mpg"  "cyl"  "disp" "hp"   "drat" "wt"   "qsec" "vs"   "am"   "gear"
@@ -125,19 +131,21 @@ At first Postgres won’t contain any tables:
     ## 31 15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8
     ## 32 21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2
 
-    # be sure to disconnect from Postgres before shutting down
+be sure to disconnect from Postgres before shutting down
+
     dbDisconnect(con)
 
-    # close down the Docker container.
-    # Note that there's a big difference between "stop" and "down".
-    #  `docker-compose stop` will keeps the contents of the Postgres database
-    #  `docker-compose down` will delete the contents of the Postgres database
-    # in this case use:
+close down the Docker container. Note that there’s a big difference
+between “stop” and “down”. `docker-compose stop` will keeps the contents
+of the Postgres database `docker-compose down` will delete the contents
+of the Postgres database in this case use:
 
     system2("docker-compose", "stop", stdout = TRUE, stderr = TRUE)
 
     ## [1] "Stopping sql-pet_postgres9_1 ... \r"                                          
     ## [2] "\033[1A\033[2K\rStopping sql-pet_postgres9_1 ... \033[32mdone\033[0m\r\033[1B"
+
+—–Database Persistence Check—–
 
 After closing Docker down, bring it up again and verify that tables are
 still there.
@@ -160,12 +168,15 @@ Connect to Postgres
                           user = "postgres",
                           password = "postgres")
 
-    # Postgres should still have mtcars in it:
+Postgres should still have mtcars in it:
+
     dbListTables(con)
 
     ## [1] "mtcars"
 
-    # Might as well delete mtcars, since there are enough copies of it in the world.
+Might as well delete mtcars, since there are enough copies of it in the
+world.
+
     dbRemoveTable(con, "mtcars")
     dbExistsTable(con, "mtcars")
 
@@ -176,6 +187,10 @@ Connect to Postgres
 
     ## [1] "Stopping sql-pet_postgres9_1 ... \r"                                          
     ## [2] "\033[1A\033[2K\rStopping sql-pet_postgres9_1 ... \033[32mdone\033[0m\r\033[1B"
+
+Troubleshooting commands
+
+    # This section needs work, depending on what we are trying to accomplish
 
     #Start Docker PostgreSQL manually, without access to the `/src` directory:
     # system2("docker", "run postgres:9.4", , stdout = TRUE, stderr = TRUE)
