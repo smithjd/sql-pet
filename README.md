@@ -31,19 +31,15 @@ Noam Ross's "[Docker for the UseR](https://nyhackr.blob.core.windows.net/present
 
 ## Install Docker
 
-Install Docker.  
+Install Docker.  Note that this can be tricky.  
 
   + [On a Mac](https://docs.docker.com/docker-for-mac/install/)
-  + [On Windows](https://docs.docker.com/docker-for-windows/install/)
+  + [On Windows](https://docs.docker.com/docker-for-windows/install/) (There are variants and issues that depend on your particular version of the OS.)
   + [On UNIX flavors](https://docs.docker.com/install/#supported-platforms)
 
 ## Download the repo
 
 First step: download [this repo](https://github.com/smithjd/sql-pet).  It contains source code to build a Docker container that has the dvdrental database in Postgress and shows how to interact with the database from R.
-
-**Note: when running the scripts in this repo, there's a difference between "sourcing" a file and "source with echo".  Use "source with echo":
-
-![](./fig/rstudio-source-with-echo.png)
 
 # Docker & Postgres
 
@@ -54,6 +50,11 @@ The following .yml file contains the instructions for creating a Docker containe
 * [docker-compose.yml](docker-compose.yml) (Note that if you are running Postgres locally, you'll have to close it down to avoid a port conflict.)
 
 * Use [./src/1_test_postgres.R](./src/1_test_postgres.R) to demonstrate that you have a persistent database by uploading `mtcars` to Postgres, then stopping the Docker container, restarting it, and finally determining that `mtcars` is still there.
+
+**Note:** when running the scripts in this repo, there's a difference between "sourcing" a file and "source with echo".  Use "source with echo":
+
+ ![](./fig/rstudio-source-with-echo.png)
+
 
 ## DVD Rental database installation
 
