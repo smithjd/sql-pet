@@ -8,48 +8,14 @@ library(tidyverse)
 library(DBI)
 library(RPostgres)
 
-#' This demonstrates connecting, reading and writing to postgres -- using the default database.
-#'
-#' Most useful if you run a line or two at a time, rather than the chunks in their entirety.
-#'
-#' First, verify that Docker is up and running and that it responds to your commands:
-#'
-
-# (Note that Knitr doesn't always capture the output of these system commands in its output.)
-
+#-----Start Docker-----
+system("docker-compose up -d")
 system("docker ps -a")
 
-#' Docker should return a response containing CONTAINER, ID, etc.
-#'
-#' Next bring up the docker container with Postgres running in it.
-#'
-#' If this is the first time you've brought up the Postgres container, you can see more of what's going on if you run the following command in a terminal window:
-#'
-#'  `docker-compose up`
-#'
-#' The last message from docker should read:
-#'
-#'   `postgres9_1  | LOG:  database system is ready to accept connections`
-#'
-#' Your terminal window is attached to the Docker image and you can't use it for anything else.  You can send the `stop` command from R or from another terminal and then #' bring up Postgres in *disconnected* mode, so that you have your terminal back.
-#'
-#' To stop Postgres (momentarily), from R, enter:
-#'
-#'   `system("docker-compose stop")`
-#'
-#' From another terminal window, just enter:
-#'
-#'   `docker-compose stop`
-#'
-#' After the first time, you can always bring up Postgres and disconnect the process from your window:
-
-system("docker-compose up -d")
-
+#-----Establish con vector-----
 #'
 #' Connect with Postgres
 #'
-
-
 Sys.sleep(5) # ned to wait for Docker & Postgres to come up before connecting.
 
 con <- DBI::dbConnect(RPostgres::Postgres(),
@@ -58,6 +24,7 @@ con <- DBI::dbConnect(RPostgres::Postgres(),
                       user = "postgres",
                       password = "postgres")
 
+#-----Write mtcars table-----
 #' At first Postgres won't contain any tables:
 dbListTables(con)
 
@@ -76,6 +43,7 @@ dbDisconnect(con)
 # close down the Docker container
 system("docker-compose stop")
 
+#-----Database Persistence Check-----
 #'
 #' After closing Docker down, bring it up again and verify that tables are still there.
 #'
@@ -102,4 +70,48 @@ dbExistsTable(con, "mtcars")
 
 dbDisconnect(con)
 system("docker-compose stop")
+
+
+#-----Troubleshooting-----
+
+#Start Docker PostgreSQL manually
+system ("docker run postgres:9.4")
+
+#Manual stop and remove of Docker container
+system("docker stop {containerid")
+system("docker rm {containerid}")
+
+#Environmental Commands
+Sys.getenv()
+Sys.which('whoami')
+Sys.setenv(PATH = X)
+
+
+#' Docker should return a response containing CONTAINER, ID, etc.
+#'
+#' Next bring up the docker container with Postgres running in it.
+#'
+#' If this is the first time you've brought up the Postgres container, you can see more of what's going on if you run the following command in a terminal window:
+#'
+#'  `docker-compose up`
+#'
+#' The last message from docker should read:
+#'
+#'   `postgres9_1  | LOG:  database system is ready to accept connections`
+#'
+#' Your terminal window is attached to the Docker image and you can't use it for anything else.  You can send the `stop` command from R or from another terminal and then #' bring up Postgres in *disconnected* mode, so that you have your terminal back.
+#'
+#' To stop Postgres (momentarily), from R, enter:
+#'
+#'   `system("docker-compose stop")`
+#'
+#' From another terminal window, just enter:
+#'
+#'   `docker-compose stop`
+#'
+#' After the first time, you can always bring up Postgres and disconnect the process from your window:
+
+
+
+
 
