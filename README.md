@@ -1,7 +1,7 @@
 SQL Pet Tutorial
 =======
 
-# Next Meeting 9/8 @10am
+## Next Meeting: Saturday September 8 @10am
 Location: SW 2730 SW Moody Ave, Portland, OR 97201  
 
 # Goals
@@ -34,19 +34,15 @@ Noam Ross's "[Docker for the UseR](https://nyhackr.blob.core.windows.net/present
 
 ## Install Docker
 
-Install Docker.  
+Install Docker.  Note that this can be tricky.  
 
   + [On a Mac](https://docs.docker.com/docker-for-mac/install/)
-  + [On Windows](https://docs.docker.com/docker-for-windows/install/)
+  + [On Windows](https://docs.docker.com/docker-for-windows/install/) (There are variants and issues that depend on your particular version of the OS, so look carefully at this guide to [Docker Hosting for Windows](docker_hosting_for_windows.md).)
   + [On UNIX flavors](https://docs.docker.com/install/#supported-platforms)
 
 ## Download the repo
 
 First step: download [this repo](https://github.com/smithjd/sql-pet).  It contains source code to build a Docker container that has the dvdrental database in Postgress and shows how to interact with the database from R.
-
-**Note: when running the scripts in this repo, there's a difference between "sourcing" a file and "source with echo".  Use "source with echo":
-
-![](./fig/rstudio-source-with-echo.png)
 
 # Docker & Postgres
 
@@ -57,6 +53,11 @@ The following .yml file contains the instructions for creating a Docker containe
 * [docker-compose.yml](docker-compose.yml) (Note that if you are running Postgres locally, you'll have to close it down to avoid a port conflict.)
 
 * Use [./src/1_test_postgres.R](./src/1_test_postgres.R) to demonstrate that you have a persistent database by uploading `mtcars` to Postgres, then stopping the Docker container, restarting it, and finally determining that `mtcars` is still there.
+
+**Note:** when running the scripts in this repo, there's a difference between "sourcing" a file and "source with echo".  Use "source with echo":
+
+ ![](./fig/rstudio-source-with-echo.png)
+
 
 ## DVD Rental database installation
 
@@ -135,6 +136,7 @@ Need to incorporate more of the [ideas that Aaron Makubuya demonstrated](https:/
   + [A Docker curriculum](https://katacoda.com/courses/docker)
 * Scott Came's materials about Docker and R [on his website](http://www.cascadia-analytics.com/2018/07/21/docker-r-p1.html) and at the 2018 UseR Conference focus on **R inside Docker**.
 * Usage examples of [Postgres with Docker](https://amattn.com/p/tutorial_postgresql_usage_examples_with_docker.html)
+* Postgres & Docker [documentation](https://docs.docker.com/samples/library/postgres/#postgres_db)
 * David Severski describes some [key elements of connecting to databases with R](https://github.com/davidski/database_connections) for MacOS users
 * Loading the [dvdrental database into Postgres](http://www.postgresqltutorial.com/load-postgresql-sample-database/)
 * This tutorial picks up ideas and tips from Ed Borasky's [Data Science pet containers]( https://github.com/hackoregon/data-science-pet-containers), which creates a framework based on that Hack Oregon example.

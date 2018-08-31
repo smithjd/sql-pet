@@ -13,31 +13,32 @@ library(here)
 
 # verify that Docker is up and running:
 
-system("docker version")
+system2("docker", "version", stdout = TRUE, stderr = TRUE)
 
 # run docker-compose to bring up postgres.  The first time it runs it will take a minute to create the Postgres environment.
 
-system("docker-compose up -d")
+system2("docker-compose", "up -d", stdout = TRUE, stderr = TRUE)
 
 # inside Docker, execute the postgress SQL command line program to create the dvdrental database:
 
-system('docker exec sql-pet_postgres9_1 psql -U postgres -c "CREATE DATABASE dvdrental;"')
+system2('docker', 'exec sql-pet_postgres9_1 psql -U postgres -c "CREATE DATABASE dvdrental;"',
+        stdout = TRUE, stderr = TRUE)
 
 # verify that R is running with the right directory (the repo's)
-system("pwd")
+system2("pwd", stdout = TRUE, stderr = TRUE)
 
 # restore the database from the .tar file
 
-system("docker exec sql-pet_postgres9_1 pg_restore -U postgres -d dvdrental /src/dvdrental.tar")
+system2("docker", "exec sql-pet_postgres9_1 pg_restore -U postgres -d dvdrental /src/dvdrental.tar", stdout = TRUE, stderr = TRUE)
 
 
 # verify that the dvdrental database exists
-system('docker exec sql-pet_postgres9_1 psql -U postgres -c "\\l"')
+system2('docker', 'exec sql-pet_postgres9_1 psql -U postgres -c "\\l"', stdout = TRUE, stderr = TRUE)
 
 # Cleanup
 
 file.remove(here("src", "dvdrental.tar"))
 
-system("docker-compose stop")
+system2("docker-compose", "stop", stdout = TRUE, stderr = TRUE)
 ```
 

@@ -1,34 +1,37 @@
     library(tidyverse)
 
-    ## ── Attaching packages ────────
+    ## ── Attaching packages ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
 
     ## ✔ ggplot2 3.0.0     ✔ purrr   0.2.5
     ## ✔ tibble  1.4.2     ✔ dplyr   0.7.6
     ## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
     ## ✔ readr   1.1.1     ✔ forcats 0.3.0
 
-    ## Warning: package 'dplyr' was built under R version 3.5.1
-
-    ## ── Conflicts ─────────────────
+    ## ── Conflicts ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
     ## ✖ dplyr::filter() masks stats::filter()
     ## ✖ dplyr::lag()    masks stats::lag()
 
     library(DBI)
     library(RPostgres)
 
-This demonstrates connecting, reading and writing to postgres – using
-the default database.
+\#Start Docker
 
-Most useful if you run a line or two at a time, rather than the chunks
-in their entirety.
+    system2("docker-compose", "up -d", stdout = TRUE, stderr = TRUE)
 
-First, verify that Docker is up and running and that it responds to your
-commands:
+    ## [1] "Starting sql-pet_dat_1 ... \r"                                                                             
+    ## [2] "\033[1A\033[2K\rStarting sql-pet_dat_1 ... \033[32mdone\033[0m\r\033[1BStarting sql-pet_postgres9_1 ... \r"
+    ## [3] "\033[1A\033[2K\rStarting sql-pet_postgres9_1 ... \033[32mdone\033[0m\r\033[1B"
 
-    # (Note that Knitr doesn't always capture the output of these system commands in its output.)
-    system("docker ps -a")
+    system2("docker", "ps -a", stdout = TRUE, stderr = TRUE)
 
-Docker should return a response containing CONTAINER, ID, etc.
+    ## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS                    NAMES"                  
+    ## [2] "f8f2eb335f6d        postgres:9.4        \"docker-entrypoint.s…\"   15 minutes ago      Exited (0) 14 minutes ago                                    determined_montalcini"
+    ## [3] "c1c11654b012        postgres:9.4        \"docker-entrypoint.s…\"   16 minutes ago      Exited (0) 16 minutes ago                                    jovial_pike"          
+    ## [4] "128a4299a222        postgres:9.4        \"docker-entrypoint.s…\"   5 days ago          Up Less than a second               0.0.0.0:5432->5432/tcp   sql-pet_postgres9_1"  
+    ## [5] "58be504c00f3        alpine:latest       \"true\"                   11 days ago         Exited (0) Less than a second ago                            sql-pet_dat_1"        
+    ## [6] "eb4237180959        alpine:latest       \"true\"                   11 days ago         Exited (0) 11 days ago                                       sql-pet_pg_data_1"
+
+Docker should return a response containing CONTAINER ID, IMAGE, etc.
 
 Next bring up the docker container with Postgres running in it.
 
@@ -43,13 +46,14 @@ The last message from docker should read:
 `postgres9_1  | LOG:  database system is ready to accept connections`
 
 Your terminal window is attached to the Docker image and you can’t use
-it for anything else. You can send the `stop` command from R or from
-another terminal and then \#’ bring up Postgres in *disconnected* mode,
-so that you have your terminal back.
+it for anything else until Docker releases the terminal’s connection.
+You can send the `stop` command from R or from another terminal and then
+bring up Postgres in *disconnected* mode, so that you have your terminal
+back.
 
 To stop Postgres (momentarily), from R, enter:
 
-`system("docker-compose stop")`
+`system2("docker-compose stop")`
 
 From another terminal window, just enter:
 
@@ -58,11 +62,9 @@ From another terminal window, just enter:
 After the first time, you can always bring up Postgres and disconnect
 the process from your window:
 
-    system("docker-compose up -d")
+    Sys.sleep(5) # need to wait for Docker & Postgres to come up before connecting.
 
 Connect with Postgres
-
-    Sys.sleep(5) # need to wait for Docker & Postgres to come up before connecting.
 
     con <- DBI::dbConnect(RPostgres::Postgres(),
                           host = "localhost",
@@ -70,20 +72,26 @@ Connect with Postgres
                           user = "postgres",
                           password = "postgres")
 
-At first Postgres won’t contain any tables:
+—–Write mtcars table—–
+
+Show that at first Postgres database doesn’t contain any tables:
 
     dbListTables(con)
 
     ## character(0)
 
-    # Write data frame to Postgres:
+Write data frame to Postgres:
+
     dbWriteTable(con, "mtcars", mtcars)
+
+List the tables in the Postgres database again:
 
     dbListTables(con)
 
     ## [1] "mtcars"
 
-    # demonstrate that mtcars is really there:
+Demonstrate that mtcars is really there:
+
     dbListFields(con, "mtcars")
 
     ##  [1] "mpg"  "cyl"  "disp" "hp"   "drat" "wt"   "qsec" "vs"   "am"   "gear"
@@ -125,18 +133,34 @@ At first Postgres won’t contain any tables:
     ## 31 15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8
     ## 32 21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2
 
-    # be sure to disconnect from Postgres before shutting down
+Be sure to disconnect from Postgres before shutting down
+
     dbDisconnect(con)
 
-    # close down the Docker container
-    system("docker-compose stop")
+Close down the Docker container. Note that there’s a big difference
+between “stop” and “down”.
+
+`docker-compose stop` will keeps the contents of the Postgres database
+`docker-compose down` will delete the contents of the Postgres database
+in this case use:
+
+    system2("docker-compose", "stop", stdout = TRUE, stderr = TRUE)
+
+    ## [1] "Stopping sql-pet_postgres9_1 ... \r"                                          
+    ## [2] "\033[1A\033[2K\rStopping sql-pet_postgres9_1 ... \033[32mdone\033[0m\r\033[1B"
+
+—–Database Persistence Check—–
 
 After closing Docker down, bring it up again and verify that tables are
 still there.
 
-    # Bring up Docker-compose and Postgres:
+Bring up Docker-compose and Postgres:
 
-    system("docker-compose up -d")
+    system2("docker-compose", "up -d", stdout = TRUE, stderr = TRUE)
+
+    ## [1] "Starting sql-pet_dat_1 ... \r"                                                                             
+    ## [2] "\033[1A\033[2K\rStarting sql-pet_dat_1 ... \033[32mdone\033[0m\r\033[1BStarting sql-pet_postgres9_1 ... \r"
+    ## [3] "\033[1A\033[2K\rStarting sql-pet_postgres9_1 ... \033[32mdone\033[0m\r\033[1B"
 
 Connect to Postgres
 
@@ -148,16 +172,40 @@ Connect to Postgres
                           user = "postgres",
                           password = "postgres")
 
-    # Postgres should still have mtcars in it:
+Postgres should still have mtcars in it:
+
     dbListTables(con)
 
     ## [1] "mtcars"
 
-    # Might as well delete mtcars, since there are enough copies of it in the world.
+Might as well delete mtcars, since there are enough copies of it in the
+world.
+
     dbRemoveTable(con, "mtcars")
     dbExistsTable(con, "mtcars")
 
     ## [1] FALSE
 
     dbDisconnect(con)
-    system("docker-compose stop")
+    system2("docker-compose", "stop", stdout = TRUE, stderr = TRUE)
+
+    ## [1] "Stopping sql-pet_postgres9_1 ... \r"                                          
+    ## [2] "\033[1A\033[2K\rStopping sql-pet_postgres9_1 ... \033[32mdone\033[0m\r\033[1B"
+
+Troubleshooting commands:
+
+    # This section needs work, depending on what we are trying to accomplish
+
+    #Start Docker PostgreSQL manually, without access to the `/src` directory:
+    # system2("docker", "run postgres:9.4", , stdout = TRUE, stderr = TRUE)
+
+    #Manual stop and remove of Docker container
+    # system2("docker stop {containerid")
+    # system2("docker rm {containerid}")
+
+    #Environmental Commands
+    # Sys.getenv()
+
+    #  Not sure what these are or what their function is:
+    # Sys.which('whoami')
+    # Sys.setenv(PATH = X)
