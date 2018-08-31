@@ -1,7 +1,7 @@
 SQL Pet Tutorial
 =======
 
-# Next Meeting 9/8 @10am
+## Next Meeting: Saturday September 8 @10am
 Location: SW 2730 SW Moody Ave, Portland, OR 97201  
 
 # Goals
@@ -37,7 +37,7 @@ Noam Ross's "[Docker for the UseR](https://nyhackr.blob.core.windows.net/present
 Install Docker.  Note that this can be tricky.  
 
   + [On a Mac](https://docs.docker.com/docker-for-mac/install/)
-  + [On Windows](https://docs.docker.com/docker-for-windows/install/) (There are variants and issues that depend on your particular version of the OS.)
+  + [On Windows](https://docs.docker.com/docker-for-windows/install/) (There are variants and issues that depend on your particular version of the OS, so look carefully at this guide to [Docker Hosting for Windows](docker_hosting_for_windows.md).)
   + [On UNIX flavors](https://docs.docker.com/install/#supported-platforms)
 
 ## Download the repo
