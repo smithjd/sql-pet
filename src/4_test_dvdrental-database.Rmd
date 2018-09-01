@@ -19,7 +19,7 @@ library(DT)
 Bring up Docker-compose with Postgres running the dvdrental database
 ```{r}
 
-system("docker-compose up -d")
+system2("docker-compose", "up -d", stdout = TRUE, stderr = TRUE)
 
 ```
 
@@ -66,7 +66,7 @@ rental %>%
 Always disconnect from the database and close down docker:
 ```{r}
 dbDisconnect(con)
-system("docker-compose stop")
+system2("docker-compose", "stop", stdout = TRUE, stderr = TRUE)
 
 ```
 
