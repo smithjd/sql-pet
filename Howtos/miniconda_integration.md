@@ -4,15 +4,25 @@ Miniconda Integration
 ## Why do this?
 
 A number of R deep learning packages use Python under the hood.
-RStudio’s `keras`package, for example, works this way. Also, the R
-`docker` package works by calling a Python Docker API library from R via
-`reticulate`. And, of course, you’ll probably end up receiving a Jupyter
-notebook or two even if you’re a die-hard RStudio user. So … here we
-go\!
+RStudio’s [`keras`](https://keras.rstudio.com/) package, for example,
+works this way. Also, the R
+[`docker`](https://bhaskarvk.github.io/docker/) package works by calling
+a Python Docker API library from R via
+[`reticulate`](https://rstudio.github.io/reticulate/). And, of course,
+you’ll probably end up receiving a Jupyter notebook or two even if
+you’re a die-hard RStudio user.
+
+[`Miniconda`](https://conda.io/miniconda.html) is a bare-bones
+minimalist version of the rather large Anaconda environment. If you’re
+doing Python data science, you probably have the full Anaconda installed
+already. But for R programmers, we only want enough Python for the R
+packages that use Python libraries to work. So … here we go\!
 
 ## Install the `installr` package.
 
-There’s an R package called `installr` that can run a Windows installer.
+There’s an R package called
+[`installr`](https://github.com/talgalili/installr) that can run a
+Windows installer.
 
 ``` r
 if (!require(installr)) install.packages("installr")
@@ -38,9 +48,9 @@ if (!require(installr)) install.packages("installr")
 library(installr)
 ```
 
-## Install Miniconda3
+## Install `Miniconda3`
 
-The following R code chunk will install Miniconda3. I’ve commented it
+The following R code chunk will install `Miniconda3.` I’ve commented it
 out because I already ran
 it.
 
@@ -117,3 +127,7 @@ py_discover_config()
     ## version:        3.6.5 |Anaconda, Inc.| (default, Mar 29 2018, 13:32:41) [MSC v.1900 64 bit (AMD64)]
     ## Architecture:   64bit
     ## numpy:           [NOT FOUND]
+    ## 
+    ## python versions found: 
+    ##  D:\Users\znmeb\Miniconda3\python.exe
+    ##  D:\Users\znmeb\Miniconda3\envs\docker\python.exe
