@@ -94,4 +94,44 @@ details. Summary:
 2.  In that file, all text files (scripts, program source, data, etc.)
     that are destined for a Docker container will need to have the
     designator `<spec> text eol=lf`, where `<spec>` is the file name
-    specifier, for example, `*.sh`.
+    specifier, for example,
+`*.sh`.
+
+## Installing the R [`docker`](https://bhaskarvk.github.io/docker/) package
+
+First, if you haven’t already, install Miniconda3 and `reticulate`. The
+instructions are at
+<https://github.com/smithjd/sql-pet/blob/master/Howtos/miniconda_integration.md>.
+
+Now, install `docker`:
+
+``` r
+if (!require(docker)) install.packages("docker")
+```
+
+    ## Loading required package: docker
+
+``` r
+library(docker)
+```
+
+Create a `conda` virtual environment:
+
+``` r
+library(reticulate)
+conda_remove(envname = "docker")
+conda_create(envname = "docker")
+conda_install(envname = "docker", packages = "docker", pip = TRUE)
+use_condaenv("docker")
+```
+
+Did it work?
+
+``` r
+library(docker)
+client <- docker$from_env()
+s <- client$containers$run("alpine", 'echo -n "Hello World!"', remove=TRUE)
+print(s$decode("UTF-8"))
+```
+
+    ## [1] "Hello World!"
