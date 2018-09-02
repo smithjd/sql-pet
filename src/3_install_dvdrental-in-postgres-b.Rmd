@@ -1,5 +1,5 @@
 ---
-title: "Install dvdrental database in Postgres"
+title: "Install dvdrental database in Postgres - version b"
 author: "John D. Smith"
 date: "8/12/2018"
 output: github_document
@@ -10,12 +10,12 @@ library(tidyverse)
 library(DBI)
 library(RPostgres)
 ```
+## Create a Postgres container, restore dvdrental database, test connection
 
-# Be sure to run get_dvdrental-zipfile.Rmd first
+## Be sure to run /src/get_dvdrental-zipfile.Rmd first
 
+## verify that Docker is up and running:
 ```{r}
-
-# verify that Docker is up and running:
 
 system2("docker", "version", stdout = TRUE, stderr = TRUE)
 
@@ -36,18 +36,20 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 system2('docker', 'exec pet ls petdir',
         stdout = TRUE, stderr = TRUE)
 
-# inside Docker, execute the postgress SQL command line program to create the dvdrental database:
+Sys.sleep(2)
+# inside Docker, execute the postgress SQL command-line program to create the dvdrental database:
 system2('docker', 'exec pet psql -U postgres -c "CREATE DATABASE dvdrental;"',
         stdout = TRUE, stderr = TRUE)
 
+Sys.sleep(2)
 # restore the database from the .tar file
-system2("docker", "exec pet pg_restore -U postgres -d dvdrental petdir/src/dvdrental.tar", stdout = TRUE, stderr = TRUE)
+system2("docker", "exec pet pg_restore -U postgres -d dvdrental petdir/dvdrental.tar", stdout = TRUE, stderr = TRUE)
 
 ```
-
+now connect to the database with R
 ```{r}
-
-Sys.sleep(5) # need to wait for Docker & Postgres to come up before connecting.
+# need to wait for Docker & Postgres to come up before connecting.
+Sys.sleep(5) 
 
 con <- DBI::dbConnect(RPostgres::Postgres(),
                       host = "localhost",
@@ -61,16 +63,15 @@ dbListTables(con)
 dbListFields(con, "rental")
 dbDisconnect(con)
 ```
-
-stop the container
+Stop the container
 ```{r}
 system2('docker', 'stop pet',
         stdout = TRUE, stderr = TRUE)
 ```
-
+Restart the container and verify that the dvdrental database is still there
 ```{r}
 docker_cmd <- paste0(
-  "start ps"
+  "start pet"
 )
 
 system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
@@ -91,7 +92,7 @@ dbDisconnect(con)
 
 ```
 
-close it down
+Stop the container & show that it is still there, so can be started again.
 ```{r}
 system2('docker', 'stop pet',
         stdout = TRUE, stderr = TRUE)
@@ -100,7 +101,9 @@ system2('docker', 'stop pet',
 system2('docker', 'ps -a',
         stdout = TRUE, stderr = TRUE)
 
-
+#
+# Once stopped, the container could be removed with:
+#
 # system2('docker', 'rm pet ',
 #         stdout = TRUE, stderr = TRUE)
 

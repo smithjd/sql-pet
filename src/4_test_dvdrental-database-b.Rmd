@@ -6,14 +6,13 @@ output: md_document
 ---
 
 This runs after the dvdrental database is created 
-  by \src\install_dvdrental-in-postgres.Rmd
+  by \src\3_install_dvdrental-in-postgres-b.Rmd
   
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(DBI)
 library(RPostgres)
-library(here)
 library(DT)
 ```
 Bring up Docker-compose with Postgres running the dvdrental database
@@ -47,16 +46,19 @@ rental <- tbl(con,  "rental")
 
 rental %>% count() %>% collect(n = Inf)
 
-rental %>% 
-  summarize(start_date = min(rental_date, na.rm = TRUE),
-            end_date = max(return_date, na.rm = TRUE)) %>% 
+rental_df <- rental %>% 
   collect(n = Inf)
 
-rental %>% collect(n = 50) %>% DT::datatable() # or `View()` in an interactive environment
+rental_df %>% 
+  summarize(start_date = min(rental_date, na.rm = TRUE),
+            end_date = max(return_date, na.rm = TRUE)) 
+  
+str(rental_df)
 
-rental %>%
+glimpse(rental_df)
+
+rental_df %>%
   count(customer_id) %>%
-  collect(n = Inf) %>%
   mutate(n = as.numeric(n)) %>%
   ggplot(aes(n)) +
     geom_bar() +

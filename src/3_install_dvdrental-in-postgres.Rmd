@@ -26,7 +26,7 @@ system2("pwd", stdout = TRUE, stderr = TRUE)
 
 # restore the database from the .tar file
 
-system2("docker", "exec sql-pet_postgres9_1 pg_restore -U postgres -d dvdrental /src/dvdrental.tar", stdout = TRUE, stderr = TRUE)
+system2("docker", "exec sql-pet_postgres9_1 pg_restore -U postgres -d dvdrental src/dvdrental.tar", stdout = TRUE, stderr = TRUE)
 
 
 # verify that the dvdrental database exists

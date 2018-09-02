@@ -11,7 +11,7 @@ library(RPostgres)
 #' #Start Postgres in Docker:
 #'
 docker_cmd <- paste0(
-  "run -d --name post-temp --publish 5432:5432 ",
+  "run -d --name temporary-postgres --publish 5432:5432 ",
   " postgres:9.4"
 )
 
@@ -25,22 +25,22 @@ system2("docker", "ps -a", stdout = TRUE, stderr = TRUE)
 #'
 #' If this is the first time you've brought up the Postgres container, you can see more of what's going on if you run the following command in a terminal window:
 #'
-#'  `docker-compose up`
+#'
 #'
 #' The last message from docker should read:
 #'
-#'   `postgres9_1  | LOG:  database system is ready to accept connections`
+#'
 #'
 #' Your terminal window is attached to the Docker image and you can't use it for anything else until Docker releases the terminal's connection.  You can send the `stop` command from R or from another terminal and then
 #' bring up Postgres in *disconnected* mode, so that you have your terminal back.
 #'
 #' To stop Postgres (momentarily), from R, enter:
 #'
-#'   `system2("docker-compose stop")`
+#'
 #'
 #' From another terminal window, just enter:
 #'
-#'   `docker-compose stop`
+#'
 #'
 #' After the first time, you can always bring up Postgres and disconnect the process from your window:
 
@@ -77,11 +77,11 @@ dbDisconnect(con)
 #' Close down the Docker container.
 #' Note that there's a big difference between "stop" and "down".
 #'
-#'  `docker-compose stop` will keeps the contents of the Postgres database
-#'  `docker-compose down` will delete the contents of the Postgres database
+#'
+#'
 #' in this case use:
 
-system2("docker", "stop post-temp", stdout = TRUE, stderr = TRUE)
+system2("docker", "stop temporary-postgres", stdout = TRUE, stderr = TRUE)
 
 #' -----Database Persistence Check-----
 #'
@@ -89,7 +89,7 @@ system2("docker", "stop post-temp", stdout = TRUE, stderr = TRUE)
 #'
 #' Bring up Docker-compose and Postgres:
 
-system2("docker", "start post-temp", stdout = TRUE, stderr = TRUE)
+system2("docker", "start temporary-postgres", stdout = TRUE, stderr = TRUE)
 #'
 #' Connect to Postgres
 #'
@@ -109,8 +109,8 @@ dbRemoveTable(con, "mtcars")
 dbExistsTable(con, "mtcars")
 
 dbDisconnect(con)
-system2("docker", "stop post-temp", stdout = TRUE, stderr = TRUE)
-system2("docker", "rm post-temp", stdout = TRUE, stderr = TRUE)
+system2("docker", "stop temporary-postgres", stdout = TRUE, stderr = TRUE)
+system2("docker", "rm temporary-postgres", stdout = TRUE, stderr = TRUE)
 
 # show that we haven't left anything behind:
 

@@ -1,13 +1,13 @@
     library(tidyverse)
 
-    ## ── Attaching packages ────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
+    ## ── Attaching packages ────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
 
     ## ✔ ggplot2 3.0.0     ✔ purrr   0.2.5
     ## ✔ tibble  1.4.2     ✔ dplyr   0.7.6
     ## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
     ## ✔ readr   1.1.1     ✔ forcats 0.3.0
 
-    ## ── Conflicts ───────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+    ## ── Conflicts ───────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
     ## ✖ dplyr::filter() masks stats::filter()
     ## ✖ dplyr::lag()    masks stats::lag()
 
@@ -17,18 +17,18 @@
 \#Start Postgres in Docker:
 
     docker_cmd <- paste0(
-      "run -d --name post-temp --publish 5432:5432 ",
+      "run -d --name temporary-postgres --publish 5432:5432 ",
       " postgres:9.4"
     )
 
     system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 
-    ## [1] "fe1246711e89d006e7647e5f0ddb197fe14c3ea3f0adaf49ee4b45d04555d878"
+    ## [1] "c3ea7ab07a5f7f584947092dadb0894854a42b5f5799bf459449f410270c7d14"
 
     system2("docker", "ps -a", stdout = TRUE, stderr = TRUE)
 
-    ## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES"      
-    ## [2] "fe1246711e89        postgres:9.4        \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   post-temp"
+    ## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES"               
+    ## [2] "c3ea7ab07a5f        postgres:9.4        \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   temporary-postgres"
 
 Docker should return a response containing CONTAINER ID, IMAGE, etc.
 
@@ -38,11 +38,7 @@ If this is the first time you’ve brought up the Postgres container, you
 can see more of what’s going on if you run the following command in a
 terminal window:
 
-`docker-compose up`
-
 The last message from docker should read:
-
-`postgres9_1  | LOG:  database system is ready to accept connections`
 
 Your terminal window is attached to the Docker image and you can’t use
 it for anything else until Docker releases the terminal’s connection.
@@ -52,11 +48,7 @@ back.
 
 To stop Postgres (momentarily), from R, enter:
 
-`system2("docker-compose stop")`
-
 From another terminal window, just enter:
-
-`docker-compose stop`
 
 After the first time, you can always bring up Postgres and disconnect
 the process from your window:
@@ -139,13 +131,11 @@ Be sure to disconnect from Postgres before shutting down
 Close down the Docker container. Note that there’s a big difference
 between “stop” and “down”.
 
-`docker-compose stop` will keeps the contents of the Postgres database
-`docker-compose down` will delete the contents of the Postgres database
 in this case use:
 
-    system2("docker", "stop post-temp", stdout = TRUE, stderr = TRUE)
+    system2("docker", "stop temporary-postgres", stdout = TRUE, stderr = TRUE)
 
-    ## [1] "post-temp"
+    ## [1] "temporary-postgres"
 
 —–Database Persistence Check—–
 
@@ -154,9 +144,9 @@ still there.
 
 Bring up Docker-compose and Postgres:
 
-    system2("docker", "start post-temp", stdout = TRUE, stderr = TRUE)
+    system2("docker", "start temporary-postgres", stdout = TRUE, stderr = TRUE)
 
-    ## [1] "post-temp"
+    ## [1] "temporary-postgres"
 
 Connect to Postgres
 
@@ -183,13 +173,13 @@ world.
     ## [1] FALSE
 
     dbDisconnect(con)
-    system2("docker", "stop post-temp", stdout = TRUE, stderr = TRUE)
+    system2("docker", "stop temporary-postgres", stdout = TRUE, stderr = TRUE)
 
-    ## [1] "post-temp"
+    ## [1] "temporary-postgres"
 
-    system2("docker", "rm post-temp", stdout = TRUE, stderr = TRUE)
+    system2("docker", "rm temporary-postgres", stdout = TRUE, stderr = TRUE)
 
-    ## [1] "post-temp"
+    ## [1] "temporary-postgres"
 
     # show that we haven't left anything behind:
 
