@@ -1,0 +1,107 @@
+---
+title: "Install dvdrental database in Postgres"
+author: "John D. Smith"
+date: "8/12/2018"
+output: github_document
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(DBI)
+library(RPostgres)
+```
+
+# Be sure to run get_dvdrental-zipfile.Rmd first
+
+```{r}
+
+# verify that Docker is up and running:
+
+system2("docker", "version", stdout = TRUE, stderr = TRUE)
+
+# run docker to bring up postgres.  The first time it runs it will take a minute to create the Postgres environment.
+
+wd <- getwd()
+
+docker_cmd <- paste0(
+  "run -d --name pet --publish 5432:5432 ",
+  '--mount "type=bind,source=', wd,
+  '/,target=/petdir"',
+    " postgres:9.4"
+)
+
+system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
+
+# show files in your working directory
+system2('docker', 'exec pet ls petdir',
+        stdout = TRUE, stderr = TRUE)
+
+# inside Docker, execute the postgress SQL command line program to create the dvdrental database:
+system2('docker', 'exec pet psql -U postgres -c "CREATE DATABASE dvdrental;"',
+        stdout = TRUE, stderr = TRUE)
+
+# restore the database from the .tar file
+system2("docker", "exec pet pg_restore -U postgres -d dvdrental petdir/src/dvdrental.tar", stdout = TRUE, stderr = TRUE)
+
+```
+
+```{r}
+
+Sys.sleep(5) # need to wait for Docker & Postgres to come up before connecting.
+
+con <- DBI::dbConnect(RPostgres::Postgres(),
+                      host = "localhost",
+                      port = "5432",
+                      user = "postgres",
+                      password = "postgres",
+                      dbname = "dvdrental" ) # note that the dbname is specified
+
+dbListTables(con)
+
+dbListFields(con, "rental")
+dbDisconnect(con)
+```
+
+stop the container
+```{r}
+system2('docker', 'stop pet',
+        stdout = TRUE, stderr = TRUE)
+```
+
+```{r}
+docker_cmd <- paste0(
+  "start ps"
+)
+
+system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
+
+Sys.sleep(1) # need to wait for Docker & Postgres to come up before connecting.
+
+con <- DBI::dbConnect(RPostgres::Postgres(),
+                      host = "localhost",
+                      port = "5432",
+                      user = "postgres",
+                      password = "postgres",
+                      dbname = "dvdrental" ) # note that the dbname is specified
+
+dbListTables(con)
+
+dbListFields(con, "rental")
+dbDisconnect(con)
+
+```
+
+close it down
+```{r}
+system2('docker', 'stop pet',
+        stdout = TRUE, stderr = TRUE)
+
+# show that the container still exists
+system2('docker', 'ps -a',
+        stdout = TRUE, stderr = TRUE)
+
+
+# system2('docker', 'rm pet ',
+#         stdout = TRUE, stderr = TRUE)
+
+```
