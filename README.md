@@ -48,11 +48,7 @@ First step: download [this repo](https://github.com/smithjd/sql-pet).  It contai
 
 There's a lot to learn about Docker and many uses for it, here we just cut to the chase. 
 
-The following .yml file contains the instructions for creating a Docker container that runs Postgres:
-
-* [docker-compose.yml](docker-compose.yml) (Note that if you are running Postgres locally, you'll have to close it down to avoid a port conflict.)
-
-* Use [./src/1_test_postgres.R](./src/1_test_postgres.R) to demonstrate that you have a persistent database by uploading `mtcars` to Postgres, then stopping the Docker container, restarting it, and finally determining that `mtcars` is still there.
+* Use [./src/1_test_postgres-b.R](./src/1_test_postgres-b.R) to demonstrate that you have a persistent database by uploading `mtcars` to Postgres, then stopping the Docker container, restarting it, and finally determining that `mtcars` is still there. (Note that if you are running Postgres locally, you'll have to close it down to avoid a port conflict.) See the results here: [./src/1_test_postgres-b.md](./src/1_test_postgres-b.md)
 
 **Note:** when running the scripts in this repo, there's a difference between "sourcing" a file and "source with echo".  Use "source with echo":
 
@@ -63,17 +59,17 @@ The following .yml file contains the instructions for creating a Docker containe
 
 * Download the backup file for the dvdrental test database and convert it to a .tar file with:
 
-   [./src/2_get_dvdrental-zipfile.Rmd](./src/2_get_dvdrental-zipfile.Rmd)
+   [./src/2_get_dvdrental-zipfile.Rmd](./src/2_get_dvdrental-zipfile.Rmd). See the results here: [./src/2_get_dvdrental-zipfile.md](./src/2_get_dvdrental-zipfile.md)
 
 * Create the dvdrental database in Postgres and restore the data in the .tar file with:
 
-   [./src/3_install_dvdrental-in-postgres.Rmd](./src/3_install_dvdrental-in-postgres.Rmd)
+   [./src/3_install_dvdrental-in-postgres-b.Rmd](./src/3_install_dvdrental-in-postgres-b.Rmd).  See the results here: [./src/3_install_dvdrental-in-postgres-b.md](./src/3_install_dvdrental-in-postgres-b.md)
 
 ## Verify that the dvdrental database is running and browse some tables
 
 * Explore the dvdrental database:
 
-   [./src/4_test_dvdrental-database.Rmd](./src/4_test_dvdrental-database.Rmd)
+   [./src/4_test_dvdrental-database-b.Rmd](./src/4_test_dvdrental-database-b.Rmd) See the results here: [./src/4_test_dvdrental-database-b.md](./src/4_test_dvdrental-database-b.md)
 
 Need to incorporate more of the [ideas that Aaron Makubuya demonstrated](https://github.com/Cascadia-R/Using_R_With_Databases/blob/master/Intro_To_R_With_Databases.Rmd) at the Cascadia R Conf.
 
@@ -106,7 +102,19 @@ Need to incorporate more of the [ideas that Aaron Makubuya demonstrated](https:/
   
 # More about Docker & Postgres
 
-* When you have time explore the Postgres environment it's worth browsing around inside the Docker command with a shell. (Later you might come back to study this [ROpensci Docker tutorial](https://ropenscilabs.github.io/r-docker-tutorial/))
+## Docker (and R)
+* Noam Ross' [talk on Docker for the UseR](https://www.youtube.com/watch?v=803oZI5dvAU&t=1) and his [Slides](https://github.com/noamross/nyhackr-docker-talk) give a lot of context and tips.
+* Good Docker tutorials
+  + [An introductory Docker tutorial](https://docker-curriculum.com/)
+  + [A Docker curriculum](https://katacoda.com/courses/docker)
+* Scott Came's materials about Docker and R [on his website](http://www.cascadia-analytics.com/2018/07/21/docker-r-p1.html) and at the 2018 UseR Conference focus on **R inside Docker**.
+* It's worth studying the [ROpensci Docker tutorial](https://ropenscilabs.github.io/r-docker-tutorial/)
+* Chosing [between Docker and Vagrant](https://medium.com/@Mahmoud_Zalt/vagrant-vs-docker-679c9ce4231b)
+
+## Postgres
+
+* Loading the [dvdrental database into Postgres](http://www.postgresqltutorial.com/load-postgresql-sample-database/)
+* To explore the Postgres environment it's worth browsing around inside the Docker command with a shell.
 
   + To run the Docker container that contains Postgres, you can enter this from a command prompt:
 
@@ -129,15 +137,13 @@ Need to incorporate more of the [ideas that Aaron Makubuya demonstrated](https:/
     + `postgres=# \conninfo`   # display information about current connection
     + `postgres=# \q`          # exit psql
 
-# More Resources
-* Noam Ross' [talk on Docker for the UseR](https://www.youtube.com/watch?v=803oZI5dvAU&t=1) and his [Slides](https://github.com/noamross/nyhackr-docker-talk) give a lot of context and tips.
-* Good Docker tutorials
-  + [An introductory Docker tutorial](https://docker-curriculum.com/)
-  + [A Docker curriculum](https://katacoda.com/courses/docker)
-* Scott Came's materials about Docker and R [on his website](http://www.cascadia-analytics.com/2018/07/21/docker-r-p1.html) and at the 2018 UseR Conference focus on **R inside Docker**.
-* Usage examples of [Postgres with Docker](https://amattn.com/p/tutorial_postgresql_usage_examples_with_docker.html)
+## Documentation Docker and Postgres
+
+* [The Postgres image documentation](https://docs.docker.com/samples/library/postgres/)
+* [Dockerize PostgreSQL](https://docs.docker.com/engine/examples/postgresql_service/)
 * Postgres & Docker [documentation](https://docs.docker.com/samples/library/postgres/#postgres_db)
+* Usage examples of [Postgres with Docker](https://amattn.com/p/tutorial_postgresql_usage_examples_with_docker.html)
+
+# More Resources
 * David Severski describes some [key elements of connecting to databases with R](https://github.com/davidski/database_connections) for MacOS users
-* Loading the [dvdrental database into Postgres](http://www.postgresqltutorial.com/load-postgresql-sample-database/)
-* This tutorial picks up ideas and tips from Ed Borasky's [Data Science pet containers]( https://github.com/hackoregon/data-science-pet-containers), which creates a framework based on that Hack Oregon example.
-* Chosing [between Docker and Vagrant](https://medium.com/@Mahmoud_Zalt/vagrant-vs-docker-679c9ce4231b)
+* This tutorial picks up ideas and tips from Ed Borasky's [Data Science pet containers](https://github.com/hackoregon/data-science-pet-containers), which creates a framework based on that Hack Oregon example and explains why this repo is named pet-sql.
