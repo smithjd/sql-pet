@@ -226,20 +226,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">3.5</span> Installing the R <a href="https://bhaskarvk.github.io/docker/"><code>docker</code></a> package</h2>
 <p>First, if you haven’t already, install Miniconda3 and <code>reticulate</code>. The instructions are in <a href="#miniconda-installation">Chapter 1</a>.</p>
 <p>Now, install the R <code>docker</code> package:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="cf">if</span> (<span class="op">!</span><span class="kw">require</span>(docker)) <span class="kw">install.packages</span>(<span class="st">&quot;docker&quot;</span>)</a></code></pre></div>
-<pre><code>## Loading required package: docker</code></pre>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw">library</span>(docker)</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="cf">if</span> (<span class="op">!</span><span class="kw">require</span>(docker)) <span class="kw">install.packages</span>(<span class="st">&quot;docker&quot;</span>)</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="kw">library</span>(docker)</a></code></pre></div>
 <p>Create a <code>conda</code> virtual environment:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw">library</span>(reticulate)</a>
-<a class="sourceLine" id="cb11-2" data-line-number="2"><span class="kw">conda_remove</span>(<span class="dt">envname =</span> <span class="st">&quot;docker&quot;</span>)</a>
-<a class="sourceLine" id="cb11-3" data-line-number="3"><span class="kw">conda_create</span>(<span class="dt">envname =</span> <span class="st">&quot;docker&quot;</span>)</a>
-<a class="sourceLine" id="cb11-4" data-line-number="4"><span class="kw">conda_install</span>(<span class="dt">envname =</span> <span class="st">&quot;docker&quot;</span>, <span class="dt">packages =</span> <span class="st">&quot;docker&quot;</span>, <span class="dt">pip =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb11-5" data-line-number="5"><span class="kw">use_condaenv</span>(<span class="st">&quot;docker&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">library</span>(reticulate)</a>
+<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="kw">conda_remove</span>(<span class="dt">envname =</span> <span class="st">&quot;docker&quot;</span>)</a>
+<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="kw">conda_create</span>(<span class="dt">envname =</span> <span class="st">&quot;docker&quot;</span>)</a>
+<a class="sourceLine" id="cb7-4" data-line-number="4"><span class="kw">conda_install</span>(<span class="dt">envname =</span> <span class="st">&quot;docker&quot;</span>, <span class="dt">packages =</span> <span class="st">&quot;docker&quot;</span>, <span class="dt">pip =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb7-5" data-line-number="5"><span class="kw">use_condaenv</span>(<span class="st">&quot;docker&quot;</span>)</a></code></pre></div>
 <p>Did it work?</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw">library</span>(docker)</a>
-<a class="sourceLine" id="cb12-2" data-line-number="2">client &lt;-<span class="st"> </span>docker<span class="op">$</span><span class="kw">from_env</span>()</a>
-<a class="sourceLine" id="cb12-3" data-line-number="3">s &lt;-<span class="st"> </span>client<span class="op">$</span>containers<span class="op">$</span><span class="kw">run</span>(<span class="st">&quot;alpine&quot;</span>, <span class="st">&#39;echo -n &quot;Hello World!&quot;&#39;</span>, <span class="dt">remove=</span><span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb12-4" data-line-number="4"><span class="kw">print</span>(s<span class="op">$</span><span class="kw">decode</span>(<span class="st">&quot;UTF-8&quot;</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">library</span>(docker)</a>
+<a class="sourceLine" id="cb8-2" data-line-number="2">client &lt;-<span class="st"> </span>docker<span class="op">$</span><span class="kw">from_env</span>()</a>
+<a class="sourceLine" id="cb8-3" data-line-number="3">s &lt;-<span class="st"> </span>client<span class="op">$</span>containers<span class="op">$</span><span class="kw">run</span>(<span class="st">&quot;alpine&quot;</span>, <span class="st">&#39;echo -n &quot;Hello World!&quot;&#39;</span>, <span class="dt">remove=</span><span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb8-4" data-line-number="4"><span class="kw">print</span>(s<span class="op">$</span><span class="kw">decode</span>(<span class="st">&quot;UTF-8&quot;</span>))</a></code></pre></div>
 <pre><code>## [1] &quot;Hello World!&quot;</code></pre>
 
 </div>
