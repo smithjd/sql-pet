@@ -1,3 +1,5 @@
+# Docker Hosting for Windows
+
 ## Hardware requirements
 You will need an Intel or AMD processor with 64-bit hardware and the hardware virtualization feature. Most machines you buy today will have that, but older ones may not. You will need to go into the BIOS / firmware and enable the virtualization feature. You will need at least 4 gigabytes of RAM!
 
@@ -48,13 +50,13 @@ So you need a way to tell Git that some files need to be checked out with Linux 
 First, if you haven't already, install Miniconda3 and `reticulate`. The instructions are at <https://github.com/smithjd/sql-pet/blob/master/Howtos/miniconda_integration.md>.
 
 Now, install `docker`:
-```{r}
+```{r eval=FALSE}
 if (!require(docker)) install.packages("docker")
 library(docker)
 ```
 
 Create a `conda` virtual environment:
-```{r}
+```{r eval=FALSE}
 library(reticulate)
 conda_remove(envname = "docker")
 conda_create(envname = "docker")
@@ -63,7 +65,7 @@ use_condaenv("docker")
 ```
 
 Did it work?
-```{r}
+```{r eval=FALSE}
 library(docker)
 client <- docker$from_env()
 s <- client$containers$run("alpine", 'echo -n "Hello World!"', remove=TRUE)

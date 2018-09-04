@@ -1,3 +1,5 @@
+# Miniconda Integration
+
 ## Why do this?
 
 A number of R deep learning packages use Python under the hood. RStudio's [`keras`](https://keras.rstudio.com/) package, for example, works this way. Also, the R [`docker`](https://bhaskarvk.github.io/docker/) package works by calling a Python Docker API library from R via [`reticulate`](https://rstudio.github.io/reticulate/). And, of course, you'll probably end up receiving a Jupyter notebook or two even if you're a die-hard RStudio user. 
@@ -7,16 +9,16 @@ A number of R deep learning packages use Python under the hood. RStudio's [`kera
 ## Install the `installr` package.
 There's an R package called [`installr`](https://github.com/talgalili/installr
 ) that can run a Windows installer.
-```{r}
+```{r eval=FALSE}
 if (!require(installr)) install.packages("installr")
 library(installr)
 ```
 
 ## Install `Miniconda3`
-The following R code chunk will install `Miniconda3.` I've commented it out because I already ran it.
+The following R code chunk will install `Miniconda3.
 
-```{r}
-#install.URL("https://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86_64.exe")
+```{r eval=FALSE}
+install.URL("https://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86_64.exe")
 ```
 
 Here are the screenshots you'll see:
@@ -69,12 +71,12 @@ knitr::include_graphics("screenshots/2018-08-31 16_21_44-Miniconda3 4.5.4 (64-bi
 <br>Clear the check boxes and click `Finish`.
 
 ## Install `reticulate`
-```{r}
+```{r eval=FALSE}
 if (!require(reticulate)) install.packages("reticulate")
 library(reticulate)
 ```
 <br>Did it work?
-```{r}
+```{r eval=FALSE}
 py_discover_config()
 ```
 
