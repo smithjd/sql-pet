@@ -1,5 +1,6 @@
 #! /usr/bin/env Rscript
 
+unlink("../docs", recursive = TRUE)
 bookdown::render_book(
   input = "index.Rmd",
   output_format = "bookdown::gitbook",
@@ -15,3 +16,4 @@ bookdown::render_book(
   output_format = "bookdown::epub_book",
   output_dir = "../docs"
 )
+file.create("../docs/.nojekyll")
