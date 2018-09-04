@@ -150,11 +150,28 @@
 \setcounter{tocdepth}{1}
 \tableofcontents
 }
-\hypertarget{prerequisites}{%
-\chapter{Prerequisites}\label{prerequisites}}
+\hypertarget{introduction}{%
+\chapter{Introduction}\label{introduction}}
+
+\hypertarget{who-are-we}{%
+\section{Who are we?}\label{who-are-we}}
 
 \begin{itemize}
 \tightlist
+\item
+  M. Edward (Ed) Borasky
+\end{itemize}
+
+\hypertarget{prerequisites}{%
+\section{Prerequisites}\label{prerequisites}}
+
+You will need
+
+\begin{itemize}
+\tightlist
+\item
+  A computer running Windows, MacOS, or Linux. Any Linux distro that
+  will run Docker Community Edition, R and RStudio will work,
 \item
   R, and
 \item
@@ -164,6 +181,130 @@
 The database we use is PostgreSQL 10, but you do not need to install
 that - it's installed via a Docker image. RStudio 1.2 is highly
 recommended but not required.
+
+\hypertarget{miniconda-integration}{%
+\chapter{Miniconda Integration}\label{miniconda-integration}}
+
+\hypertarget{why-do-this}{%
+\section{Why do this?}\label{why-do-this}}
+
+A number of R deep learning packages use Python under the hood.
+RStudio's \textbf{keras} \citep{R-keras} package, for example, works
+this way. Also, the R \textbf{docker} \citep{R-docker} package works by
+calling a Python Docker API library from R via \textbf{reticulate}
+\citep{R-reticulate}. And, of course, you'll probably end up receiving a
+Jupyter notebook or two even if you're a die-hard RStudio user.
+
+\href{https://conda.io/miniconda.html}{\texttt{Miniconda}} is a
+bare-bones minimalist version of the rather large Anaconda environment.
+If you're doing Python data science, you probably have the full Anaconda
+installed already. But for R programmers, we only want enough Python for
+the R packages that use Python libraries to work. So \ldots{} here we
+go!
+
+\hypertarget{install-the-installr-package.}{%
+\section{\texorpdfstring{Install the \texttt{installr}
+package.}{Install the installr package.}}\label{install-the-installr-package.}}
+
+There's an R package called \textbf{installr} \citep{R-installr} that
+can run a Windows installer.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ControlFlowTok{if}\NormalTok{ (}\OperatorTok{!}\KeywordTok{require}\NormalTok{(installr)) }\KeywordTok{install.packages}\NormalTok{(}\StringTok{"installr"}\NormalTok{)}
+\KeywordTok{library}\NormalTok{(installr)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{install-miniconda3}{%
+\section{\texorpdfstring{Install
+\texttt{Miniconda3}}{Install Miniconda3}}\label{install-miniconda3}}
+
+The following R code chunk will install `Miniconda3.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{install.URL}\NormalTok{(}\StringTok{"https://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86_64.exe"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Here are the screenshots you'll see:
+
+\begin{center}\includegraphics[width=0.9\linewidth]{screenshots/2018-08-31_16_12_57-Miniconda3_4.5.4_(64-bit)_Setup} \end{center}
+
+Click \texttt{Next}.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\begin{center}\includegraphics[width=0.9\linewidth]{screenshots/2018-08-31_16_13_57-Miniconda3_4.5.4_(64-bit)_Setup} \end{center}
+
+Click \texttt{I\ Agree}.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\begin{center}\includegraphics[width=0.9\linewidth]{screenshots/2018-08-31_16_14_23-Miniconda3_4.5.4_(64-bit)_Setup} \end{center}
+
+\texttt{Just\ Me}, \texttt{Next}.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\begin{center}\includegraphics[width=0.9\linewidth]{screenshots/2018-08-31_16_16_11-Miniconda3_4.5.4_(64-bit)_Setup} \end{center}
+
+Choose the install location. The default is your home directory, which
+on my laptop is a small SSD. So I changed it to the \texttt{D} drive,
+which is a terabyte spinning disk. After you've set the install
+location, click \texttt{Next}.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\begin{center}\includegraphics[width=0.9\linewidth]{screenshots/2018-08-31_16_18_47-Miniconda3_4.5.4_(64-bit)_Setup} \end{center}
+
+Clear both check boxes and click \texttt{Install}.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\begin{center}\includegraphics[width=0.9\linewidth]{screenshots/2018-08-31_16_21_12-Miniconda3_4.5.4_(64-bit)_Setup} \end{center}
+
+Click \texttt{Next}.
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\begin{center}\includegraphics[width=0.9\linewidth]{screenshots/2018-08-31_16_21_44-Miniconda3_4.5.4_(64-bit)_Setup} \end{center}
+
+Clear the check boxes and click \texttt{Finish}.
+
+\hypertarget{install-reticulate}{%
+\section{\texorpdfstring{Install
+\texttt{reticulate}}{Install reticulate}}\label{install-reticulate}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ControlFlowTok{if}\NormalTok{ (}\OperatorTok{!}\KeywordTok{require}\NormalTok{(reticulate)) }\KeywordTok{install.packages}\NormalTok{(}\StringTok{"reticulate"}\NormalTok{)}
+\KeywordTok{library}\NormalTok{(reticulate)}
+\end{Highlighting}
+\end{Shaded}
+
+Did it work?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{py_discover_config}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## python:         /usr/bin/python
+## libpython:      /usr/lib/libpython3.7m.so
+## pythonhome:     /usr:/usr
+## version:        3.7.0 (default, Jul 15 2018, 10:44:58)  [GCC 8.1.1 20180531]
+## numpy:          /usr/lib/python3.7/site-packages/numpy
+## numpy_version:  1.15.1
+## 
+## python versions found: 
+##  /home/znmeb/.conda/envs/docker/bin/python
+##  /usr/bin/python
+##  /usr/bin/python3
+\end{verbatim}
 
 \hypertarget{docker-hosting-for-windows}{%
 \chapter{Docker Hosting for Windows}\label{docker-hosting-for-windows}}
@@ -324,127 +465,8 @@ Did it work?
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{miniconda-integration}{%
-\chapter{Miniconda Integration}\label{miniconda-integration}}
-
-\hypertarget{why-do-this}{%
-\section{Why do this?}\label{why-do-this}}
-
-A number of R deep learning packages use Python under the hood.
-RStudio's \textbf{keras} \citep{R-keras} package, for example, works
-this way. Also, the R \textbf{docker} \citep{R-docker} package works by
-calling a Python Docker API library from R via \textbf{reticulate}
-\citep{R-reticulate}. And, of course, you'll probably end up receiving a
-Jupyter notebook or two even if you're a die-hard RStudio user.
-
-\href{https://conda.io/miniconda.html}{\texttt{Miniconda}} is a
-bare-bones minimalist version of the rather large Anaconda environment.
-If you're doing Python data science, you probably have the full Anaconda
-installed already. But for R programmers, we only want enough Python for
-the R packages that use Python libraries to work. So \ldots{} here we
-go!
-
-\hypertarget{install-the-installr-package.}{%
-\section{\texorpdfstring{Install the \texttt{installr}
-package.}{Install the installr package.}}\label{install-the-installr-package.}}
-
-There's an R package called \textbf{installr} \citep{R-installr} that
-can run a Windows installer.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\ControlFlowTok{if}\NormalTok{ (}\OperatorTok{!}\KeywordTok{require}\NormalTok{(installr)) }\KeywordTok{install.packages}\NormalTok{(}\StringTok{"installr"}\NormalTok{)}
-\KeywordTok{library}\NormalTok{(installr)}
-\end{Highlighting}
-\end{Shaded}
-
-\hypertarget{install-miniconda3}{%
-\section{\texorpdfstring{Install
-\texttt{Miniconda3}}{Install Miniconda3}}\label{install-miniconda3}}
-
-The following R code chunk will install `Miniconda3.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{install.URL}\NormalTok{(}\StringTok{"https://repo.continuum.io/miniconda/Miniconda3-latest-Windows-x86_64.exe"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-Here are the screenshots you'll see:
-
-\begin{center}\includegraphics[width=0.9\linewidth]{screenshots/2018-08-31_16_12_57-Miniconda3_4.5.4_(64-bit)_Setup} \end{center}
-
-Click \texttt{Next}.
-
-\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
-
-\begin{center}\includegraphics[width=0.9\linewidth]{screenshots/2018-08-31_16_13_57-Miniconda3_4.5.4_(64-bit)_Setup} \end{center}
-
-Click \texttt{I\ Agree}.
-
-\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
-
-\begin{center}\includegraphics[width=0.9\linewidth]{screenshots/2018-08-31_16_14_23-Miniconda3_4.5.4_(64-bit)_Setup} \end{center}
-
-\texttt{Just\ Me}, \texttt{Next}.
-
-\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
-
-\begin{center}\includegraphics[width=0.9\linewidth]{screenshots/2018-08-31_16_16_11-Miniconda3_4.5.4_(64-bit)_Setup} \end{center}
-
-Choose the install location. The default is your home directory, which
-on my laptop is a small SSD. So I changed it to the \texttt{D} drive,
-which is a terabyte spinning disk. After you've set the install
-location, click \texttt{Next}.
-
-\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
-
-\begin{center}\includegraphics[width=0.9\linewidth]{screenshots/2018-08-31_16_18_47-Miniconda3_4.5.4_(64-bit)_Setup} \end{center}
-
-Clear both check boxes and click \texttt{Install}.
-
-\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
-
-\begin{center}\includegraphics[width=0.9\linewidth]{screenshots/2018-08-31_16_21_12-Miniconda3_4.5.4_(64-bit)_Setup} \end{center}
-
-Click \texttt{Next}.
-
-\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
-
-\begin{center}\includegraphics[width=0.9\linewidth]{screenshots/2018-08-31_16_21_44-Miniconda3_4.5.4_(64-bit)_Setup} \end{center}
-
-Clear the check boxes and click \texttt{Finish}.
-
-\hypertarget{install-reticulate}{%
-\section{\texorpdfstring{Install
-\texttt{reticulate}}{Install reticulate}}\label{install-reticulate}}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\ControlFlowTok{if}\NormalTok{ (}\OperatorTok{!}\KeywordTok{require}\NormalTok{(reticulate)) }\KeywordTok{install.packages}\NormalTok{(}\StringTok{"reticulate"}\NormalTok{)}
-\KeywordTok{library}\NormalTok{(reticulate)}
-\end{Highlighting}
-\end{Shaded}
-
-Did it work?
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{py_discover_config}\NormalTok{()}
-\end{Highlighting}
-\end{Shaded}
-
 \begin{verbatim}
-## python:         /usr/bin/python
-## libpython:      /usr/lib/libpython3.7m.so
-## pythonhome:     /usr:/usr
-## version:        3.7.0 (default, Jul 15 2018, 10:44:58)  [GCC 8.1.1 20180531]
-## numpy:          /usr/lib/python3.7/site-packages/numpy
-## numpy_version:  1.15.1
-## 
-## python versions found: 
-##  /usr/bin/python
-##  /usr/bin/python3
+## [1] "Hello World!"
 \end{verbatim}
 
 \bibliography{book.bib,packages.bib}
