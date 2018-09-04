@@ -54,13 +54,13 @@ So you need a way to tell Git that some files need to be checked out with Linux 
 First, if you haven't already, install Miniconda3 and `reticulate`. The instructions are at <https://github.com/smithjd/sql-pet/blob/master/Howtos/miniconda_integration.md>.
 
 Now, install `docker`:
-```{r eval=FALSE}
+```{r}
 if (!require(docker)) install.packages("docker")
 library(docker)
 ```
 
 Create a `conda` virtual environment:
-```{r eval=FALSE}
+```{r}
 library(reticulate)
 conda_remove(envname = "docker")
 conda_create(envname = "docker")
@@ -69,7 +69,7 @@ use_condaenv("docker")
 ```
 
 Did it work?
-```{r eval=FALSE}
+```{r}
 library(docker)
 client <- docker$from_env()
 s <- client$containers$run("alpine", 'echo -n "Hello World!"', remove=TRUE)
