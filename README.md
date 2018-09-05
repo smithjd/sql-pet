@@ -6,34 +6,10 @@ Location: SW 2730 SW Moody Ave, Portland, OR 97201
 
 ## Agenda items go here: https://github.com/smithjd/sql-pet/projects/1
 
-# Direction
+# Documentation
+
 * Publishing here: https://smithjd.github.io/sql-pet/
 
-# Goals
-
-The use case for this repo is:
-
-* You are running R through Rstudio and want to experiment with some of the intricacies of working with an SQL database that has:
-    + a moderately complex and unfamiliar structure. 
-    + requires passwords and other features found in an organizational environment
-    + mostly read but sometimes write to the database
-
-    Here is how R and Docker fit on your operating system in this tutorial:
-    
-    ![R and Docker](fig/r-and-docker.png)
-
-    This tutorial uses [the Postgres version of "dvd rental" database](http://www.postgresqltutorial.com/postgresql-sample-database/), which can be  [downloaded here](http://www.postgresqltutorial.com/wp-content/uploads/2017/10/dvdrental.zip).  Here's a glimpse of it's structure:
-    
-    ![Entity Relationship diagram for the dvdrental database](fig/dvdrental-er-diagram.png)
-
-* You want to run PostgresSQL on a Docker container, avoiding any OS or system dependencies that might come up. 
-
-Noam Ross's "[Docker for the UseR](https://nyhackr.blob.core.windows.net/presentations/Docker-for-the-UseR_Noam-Ross.pdf)" suggests that there are four distinct use-cases for useRs.  This repo explores #2.
-
-1. Make a fixed working environment
-2. Access a service outside of R **(e.g., Postgres)**
-3. Create an R based service
-4. Send our compute job somewhere else
 
 # Instructions
 
@@ -57,7 +33,7 @@ There's a lot to learn about Docker and many uses for it, here we just cut to th
 
 **Note:** when running the scripts in this repo, there's a difference between "sourcing" a file and "source with echo".  Use "source with echo":
 
- ![](./fig/rstudio-source-with-echo.png)
+ ![](./r-database-docker/screenshots/rstudio-source-with-echo.png)
 
 
 ## DVD Rental database installation
