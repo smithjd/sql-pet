@@ -25,7 +25,7 @@ Install Docker.  Note that this can be tricky.
 
 First step: download [this repo](https://github.com/smithjd/sql-pet).  It contains source code to build a Docker container that has the dvdrental database in Postgress and shows how to interact with the database from R.
 
-# Docker & Postgres
+# Docker & Postgres -> goes to chapter 4
 
 There's a lot to learn about Docker and many uses for it, here we just cut to the chase. 
 
@@ -54,7 +54,7 @@ There's a lot to learn about Docker and many uses for it, here we just cut to th
 
 Need to incorporate more of the [ideas that Aaron Makubuya demonstrated](https://github.com/Cascadia-R/Using_R_With_Databases/blob/master/Intro_To_R_With_Databases.Rmd) at the Cascadia R Conf.
 
-## Interacting with Postgres from R
+# Interacting with Postgres from R -> goes to chapter 5
 
 * keeping passwords secure
 * differences between production and data warehouse environments
@@ -81,16 +81,7 @@ Need to incorporate more of the [ideas that Aaron Makubuya demonstrated](https:/
   + parameterizing SQL queries
   + show_query and EXPLAIN
   
-# More about Docker & Postgres
-
-## Docker (and R)
-* Noam Ross' [talk on Docker for the UseR](https://www.youtube.com/watch?v=803oZI5dvAU&t=1) and his [Slides](https://github.com/noamross/nyhackr-docker-talk) give a lot of context and tips.
-* Good Docker tutorials
-  + [An introductory Docker tutorial](https://docker-curriculum.com/)
-  + [A Docker curriculum](https://katacoda.com/courses/docker)
-* Scott Came's materials about Docker and R [on his website](http://www.cascadia-analytics.com/2018/07/21/docker-r-p1.html) and at the 2018 UseR Conference focus on **R inside Docker**.
-* It's worth studying the [ROpensci Docker tutorial](https://ropenscilabs.github.io/r-docker-tutorial/)
-* Chosing [between Docker and Vagrant](https://medium.com/@Mahmoud_Zalt/vagrant-vs-docker-679c9ce4231b)
+# Docker & Postgres tips -> Chapter 10?
 
 ## Postgres
 
@@ -117,14 +108,3 @@ Need to incorporate more of the [ideas that Aaron Makubuya demonstrated](https:/
     + `postgres=# \l`          # list Postgres databases
     + `postgres=# \conninfo`   # display information about current connection
     + `postgres=# \q`          # exit psql
-
-## Documentation Docker and Postgres
-
-* [The Postgres image documentation](https://docs.docker.com/samples/library/postgres/)
-* [Dockerize PostgreSQL](https://docs.docker.com/engine/examples/postgresql_service/)
-* Postgres & Docker [documentation](https://docs.docker.com/samples/library/postgres/#postgres_db)
-* Usage examples of [Postgres with Docker](https://amattn.com/p/tutorial_postgresql_usage_examples_with_docker.html)
-
-# More Resources
-* David Severski describes some [key elements of connecting to databases with R](https://github.com/davidski/database_connections) for MacOS users
-* This tutorial picks up ideas and tips from Ed Borasky's [Data Science pet containers](https://github.com/hackoregon/data-science-pet-containers), which creates a framework based on that Hack Oregon example and explains why this repo is named pet-sql.
