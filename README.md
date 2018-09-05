@@ -6,6 +6,9 @@ Location: SW 2730 SW Moody Ave, Portland, OR 97201
 
 ## Agenda items go here: https://github.com/smithjd/sql-pet/projects/1
 
+# Direction
+* Publishing here: https://smithjd.github.io/sql-pet/
+
 # Goals
 
 The use case for this repo is:
