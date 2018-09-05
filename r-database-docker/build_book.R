@@ -10,15 +10,10 @@ bookdown::render_book(
   output_dir = "../docs"
 )
 
-# PDF and epub
+# PDF
 bookdown::render_book(
   input = "index.Rmd",
   output_format = "bookdown::pdf_book",
-  output_dir = "../docs"
-)
-bookdown::render_book(
-  input = "index.Rmd",
-  output_format = "bookdown::epub_book",
   output_dir = "../docs"
 )
 
