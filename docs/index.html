@@ -68,8 +68,9 @@
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
 <li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#why-integrate-r-with-databases-using-docker"><i class="fa fa-check"></i><b>1.1</b> Why integrate R with databases using Docker?</a></li>
-<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#who-are-we"><i class="fa fa-check"></i><b>1.2</b> Who are we?</a></li>
-<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#prerequisites"><i class="fa fa-check"></i><b>1.3</b> Prerequisites</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#setup"><i class="fa fa-check"></i><b>1.2</b> Setup</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#who-are-we"><i class="fa fa-check"></i><b>1.3</b> Who are we?</a></li>
+<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#prerequisites"><i class="fa fa-check"></i><b>1.4</b> Prerequisites</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="docker-hosting-for-windows.html"><a href="docker-hosting-for-windows.html"><i class="fa fa-check"></i><b>2</b> Docker Hosting for Windows</a><ul>
 <li class="chapter" data-level="2.1" data-path="docker-hosting-for-windows.html"><a href="docker-hosting-for-windows.html#hardware-requirements"><i class="fa fa-check"></i><b>2.1</b> Hardware requirements</a></li>
@@ -87,6 +88,7 @@
 <li class="chapter" data-level="3.1" data-path="learning-goals-and-use-cases.html"><a href="learning-goals-and-use-cases.html#context-why-integrate-r-with-databases-using-docker"><i class="fa fa-check"></i><b>3.1</b> Context: Why integrate R with databases using Docker?</a></li>
 <li class="chapter" data-level="3.2" data-path="learning-goals-and-use-cases.html"><a href="learning-goals-and-use-cases.html#learning-goals"><i class="fa fa-check"></i><b>3.2</b> Learning Goals</a></li>
 <li class="chapter" data-level="3.3" data-path="learning-goals-and-use-cases.html"><a href="learning-goals-and-use-cases.html#use-cases"><i class="fa fa-check"></i><b>3.3</b> Use cases</a></li>
+<li class="chapter" data-level="3.4" data-path="learning-goals-and-use-cases.html"><a href="learning-goals-and-use-cases.html#environment"><i class="fa fa-check"></i><b>3.4</b> Environment</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -120,13 +122,28 @@
 <h2><span class="header-section-number">1.1</span> Why integrate R with databases using Docker?</h2>
 <ul>
 <li>Large data stores in organizations are stored in databases that have specific access constraints and structural characteristics.</li>
-<li>Learning to navigate the gap between R and the database is difficult to simulate outside corporate walls.</li>
+<li>Learning to navigate the interface (passwords, packages, etc.) between R and the database is difficult to simulate outside corporate walls.</li>
 <li>R users frequently need to make sense of complex data structures using diagnostic techniques that shuld not be reinvented (and so would benefit from more public instruction and commentary).</li>
+<li>Rarely upload or write to the organization’s database.</li>
 <li>Docker is a relatively easy way to simulate the relationship between an R/Rstudio session and database – all on on a single machine.</li>
+<li>You want to run PostgresSQL on a Docker container, avoiding any OS or system dependencies that might come up.</li>
 </ul>
+<p>Noam Ross’s “<a href="https://nyhackr.blob.core.windows.net/presentations/Docker-for-the-UseR_Noam-Ross.pdf">Docker for the UseR</a>” suggests that there are four distinct use-cases for useRs. This tutorial explores #2:</p>
+<ol style="list-style-type: decimal">
+<li>Make a fixed working environment</li>
+<li>Access a service outside of R <strong>(e.g., Postgres)</strong></li>
+<li>Create an R based service</li>
+<li>Send our compute job somewhere else</li>
+</ol>
+</div>
+<div id="setup" class="section level2">
+<h2><span class="header-section-number">1.2</span> Setup</h2>
+<p>Here is how R and Docker fit on your operating system in this tutorial:</p>
+<p><img src="screenshots/r-and-docker.png" alt="R and Docker" />
+(This diagram needs to be updated as our directory structure evolves.)</p>
 </div>
 <div id="who-are-we" class="section level2">
-<h2><span class="header-section-number">1.2</span> Who are we?</h2>
+<h2><span class="header-section-number">1.3</span> Who are we?</h2>
 <ul>
 <li>M. Edward (Ed) Borasky - <a href="https://github.com/znmeb">@znmeb</a></li>
 <li>John David Smith - <a href="https://github.com/smithjd">@smithjd</a></li>
@@ -137,7 +154,7 @@
 </ul>
 </div>
 <div id="prerequisites" class="section level2">
-<h2><span class="header-section-number">1.3</span> Prerequisites</h2>
+<h2><span class="header-section-number">1.4</span> Prerequisites</h2>
 <p>You will need</p>
 <ul>
 <li>A computer running Windows, MacOS, or Linux. Any Linux distro that will run Docker Community Edition, R and RStudio will work,</li>
