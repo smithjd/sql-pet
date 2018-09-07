@@ -29,7 +29,7 @@ in late preview. Also, you will need to install the `bookdown` package.
 3.  Create a branch for your edits. For example,
     
         git checkout -b add-chapter-seven
-        git push --upstream origin add-chapter-seven
+        git push --set-upstream origin add-chapter-seven
 
 ### Editing notes
 
