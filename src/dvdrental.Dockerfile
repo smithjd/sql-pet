@@ -2,7 +2,8 @@ FROM postgres:9.4
 
 WORKDIR /tmp
 
-RUN apt-get -qq update && apt-get install -y -qq curl zip  > /dev/null 2>&1 && \
+RUN apt-get -qq update && \
+  apt-get install -y -qq curl zip  > /dev/null 2>&1 && \
   curl -Os http://www.postgresqltutorial.com/wp-content/uploads/2017/10/dvdrental.zip && \
   unzip dvdrental.zip && \
   rm dvdrental.zip && \
