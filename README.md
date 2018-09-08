@@ -1,18 +1,25 @@
 SQL Pet Tutorial
 =======
 
-# Next Meeting 9/8 @10am
-Location: SW 2730 SW Moody Ave, Portland, OR 97201 
+# Next Meeting 9/15 @10am
+Location: TBA, but could be SW 2730 SW Moody Ave, Portland, OR 97201 
 
-## Agenda items go here: https://github.com/smithjd/sql-pet/projects/1
+## Projects
 
-# Documentation
+* Meeting agenda items go here: https://github.com/smithjd/sql-pet/projects/1
+* Kanban is here: https://github.com/smithjd/sql-pet/projects/2 
 
-* Project documentation is here: https://smithjd.github.io/sql-pet/
+# Book: https://smithjd.github.io/sql-pet/
 
-# Docker & Postgres tips -> Chapter 10?
+* Tutorial materials go in the Book
+* Executable code is in the /src directory
+  + selected chunks are move to the book as described here: https://bookdown.org/yihui/bookdown/new-session.html 
 
-## Postgres
+## More Docker & Postgres tips 
+
+Do these items have a place?
+
+### Postgres
 
 * Loading the [dvdrental database into Postgres](http://www.postgresqltutorial.com/load-postgresql-sample-database/)
 * To explore the Postgres environment it's worth browsing around inside the Docker command with a shell.

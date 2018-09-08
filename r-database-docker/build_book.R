@@ -1,11 +1,17 @@
 #! /usr/bin/env Rscript
 
+# Adding `new_session = TRUE` according to
+#   https://bookdown.org/yihui/bookdown/new-session.html
+# so that we can run docker and other code within the book in separate chapters, separately.
+# JDS: let's try this and see if it is too cumbersome
+
 # clear the directory
 unlink("../docs", recursive = TRUE)
 
 # make the web book
 bookdown::render_book(
   input = "index.Rmd",
+  new_session = TRUE,
   output_format = "bookdown::gitbook",
   output_dir = "../docs"
 )
@@ -13,6 +19,7 @@ bookdown::render_book(
 # PDF
 bookdown::render_book(
   input = "index.Rmd",
+  new_session = TRUE,
   output_format = "bookdown::pdf_book",
   output_dir = "../docs"
 )
