@@ -1,7 +1,9 @@
 SQL Pet Tutorial
 =======
 
-# Next Meeting 9/22 @10am
+# Next Meeting 9/15 @10am
+
+### Future Meeting 9/29
 Location: SW 2730 SW Moody Ave, Portland, OR 97201 
 
 ## Agenda items go here: https://github.com/smithjd/sql-pet/projects/1
