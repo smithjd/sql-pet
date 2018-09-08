@@ -10,8 +10,8 @@ WORKDIR /tmp
 
 COPY init-dvdrental.sh /docker-entrypoint-initdb.d/
 
-RUN apt-get -qq update && \ # update the ubuntu package database
-   # install curl and zip (needed to download and unzip dvdrental)
+RUN apt-get -qq update && \
+  # install curl and zip (needed to download and unzip dvdrental)
   apt-get install -y -qq curl zip  > /dev/null 2>&1 && \
   # download the dvdrental database dump from the tutorial site
   curl -Os http://www.postgresqltutorial.com/wp-content/uploads/2017/10/dvdrental.zip && \
