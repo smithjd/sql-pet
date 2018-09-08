@@ -5,7 +5,7 @@ John D. Smith (with mods by Scott Came)
 
 ## Create a Postgres container, restore dvdrental database, test connection
 
-## verify that Docker is up and running:
+verify that Docker is up and running:
 
 ``` r
 system2("docker", "version", stdout = TRUE, stderr = TRUE)
@@ -28,29 +28,48 @@ system2("docker", "version", stdout = TRUE, stderr = TRUE)
     ## [15] "  Git commit:       e68fc7a"                    
     ## [16] "  Built:            Tue Aug 21 17:29:02 2018"   
     ## [17] "  OS/Arch:          linux/amd64"                
-    ## [18] "  Experimental:     true"
+    ## [18] "  Experimental:     true"                       
+    ## [19] " Kubernetes:"                                   
+    ## [20] "  Version:          v1.10.3"                    
+    ## [21] "  StackAPI:         v1beta2"
+
+build an image that derives from postgres:10, defined in
+dvdrental.Dockerfile, that is set up to restore and load the dvdrental
+db on
+startup
 
 ``` r
-# build an image that derives from postgres:9.4, defined in dvdrental.Dockerfile, that is set up to restore and load the dvdrental db on startup
-
 system2("docker", "build -t postgres-dvdrental -f dvdrental.Dockerfile .", stdout = TRUE, stderr = TRUE)
 ```
 
-    ##  [1] "Sending build context to Docker daemon   25.6kB\r\r"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
-    ##  [2] "Step 1/3 : FROM postgres:9.4"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
-    ##  [3] " ---> 778c7dfbeb5d"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
-    ##  [4] "Step 2/3 : WORKDIR /tmp"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
-    ##  [5] " ---> Using cache"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
-    ##  [6] " ---> 9f4810c5dfe0"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
-    ##  [7] "Step 3/3 : RUN apt-get -qq update && apt-get install -y -qq curl zip  > /dev/null 2>&1 &&   curl -Os http://www.postgresqltutorial.com/wp-content/uploads/2017/10/dvdrental.zip &&   unzip dvdrental.zip &&   rm dvdrental.zip &&   chmod ugo+w dvdrental.tar &&   chown postgres dvdrental.tar &&   echo '#!/bin/bash' > /docker-entrypoint-initdb.d/dvdrental.sh &&   echo 'psql -U postgres -c \"CREATE DATABASE dvdrental;\"' >> /docker-entrypoint-initdb.d/dvdrental.sh &&   echo 'pg_restore -v -U postgres -d dvdrental /tmp/dvdrental.tar' >> /docker-entrypoint-initdb.d/dvdrental.sh &&   echo 'rm -f /tmp/dvdrental.tar' >> /docker-entrypoint-initdb.d/dvdrental.sh &&   chmod u+x /docker-entrypoint-initdb.d/dvdrental.sh &&   apt-get remove -y curl zip"
-    ##  [8] " ---> Using cache"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
-    ##  [9] " ---> 38315a3acca7"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
-    ## [10] "Successfully built 38315a3acca7"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
-    ## [11] "Successfully tagged postgres-dvdrental:latest"
+    ##  [1] "Sending build context to Docker daemon  27.65kB\r\r"                                                                                                                                                                                                                                                                                                                                           
+    ##  [2] "Step 1/4 : FROM postgres:10"                                                                                                                                                                                                                                                                                                                                                                   
+    ##  [3] " ---> ac25c2bac3c4"                                                                                                                                                                                                                                                                                                                                                                            
+    ##  [4] "Step 2/4 : WORKDIR /tmp"                                                                                                                                                                                                                                                                                                                                                                       
+    ##  [5] " ---> Using cache"                                                                                                                                                                                                                                                                                                                                                                             
+    ##  [6] " ---> 7fcddd04bd0d"                                                                                                                                                                                                                                                                                                                                                                            
+    ##  [7] "Step 3/4 : COPY init-dvdrental.sh /docker-entrypoint-initdb.d/"                                                                                                                                                                                                                                                                                                                                
+    ##  [8] " ---> Using cache"                                                                                                                                                                                                                                                                                                                                                                             
+    ##  [9] " ---> 70d5ae5da0ee"                                                                                                                                                                                                                                                                                                                                                                            
+    ## [10] "Step 4/4 : RUN apt-get -qq update &&   apt-get install -y -qq curl zip  > /dev/null 2>&1 &&   curl -Os http://www.postgresqltutorial.com/wp-content/uploads/2017/10/dvdrental.zip &&   unzip dvdrental.zip &&   rm dvdrental.zip &&   chmod ugo+w dvdrental.tar &&   chown postgres dvdrental.tar &&   chmod u+x /docker-entrypoint-initdb.d/init-dvdrental.sh &&   apt-get remove -y curl zip"
+    ## [11] " ---> Using cache"                                                                                                                                                                                                                                                                                                                                                                             
+    ## [12] " ---> 5819141d8fe3"                                                                                                                                                                                                                                                                                                                                                                            
+    ## [13] "Successfully built 5819141d8fe3"                                                                                                                                                                                                                                                                                                                                                               
+    ## [14] "Successfully tagged postgres-dvdrental:latest"
+
+remove the `pet` container if it
+exists
 
 ``` r
-# run docker to bring up postgres.  The first time it runs it will take a minute to create the Postgres environment.
+if(system2("docker", "ps -a", stdout=TRUE) %>% grepl(x=., pattern='postgres-dvdrental.+pet') %>% any()) {
+  system2("docker", "rm -f pet")
+}
+```
 
+run docker to bring up postgres. The first time it runs it will take a
+minute to create the Postgres environment.
+
+``` r
 wd <- getwd()
 
 docker_cmd <- paste0(
@@ -63,7 +82,7 @@ docker_cmd <- paste0(
 system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
-    ## [1] "de13fc3c7038daf1342bdae56eb70224a68edd4093f698a302cbd3cc707a8215"
+    ## [1] "f3566f0db69dbc41ebf8b55454414762ceeb9d59b2b0de197ac73fd4c62d0d3b"
 
 now connect to the database with R
 
@@ -83,15 +102,15 @@ dbListTables(con)
 
     ##  [1] "actor_info"                 "customer_list"             
     ##  [3] "film_list"                  "nicer_but_slower_film_list"
-    ##  [5] "sales_by_film_category"     "sales_by_store"            
-    ##  [7] "staff"                      "inventory"                 
-    ##  [9] "country"                    "store"                     
-    ## [11] "staff_list"                 "language"                  
-    ## [13] "actor"                      "category"                  
-    ## [15] "city"                       "rental"                    
-    ## [17] "film_actor"                 "address"                   
-    ## [19] "film_category"              "film"                      
-    ## [21] "customer"                   "payment"
+    ##  [5] "sales_by_film_category"     "staff"                     
+    ##  [7] "sales_by_store"             "staff_list"                
+    ##  [9] "category"                   "film_category"             
+    ## [11] "country"                    "actor"                     
+    ## [13] "language"                   "inventory"                 
+    ## [15] "payment"                    "rental"                    
+    ## [17] "city"                       "store"                     
+    ## [19] "film"                       "address"                   
+    ## [21] "film_actor"                 "customer"
 
 ``` r
 dbListFields(con, "rental")
@@ -141,15 +160,15 @@ dbListTables(con)
 
     ##  [1] "actor_info"                 "customer_list"             
     ##  [3] "film_list"                  "nicer_but_slower_film_list"
-    ##  [5] "sales_by_film_category"     "sales_by_store"            
-    ##  [7] "staff"                      "inventory"                 
-    ##  [9] "country"                    "store"                     
-    ## [11] "staff_list"                 "language"                  
-    ## [13] "actor"                      "category"                  
-    ## [15] "city"                       "rental"                    
-    ## [17] "film_actor"                 "address"                   
-    ## [19] "film_category"              "film"                      
-    ## [21] "customer"                   "payment"
+    ##  [5] "sales_by_film_category"     "staff"                     
+    ##  [7] "sales_by_store"             "staff_list"                
+    ##  [9] "category"                   "film_category"             
+    ## [11] "country"                    "actor"                     
+    ## [13] "language"                   "inventory"                 
+    ## [15] "payment"                    "rental"                    
+    ## [17] "city"                       "store"                     
+    ## [19] "film"                       "address"                   
+    ## [21] "film_actor"                 "customer"
 
 ``` r
 dbListFields(con, "rental")
@@ -174,15 +193,11 @@ system2('docker', 'stop pet',
 
 ``` r
 # show that the container still exists
-system2('docker', 'ps -a',
-        stdout = TRUE, stderr = TRUE)
+psout <- system2("docker", "ps -a", stdout=TRUE)
+psout[grepl(x=psout, pattern='postgres-dvdrental.+pet')]
 ```
 
-    ## [1] "CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS                    NAMES"                    
-    ## [2] "de13fc3c7038        postgres-dvdrental   \"docker-entrypoint.s…\"   9 seconds ago       Exited (0) Less than a second ago                            pet"                    
-    ## [3] "a47c64e6c3ac        61205f6444f9         \"/bin/sh -c 'cd /tmp…\"   4 days ago          Exited (1) 4 days ago                                        affectionate_heisenberg"
-    ## [4] "386259e955e6        fdc37809b564         \"/bin/sh -c 'rm /opt…\"   5 days ago          Exited (1) 5 days ago                                        elegant_wright"         
-    ## [5] "5cc9750838cc        mariadb              \"docker-entrypoint.s…\"   6 weeks ago         Up 3 hours                          0.0.0.0:3306->3306/tcp   mariadb"
+    ## [1] "f3566f0db69d        postgres-dvdrental                          \"docker-entrypoint.s…\"   9 seconds ago       Exited (0) Less than a second ago                       pet"
 
 ``` r
 #
