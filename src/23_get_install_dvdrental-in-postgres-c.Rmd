@@ -12,16 +12,28 @@ library(RPostgres)
 ```
 ## Create a Postgres container, restore dvdrental database, test connection
 
-## verify that Docker is up and running:
+verify that Docker is up and running:
 ```{r}
 
 system2("docker", "version", stdout = TRUE, stderr = TRUE)
+```
 
-# build an image that derives from postgres:9.4, defined in dvdrental.Dockerfile, that is set up to restore and load the dvdrental db on startup
+build an image that derives from postgres:10, defined in dvdrental.Dockerfile, that is set up to restore and load the dvdrental db on startup
+```{r}
 
 system2("docker", "build -t postgres-dvdrental -f dvdrental.Dockerfile .", stdout = TRUE, stderr = TRUE)
 
-# run docker to bring up postgres.  The first time it runs it will take a minute to create the Postgres environment.
+```
+
+remove the `pet` container if it exists
+```{r}
+if(system2("docker", "ps -a", stdout=TRUE) %>% grepl(x=., pattern='postgres-dvdrental.+pet') %>% any()) {
+  system2("docker", "rm -f pet")
+}
+```
+
+run docker to bring up postgres.  The first time it runs it will take a minute to create the Postgres environment.
+```{r}
 
 wd <- getwd()
 
@@ -87,8 +99,8 @@ system2('docker', 'stop pet',
         stdout = TRUE, stderr = TRUE)
 
 # show that the container still exists
-system2('docker', 'ps -a',
-        stdout = TRUE, stderr = TRUE)
+psout <- system2("docker", "ps -a", stdout=TRUE)
+psout[grepl(x=psout, pattern='postgres-dvdrental.+pet')]
 
 #
 # Once stopped, the container could be removed with:

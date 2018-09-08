@@ -5,7 +5,7 @@ John D. Smith (with mods by Scott Came)
 
 ## Create a Postgres container, restore dvdrental database, test connection
 
-## verify that Docker is up and running:
+verify that Docker is up and running:
 
 ``` r
 system2("docker", "version", stdout = TRUE, stderr = TRUE)
@@ -33,9 +33,12 @@ system2("docker", "version", stdout = TRUE, stderr = TRUE)
     ## [20] "  Version:          v1.10.3"                    
     ## [21] "  StackAPI:         v1beta2"
 
-``` r
-# build an image that derives from postgres:9.4, defined in dvdrental.Dockerfile, that is set up to restore and load the dvdrental db on startup
+build an image that derives from postgres:10, defined in
+dvdrental.Dockerfile, that is set up to restore and load the dvdrental
+db on
+startup
 
+``` r
 system2("docker", "build -t postgres-dvdrental -f dvdrental.Dockerfile .", stdout = TRUE, stderr = TRUE)
 ```
 
@@ -54,9 +57,19 @@ system2("docker", "build -t postgres-dvdrental -f dvdrental.Dockerfile .", stdou
     ## [13] "Successfully built 5819141d8fe3"                                                                                                                                                                                                                                                                                                                                                               
     ## [14] "Successfully tagged postgres-dvdrental:latest"
 
-``` r
-# run docker to bring up postgres.  The first time it runs it will take a minute to create the Postgres environment.
+remove the `pet` container if it
+exists
 
+``` r
+if(system2("docker", "ps -a", stdout=TRUE) %>% grepl(x=., pattern='postgres-dvdrental.+pet') %>% any()) {
+  system2("docker", "rm -f pet")
+}
+```
+
+run docker to bring up postgres. The first time it runs it will take a
+minute to create the Postgres environment.
+
+``` r
 wd <- getwd()
 
 docker_cmd <- paste0(
@@ -69,7 +82,7 @@ docker_cmd <- paste0(
 system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
-    ## [1] "72c6301281da83a7a7a3de1cb729b1557d98447ac5e55080d01b12bf55e2eadb"
+    ## [1] "f3566f0db69dbc41ebf8b55454414762ceeb9d59b2b0de197ac73fd4c62d0d3b"
 
 now connect to the database with R
 
@@ -180,22 +193,11 @@ system2('docker', 'stop pet',
 
 ``` r
 # show that the container still exists
-system2('docker', 'ps -a',
-        stdout = TRUE, stderr = TRUE)
+psout <- system2("docker", "ps -a", stdout=TRUE)
+psout[grepl(x=psout, pattern='postgres-dvdrental.+pet')]
 ```
 
-    ##  [1] "CONTAINER ID        IMAGE                                       COMMAND                  CREATED             STATUS                              PORTS               NAMES"                                                                                                        
-    ##  [2] "72c6301281da        postgres-dvdrental                          \"docker-entrypoint.s…\"   9 seconds ago       Exited (0) Less than a second ago                       pet"                                                                                                        
-    ##  [3] "52eb7a0975ca        ubuntu                                      \"/bin/bash\"              About an hour ago   Up About an hour                                        k8s_ubuntu_ubuntu-6c497666b8-grrfp_default_d9b67919-b390-11e8-b7f8-025000000001_0"                          
-    ##  [4] "54ca601cecf2        scottcame/shiny                             \"/opt/shiny-server/b…\"   About an hour ago   Up About an hour                                        k8s_shiny_shiny-697bb66bb8-sxl6s_default_cb12d035-b38f-11e8-b7f8-025000000001_0"                            
-    ##  [5] "a76c123722ca        scottcame/shiny                             \"/opt/shiny-server/b…\"   About an hour ago   Up About an hour                                        k8s_shiny_shiny-697bb66bb8-92ddd_default_cb11afe2-b38f-11e8-b7f8-025000000001_0"                            
-    ##  [6] "32c5b3484ed1        scottcame/shiny                             \"/opt/shiny-server/b…\"   About an hour ago   Up About an hour                                        k8s_shiny_shiny-697bb66bb8-ldd9q_default_cb12fa39-b38f-11e8-b7f8-025000000001_0"                            
-    ##  [7] "b102a13735c0        scottcame/shiny                             \"/opt/shiny-server/b…\"   2 hours ago         Up 2 hours                                              k8s_shiny_shiny-697bb66bb8-99dt9_default_6def24a3-b38e-11e8-b7f8-025000000001_0"                            
-    ##  [8] "979d8caf518e        8fafd8af70e9                                \"/bin/sh -c 'node se…\"   3 hours ago         Up 3 hours                                              k8s_kubernetes-bootcamp_kubernetes-bootcamp-5c69669756-d2448_default_ae918806-b385-11e8-b7f8-025000000001_0"
-    ##  [9] "713add2a3337        gcr.io/google-samples/kubernetes-bootcamp   \"/bin/sh -c 'node se…\"   4 hours ago         Up 4 hours                                              k8s_kubernetes-bootcamp_kubernetes-bootcamp-5c69669756-shpm4_default_c4747d18-b379-11e8-b7f8-025000000001_0"
-    ## [10] "a47c64e6c3ac        61205f6444f9                                \"/bin/sh -c 'cd /tmp…\"   9 days ago          Exited (1) 9 days ago                                   affectionate_heisenberg"                                                                                    
-    ## [11] "386259e955e6        fdc37809b564                                \"/bin/sh -c 'rm /opt…\"   10 days ago         Exited (1) 10 days ago                                  elegant_wright"                                                                                             
-    ## [12] "5cc9750838cc        mariadb                                     \"docker-entrypoint.s…\"   7 weeks ago         Up 5 days                                               mariadb"
+    ## [1] "f3566f0db69d        postgres-dvdrental                          \"docker-entrypoint.s…\"   9 seconds ago       Exited (0) Less than a second ago                       pet"
 
 ``` r
 #
