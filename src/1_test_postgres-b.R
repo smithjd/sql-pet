@@ -71,6 +71,24 @@ dbListTables(con)
 dbListFields(con, "mtcars")
 dbReadTable(con, "mtcars")
 
+# create an object that can be used in dplyr commands
+mtcars_table <- tbl(con, "mtcars")
+
+# get some of the rows from the table
+mtcars_table %>% filter(cyl == 6) %>% collect(n = Inf)
+
+# see what dplyr is writing and sending to the database
+mtcars_table %>% filter(cyl == 6) %>% explain()
+
+# take the results of explain and put them in a SQL Query command:
+
+dbGetQuery(con,
+  'SELECT *
+   FROM "mtcars"
+   WHERE ("cyl" = 6.0)')
+
+# The results are the same.  Figure out what's easiest for you.
+
 #' Be sure to disconnect from Postgres before shutting down
 dbDisconnect(con)
 

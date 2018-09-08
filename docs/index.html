@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>R, Databases and Docker</title>
+  <meta name="description" content="A collection of tutorials for integrating R with databases using Docker">
+  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+
+  <meta property="og:title" content="R, Databases and Docker" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="A collection of tutorials for integrating R with databases using Docker" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="R, Databases and Docker" />
+  
+  <meta name="twitter:description" content="A collection of tutorials for integrating R with databases using Docker" />
+  
+
+<meta name="author" content="M. Edward (Ed) Borasky, editor">
+
+
+<meta name="date" content="2018-09-07">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+
+<link rel="next" href="docker-hosting-for-windows.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">R, Databases and Docker</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#using-r-to-query-a-dbms-in-your-organization"><i class="fa fa-check"></i><b>1.1</b> Using R to query a DBMS in your organization</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#dockers-role"><i class="fa fa-check"></i><b>1.2</b> Docker’s role</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#docker-and-r-on-your-machine"><i class="fa fa-check"></i><b>1.3</b> Docker and R on your machine</a></li>
+<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#who-are-we"><i class="fa fa-check"></i><b>1.4</b> Who are we?</a></li>
+<li class="chapter" data-level="1.5" data-path="index.html"><a href="index.html#prerequisites"><i class="fa fa-check"></i><b>1.5</b> Prerequisites</a></li>
+<li class="chapter" data-level="1.6" data-path="index.html"><a href="index.html#install-docker"><i class="fa fa-check"></i><b>1.6</b> Install Docker</a></li>
+<li class="chapter" data-level="1.7" data-path="index.html"><a href="index.html#download-the-repo"><i class="fa fa-check"></i><b>1.7</b> Download the repo</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="docker-hosting-for-windows.html"><a href="docker-hosting-for-windows.html"><i class="fa fa-check"></i><b>2</b> Docker Hosting for Windows</a><ul>
+<li class="chapter" data-level="2.1" data-path="docker-hosting-for-windows.html"><a href="docker-hosting-for-windows.html#hardware-requirements"><i class="fa fa-check"></i><b>2.1</b> Hardware requirements</a></li>
+<li class="chapter" data-level="2.2" data-path="docker-hosting-for-windows.html"><a href="docker-hosting-for-windows.html#software-requirements"><i class="fa fa-check"></i><b>2.2</b> Software requirements</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="docker-hosting-for-windows.html"><a href="docker-hosting-for-windows.html#windows-7-8-8.1-and-windows-10-home-64-bit"><i class="fa fa-check"></i><b>2.2.1</b> Windows 7, 8, 8.1 and Windows 10 Home (64 bit)</a></li>
+<li class="chapter" data-level="2.2.2" data-path="docker-hosting-for-windows.html"><a href="docker-hosting-for-windows.html#windows-10-pro"><i class="fa fa-check"></i><b>2.2.2</b> Windows 10 Pro</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="docker-hosting-for-windows.html"><a href="docker-hosting-for-windows.html#docker-for-windows-settings"><i class="fa fa-check"></i><b>2.3</b> Docker for Windows settings</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="docker-hosting-for-windows.html"><a href="docker-hosting-for-windows.html#shared-drives"><i class="fa fa-check"></i><b>2.3.1</b> Shared drives</a></li>
+<li class="chapter" data-level="2.3.2" data-path="docker-hosting-for-windows.html"><a href="docker-hosting-for-windows.html#kubernetes"><i class="fa fa-check"></i><b>2.3.2</b> Kubernetes</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="docker-hosting-for-windows.html"><a href="docker-hosting-for-windows.html#git-github-and-line-endings"><i class="fa fa-check"></i><b>2.4</b> Git, GitHub and line endings</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="learning-goals-and-use-cases.html"><a href="learning-goals-and-use-cases.html"><i class="fa fa-check"></i><b>3</b> Learning Goals and Use Cases</a><ul>
+<li class="chapter" data-level="3.1" data-path="learning-goals-and-use-cases.html"><a href="learning-goals-and-use-cases.html#context-why-integrate-r-with-databases-using-docker"><i class="fa fa-check"></i><b>3.1</b> Context: Why integrate R with databases using Docker?</a></li>
+<li class="chapter" data-level="3.2" data-path="learning-goals-and-use-cases.html"><a href="learning-goals-and-use-cases.html#learning-goals"><i class="fa fa-check"></i><b>3.2</b> Learning Goals</a></li>
+<li class="chapter" data-level="3.3" data-path="learning-goals-and-use-cases.html"><a href="learning-goals-and-use-cases.html#use-cases"><i class="fa fa-check"></i><b>3.3</b> Use cases</a></li>
+<li class="chapter" data-level="3.4" data-path="learning-goals-and-use-cases.html"><a href="learning-goals-and-use-cases.html#environment"><i class="fa fa-check"></i><b>3.4</b> Environment</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="docker-postgres-and-dvdrental-setup.html"><a href="docker-postgres-and-dvdrental-setup.html"><i class="fa fa-check"></i><b>4</b> Docker, Postgres, and dvdrental setup</a><ul>
+<li class="chapter" data-level="4.1" data-path="docker-postgres-and-dvdrental-setup.html"><a href="docker-postgres-and-dvdrental-setup.html#docker-setup"><i class="fa fa-check"></i><b>4.1</b> Docker setup</a></li>
+<li class="chapter" data-level="4.2" data-path="docker-postgres-and-dvdrental-setup.html"><a href="docker-postgres-and-dvdrental-setup.html#bring-up-postres-in-docker"><i class="fa fa-check"></i><b>4.2</b> Bring up Postres in Docker</a></li>
+<li class="chapter" data-level="4.3" data-path="docker-postgres-and-dvdrental-setup.html"><a href="docker-postgres-and-dvdrental-setup.html#dvd-rental-database-installation"><i class="fa fa-check"></i><b>4.3</b> DVD Rental database installation</a></li>
+<li class="chapter" data-level="4.4" data-path="docker-postgres-and-dvdrental-setup.html"><a href="docker-postgres-and-dvdrental-setup.html#verify-that-the-dvdrental-database-is-running-and-browse-some-tables"><i class="fa fa-check"></i><b>4.4</b> Verify that the dvdrental database is running and browse some tables</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="interacting-with-postgres-from-r.html"><a href="interacting-with-postgres-from-r.html"><i class="fa fa-check"></i><b>5</b> Interacting with Postgres from R</a><ul>
+<li class="chapter" data-level="5.1" data-path="interacting-with-postgres-from-r.html"><a href="interacting-with-postgres-from-r.html#topics-to-cover"><i class="fa fa-check"></i><b>5.1</b> Topics to cover</a></li>
+<li class="chapter" data-level="5.2" data-path="interacting-with-postgres-from-r.html"><a href="interacting-with-postgres-from-r.html#more-topics"><i class="fa fa-check"></i><b>5.2</b> More topics</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="other-resources.html"><a href="other-resources.html"><i class="fa fa-check"></i><b>6</b> Other resources</a><ul>
+<li class="chapter" data-level="6.1" data-path="other-resources.html"><a href="other-resources.html#editing-this-book"><i class="fa fa-check"></i><b>6.1</b> Editing this book</a></li>
+<li class="chapter" data-level="6.2" data-path="other-resources.html"><a href="other-resources.html#docker-alternatives"><i class="fa fa-check"></i><b>6.2</b> Docker alternatives</a></li>
+<li class="chapter" data-level="6.3" data-path="other-resources.html"><a href="other-resources.html#docker-and-r"><i class="fa fa-check"></i><b>6.3</b> Docker and R</a></li>
+<li class="chapter" data-level="6.4" data-path="other-resources.html"><a href="other-resources.html#documentation-docker-and-postgres"><i class="fa fa-check"></i><b>6.4</b> Documentation Docker and Postgres</a></li>
+<li class="chapter" data-level="6.5" data-path="other-resources.html"><a href="other-resources.html#more-resources"><i class="fa fa-check"></i><b>6.5</b> More Resources</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">R, Databases and Docker</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="header">
+<h1 class="title">R, Databases and Docker</h1>
+<h4 class="author"><em>M. Edward (Ed) Borasky, editor</em></h4>
+<h4 class="date"><em>2018-09-07</em></h4>
+</div>
+<div id="introduction" class="section level1">
+<h1><span class="header-section-number">Chapter 1</span> Introduction</h1>
+<div id="using-r-to-query-a-dbms-in-your-organization" class="section level2">
+<h2><span class="header-section-number">1.1</span> Using R to query a DBMS in your organization</h2>
+<ul>
+<li>Large data stores in organizations are stored in databases that have specific access constraints and structural characteristics. Data documentation may be incomplete, often emphsizes operational issues rather than analytical ones, and often needs to be confirmed on the fly. Data volumes and query performance are important design constraints.</li>
+<li>R users frequently need to make sense of complex data structures and coding schemes to address incompletely formed questions so that exploratory data analysis has to be fast. Exploratory techniques for the purpose should not be reinvented (and so would benefit from more public instruction or discussion).</li>
+<li>Learning to navigate the interfaces (passwords, packages, etc.) between R and a database is difficult to simulate outside corporate walls. Resources for interface problem diagnosis behind corporate walls may or may not address all the issues that R users face, so a simulated environment is needed.</li>
+</ul>
+</div>
+<div id="dockers-role" class="section level2">
+<h2><span class="header-section-number">1.2</span> Docker’s role</h2>
+<p>Noam Ross’s “<a href="https://nyhackr.blob.core.windows.net/presentations/Docker-for-the-UseR_Noam-Ross.pdf">Docker for the UseR</a>” suggests that there are four distinct Docker use-cases for useRs.</p>
+<ol style="list-style-type: decimal">
+<li>Make a fixed working environment for reproducible analysis</li>
+<li>Access a service outside of R <strong>(e.g., Postgres)</strong></li>
+<li>Create an R based service (e.g., with <code>plumber</code>)</li>
+<li>Send our compute jobs to the cloud with minimal reconfiguration or revision</li>
+</ol>
+<p>This book explores #2 because it allows us to work on the database access issues <a href="index.html#using-r-to-query-a-dbms-in-your-organization">described above</a> and to practice on an industrial-scale DBMS.</p>
+<ul>
+<li>Docker is a relatively easy way to simulate the relationship between an R/Rstudio session and a database – all on on a single machine, provided you have Docker installed and running.</li>
+<li>You may want to run PostgresSQL on a Docker container, avoiding any OS or system dependencies that might come up.</li>
+</ul>
+</div>
+<div id="docker-and-r-on-your-machine" class="section level2">
+<h2><span class="header-section-number">1.3</span> Docker and R on your machine</h2>
+<p>Here is how R and Docker fit on your operating system in this tutorial:</p>
+<p><img src="screenshots/r-and-docker.png" alt="R and Docker" />
+(This diagram needs to be updated as our directory structure evolves.)</p>
+</div>
+<div id="who-are-we" class="section level2">
+<h2><span class="header-section-number">1.4</span> Who are we?</h2>
+<ul>
+<li>M. Edward (Ed) Borasky - <a href="https://github.com/znmeb">@znmeb</a></li>
+<li>John David Smith - <a href="https://github.com/smithjd">@smithjd</a></li>
+<li>Scott Came - <a href="https://github.com/scottcame">@scottcame</a></li>
+<li>Ian Franz - <a href="https://github.com/ianfrantz">@ianfrantz</a></li>
+<li>Sophie Yang - <a href="https://github.com/SophieMYang">@SophieMYang</a></li>
+<li>Jim Tyhurst - <a href="https://github.com/jimtyhurst">@jimtyhurst</a></li>
+<li>Paul Refalo - <a href="https://github.com/paulrefalo">@paulrefalo</a></li>
+</ul>
+</div>
+<div id="prerequisites" class="section level2">
+<h2><span class="header-section-number">1.5</span> Prerequisites</h2>
+<p>You will need</p>
+<ul>
+<li>A computer running Windows, MacOS, or Linux (Any Linux distro that will run Docker Community Edition, R and RStudio will work),</li>
+<li><a href="https://www.datacamp.com/community/tutorials/installing-R-windows-mac-ubuntu">R, and Rstudio</a> and</li>
+<li>Docker hosting.</li>
+</ul>
+<p>The database we use is PostgreSQL 10, but you do not need to install that - it’s installed via a Docker image. RStudio 1.2 is highly recommended but not required.</p>
+</div>
+<div id="install-docker" class="section level2">
+<h2><span class="header-section-number">1.6</span> Install Docker</h2>
+<p>Install Docker. Installation depends on your operating system:</p>
+<ul>
+<li><a href="https://docs.docker.com/docker-for-mac/install/">On a Mac</a></li>
+<li><a href="https://docs.docker.com/install/#supported-platforms">On UNIX flavors</a></li>
+<li>For Windows, <a href="https://smithjd.github.io/sql-pet/docker-hosting-for-windows.html">consider these issues and follow these instructions</a>.</li>
+</ul>
+</div>
+<div id="download-the-repo" class="section level2">
+<h2><span class="header-section-number">1.7</span> Download the repo</h2>
+<p>First step: download <a href="https://github.com/smithjd/sql-pet">this repo</a>. It contains source code to build a Docker container that has the dvdrental database in Postgress and shows how to interact with the database from R.</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+
+<a href="docker-hosting-for-windows.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/smithjd/sql-pet/edit/master/r-database-docker/index.Rmd",
+"text": "Edit"
+},
+"download": ["r-database-docker.pdf"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

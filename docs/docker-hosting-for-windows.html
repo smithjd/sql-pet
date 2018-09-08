@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>R, Databases and Docker</title>
+  <meta name="description" content="A collection of tutorials for integrating R with databases using Docker">
+  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+
+  <meta property="og:title" content="R, Databases and Docker" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="A collection of tutorials for integrating R with databases using Docker" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="R, Databases and Docker" />
+  
+  <meta name="twitter:description" content="A collection of tutorials for integrating R with databases using Docker" />
+  
+
+<meta name="author" content="M. Edward (Ed) Borasky, editor">
+
+
+<meta name="date" content="2018-09-07">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="index.html">
+<link rel="next" href="learning-goals-and-use-cases.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">R, Databases and Docker</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#using-r-to-query-a-dbms-in-your-organization"><i class="fa fa-check"></i><b>1.1</b> Using R to query a DBMS in your organization</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#dockers-role"><i class="fa fa-check"></i><b>1.2</b> Docker’s role</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#docker-and-r-on-your-machine"><i class="fa fa-check"></i><b>1.3</b> Docker and R on your machine</a></li>
+<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#who-are-we"><i class="fa fa-check"></i><b>1.4</b> Who are we?</a></li>
+<li class="chapter" data-level="1.5" data-path="index.html"><a href="index.html#prerequisites"><i class="fa fa-check"></i><b>1.5</b> Prerequisites</a></li>
+<li class="chapter" data-level="1.6" data-path="index.html"><a href="index.html#install-docker"><i class="fa fa-check"></i><b>1.6</b> Install Docker</a></li>
+<li class="chapter" data-level="1.7" data-path="index.html"><a href="index.html#download-the-repo"><i class="fa fa-check"></i><b>1.7</b> Download the repo</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="docker-hosting-for-windows.html"><a href="docker-hosting-for-windows.html"><i class="fa fa-check"></i><b>2</b> Docker Hosting for Windows</a><ul>
+<li class="chapter" data-level="2.1" data-path="docker-hosting-for-windows.html"><a href="docker-hosting-for-windows.html#hardware-requirements"><i class="fa fa-check"></i><b>2.1</b> Hardware requirements</a></li>
+<li class="chapter" data-level="2.2" data-path="docker-hosting-for-windows.html"><a href="docker-hosting-for-windows.html#software-requirements"><i class="fa fa-check"></i><b>2.2</b> Software requirements</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="docker-hosting-for-windows.html"><a href="docker-hosting-for-windows.html#windows-7-8-8.1-and-windows-10-home-64-bit"><i class="fa fa-check"></i><b>2.2.1</b> Windows 7, 8, 8.1 and Windows 10 Home (64 bit)</a></li>
+<li class="chapter" data-level="2.2.2" data-path="docker-hosting-for-windows.html"><a href="docker-hosting-for-windows.html#windows-10-pro"><i class="fa fa-check"></i><b>2.2.2</b> Windows 10 Pro</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="docker-hosting-for-windows.html"><a href="docker-hosting-for-windows.html#docker-for-windows-settings"><i class="fa fa-check"></i><b>2.3</b> Docker for Windows settings</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="docker-hosting-for-windows.html"><a href="docker-hosting-for-windows.html#shared-drives"><i class="fa fa-check"></i><b>2.3.1</b> Shared drives</a></li>
+<li class="chapter" data-level="2.3.2" data-path="docker-hosting-for-windows.html"><a href="docker-hosting-for-windows.html#kubernetes"><i class="fa fa-check"></i><b>2.3.2</b> Kubernetes</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="docker-hosting-for-windows.html"><a href="docker-hosting-for-windows.html#git-github-and-line-endings"><i class="fa fa-check"></i><b>2.4</b> Git, GitHub and line endings</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="learning-goals-and-use-cases.html"><a href="learning-goals-and-use-cases.html"><i class="fa fa-check"></i><b>3</b> Learning Goals and Use Cases</a><ul>
+<li class="chapter" data-level="3.1" data-path="learning-goals-and-use-cases.html"><a href="learning-goals-and-use-cases.html#context-why-integrate-r-with-databases-using-docker"><i class="fa fa-check"></i><b>3.1</b> Context: Why integrate R with databases using Docker?</a></li>
+<li class="chapter" data-level="3.2" data-path="learning-goals-and-use-cases.html"><a href="learning-goals-and-use-cases.html#learning-goals"><i class="fa fa-check"></i><b>3.2</b> Learning Goals</a></li>
+<li class="chapter" data-level="3.3" data-path="learning-goals-and-use-cases.html"><a href="learning-goals-and-use-cases.html#use-cases"><i class="fa fa-check"></i><b>3.3</b> Use cases</a></li>
+<li class="chapter" data-level="3.4" data-path="learning-goals-and-use-cases.html"><a href="learning-goals-and-use-cases.html#environment"><i class="fa fa-check"></i><b>3.4</b> Environment</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="docker-postgres-and-dvdrental-setup.html"><a href="docker-postgres-and-dvdrental-setup.html"><i class="fa fa-check"></i><b>4</b> Docker, Postgres, and dvdrental setup</a><ul>
+<li class="chapter" data-level="4.1" data-path="docker-postgres-and-dvdrental-setup.html"><a href="docker-postgres-and-dvdrental-setup.html#docker-setup"><i class="fa fa-check"></i><b>4.1</b> Docker setup</a></li>
+<li class="chapter" data-level="4.2" data-path="docker-postgres-and-dvdrental-setup.html"><a href="docker-postgres-and-dvdrental-setup.html#bring-up-postres-in-docker"><i class="fa fa-check"></i><b>4.2</b> Bring up Postres in Docker</a></li>
+<li class="chapter" data-level="4.3" data-path="docker-postgres-and-dvdrental-setup.html"><a href="docker-postgres-and-dvdrental-setup.html#dvd-rental-database-installation"><i class="fa fa-check"></i><b>4.3</b> DVD Rental database installation</a></li>
+<li class="chapter" data-level="4.4" data-path="docker-postgres-and-dvdrental-setup.html"><a href="docker-postgres-and-dvdrental-setup.html#verify-that-the-dvdrental-database-is-running-and-browse-some-tables"><i class="fa fa-check"></i><b>4.4</b> Verify that the dvdrental database is running and browse some tables</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="interacting-with-postgres-from-r.html"><a href="interacting-with-postgres-from-r.html"><i class="fa fa-check"></i><b>5</b> Interacting with Postgres from R</a><ul>
+<li class="chapter" data-level="5.1" data-path="interacting-with-postgres-from-r.html"><a href="interacting-with-postgres-from-r.html#topics-to-cover"><i class="fa fa-check"></i><b>5.1</b> Topics to cover</a></li>
+<li class="chapter" data-level="5.2" data-path="interacting-with-postgres-from-r.html"><a href="interacting-with-postgres-from-r.html#more-topics"><i class="fa fa-check"></i><b>5.2</b> More topics</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="other-resources.html"><a href="other-resources.html"><i class="fa fa-check"></i><b>6</b> Other resources</a><ul>
+<li class="chapter" data-level="6.1" data-path="other-resources.html"><a href="other-resources.html#editing-this-book"><i class="fa fa-check"></i><b>6.1</b> Editing this book</a></li>
+<li class="chapter" data-level="6.2" data-path="other-resources.html"><a href="other-resources.html#docker-alternatives"><i class="fa fa-check"></i><b>6.2</b> Docker alternatives</a></li>
+<li class="chapter" data-level="6.3" data-path="other-resources.html"><a href="other-resources.html#docker-and-r"><i class="fa fa-check"></i><b>6.3</b> Docker and R</a></li>
+<li class="chapter" data-level="6.4" data-path="other-resources.html"><a href="other-resources.html#documentation-docker-and-postgres"><i class="fa fa-check"></i><b>6.4</b> Documentation Docker and Postgres</a></li>
+<li class="chapter" data-level="6.5" data-path="other-resources.html"><a href="other-resources.html#more-resources"><i class="fa fa-check"></i><b>6.5</b> More Resources</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">R, Databases and Docker</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="docker-hosting-for-windows" class="section level1">
+<h1><span class="header-section-number">Chapter 2</span> Docker Hosting for Windows</h1>
+<p>Skip these instructions if your computer has either OSX or a Unix variant.</p>
+<div id="hardware-requirements" class="section level2">
+<h2><span class="header-section-number">2.1</span> Hardware requirements</h2>
+<p>You will need an Intel or AMD processor with 64-bit hardware and the hardware virtualization feature. Most machines you buy today will have that, but older ones may not. You will need to go into the BIOS / firmware and enable the virtualization feature. You will need at least 4 gigabytes of RAM!</p>
+</div>
+<div id="software-requirements" class="section level2">
+<h2><span class="header-section-number">2.2</span> Software requirements</h2>
+<p>You will need Windows 7 64-bit or later. If you can afford it, I highly recommend upgrading to Windows 10 Pro.</p>
+<div id="windows-7-8-8.1-and-windows-10-home-64-bit" class="section level3">
+<h3><span class="header-section-number">2.2.1</span> Windows 7, 8, 8.1 and Windows 10 Home (64 bit)</h3>
+<p>Install Docker Toolbox. The instructions are here: <a href="https://docs.docker.com/toolbox/toolbox_install_windows/" class="uri">https://docs.docker.com/toolbox/toolbox_install_windows/</a>. Make sure you try the test cases and they work!</p>
+</div>
+<div id="windows-10-pro" class="section level3">
+<h3><span class="header-section-number">2.2.2</span> Windows 10 Pro</h3>
+<p>Install Docker for Windows <em>stable</em>. The instructions are here: <a href="https://docs.docker.com/docker-for-windows/install/#start-docker-for-windows" class="uri">https://docs.docker.com/docker-for-windows/install/#start-docker-for-windows</a>. Again, make sure you try the test cases and they work.</p>
+</div>
+</div>
+<div id="docker-for-windows-settings" class="section level2">
+<h2><span class="header-section-number">2.3</span> Docker for Windows settings</h2>
+<div id="shared-drives" class="section level3">
+<h3><span class="header-section-number">2.3.1</span> Shared drives</h3>
+<p>If you’re going to mount host files into container filesystems, you need to set up shared drives. Open the Docker settings dialog and select <code>Shared Drives</code>. Check the drives you want to share. In this screenshot, the <code>D:</code> drive is my 1 terabyte hard drive.</p>
+<p><img src="screenshots/2018-08-26_15_16_51-Shared_Drives.png" width="90%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="kubernetes" class="section level3">
+<h3><span class="header-section-number">2.3.2</span> Kubernetes</h3>
+<p>Kubernetes is a container orchestration / cloud management package that’s a major DevOps tool. It’s heavily supported by Red Hat and Google, and as a result is becoming a required skill for DevOps.</p>
+<p>However, it’s overkill for this project at the moment, and it doesn’t seem to be compatible with the Docker Compose we’re using. So you should make sure it’s not enabled.</p>
+<p>Go to the <code>Kubernetes</code> dialog and make sure the <code>Enable Kubernetes</code> checkbox is cleared.</p>
+<p><img src="screenshots/2018-08-26_15_26_22-Kubernetes.png" width="90%" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="git-github-and-line-endings" class="section level2">
+<h2><span class="header-section-number">2.4</span> Git, GitHub and line endings</h2>
+<p>Git was originally developed for Linux - in fact, it was created by Linus Torvalds to manage hundreds of different versions of the Linux kernel on different machines all around the world. As usage has grown, it’s achieved a huge following and is the version control system used by most large open source projects.</p>
+<p>If you’re on Windows, there are some things about Git and GitHub you need to watch. First of all, there are quite a few tools for running Git on Windows, but the RStudio default and recommended one is Git for Windows (<a href="https://git-scm.com/download/win" class="uri">https://git-scm.com/download/win</a>).</p>
+<p>By default, text files on Linux end with a single linefeed (<code>\n</code>) character. But on Windows, text files end with a carriage return and a line feed (<code>\r\n</code>). See <a href="https://en.wikipedia.org/wiki/Newline" class="uri">https://en.wikipedia.org/wiki/Newline</a> for the gory details.</p>
+<p>Git defaults to checking files out in the native mode. So if you’re on Linux, a text file will show up with the Linux convention, and if you’re on Windows, it will show up with the Windows convention.</p>
+<p>Most of the time this doesn’t cause any problems. But Docker containers usually run Linux, and if you have files from a repository on Windows that you’ve sent to the container, the container may malfunction or give weird results.</p>
+<p>In particular, executable <code>sh</code> or <code>bash</code> scripts will fail in a Docker container if they have Windows line endings. You may see an error message with <code>\r</code> in it, which means the shell saw the carriage return (<code>\r</code>) and gave up. But often you’ll see no hint at all what the problem was.</p>
+<p>So you need a way to tell Git that some files need to be checked out with Linux line endings. See <a href="https://help.github.com/articles/dealing-with-line-endings/" class="uri">https://help.github.com/articles/dealing-with-line-endings/</a> for the details. Summary:</p>
+<ol style="list-style-type: decimal">
+<li>You’ll need a <code>.gitattributes</code> file in the root of the repository.</li>
+<li>In that file, all text files (scripts, program source, data, etc.) that are destined for a Docker container will need to have the designator <code>&lt;spec&gt; text eol=lf</code>, where <code>&lt;spec&gt;</code> is the file name specifier, for example, <code>*.sh</code>.</li>
+</ol>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="learning-goals-and-use-cases.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/smithjd/sql-pet/edit/master/r-database-docker/02-docker_hosting_for_windows.Rmd",
+"text": "Edit"
+},
+"download": ["r-database-docker.pdf"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

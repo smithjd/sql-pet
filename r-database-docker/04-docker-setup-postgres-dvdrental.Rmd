@@ -1,0 +1,35 @@
+# Docker, Postgres, and dvdrental setup
+
+(the links may not be working correctly yet...)
+
+## Docker setup
+
+Verify that Docker is up and running.
+
+## Bring up Postres in Docker
+
+There's a lot to learn about Docker and many uses for it, here we just cut to the chase. 
+
+* Use [./src/1_test_postgres-b.R](./src/1_test_postgres-b.R) to demonstrate that you have a persistent database by uploading `mtcars` to Postgres, then stopping the Docker container, restarting it, and finally determining that `mtcars` is still there. (Note that if you are running Postgres locally, you'll have to close it down to avoid a port conflict.) See the results here: [./src/1_test_postgres-b.md](./src/1_test_postgres-b.md)
+
+**Note:** when running the scripts in this repo, there's a difference between "sourcing" a file and "source with echo".  Use "source with echo":
+
+ ![](./screenshots/rstudio-source-with-echo.png)
+
+## DVD Rental database installation
+
+* Download the backup file for the dvdrental test database and convert it to a .tar file with:
+
+   [./src/2_get_dvdrental-zipfile.Rmd](./src/2_get_dvdrental-zipfile.Rmd). See the results here: [./src/2_get_dvdrental-zipfile.md](./src/2_get_dvdrental-zipfile.md)
+
+* Create the dvdrental database in Postgres and restore the data in the .tar file with:
+
+   [./src/3_install_dvdrental-in-postgres-b.Rmd](./src/3_install_dvdrental-in-postgres-b.Rmd).  See the results here: [./src/3_install_dvdrental-in-postgres-b.md](./src/3_install_dvdrental-in-postgres-b.md)
+
+## Verify that the dvdrental database is running and browse some tables
+
+* Explore the dvdrental database:
+
+   [./src/4_test_dvdrental-database-b.Rmd](./src/4_test_dvdrental-database-b.Rmd) See the results here: [./src/4_test_dvdrental-database-b.md](./src/4_test_dvdrental-database-b.md)
+
+Need to incorporate more of the [ideas that Aaron Makubuya demonstrated](https://github.com/Cascadia-R/Using_R_With_Databases/blob/master/Intro_To_R_With_Databases.Rmd) at the Cascadia R Conf.
