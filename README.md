@@ -1,16 +1,10 @@
-SQL Pet Tutorial
-=======
+# SQL Pet Tutorial
 
-<<<<<<< HEAD
-# Next Meeting 9/15 @10am
+# Next Meeting 9/15 10:00 am - Noon
+Location: CLSB, 2730 SW Moody Ave, Portland, OR 97201 (1st floor lobby of the Collaborative Life Sciences Building)
+## Agenda items go in the [project kanban](https://github.com/smithjd/sql-pet/projects/1).
 
-### Future Meeting 9/29
-=======
-# Next Meeting 9/22 @10:00am
->>>>>>> 8ed43be8ed8c7ecc991894b2ef512e844ff64702
-Location: SW 2730 SW Moody Ave, Portland, OR 97201 
-
-## Agenda items go here: https://github.com/smithjd/sql-pet/projects/1
+Future Meeting 9/29
 
 # Documentation
 
