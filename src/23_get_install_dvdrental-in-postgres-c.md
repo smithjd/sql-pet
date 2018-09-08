@@ -28,7 +28,10 @@ system2("docker", "version", stdout = TRUE, stderr = TRUE)
     ## [15] "  Git commit:       e68fc7a"                    
     ## [16] "  Built:            Tue Aug 21 17:29:02 2018"   
     ## [17] "  OS/Arch:          linux/amd64"                
-    ## [18] "  Experimental:     true"
+    ## [18] "  Experimental:     true"                       
+    ## [19] " Kubernetes:"                                   
+    ## [20] "  Version:          v1.10.3"                    
+    ## [21] "  StackAPI:         v1beta2"
 
 ``` r
 # build an image that derives from postgres:9.4, defined in dvdrental.Dockerfile, that is set up to restore and load the dvdrental db on startup
@@ -36,17 +39,14 @@ system2("docker", "version", stdout = TRUE, stderr = TRUE)
 system2("docker", "build -t postgres-dvdrental -f dvdrental.Dockerfile .", stdout = TRUE, stderr = TRUE)
 ```
 
-    ##  [1] "Sending build context to Docker daemon   25.6kB\r\r"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
-    ##  [2] "Step 1/3 : FROM postgres:9.4"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
-    ##  [3] " ---> 778c7dfbeb5d"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
-    ##  [4] "Step 2/3 : WORKDIR /tmp"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
-    ##  [5] " ---> Using cache"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
-    ##  [6] " ---> 9f4810c5dfe0"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
-    ##  [7] "Step 3/3 : RUN apt-get -qq update && apt-get install -y -qq curl zip  > /dev/null 2>&1 &&   curl -Os http://www.postgresqltutorial.com/wp-content/uploads/2017/10/dvdrental.zip &&   unzip dvdrental.zip &&   rm dvdrental.zip &&   chmod ugo+w dvdrental.tar &&   chown postgres dvdrental.tar &&   echo '#!/bin/bash' > /docker-entrypoint-initdb.d/dvdrental.sh &&   echo 'psql -U postgres -c \"CREATE DATABASE dvdrental;\"' >> /docker-entrypoint-initdb.d/dvdrental.sh &&   echo 'pg_restore -v -U postgres -d dvdrental /tmp/dvdrental.tar' >> /docker-entrypoint-initdb.d/dvdrental.sh &&   echo 'rm -f /tmp/dvdrental.tar' >> /docker-entrypoint-initdb.d/dvdrental.sh &&   chmod u+x /docker-entrypoint-initdb.d/dvdrental.sh &&   apt-get remove -y curl zip"
-    ##  [8] " ---> Using cache"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
-    ##  [9] " ---> 38315a3acca7"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
-    ## [10] "Successfully built 38315a3acca7"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
-    ## [11] "Successfully tagged postgres-dvdrental:latest"
+    ## Warning in system2("docker", "build -t postgres-dvdrental -f
+    ## dvdrental.Dockerfile .", : running command ''docker' build -t postgres-
+    ## dvdrental -f dvdrental.Dockerfile . 2>&1' had status 1
+
+    ## [1] "Sending build context to Docker daemon  27.65kB\r\r"                                     
+    ## [2] "Error response from daemon: Dockerfile parse error line 15: unknown instruction: APT-GET"
+    ## attr(,"status")
+    ## [1] 1
 
 ``` r
 # run docker to bring up postgres.  The first time it runs it will take a minute to create the Postgres environment.
@@ -63,7 +63,7 @@ docker_cmd <- paste0(
 system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
-    ## [1] "de13fc3c7038daf1342bdae56eb70224a68edd4093f698a302cbd3cc707a8215"
+    ## [1] "baf6450d3ddd2acd23576dacc7e7c74032d27e42c27ae805bae8fb536c598c55"
 
 now connect to the database with R
 
@@ -83,15 +83,15 @@ dbListTables(con)
 
     ##  [1] "actor_info"                 "customer_list"             
     ##  [3] "film_list"                  "nicer_but_slower_film_list"
-    ##  [5] "sales_by_film_category"     "sales_by_store"            
-    ##  [7] "staff"                      "inventory"                 
-    ##  [9] "country"                    "store"                     
-    ## [11] "staff_list"                 "language"                  
-    ## [13] "actor"                      "category"                  
-    ## [15] "city"                       "rental"                    
-    ## [17] "film_actor"                 "address"                   
-    ## [19] "film_category"              "film"                      
-    ## [21] "customer"                   "payment"
+    ##  [5] "sales_by_film_category"     "staff"                     
+    ##  [7] "sales_by_store"             "staff_list"                
+    ##  [9] "category"                   "film_category"             
+    ## [11] "country"                    "actor"                     
+    ## [13] "language"                   "inventory"                 
+    ## [15] "payment"                    "rental"                    
+    ## [17] "city"                       "store"                     
+    ## [19] "film"                       "address"                   
+    ## [21] "film_actor"                 "customer"
 
 ``` r
 dbListFields(con, "rental")
@@ -141,15 +141,15 @@ dbListTables(con)
 
     ##  [1] "actor_info"                 "customer_list"             
     ##  [3] "film_list"                  "nicer_but_slower_film_list"
-    ##  [5] "sales_by_film_category"     "sales_by_store"            
-    ##  [7] "staff"                      "inventory"                 
-    ##  [9] "country"                    "store"                     
-    ## [11] "staff_list"                 "language"                  
-    ## [13] "actor"                      "category"                  
-    ## [15] "city"                       "rental"                    
-    ## [17] "film_actor"                 "address"                   
-    ## [19] "film_category"              "film"                      
-    ## [21] "customer"                   "payment"
+    ##  [5] "sales_by_film_category"     "staff"                     
+    ##  [7] "sales_by_store"             "staff_list"                
+    ##  [9] "category"                   "film_category"             
+    ## [11] "country"                    "actor"                     
+    ## [13] "language"                   "inventory"                 
+    ## [15] "payment"                    "rental"                    
+    ## [17] "city"                       "store"                     
+    ## [19] "film"                       "address"                   
+    ## [21] "film_actor"                 "customer"
 
 ``` r
 dbListFields(con, "rental")
@@ -178,11 +178,18 @@ system2('docker', 'ps -a',
         stdout = TRUE, stderr = TRUE)
 ```
 
-    ## [1] "CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS                    NAMES"                    
-    ## [2] "de13fc3c7038        postgres-dvdrental   \"docker-entrypoint.s…\"   9 seconds ago       Exited (0) Less than a second ago                            pet"                    
-    ## [3] "a47c64e6c3ac        61205f6444f9         \"/bin/sh -c 'cd /tmp…\"   4 days ago          Exited (1) 4 days ago                                        affectionate_heisenberg"
-    ## [4] "386259e955e6        fdc37809b564         \"/bin/sh -c 'rm /opt…\"   5 days ago          Exited (1) 5 days ago                                        elegant_wright"         
-    ## [5] "5cc9750838cc        mariadb              \"docker-entrypoint.s…\"   6 weeks ago         Up 3 hours                          0.0.0.0:3306->3306/tcp   mariadb"
+    ##  [1] "CONTAINER ID        IMAGE                                       COMMAND                  CREATED             STATUS                              PORTS               NAMES"                                                                                                        
+    ##  [2] "baf6450d3ddd        postgres-dvdrental                          \"docker-entrypoint.s…\"   9 seconds ago       Exited (0) Less than a second ago                       pet"                                                                                                        
+    ##  [3] "52eb7a0975ca        ubuntu                                      \"/bin/bash\"              43 minutes ago      Up 43 minutes                                           k8s_ubuntu_ubuntu-6c497666b8-grrfp_default_d9b67919-b390-11e8-b7f8-025000000001_0"                          
+    ##  [4] "54ca601cecf2        scottcame/shiny                             \"/opt/shiny-server/b…\"   About an hour ago   Up About an hour                                        k8s_shiny_shiny-697bb66bb8-sxl6s_default_cb12d035-b38f-11e8-b7f8-025000000001_0"                            
+    ##  [5] "a76c123722ca        scottcame/shiny                             \"/opt/shiny-server/b…\"   About an hour ago   Up About an hour                                        k8s_shiny_shiny-697bb66bb8-92ddd_default_cb11afe2-b38f-11e8-b7f8-025000000001_0"                            
+    ##  [6] "32c5b3484ed1        scottcame/shiny                             \"/opt/shiny-server/b…\"   About an hour ago   Up About an hour                                        k8s_shiny_shiny-697bb66bb8-ldd9q_default_cb12fa39-b38f-11e8-b7f8-025000000001_0"                            
+    ##  [7] "b102a13735c0        scottcame/shiny                             \"/opt/shiny-server/b…\"   About an hour ago   Up About an hour                                        k8s_shiny_shiny-697bb66bb8-99dt9_default_6def24a3-b38e-11e8-b7f8-025000000001_0"                            
+    ##  [8] "979d8caf518e        8fafd8af70e9                                \"/bin/sh -c 'node se…\"   2 hours ago         Up 2 hours                                              k8s_kubernetes-bootcamp_kubernetes-bootcamp-5c69669756-d2448_default_ae918806-b385-11e8-b7f8-025000000001_0"
+    ##  [9] "713add2a3337        gcr.io/google-samples/kubernetes-bootcamp   \"/bin/sh -c 'node se…\"   3 hours ago         Up 3 hours                                              k8s_kubernetes-bootcamp_kubernetes-bootcamp-5c69669756-shpm4_default_c4747d18-b379-11e8-b7f8-025000000001_0"
+    ## [10] "a47c64e6c3ac        61205f6444f9                                \"/bin/sh -c 'cd /tmp…\"   9 days ago          Exited (1) 9 days ago                                   affectionate_heisenberg"                                                                                    
+    ## [11] "386259e955e6        fdc37809b564                                \"/bin/sh -c 'rm /opt…\"   10 days ago         Exited (1) 10 days ago                                  elegant_wright"                                                                                             
+    ## [12] "5cc9750838cc        mariadb                                     \"docker-entrypoint.s…\"   7 weeks ago         Up 5 days                                               mariadb"
 
 ``` r
 #
