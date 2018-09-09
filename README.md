@@ -1,5 +1,4 @@
-SQL Pet Tutorial
-=======
+# SQL Pet Tutorial
 
 # Next Meeting 9/15 @10am
 Location: TBA, but could be SW 2730 SW Moody Ave, Portland, OR 97201 
