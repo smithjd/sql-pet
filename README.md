@@ -25,7 +25,7 @@ Do these items have a place?
 
   + To run the Docker container that contains Postgres, you can enter this from a command prompt:
 
-    `$ docker exec -ti sql-pet_postgres9_1 sh`
+    `$ docker exec -ti pet sh`
 
   + To exit Docker enter:
 
