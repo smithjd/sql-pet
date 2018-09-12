@@ -1,11 +1,12 @@
 #!/bin/bash
 
-# this script is run by the postgres docker container as it starts up
+# This script is run by the postgres docker container as it starts up.
 # ...it runs as soon as the database server is available, but before it's available to accept connections
 
-# create the dvdrental database
+# Use the POstgres command-line utility to create the dvdrental database in postgres.
 psql -U postgres -c "CREATE DATABASE dvdrental;"
-# restore the database from the dumpfile
+# Restore the database from the dumpfile.
 pg_restore -v -U postgres -d dvdrental /tmp/dvdrental.tar
-# remove the dumpfile (note that this does not save space in the image filesystem, but at least the file isn't cluttering the /tmp directory...)
+# Remove the dumpfile (note that this does not save space in the image filesystem,
+#   it just removes clutter from /tmp directory...).
 rm -f /tmp/dvdrental.tar
