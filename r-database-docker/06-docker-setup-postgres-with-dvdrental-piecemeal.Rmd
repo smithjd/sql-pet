@@ -35,7 +35,7 @@ system2("docker", "version", stdout = TRUE, stderr = TRUE)
 Remove the `pet` container if it exists (e.g., from a prior run)
 ```{r}
 if (system2("docker", "ps -a", stdout = TRUE) %>% 
-   grepl(x = ., pattern = 'postgres-dvdrental.+pet') %>% 
+   grepl(x = ., pattern = 'pet') %>% 
    any()) {
      system2("docker", "rm -f pet")
 }
@@ -121,7 +121,7 @@ con <- DBI::dbConnect(RPostgres::Postgres(),
                       password = "postgres",
                       dbname = "dvdrental" ) # note that the dbname is specified
 
-dbListTables(con)
+glimpse(dbReadTable(con, "rental"))
 
 ```
 
@@ -132,19 +132,13 @@ system2('docker', 'stop pet',
 
 # show that the container still exists even though it's not running
 psout <- system2("docker", "ps -a", stdout = TRUE)
-psout[grepl(x = psout, pattern = 'postgres-dvdrental.+pet')]
+psout[grepl(x = psout, pattern = 'pet')]
 ```
 
-But for the moment, let's remove it.
-```{r}
-system2('docker', 'rm pet',
-        stdout = TRUE, stderr = TRUE)
-
-```
 Next time, you can just use this command to start the container:
 
 `system2("docker",  "start pet", stdout = TRUE, stderr = TRUE)`
 
-And once stopped, the container can be removed with:
+And after disconnecting from it the container can be completely removed with:
 
-`system2("docker",  "rm pet", stdout = TRUE, stderr = TRUE)`
+`system2("docker",  "rm pet -f", stdout = TRUE, stderr = TRUE)`

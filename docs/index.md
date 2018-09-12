@@ -1,6 +1,6 @@
 ---
 title: "R, Databases and Docker"
-author: "M. Edward (Ed) Borasky, editor"
+author: "Dipti Muni, Ian Frantz, John David Smith, M. Edward (Ed) Borasky,  Scott Case, and Sophie Yang"
 date: "2018-09-12"
 site: bookdown::bookdown_site
 documentclass: book

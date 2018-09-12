@@ -23,13 +23,13 @@ system2("docker", "version", stdout = TRUE, stderr = TRUE)
 Remove the `pet` container if it exists (e.g., from a prior run)
 ```{r}
 if (system2("docker", "ps -a", stdout = TRUE) %>% 
-   grepl(x = ., pattern = 'postgres-dvdrental.+pet') %>% 
+   grepl(x = ., pattern = 'pet') %>% 
    any()) {
      system2("docker", "rm -f pet")
 }
 ```
 ## Build the Docker Image
-Build an image that derives from postgres:10, defined in `dvdrental.Dockerfile`, that is set up to restore and load the dvdrental db on startup.  The `dvdrental.Dockerfile` is shown and discussed below.  
+Build an image that derives from postgres:10, defined in `dvdrental.Dockerfile`, that is set up to restore and load the dvdrental db on startup.  The [dvdrental.Dockerfile](./dvdrental.Dockerfile) is discussed below.  
 ```{r}
 
 system2("docker", "build -t postgres-dvdrental -f dvdrental.Dockerfile .", stdout = TRUE, stderr = TRUE)
@@ -76,7 +76,7 @@ dbListTables(con)
 dbListFields(con, "rental")
 dbDisconnect(con)
 
-Sys.sleep(1) # Can take a moment to disconnect.
+Sys.sleep(2) # Can take a moment to disconnect.
 ```
 ## Stop and start to demonstrate persistence
 
@@ -85,14 +85,14 @@ Stop the container
 system2('docker', 'stop pet',
         stdout = TRUE, stderr = TRUE)
 
-Sys.sleep(2) # can take a moment for Docker to stop the container.
+Sys.sleep(3) # can take a moment for Docker to stop the container.
 ```
 Restart the container and verify that the dvdrental tables are still there
 ```{r}
 
 system2("docker",  "start pet", stdout = TRUE, stderr = TRUE)
 
-Sys.sleep(2) # need to wait for Docker & Postgres to come up before connecting.
+Sys.sleep(4) # need to wait for Docker & Postgres to come up before connecting.
 
 con <- DBI::dbConnect(RPostgres::Postgres(),
                       host = "localhost",
@@ -112,10 +112,7 @@ system2('docker', 'stop pet',
 
 # show that the container still exists even though it's not running
 psout <- system2("docker", "ps -a", stdout = TRUE)
-psout[grepl(x = psout, pattern = 'postgres-dvdrental.+pet')]
-
-system2('docker', 'rm pet',
-        stdout = TRUE, stderr = TRUE)
+psout[grepl(x = psout, pattern = 'pet')]
 
 ```
 Next time, you can just use this command to start the container:

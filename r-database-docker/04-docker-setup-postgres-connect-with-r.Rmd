@@ -22,10 +22,11 @@ system2("docker", "version", stdout = TRUE, stderr = TRUE)
 The convention we use in this book is to assemble a command with `paste0` so that the parts of the command can be specified separately.
 ```{r, eval=TRUE, echo=TRUE}
 docker_cmd <- paste0(
-  "run -d --name temporary-postgres --publish 5432:5432 ",
+  "run -d --name cattle --publish 5432:5432 ",
   " postgres:10"
 )
 docker_cmd
+# Naming containers `cattle` for throw-aways and `pet` for ones we treasure and keep around.  :-)
 ```
 
 Submit the command constructed above:
@@ -82,8 +83,8 @@ knitr::kable(head(mtcars_df))
 Afterwards, always disconnect from the DBMS, stop the docker container and (optionally) remove it.
 ```{r}
 dbDisconnect(con)
-system2("docker", "stop temporary-postgres", stdout = TRUE, stderr = TRUE)
-system2("docker", "rm temporary-postgres", stdout = TRUE, stderr = TRUE)
+system2("docker", "stop cattle", stdout = TRUE, stderr = TRUE)
+system2("docker", "rm cattle", stdout = TRUE, stderr = TRUE)
 ```
 
-If we `stop` the docker container but don't remove it (with the `rm temporary-postgres` command), the container will persist and we can start it up with `start temporary-postgres`.  In that case, `mtcars` would still be there and we could download it again.  Since we have now removed the `temporary-postgres` container, the whole database has been deleted.  (There are enough copies of `mtcars` in the world, so no great loss.)
+If we `stop` the docker container but don't remove it (with the `rm cattle` command), the container will persist and we can start it up with `start cattle`.  In that case, `mtcars` would still be there and we could download it again.  Since we have now removed the `cattle` container, the whole database has been deleted.  (There are enough copies of `mtcars` in the world, so no great loss.)

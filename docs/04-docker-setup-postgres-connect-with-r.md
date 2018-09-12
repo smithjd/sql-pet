@@ -41,14 +41,18 @@ The convention we use in this book is to assemble a command with `paste0` so tha
 
 ```r
 docker_cmd <- paste0(
-  "run -d --name temporary-postgres --publish 5432:5432 ",
+  "run -d --name cattle --publish 5432:5432 ",
   " postgres:10"
 )
 docker_cmd
 ```
 
 ```
-## [1] "run -d --name temporary-postgres --publish 5432:5432  postgres:10"
+## [1] "run -d --name cattle --publish 5432:5432  postgres:10"
+```
+
+```r
+# Naming containers `cattle` for throw-aways and `pet` for ones we treasure and keep around.  :-)
 ```
 
 Submit the command constructed above:
@@ -58,7 +62,16 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "cfcf06336e9f7d067346d3535830cd7e7fc285c5ee3ad83409c219ece10e3e50"
+## Warning in system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE):
+## running command ''docker' run -d --name cattle --publish 5432:5432
+## postgres:10 2>&1' had status 125
+```
+
+```
+## [1] "0cd21b2004ee422bc45568f8d6ea81194106d5824f23afdd605fdd03f0f944f2"                                                                                                                                                                   
+## [2] "docker: Error response from daemon: driver failed programming external connectivity on endpoint cattle (71402ed1a3b8599eec6ca3158239fe0057c922ab9852410bef663d0460efd7a4): Bind for 0.0.0.0:5432 failed: port is already allocated."
+## attr(,"status")
+## [1] 125
 ```
 Docker returns a long string of numbers.  If you are running this command for the first time, Docker is downloading the Postgres image and it takes a bit of time.
 
@@ -69,8 +82,8 @@ system2("docker", "ps", stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED                  STATUS                  PORTS                    NAMES"               
-## [2] "cfcf06336e9f        postgres:10         \"docker-entrypoint.s…\"   Less than a second ago   Up Less than a second   0.0.0.0:5432->5432/tcp   temporary-postgres"
+## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES"
+## [2] "d28b04fbfa2b        postgres:10         \"docker-entrypoint.s…\"   34 seconds ago      Up 7 seconds        0.0.0.0:5432->5432/tcp   pet"
 ```
 
 Create a connection to Postgres after waiting 3 seconds so that Docker has time to do its thing.
@@ -155,19 +168,19 @@ Afterwards, always disconnect from the DBMS, stop the docker container and (opti
 
 ```r
 dbDisconnect(con)
-system2("docker", "stop temporary-postgres", stdout = TRUE, stderr = TRUE)
+system2("docker", "stop cattle", stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "temporary-postgres"
+## [1] "cattle"
 ```
 
 ```r
-system2("docker", "rm temporary-postgres", stdout = TRUE, stderr = TRUE)
+system2("docker", "rm cattle", stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "temporary-postgres"
+## [1] "cattle"
 ```
 
-If we `stop` the docker container but don't remove it (with the `rm temporary-postgres` command), the container will persist and we can start it up with `start temporary-postgres`.  In that case, `mtcars` would still be there and we could download it again.  Since we have now removed the `temporary-postgres` container, the whole database has been deleted.  (There are enough copies of `mtcars` in the world, so no great loss.)
+If we `stop` the docker container but don't remove it (with the `rm cattle` command), the container will persist and we can start it up with `start cattle`.  In that case, `mtcars` would still be there and we could download it again.  Since we have now removed the `cattle` container, the whole database has been deleted.  (There are enough copies of `mtcars` in the world, so no great loss.)
