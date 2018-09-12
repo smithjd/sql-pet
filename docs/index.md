@@ -1,7 +1,7 @@
 ---
 title: "R, Databases and Docker"
 author: "M. Edward (Ed) Borasky, editor"
-date: "2018-09-11"
+date: "2018-09-12"
 site: bookdown::bookdown_site
 documentclass: book
 bibliography: [book.bib, packages.bib]

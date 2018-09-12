@@ -37,7 +37,6 @@ Remove the `pet` container if it exists (e.g., from a prior run)
 if (system2("docker", "ps -a", stdout = TRUE) %>% 
    grepl(x = ., pattern = 'postgres-dvdrental.+pet') %>% 
    any()) {
-     system2("docker", "stop pet")
      system2("docker", "rm -f pet")
 }
 ```
@@ -87,7 +86,7 @@ file.remove(here("dvdrental.tar")) # the tar file is no longer needed.
 Use the DBI package to connect to Postgres.  But first, wait for Docker & Postgres to come up before connecting.
 ```{r}
 
-Sys.sleep(2) 
+Sys.sleep(4) 
 
 con <- DBI::dbConnect(RPostgres::Postgres(),
                       host = "localhost",

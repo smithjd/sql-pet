@@ -35,6 +35,16 @@ system2("docker", "version", stdout = TRUE, stderr = TRUE)
 ## [18] "  Experimental:     true"
 ```
 
+## Clean up if appropriate
+Remove the `pet` container if it exists (e.g., from a prior run)
+
+```r
+if (system2("docker", "ps -a", stdout = TRUE) %>% 
+   grepl(x = ., pattern = 'postgres-dvdrental.+pet') %>% 
+   any()) {
+     system2("docker", "rm -f pet")
+}
+```
 ## Build the Docker Image
 Build an image that derives from postgres:10, defined in `dvdrental.Dockerfile`, that is set up to restore and load the dvdrental db on startup.  The `dvdrental.Dockerfile` is shown and discussed below.  
 
@@ -43,7 +53,7 @@ system2("docker", "build -t postgres-dvdrental -f dvdrental.Dockerfile .", stdou
 ```
 
 ```
-##  [1] "Sending build context to Docker daemon  613.4kB\r\r"                                                                                                                                                                                                                                                                                                                                           
+##  [1] "Sending build context to Docker daemon  540.7kB\r\r"                                                                                                                                                                                                                                                                                                                                           
 ##  [2] "Step 1/4 : FROM postgres:10"                                                                                                                                                                                                                                                                                                                                                                   
 ##  [3] " ---> ac25c2bac3c4"                                                                                                                                                                                                                                                                                                                                                                            
 ##  [4] "Step 2/4 : WORKDIR /tmp"                                                                                                                                                                                                                                                                                                                                                                       
@@ -59,17 +69,6 @@ system2("docker", "build -t postgres-dvdrental -f dvdrental.Dockerfile .", stdou
 ## [14] "Successfully tagged postgres-dvdrental:latest"
 ```
 
-## Clean up if appropriate
-Remove the `pet` container if it exists (e.g., from a prior run)
-
-```r
-if (system2("docker", "ps -a", stdout = TRUE) %>% 
-   grepl(x = ., pattern = 'postgres-dvdrental.+pet') %>% 
-   any()) {
-     system2("docker", "stop pet")
-     system2("docker", "rm -f pet")
-}
-```
 ## Run the Docker Image
 Run docker to bring up postgres.  The first time it runs it will take a minute to create the Postgres environment.  There are two important parts to this that may not be obvious:
 
@@ -92,14 +91,14 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "1d634ba5a84227c5b2a722be3e7fce7c66e1e84c6fab6865cdb5e1248610b894"
+## [1] "66928eddb1ac56da90f3a873459c09444606f4032c02197e0dc1e6d9c1e44852"
 ```
 ## Connect to Postgres with R
 
 Use the DBI package to connect to Postgres.  But first, wait for Docker & Postgres to come up before connecting.
 
 ```r
-Sys.sleep(2) 
+Sys.sleep(4) 
 
 con <- DBI::dbConnect(RPostgres::Postgres(),
                       host = "localhost",
@@ -208,7 +207,7 @@ psout[grepl(x = psout, pattern = 'postgres-dvdrental.+pet')]
 ```
 
 ```
-## [1] "1d634ba5a842        postgres-dvdrental   \"docker-entrypoint.s…\"   20 seconds ago      Exited (137) Less than a second ago                       pet"
+## [1] "66928eddb1ac        postgres-dvdrental   \"docker-entrypoint.s…\"   22 seconds ago      Exited (137) Less than a second ago                       pet"
 ```
 
 ```r
