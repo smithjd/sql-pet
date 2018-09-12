@@ -14,6 +14,10 @@
 
 * dplyr queries
 * examining dplyr queries (show_query on the R side v EXPLAIN on the Postges side)
+* R tools like glimpse, skimr, kable.
+* Tutorials like: https://suzan.rbind.io/tags/dplyr/ 
+* Benjamin S. Baumer, A Grammar for Reproducible and Painless Extract-Transform-Load Operations on Medium Data: https://arxiv.org/pdf/1708.07073 
+
 
 ### Subset: only retrieve what you need
 
