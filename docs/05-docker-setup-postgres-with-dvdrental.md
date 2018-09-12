@@ -40,20 +40,20 @@ Remove the `pet` container if it exists (e.g., from a prior run)
 
 ```r
 if (system2("docker", "ps -a", stdout = TRUE) %>% 
-   grepl(x = ., pattern = 'postgres-dvdrental.+pet') %>% 
+   grepl(x = ., pattern = 'pet') %>% 
    any()) {
      system2("docker", "rm -f pet")
 }
 ```
 ## Build the Docker Image
-Build an image that derives from postgres:10, defined in `dvdrental.Dockerfile`, that is set up to restore and load the dvdrental db on startup.  The `dvdrental.Dockerfile` is shown and discussed below.  
+Build an image that derives from postgres:10, defined in `dvdrental.Dockerfile`, that is set up to restore and load the dvdrental db on startup.  The [dvdrental.Dockerfile](./dvdrental.Dockerfile) is discussed below.  
 
 ```r
 system2("docker", "build -t postgres-dvdrental -f dvdrental.Dockerfile .", stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-##  [1] "Sending build context to Docker daemon  540.7kB\r\r"                                                                                                                                                                                                                                                                                                                                           
+##  [1] "Sending build context to Docker daemon  572.9kB\r\r"                                                                                                                                                                                                                                                                                                                                           
 ##  [2] "Step 1/4 : FROM postgres:10"                                                                                                                                                                                                                                                                                                                                                                   
 ##  [3] " ---> ac25c2bac3c4"                                                                                                                                                                                                                                                                                                                                                                            
 ##  [4] "Step 2/4 : WORKDIR /tmp"                                                                                                                                                                                                                                                                                                                                                                       
@@ -91,7 +91,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "66928eddb1ac56da90f3a873459c09444606f4032c02197e0dc1e6d9c1e44852"
+## [1] "424f7d9f0031a3404e0dc8eb1c209dad09354ae926e32dee8879f9719c269fbb"
 ```
 ## Connect to Postgres with R
 
@@ -136,7 +136,7 @@ dbListFields(con, "rental")
 ```r
 dbDisconnect(con)
 
-Sys.sleep(1) # Can take a moment to disconnect.
+Sys.sleep(2) # Can take a moment to disconnect.
 ```
 ## Stop and start to demonstrate persistence
 
@@ -152,7 +152,7 @@ system2('docker', 'stop pet',
 ```
 
 ```r
-Sys.sleep(2) # can take a moment for Docker to stop the container.
+Sys.sleep(3) # can take a moment for Docker to stop the container.
 ```
 Restart the container and verify that the dvdrental tables are still there
 
@@ -165,7 +165,7 @@ system2("docker",  "start pet", stdout = TRUE, stderr = TRUE)
 ```
 
 ```r
-Sys.sleep(2) # need to wait for Docker & Postgres to come up before connecting.
+Sys.sleep(4) # need to wait for Docker & Postgres to come up before connecting.
 
 con <- DBI::dbConnect(RPostgres::Postgres(),
                       host = "localhost",
@@ -203,20 +203,11 @@ system2('docker', 'stop pet',
 ```r
 # show that the container still exists even though it's not running
 psout <- system2("docker", "ps -a", stdout = TRUE)
-psout[grepl(x = psout, pattern = 'postgres-dvdrental.+pet')]
+psout[grepl(x = psout, pattern = 'pet')]
 ```
 
 ```
-## [1] "66928eddb1ac        postgres-dvdrental   \"docker-entrypoint.s…\"   22 seconds ago      Exited (137) Less than a second ago                       pet"
-```
-
-```r
-system2('docker', 'rm pet',
-        stdout = TRUE, stderr = TRUE)
-```
-
-```
-## [1] "pet"
+## [1] "424f7d9f0031        postgres-dvdrental   \"docker-entrypoint.s…\"   25 seconds ago      Exited (137) Less than a second ago                       pet"
 ```
 Next time, you can just use this command to start the container:
 

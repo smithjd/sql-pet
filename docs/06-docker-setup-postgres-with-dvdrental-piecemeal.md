@@ -74,7 +74,7 @@ Remove the `pet` container if it exists (e.g., from a prior run)
 
 ```r
 if (system2("docker", "ps -a", stdout = TRUE) %>% 
-   grepl(x = ., pattern = 'postgres-dvdrental.+pet') %>% 
+   grepl(x = ., pattern = 'pet') %>% 
    any()) {
      system2("docker", "rm -f pet")
 }
@@ -98,7 +98,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "4f3d8b0056f87bcba3435c8606513acfa567d0b7814e78b9f72c90b5f717c8e8"
+## [1] "b343536d29685419e7821ba27190f29860db7c412b7dc97004e3c47c43b19b6e"
 ```
 
 Peek inside the docker container and list the files in the `petdir` directory.  Notice that `dvdrental.tar` is in both.
@@ -227,21 +227,19 @@ con <- DBI::dbConnect(RPostgres::Postgres(),
                       password = "postgres",
                       dbname = "dvdrental" ) # note that the dbname is specified
 
-dbListTables(con)
+glimpse(dbReadTable(con, "rental"))
 ```
 
 ```
-##  [1] "actor_info"                 "customer_list"             
-##  [3] "film_list"                  "nicer_but_slower_film_list"
-##  [5] "sales_by_film_category"     "staff"                     
-##  [7] "sales_by_store"             "staff_list"                
-##  [9] "category"                   "film_category"             
-## [11] "country"                    "actor"                     
-## [13] "language"                   "inventory"                 
-## [15] "payment"                    "rental"                    
-## [17] "city"                       "store"                     
-## [19] "film"                       "address"                   
-## [21] "film_actor"                 "customer"
+## Observations: 16,044
+## Variables: 7
+## $ rental_id    <int> 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 1...
+## $ rental_date  <dttm> 2005-05-24 22:54:33, 2005-05-24 23:03:39, 2005-0...
+## $ inventory_id <int> 1525, 1711, 2452, 2079, 2792, 3995, 2346, 2580, 1...
+## $ customer_id  <int> 459, 408, 333, 222, 549, 269, 239, 126, 399, 142,...
+## $ return_date  <dttm> 2005-05-28 19:40:33, 2005-06-01 22:12:39, 2005-0...
+## $ staff_id     <int> 1, 1, 2, 1, 1, 2, 2, 1, 2, 2, 2, 1, 1, 1, 2, 1, 2...
+## $ last_update  <dttm> 2006-02-16 02:30:53, 2006-02-16 02:30:53, 2006-0...
 ```
 
 Stop the container & show that the container is still there, so can be started again.
@@ -258,27 +256,17 @@ system2('docker', 'stop pet',
 ```r
 # show that the container still exists even though it's not running
 psout <- system2("docker", "ps -a", stdout = TRUE)
-psout[grepl(x = psout, pattern = 'postgres-dvdrental.+pet')]
+psout[grepl(x = psout, pattern = 'pet')]
 ```
 
 ```
-## character(0)
+## [1] "b343536d2968        postgres:10         \"docker-entrypoint.s…\"   24 seconds ago      Exited (137) Less than a second ago                       pet"
 ```
 
-But for the moment, let's remove it.
-
-```r
-system2('docker', 'rm pet',
-        stdout = TRUE, stderr = TRUE)
-```
-
-```
-## [1] "pet"
-```
 Next time, you can just use this command to start the container:
 
 `system2("docker",  "start pet", stdout = TRUE, stderr = TRUE)`
 
-And once stopped, the container can be removed with:
+And after disconnecting from it the container can be completely removed with:
 
-`system2("docker",  "rm pet", stdout = TRUE, stderr = TRUE)`
+`system2("docker",  "rm pet -f", stdout = TRUE, stderr = TRUE)`
