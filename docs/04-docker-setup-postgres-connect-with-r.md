@@ -58,7 +58,16 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "d6adf24fe051aedae580c5a32cf1d2d6ecef8c77324be0a143a23baf5dd5b516"
+## Warning in system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE):
+## running command ''docker' run -d --name temporary-postgres --publish
+## 5432:5432 postgres:10 2>&1' had status 125
+```
+
+```
+## [1] "5d687efa4facfa81cef51124524d28eac9a66835f09b3e350e623b94cd002c7c"                                                                                                                                                                               
+## [2] "docker: Error response from daemon: driver failed programming external connectivity on endpoint temporary-postgres (a2f742a9c952c8a06a3dc81acf2925399c6c12c0fab1e7dc94b58db2cf86d7ed): Bind for 0.0.0.0:5432 failed: port is already allocated."
+## attr(,"status")
+## [1] 125
 ```
 Docker returns a long string of numbers.  If you are running this command for the first time, Docker is downloading the Postgres image and it takes a bit of time.
 
@@ -69,8 +78,8 @@ system2("docker", "ps", stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES"               
-## [2] "d6adf24fe051        postgres:10         \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   temporary-postgres"
+## [1] "CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS              PORTS                    NAMES"
+## [2] "da272e3318e1        postgres-dvdrental   \"docker-entrypoint.s…\"   6 seconds ago       Up 5 seconds        0.0.0.0:5432->5432/tcp   pet"
 ```
 
 Create a connection to Postgres after waiting 3 seconds so that Docker has time to do its thing.
