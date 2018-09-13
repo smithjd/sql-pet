@@ -1,14 +1,14 @@
-# SQL Pet](https://github.com/smithjd/sql-pet/) Project
+# [SQL Pet](https://github.com/smithjd/sql-pet/) Project
 # Getting started as a contributor
 
 **Table of Contents**
 
-0. <a href="#introduction">Introduction</a><br>
-0. <a href="#motivation">Motivation</a><br>
-0. <a href="#workflow">Work flow</a><br>
-0. <a href="#process">Process description</a><br>
-0. <a href="#glossary">Glossary</a><br>
-0. <a href="#references">References</a>
+1. <a href="#introduction">Introduction</a><br>
+1. <a href="#motivation">Motivation</a><br>
+1. <a href="#workflow">Work flow</a><br>
+1. <a href="#process">Process description</a><br>
+1. <a href="#glossary">Glossary</a><br>
+1. <a href="#references">References</a>
 
 ## <a name="introduction">1. Introduction</a>
 The purpose of this document is to help you get started as a contributor for the [SQL Pet](https://github.com/smithjd/sql-pet/) project. "Contributor" often means one who writes code, but technical writers and instructional analysts may also be contributing documents, so "contributor" is more general and more appropriate in this case than "software developer" or "programmer". Team membership is always in a state of flux with people coming and going, each with their own unique history of development experience. We hope this documentation will provide consistency over time as team membership changes. Another benefit for those of you with little development experience is that this process is widely used by other developers on open source projects and on commercial software projects. So developing with this team will prepare you to work on other teams in the future. We did not make this process up, so we are going to point you off to documents that have already been written by other teams that follow this process.
