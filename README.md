@@ -5,12 +5,12 @@ Location: Study room 2B at Central Library, Downtown Portland -- 801 SW 10th
 
 **Table of Contents**
 
-0. [Projects](#projects)
-0. [Book](#book)
-0. [More Docker and PostgreSQL tips](#more-docker-and-postgresql-tips)
-0. [How to contribute](#how-to-contribute)
-0. [Code of Conduct](#code-of-conduct)
-0. [License](#license)
+1. [Projects](#projects)
+1. [Book](#book)
+1. [More Docker and PostgreSQL tips](#more-docker-and-postgresql-tips)
+1. [How to contribute](#how-to-contribute)
+1. [Code of Conduct](#code-of-conduct)
+1. [License](#license)
 
 ## Projects
 
@@ -67,4 +67,4 @@ We provide more guidelines for coding style and developer's workflow in the [Con
 If you plan to participate in the project in any way, such as a developer, reviewer, contributor, committer, or student, you are expected to follow the project's [Code of Conduct](https://github.com/smithjd/sql-pet/blob/master/CODE_OF_CONDUCT.md). Please review those guidelines before choosing to participate in the project.
 
 ## License
-Software in this project is licensed under the [MIT License](https://github.com/smithjd/sql-pet/blob/master/LICENSE.md).
+Software in this project is licensed under the [MIT License](https://github.com/smithjd/sql-pet/blob/master/LICENSE).
