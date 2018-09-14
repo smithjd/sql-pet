@@ -115,6 +115,9 @@ psout <- system2("docker", "ps -a", stdout = TRUE)
 psout[grepl(x = psout, pattern = 'pet')]
 
 ```
+
+## Cleaning up
+
 Next time, you can just use this command to start the container:
 
 `system2("docker",  "start pet", stdout = TRUE, stderr = TRUE)`
@@ -122,3 +125,9 @@ Next time, you can just use this command to start the container:
 And once stopped, the container can be removed with:
 
 `system2("docker",  "rm pet", stdout = TRUE, stderr = TRUE)`
+
+## Using the `pet` container in the rest of the book
+
+After this point in the book, we assume that Docker is up and that we can always start up our *pet database* with:
+
+`system2("docker",  "start pet", stdout = TRUE, stderr = TRUE)`

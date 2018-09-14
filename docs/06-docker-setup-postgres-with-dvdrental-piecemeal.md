@@ -98,7 +98,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "b343536d29685419e7821ba27190f29860db7c412b7dc97004e3c47c43b19b6e"
+## [1] "e95bedc1146ecf831d2b5d29ebec8dafe4f3542cd7c4389a19d06d3ba13f7825"
 ```
 
 Peek inside the docker container and list the files in the `petdir` directory.  Notice that `dvdrental.tar` is in both.
@@ -260,8 +260,10 @@ psout[grepl(x = psout, pattern = 'pet')]
 ```
 
 ```
-## [1] "b343536d2968        postgres:10         \"docker-entrypoint.s…\"   24 seconds ago      Exited (137) Less than a second ago                       pet"
+## [1] "e95bedc1146e        postgres:10         \"docker-entrypoint.s…\"   23 seconds ago      Exited (137) Less than a second ago                       pet"
 ```
+
+## Cleaning up
 
 Next time, you can just use this command to start the container:
 
@@ -270,3 +272,9 @@ Next time, you can just use this command to start the container:
 And after disconnecting from it the container can be completely removed with:
 
 `system2("docker",  "rm pet -f", stdout = TRUE, stderr = TRUE)`
+
+## Using the `pet` container in the rest of the book
+
+After this point in the book, we assume that Docker is up and that we can always start up our *pet database* with:
+
+`system2("docker",  "start pet", stdout = TRUE, stderr = TRUE)`

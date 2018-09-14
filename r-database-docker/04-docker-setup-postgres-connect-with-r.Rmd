@@ -40,6 +40,7 @@ The following comand shows that `postgres:10` is still running:
 system2("docker", "ps", stdout = TRUE, stderr = TRUE)
 
 ```
+## Connect, read and write to Postgres from R
 
 Create a connection to Postgres after waiting 3 seconds so that Docker has time to do its thing.
 ```{r}
@@ -79,6 +80,8 @@ mtcars_df <- tbl(con, "mtcars")
 # Show a few rows:
 knitr::kable(head(mtcars_df))
 ```
+
+## Clean up
 
 Afterwards, always disconnect from the DBMS, stop the docker container and (optionally) remove it.
 ```{r}

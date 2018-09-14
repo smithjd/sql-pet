@@ -1,4 +1,5 @@
-# Interacting with Postgres from R
+# Introduction to interacting with Postgres from R
+
 
 
 ## Basics
@@ -38,6 +39,11 @@ You usually need to use both the available documentation for your [database](htt
 
 Depending on how skeptical you are about the documenttion, you might want to get an overview of a database by pulling data from the database `information_schema`.  Here's a selection of useful information although you may want more (or less).  There is a lot to choose from [a vast list of metadata](https://www.postgresql.org/docs/current/static/infoschema-columns.html).  Note that information schemas are somewhat consistent across different DBMS' that you may encounter.
 
+
+have we hidden "in_schema()" as in:
+
+  `con %>% tbl(in_schema("aux", "df"))`
+  
 
 ```r
 table_schema_query  <- paste0("SELECT ", 
@@ -165,59 +171,4 @@ rental_meta_data %>% count(data_type)
 ## 12 tsvector                        1
 ## 13 USER-DEFINED                    3
 ```
-
-## Using Dplyr
-
-We already started, but that's OK.
-
-### finding out what's in the database
-
-* DBI / RPostgres packaages
-* R tools like glimpse, skimr, kable.
-* examining dplyr queries (show_query on the R side v EXPLAIN on the Postges side)
-* Tutorials like: https://suzan.rbind.io/tags/dplyr/ 
-* Benjamin S. Baumer, A Grammar for Reproducible and Painless Extract-Transform-Load Operations on Medium Data: https://arxiv.org/pdf/1708.07073 
-
-### sample query
-
-* rental 
-* date subset
-* left join staff
-* left join customer
-
-### Subset: only retrieve what you need
-
-* Columns
-* Rows
-  + number of row
-  + specific rows
-* dplyr joins in the R
-
-### Make the server do as much work as you can
-
-discuss this simple example? http://www.postgresqltutorial.com/postgresql-left-join/ 
-
-* dplyr joins on the server side
-* Where you put `(collect(n = Inf))` really matters
-
-## What is dplyr sending to the server?
-
-* show_query as a first draft
-
-## Writing your on SQL directly to the DBMS
-
-* dbquery
-* Glue for constructing SQL statements
-  + parameterizing SQL queries
-
-## Chosing between dplyr and native SQL
-
-* performance considerations: first get the right data, then worory about performance
-* Tradeoffs between leaving the data in Postgres vs what's kept in R: 
-  + browsing the data
-  + larger samples and complete tables
-  + using what you know to write efficient queries that do most of the work on the server
-
-## More topics
-* Check this against [Aaron Makubuya's workshop](https://github.com/Cascadia-R/Using_R_With_Databases/blob/master/Intro_To_R_With_Databases.Rmd) at the Cascadia R Conf.
 
