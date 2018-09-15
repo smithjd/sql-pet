@@ -5,6 +5,7 @@ We always load the tidyverse and some other packages, but don't show it unless w
 library(tidyverse)
 library(DBI)
 library(RPostgres)
+library(glue)
 ```
 ## Verify that Docker running
 
@@ -19,20 +20,29 @@ The `docker version` command returns the details about the docker daemon that is
 system2("docker", "version", stdout = TRUE, stderr = TRUE)
 ```
 
-The convention we use in this book is to assemble a command with `paste0` so that the parts of the command can be specified separately.
+The convention we use in this book is to assemble a command with `paste0` so that the parts of the command can be specified separately.  This chunk just constructs the command, but does not execute.  If you have problems, you can copy the command and execute in your terminal session.
+
+chunk the following... 
 ```{r, eval=TRUE, echo=TRUE}
-docker_cmd <- paste0(
-  "run -d --name cattle --publish 5432:5432 ",
-  " postgres:10"
+docker_cmd <- glue(
+  "run ", # Run is the command for docker
+  "--detach ", # Detach means the docker container runs without a termanil
+  "--name cattle ", # we are naming container
+  "--publish 5432:5432 ", # Postgres port is  5432
+  " postgres:10"  # this is the name of the Docker image we are downloading / executing.
 )
 docker_cmd
 # Naming containers `cattle` for throw-aways and `pet` for ones we treasure and keep around.  :-)
 ```
 
+Remove `cattle` if it exists.
+
 Submit the command constructed above:
 ```{r, eval=TRUE, echo=TRUE}
 system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
+POssible errors here: if docker isn't ready, you'll see errors.
+
 Docker returns a long string of numbers.  If you are running this command for the first time, Docker is downloading the Postgres image and it takes a bit of time.
 
 The following comand shows that `postgres:10` is still running:
