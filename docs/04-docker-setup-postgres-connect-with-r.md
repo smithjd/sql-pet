@@ -68,8 +68,8 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "0cd21b2004ee422bc45568f8d6ea81194106d5824f23afdd605fdd03f0f944f2"                                                                                                                                                                   
-## [2] "docker: Error response from daemon: driver failed programming external connectivity on endpoint cattle (71402ed1a3b8599eec6ca3158239fe0057c922ab9852410bef663d0460efd7a4): Bind for 0.0.0.0:5432 failed: port is already allocated."
+## [1] "6f517ecefe4366c73a7918c4a0e70a68f2ca4274a9052b08a54b15a9107d165a"                                                                                                                                                                   
+## [2] "docker: Error response from daemon: driver failed programming external connectivity on endpoint cattle (d15d0ae850de5166f58d91ef9a34b592977c16e002c28b1627bd8d2da541814d): Bind for 0.0.0.0:5432 failed: port is already allocated."
 ## attr(,"status")
 ## [1] 125
 ```
@@ -83,8 +83,9 @@ system2("docker", "ps", stdout = TRUE, stderr = TRUE)
 
 ```
 ## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES"
-## [2] "d28b04fbfa2b        postgres:10         \"docker-entrypoint.s…\"   34 seconds ago      Up 7 seconds        0.0.0.0:5432->5432/tcp   pet"
+## [2] "f2e14cb8faae        postgres:10         \"docker-entrypoint.s…\"   37 seconds ago      Up 11 seconds       0.0.0.0:5432->5432/tcp   pet"
 ```
+## Connect, read and write to Postgres from R
 
 Create a connection to Postgres after waiting 3 seconds so that Docker has time to do its thing.
 
@@ -163,6 +164,8 @@ mpg & cyl & disp & hp & drat & wt & qsec & vs & am & gear & carb\\
 18.1 & 6 & 225 & 105 & 2.76 & 3.460 & 20.22 & 1 & 0 & 3 & 1\\
 \hline
 \end{tabular}
+
+## Clean up
 
 Afterwards, always disconnect from the DBMS, stop the docker container and (optionally) remove it.
 

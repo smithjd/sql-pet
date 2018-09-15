@@ -25,7 +25,7 @@
 <meta name="author" content="Dipti Muni, Ian Frantz, John David Smith, M. Edward (Ed) Borasky, Scott Case, and Sophie Yang">
 
 
-<meta name="date" content="2018-09-12">
+<meta name="date" content="2018-09-14">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -160,6 +160,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="4" data-path="docker-postgres-and-r.html"><a href="docker-postgres-and-r.html"><i class="fa fa-check"></i><b>4</b> Docker, Postgres, and R</a><ul>
 <li class="chapter" data-level="4.1" data-path="docker-postgres-and-r.html"><a href="docker-postgres-and-r.html#verify-that-docker-running"><i class="fa fa-check"></i><b>4.1</b> Verify that Docker running</a></li>
+<li class="chapter" data-level="4.2" data-path="docker-postgres-and-r.html"><a href="docker-postgres-and-r.html#connect-read-and-write-to-postgres-from-r"><i class="fa fa-check"></i><b>4.2</b> Connect, read and write to Postgres from R</a></li>
+<li class="chapter" data-level="4.3" data-path="docker-postgres-and-r.html"><a href="docker-postgres-and-r.html#clean-up"><i class="fa fa-check"></i><b>4.3</b> Clean up</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="a-persistent-database-in-postgres-in-docker-all-at-once.html"><a href="a-persistent-database-in-postgres-in-docker-all-at-once.html"><i class="fa fa-check"></i><b>5</b> A persistent database in Postgres in Docker - all at once</a><ul>
 <li class="chapter" data-level="5.1" data-path="a-persistent-database-in-postgres-in-docker-all-at-once.html"><a href="a-persistent-database-in-postgres-in-docker-all-at-once.html#overview"><i class="fa fa-check"></i><b>5.1</b> Overview</a></li>
@@ -169,6 +171,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.5" data-path="a-persistent-database-in-postgres-in-docker-all-at-once.html"><a href="a-persistent-database-in-postgres-in-docker-all-at-once.html#run-the-docker-image"><i class="fa fa-check"></i><b>5.5</b> Run the Docker Image</a></li>
 <li class="chapter" data-level="5.6" data-path="a-persistent-database-in-postgres-in-docker-all-at-once.html"><a href="a-persistent-database-in-postgres-in-docker-all-at-once.html#connect-to-postgres-with-r"><i class="fa fa-check"></i><b>5.6</b> Connect to Postgres with R</a></li>
 <li class="chapter" data-level="5.7" data-path="a-persistent-database-in-postgres-in-docker-all-at-once.html"><a href="a-persistent-database-in-postgres-in-docker-all-at-once.html#stop-and-start-to-demonstrate-persistence"><i class="fa fa-check"></i><b>5.7</b> Stop and start to demonstrate persistence</a></li>
+<li class="chapter" data-level="5.8" data-path="a-persistent-database-in-postgres-in-docker-all-at-once.html"><a href="a-persistent-database-in-postgres-in-docker-all-at-once.html#cleaning-up"><i class="fa fa-check"></i><b>5.8</b> Cleaning up</a></li>
+<li class="chapter" data-level="5.9" data-path="a-persistent-database-in-postgres-in-docker-all-at-once.html"><a href="a-persistent-database-in-postgres-in-docker-all-at-once.html#using-the-pet-container-in-the-rest-of-the-book"><i class="fa fa-check"></i><b>5.9</b> Using the <code>pet</code> container in the rest of the book</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="a-persistent-database-in-postgres-in-docker-piecemeal.html"><a href="a-persistent-database-in-postgres-in-docker-piecemeal.html"><i class="fa fa-check"></i><b>6</b> A persistent database in Postgres in Docker - piecemeal</a><ul>
 <li class="chapter" data-level="6.1" data-path="a-persistent-database-in-postgres-in-docker-piecemeal.html"><a href="a-persistent-database-in-postgres-in-docker-piecemeal.html#overview-1"><i class="fa fa-check"></i><b>6.1</b> Overview</a></li>
@@ -176,32 +180,38 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.3" data-path="a-persistent-database-in-postgres-in-docker-piecemeal.html"><a href="a-persistent-database-in-postgres-in-docker-piecemeal.html#now-verify-that-docker-is-up-and-running"><i class="fa fa-check"></i><b>6.3</b> Now, verify that Docker is up and running:</a></li>
 <li class="chapter" data-level="6.4" data-path="a-persistent-database-in-postgres-in-docker-piecemeal.html"><a href="a-persistent-database-in-postgres-in-docker-piecemeal.html#build-the-docker-image-1"><i class="fa fa-check"></i><b>6.4</b> Build the Docker Image</a></li>
 <li class="chapter" data-level="6.5" data-path="a-persistent-database-in-postgres-in-docker-piecemeal.html"><a href="a-persistent-database-in-postgres-in-docker-piecemeal.html#stop-and-start-to-demonstrate-persistence-1"><i class="fa fa-check"></i><b>6.5</b> Stop and start to demonstrate persistence</a></li>
+<li class="chapter" data-level="6.6" data-path="a-persistent-database-in-postgres-in-docker-piecemeal.html"><a href="a-persistent-database-in-postgres-in-docker-piecemeal.html#cleaning-up-1"><i class="fa fa-check"></i><b>6.6</b> Cleaning up</a></li>
+<li class="chapter" data-level="6.7" data-path="a-persistent-database-in-postgres-in-docker-piecemeal.html"><a href="a-persistent-database-in-postgres-in-docker-piecemeal.html#using-the-pet-container-in-the-rest-of-the-book-1"><i class="fa fa-check"></i><b>6.7</b> Using the <code>pet</code> container in the rest of the book</a></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="interacting-with-postgres-from-r.html"><a href="interacting-with-postgres-from-r.html"><i class="fa fa-check"></i><b>7</b> Interacting with Postgres from R</a><ul>
-<li class="chapter" data-level="7.1" data-path="interacting-with-postgres-from-r.html"><a href="interacting-with-postgres-from-r.html#basics"><i class="fa fa-check"></i><b>7.1</b> Basics</a></li>
-<li class="chapter" data-level="7.2" data-path="interacting-with-postgres-from-r.html"><a href="interacting-with-postgres-from-r.html#ask-yourself-about-what-you-are-aiming-for"><i class="fa fa-check"></i><b>7.2</b> Ask yourself about what you are aiming for?</a></li>
-<li class="chapter" data-level="7.3" data-path="interacting-with-postgres-from-r.html"><a href="interacting-with-postgres-from-r.html#get-some-basic-information-about-your-database"><i class="fa fa-check"></i><b>7.3</b> Get some basic information about your database</a></li>
-<li class="chapter" data-level="7.4" data-path="interacting-with-postgres-from-r.html"><a href="interacting-with-postgres-from-r.html#using-dplyr"><i class="fa fa-check"></i><b>7.4</b> Using Dplyr</a><ul>
-<li class="chapter" data-level="7.4.1" data-path="interacting-with-postgres-from-r.html"><a href="interacting-with-postgres-from-r.html#finding-out-whats-in-the-database"><i class="fa fa-check"></i><b>7.4.1</b> finding out what’s in the database</a></li>
-<li class="chapter" data-level="7.4.2" data-path="interacting-with-postgres-from-r.html"><a href="interacting-with-postgres-from-r.html#sample-query"><i class="fa fa-check"></i><b>7.4.2</b> sample query</a></li>
-<li class="chapter" data-level="7.4.3" data-path="interacting-with-postgres-from-r.html"><a href="interacting-with-postgres-from-r.html#subset-only-retrieve-what-you-need"><i class="fa fa-check"></i><b>7.4.3</b> Subset: only retrieve what you need</a></li>
-<li class="chapter" data-level="7.4.4" data-path="interacting-with-postgres-from-r.html"><a href="interacting-with-postgres-from-r.html#make-the-server-do-as-much-work-as-you-can"><i class="fa fa-check"></i><b>7.4.4</b> Make the server do as much work as you can</a></li>
-</ul></li>
-<li class="chapter" data-level="7.5" data-path="interacting-with-postgres-from-r.html"><a href="interacting-with-postgres-from-r.html#what-is-dplyr-sending-to-the-server"><i class="fa fa-check"></i><b>7.5</b> What is dplyr sending to the server?</a></li>
-<li class="chapter" data-level="7.6" data-path="interacting-with-postgres-from-r.html"><a href="interacting-with-postgres-from-r.html#writing-your-on-sql-directly-to-the-dbms"><i class="fa fa-check"></i><b>7.6</b> Writing your on SQL directly to the DBMS</a></li>
-<li class="chapter" data-level="7.7" data-path="interacting-with-postgres-from-r.html"><a href="interacting-with-postgres-from-r.html#chosing-between-dplyr-and-native-sql"><i class="fa fa-check"></i><b>7.7</b> Chosing between dplyr and native SQL</a></li>
-<li class="chapter" data-level="7.8" data-path="interacting-with-postgres-from-r.html"><a href="interacting-with-postgres-from-r.html#more-topics"><i class="fa fa-check"></i><b>7.8</b> More topics</a></li>
+<li class="chapter" data-level="7" data-path="introduction-to-interacting-with-postgres-from-r.html"><a href="introduction-to-interacting-with-postgres-from-r.html"><i class="fa fa-check"></i><b>7</b> Introduction to interacting with Postgres from R</a><ul>
+<li class="chapter" data-level="7.1" data-path="introduction-to-interacting-with-postgres-from-r.html"><a href="introduction-to-interacting-with-postgres-from-r.html#basics"><i class="fa fa-check"></i><b>7.1</b> Basics</a></li>
+<li class="chapter" data-level="7.2" data-path="introduction-to-interacting-with-postgres-from-r.html"><a href="introduction-to-interacting-with-postgres-from-r.html#ask-yourself-about-what-you-are-aiming-for"><i class="fa fa-check"></i><b>7.2</b> Ask yourself about what you are aiming for?</a></li>
+<li class="chapter" data-level="7.3" data-path="introduction-to-interacting-with-postgres-from-r.html"><a href="introduction-to-interacting-with-postgres-from-r.html#get-some-basic-information-about-your-database"><i class="fa fa-check"></i><b>7.3</b> Get some basic information about your database</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="real-work-with-real-data.html"><a href="real-work-with-real-data.html"><i class="fa fa-check"></i><b>8</b> Real work with real data</a><ul>
-<li class="chapter" data-level="8.1" data-path="real-work-with-real-data.html"><a href="real-work-with-real-data.html#basic-investigation"><i class="fa fa-check"></i><b>8.1</b> Basic investigation</a></li>
-<li class="chapter" data-level="8.2" data-path="real-work-with-real-data.html"><a href="real-work-with-real-data.html#standards-for-production-jobs"><i class="fa fa-check"></i><b>8.2</b> Standards for production jobs</a></li>
+<li class="chapter" data-level="8.1" data-path="real-work-with-real-data.html"><a href="real-work-with-real-data.html#some-extra-handy-libraries"><i class="fa fa-check"></i><b>8.1</b> Some extra handy libraries</a></li>
+<li class="chapter" data-level="8.2" data-path="real-work-with-real-data.html"><a href="real-work-with-real-data.html#basic-investigation"><i class="fa fa-check"></i><b>8.2</b> Basic investigation</a></li>
+<li class="chapter" data-level="8.3" data-path="real-work-with-real-data.html"><a href="real-work-with-real-data.html#using-dplyr"><i class="fa fa-check"></i><b>8.3</b> Using Dplyr</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="real-work-with-real-data.html"><a href="real-work-with-real-data.html#finding-out-whats-in-the-database"><i class="fa fa-check"></i><b>8.3.1</b> finding out what’s in the database</a></li>
+<li class="chapter" data-level="8.3.2" data-path="real-work-with-real-data.html"><a href="real-work-with-real-data.html#sample-query"><i class="fa fa-check"></i><b>8.3.2</b> sample query</a></li>
+<li class="chapter" data-level="8.3.3" data-path="real-work-with-real-data.html"><a href="real-work-with-real-data.html#subset-only-retrieve-what-you-need"><i class="fa fa-check"></i><b>8.3.3</b> Subset: only retrieve what you need</a></li>
+<li class="chapter" data-level="8.3.4" data-path="real-work-with-real-data.html"><a href="real-work-with-real-data.html#make-the-server-do-as-much-work-as-you-can"><i class="fa fa-check"></i><b>8.3.4</b> Make the server do as much work as you can</a></li>
 </ul></li>
-<li class="chapter" data-level="9" data-path="other-resources.html"><a href="other-resources.html"><i class="fa fa-check"></i><b>9</b> Other resources</a><ul>
-<li class="chapter" data-level="9.1" data-path="other-resources.html"><a href="other-resources.html#editing-this-book"><i class="fa fa-check"></i><b>9.1</b> Editing this book</a></li>
-<li class="chapter" data-level="9.2" data-path="other-resources.html"><a href="other-resources.html#docker-alternatives"><i class="fa fa-check"></i><b>9.2</b> Docker alternatives</a></li>
-<li class="chapter" data-level="9.3" data-path="other-resources.html"><a href="other-resources.html#docker-and-r"><i class="fa fa-check"></i><b>9.3</b> Docker and R</a></li>
-<li class="chapter" data-level="9.4" data-path="other-resources.html"><a href="other-resources.html#documentation-docker-and-postgres"><i class="fa fa-check"></i><b>9.4</b> Documentation Docker and Postgres</a></li>
-<li class="chapter" data-level="9.5" data-path="other-resources.html"><a href="other-resources.html#more-resources"><i class="fa fa-check"></i><b>9.5</b> More Resources</a></li>
+<li class="chapter" data-level="8.4" data-path="real-work-with-real-data.html"><a href="real-work-with-real-data.html#what-is-dplyr-sending-to-the-server"><i class="fa fa-check"></i><b>8.4</b> What is dplyr sending to the server?</a></li>
+<li class="chapter" data-level="8.5" data-path="real-work-with-real-data.html"><a href="real-work-with-real-data.html#writing-your-on-sql-directly-to-the-dbms"><i class="fa fa-check"></i><b>8.5</b> Writing your on SQL directly to the DBMS</a></li>
+<li class="chapter" data-level="8.6" data-path="real-work-with-real-data.html"><a href="real-work-with-real-data.html#chosing-between-dplyr-and-native-sql"><i class="fa fa-check"></i><b>8.6</b> Chosing between dplyr and native SQL</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="real-work-with-real-data-1.html"><a href="real-work-with-real-data-1.html"><i class="fa fa-check"></i><b>9</b> Real work with real data</a><ul>
+<li class="chapter" data-level="9.1" data-path="real-work-with-real-data-1.html"><a href="real-work-with-real-data-1.html#some-extra-handy-libraries-1"><i class="fa fa-check"></i><b>9.1</b> Some extra handy libraries</a></li>
+<li class="chapter" data-level="9.2" data-path="real-work-with-real-data-1.html"><a href="real-work-with-real-data-1.html#more-topics"><i class="fa fa-check"></i><b>9.2</b> More topics</a></li>
+<li class="chapter" data-level="9.3" data-path="real-work-with-real-data-1.html"><a href="real-work-with-real-data-1.html#standards-for-production-jobs"><i class="fa fa-check"></i><b>9.3</b> Standards for production jobs</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="other-resources.html"><a href="other-resources.html"><i class="fa fa-check"></i><b>10</b> Other resources</a><ul>
+<li class="chapter" data-level="10.1" data-path="other-resources.html"><a href="other-resources.html#editing-this-book"><i class="fa fa-check"></i><b>10.1</b> Editing this book</a></li>
+<li class="chapter" data-level="10.2" data-path="other-resources.html"><a href="other-resources.html#docker-alternatives"><i class="fa fa-check"></i><b>10.2</b> Docker alternatives</a></li>
+<li class="chapter" data-level="10.3" data-path="other-resources.html"><a href="other-resources.html#docker-and-r"><i class="fa fa-check"></i><b>10.3</b> Docker and R</a></li>
+<li class="chapter" data-level="10.4" data-path="other-resources.html"><a href="other-resources.html#documentation-docker-and-postgres"><i class="fa fa-check"></i><b>10.4</b> Documentation Docker and Postgres</a></li>
+<li class="chapter" data-level="10.5" data-path="other-resources.html"><a href="other-resources.html#more-resources"><i class="fa fa-check"></i><b>10.5</b> More Resources</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -227,7 +237,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">R, Databases and Docker</h1>
 <h4 class="author"><em>Dipti Muni, Ian Frantz, John David Smith, M. Edward (Ed) Borasky, Scott Case, and Sophie Yang</em></h4>
-<h4 class="date"><em>2018-09-12</em></h4>
+<h4 class="date"><em>2018-09-14</em></h4>
 </div>
 <div id="introduction" class="section level1">
 <h1><span class="header-section-number">Chapter 1</span> Introduction</h1>
