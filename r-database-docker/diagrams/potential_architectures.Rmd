@@ -1,0 +1,79 @@
+---
+title: "Potential Architectures"
+author: "M, Edward (Ed) Borasky"
+date: "9/14/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+if (!require(DiagrammeR)) install.packages("DiagrammeR")
+library(DiagrammeR)
+```
+
+## Small architecture
+The simplest architecture we can possibly use has just one container, running PostgreSQL. 
+
+* We talk to the PostgreSQL container for data analysis from RStudio on the host, using the `DBI` and `RPostgres` packages.
+* We talk to the PostgreSQL container for administration by building `docker exec` commands and executing them with `system2`.
+* We either mount the `Backups` volume on the host filesystem or we copy files to and from `Backups` with `docker cp` commands wrapped with `system2`.
+
+```{r echo=FALSE}
+DiagrammeR::mermaid("
+graph LR
+    Host_Filesystem---Backups
+    RStudio---PostgreSQL
+    subgraph Containers
+    PostgreSQL
+    end
+    subgraph Volumes
+    PostgreSQL---pgdata
+    PostgreSQL---Backups
+    end
+end
+")
+```
+
+<br><br><br>
+
+## Medium architecture
+The medium architecture adds a `pgAdmin4` container for administering the PostgreSQL server. We have the same workflow for backups, and we still do the data analysis with host RStudio, but we manage the server with a browser pointed at the `pgAdmin4` web service.
+
+```{r echo=FALSE}
+DiagrammeR::mermaid("
+graph LR
+    Host_Filesystem---Backups
+    RStudio---PostgreSQL
+    Browser---pgAdmin4
+    subgraph Containers
+    PostgreSQL---pgAdmin4
+    end
+    subgraph Volumes
+    pgAdmin4---Backups
+    PostgreSQL---pgdata
+    end
+end
+")
+```
+
+<br><br><br>
+
+## Large architecture
+In the large architecture, we add a `rocker/rstudio` container, thus creating a fully-containerized workflow. We talk to the containers via a browser only.
+
+```{r echo=FALSE}
+DiagrammeR::mermaid("
+graph LR
+    Host_Filesystem---Backups
+    Browser---Rocker_RStudio
+    Browser---pgAdmin4
+    subgraph Containers
+    PostgreSQL---pgAdmin4
+    Rocker_RStudio---PostgreSQL
+    end
+    subgraph Volumes
+    pgAdmin4---Backups
+    PostgreSQL---pgdata
+    end
+end")
+```
