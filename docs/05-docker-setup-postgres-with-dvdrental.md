@@ -53,7 +53,7 @@ system2("docker", "build -t postgres-dvdrental -f dvdrental.Dockerfile .", stdou
 ```
 
 ```
-##  [1] "Sending build context to Docker daemon  627.7kB\r\r"                                                                                                                                                                                                                                                                                                                                           
+##  [1] "Sending build context to Docker daemon  601.1kB\r\r"                                                                                                                                                                                                                                                                                                                                           
 ##  [2] "Step 1/4 : FROM postgres:10"                                                                                                                                                                                                                                                                                                                                                                   
 ##  [3] " ---> ac25c2bac3c4"                                                                                                                                                                                                                                                                                                                                                                            
 ##  [4] "Step 2/4 : WORKDIR /tmp"                                                                                                                                                                                                                                                                                                                                                                       
@@ -91,7 +91,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "4551031ceabb0d9f1222ce6c16e05bedabbf25c7fb082f131c69bd4a12b00444"
+## [1] "b64033acf6ef67a8c89779016be58cacd56e37c1df1995939df3cc57b19da9c1"
 ```
 ## Connect to Postgres with R
 
@@ -207,7 +207,7 @@ psout[grepl(x = psout, pattern = 'pet')]
 ```
 
 ```
-## [1] "4551031ceabb        postgres-dvdrental   \"docker-entrypoint.s…\"   26 seconds ago      Exited (137) Less than a second ago                       pet"
+## [1] "b64033acf6ef        postgres-dvdrental   \"docker-entrypoint.s…\"   26 seconds ago      Exited (137) Less than a second ago                       pet"
 ```
 
 ## Cleaning up
