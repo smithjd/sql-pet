@@ -1,7 +1,7 @@
 ---
 title: "R, Databases and Docker"
 author: "Dipti Muni, Ian Frantz, John David Smith, M. Edward (Ed) Borasky,  Scott Case, and Sophie Yang"
-date: "2018-09-14"
+date: "2018-09-15"
 site: bookdown::bookdown_site
 documentclass: book
 bibliography: [book.bib, packages.bib]
@@ -57,6 +57,13 @@ You will need
 * Docker hosting.
 
 The database we use is PostgreSQL 10, but you do not need to install that - it's installed via a Docker image. RStudio 1.2 is highly recommended but not required.
+
+In addition to the current version of R and Rstudio, you will need the following packages:
+
+* tidyverse
+* DBI
+* RPostgres
+* glue
 
 ## Install Docker
 

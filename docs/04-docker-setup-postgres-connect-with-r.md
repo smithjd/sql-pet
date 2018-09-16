@@ -37,23 +37,30 @@ system2("docker", "version", stdout = TRUE, stderr = TRUE)
 ## [18] "  Experimental:     true"
 ```
 
-The convention we use in this book is to assemble a command with `paste0` so that the parts of the command can be specified separately.
+The convention we use in this book is to assemble a command with `paste0` so that the parts of the command can be specified separately.  This chunk just constructs the command, but does not execute.  If you have problems, you can copy the command and execute in your terminal session.
+
+chunk the following... 
 
 ```r
-docker_cmd <- paste0(
-  "run -d --name cattle --publish 5432:5432 ",
-  " postgres:10"
+docker_cmd <- glue(
+  "run ", # Run is the command for docker
+  "--detach ", # Detach means the docker container runs without a termanil
+  "--name cattle ", # we are naming container
+  "--publish 5432:5432 ", # Postgres port is  5432
+  " postgres:10"  # this is the name of the Docker image we are downloading / executing.
 )
 docker_cmd
 ```
 
 ```
-## [1] "run -d --name cattle --publish 5432:5432  postgres:10"
+## run --detach --name cattle --publish 5432:5432  postgres:10
 ```
 
 ```r
 # Naming containers `cattle` for throw-aways and `pet` for ones we treasure and keep around.  :-)
 ```
+
+Remove `cattle` if it exists.
 
 Submit the command constructed above:
 
@@ -63,16 +70,18 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 
 ```
 ## Warning in system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE):
-## running command ''docker' run -d --name cattle --publish 5432:5432
+## running command ''docker' run --detach --name cattle --publish 5432:5432
 ## postgres:10 2>&1' had status 125
 ```
 
 ```
-## [1] "6f517ecefe4366c73a7918c4a0e70a68f2ca4274a9052b08a54b15a9107d165a"                                                                                                                                                                   
-## [2] "docker: Error response from daemon: driver failed programming external connectivity on endpoint cattle (d15d0ae850de5166f58d91ef9a34b592977c16e002c28b1627bd8d2da541814d): Bind for 0.0.0.0:5432 failed: port is already allocated."
+## [1] "ee7cc4adcf985872b04c651abbe61458dd0920c8ee08fec86af2c42237a39e08"                                                                                                                                                                   
+## [2] "docker: Error response from daemon: driver failed programming external connectivity on endpoint cattle (6fc620fff9fb40f5b980a50c2413b2a0a3ca24bd90c30534b93958f2636ad9d1): Bind for 0.0.0.0:5432 failed: port is already allocated."
 ## attr(,"status")
 ## [1] 125
 ```
+Possible errors here: if docker isn't ready, you'll see errors.
+
 Docker returns a long string of numbers.  If you are running this command for the first time, Docker is downloading the Postgres image and it takes a bit of time.
 
 The following comand shows that `postgres:10` is still running:
@@ -83,7 +92,7 @@ system2("docker", "ps", stdout = TRUE, stderr = TRUE)
 
 ```
 ## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES"
-## [2] "f2e14cb8faae        postgres:10         \"docker-entrypoint.s…\"   37 seconds ago      Up 11 seconds       0.0.0.0:5432->5432/tcp   pet"
+## [2] "1ba48c87635b        postgres:10         \"docker-entrypoint.s…\"   35 seconds ago      Up 10 seconds       0.0.0.0:5432->5432/tcp   pet"
 ```
 ## Connect, read and write to Postgres from R
 
