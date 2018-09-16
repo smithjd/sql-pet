@@ -1,6 +1,6 @@
 # Docker, Postgres, and R
 
-We always load the tidyverse and some other packages, but don't show it unless we are using packages other than `tidyverse`, `DBI`, and `RPostgres`.
+We always load the tidyverse and some other packages, but don't show it unless we are using packages other than `tidyverse`, `DBI`, `RPostgres`, and `glue`.
 
 ## Verify that Docker running
 
@@ -43,11 +43,11 @@ chunk the following...
 
 ```r
 docker_cmd <- glue(
-  "run ", # Run is the command for docker
-  "--detach ", # Detach means the docker container runs without a termanil
-  "--name cattle ", # we are naming container
-  "--publish 5432:5432 ", # Postgres port is  5432
-  " postgres:10"  # this is the name of the Docker image we are downloading / executing.
+  "run ",      # Run is the Docker command.  Everything that follows are `run` parameters.
+  "--detach ", # (or `-d`) tells Docker to disconnect from the terminal / program issuing the command
+  "--name cattle ",       # tells Docker to give the container a name: `cattle`
+  "--publish 5432:5432 ", # tells Docker to expose the Postgres port 5432 to the local network with 5432
+  " postgres:10"  # tells Docker the image that is to be run (after downloading if necessary)
 )
 docker_cmd
 ```
@@ -75,8 +75,8 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "ee7cc4adcf985872b04c651abbe61458dd0920c8ee08fec86af2c42237a39e08"                                                                                                                                                                   
-## [2] "docker: Error response from daemon: driver failed programming external connectivity on endpoint cattle (6fc620fff9fb40f5b980a50c2413b2a0a3ca24bd90c30534b93958f2636ad9d1): Bind for 0.0.0.0:5432 failed: port is already allocated."
+## [1] "249b0658664a0d878ccfe6332878ee7f1e2ff8143706394db679793badd43e74"                                                                                                                                                                   
+## [2] "docker: Error response from daemon: driver failed programming external connectivity on endpoint cattle (a4f8447968a1778c9bb5a5d1a075f0842b6395b43e3d0d669a067c13f6227b5c): Bind for 0.0.0.0:5432 failed: port is already allocated."
 ## attr(,"status")
 ## [1] 125
 ```
@@ -91,8 +91,8 @@ system2("docker", "ps", stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES"
-## [2] "1ba48c87635b        postgres:10         \"docker-entrypoint.s…\"   35 seconds ago      Up 10 seconds       0.0.0.0:5432->5432/tcp   pet"
+## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES"    
+## [2] "fdbefcf484f1        postgres:10         \"docker-entrypoint.s…\"   37 seconds ago      Up 11 seconds       0.0.0.0:5432->5432/tcp   sql-pet"
 ```
 ## Connect, read and write to Postgres from R
 
@@ -180,6 +180,8 @@ Afterwards, always disconnect from the DBMS, stop the docker container and (opti
 
 ```r
 dbDisconnect(con)
+
+# tell Docker to stop the container:
 system2("docker", "stop cattle", stdout = TRUE, stderr = TRUE)
 ```
 
@@ -188,6 +190,7 @@ system2("docker", "stop cattle", stdout = TRUE, stderr = TRUE)
 ```
 
 ```r
+# tell Docker to remove the container from it's library of active containers:
 system2("docker", "rm cattle", stdout = TRUE, stderr = TRUE)
 ```
 
@@ -195,4 +198,4 @@ system2("docker", "rm cattle", stdout = TRUE, stderr = TRUE)
 ## [1] "cattle"
 ```
 
-If we `stop` the docker container but don't remove it (with the `rm cattle` command), the container will persist and we can start it up with `start cattle`.  In that case, `mtcars` would still be there and we could download it again.  Since we have now removed the `cattle` container, the whole database has been deleted.  (There are enough copies of `mtcars` in the world, so no great loss.)
+If we `stop` the docker container but don't remove it (with the `rm cattle` command), the container will persist and we can start it up again later with `start cattle`.  In that case, `mtcars` would still be there and we could retrieve it from R again.  Since we have now removed the `cattle` container, the whole database has been deleted.  (There are enough copies of `mtcars` in the world, so no great loss.)

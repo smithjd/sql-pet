@@ -4,9 +4,11 @@
 
 You've already connected to Postgres with R, now you need a "realistic" (`dvdrental`) database. We're going to demonstrate how to set one up, with two different approaches.  This chapter and the next do the same job, illustrating the different approaches that you can take and helping you see the different points whwere you could swap what's provided here with a different DBMS or a different backup file or something else.
 
-The code in this first version is recommended because it is an "all in one" approach.  Details about how it works and how you might modify it are included below.
+The code in this first version is recommended because it is an "all in one" approach.  Details about how it works and how you might modify it are included below.  There is another version in the the next chapter that you can use to investigate Docker commands and components.
 
 Note that this approach relies on two files that have quote that's not shown here: [dvdrental.Dockerfile](./dvdrental.Dockerfile) and [init-dvdrental.sh](init-dvdrental.sh).  They are discussed below.
+
+Note that `tidyverse`, `DBI`, `RPostgres`, and `glue` are loaded.
 
 ## First, verify that Docker is up and running:
 
@@ -36,24 +38,29 @@ system2("docker", "version", stdout = TRUE, stderr = TRUE)
 ```
 
 ## Clean up if appropriate
-Remove the `pet` container if it exists (e.g., from a prior run)
+Remove the `sql-pet` container if it exists (e.g., from a prior run)
 
 ```r
 if (system2("docker", "ps -a", stdout = TRUE) %>% 
-   grepl(x = ., pattern = 'pet') %>% 
+   grepl(x = ., pattern = 'sql-pet') %>% 
    any()) {
-     system2("docker", "rm -f pet")
+     system2("docker", "rm -f sql-pet")
 }
 ```
 ## Build the Docker Image
 Build an image that derives from postgres:10, defined in `dvdrental.Dockerfile`, that is set up to restore and load the dvdrental db on startup.  The [dvdrental.Dockerfile](./dvdrental.Dockerfile) is discussed below.  
 
 ```r
-system2("docker", "build -t postgres-dvdrental -f dvdrental.Dockerfile .", stdout = TRUE, stderr = TRUE)
+system2("docker", 
+        glue("build ", # tells Docker to build an image that can be loaded as a container
+          "--tag postgres-dvdrental ", # (or -t) tells Docker to name the image
+          "--file dvdrental.Dockerfile ", #(or -f) tells Docker to read `build` instructions from the dvdrental.Dockerfile
+          " . "),  # tells Docker to look for dvdrental.Dockerfile in the current directory
+          stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-##  [1] "Sending build context to Docker daemon  601.1kB\r\r"                                                                                                                                                                                                                                                                                                                                           
+##  [1] "Sending build context to Docker daemon  622.1kB\r\r"                                                                                                                                                                                                                                                                                                                                           
 ##  [2] "Step 1/4 : FROM postgres:10"                                                                                                                                                                                                                                                                                                                                                                   
 ##  [3] " ---> ac25c2bac3c4"                                                                                                                                                                                                                                                                                                                                                                            
 ##  [4] "Step 2/4 : WORKDIR /tmp"                                                                                                                                                                                                                                                                                                                                                                       
@@ -77,21 +84,37 @@ Run docker to bring up postgres.  The first time it runs it will take a minute t
   
 Doing all of that work behind the scenes involves two layers of complexity.  Depending on how you look at it, that may be more or less difficult to understand than the method shown in the next Chapter.
 
+
 ```r
 wd <- getwd()
 
-docker_cmd <- paste0(
-  "run -d --name pet --publish 5432:5432 ",
-  '--mount "type=bind,source=', wd,
-  '/,target=/petdir"',
-    " postgres-dvdrental"
+docker_cmd <- glue(
+  "run ",      # Run is the Docker command.  Everything that follows are `run` parameters.
+  "--detach ", # (or `-d`) tells Docker to disconnect from the terminal / program issuing the command
+  " --name sql-pet ",     # tells Docker to give the container a name: `sql-pet`
+  "--publish 5432:5432 ", # tells Docker to expose the Postgres port 5432 to the local network with 5432
+  "--mount ", # tells Docker to mount a volume -- mapping Docker's internal file structure to the host file structure
+  "type=bind,", # tells Docker that the mount command points to an actual file on the host system
+  "source='", # tells Docker where the local file will be found
+  wd, "/',", # the current working directory, as retrieved above
+  "target=/petdir", # tells Docker to refer to the current directory as "/petdir" in its file system
+  " postgres-dvdrental" # tells Docker to run the image was built in the previous step
 )
 
+# if you are curious you can paste this string into a terminal window after the command 'docker':
+docker_cmd
+```
+
+```
+## run --detach  --name sql-pet --publish 5432:5432 --mount type=bind,source='/Users/jds/Documents/Library/R/r-system/sql-pet/r-database-docker/',target=/petdir postgres-dvdrental
+```
+
+```r
 system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "b64033acf6ef67a8c89779016be58cacd56e37c1df1995939df3cc57b19da9c1"
+## [1] "1c94395ada6e31bc308973b1b9b846d30c2cf4e4ece0941c14aea58e5d6807d4"
 ```
 ## Connect to Postgres with R
 
@@ -143,12 +166,12 @@ Sys.sleep(2) # Can take a moment to disconnect.
 Stop the container
 
 ```r
-system2('docker', 'stop pet',
+system2('docker', 'stop sql-pet',
         stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "pet"
+## [1] "sql-pet"
 ```
 
 ```r
@@ -157,11 +180,11 @@ Sys.sleep(3) # can take a moment for Docker to stop the container.
 Restart the container and verify that the dvdrental tables are still there
 
 ```r
-system2("docker",  "start pet", stdout = TRUE, stderr = TRUE)
+system2("docker",  "start sql-pet", stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "pet"
+## [1] "sql-pet"
 ```
 
 ```r
@@ -174,54 +197,60 @@ con <- DBI::dbConnect(RPostgres::Postgres(),
                       password = "postgres",
                       dbname = "dvdrental" ) # note that the dbname is specified
 
-glimpse(dbReadTable(con, "rental"))
+glimpse(dbReadTable(con, "film"))
 ```
 
 ```
-## Observations: 16,044
-## Variables: 7
-## $ rental_id    <int> 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 1...
-## $ rental_date  <dttm> 2005-05-24 22:54:33, 2005-05-24 23:03:39, 2005-0...
-## $ inventory_id <int> 1525, 1711, 2452, 2079, 2792, 3995, 2346, 2580, 1...
-## $ customer_id  <int> 459, 408, 333, 222, 549, 269, 239, 126, 399, 142,...
-## $ return_date  <dttm> 2005-05-28 19:40:33, 2005-06-01 22:12:39, 2005-0...
-## $ staff_id     <int> 1, 1, 2, 1, 1, 2, 2, 1, 2, 2, 2, 1, 1, 1, 2, 1, 2...
-## $ last_update  <dttm> 2006-02-16 02:30:53, 2006-02-16 02:30:53, 2006-0...
+## Observations: 1,000
+## Variables: 13
+## $ film_id          <int> 133, 384, 8, 98, 1, 2, 3, 4, 5, 6, 7, 9, 10, ...
+## $ title            <chr> "Chamber Italian", "Grosse Wonderful", "Airpo...
+## $ description      <chr> "A Fateful Reflection of a Moose And a Husban...
+## $ release_year     <int> 2006, 2006, 2006, 2006, 2006, 2006, 2006, 200...
+## $ language_id      <int> 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...
+## $ rental_duration  <int> 7, 5, 6, 4, 6, 3, 7, 5, 6, 3, 6, 3, 6, 6, 6, ...
+## $ rental_rate      <dbl> 4.99, 4.99, 4.99, 4.99, 0.99, 4.99, 2.99, 2.9...
+## $ length           <int> 117, 49, 54, 73, 86, 48, 50, 117, 130, 169, 6...
+## $ replacement_cost <dbl> 14.99, 19.99, 15.99, 12.99, 20.99, 12.99, 18....
+## $ rating           <chr> "NC-17", "R", "R", "PG-13", "PG", "G", "NC-17...
+## $ last_update      <dttm> 2013-05-26 14:50:58, 2013-05-26 14:50:58, 20...
+## $ special_features <chr> "{Trailers}", "{\"Behind the Scenes\"}", "{Tr...
+## $ fulltext         <chr> "'chamber':1 'fate':4 'husband':11 'italian':...
 ```
 
 Stop the container & show that the container is still there, so can be started again.
 
 ```r
-system2('docker', 'stop pet',
+system2('docker', 'stop sql-pet',
         stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "pet"
+## [1] "sql-pet"
 ```
 
 ```r
 # show that the container still exists even though it's not running
 psout <- system2("docker", "ps -a", stdout = TRUE)
-psout[grepl(x = psout, pattern = 'pet')]
+psout[grepl(x = psout, pattern = 'sql-pet')]
 ```
 
 ```
-## [1] "b64033acf6ef        postgres-dvdrental   \"docker-entrypoint.s…\"   26 seconds ago      Exited (137) Less than a second ago                       pet"
+## [1] "1c94395ada6e        postgres-dvdrental   \"docker-entrypoint.s…\"   25 seconds ago      Exited (137) Less than a second ago                       sql-pet"
 ```
 
 ## Cleaning up
 
 Next time, you can just use this command to start the container:
 
-`system2("docker",  "start pet", stdout = TRUE, stderr = TRUE)`
+`system2("docker",  "start sql-pet", stdout = TRUE, stderr = TRUE)`
 
 And once stopped, the container can be removed with:
 
-`system2("docker",  "rm pet", stdout = TRUE, stderr = TRUE)`
+`system2("docker",  "rm sql-pet", stdout = TRUE, stderr = TRUE)`
 
-## Using the `pet` container in the rest of the book
+## Using the `sql-pet` container in the rest of the book
 
-After this point in the book, we assume that Docker is up and that we can always start up our *pet database* with:
+After this point in the book, we assume that Docker is up and that we can always start up our *sql-pet database* with:
 
-`system2("docker",  "start pet", stdout = TRUE, stderr = TRUE)`
+`system2("docker",  "start sql-pet", stdout = TRUE, stderr = TRUE)`
