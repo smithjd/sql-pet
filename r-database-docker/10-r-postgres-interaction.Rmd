@@ -5,7 +5,9 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(DBI)
 library(RPostgres)
+library(glue)
 ```
+Note that `tidyverse`, `DBI`, `RPostgres`, and `glue` are loaded.
 
 ## Basics
 
@@ -23,7 +25,7 @@ library(RPostgres)
 
 Assume that the Docker container with Postgres and the dvdrental database are ready to go.
 ```{r}
-system2("docker",  "start pet", stdout = TRUE, stderr = TRUE)
+system2("docker",  "start sql-pet", stdout = TRUE, stderr = TRUE)
 Sys.sleep(2) # need to wait for Docker & Postgres to come up before connecting.
 con <- DBI::dbConnect(RPostgres::Postgres(), host = "localhost",
                       port = "5432", user = "postgres",
@@ -43,8 +45,8 @@ have we hidden "in_schema()" as in:
   
 ```{r}
 
-table_schema_query  <- paste0("SELECT ", 
-  "table_name, column_name, data_type, ordinal_position, column_default, character_maximum_length, is_nullable", 
+table_schema_query  <- glue("SELECT ", 
+  "table_name, column_name, data_type, ordinal_position, column_default, character_maximum_length", 
   " FROM information_schema.columns ", 
   "WHERE table_schema = 'public'")
  

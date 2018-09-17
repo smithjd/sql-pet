@@ -1,6 +1,6 @@
 # Docker, Postgres, and R
 
-We always load the tidyverse and some other packages, but don't show it unless we are using packages other than `tidyverse`, `DBI`, and `RPostgres`.
+We always load the tidyverse and some other packages, but don't show it unless we are using packages other than `tidyverse`, `DBI`, `RPostgres`, and `glue`.
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(DBI)
@@ -25,13 +25,15 @@ The convention we use in this book is to assemble a command with `paste0` so tha
 chunk the following... 
 ```{r, eval=TRUE, echo=TRUE}
 docker_cmd <- glue(
-  "run ", # Run is the command for docker
-  "--detach ", # Detach means the docker container runs without a termanil
-  "--name cattle ", # we are naming container
-  "--publish 5432:5432 ", # Postgres port is  5432
-  " postgres:10"  # this is the name of the Docker image we are downloading / executing.
+  "run ",      # Run is the Docker command.  Everything that follows are `run` parameters.
+  "--detach ", # (or `-d`) tells Docker to disconnect from the terminal / program issuing the command
+  "--name cattle ",       # tells Docker to give the container a name: `cattle`
+  "--publish 5432:5432 ", # tells Docker to expose the Postgres port 5432 to the local network with 5432
+  " postgres:10"  # tells Docker the image that is to be run (after downloading if necessary)
 )
 docker_cmd
+
+
 # Naming containers `cattle` for throw-aways and `pet` for ones we treasure and keep around.  :-)
 ```
 
@@ -96,8 +98,12 @@ knitr::kable(head(mtcars_df))
 Afterwards, always disconnect from the DBMS, stop the docker container and (optionally) remove it.
 ```{r}
 dbDisconnect(con)
+
+# tell Docker to stop the container:
 system2("docker", "stop cattle", stdout = TRUE, stderr = TRUE)
+
+# tell Docker to remove the container from it's library of active containers:
 system2("docker", "rm cattle", stdout = TRUE, stderr = TRUE)
 ```
 
-If we `stop` the docker container but don't remove it (with the `rm cattle` command), the container will persist and we can start it up with `start cattle`.  In that case, `mtcars` would still be there and we could download it again.  Since we have now removed the `cattle` container, the whole database has been deleted.  (There are enough copies of `mtcars` in the world, so no great loss.)
+If we `stop` the docker container but don't remove it (with the `rm cattle` command), the container will persist and we can start it up again later with `start cattle`.  In that case, `mtcars` would still be there and we could retrieve it from R again.  Since we have now removed the `cattle` container, the whole database has been deleted.  (There are enough copies of `mtcars` in the world, so no great loss.)
