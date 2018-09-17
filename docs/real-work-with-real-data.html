@@ -22,10 +22,10 @@
   <meta name="twitter:description" content="A collection of tutorials for integrating R with databases using Docker" />
   
 
-<meta name="author" content="Dipti Muni, Ian Frantz, John David Smith, M. Edward (Ed) Borasky, Scott Case, and Sophie Yang">
+<meta name="author" content="Dipti Muni, Ian Frantz, John David Smith, Mary Anne Thygesen, M. Edward (Ed) Borasky, Scott Case, and Sophie Yang">
 
 
-<meta name="date" content="2018-09-15">
+<meta name="date" content="2018-09-16">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -172,7 +172,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.6" data-path="a-persistent-database-in-postgres-in-docker-all-at-once.html"><a href="a-persistent-database-in-postgres-in-docker-all-at-once.html#connect-to-postgres-with-r"><i class="fa fa-check"></i><b>5.6</b> Connect to Postgres with R</a></li>
 <li class="chapter" data-level="5.7" data-path="a-persistent-database-in-postgres-in-docker-all-at-once.html"><a href="a-persistent-database-in-postgres-in-docker-all-at-once.html#stop-and-start-to-demonstrate-persistence"><i class="fa fa-check"></i><b>5.7</b> Stop and start to demonstrate persistence</a></li>
 <li class="chapter" data-level="5.8" data-path="a-persistent-database-in-postgres-in-docker-all-at-once.html"><a href="a-persistent-database-in-postgres-in-docker-all-at-once.html#cleaning-up"><i class="fa fa-check"></i><b>5.8</b> Cleaning up</a></li>
-<li class="chapter" data-level="5.9" data-path="a-persistent-database-in-postgres-in-docker-all-at-once.html"><a href="a-persistent-database-in-postgres-in-docker-all-at-once.html#using-the-pet-container-in-the-rest-of-the-book"><i class="fa fa-check"></i><b>5.9</b> Using the <code>pet</code> container in the rest of the book</a></li>
+<li class="chapter" data-level="5.9" data-path="a-persistent-database-in-postgres-in-docker-all-at-once.html"><a href="a-persistent-database-in-postgres-in-docker-all-at-once.html#using-the-sql-pet-container-in-the-rest-of-the-book"><i class="fa fa-check"></i><b>5.9</b> Using the <code>sql-pet</code> container in the rest of the book</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="a-persistent-database-in-postgres-in-docker-piecemeal.html"><a href="a-persistent-database-in-postgres-in-docker-piecemeal.html"><i class="fa fa-check"></i><b>6</b> A persistent database in Postgres in Docker - piecemeal</a><ul>
 <li class="chapter" data-level="6.1" data-path="a-persistent-database-in-postgres-in-docker-piecemeal.html"><a href="a-persistent-database-in-postgres-in-docker-piecemeal.html#overview-1"><i class="fa fa-check"></i><b>6.1</b> Overview</a></li>
@@ -181,7 +181,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.4" data-path="a-persistent-database-in-postgres-in-docker-piecemeal.html"><a href="a-persistent-database-in-postgres-in-docker-piecemeal.html#build-the-docker-image-1"><i class="fa fa-check"></i><b>6.4</b> Build the Docker Image</a></li>
 <li class="chapter" data-level="6.5" data-path="a-persistent-database-in-postgres-in-docker-piecemeal.html"><a href="a-persistent-database-in-postgres-in-docker-piecemeal.html#stop-and-start-to-demonstrate-persistence-1"><i class="fa fa-check"></i><b>6.5</b> Stop and start to demonstrate persistence</a></li>
 <li class="chapter" data-level="6.6" data-path="a-persistent-database-in-postgres-in-docker-piecemeal.html"><a href="a-persistent-database-in-postgres-in-docker-piecemeal.html#cleaning-up-1"><i class="fa fa-check"></i><b>6.6</b> Cleaning up</a></li>
-<li class="chapter" data-level="6.7" data-path="a-persistent-database-in-postgres-in-docker-piecemeal.html"><a href="a-persistent-database-in-postgres-in-docker-piecemeal.html#using-the-pet-container-in-the-rest-of-the-book-1"><i class="fa fa-check"></i><b>6.7</b> Using the <code>pet</code> container in the rest of the book</a></li>
+<li class="chapter" data-level="6.7" data-path="a-persistent-database-in-postgres-in-docker-piecemeal.html"><a href="a-persistent-database-in-postgres-in-docker-piecemeal.html#using-the-sql-pet-container-in-the-rest-of-the-book-1"><i class="fa fa-check"></i><b>6.7</b> Using the <code>sql-pet</code> container in the rest of the book</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="introduction-to-interacting-with-postgres-from-r.html"><a href="introduction-to-interacting-with-postgres-from-r.html"><i class="fa fa-check"></i><b>7</b> Introduction to interacting with Postgres from R</a><ul>
 <li class="chapter" data-level="7.1" data-path="introduction-to-interacting-with-postgres-from-r.html"><a href="introduction-to-interacting-with-postgres-from-r.html#basics"><i class="fa fa-check"></i><b>7.1</b> Basics</a></li>
@@ -239,13 +239,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="some-extra-handy-libraries" class="section level2">
 <h2><span class="header-section-number">8.1</span> Some extra handy libraries</h2>
 <p>Here are some packages that we find handy in the preliminary investigation of a database (or a problem that involves data from a databse).</p>
-<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb96-1" data-line-number="1"><span class="kw">library</span>(glue)</a></code></pre></div>
-<pre><code>## 
-## Attaching package: &#39;glue&#39;</code></pre>
-<pre><code>## The following object is masked from &#39;package:dplyr&#39;:
-## 
-##     collapse</code></pre>
-<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb99-1" data-line-number="1"><span class="kw">library</span>(skimr)</a></code></pre></div>
+<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb99-1" data-line-number="1"><span class="kw">library</span>(glue)</a>
+<a class="sourceLine" id="cb99-2" data-line-number="2"><span class="kw">library</span>(skimr)</a></code></pre></div>
 </div>
 <div id="basic-investigation" class="section level2">
 <h2><span class="header-section-number">8.2</span> Basic investigation</h2>

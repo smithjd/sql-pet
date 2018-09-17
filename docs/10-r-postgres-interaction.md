@@ -1,6 +1,7 @@
 # Introduction to interacting with Postgres from R
 
 
+Note that `tidyverse`, `DBI`, `RPostgres`, and `glue` are loaded.
 
 ## Basics
 
@@ -19,11 +20,11 @@
 Assume that the Docker container with Postgres and the dvdrental database are ready to go.
 
 ```r
-system2("docker",  "start pet", stdout = TRUE, stderr = TRUE)
+system2("docker",  "start sql-pet", stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "pet"
+## [1] "sql-pet"
 ```
 
 ```r
@@ -46,8 +47,8 @@ have we hidden "in_schema()" as in:
   
 
 ```r
-table_schema_query  <- paste0("SELECT ", 
-  "table_name, column_name, data_type, ordinal_position, column_default, character_maximum_length, is_nullable", 
+table_schema_query  <- glue("SELECT ", 
+  "table_name, column_name, data_type, ordinal_position, column_default, character_maximum_length", 
   " FROM information_schema.columns ", 
   "WHERE table_schema = 'public'")
  
@@ -58,14 +59,13 @@ glimpse(rental_meta_data)
 
 ```
 ## Observations: 128
-## Variables: 7
+## Variables: 6
 ## $ table_name               <chr> "actor_info", "actor_info", "actor_in...
 ## $ column_name              <chr> "actor_id", "first_name", "last_name"...
 ## $ data_type                <chr> "integer", "character varying", "char...
 ## $ ordinal_position         <int> 1, 2, 3, 4, 1, 2, 3, 4, 5, 6, 7, 8, 9...
 ## $ column_default           <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, N...
 ## $ character_maximum_length <int> NA, 45, 45, NA, NA, NA, 50, 10, 20, 5...
-## $ is_nullable              <chr> "YES", "YES", "YES", "YES", "YES", "Y...
 ```
 Pull out some rough-and-ready but useful statistics about your database.  Since we are in SQL-land we talk about variables as `columns`.
 

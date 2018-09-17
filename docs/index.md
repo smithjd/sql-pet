@@ -1,7 +1,7 @@
 ---
 title: "R, Databases and Docker"
-author: "Dipti Muni, Ian Frantz, John David Smith, M. Edward (Ed) Borasky,  Scott Case, and Sophie Yang"
-date: "2018-09-15"
+author: "Dipti Muni, Ian Frantz, John David Smith, Mary Anne Thygesen, M. Edward (Ed) Borasky,  Scott Case, and Sophie Yang"
+date: "2018-09-16"
 site: bookdown::bookdown_site
 documentclass: book
 bibliography: [book.bib, packages.bib]
