@@ -25,7 +25,7 @@
 <meta name="author" content="Dipti Muni, Ian Frantz, John David Smith, Mary Anne Thygesen, M. Edward (Ed) Borasky, Scott Case, and Sophie Yang">
 
 
-<meta name="date" content="2018-09-16">
+<meta name="date" content="2018-09-17">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -160,13 +160,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="4" data-path="docker-postgres-and-r.html"><a href="docker-postgres-and-r.html"><i class="fa fa-check"></i><b>4</b> Docker, Postgres, and R</a><ul>
 <li class="chapter" data-level="4.1" data-path="docker-postgres-and-r.html"><a href="docker-postgres-and-r.html#verify-that-docker-running"><i class="fa fa-check"></i><b>4.1</b> Verify that Docker running</a></li>
-<li class="chapter" data-level="4.2" data-path="docker-postgres-and-r.html"><a href="docker-postgres-and-r.html#connect-read-and-write-to-postgres-from-r"><i class="fa fa-check"></i><b>4.2</b> Connect, read and write to Postgres from R</a></li>
-<li class="chapter" data-level="4.3" data-path="docker-postgres-and-r.html"><a href="docker-postgres-and-r.html#clean-up"><i class="fa fa-check"></i><b>4.3</b> Clean up</a></li>
+<li class="chapter" data-level="4.2" data-path="docker-postgres-and-r.html"><a href="docker-postgres-and-r.html#clean-up-if-appropriate"><i class="fa fa-check"></i><b>4.2</b> Clean up if appropriate</a></li>
+<li class="chapter" data-level="4.3" data-path="docker-postgres-and-r.html"><a href="docker-postgres-and-r.html#connect-read-and-write-to-postgres-from-r"><i class="fa fa-check"></i><b>4.3</b> Connect, read and write to Postgres from R</a></li>
+<li class="chapter" data-level="4.4" data-path="docker-postgres-and-r.html"><a href="docker-postgres-and-r.html#clean-up"><i class="fa fa-check"></i><b>4.4</b> Clean up</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="a-persistent-database-in-postgres-in-docker-all-at-once.html"><a href="a-persistent-database-in-postgres-in-docker-all-at-once.html"><i class="fa fa-check"></i><b>5</b> A persistent database in Postgres in Docker - all at once</a><ul>
 <li class="chapter" data-level="5.1" data-path="a-persistent-database-in-postgres-in-docker-all-at-once.html"><a href="a-persistent-database-in-postgres-in-docker-all-at-once.html#overview"><i class="fa fa-check"></i><b>5.1</b> Overview</a></li>
 <li class="chapter" data-level="5.2" data-path="a-persistent-database-in-postgres-in-docker-all-at-once.html"><a href="a-persistent-database-in-postgres-in-docker-all-at-once.html#first-verify-that-docker-is-up-and-running"><i class="fa fa-check"></i><b>5.2</b> First, verify that Docker is up and running:</a></li>
-<li class="chapter" data-level="5.3" data-path="a-persistent-database-in-postgres-in-docker-all-at-once.html"><a href="a-persistent-database-in-postgres-in-docker-all-at-once.html#clean-up-if-appropriate"><i class="fa fa-check"></i><b>5.3</b> Clean up if appropriate</a></li>
+<li class="chapter" data-level="5.3" data-path="a-persistent-database-in-postgres-in-docker-all-at-once.html"><a href="a-persistent-database-in-postgres-in-docker-all-at-once.html#clean-up-if-appropriate-1"><i class="fa fa-check"></i><b>5.3</b> Clean up if appropriate</a></li>
 <li class="chapter" data-level="5.4" data-path="a-persistent-database-in-postgres-in-docker-all-at-once.html"><a href="a-persistent-database-in-postgres-in-docker-all-at-once.html#build-the-docker-image"><i class="fa fa-check"></i><b>5.4</b> Build the Docker Image</a></li>
 <li class="chapter" data-level="5.5" data-path="a-persistent-database-in-postgres-in-docker-all-at-once.html"><a href="a-persistent-database-in-postgres-in-docker-all-at-once.html#run-the-docker-image"><i class="fa fa-check"></i><b>5.5</b> Run the Docker Image</a></li>
 <li class="chapter" data-level="5.6" data-path="a-persistent-database-in-postgres-in-docker-all-at-once.html"><a href="a-persistent-database-in-postgres-in-docker-all-at-once.html#connect-to-postgres-with-r"><i class="fa fa-check"></i><b>5.6</b> Connect to Postgres with R</a></li>
@@ -258,25 +259,25 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="get-some-basic-information-about-your-database" class="section level2">
 <h2><span class="header-section-number">7.3</span> Get some basic information about your database</h2>
 <p>Assume that the Docker container with Postgres and the dvdrental database are ready to go.</p>
-<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb86-1" data-line-number="1"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>,  <span class="st">&quot;start sql-pet&quot;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb87-1" data-line-number="1"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>,  <span class="st">&quot;start sql-pet&quot;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <pre><code>## [1] &quot;sql-pet&quot;</code></pre>
-<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb88-1" data-line-number="1"><span class="kw">Sys.sleep</span>(<span class="dv">2</span>) <span class="co"># need to wait for Docker &amp; Postgres to come up before connecting.</span></a>
-<a class="sourceLine" id="cb88-2" data-line-number="2">con &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbConnect</span>(RPostgres<span class="op">::</span><span class="kw">Postgres</span>(), <span class="dt">host =</span> <span class="st">&quot;localhost&quot;</span>,</a>
-<a class="sourceLine" id="cb88-3" data-line-number="3">                      <span class="dt">port =</span> <span class="st">&quot;5432&quot;</span>, <span class="dt">user =</span> <span class="st">&quot;postgres&quot;</span>,</a>
-<a class="sourceLine" id="cb88-4" data-line-number="4">                      <span class="dt">password =</span> <span class="st">&quot;postgres&quot;</span>, <span class="dt">dbname =</span> <span class="st">&quot;dvdrental&quot;</span> ) <span class="co"># note that the dbname is specified</span></a></code></pre></div>
+<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb89-1" data-line-number="1"><span class="kw">Sys.sleep</span>(<span class="dv">2</span>) <span class="co"># need to wait for Docker &amp; Postgres to come up before connecting.</span></a>
+<a class="sourceLine" id="cb89-2" data-line-number="2">con &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbConnect</span>(RPostgres<span class="op">::</span><span class="kw">Postgres</span>(), <span class="dt">host =</span> <span class="st">&quot;localhost&quot;</span>,</a>
+<a class="sourceLine" id="cb89-3" data-line-number="3">                      <span class="dt">port =</span> <span class="st">&quot;5432&quot;</span>, <span class="dt">user =</span> <span class="st">&quot;postgres&quot;</span>,</a>
+<a class="sourceLine" id="cb89-4" data-line-number="4">                      <span class="dt">password =</span> <span class="st">&quot;postgres&quot;</span>, <span class="dt">dbname =</span> <span class="st">&quot;dvdrental&quot;</span> ) <span class="co"># note that the dbname is specified</span></a></code></pre></div>
 <p>You usually need to use both the available documentation for your <a href="http://www.postgresqltutorial.com/postgresql-sample-database/">database</a> and to be somewhat skeptical (e.g., empirical). It’s worth learning to interpret the symbols in an <a href="https://en.wikipedia.org/wiki/Entity%E2%80%93relationship_model">Entity Relationship Diagram</a>:</p>
 <p><img src="screenshots/ER-diagram-symbols.png" /></p>
 <p>Depending on how skeptical you are about the documenttion, you might want to get an overview of a database by pulling data from the database <code>information_schema</code>. Here’s a selection of useful information although you may want more (or less). There is a lot to choose from <a href="https://www.postgresql.org/docs/current/static/infoschema-columns.html">a vast list of metadata</a>. Note that information schemas are somewhat consistent across different DBMS’ that you may encounter.</p>
 <p>have we hidden “in_schema()” as in:</p>
 <p><code>con %&gt;% tbl(in_schema(&quot;aux&quot;, &quot;df&quot;))</code></p>
-<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb89-1" data-line-number="1">table_schema_query  &lt;-<span class="st"> </span><span class="kw">glue</span>(<span class="st">&quot;SELECT &quot;</span>, </a>
-<a class="sourceLine" id="cb89-2" data-line-number="2">  <span class="st">&quot;table_name, column_name, data_type, ordinal_position, column_default, character_maximum_length&quot;</span>, </a>
-<a class="sourceLine" id="cb89-3" data-line-number="3">  <span class="st">&quot; FROM information_schema.columns &quot;</span>, </a>
-<a class="sourceLine" id="cb89-4" data-line-number="4">  <span class="st">&quot;WHERE table_schema = &#39;public&#39;&quot;</span>)</a>
-<a class="sourceLine" id="cb89-5" data-line-number="5"> </a>
-<a class="sourceLine" id="cb89-6" data-line-number="6">  rental_meta_data  &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con, table_schema_query) </a>
-<a class="sourceLine" id="cb89-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb89-8" data-line-number="8"><span class="kw">glimpse</span>(rental_meta_data)</a></code></pre></div>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb90-1" data-line-number="1">table_schema_query  &lt;-<span class="st"> </span><span class="kw">glue</span>(<span class="st">&quot;SELECT &quot;</span>, </a>
+<a class="sourceLine" id="cb90-2" data-line-number="2">  <span class="st">&quot;table_name, column_name, data_type, ordinal_position, column_default, character_maximum_length&quot;</span>, </a>
+<a class="sourceLine" id="cb90-3" data-line-number="3">  <span class="st">&quot; FROM information_schema.columns &quot;</span>, </a>
+<a class="sourceLine" id="cb90-4" data-line-number="4">  <span class="st">&quot;WHERE table_schema = &#39;public&#39;&quot;</span>)</a>
+<a class="sourceLine" id="cb90-5" data-line-number="5"> </a>
+<a class="sourceLine" id="cb90-6" data-line-number="6">  rental_meta_data  &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con, table_schema_query) </a>
+<a class="sourceLine" id="cb90-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb90-8" data-line-number="8"><span class="kw">glimpse</span>(rental_meta_data)</a></code></pre></div>
 <pre><code>## Observations: 128
 ## Variables: 6
 ## $ table_name               &lt;chr&gt; &quot;actor_info&quot;, &quot;actor_info&quot;, &quot;actor_in...
@@ -287,7 +288,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## $ character_maximum_length &lt;int&gt; NA, 45, 45, NA, NA, NA, 50, 10, 20, 5...</code></pre>
 <p>Pull out some rough-and-ready but useful statistics about your database. Since we are in SQL-land we talk about variables as <code>columns</code>.</p>
 <p>Start with a list of tables names and a count of the number of columns that each one contains.</p>
-<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb91-1" data-line-number="1">rental_meta_data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(table_name) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rename</span>(<span class="dt">number_of_columns =</span> n) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.data.frame</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb92-1" data-line-number="1">rental_meta_data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(table_name) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rename</span>(<span class="dt">number_of_columns =</span> n) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.data.frame</span>()</a></code></pre></div>
 <pre><code>##                    table_name number_of_columns
 ## 1                       actor                 4
 ## 2                  actor_info                 4
@@ -312,7 +313,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 21                 staff_list                 8
 ## 22                      store                 4</code></pre>
 <p>How many column names are shared across tables (or duplicated)?</p>
-<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb93-1" data-line-number="1">rental_meta_data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(column_name, <span class="dt">sort =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(n <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb94-1" data-line-number="1">rental_meta_data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(column_name, <span class="dt">sort =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(n <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>)</a></code></pre></div>
 <pre><code>## # A tibble: 34 x 2
 ##    column_name     n
 ##    &lt;chr&gt;       &lt;int&gt;
@@ -328,7 +329,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 10 category        3
 ## # ... with 24 more rows</code></pre>
 <p>How many column names are unique?</p>
-<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb95-1" data-line-number="1">rental_meta_data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(column_name) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(n <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb96-1" data-line-number="1">rental_meta_data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(column_name) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(n <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>)</a></code></pre></div>
 <pre><code>## # A tibble: 34 x 2
 ##    column_name     n
 ##    &lt;chr&gt;       &lt;int&gt;
@@ -344,7 +345,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 10 country         3
 ## # ... with 24 more rows</code></pre>
 <p>What data types are found in the database?</p>
-<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb97-1" data-line-number="1">rental_meta_data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(data_type)</a></code></pre></div>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb98-1" data-line-number="1">rental_meta_data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(data_type)</a></code></pre></div>
 <pre><code>## # A tibble: 13 x 2
 ##    data_type                       n
 ##    &lt;chr&gt;                       &lt;int&gt;
