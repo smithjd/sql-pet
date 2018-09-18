@@ -37,18 +37,39 @@ system2("docker", "version", stdout = TRUE, stderr = TRUE)
 ## [18] "  Experimental:     true"
 ```
 
-The convention we use in this book is to assemble a command with `paste0` so that the parts of the command can be specified separately.  This chunk just constructs the command, but does not execute.  If you have problems, you can copy the command and execute in your terminal session.
+## Clean up if appropriate
+Remove the `cattle` and `sql-pet` containers if they exists (e.g., from a prior experiments).  
 
-chunk the following... 
+```r
+if (system2("docker", "ps -a", stdout = TRUE) %>% 
+   grepl(x = ., pattern = 'cattle') %>% 
+   any()) {
+     system2("docker", "rm -f cattle")
+}
+if (system2("docker", "ps -a", stdout = TRUE) %>% 
+   grepl(x = ., pattern = 'sql-pet') %>% 
+   any()) {
+     system2("docker", "rm -f sql-pet")
+}
+```
+
+The convention we use in this book is to assemble a command with `glue` so that the you can see all of its separate parts.  The following chunk just constructs the command, but does not execute it.  If you have problems executing a commnad, you can always copy the command and execute in your terminal session.
 
 ```r
 docker_cmd <- glue(
-  "run ",      # Run is the Docker command.  Everything that follows are `run` parameters.
+  "run ",      # Run is the Docker command.  Everything that follows are `docker run` parameters.
   "--detach ", # (or `-d`) tells Docker to disconnect from the terminal / program issuing the command
   "--name cattle ",       # tells Docker to give the container a name: `cattle`
   "--publish 5432:5432 ", # tells Docker to expose the Postgres port 5432 to the local network with 5432
   " postgres:10"  # tells Docker the image that is to be run (after downloading if necessary)
 )
+
+# We name containers `cattle` for throw-aways and `pet` for ones we treasure and keep around.  :-)
+```
+
+Submit the command constructed above:
+
+```r
 docker_cmd
 ```
 
@@ -57,30 +78,12 @@ docker_cmd
 ```
 
 ```r
-# Naming containers `cattle` for throw-aways and `pet` for ones we treasure and keep around.  :-)
-```
-
-Remove `cattle` if it exists.
-
-Submit the command constructed above:
-
-```r
 system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## Warning in system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE):
-## running command ''docker' run --detach --name cattle --publish 5432:5432
-## postgres:10 2>&1' had status 125
+## [1] "596ad8bf2df8e1e21643dcd84b69de00e0d51ef3ef333fac685c74bc4ca0c32d"
 ```
-
-```
-## [1] "249b0658664a0d878ccfe6332878ee7f1e2ff8143706394db679793badd43e74"                                                                                                                                                                   
-## [2] "docker: Error response from daemon: driver failed programming external connectivity on endpoint cattle (a4f8447968a1778c9bb5a5d1a075f0842b6395b43e3d0d669a067c13f6227b5c): Bind for 0.0.0.0:5432 failed: port is already allocated."
-## attr(,"status")
-## [1] 125
-```
-Possible errors here: if docker isn't ready, you'll see errors.
 
 Docker returns a long string of numbers.  If you are running this command for the first time, Docker is downloading the Postgres image and it takes a bit of time.
 
@@ -91,21 +94,35 @@ system2("docker", "ps", stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES"    
-## [2] "fdbefcf484f1        postgres:10         \"docker-entrypoint.s…\"   37 seconds ago      Up 11 seconds       0.0.0.0:5432->5432/tcp   sql-pet"
+## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES"   
+## [2] "596ad8bf2df8        postgres:10         \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
 ```
 ## Connect, read and write to Postgres from R
 
-Create a connection to Postgres after waiting 3 seconds so that Docker has time to do its thing.
+Create a connection to Postgres waiting up to 10 seconds for the database to come up in Docker.
+
 
 ```r
-Sys.sleep(3)
+wait_for_postgres <- function(seconds_to_test){
+  for (i in 1:seconds_to_test) {
+    db_ready <- DBI::dbCanConnect(RPostgres::Postgres(),
+                        host = "localhost",
+                        port = "5432",
+                        user = "postgres",
+                        password = "postgres")
+    if ( !db_ready ) {Sys.sleep(1)} 
+    else {con <- DBI::dbConnect(RPostgres::Postgres(),
+                        host = "localhost",
+                        port = "5432",
+                        user = "postgres",
+                        password = "postgres")
+    }
+    if (i == seconds_to_test & !db_ready) {con <- "it's not there"}
+    }
+    con
+  }
 
-con <- DBI::dbConnect(RPostgres::Postgres(),
-                      host = "localhost",
-                      port = "5432",
-                      user = "postgres",
-                      password = "postgres")
+con <- wait_for_postgres(10)
 ```
 
 Show that you can connect but that Postgres database doesn't contain any tables:
