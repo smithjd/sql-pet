@@ -52,17 +52,32 @@ The following comand shows that `postgres:10` is still running:
 system2("docker", "ps", stdout = TRUE, stderr = TRUE)
 
 ```
-## Connect, read and write to Postgres from R
+## Put the database password in an environment file
+The goal is to put the password in a file that will **not** be committed in your source code repository. The your code can reference the name of the variable, but the value of that variable will not appear in open text in your source code.
 
+We have chosen to call the file `dev_environment.csv` in the current working directory where you are executing this script. That file name appears in the `.gitignore` file, so that you will not accidentally commit it. We are going to create that file now.
+
+You will be prompted for the database password. By default, a postgres database defines a database user named `postgres`, whose password is `postgres`. If you have changed the password or created a new user with a different password, then enter those new values when prompted. Otherwise, enter `postgres` and `postgres` at the two prompts.
+```{r}
+DB_USERNAME <- trimws(readline(prompt = "username: "), which = "both")
+DB_PASSWORD <- getPass::getPass(msg = "password: ")
+environment_variables = data.frame(
+  variable = c("username", "password"),
+  value = c(DB_USERNAME, DB_PASSWORD),
+  stringsAsFactors = FALSE)
+write.csv(environment_variables, "./dev_environment.csv", row.names = FALSE)
+```
+## Connect, read and write to Postgres from R
 Create a connection to Postgres after waiting 3 seconds so that Docker has time to do its thing.
 ```{r}
 Sys.sleep(3)
 
-con <- DBI::dbConnect(RPostgres::Postgres(),
-                      host = "localhost",
-                      port = "5432",
-                      user = "postgres",
-                      password = "postgres")
+con <- DBI::dbConnect(
+  RPostgres::Postgres(),
+  host = "localhost",
+  port = "5432",
+  user = dplyr::filter(environment_variables, variable == "username")[, "value"],
+  password = dplyr::filter(environment_variables, variable == "password")[, "value"])
 ```
 
 Show that you can connect but that Postgres database doesn't contain any tables:
