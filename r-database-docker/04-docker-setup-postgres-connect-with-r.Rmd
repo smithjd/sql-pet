@@ -6,6 +6,7 @@ library(tidyverse)
 library(DBI)
 library(RPostgres)
 library(glue)
+library(dbplyr)
 ```
 ## Verify that Docker running
 
@@ -20,6 +21,12 @@ The `docker version` command returns the details about the docker daemon that is
 system2("docker", "version", stdout = TRUE, stderr = TRUE)
 ```
 
+The purpose of this exercise is to illustrate the creation of a new temporary `cattle` database.  If it already exists, it is forcibly removed from the container in the next code block.
+
+```{r}
+system2("docker","rm -f cattle")
+```
+
 The convention we use in this book is to assemble a command with `paste0` so that the parts of the command can be specified separately.  This chunk just constructs the command, but does not execute.  If you have problems, you can copy the command and execute in your terminal session.
 
 chunk the following... 
@@ -31,7 +38,7 @@ docker_cmd <- glue(
   "--publish 5432:5432 ", # tells Docker to expose the Postgres port 5432 to the local network with 5432
   " postgres:10"  # tells Docker the image that is to be run (after downloading if necessary)
 )
-docker_cmd
+cat(paste0('docker ',docker_cmd))
 
 
 # Naming containers `cattle` for throw-aways and `pet` for ones we treasure and keep around.  :-)
@@ -73,7 +80,7 @@ dbListTables(con)
 
 Write `mtcars` to Postgres
 ```{r}
-dbWriteTable(con, "mtcars", mtcars)
+dbWriteTable(con, "mtcars", mtcars,overwrite=TRUE)
 ```
 
 List the tables in the Postgres database to show that `mtcars` is now there:
@@ -87,6 +94,7 @@ dbListFields(con, "mtcars")
 
 Download the table from the DBMS to a local data frame:
 ```{r}
+mtcars_df <- dbGetQuery(con,"SELECT * FROM mtcars")
 mtcars_df <- tbl(con, "mtcars")
 
 # Show a few rows:
