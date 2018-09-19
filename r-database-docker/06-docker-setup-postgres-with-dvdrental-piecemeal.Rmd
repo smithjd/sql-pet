@@ -59,10 +59,11 @@ docker_cmd <- glue(
   " --name sql-pet ",     # tells Docker to give the container a name: `sql-pet`
   "--publish 5432:5432 ", # tells Docker to expose the Postgres port 5432 to the local network with 5432
   "--mount ", # tells Docker to mount a volume -- mapping Docker's internal file structure to the host file structure
-  "type=bind,source='", wd, "'/,target=/petdir",
+  "type=bind,source=", wd, "/,target=/petdir",
   " postgres:10" # tells Docker the image that is to be run (after downloading if necessary)
 )
-
+cat ('docker ',docker_cmd)
+cat ('')
 system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
