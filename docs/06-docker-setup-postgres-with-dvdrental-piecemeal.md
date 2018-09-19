@@ -106,7 +106,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "fd4e74cd405b2cd3cd741770824dfd1b73a31793aeac99a6dfeb641463ae75a9"
+## [1] "3eae6ab50047e30ffdb3b355495b38642c500419ab119936f06714197aacb026"
 ```
 
 Peek inside the docker container and list the files in the `petdir` directory.  Notice that `dvdrental.tar` is in both.
@@ -131,7 +131,7 @@ dir(wd, pattern = "dvdrental.tar")
 We can execute programs inside the Docker container with the `exec` command.  In this case we tell Docker to execute the `psql` program inside the `sql-pet` container and pass it some commands.
 
 ```r
-Sys.sleep(2)
+Sys.sleep(2)  # is this really needed?
 # inside Docker, execute the postgress SQL command-line program to create the dvdrental database:
 system2('docker', 'exec sql-pet psql -U postgres -c "CREATE DATABASE dvdrental;"',
         stdout = TRUE, stderr = TRUE)
@@ -145,7 +145,7 @@ The `psql` program repeats back to us what it has done, e.g., to create a databs
 Next we execute a different program in the Docker container, `pg_restore`, and tell it where the restore file is located.  If successful, the `pg_restore` just responds with a very laconic `character(0)`.
 
 ```r
-Sys.sleep(2)
+Sys.sleep(2)  # is this really needed?
 # restore the database from the .tar file
 system2("docker", "exec sql-pet pg_restore -U postgres -d dvdrental petdir/dvdrental.tar", stdout = TRUE, stderr = TRUE)
 ```
@@ -165,14 +165,28 @@ file.remove(here("dvdrental.tar")) # the tar file is no longer needed.
 Use the DBI package to connect to Postgres.  But first, wait for Docker & Postgres to come up before connecting.
 
 ```r
-Sys.sleep(4) 
+wait_for_postgres <- function(seconds_to_test){
+  for (i in 1:seconds_to_test) {
+    db_ready <- DBI::dbCanConnect(RPostgres::Postgres(),
+                        host = "localhost",
+                        port = "5432",
+                        user = "postgres",
+                        password = "postgres",
+                        dbname = "dvdrental" ) # note that the dbname is specified
+    if ( !db_ready ) {Sys.sleep(1)} 
+    else {con <- DBI::dbConnect(RPostgres::Postgres(),
+                        host = "localhost",
+                        port = "5432",
+                        user = "postgres",
+                        password = "postgres",
+                        dbname = "dvdrental" ) # note that the dbname is specified)
+    }
+    if (i == seconds_to_test & !db_ready) {con <- "it's not there"}
+    }
+    con
+  }
 
-con <- DBI::dbConnect(RPostgres::Postgres(),
-                      host = "localhost",
-                      port = "5432",
-                      user = "postgres",
-                      password = "postgres",
-                      dbname = "dvdrental" ) # note that the dbname is specified
+con <- wait_for_postgres(10)
 
 dbListTables(con)
 ```
@@ -231,12 +245,7 @@ system2("docker",  "start sql-pet", stdout = TRUE, stderr = TRUE)
 ```r
 Sys.sleep(1) # need to wait for Docker & Postgres to come up before connecting.
 
-con <- DBI::dbConnect(RPostgres::Postgres(),
-                      host = "localhost",
-                      port = "5432",
-                      user = "postgres",
-                      password = "postgres",
-                      dbname = "dvdrental" ) # note that the dbname is specified
+con <- wait_for_postgres(10)
 
 glimpse(dbReadTable(con, "film"))
 ```
@@ -277,7 +286,7 @@ psout[grepl(x = psout, pattern = 'sql-pet')]
 ```
 
 ```
-## [1] "fd4e74cd405b        postgres:10         \"docker-entrypoint.s…\"   23 seconds ago      Exited (137) Less than a second ago                       sql-pet"
+## [1] "3eae6ab50047        postgres:10         \"docker-entrypoint.s…\"   30 seconds ago      Exited (137) Less than a second ago                       sql-pet"
 ```
 
 ## Cleaning up

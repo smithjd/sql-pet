@@ -1,7 +1,7 @@
 # SQL Pet Tutorial
 
-## Next Meeting 9/15 @10am
-Location: Study room 2B at Central Library, Downtown Portland -- 801 SW 10th 
+## Next Meeting October/6 @10am (about 2-3 hours, followed by lunch)
+Location: TBA, but could be Study room 2B at Central Library, Downtown Portland -- 801 SW 10th 
 
 **Table of Contents**
 

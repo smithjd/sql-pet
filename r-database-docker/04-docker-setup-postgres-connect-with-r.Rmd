@@ -21,30 +21,40 @@ The `docker version` command returns the details about the docker daemon that is
 system2("docker", "version", stdout = TRUE, stderr = TRUE)
 ```
 
-The convention we use in this book is to assemble a command with `paste0` so that the parts of the command can be specified separately.  This chunk just constructs the command, but does not execute.  If you have problems, you can copy the command and execute in your terminal session.
+## Clean up if appropriate
+Remove the `cattle` and `sql-pet` containers if they exists (e.g., from a prior experiments).  
+```{r docker cleanup}
+if (system2("docker", "ps -a", stdout = TRUE) %>% 
+   grepl(x = ., pattern = 'cattle') %>% 
+   any()) {
+     system2("docker", "rm -f cattle")
+}
+if (system2("docker", "ps -a", stdout = TRUE) %>% 
+   grepl(x = ., pattern = 'sql-pet') %>% 
+   any()) {
+     system2("docker", "rm -f sql-pet")
+}
+```
 
-chunk the following... 
-```{r, eval=TRUE, echo=TRUE}
+The convention we use in this book is to assemble a command with `glue` so that the you can see all of its separate parts.  The following chunk just constructs the command, but does not execute it.  If you have problems executing a commnad, you can always copy the command and execute in your terminal session.
+```{r glue docker command, eval=TRUE, echo=TRUE}
 docker_cmd <- glue(
-  "run ",      # Run is the Docker command.  Everything that follows are `run` parameters.
+  "run ",      # Run is the Docker command.  Everything that follows are `docker run` parameters.
   "--detach ", # (or `-d`) tells Docker to disconnect from the terminal / program issuing the command
   "--name cattle ",       # tells Docker to give the container a name: `cattle`
   "--publish 5432:5432 ", # tells Docker to expose the Postgres port 5432 to the local network with 5432
   " postgres:10"  # tells Docker the image that is to be run (after downloading if necessary)
 )
-docker_cmd
 
-
-# Naming containers `cattle` for throw-aways and `pet` for ones we treasure and keep around.  :-)
+# We name containers `cattle` for throw-aways and `pet` for ones we treasure and keep around.  :-)
 ```
-
-Remove `cattle` if it exists.
 
 Submit the command constructed above:
-```{r, eval=TRUE, echo=TRUE}
+```{r run the docker command, eval=TRUE, echo=TRUE}
+docker_cmd
+
 system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
-Possible errors here: if docker isn't ready, you'll see errors.
 
 Docker returns a long string of numbers.  If you are running this command for the first time, Docker is downloading the Postgres image and it takes a bit of time.
 
@@ -73,14 +83,27 @@ Your password is still in plain text in the file, `dev_environment.csv`, so you 
 ## Connect, read and write to Postgres from R
 Create a connection to Postgres after waiting 3 seconds so that Docker has time to do its thing. For security, we use values from the `environment_variables` data.frame, rather than keeping the `username` and `password` in plain text in this source file.
 ```{r}
-Sys.sleep(3)
+wait_for_postgres <- function(seconds_to_test){
+  for (i in 1:seconds_to_test) {
+    db_ready <- DBI::dbCanConnect(RPostgres::Postgres(),
+                        host = "localhost",
+                        port = "5432",
+                        user = dplyr::filter(environment_variables, variable == "username")[, "value"],
+                        password = dplyr::filter(environment_variables, variable == "password")[, "value"])
+    if ( !db_ready ) {Sys.sleep(1)} 
+    else {con <- DBI::dbConnect(RPostgres::Postgres(),
+                        host = "localhost",
+                        port = "5432",
+                        user = dplyr::filter(environment_variables, variable == "username")[, "value"],
+                        password = dplyr::filter(environment_variables, variable == "password")[, "value"])
+    }
+    if (i == seconds_to_test & !db_ready) {con <- "it's not there"}
+    }
+    con
+  }
 
-con <- DBI::dbConnect(
-  RPostgres::Postgres(),
-  host = "localhost",
-  port = "5432",
-  user = dplyr::filter(environment_variables, variable == "username")[, "value"],
-  password = dplyr::filter(environment_variables, variable == "password")[, "value"])
+con <- wait_for_postgres(10)
+
 ```
 
 Show that you can connect but that Postgres database doesn't contain any tables:
