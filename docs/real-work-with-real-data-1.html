@@ -25,7 +25,7 @@
 <meta name="author" content="Dipti Muni, Ian Frantz, John David Smith, Mary Anne Thygesen, M. Edward (Ed) Borasky, Scott Case, and Sophie Yang">
 
 
-<meta name="date" content="2018-09-17">
+<meta name="date" content="2018-09-20">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -161,8 +161,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4" data-path="docker-postgres-and-r.html"><a href="docker-postgres-and-r.html"><i class="fa fa-check"></i><b>4</b> Docker, Postgres, and R</a><ul>
 <li class="chapter" data-level="4.1" data-path="docker-postgres-and-r.html"><a href="docker-postgres-and-r.html#verify-that-docker-running"><i class="fa fa-check"></i><b>4.1</b> Verify that Docker running</a></li>
 <li class="chapter" data-level="4.2" data-path="docker-postgres-and-r.html"><a href="docker-postgres-and-r.html#clean-up-if-appropriate"><i class="fa fa-check"></i><b>4.2</b> Clean up if appropriate</a></li>
-<li class="chapter" data-level="4.3" data-path="docker-postgres-and-r.html"><a href="docker-postgres-and-r.html#connect-read-and-write-to-postgres-from-r"><i class="fa fa-check"></i><b>4.3</b> Connect, read and write to Postgres from R</a></li>
-<li class="chapter" data-level="4.4" data-path="docker-postgres-and-r.html"><a href="docker-postgres-and-r.html#clean-up"><i class="fa fa-check"></i><b>4.4</b> Clean up</a></li>
+<li class="chapter" data-level="4.3" data-path="docker-postgres-and-r.html"><a href="docker-postgres-and-r.html#put-the-database-password-in-an-environment-file"><i class="fa fa-check"></i><b>4.3</b> Put the database password in an environment file</a></li>
+<li class="chapter" data-level="4.4" data-path="docker-postgres-and-r.html"><a href="docker-postgres-and-r.html#connect-read-and-write-to-postgres-from-r"><i class="fa fa-check"></i><b>4.4</b> Connect, read and write to Postgres from R</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="docker-postgres-and-r.html"><a href="docker-postgres-and-r.html#pause-for-some-security-considerations"><i class="fa fa-check"></i><b>4.4.1</b> Pause for some security considerations</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="docker-postgres-and-r.html"><a href="docker-postgres-and-r.html#clean-up"><i class="fa fa-check"></i><b>4.5</b> Clean up</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="a-persistent-database-in-postgres-in-docker-all-at-once.html"><a href="a-persistent-database-in-postgres-in-docker-all-at-once.html"><i class="fa fa-check"></i><b>5</b> A persistent database in Postgres in Docker - all at once</a><ul>
 <li class="chapter" data-level="5.1" data-path="a-persistent-database-in-postgres-in-docker-all-at-once.html"><a href="a-persistent-database-in-postgres-in-docker-all-at-once.html#overview"><i class="fa fa-check"></i><b>5.1</b> Overview</a></li>
@@ -240,13 +243,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="some-extra-handy-libraries-1" class="section level2">
 <h2><span class="header-section-number">9.1</span> Some extra handy libraries</h2>
 <p>Here are some packages that we find handy in the preliminary investigation of a database (or a problem that involves data from a databse).</p>
-<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb101-1" data-line-number="1"><span class="kw">library</span>(glue)</a></code></pre></div>
+<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb106-1" data-line-number="1"><span class="kw">library</span>(glue)</a></code></pre></div>
 <pre><code>## 
 ## Attaching package: &#39;glue&#39;</code></pre>
 <pre><code>## The following object is masked from &#39;package:dplyr&#39;:
 ## 
 ##     collapse</code></pre>
-<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb104-1" data-line-number="1"><span class="kw">library</span>(skimr)</a></code></pre></div>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb109-1" data-line-number="1"><span class="kw">library</span>(skimr)</a></code></pre></div>
 </div>
 <div id="more-topics" class="section level2">
 <h2><span class="header-section-number">9.2</span> More topics</h2>

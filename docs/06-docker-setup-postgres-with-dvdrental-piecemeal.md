@@ -106,7 +106,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "3eae6ab50047e30ffdb3b355495b38642c500419ab119936f06714197aacb026"
+## [1] "e18eac258acce9fe1272ab5cc0624ab561eaccae9b62d73b6dd97ef3634b1317"
 ```
 
 Peek inside the docker container and list the files in the `petdir` directory.  Notice that `dvdrental.tar` is in both.
@@ -286,7 +286,7 @@ psout[grepl(x = psout, pattern = 'sql-pet')]
 ```
 
 ```
-## [1] "3eae6ab50047        postgres:10         \"docker-entrypoint.s…\"   30 seconds ago      Exited (137) Less than a second ago                       sql-pet"
+## [1] "e18eac258acc        postgres:10         \"docker-entrypoint.s…\"   29 seconds ago      Exited (137) Less than a second ago                       sql-pet"
 ```
 
 ## Cleaning up
