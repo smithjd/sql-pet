@@ -17,7 +17,6 @@ library(knitr)
 result <- system2("docker", "version", stdout = TRUE, stderr = TRUE)
 result
 ```
-
 verify pet DB is available, it may be stopped.
 ```{r}
 result <- system2("docker", "ps -a", stdout = TRUE, stderr = TRUE)
@@ -26,10 +25,12 @@ result
 any(grepl('Up .+pet$',result))
 
 ```
-
 now connect to the database with R
 ```{r}
 # need to wait for Docker & Postgres to come up before connecting.
+
+#change the method here.
+
 Sys.sleep(1) 
 con <- DBI::dbConnect(RPostgres::Postgres(),
                       host = "localhost",
