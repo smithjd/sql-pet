@@ -10,6 +10,8 @@ Note that this approach relies on two files that have quote that's not shown her
 
 Note that `tidyverse`, `DBI`, `RPostgres`, and `glue` are loaded.
 
+
+
 ## First, verify that Docker is up and running:
 
 ```r
@@ -60,7 +62,7 @@ system2("docker",
 ```
 
 ```
-##  [1] "Sending build context to Docker daemon  622.1kB\r\r"                                                                                                                                                                                                                                                                                                                                           
+##  [1] "Sending build context to Docker daemon  2.974MB\r\r"                                                                                                                                                                                                                                                                                                                                           
 ##  [2] "Step 1/4 : FROM postgres:10"                                                                                                                                                                                                                                                                                                                                                                   
 ##  [3] " ---> ac25c2bac3c4"                                                                                                                                                                                                                                                                                                                                                                            
 ##  [4] "Step 2/4 : WORKDIR /tmp"                                                                                                                                                                                                                                                                                                                                                                       
@@ -114,21 +116,22 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "1c94395ada6e31bc308973b1b9b846d30c2cf4e4ece0941c14aea58e5d6807d4"
+## [1] "204b0fdac0c79ba0b58c8f5a575fadb27494d0311ed64a270abe177a8e96f5c2"
 ```
 ## Connect to Postgres with R
-
 Use the DBI package to connect to Postgres.  But first, wait for Docker & Postgres to come up before connecting.
 
-```r
-Sys.sleep(4) 
+We have loaded the `wait_for_postgres` function behind the scenes.
 
-con <- DBI::dbConnect(RPostgres::Postgres(),
-                      host = "localhost",
-                      port = "5432",
-                      user = "postgres",
-                      password = "postgres",
-                      dbname = "dvdrental" ) # note that the dbname is specified
+
+```r
+con <- wait_for_postgres(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
+                         password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
+                         dbname = "dvdrental",
+                         seconds_to_test = 10)
+
+
+# if (con == "it's not there") {stop()}
 
 dbListTables(con)
 ```
@@ -188,14 +191,10 @@ system2("docker",  "start sql-pet", stdout = TRUE, stderr = TRUE)
 ```
 
 ```r
-Sys.sleep(4) # need to wait for Docker & Postgres to come up before connecting.
-
-con <- DBI::dbConnect(RPostgres::Postgres(),
-                      host = "localhost",
-                      port = "5432",
-                      user = "postgres",
-                      password = "postgres",
-                      dbname = "dvdrental" ) # note that the dbname is specified
+con <- wait_for_postgres(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
+                         password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
+                         dbname = "dvdrental",
+                         seconds_to_test = 10)
 
 glimpse(dbReadTable(con, "film"))
 ```
@@ -217,6 +216,11 @@ glimpse(dbReadTable(con, "film"))
 ## $ special_features <chr> "{Trailers}", "{\"Behind the Scenes\"}", "{Tr...
 ## $ fulltext         <chr> "'chamber':1 'fate':4 'husband':11 'italian':...
 ```
+It's always good to have R disconnect from the database
+
+```r
+dbDisconnect(con)
+```
 
 Stop the container & show that the container is still there, so can be started again.
 
@@ -236,7 +240,7 @@ psout[grepl(x = psout, pattern = 'sql-pet')]
 ```
 
 ```
-## [1] "1c94395ada6e        postgres-dvdrental   \"docker-entrypoint.s…\"   25 seconds ago      Exited (137) Less than a second ago                       sql-pet"
+## [1] "204b0fdac0c7        postgres-dvdrental   \"docker-entrypoint.s…\"   21 seconds ago      Exited (137) Less than a second ago                       sql-pet"
 ```
 
 ## Cleaning up
