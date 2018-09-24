@@ -62,7 +62,7 @@ system2("docker",
 ```
 
 ```
-##  [1] "Sending build context to Docker daemon  2.974MB\r\r"                                                                                                                                                                                                                                                                                                                                           
+##  [1] "Sending build context to Docker daemon  11.96MB\r\r"                                                                                                                                                                                                                                                                                                                                           
 ##  [2] "Step 1/4 : FROM postgres:10"                                                                                                                                                                                                                                                                                                                                                                   
 ##  [3] " ---> ac25c2bac3c4"                                                                                                                                                                                                                                                                                                                                                                            
 ##  [4] "Step 2/4 : WORKDIR /tmp"                                                                                                                                                                                                                                                                                                                                                                       
@@ -116,7 +116,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "204b0fdac0c79ba0b58c8f5a575fadb27494d0311ed64a270abe177a8e96f5c2"
+## [1] "6f9eca291846b5e81445a4de60b77d980e3698cbc4a80b76bff7d1ff7c8555f4"
 ```
 ## Connect to Postgres with R
 Use the DBI package to connect to Postgres.  But first, wait for Docker & Postgres to come up before connecting.
@@ -240,7 +240,7 @@ psout[grepl(x = psout, pattern = 'sql-pet')]
 ```
 
 ```
-## [1] "204b0fdac0c7        postgres-dvdrental   \"docker-entrypoint.s…\"   21 seconds ago      Exited (137) Less than a second ago                       sql-pet"
+## [1] "6f9eca291846        postgres-dvdrental   \"docker-entrypoint.s…\"   21 seconds ago      Exited (137) Less than a second ago                       sql-pet"
 ```
 
 ## Cleaning up

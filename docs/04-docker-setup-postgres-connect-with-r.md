@@ -87,7 +87,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "3122d34db771235ff4852ad5bbc8e5ed1b0d4c6564a0df504512dcd021e83bf2"
+## [1] "9de37bbf3eaeff5331ec65c9ab81d194390fde4ecde8bf6a1170409f967dbb27"
 ```
 
 Docker returns a long string of numbers.  If you are running this command for the first time, Docker is downloading the Postgres image and it takes a bit of time.
@@ -100,7 +100,7 @@ system2("docker", "ps", stdout = TRUE, stderr = TRUE)
 
 ```
 ## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES"   
-## [2] "3122d34db771        postgres:10         \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
+## [2] "9de37bbf3eae        postgres:10         \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
 ```
 ## Put the database password in an environment file
 The goal is to put the password in an untracked file that will **not** be committed in your source code repository. Your code can reference the name of the variable, but the value of that variable will not appear in open text in your source code.
@@ -113,7 +113,7 @@ In an interactive environment, you could execute a snippet of code that prompts 
 
 
 ```r
-wait_for_postgres <- function(seconds_to_test){
+prompt_for_postgres <- function(seconds_to_test){
   for (i in 1:seconds_to_test) {
     db_ready <- DBI::dbCanConnect(RPostgres::Postgres(),
                                   host = "localhost",

@@ -1,17 +1,23 @@
----
-title: "PostgreSQL"
-author: "Sophie Yang"
-date: "September 12, 2018"
-output: github_document
----
-
+# Postgres Examples, part A
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(DBI)
 library(RPostgres)
+library(glue)
 library(knitr)
 ```
+
+```{r echo=FALSE}
+read_chunk('book-src/shared-db-login-code.R')
+
+source('book-src/shared-db-login-code.R')  # use when debugging outside of knitr
+```
+
+```{r get_postgres_connection, eval=TRUE, echo=FALSE}
+
+```
+
 ## Verify Docker is up and running:
 ```{r}
 result <- system2("docker", "version", stdout = TRUE, stderr = TRUE)
@@ -25,19 +31,27 @@ result
 any(grepl('Up .+pet$',result))
 
 ```
+Start up the `docker-pet` container
+```{r}
+result <- system2("docker", "start sql-pet", stdout = TRUE, stderr = TRUE)
+result
+
+
+```
+
+
 now connect to the database with R
 ```{r}
 # need to wait for Docker & Postgres to come up before connecting.
 
-#change the method here.
 
-Sys.sleep(1) 
-con <- DBI::dbConnect(RPostgres::Postgres(),
-                      host = "localhost",
-                      port = "5432",
-                      user = "postgres",
-                      password = "postgres",
-                      dbname = "dvdrental" ) # note that the dbname is specified
+#change the method here.
+con <- wait_for_postgres(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
+                         password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
+                         dbname = "dvdrental",
+                         seconds_to_test = 10)
+
+
 ```
 
 ```{r}
@@ -49,9 +63,8 @@ rs <- dbGetQuery(con
                    order by table_name
                   ;"
                   )
-kable(rs)
 # Get list of tables 
-kable(dbListTables(con))
+kable(head(dbListTables(con)))
 ```
 
 ```{r}
@@ -74,7 +87,7 @@ rs <- dbGetQuery(con
 
                   ;"
                   )
-kable(rs)
+kable(head(rs))
 ```
 
 
@@ -91,7 +104,7 @@ WHERE 1 = 1 --r.conrelid = '16485'
 )
 
 
-kable(rs)
+kable(head(rs))
 ```
 
 ```{r}
@@ -105,7 +118,7 @@ rs <- dbGetQuery(con,
    and n.nspname = 'public'
 order by conrelid::regclass::text, contype DESC;
 ")
-kable(rs)
+kable(head(rs))
 ```
 
 ```{r}
@@ -116,7 +129,7 @@ FROM pg_catalog.pg_constraint r
 WHERE 1=1 --r.conrelid = '16485' AND r.contype = 'f' ORDER BY 1;
 ")
 
-rs
+head(rs)
 ```
 
 
@@ -131,14 +144,6 @@ rs
 ##          dbFetch: Execute optimzed execution plan and return the dataset.
 ##    dbClearResult:remove pending query results from the database to your R environment
 
-## how many customers are there in the DVD Rental System
-rs1 <- dbGetQuery(con,'select * from customer;')
-kable(rs1)
-
-# pco <- dbSendQuery(con,'select * from customer;')
-# rs2  <- dbFetch(pco)
-# dbClearResult(pco)
-# View(rs2)
 ```
 
 ```{r}
@@ -166,7 +171,7 @@ rs <- dbGetQuery(con,
                    where r.rental_id is null;
                  "
                  )
-rs
+head(rs)
 ```
 
 ```{r }
@@ -177,7 +182,7 @@ rs <- dbGetQuery(con,
                ;
                 "
                 )
-rs
+head(rs)
 ## what is the film distribution based on language
 
 rs <- dbGetQuery(con,
@@ -192,7 +197,7 @@ rs <- dbGetQuery(con,
                  ;
                 "
                 )
-rs
+head(rs)
 ```
 
 ```{r}
@@ -220,7 +225,7 @@ rs <- dbGetQuery(con,
                  ;
                 "
                 )
-rs
+head(rs)
 ```
 
 ```{r}
@@ -235,7 +240,7 @@ rs <- dbGetQuery(con,
                  ;
                 "
                 )
-rs
+head(rs)
 ```
 
 ```{r}
@@ -259,7 +264,7 @@ rs <- dbGetQuery(con,
                  ;
                 "
                 )
-rs
+head(rs)
 ```
 
 ```{r}
@@ -277,7 +282,7 @@ rs <- dbGetQuery(con,
                   where p.rental_id is null
                  ;"
                 )  
-rs
+head(rs)
 ```
 
 ```{r}
@@ -300,7 +305,7 @@ rs <- dbGetQuery(con,
                   limit 25
                  ;"
                 )  
-rs
+head(rs)
 ```
 
 ```{r}
@@ -316,7 +321,7 @@ rs <- dbGetQuery(con,
                  order by count desc
                  ;"
                 )  
-rs
+head(rs)
 ```
 
 ```{r}
@@ -333,7 +338,7 @@ rs <- dbGetQuery(con,
                  order by revenue desc
                  ;"
                 )  
-rs
+head(rs)
 ```
 
 ```{r}
@@ -356,7 +361,7 @@ rs <- dbGetQuery(con,
                  order by f.title  ;
                "
                 )  
-rs
+head(rs)
 ```
 
 ```{r}
@@ -373,145 +378,24 @@ rs <- dbGetQuery(con,
                   where p.rental_id is null
                  ;"
                 )  
-rs
+head(rs)
+```
+list what's there
+```{r}
+dbListTables(con)
 ```
 
+Clean up
 ```{r}
-## meta data: check existence of a table
-rs1 <- dbGetQuery(con
-                 ,"SELECT c.* 
-                     FROM pg_catalog.pg_class c
-                     JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
-                    WHERE  n.nspname = 'public'
-                      AND  c.relname = 'cust_movies'
-                      AND  c.relkind = 'r'
-                   ;
-                 "
-                 )
-rs1
-```
+# dbRemoveTable(con, "cars")
+# dbRemoveTable(con, "mtcars")
+# dbRemoveTable(con, "cust_movies")
 
-
-```{r}
-## create table via SQL statement
-rs <- dbGetQuery(con
-                ,'CREATE TABLE cust_movies AS
-                    select c.customer_id
-                          ,first_name
-                          ,last_name,title
-                          ,description
-                      from customer c join rental r on c.customer_id = r.customer_id
-                        join inventory i on r.inventory_id = i.inventory_id 
-                        join film f on i.film_id = f.film_id 
-                    order by last_name,first_name;
-                 '
-                )
-rs
-```
-
-```{r}
-pco <- dbSendQuery(con,"select * from customer where customer_id between $1 and $2")
-dbBind(pco,list(501,525))
-rs2  <- dbFetch(pco)
-dbClearResult(pco)
-View(rs2)
-rs2
-```
-
-```{r}
-rs1 <- dbGetQuery(con,
-                "explain select r.*
-                   from rental r 
-                 ;"
-                )  
-rs1
-
-rs2 <- dbGetQuery(con,
-                "explain select count(*) count
-                   from rental r 
-                        left outer join payment p 
-                          on r.rental_id = p.rental_id  
-                    where p.rental_id is null
-                 ;")
-rs2
-
-rs3 <- dbGetQuery(con,
-                "explain select sum(f.rental_rate) open_amt,count(*) count
-                   from rental r 
-                        left outer join payment p 
-                          on r.rental_id = p.rental_id 
-                        join inventory i
-                          on r.inventory_id = i.inventory_id
-                        join film f
-                          on i.film_id = f.film_id
-                    where p.rental_id is null
-                 ;")
-rs3
-
-rs4 <- dbGetQuery(con,
-                "explain select c.customer_id,c.first_name,c.last_name,sum(f.rental_rate) open_amt,count(*) count
-                   from rental r 
-                        left outer join payment p 
-                          on r.rental_id = p.rental_id  
-                        join inventory i
-                          on r.inventory_id = i.inventory_id
-                        join film f
-                          on i.film_id = f.film_id
-                        join customer c
-                          on r.customer_id = c.customer_id
-                  where p.rental_id is null
-                  group by c.customer_id,c.first_name,c.last_name
-                  order by open_amt desc
-                 ;"
-                )  
-rs4
-```
-
-## SQL Execution Steps
-
-*  Parse the incoming SQL query
-*  Compile the SQL query
-*  Plan/optimize the data acquisition path
-*  Execute the optimized query / acquire and return data
-
-```{r}
-dbWriteTable(con, "mtcars", mtcars)
-rs <- dbSendQuery(con, "SELECT * FROM mtcars WHERE cyl = 4")
-dbFetch(rs)
-dbClearResult(rs)
-```
-
-```{r}
-#Pass one set of values with the param argument:
-rs <- dbSendQuery(con,"SELECT * FROM mtcars WHERE cyl = 4")
-dbFetch(rs)
-dbClearResult(rs)
-
-
-# Pass multiple sets of values with dbBind():
-rs <- dbSendQuery(con, "SELECT * FROM mtcars WHERE cyl = $1")
-dbBind(rs, list(6L))
-dbFetch(rs)
-dbBind(rs, list(8L))
-dbFetch(rs)
-dbClearResult(rs)
-```
-
-```{r}
-dbWriteTable(con, "cars", head(cars, 3))
-dbReadTable(con, "cars")   # there are 3 rows
-
-dbExecute(
-  con,
-  "INSERT INTO cars (speed, dist) VALUES ($1, $2)",
-  param = list(4:7, 5:8)
-)
-dbReadTable(con, "cars")   # there are now 10 rows
-```
-
-```{r}
 # diconnect from the db
 dbDisconnect(con)
-```
+
+result <- system2("docker", "stop sql-pet", stdout = TRUE, stderr = TRUE)
+result
 
 ```
+

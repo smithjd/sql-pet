@@ -98,15 +98,23 @@ docker_cmd <- glue(
   " --name sql-pet ",     # tells Docker to give the container a name: `sql-pet`
   "--publish 5432:5432 ", # tells Docker to expose the Postgres port 5432 to the local network with 5432
   "--mount ", # tells Docker to mount a volume -- mapping Docker's internal file structure to the host file structure
-  "type=bind,source='", wd, "'/,target=/petdir",
+  "type=bind,source=", wd, "/,target=/petdir",
   " postgres:10" # tells Docker the image that is to be run (after downloading if necessary)
 )
+cat ('docker ',docker_cmd)
+```
 
+```
+## docker  run --detach  --name sql-pet --publish 5432:5432 --mount type=bind,source=/Users/jds/Documents/Library/R/r-system/sql-pet/r-database-docker/,target=/petdir postgres:10
+```
+
+```r
+cat ('')
 system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "e18eac258acce9fe1272ab5cc0624ab561eaccae9b62d73b6dd97ef3634b1317"
+## [1] "dfb83a0923eb40f771995d6c06a74c6caae0633431f1555894a2640833abc087"
 ```
 
 Peek inside the docker container and list the files in the `petdir` directory.  Notice that `dvdrental.tar` is in both.
@@ -286,7 +294,7 @@ psout[grepl(x = psout, pattern = 'sql-pet')]
 ```
 
 ```
-## [1] "e18eac258acc        postgres:10         \"docker-entrypoint.s…\"   29 seconds ago      Exited (137) Less than a second ago                       sql-pet"
+## [1] "dfb83a0923eb        postgres:10         \"docker-entrypoint.s…\"   30 seconds ago      Exited (137) Less than a second ago                       sql-pet"
 ```
 
 ## Cleaning up

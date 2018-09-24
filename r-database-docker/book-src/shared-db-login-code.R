@@ -30,7 +30,7 @@ Sys.Date()
 
 ## @knitr interactive_postgres_connection
 
-wait_for_postgres <- function(seconds_to_test){
+prompt_for_postgres <- function(seconds_to_test){
   for (i in 1:seconds_to_test) {
     db_ready <- DBI::dbCanConnect(RPostgres::Postgres(),
                                   host = "localhost",

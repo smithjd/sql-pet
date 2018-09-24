@@ -25,7 +25,7 @@
 <meta name="author" content="Dipti Muni, Ian Frantz, John David Smith, Mary Anne Thygesen, M. Edward (Ed) Borasky, Scott Case, and Sophie Yang">
 
 
-<meta name="date" content="2018-09-20">
+<meta name="date" content="2018-09-23">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -210,12 +210,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="9.2" data-path="real-work-with-real-data-1.html"><a href="real-work-with-real-data-1.html#more-topics"><i class="fa fa-check"></i><b>9.2</b> More topics</a></li>
 <li class="chapter" data-level="9.3" data-path="real-work-with-real-data-1.html"><a href="real-work-with-real-data-1.html#standards-for-production-jobs"><i class="fa fa-check"></i><b>9.3</b> Standards for production jobs</a></li>
 </ul></li>
-<li class="chapter" data-level="10" data-path="other-resources.html"><a href="other-resources.html"><i class="fa fa-check"></i><b>10</b> Other resources</a><ul>
-<li class="chapter" data-level="10.1" data-path="other-resources.html"><a href="other-resources.html#editing-this-book"><i class="fa fa-check"></i><b>10.1</b> Editing this book</a></li>
-<li class="chapter" data-level="10.2" data-path="other-resources.html"><a href="other-resources.html#docker-alternatives"><i class="fa fa-check"></i><b>10.2</b> Docker alternatives</a></li>
-<li class="chapter" data-level="10.3" data-path="other-resources.html"><a href="other-resources.html#docker-and-r"><i class="fa fa-check"></i><b>10.3</b> Docker and R</a></li>
-<li class="chapter" data-level="10.4" data-path="other-resources.html"><a href="other-resources.html#documentation-docker-and-postgres"><i class="fa fa-check"></i><b>10.4</b> Documentation Docker and Postgres</a></li>
-<li class="chapter" data-level="10.5" data-path="other-resources.html"><a href="other-resources.html#more-resources"><i class="fa fa-check"></i><b>10.5</b> More Resources</a></li>
+<li class="chapter" data-level="10" data-path="postgres-examples-part-a.html"><a href="postgres-examples-part-a.html"><i class="fa fa-check"></i><b>10</b> Postgres Examples, part A</a><ul>
+<li class="chapter" data-level="10.1" data-path="postgres-examples-part-a.html"><a href="postgres-examples-part-a.html#verify-docker-is-up-and-running"><i class="fa fa-check"></i><b>10.1</b> Verify Docker is up and running:</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="postgres-examples-part-b.html"><a href="postgres-examples-part-b.html"><i class="fa fa-check"></i><b>11</b> Postgres Examples, part B</a><ul>
+<li class="chapter" data-level="11.1" data-path="postgres-examples-part-b.html"><a href="postgres-examples-part-b.html#verify-docker-is-up-and-running-1"><i class="fa fa-check"></i><b>11.1</b> Verify Docker is up and running:</a></li>
+<li class="chapter" data-level="11.2" data-path="postgres-examples-part-b.html"><a href="postgres-examples-part-b.html#sql-execution-steps"><i class="fa fa-check"></i><b>11.2</b> SQL Execution Steps</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="other-resources.html"><a href="other-resources.html"><i class="fa fa-check"></i><b>12</b> Other resources</a><ul>
+<li class="chapter" data-level="12.1" data-path="other-resources.html"><a href="other-resources.html#editing-this-book"><i class="fa fa-check"></i><b>12.1</b> Editing this book</a></li>
+<li class="chapter" data-level="12.2" data-path="other-resources.html"><a href="other-resources.html#docker-alternatives"><i class="fa fa-check"></i><b>12.2</b> Docker alternatives</a></li>
+<li class="chapter" data-level="12.3" data-path="other-resources.html"><a href="other-resources.html#docker-and-r"><i class="fa fa-check"></i><b>12.3</b> Docker and R</a></li>
+<li class="chapter" data-level="12.4" data-path="other-resources.html"><a href="other-resources.html#documentation-docker-and-postgres"><i class="fa fa-check"></i><b>12.4</b> Documentation Docker and Postgres</a></li>
+<li class="chapter" data-level="12.5" data-path="other-resources.html"><a href="other-resources.html#more-resources"><i class="fa fa-check"></i><b>12.5</b> More Resources</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -299,12 +306,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>##  docker run --detach --name cattle --publish 5432:5432  postgres:10</code></pre>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="co"># this is how R submits it to Docker:</span></a>
 <a class="sourceLine" id="cb7-2" data-line-number="2"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, docker_cmd, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
-<pre><code>## [1] &quot;164ff7e1c21f168944595bc9eae9843e069e4f90e78a31b710d2e6bfd2c549c3&quot;</code></pre>
+<pre><code>## [1] &quot;1cb6ed3e321000e2b5133580e0405c06812603fe830068ac865e9343849cb611&quot;</code></pre>
 <p>Docker returns a long string of numbers. If you are running this command for the first time, Docker is downloading the Postgres image and it takes a bit of time.</p>
 <p>The following comand shows that <code>postgres:10</code> is running. <code>postgres</code> is waiting for a connection:</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, <span class="st">&quot;ps&quot;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <pre><code>## [1] &quot;CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES&quot;   
-## [2] &quot;164ff7e1c21f        postgres:10         \&quot;docker-entrypoint.s…\&quot;   1 second ago        Up Less than a second   0.0.0.0:5432-&gt;5432/tcp   cattle&quot;</code></pre>
+## [2] &quot;1cb6ed3e3210        postgres:10         \&quot;docker-entrypoint.s…\&quot;   1 second ago        Up Less than a second   0.0.0.0:5432-&gt;5432/tcp   cattle&quot;</code></pre>
 </div>
 <div id="put-the-database-password-in-an-environment-file" class="section level2">
 <h2><span class="header-section-number">4.3</span> Put the database password in an environment file</h2>
@@ -312,7 +319,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>We have chosen to call the file <code>dev_environment.csv</code> in the current working directory where you are executing this script. That file name appears in the <code>.gitignore</code> file, so that you will not accidentally commit it. We are going to create that file now.</p>
 <p>You will be prompted for the database password. By default, a postgres database defines a database user named <code>postgres</code>, whose password is <code>postgres</code>. If you have changed the password or created a new user with a different password, then enter those new values when prompted. Otherwise, enter <code>postgres</code> and <code>postgres</code> at the two prompts.</p>
 <p>In an interactive environment, you could execute a snippet of code that prompts the user for their username and password with the followoing snippet (which isn’t run in the book):</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">wait_for_postgres &lt;-<span class="st"> </span><span class="cf">function</span>(seconds_to_test){</a>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">prompt_for_postgres &lt;-<span class="st"> </span><span class="cf">function</span>(seconds_to_test){</a>
 <a class="sourceLine" id="cb11-2" data-line-number="2">  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>seconds_to_test) {</a>
 <a class="sourceLine" id="cb11-3" data-line-number="3">    db_ready &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbCanConnect</span>(RPostgres<span class="op">::</span><span class="kw">Postgres</span>(),</a>
 <a class="sourceLine" id="cb11-4" data-line-number="4">                                  <span class="dt">host =</span> <span class="st">&quot;localhost&quot;</span>,</a>
