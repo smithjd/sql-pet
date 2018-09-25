@@ -5,6 +5,7 @@ This illustrates the file structure for this project.  Once it settles down, the
 - `Contributing.md` 
 - `sql-pet.Rproj` (Open this Rstudio project for the project as a whole)
 - `maintaining-the-bookdown-site.md` 
+- `project-file-structure.md` (this file)
 - `src` (future location of handy executable code)
 - `docs` (HTML files served up in https://smithjd.github.io/sql-pet/index.html)
 - `r-database-docker` (bookdown source files)
