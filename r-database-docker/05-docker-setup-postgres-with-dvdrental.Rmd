@@ -69,8 +69,8 @@ docker_cmd <- glue(
   "--publish 5432:5432 ", # tells Docker to expose the Postgres port 5432 to the local network with 5432
   "--mount ", # tells Docker to mount a volume -- mapping Docker's internal file structure to the host file structure
   "type=bind,", # tells Docker that the mount command points to an actual file on the host system
-  "source='", # tells Docker where the local file will be found
-  wd, "/',", # the current working directory, as retrieved above
+  'source="', # tells Docker where the local file will be found
+  wd, '/",', # the current working directory, as retrieved above
   "target=/petdir", # tells Docker to refer to the current directory as "/petdir" in its file system
   " postgres-dvdrental" # tells Docker to run the image was built in the previous step
 )

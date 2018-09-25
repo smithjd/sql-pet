@@ -1,0 +1,39 @@
+This illustrates the file structure for this project.  Once it settles down, the file names could be made clickable.
+
+* `README.md`  (project overivew)
+* `CODE_OF_CONDUCT.md` 
+* `Contributing.md` 
+* `sql-pet.Rproj` (Open this Rstudio project for the project as a whole)
+* `maintaining-the-bookdown-site.md` 
+* `src` (future location of handy executable code)
+* `docs` (HTML files served up in https://smithjd.github.io/sql-pet/index.html)
+* `r-database-docker` (bookdown source files)
+  - `index.Rmd` (Chapter 1)
+  - `02-docker_hosting_for_windows.Rmd` (Self-conained chapters, each of which can be run independently)
+  - `...` (many files, subject to reorganization and expansion, names start with a 2 digit number)
+  - `89-resources.Rmd` 
+  - `90-references.Rmd` 
+  - `packages.bib` 
+  - `book.bib` 
+  - `build_book.R` (R code to compile the whole book)
+  - `dvdrental.Dockerfile` (Docker commands)
+  - `init-dvdrental.sh` 
+  - `preamble.tex` (boilerplate)
+  - `r-database-docker.Rproj`  (Open this Rstudio project to at the book level)
+  - `style.css` (boilerplate)
+  - `_bookdown.yml` (boilerplate)
+  - `_output.yml` (boilerplate)
+  - `dev_environment.csv` (sample file for storing passwords)
+
+  - `book-src ` (executable code called by the bookdown files)
+    - `db-login-batch-code.R` 
+    - `db-login-interactive-code.R` 
+  - `diagrams` (needs renaming?)
+    - `potential_architectures.Rmd` 
+    - `potential_architectures.html` 
+    - `potential_architectures.pdf` 
+  - `screenshots` (`png` files called inserted in the various Bookdown chapters)
+    - `2018-08-26_15_16_51-Shared_Drives.png` 
+    - `2018-08-26_15_26_22-Kubernetes.png` 
+    - `ER-diagram-symbols.png` 
+    - `...` (many additional files)
