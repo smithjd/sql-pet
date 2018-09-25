@@ -19,7 +19,7 @@ Docker commands can be run from a terminal (e.g., the Rstudio Terminal pane) or 
 3. `stdout = TRUE, stderr = TRUE` are two parameters that are standard in this book, so that the comand's full output is shown in the book.
 
 ```{r echo=FALSE}
-read_chunk('book-src/shared-db-login-code.R')
+read_chunk('book-sr/db-login-batch-code.R')
 
 ```
 The `docker version` command returns the details about the docker daemon that is running on your computer.
@@ -50,7 +50,7 @@ docker_cmd <- glue(
   "--detach ", # (or `-d`) tells Docker to disconnect from the terminal / program issuing the command
   "--name cattle ",       # tells Docker to give the container a name: `cattle`
   "--publish 5432:5432 ", # tells Docker to expose the Postgres port 5432 to the local network with 5432
-  " postgres:10"  # tells Docker the image that is to be run (after downloading if necessary)
+  " postgres:10 "  # tells Docker the image that is to be run (after downloading if necessary)
 )
 
 # We name containers `cattle` for "throw-aways" and `pet` for ones we treasure and keep around.  :-)
