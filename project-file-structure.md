@@ -1,13 +1,14 @@
 This illustrates the file structure for this project.  Once it settles down, the file names could be made clickable.
 
-* `README.md`  (project overivew)
-* `CODE_OF_CONDUCT.md` 
-* `Contributing.md` 
-* `sql-pet.Rproj` (Open this Rstudio project for the project as a whole)
-* `maintaining-the-bookdown-site.md` 
-* `src` (future location of handy executable code)
-* `docs` (HTML files served up in https://smithjd.github.io/sql-pet/index.html)
-* `r-database-docker` (bookdown source files)
+- `README.md`  (project overivew)
+- `CODE_OF_CONDUCT.md` 
+- `Contributing.md` 
+- `sql-pet.Rproj` (Open this Rstudio project for the project as a whole)
+- `maintaining-the-bookdown-site.md` 
+- `project-file-structure.md` (this file)
+- `src` (future location of handy executable code)
+- `docs` (HTML files served up in https://smithjd.github.io/sql-pet/index.html)
+- `r-database-docker` (bookdown source files)
   - `index.Rmd` (Chapter 1)
   - `02-docker_hosting_for_windows.Rmd` (Self-conained chapters, each of which can be run independently)
   - `...` (many files, subject to reorganization and expansion, names start with a 2 digit number)
@@ -24,7 +25,6 @@ This illustrates the file structure for this project.  Once it settles down, the
   - `_bookdown.yml` (boilerplate)
   - `_output.yml` (boilerplate)
   - `dev_environment.csv` (sample file for storing passwords)
-
   - `book-src ` (executable code called by the bookdown files)
     - `db-login-batch-code.R` 
     - `db-login-interactive-code.R` 
