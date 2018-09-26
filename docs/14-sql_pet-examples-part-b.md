@@ -3,17 +3,6 @@
 
 
 
-```
-## username:
-```
-
-```
-## WARNING: your platform is not supported. Input is not masked!
-```
-
-```
-## password:
-```
 
 
 
@@ -52,8 +41,8 @@ result
 ```
 
 ```
-## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                    PORTS               NAMES"    
-## [2] "dfb83a0923eb        postgres:10         \"docker-entrypoint.s…\"   42 seconds ago      Exited (0) 1 second ago                       sql-pet"
+## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                     PORTS               NAMES"    
+## [2] "e154b06bdc5a        postgres:10         \"docker-entrypoint.s…\"   30 seconds ago      Exited (0) 2 seconds ago                       sql-pet"
 ```
 
 ```r
@@ -78,10 +67,6 @@ result
 now connect to the database with R
 
 ```r
-# need to wait for Docker & Postgres to come up before connecting.
-
-
-#change the method here.
 con <- wait_for_postgres(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
                          password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
                          dbname = "dvdrental",
@@ -330,7 +315,7 @@ head(rs4)
 
 
 ```r
-dbWriteTable(con, "mtcars", mtcars)  
+dbWriteTable(con, "mtcars", mtcars, overwrite = TRUE)
 rs <- dbSendQuery(con, "SELECT * FROM mtcars WHERE cyl = 4")
 dbFetch(rs)
 ```
@@ -381,7 +366,7 @@ dbClearResult(rs)
 
 # Pass multiple sets of values with dbBind():
 rs <- dbSendQuery(con, "SELECT * FROM mtcars WHERE cyl = $1")
-dbBind(rs, list(6L))
+dbBind(rs, list(6L)) # cyl = 6
 dbFetch(rs)
 ```
 
@@ -397,7 +382,7 @@ dbFetch(rs)
 ```
 
 ```r
-dbBind(rs, list(8L))
+dbBind(rs, list(8L)) # cyl = 8
 dbFetch(rs)
 ```
 
@@ -423,34 +408,74 @@ dbFetch(rs)
 dbClearResult(rs)
 ```
 
+This is an example from the DBI help file
 
 ```r
-dbWriteTable(con, "cars", head(mtcars, 3))
+dbWriteTable(con, "cars", head(cars, 3)) # not to be confused with mtcars
 dbReadTable(con, "cars")   # there are 3 rows
 ```
 
 ```
-##    mpg cyl disp  hp drat    wt  qsec vs am gear carb
-## 1 21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
-## 2 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
-## 3 22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
+##   speed dist
+## 1     4    2
+## 2     4   10
+## 3     7    4
 ```
 
 ```r
-# not working at the moment.  Not sure what Sophie had in mind...  - JDS
-# dbExecute(
-#   con,
-#   "INSERT INTO cars (speed, dist) VALUES ($1, $2)",
-#   param = list(4:7, 5:8)
-# )
+dbExecute(
+  con,
+  "INSERT INTO cars (speed, dist) VALUES (1, 1), (2, 2), (3, 3)"
+)
+```
+
+```
+## [1] 3
+```
+
+```r
+dbReadTable(con, "cars")   # there are now 6 rows
+```
+
+```
+##   speed dist
+## 1     4    2
+## 2     4   10
+## 3     7    4
+## 4     1    1
+## 5     2    2
+## 6     3    3
+```
+
+```r
+# Pass values using the param argument:
+dbExecute(
+  con,
+  "INSERT INTO cars (speed, dist) VALUES ($1, $2)",
+  param = list(4:7, 5:8)
+)
+```
+
+```
+## [1] 4
+```
+
+```r
 dbReadTable(con, "cars")   # there are now 10 rows
 ```
 
 ```
-##    mpg cyl disp  hp drat    wt  qsec vs am gear carb
-## 1 21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
-## 2 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
-## 3 22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
+##    speed dist
+## 1      4    2
+## 2      4   10
+## 3      7    4
+## 4      1    1
+## 5      2    2
+## 6      3    3
+## 7      4    5
+## 8      5    6
+## 9      6    7
+## 10     7    8
 ```
  
 Clean up

@@ -64,7 +64,7 @@ docker_cmd <- glue(
   "--detach ", # (or `-d`) tells Docker to disconnect from the terminal / program issuing the command
   "--name cattle ",       # tells Docker to give the container a name: `cattle`
   "--publish 5432:5432 ", # tells Docker to expose the Postgres port 5432 to the local network with 5432
-  " postgres:10"  # tells Docker the image that is to be run (after downloading if necessary)
+  " postgres:10 "  # tells Docker the image that is to be run (after downloading if necessary)
 )
 
 # We name containers `cattle` for "throw-aways" and `pet` for ones we treasure and keep around.  :-)
@@ -87,7 +87,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "9de37bbf3eaeff5331ec65c9ab81d194390fde4ecde8bf6a1170409f967dbb27"
+## [1] "13c84a66f1fa4f6efc4cb5df7fa46294f783d99e8c9e42dc8b40ffb5d47eaa9d"
 ```
 
 Docker returns a long string of numbers.  If you are running this command for the first time, Docker is downloading the Postgres image and it takes a bit of time.
@@ -100,7 +100,7 @@ system2("docker", "ps", stdout = TRUE, stderr = TRUE)
 
 ```
 ## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES"   
-## [2] "9de37bbf3eae        postgres:10         \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
+## [2] "13c84a66f1fa        postgres:10         \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
 ```
 ## Put the database password in an environment file
 The goal is to put the password in an untracked file that will **not** be committed in your source code repository. Your code can reference the name of the variable, but the value of that variable will not appear in open text in your source code.
@@ -112,36 +112,6 @@ You will be prompted for the database password. By default, a postgres database 
 In an interactive environment, you could execute a snippet of code that prompts the user for their username and password with the followoing snippet (which isn't run in the book):
 
 
-```r
-prompt_for_postgres <- function(seconds_to_test){
-  for (i in 1:seconds_to_test) {
-    db_ready <- DBI::dbCanConnect(RPostgres::Postgres(),
-                                  host = "localhost",
-                                  port = "5432",
-                                  user = dplyr::filter(environment_variables, variable == "username")[, "value"],
-                                  password = dplyr::filter(environment_variables, variable == "password")[, "value"],
-                                  dbname = "postgres")
-    if ( !db_ready ) {Sys.sleep(1)}
-    else {con <- DBI::dbConnect(RPostgres::Postgres(),
-                                host = "localhost",
-                                port = "5432",
-                                user = dplyr::filter(environment_variables, variable == "username")[, "value"],
-                                password = dplyr::filter(environment_variables, variable == "password")[, "value"],
-                                dbname = "postgres")
-    }
-    if (i == seconds_to_test & !db_ready) {con <- "there is no connection "}
-  }
-  con
-}
-
-DB_USERNAME <- trimws(readline(prompt = "username: "), which = "both")
-DB_PASSWORD <- getPass::getPass(msg = "password: ")
-environment_variables = data.frame(
-  variable = c("username", "password"),
-  value = c(DB_USERNAME, DB_PASSWORD),
-  stringsAsFactors = FALSE)
-write.csv(environment_variables, "./dev_environment.csv", row.names = FALSE)
-```
 Your password is still in plain text in the file, `dev_environment.csv`, so you should protect that file from exposure. However, you do not need to worry about committing that file accidentally to your git repository, because the name of the file appears in the `.gitignore` file.
 
 ## Connect, read and write to Postgres from R
@@ -211,7 +181,7 @@ dbListTables(con)
 Write `mtcars` to Postgres
 
 ```r
-dbWriteTable(con, "mtcars", mtcars)
+dbWriteTable(con, "mtcars", mtcars, overwrite = TRUE)
 ```
 
 List the tables in the Postgres database to show that `mtcars` is now there:

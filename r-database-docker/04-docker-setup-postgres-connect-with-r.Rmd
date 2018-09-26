@@ -19,7 +19,7 @@ Docker commands can be run from a terminal (e.g., the Rstudio Terminal pane) or 
 3. `stdout = TRUE, stderr = TRUE` are two parameters that are standard in this book, so that the comand's full output is shown in the book.
 
 ```{r echo=FALSE}
-read_chunk('book-sr/db-login-batch-code.R')
+read_chunk('book-src/db-login-batch-code.R')
 
 ```
 The `docker version` command returns the details about the docker daemon that is running on your computer.
@@ -122,7 +122,7 @@ dbListTables(con)
 
 Write `mtcars` to Postgres
 ```{r}
-dbWriteTable(con, "mtcars", mtcars)
+dbWriteTable(con, "mtcars", mtcars, overwrite = TRUE)
 ```
 
 List the tables in the Postgres database to show that `mtcars` is now there:

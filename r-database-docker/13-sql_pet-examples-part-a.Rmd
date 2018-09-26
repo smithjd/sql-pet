@@ -7,11 +7,13 @@ library(RPostgres)
 library(glue)
 library(knitr)
 ```
-
+Libraries loaded and functions are loaded
 ```{r echo=FALSE}
-read_chunk('book-src/shared-db-login-code.R')
+read_chunk('book-src/db-login-batch-code.R')
 
-source('book-src/shared-db-login-code.R')  # use when debugging outside of knitr
+# use when debugging outside of knitr
+# source('r-database-docker/book-src/db-login-batch-code.R')
+# source('r-database-docker/book-src/db-login-interactive-code.R')  
 ```
 
 ```{r get_postgres_connection, eval=TRUE, echo=FALSE}
@@ -44,13 +46,10 @@ now connect to the database with R
 ```{r}
 # need to wait for Docker & Postgres to come up before connecting.
 
-
-#change the method here.
 con <- wait_for_postgres(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
                          password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
                          dbname = "dvdrental",
                          seconds_to_test = 10)
-
 
 ```
 
@@ -64,7 +63,7 @@ rs <- dbGetQuery(con
                   ;"
                   )
 # Get list of tables 
-kable(head(dbListTables(con)))
+kable(dbListTables(con))
 ```
 
 ```{r}
@@ -87,9 +86,10 @@ rs <- dbGetQuery(con
 
                   ;"
                   )
-kable(head(rs))
-```
+kable(head(rs, n = 20))
 
+```
+There are {r dim(rs)[1]} rows in the catalog.
 
 ```{r}
 rs <- dbGetQuery(con,
@@ -119,6 +119,7 @@ rs <- dbGetQuery(con,
 order by conrelid::regclass::text, contype DESC;
 ")
 kable(head(rs))
+dim(rs)[1]
 ```
 
 ```{r}
@@ -144,6 +145,17 @@ head(rs)
 ##          dbFetch: Execute optimzed execution plan and return the dataset.
 ##    dbClearResult:remove pending query results from the database to your R environment
 
+```
+
+How many customers are there in the DVD Rental System
+```{r}
+rs1 <- dbGetQuery(con,'select * from customer;')
+kable(head(rs1))
+
+pco <- dbSendQuery(con,'select * from customer;')
+rs2  <- dbFetch(pco)
+dbClearResult(pco)
+kable(head(rs2))
 ```
 
 ```{r}

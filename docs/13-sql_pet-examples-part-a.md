@@ -1,18 +1,7 @@
 # Postgres Examples, part A
 
+Libraries loaded and functions are loaded
 
-
-```
-## username:
-```
-
-```
-## WARNING: your platform is not supported. Input is not masked!
-```
-
-```
-## password:
-```
 
 
 
@@ -52,7 +41,7 @@ result
 
 ```
 ## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES"    
-## [2] "dfb83a0923eb        postgres:10         \"docker-entrypoint.s…\"   38 seconds ago      Up 6 seconds        0.0.0.0:5432->5432/tcp   sql-pet"
+## [2] "e154b06bdc5a        postgres:10         \"docker-entrypoint.s…\"   26 seconds ago      Up 5 seconds        0.0.0.0:5432->5432/tcp   sql-pet"
 ```
 
 ```r
@@ -79,8 +68,6 @@ now connect to the database with R
 ```r
 # need to wait for Docker & Postgres to come up before connecting.
 
-
-#change the method here.
 con <- wait_for_postgres(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
                          password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
                          dbname = "dvdrental",
@@ -98,7 +85,7 @@ rs <- dbGetQuery(con
                   ;"
                   )
 # Get list of tables 
-kable(head(dbListTables(con)))
+kable(dbListTables(con))
 ```
 
 
@@ -117,6 +104,38 @@ nicer\_but\_slower\_film\_list\\
 sales\_by\_film\_category\\
 \hline
 staff\\
+\hline
+sales\_by\_store\\
+\hline
+staff\_list\\
+\hline
+category\\
+\hline
+film\_category\\
+\hline
+country\\
+\hline
+actor\\
+\hline
+language\\
+\hline
+inventory\\
+\hline
+payment\\
+\hline
+rental\\
+\hline
+city\\
+\hline
+store\\
+\hline
+film\\
+\hline
+address\\
+\hline
+film\_actor\\
+\hline
+customer\\
 \hline
 \end{tabular}
 
@@ -141,7 +160,7 @@ rs <- dbGetQuery(con
 
                   ;"
                   )
-kable(head(rs))
+kable(head(rs, n = 20))
 ```
 
 
@@ -161,8 +180,36 @@ dvdrental.public.actor\_info & actor\_id & 1 & integer\\
 \hline
 dvdrental.public.actor\_info & first\_name & 2 & character varying(45)\\
 \hline
+dvdrental.public.actor\_info & last\_name & 3 & character varying(45)\\
+\hline
+dvdrental.public.actor\_info & film\_info & 4 & text\\
+\hline
+dvdrental.public.address & address\_id & 1 & integer\\
+\hline
+dvdrental.public.address & address & 2 & character varying(50)\\
+\hline
+dvdrental.public.address & address2 & 3 & character varying(50)\\
+\hline
+dvdrental.public.address & district & 4 & character varying(20)\\
+\hline
+dvdrental.public.address & city\_id & 5 & smallint\\
+\hline
+dvdrental.public.address & postal\_code & 6 & character varying(10)\\
+\hline
+dvdrental.public.address & phone & 7 & character varying(20)\\
+\hline
+dvdrental.public.address & last\_update & 8 & timestamp without time zone\\
+\hline
+dvdrental.public.category & category\_id & 1 & integer\\
+\hline
+dvdrental.public.category & name & 2 & character varying(25)\\
+\hline
+dvdrental.public.category & last\_update & 3 & timestamp without time zone\\
+\hline
+dvdrental.public.city & city\_id & 1 & integer\\
+\hline
 \end{tabular}
-
+There are {r dim(rs)[1]} rows in the catalog.
 
 
 ```r
@@ -233,6 +280,14 @@ city & city\_pkey & PRIMARY KEY (city\_id)\\
 city & fk\_city & FOREIGN KEY (country\_id) REFERENCES country(country\_id)\\
 \hline
 \end{tabular}
+
+```r
+dim(rs)[1]
+```
+
+```
+## [1] 33
+```
 
 
 ```r
@@ -311,6 +366,58 @@ head(rs)
 ##          dbFetch: Execute optimzed execution plan and return the dataset.
 ##    dbClearResult:remove pending query results from the database to your R environment
 ```
+
+How many customers are there in the DVD Rental System
+
+```r
+rs1 <- dbGetQuery(con,'select * from customer;')
+kable(head(rs1))
+```
+
+
+\begin{tabular}{r|r|l|l|l|r|l|l|l|r}
+\hline
+customer\_id & store\_id & first\_name & last\_name & email & address\_id & activebool & create\_date & last\_update & active\\
+\hline
+524 & 1 & Jared & Ely & jared.ely@sakilacustomer.org & 530 & TRUE & 2006-02-14 & 2013-05-26 14:49:45 & 1\\
+\hline
+1 & 1 & Mary & Smith & mary.smith@sakilacustomer.org & 5 & TRUE & 2006-02-14 & 2013-05-26 14:49:45 & 1\\
+\hline
+2 & 1 & Patricia & Johnson & patricia.johnson@sakilacustomer.org & 6 & TRUE & 2006-02-14 & 2013-05-26 14:49:45 & 1\\
+\hline
+3 & 1 & Linda & Williams & linda.williams@sakilacustomer.org & 7 & TRUE & 2006-02-14 & 2013-05-26 14:49:45 & 1\\
+\hline
+4 & 2 & Barbara & Jones & barbara.jones@sakilacustomer.org & 8 & TRUE & 2006-02-14 & 2013-05-26 14:49:45 & 1\\
+\hline
+5 & 1 & Elizabeth & Brown & elizabeth.brown@sakilacustomer.org & 9 & TRUE & 2006-02-14 & 2013-05-26 14:49:45 & 1\\
+\hline
+\end{tabular}
+
+```r
+pco <- dbSendQuery(con,'select * from customer;')
+rs2  <- dbFetch(pco)
+dbClearResult(pco)
+kable(head(rs2))
+```
+
+
+\begin{tabular}{r|r|l|l|l|r|l|l|l|r}
+\hline
+customer\_id & store\_id & first\_name & last\_name & email & address\_id & activebool & create\_date & last\_update & active\\
+\hline
+524 & 1 & Jared & Ely & jared.ely@sakilacustomer.org & 530 & TRUE & 2006-02-14 & 2013-05-26 14:49:45 & 1\\
+\hline
+1 & 1 & Mary & Smith & mary.smith@sakilacustomer.org & 5 & TRUE & 2006-02-14 & 2013-05-26 14:49:45 & 1\\
+\hline
+2 & 1 & Patricia & Johnson & patricia.johnson@sakilacustomer.org & 6 & TRUE & 2006-02-14 & 2013-05-26 14:49:45 & 1\\
+\hline
+3 & 1 & Linda & Williams & linda.williams@sakilacustomer.org & 7 & TRUE & 2006-02-14 & 2013-05-26 14:49:45 & 1\\
+\hline
+4 & 2 & Barbara & Jones & barbara.jones@sakilacustomer.org & 8 & TRUE & 2006-02-14 & 2013-05-26 14:49:45 & 1\\
+\hline
+5 & 1 & Elizabeth & Brown & elizabeth.brown@sakilacustomer.org & 9 & TRUE & 2006-02-14 & 2013-05-26 14:49:45 & 1\\
+\hline
+\end{tabular}
 
 
 ```r

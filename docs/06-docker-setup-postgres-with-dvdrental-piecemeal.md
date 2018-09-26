@@ -7,6 +7,8 @@ This chapter essentially repeats what was presented in the previous one, but doe
 
 Note that `tidyverse`, `DBI`, `RPostgres`, and `glue` are loaded.
 
+
+
 ## Retrieve the backup file
 
 The first step is to get a local copy of the `dvdrental` Postgres restore file.  It comes in a zip format and needs to be un-zipped.  Use the `downloader` and `here` packages to keep track of things.
@@ -98,23 +100,22 @@ docker_cmd <- glue(
   " --name sql-pet ",     # tells Docker to give the container a name: `sql-pet`
   "--publish 5432:5432 ", # tells Docker to expose the Postgres port 5432 to the local network with 5432
   "--mount ", # tells Docker to mount a volume -- mapping Docker's internal file structure to the host file structure
-  "type=bind,source=", wd, "/,target=/petdir",
-  " postgres:10" # tells Docker the image that is to be run (after downloading if necessary)
+  'type=bind,source="', wd, '/",target=/petdir',
+  " postgres:10 " # tells Docker the image that is to be run (after downloading if necessary)
 )
-cat ('docker ',docker_cmd)
+cat('docker ',docker_cmd)
 ```
 
 ```
-## docker  run --detach  --name sql-pet --publish 5432:5432 --mount type=bind,source=/Users/jds/Documents/Library/R/r-system/sql-pet/r-database-docker/,target=/petdir postgres:10
+## docker  run --detach  --name sql-pet --publish 5432:5432 --mount type=bind,source="/Users/jds/Documents/Library/R/r-system/sql-pet/r-database-docker/",target=/petdir postgres:10
 ```
 
 ```r
-cat ('')
 system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "dfb83a0923eb40f771995d6c06a74c6caae0633431f1555894a2640833abc087"
+## [1] "e154b06bdc5afc2ff2ea3ec6545cdc13edc504c47a0ff50b0f13a8a7c8c998c3"
 ```
 
 Peek inside the docker container and list the files in the `petdir` directory.  Notice that `dvdrental.tar` is in both.
@@ -153,7 +154,6 @@ The `psql` program repeats back to us what it has done, e.g., to create a databs
 Next we execute a different program in the Docker container, `pg_restore`, and tell it where the restore file is located.  If successful, the `pg_restore` just responds with a very laconic `character(0)`.
 
 ```r
-Sys.sleep(2)  # is this really needed?
 # restore the database from the .tar file
 system2("docker", "exec sql-pet pg_restore -U postgres -d dvdrental petdir/dvdrental.tar", stdout = TRUE, stderr = TRUE)
 ```
@@ -172,29 +172,14 @@ file.remove(here("dvdrental.tar")) # the tar file is no longer needed.
 
 Use the DBI package to connect to Postgres.  But first, wait for Docker & Postgres to come up before connecting.
 
-```r
-wait_for_postgres <- function(seconds_to_test){
-  for (i in 1:seconds_to_test) {
-    db_ready <- DBI::dbCanConnect(RPostgres::Postgres(),
-                        host = "localhost",
-                        port = "5432",
-                        user = "postgres",
-                        password = "postgres",
-                        dbname = "dvdrental" ) # note that the dbname is specified
-    if ( !db_ready ) {Sys.sleep(1)} 
-    else {con <- DBI::dbConnect(RPostgres::Postgres(),
-                        host = "localhost",
-                        port = "5432",
-                        user = "postgres",
-                        password = "postgres",
-                        dbname = "dvdrental" ) # note that the dbname is specified)
-    }
-    if (i == seconds_to_test & !db_ready) {con <- "it's not there"}
-    }
-    con
-  }
+We have loaded the `wait_for_postgres` function behind the scenes.
 
-con <- wait_for_postgres(10)
+
+```r
+con <- wait_for_postgres(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
+                         password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
+                         dbname = "dvdrental",
+                         seconds_to_test = 10)
 
 dbListTables(con)
 ```
@@ -251,9 +236,10 @@ system2("docker",  "start sql-pet", stdout = TRUE, stderr = TRUE)
 ```
 
 ```r
-Sys.sleep(1) # need to wait for Docker & Postgres to come up before connecting.
-
-con <- wait_for_postgres(10)
+con <- wait_for_postgres(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
+                         password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
+                         dbname = "dvdrental",
+                         seconds_to_test = 10)
 
 glimpse(dbReadTable(con, "film"))
 ```
@@ -294,7 +280,7 @@ psout[grepl(x = psout, pattern = 'sql-pet')]
 ```
 
 ```
-## [1] "dfb83a0923eb        postgres:10         \"docker-entrypoint.s…\"   30 seconds ago      Exited (137) Less than a second ago                       sql-pet"
+## [1] "e154b06bdc5a        postgres:10         \"docker-entrypoint.s…\"   18 seconds ago      Exited (137) Less than a second ago                       sql-pet"
 ```
 
 ## Cleaning up

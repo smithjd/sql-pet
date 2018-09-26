@@ -3,6 +3,10 @@
 
 Note that `tidyverse`, `DBI`, `RPostgres`, and `glue` are loaded.
 
+
+
+
+
 ## Basics
 
 * keeping passwords secure
@@ -28,10 +32,10 @@ system2("docker",  "start sql-pet", stdout = TRUE, stderr = TRUE)
 ```
 
 ```r
-Sys.sleep(2) # need to wait for Docker & Postgres to come up before connecting.
-con <- DBI::dbConnect(RPostgres::Postgres(), host = "localhost",
-                      port = "5432", user = "postgres",
-                      password = "postgres", dbname = "dvdrental" ) # note that the dbname is specified
+con <- wait_for_postgres(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
+                         password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
+                         dbname = "dvdrental",
+                         seconds_to_test = 10)
 ```
 
 You usually need to use both the available documentation for your [database](http://www.postgresqltutorial.com/postgresql-sample-database/) and to be somewhat skeptical (e.g., empirical).  It's worth learning to interpret the symbols in an [Entity Relationship Diagram](https://en.wikipedia.org/wiki/Entity%E2%80%93relationship_model):
