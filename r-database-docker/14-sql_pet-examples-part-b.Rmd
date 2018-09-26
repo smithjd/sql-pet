@@ -10,9 +10,9 @@ library(knitr)
 ```
 
 ```{r echo=FALSE}
-read_chunk('book-src/shared-db-login-code.R')
+read_chunk('book-src/db-login-batch-code.R')
 
-source('book-src/shared-db-login-code.R')  # use when debugging outside of knitr
+# source('book-src/shared-db-login-batch-code.R')  # use when debugging outside of knitr
 ```
 
 ```{r get_postgres_connection, eval=TRUE, echo=FALSE}
@@ -43,16 +43,11 @@ result
 
 now connect to the database with R
 ```{r}
-# need to wait for Docker & Postgres to come up before connecting.
 
-
-#change the method here.
 con <- wait_for_postgres(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
                          password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
                          dbname = "dvdrental",
                          seconds_to_test = 10)
-
-
 ```
 
 ```{r}
@@ -166,7 +161,7 @@ head(rs4)
 *  Execute the optimized query / acquire and return data
 
 ```{r}
-dbWriteTable(con, "mtcars", mtcars)  
+dbWriteTable(con, "mtcars", mtcars, overwrite = TRUE)
 rs <- dbSendQuery(con, "SELECT * FROM mtcars WHERE cyl = 4")
 dbFetch(rs)
 dbClearResult(rs)
@@ -180,23 +175,30 @@ dbClearResult(rs)
 
 # Pass multiple sets of values with dbBind():
 rs <- dbSendQuery(con, "SELECT * FROM mtcars WHERE cyl = $1")
-dbBind(rs, list(6L))
+dbBind(rs, list(6L)) # cyl = 6
 dbFetch(rs)
-dbBind(rs, list(8L))
+dbBind(rs, list(8L)) # cyl = 8
 dbFetch(rs)
 dbClearResult(rs)
 ```
 
+This is an example from the DBI help file
 ```{r}
-dbWriteTable(con, "cars", head(mtcars, 3))
+dbWriteTable(con, "cars", head(cars, 3)) # not to be confused with mtcars
 dbReadTable(con, "cars")   # there are 3 rows
 
-# not working at the moment.  Not sure what Sophie had in mind...  - JDS
-# dbExecute(
-#   con,
-#   "INSERT INTO cars (speed, dist) VALUES ($1, $2)",
-#   param = list(4:7, 5:8)
-# )
+dbExecute(
+  con,
+  "INSERT INTO cars (speed, dist) VALUES (1, 1), (2, 2), (3, 3)"
+)
+dbReadTable(con, "cars")   # there are now 6 rows
+
+# Pass values using the param argument:
+dbExecute(
+  con,
+  "INSERT INTO cars (speed, dist) VALUES ($1, $2)",
+  param = list(4:7, 5:8)
+)
 dbReadTable(con, "cars")   # there are now 10 rows
 ```
  

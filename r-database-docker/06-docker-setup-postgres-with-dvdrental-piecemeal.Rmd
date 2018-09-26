@@ -10,6 +10,7 @@ library(tidyverse)
 library(DBI)
 library(RPostgres)
 library(glue)
+require(knitr)
 ```
 Note that `tidyverse`, `DBI`, `RPostgres`, and `glue` are loaded.
 
@@ -91,7 +92,6 @@ The `psql` program repeats back to us what it has done, e.g., to create a databs
 
 Next we execute a different program in the Docker container, `pg_restore`, and tell it where the restore file is located.  If successful, the `pg_restore` just responds with a very laconic `character(0)`.
 ```{r}
-Sys.sleep(2)  # is this really needed?
 # restore the database from the .tar file
 system2("docker", "exec sql-pet pg_restore -U postgres -d dvdrental petdir/dvdrental.tar", stdout = TRUE, stderr = TRUE)
 
@@ -128,9 +128,10 @@ Restart the container and verify that the dvdrental tables are still there
 
 system2("docker",  "start sql-pet", stdout = TRUE, stderr = TRUE)
 
-Sys.sleep(1) # need to wait for Docker & Postgres to come up before connecting.
-
-con <- wait_for_postgres(10)
+con <- wait_for_postgres(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
+                         password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
+                         dbname = "dvdrental",
+                         seconds_to_test = 10)
 
 glimpse(dbReadTable(con, "film"))
 

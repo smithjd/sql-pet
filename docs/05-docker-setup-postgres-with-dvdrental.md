@@ -4,8 +4,6 @@
 
 You've already connected to Postgres with R, now you need a "realistic" (`dvdrental`) database. We're going to demonstrate how to set one up, with two different approaches.  This chapter and the next do the same job, illustrating the different approaches that you can take and helping you see the different points whwere you could swap what's provided here with a different DBMS or a different backup file or something else.
 
-## setup the discussion here
-
 The code in this first version is recommended because it is an "all in one" approach.  Details about how it works and how you might modify it are included below.  There is another version in the the next chapter that you can use to investigate Docker commands and components.
 
 Note that this approach relies on two files that have quote that's not shown here: [dvdrental.Dockerfile](./dvdrental.Dockerfile) and [init-dvdrental.sh](init-dvdrental.sh).  They are discussed below.
@@ -64,7 +62,7 @@ system2("docker",
 ```
 
 ```
-##  [1] "Sending build context to Docker daemon  11.96MB\r\r"                                                                                                                                                                                                                                                                                                                                           
+##  [1] "Sending build context to Docker daemon  3.066MB\r\r"                                                                                                                                                                                                                                                                                                                                           
 ##  [2] "Step 1/4 : FROM postgres:10"                                                                                                                                                                                                                                                                                                                                                                   
 ##  [3] " ---> ac25c2bac3c4"                                                                                                                                                                                                                                                                                                                                                                            
 ##  [4] "Step 2/4 : WORKDIR /tmp"                                                                                                                                                                                                                                                                                                                                                                       
@@ -85,7 +83,7 @@ Run docker to bring up postgres.  The first time it runs it will take a minute t
 
   * The `source=` paramter points to [dvdrental.Dockerfile](./dvdrental.Dockerfile), which does most of the heavy lifting.  It has detailed, line-by-line comments to explain what it is doing.  
   *  *Inside* [dvdrental.Dockerfile](./dvdrental.Dockerfile) the comand `COPY init-dvdrental.sh /docker-entrypoint-initdb.d/` copies  [init-dvdrental.sh](init-dvdrental.sh) from the local file system into the specified location in the Docker container.  When the Postgres Docker container initializes, it looks for that file and executes it. 
-
+  
 Doing all of that work behind the scenes involves two layers of complexity.  Depending on how you look at it, that may be more or less difficult to understand than the method shown in the next Chapter.
 
 
@@ -99,8 +97,8 @@ docker_cmd <- glue(
   "--publish 5432:5432 ", # tells Docker to expose the Postgres port 5432 to the local network with 5432
   "--mount ", # tells Docker to mount a volume -- mapping Docker's internal file structure to the host file structure
   "type=bind,", # tells Docker that the mount command points to an actual file on the host system
-  "source='", # tells Docker where the local file will be found
-  wd, "/',", # the current working directory, as retrieved above
+  'source="', # tells Docker where the local file will be found
+  wd, '/",', # the current working directory, as retrieved above
   "target=/petdir", # tells Docker to refer to the current directory as "/petdir" in its file system
   " postgres-dvdrental" # tells Docker to run the image was built in the previous step
 )
@@ -110,7 +108,7 @@ docker_cmd
 ```
 
 ```
-## run --detach  --name sql-pet --publish 5432:5432 --mount type=bind,source='/Users/jds/Documents/Library/R/r-system/sql-pet/r-database-docker/',target=/petdir postgres-dvdrental
+## run --detach  --name sql-pet --publish 5432:5432 --mount type=bind,source="/Users/jds/Documents/Library/R/r-system/sql-pet/r-database-docker/",target=/petdir postgres-dvdrental
 ```
 
 ```r
@@ -118,7 +116,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "6f9eca291846b5e81445a4de60b77d980e3698cbc4a80b76bff7d1ff7c8555f4"
+## [1] "e7c24ca253321d2767c1b1dd94137e730c56b30e8a595552b8be1682e41722ee"
 ```
 ## Connect to Postgres with R
 Use the DBI package to connect to Postgres.  But first, wait for Docker & Postgres to come up before connecting.
@@ -242,7 +240,7 @@ psout[grepl(x = psout, pattern = 'sql-pet')]
 ```
 
 ```
-## [1] "6f9eca291846        postgres-dvdrental   \"docker-entrypoint.s…\"   21 seconds ago      Exited (137) Less than a second ago                       sql-pet"
+## [1] "e7c24ca25332        postgres-dvdrental   \"docker-entrypoint.s…\"   23 seconds ago      Exited (137) Less than a second ago                       sql-pet"
 ```
 
 ## Cleaning up
