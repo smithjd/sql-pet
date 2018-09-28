@@ -4,16 +4,16 @@
 
 * Large data stores in organizations are stored in databases that have specific access constraints and  structural characteristics.
 * Learning to navigate the gap between R and the database is difficult to simulate outside corporate walls.
-* R users frequently need to make sense of complex data structures using diagnostic techniques that shuld not be reinvented (and so would benefit from more public instruction and  commentary).
+* R users frequently need to make sense of complex data structures using diagnostic techniques that should not be reinvented (and so would benefit from more public instruction and  commentary).
 * Docker is a relatively easy way to simulate the relationship between an R/Rstudio session and database -- all on on a single machine.
 
 ## Learning Goals
 
 After working through this tutorial, you can expect to be able to:
 
-* Run queries against Postgres in an environment that simulates what you will find in a corporate setting.
-* Understand some of the tradeoffs between queries aimed at exploration or informal investigation using dplyr and those where performance is important because of the size of the database or the frequency with which a query is run. You will be able to rewrite dplyr queries as SQL and submit them directly. You will have some understanding of techniques for assessing query structure and performance.
-* Set up a Postgres database in a Docker enviornment and understand enough about Docker to swap databases, swap DBMS' (e.g., MySQL for Postgres, etc.)
+* Run queries against PostgreSQL in an environment that simulates what you will find in a corporate setting.
+* Understand some of the trade offs between queries aimed at exploration or informal investigation using dplyr and those where performance is important because of the size of the database or the frequency with which a query is run. You will be able to rewrite dplyr queries as SQL and submit them directly. You will have some understanding of techniques for assessing query structure and performance.
+* Set up a PostgreSQL database in a Docker environment and understand enough about Docker to swap databases, swap DBMS' (e.g., MySQL for PostgreSQL, etc.)
 
 ## Use cases 
 

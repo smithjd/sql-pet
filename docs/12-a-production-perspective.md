@@ -3,7 +3,7 @@
 
 ## Some extra handy libraries
 
-Here are some packages that we find handy in the preliminary investigation of a database (or a problem that involves data from a databse).
+Here are some packages that we find handy in the preliminary investigation of a database (or a problem that involves data from a database).
 
 ```r
 library(glue)
@@ -33,4 +33,4 @@ library(skimr)
 
 ## Standards for production jobs
 
-* writing tests for you rqueries
+* writing tests for your queries

@@ -2,7 +2,7 @@
 
 ## Overview
 
-This chapter essentially repeats what was presented in the previous one, but does it in a step-by-step way that might be useful to understand how each of the steps involved in setting up a persistent Postgres database works.  If you are satisfied with the method shown in that chapter, skip this one for now.
+This chapter essentially repeats what was presented in the previous one, but does it in a step-by-step way that might be useful to understand how each of the steps involved in setting up a persistent PostgreSQL database works.  If you are satisfied with the method shown in that chapter, skip this one for now.
 
 
 Note that `tidyverse`, `DBI`, `RPostgres`, and `glue` are loaded.
@@ -11,7 +11,7 @@ Note that `tidyverse`, `DBI`, `RPostgres`, and `glue` are loaded.
 
 ## Retrieve the backup file
 
-The first step is to get a local copy of the `dvdrental` Postgres restore file.  It comes in a zip format and needs to be un-zipped.  Use the `downloader` and `here` packages to keep track of things.
+The first step is to get a local copy of the `dvdrental` PostgreSQL restore file.  It comes in a zip format and needs to be un-zipped.  Use the `downloader` and `here` packages to keep track of things.
 
 ```r
 if (!require(downloader)) install.packages("downloader")
@@ -86,7 +86,7 @@ if (system2("docker", "ps -a", stdout = TRUE) %>%
 
 ## Build the Docker Image
 
-Build an image that derives from postgres:10.  Connect the local and Docker directories that need to be shared.  Expose the standard Postgres port 5432.
+Build an image that derives from postgres:10.  Connect the local and Docker directories that need to be shared.  Expose the standard PostgreSQL port 5432.
 
   " postgres-dvdrental" # tells Docker the image that is to be run (after downloading if necessary)
 
@@ -115,7 +115,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "9656df81796ae8d76a331e60152eb8856579893d1c68f2980074832b75b59459"
+## [1] "df141df324e0f61a771555adae6fa8be6911120e7a50bbd860391d34e66b175b"
 ```
 
 Peek inside the docker container and list the files in the `petdir` directory.  Notice that `dvdrental.tar` is in both.
@@ -149,7 +149,7 @@ system2('docker', 'exec sql-pet psql -U postgres -c "CREATE DATABASE dvdrental;"
 ```
 ## [1] "CREATE DATABASE"
 ```
-The `psql` program repeats back to us what it has done, e.g., to create a databse named `dvdrental`.
+The `psql` program repeats back to us what it has done, e.g., to create a database named `dvdrental`.
 
 Next we execute a different program in the Docker container, `pg_restore`, and tell it where the restore file is located.  If successful, the `pg_restore` just responds with a very laconic `character(0)`.
 
@@ -170,7 +170,7 @@ file.remove(here("dvdrental.tar")) # the tar file is no longer needed.
 ## [1] TRUE
 ```
 
-Use the DBI package to connect to Postgres.  But first, wait for Docker & Postgres to come up before connecting.
+Use the DBI package to connect to PostgreSQL.  But first, wait for Docker & PostgreSQL to come up before connecting.
 
 We have loaded the `wait_for_postgres` function behind the scenes.
 
@@ -280,7 +280,7 @@ psout[grepl(x = psout, pattern = 'sql-pet')]
 ```
 
 ```
-## [1] "9656df81796a        postgres:10         \"docker-entrypoint.s…\"   18 seconds ago      Exited (137) Less than a second ago                       sql-pet"
+## [1] "df141df324e0        postgres:10         \"docker-entrypoint.s…\"   18 seconds ago      Exited (137) Less than a second ago                       sql-pet"
 ```
 
 ## Cleaning up

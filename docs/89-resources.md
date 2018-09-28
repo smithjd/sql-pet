@@ -4,7 +4,7 @@
 * Here are instructions for [editing this tutorial](https://github.com/smithjd/sql-pet/blob/master/maintaining-the-bookdown-site.md)
 
 ## Docker alternatives
-* Chosing [between Docker and Vagrant](https://medium.com/@Mahmoud_Zalt/vagrant-vs-docker-679c9ce4231b)
+* Choosing [between Docker and Vagrant](https://medium.com/@Mahmoud_Zalt/vagrant-vs-docker-679c9ce4231b)
 
 ## Docker and R
 * Noam Ross' [talk on Docker for the UseR](https://www.youtube.com/watch?v=803oZI5dvAU&t=1) and his [Slides](https://github.com/noamross/nyhackr-docker-talk) give a lot of context and tips.
