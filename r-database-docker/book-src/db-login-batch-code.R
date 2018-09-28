@@ -3,6 +3,15 @@
 
 ## @knitr get_postgres_connection
 
+#' Connect to Postgres, waiting if it is not ready
+#'
+#' @export
+#'
+#' @param user Username that will be found
+#' @param password Password that corresponds to the username
+#' @param dbname the name of the database in the database
+#' @param seconds_to_test the number of iterations to try while waiting for Postgres to be ready
+#'
 wait_for_postgres <- function(user, password, dbname, seconds_to_test = 10) {
   for (i in 1:seconds_to_test) {
     db_ready <- DBI::dbCanConnect(RPostgres::Postgres(),
