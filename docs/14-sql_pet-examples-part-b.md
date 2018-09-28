@@ -1,4 +1,4 @@
-# Postgres Examples, part B
+# Postgres Examples, part B (14)
 
 
 
@@ -42,7 +42,7 @@ result
 
 ```
 ## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                     PORTS               NAMES"    
-## [2] "e154b06bdc5a        postgres:10         \"docker-entrypoint.s…\"   30 seconds ago      Exited (0) 2 seconds ago                       sql-pet"
+## [2] "9656df81796a        postgres:10         \"docker-entrypoint.s…\"   30 seconds ago      Exited (0) 2 seconds ago                       sql-pet"
 ```
 
 ```r

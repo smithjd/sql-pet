@@ -1,7 +1,7 @@
-# Introduction to interacting with Postgres from R
+# Introduction to interacting with Postgres from R (10)
 
 
-Note that `tidyverse`, `DBI`, `RPostgres`, and `glue` are loaded.
+Note that `tidyverse`, `DBI`, `RPostgres`, `glue`, and `knitr` are loaded.  Also, we've sourced the `[db-login-batch-code.R]('r-database-docker/book-src/db-login-batch-code.R')` file which is used to log in to Postgres.
 
 
 

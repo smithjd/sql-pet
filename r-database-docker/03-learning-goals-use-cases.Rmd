@@ -1,6 +1,6 @@
 # Learning Goals and Use Cases
 
-## Context: Why integrate R with databases using Docker?
+## Context: Why integrate R with databases using Docker? (03)
 
 * Large data stores in organizations are stored in databases that have specific access constraints and  structural characteristics.
 * Learning to navigate the gap between R and the database is difficult to simulate outside corporate walls.
