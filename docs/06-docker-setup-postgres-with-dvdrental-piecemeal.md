@@ -1,4 +1,4 @@
-# A persistent database in Postgres in Docker - piecemeal
+# A persistent database in Postgres in Docker - piecemeal (06)
 
 ## Overview
 
@@ -115,7 +115,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "e154b06bdc5afc2ff2ea3ec6545cdc13edc504c47a0ff50b0f13a8a7c8c998c3"
+## [1] "9656df81796ae8d76a331e60152eb8856579893d1c68f2980074832b75b59459"
 ```
 
 Peek inside the docker container and list the files in the `petdir` directory.  Notice that `dvdrental.tar` is in both.
@@ -280,7 +280,7 @@ psout[grepl(x = psout, pattern = 'sql-pet')]
 ```
 
 ```
-## [1] "e154b06bdc5a        postgres:10         \"docker-entrypoint.s…\"   18 seconds ago      Exited (137) Less than a second ago                       sql-pet"
+## [1] "9656df81796a        postgres:10         \"docker-entrypoint.s…\"   18 seconds ago      Exited (137) Less than a second ago                       sql-pet"
 ```
 
 ## Cleaning up

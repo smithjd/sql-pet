@@ -1,36 +1,62 @@
 # Mapping your local environment (92)
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+
+
+
+```r
+library(tidyverse)
 ```
 
-```{r}
-library(tidyverse)
+```
+## -- Attaching packages -------------------------------------------------------------------------------------------------------- tidyverse 1.2.1 --
+```
+
+```
+## v ggplot2 3.0.0     v purrr   0.2.5
+## v tibble  1.4.2     v dplyr   0.7.6
+## v tidyr   0.8.1     v stringr 1.3.1
+## v readr   1.1.1     v forcats 0.3.0
+```
+
+```
+## -- Conflicts ----------------------------------------------------------------------------------------------------------- tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()
+```
+
+```r
 library(DBI)
 library(RPostgres)
 library(glue)
+```
+
+```
+## 
+## Attaching package: 'glue'
+```
+
+```
+## The following object is masked from 'package:dplyr':
+## 
+##     collapse
+```
+
+```r
 library(knitr)
 ```
 
 ## Environment Tools Used in this Chapter
 Note that `tidyverse`, `DBI`, `RPostgres`, `glue`, and `knitr` are loaded.  Also, we've sourced the `[db-login-batch-code.R]('r-database-docker/book-src/db-login-batch-code.R')` file which is used to log in to Postgres.
 
-```{r echo=FALSE}
-read_chunk('book-src/db-login-batch-code.R')
 
-# use when debugging outside of knitr
-# source('r-database-docker/book-src/db-login-batch-code.R')
-# source('r-database-docker/book-src/db-login-interactive-code.R')  
-```
 
-```{r get_postgres_connection, eval=TRUE, echo=FALSE}
 
-```
 library(rstudioapi)
 
 The following code block defines Tool and versions for the graph that follows.  The information order corresponds to the order shown in the graph.
 
-```{r eval=FALSE, echo=TRUE}
+
+```r
 library(DiagrammeR)
 
 ## OS information
@@ -79,7 +105,6 @@ con <- wait_for_postgres(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
 
 postgres_ver <- dbGetQuery(con,"select version()") %>%
   gsub(x = ., pattern = '\\(.*$', replacement = '')
-
 ```
 
 The following code block uses the data generated from the previous code block as input to the subgraphs, the ones outlined in red.  The application nodes are the parents of the subgraphs and are not outlined in reds.  The `Environment` application node represents the machine you are running the tutorial on and hosts the sub-applications.  
@@ -87,7 +112,8 @@ The following code block uses the data generated from the previous code block as
 Note that the '@@' variables are populated at the end of the `Environment` defintion following the `## @@1 - @@5` source data comment.
 
 
-```{r eval=FALSE, echo=TRUE}
+
+```r
 grViz("
 digraph Envgraph {
 

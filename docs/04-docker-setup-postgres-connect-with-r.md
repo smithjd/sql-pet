@@ -1,4 +1,4 @@
-# Docker, Postgres, and R
+# Docker, Postgres, and R (04)
 
 We always load the tidyverse and some other packages, but don't show it unless we are using packages other than `tidyverse`, `DBI`, `RPostgres`, and `glue`.
 
@@ -87,12 +87,12 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "13c84a66f1fa4f6efc4cb5df7fa46294f783d99e8c9e42dc8b40ffb5d47eaa9d"
+## [1] "c2516bfcf8bb3e36655adef1d398a33aa91d852b53cefa2fe75e3d08d97c46af"
 ```
 
-Docker returns a long string of numbers.  If you are running this command for the first time, Docker is downloading the Postgres image and it takes a bit of time.
+Docker returns a long string of numbers.  If you are running this command for the first time, Docker downloads the Postgres image, which takes a bit of time.
 
-The following comand shows that `postgres:10` is running. `postgres` is waiting for a connection:
+The following comand shows that a container named `cattle` is running `postgres:10`.  `postgres` is waiting for a connection:
 
 ```r
 system2("docker", "ps", stdout = TRUE, stderr = TRUE)
@@ -100,27 +100,24 @@ system2("docker", "ps", stdout = TRUE, stderr = TRUE)
 
 ```
 ## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES"   
-## [2] "13c84a66f1fa        postgres:10         \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
+## [2] "c2516bfcf8bb        postgres:10         \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
 ```
-## Put the database password in an environment file
-The goal is to put the password in an untracked file that will **not** be committed in your source code repository. Your code can reference the name of the variable, but the value of that variable will not appear in open text in your source code.
-
-We have chosen to call the file `dev_environment.csv` in the current working directory where you are executing this script. That file name appears in the `.gitignore` file, so that you will not accidentally commit it. We are going to create that file now.
-
-You will be prompted for the database password. By default, a postgres database defines a database user named `postgres`, whose password is `postgres`. If you have changed the password or created a new user with a different password, then enter those new values when prompted. Otherwise, enter `postgres` and `postgres` at the two prompts.
-
-In an interactive environment, you could execute a snippet of code that prompts the user for their username and password with the followoing snippet (which isn't run in the book):
-
-
-Your password is still in plain text in the file, `dev_environment.csv`, so you should protect that file from exposure. However, you do not need to worry about committing that file accidentally to your git repository, because the name of the file appears in the `.gitignore` file.
-
 ## Connect, read and write to Postgres from R
 
 ### Pause for some security considerations
 
-Create a connection to Postgres after waiting 3 seconds so that Docker has time to do its thing. For security, we use values from the `environment_variables` data.frame, rather than keeping the `username` and `password` in plain text in this source file.
+We use the following `wait_for_postgres` function, which will repeatedly try to connect to Postgres.  Postgres can take different amounts of time to come up and be ready to accept connections from R, depending on various facgtors that will be discussed later on.
 
 ```r
+#' Connect to Postgres, waiting if it is not ready
+#'
+#' @export
+#'
+#' @param user Username that will be found
+#' @param password Password that corresponds to the username
+#' @param dbname the name of the database in the database
+#' @param seconds_to_test the number of iterations to try while waiting for Postgres to be ready
+#'
 wait_for_postgres <- function(user, password, dbname, seconds_to_test = 10) {
   for (i in 1:seconds_to_test) {
     db_ready <- DBI::dbCanConnect(RPostgres::Postgres(),
@@ -142,7 +139,7 @@ wait_for_postgres <- function(user, password, dbname, seconds_to_test = 10) {
   con
 }
 ```
-This `wait_for_postgres` function uses environment variables that R obtains from reading a file named `.Rprofile` which is found in your default directory.  To see whether you have already created that file, execute:
+When we call `wait_for_postgres` we'll use environment variables that R obtains from reading a file named `.Rprofile`.  That file is not uploaded to github and R looks for it in your default directory.  To see whether you have already created that file, execute:
 
 
 ```r
@@ -158,7 +155,9 @@ It should contain lines such as:
   DEFAULT_POSTGRES_PASSWORD=postgres
   DEFAULT_POSTGRES_USER_NAME=postgres
 ```
+Those are the default values for the username and password, but this approach demonstrates how they would be kept secret and not uploaded to github or some other public location.
 
+This is how the `wait_for_postgres` function is used:
 
 ```r
 con <- wait_for_postgres(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
@@ -166,7 +165,6 @@ con <- wait_for_postgres(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
                          dbname = "postgres",
                          seconds_to_test = 10)
 ```
-
 Show that you can connect but that Postgres database doesn't contain any tables:
 
 
@@ -177,6 +175,24 @@ dbListTables(con)
 ```
 ## character(0)
 ```
+
+### Alternative: put the database password in an environment file
+
+The goal is to put the password in an untracked file that will **not** be committed in your source code repository. Your code can reference the name of the variable, but the value of that variable will not appear in open text in your source code.
+
+We have chosen to call the file `dev_environment.csv` in the current working directory where you are executing this script. That file name appears in the `.gitignore` file, so that you will not accidentally commit it. We are going to create that file now.
+
+You will be prompted for the database password. By default, a postgres database defines a database user named `postgres`, whose password is `postgres`. If you have changed the password or created a new user with a different password, then enter those new values when prompted. Otherwise, enter `postgres` and `postgres` at the two prompts.
+
+In an interactive environment, you could execute a snippet of code that prompts the user for their username and password with the followoing snippet (which isn't run in the book):
+
+
+Your password is still in plain text in the file, `dev_environment.csv`, so you should protect that file from exposure. However, you do not need to worry about committing that file accidentally to your git repository, because the name of the file appears in the `.gitignore` file.
+
+For security, we use values from the `environment_variables` data.frame, rather than keeping the `username` and `password` in plain text in a source file.
+
+
+### Interact with Postgres
 
 Write `mtcars` to Postgres
 

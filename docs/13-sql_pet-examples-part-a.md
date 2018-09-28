@@ -1,4 +1,4 @@
-# Postgres Examples, part A
+# Postgres Examples, part A (13)
 
 Libraries loaded and functions are loaded
 
@@ -41,7 +41,7 @@ result
 
 ```
 ## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES"    
-## [2] "e154b06bdc5a        postgres:10         \"docker-entrypoint.s…\"   26 seconds ago      Up 5 seconds        0.0.0.0:5432->5432/tcp   sql-pet"
+## [2] "9656df81796a        postgres:10         \"docker-entrypoint.s…\"   26 seconds ago      Up 6 seconds        0.0.0.0:5432->5432/tcp   sql-pet"
 ```
 
 ```r

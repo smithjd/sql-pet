@@ -1,4 +1,4 @@
-# A persistent database in Postgres in Docker - all at once
+# A persistent database in Postgres in Docker - all at once (05)
 
 ## Overview
 
@@ -62,7 +62,7 @@ system2("docker",
 ```
 
 ```
-##  [1] "Sending build context to Docker daemon  3.066MB\r\r"                                                                                                                                                                                                                                                                                                                                           
+##  [1] "Sending build context to Docker daemon  3.095MB\r\r"                                                                                                                                                                                                                                                                                                                                           
 ##  [2] "Step 1/4 : FROM postgres:10"                                                                                                                                                                                                                                                                                                                                                                   
 ##  [3] " ---> ac25c2bac3c4"                                                                                                                                                                                                                                                                                                                                                                            
 ##  [4] "Step 2/4 : WORKDIR /tmp"                                                                                                                                                                                                                                                                                                                                                                       
@@ -116,7 +116,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "e7c24ca253321d2767c1b1dd94137e730c56b30e8a595552b8be1682e41722ee"
+## [1] "729bc12f2a612ff613e922b04cba9bdf155de1df18b9b18eacf069fda3d99ae1"
 ```
 ## Connect to Postgres with R
 Use the DBI package to connect to Postgres.  But first, wait for Docker & Postgres to come up before connecting.
@@ -240,7 +240,7 @@ psout[grepl(x = psout, pattern = 'sql-pet')]
 ```
 
 ```
-## [1] "e7c24ca25332        postgres-dvdrental   \"docker-entrypoint.s…\"   23 seconds ago      Exited (137) Less than a second ago                       sql-pet"
+## [1] "729bc12f2a61        postgres-dvdrental   \"docker-entrypoint.s…\"   23 seconds ago      Exited (137) Less than a second ago                       sql-pet"
 ```
 
 ## Cleaning up

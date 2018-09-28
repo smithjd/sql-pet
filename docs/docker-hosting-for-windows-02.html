@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>R, Databases and Docker</title>
+  <meta name="description" content="A collection of tutorials for integrating R with databases using Docker">
+  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+
+  <meta property="og:title" content="R, Databases and Docker" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="A collection of tutorials for integrating R with databases using Docker" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="R, Databases and Docker" />
+  
+  <meta name="twitter:description" content="A collection of tutorials for integrating R with databases using Docker" />
+  
+
+<meta name="author" content="Dipti Muni, Ian Frantz, John David Smith, Mary Anne Thygesen, M. Edward (Ed) Borasky, Scott Case, and Sophie Yang">
+
+
+<meta name="date" content="2018-09-28">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="index.html">
+<link rel="next" href="learning-goals-and-use-cases.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">R, Databases and Docker</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#using-r-to-query-a-dbms-in-your-organization"><i class="fa fa-check"></i><b>1.1</b> Using R to query a DBMS in your organization</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#dockers-role"><i class="fa fa-check"></i><b>1.2</b> Docker’s role</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#docker-and-r-on-your-machine"><i class="fa fa-check"></i><b>1.3</b> Docker and R on your machine</a></li>
+<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#who-are-we"><i class="fa fa-check"></i><b>1.4</b> Who are we?</a></li>
+<li class="chapter" data-level="1.5" data-path="index.html"><a href="index.html#prerequisites"><i class="fa fa-check"></i><b>1.5</b> Prerequisites</a></li>
+<li class="chapter" data-level="1.6" data-path="index.html"><a href="index.html#install-docker"><i class="fa fa-check"></i><b>1.6</b> Install Docker</a></li>
+<li class="chapter" data-level="1.7" data-path="index.html"><a href="index.html#download-the-repo"><i class="fa fa-check"></i><b>1.7</b> Download the repo</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="docker-hosting-for-windows-02.html"><a href="docker-hosting-for-windows-02.html"><i class="fa fa-check"></i><b>2</b> Docker Hosting for Windows (02)</a><ul>
+<li class="chapter" data-level="2.1" data-path="docker-hosting-for-windows-02.html"><a href="docker-hosting-for-windows-02.html#hardware-requirements"><i class="fa fa-check"></i><b>2.1</b> Hardware requirements</a></li>
+<li class="chapter" data-level="2.2" data-path="docker-hosting-for-windows-02.html"><a href="docker-hosting-for-windows-02.html#software-requirements"><i class="fa fa-check"></i><b>2.2</b> Software requirements</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="docker-hosting-for-windows-02.html"><a href="docker-hosting-for-windows-02.html#windows-7-8-8.1-and-windows-10-home-64-bit"><i class="fa fa-check"></i><b>2.2.1</b> Windows 7, 8, 8.1 and Windows 10 Home (64 bit)</a></li>
+<li class="chapter" data-level="2.2.2" data-path="docker-hosting-for-windows-02.html"><a href="docker-hosting-for-windows-02.html#windows-10-pro"><i class="fa fa-check"></i><b>2.2.2</b> Windows 10 Pro</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="docker-hosting-for-windows-02.html"><a href="docker-hosting-for-windows-02.html#docker-for-windows-settings"><i class="fa fa-check"></i><b>2.3</b> Docker for Windows settings</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="docker-hosting-for-windows-02.html"><a href="docker-hosting-for-windows-02.html#shared-drives"><i class="fa fa-check"></i><b>2.3.1</b> Shared drives</a></li>
+<li class="chapter" data-level="2.3.2" data-path="docker-hosting-for-windows-02.html"><a href="docker-hosting-for-windows-02.html#kubernetes"><i class="fa fa-check"></i><b>2.3.2</b> Kubernetes</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="docker-hosting-for-windows-02.html"><a href="docker-hosting-for-windows-02.html#git-github-and-line-endings"><i class="fa fa-check"></i><b>2.4</b> Git, GitHub and line endings</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="learning-goals-and-use-cases.html"><a href="learning-goals-and-use-cases.html"><i class="fa fa-check"></i><b>3</b> Learning Goals and Use Cases</a><ul>
+<li class="chapter" data-level="3.1" data-path="learning-goals-and-use-cases.html"><a href="learning-goals-and-use-cases.html#context-why-integrate-r-with-databases-using-docker-03"><i class="fa fa-check"></i><b>3.1</b> Context: Why integrate R with databases using Docker? (03)</a></li>
+<li class="chapter" data-level="3.2" data-path="learning-goals-and-use-cases.html"><a href="learning-goals-and-use-cases.html#learning-goals"><i class="fa fa-check"></i><b>3.2</b> Learning Goals</a></li>
+<li class="chapter" data-level="3.3" data-path="learning-goals-and-use-cases.html"><a href="learning-goals-and-use-cases.html#use-cases"><i class="fa fa-check"></i><b>3.3</b> Use cases</a></li>
+<li class="chapter" data-level="3.4" data-path="learning-goals-and-use-cases.html"><a href="learning-goals-and-use-cases.html#environment"><i class="fa fa-check"></i><b>3.4</b> Environment</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html"><i class="fa fa-check"></i><b>4</b> Docker, Postgres, and R (04)</a><ul>
+<li class="chapter" data-level="4.1" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#verify-that-docker-running"><i class="fa fa-check"></i><b>4.1</b> Verify that Docker running</a></li>
+<li class="chapter" data-level="4.2" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#clean-up-if-appropriate"><i class="fa fa-check"></i><b>4.2</b> Clean up if appropriate</a></li>
+<li class="chapter" data-level="4.3" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#connect-read-and-write-to-postgres-from-r"><i class="fa fa-check"></i><b>4.3</b> Connect, read and write to Postgres from R</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#pause-for-some-security-considerations"><i class="fa fa-check"></i><b>4.3.1</b> Pause for some security considerations</a></li>
+<li class="chapter" data-level="4.3.2" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#alternative-put-the-database-password-in-an-environment-file"><i class="fa fa-check"></i><b>4.3.2</b> Alternative: put the database password in an environment file</a></li>
+<li class="chapter" data-level="4.3.3" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#interact-with-postgres"><i class="fa fa-check"></i><b>4.3.3</b> Interact with Postgres</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#clean-up"><i class="fa fa-check"></i><b>4.4</b> Clean up</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="a-persistent-database-in-postgres-in-docker-all-at-once-05.html"><a href="a-persistent-database-in-postgres-in-docker-all-at-once-05.html"><i class="fa fa-check"></i><b>5</b> A persistent database in Postgres in Docker - all at once (05)</a><ul>
+<li class="chapter" data-level="5.1" data-path="a-persistent-database-in-postgres-in-docker-all-at-once-05.html"><a href="a-persistent-database-in-postgres-in-docker-all-at-once-05.html#overview"><i class="fa fa-check"></i><b>5.1</b> Overview</a></li>
+<li class="chapter" data-level="5.2" data-path="a-persistent-database-in-postgres-in-docker-all-at-once-05.html"><a href="a-persistent-database-in-postgres-in-docker-all-at-once-05.html#first-verify-that-docker-is-up-and-running"><i class="fa fa-check"></i><b>5.2</b> First, verify that Docker is up and running:</a></li>
+<li class="chapter" data-level="5.3" data-path="a-persistent-database-in-postgres-in-docker-all-at-once-05.html"><a href="a-persistent-database-in-postgres-in-docker-all-at-once-05.html#clean-up-if-appropriate-1"><i class="fa fa-check"></i><b>5.3</b> Clean up if appropriate</a></li>
+<li class="chapter" data-level="5.4" data-path="a-persistent-database-in-postgres-in-docker-all-at-once-05.html"><a href="a-persistent-database-in-postgres-in-docker-all-at-once-05.html#build-the-docker-image"><i class="fa fa-check"></i><b>5.4</b> Build the Docker Image</a></li>
+<li class="chapter" data-level="5.5" data-path="a-persistent-database-in-postgres-in-docker-all-at-once-05.html"><a href="a-persistent-database-in-postgres-in-docker-all-at-once-05.html#run-the-docker-image"><i class="fa fa-check"></i><b>5.5</b> Run the Docker Image</a></li>
+<li class="chapter" data-level="5.6" data-path="a-persistent-database-in-postgres-in-docker-all-at-once-05.html"><a href="a-persistent-database-in-postgres-in-docker-all-at-once-05.html#connect-to-postgres-with-r"><i class="fa fa-check"></i><b>5.6</b> Connect to Postgres with R</a></li>
+<li class="chapter" data-level="5.7" data-path="a-persistent-database-in-postgres-in-docker-all-at-once-05.html"><a href="a-persistent-database-in-postgres-in-docker-all-at-once-05.html#stop-and-start-to-demonstrate-persistence"><i class="fa fa-check"></i><b>5.7</b> Stop and start to demonstrate persistence</a></li>
+<li class="chapter" data-level="5.8" data-path="a-persistent-database-in-postgres-in-docker-all-at-once-05.html"><a href="a-persistent-database-in-postgres-in-docker-all-at-once-05.html#cleaning-up"><i class="fa fa-check"></i><b>5.8</b> Cleaning up</a></li>
+<li class="chapter" data-level="5.9" data-path="a-persistent-database-in-postgres-in-docker-all-at-once-05.html"><a href="a-persistent-database-in-postgres-in-docker-all-at-once-05.html#using-the-sql-pet-container-in-the-rest-of-the-book"><i class="fa fa-check"></i><b>5.9</b> Using the <code>sql-pet</code> container in the rest of the book</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="a-persistent-database-in-postgres-in-docker-piecemeal-06.html"><a href="a-persistent-database-in-postgres-in-docker-piecemeal-06.html"><i class="fa fa-check"></i><b>6</b> A persistent database in Postgres in Docker - piecemeal (06)</a><ul>
+<li class="chapter" data-level="6.1" data-path="a-persistent-database-in-postgres-in-docker-piecemeal-06.html"><a href="a-persistent-database-in-postgres-in-docker-piecemeal-06.html#overview-1"><i class="fa fa-check"></i><b>6.1</b> Overview</a></li>
+<li class="chapter" data-level="6.2" data-path="a-persistent-database-in-postgres-in-docker-piecemeal-06.html"><a href="a-persistent-database-in-postgres-in-docker-piecemeal-06.html#retrieve-the-backup-file"><i class="fa fa-check"></i><b>6.2</b> Retrieve the backup file</a></li>
+<li class="chapter" data-level="6.3" data-path="a-persistent-database-in-postgres-in-docker-piecemeal-06.html"><a href="a-persistent-database-in-postgres-in-docker-piecemeal-06.html#now-verify-that-docker-is-up-and-running"><i class="fa fa-check"></i><b>6.3</b> Now, verify that Docker is up and running:</a></li>
+<li class="chapter" data-level="6.4" data-path="a-persistent-database-in-postgres-in-docker-piecemeal-06.html"><a href="a-persistent-database-in-postgres-in-docker-piecemeal-06.html#build-the-docker-image-1"><i class="fa fa-check"></i><b>6.4</b> Build the Docker Image</a></li>
+<li class="chapter" data-level="6.5" data-path="a-persistent-database-in-postgres-in-docker-piecemeal-06.html"><a href="a-persistent-database-in-postgres-in-docker-piecemeal-06.html#stop-and-start-to-demonstrate-persistence-1"><i class="fa fa-check"></i><b>6.5</b> Stop and start to demonstrate persistence</a></li>
+<li class="chapter" data-level="6.6" data-path="a-persistent-database-in-postgres-in-docker-piecemeal-06.html"><a href="a-persistent-database-in-postgres-in-docker-piecemeal-06.html#cleaning-up-1"><i class="fa fa-check"></i><b>6.6</b> Cleaning up</a></li>
+<li class="chapter" data-level="6.7" data-path="a-persistent-database-in-postgres-in-docker-piecemeal-06.html"><a href="a-persistent-database-in-postgres-in-docker-piecemeal-06.html#using-the-sql-pet-container-in-the-rest-of-the-book-1"><i class="fa fa-check"></i><b>6.7</b> Using the <code>sql-pet</code> container in the rest of the book</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="introduction-to-interacting-with-postgres-from-r-10.html"><a href="introduction-to-interacting-with-postgres-from-r-10.html"><i class="fa fa-check"></i><b>7</b> Introduction to interacting with Postgres from R (10)</a><ul>
+<li class="chapter" data-level="7.1" data-path="introduction-to-interacting-with-postgres-from-r-10.html"><a href="introduction-to-interacting-with-postgres-from-r-10.html#basics"><i class="fa fa-check"></i><b>7.1</b> Basics</a></li>
+<li class="chapter" data-level="7.2" data-path="introduction-to-interacting-with-postgres-from-r-10.html"><a href="introduction-to-interacting-with-postgres-from-r-10.html#ask-yourself-about-what-you-are-aiming-for"><i class="fa fa-check"></i><b>7.2</b> Ask yourself about what you are aiming for?</a></li>
+<li class="chapter" data-level="7.3" data-path="introduction-to-interacting-with-postgres-from-r-10.html"><a href="introduction-to-interacting-with-postgres-from-r-10.html#get-some-basic-information-about-your-database"><i class="fa fa-check"></i><b>7.3</b> Get some basic information about your database</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="real-work-with-real-data-11.html"><a href="real-work-with-real-data-11.html"><i class="fa fa-check"></i><b>8</b> Real work with real data (11)</a><ul>
+<li class="chapter" data-level="8.1" data-path="real-work-with-real-data-11.html"><a href="real-work-with-real-data-11.html#some-extra-handy-libraries"><i class="fa fa-check"></i><b>8.1</b> Some extra handy libraries</a></li>
+<li class="chapter" data-level="8.2" data-path="real-work-with-real-data-11.html"><a href="real-work-with-real-data-11.html#basic-investigation"><i class="fa fa-check"></i><b>8.2</b> Basic investigation</a></li>
+<li class="chapter" data-level="8.3" data-path="real-work-with-real-data-11.html"><a href="real-work-with-real-data-11.html#using-dplyr"><i class="fa fa-check"></i><b>8.3</b> Using Dplyr</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="real-work-with-real-data-11.html"><a href="real-work-with-real-data-11.html#finding-out-whats-in-the-database"><i class="fa fa-check"></i><b>8.3.1</b> finding out what’s in the database</a></li>
+<li class="chapter" data-level="8.3.2" data-path="real-work-with-real-data-11.html"><a href="real-work-with-real-data-11.html#sample-query"><i class="fa fa-check"></i><b>8.3.2</b> sample query</a></li>
+<li class="chapter" data-level="8.3.3" data-path="real-work-with-real-data-11.html"><a href="real-work-with-real-data-11.html#subset-only-retrieve-what-you-need"><i class="fa fa-check"></i><b>8.3.3</b> Subset: only retrieve what you need</a></li>
+<li class="chapter" data-level="8.3.4" data-path="real-work-with-real-data-11.html"><a href="real-work-with-real-data-11.html#make-the-server-do-as-much-work-as-you-can"><i class="fa fa-check"></i><b>8.3.4</b> Make the server do as much work as you can</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="real-work-with-real-data-11.html"><a href="real-work-with-real-data-11.html#what-is-dplyr-sending-to-the-server"><i class="fa fa-check"></i><b>8.4</b> What is dplyr sending to the server?</a></li>
+<li class="chapter" data-level="8.5" data-path="real-work-with-real-data-11.html"><a href="real-work-with-real-data-11.html#writing-your-on-sql-directly-to-the-dbms"><i class="fa fa-check"></i><b>8.5</b> Writing your on SQL directly to the DBMS</a></li>
+<li class="chapter" data-level="8.6" data-path="real-work-with-real-data-11.html"><a href="real-work-with-real-data-11.html#chosing-between-dplyr-and-native-sql"><i class="fa fa-check"></i><b>8.6</b> Chosing between dplyr and native SQL</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="real-work-with-real-data-12.html"><a href="real-work-with-real-data-12.html"><i class="fa fa-check"></i><b>9</b> Real work with real data (12)</a><ul>
+<li class="chapter" data-level="9.1" data-path="real-work-with-real-data-12.html"><a href="real-work-with-real-data-12.html#some-extra-handy-libraries-1"><i class="fa fa-check"></i><b>9.1</b> Some extra handy libraries</a></li>
+<li class="chapter" data-level="9.2" data-path="real-work-with-real-data-12.html"><a href="real-work-with-real-data-12.html#more-topics"><i class="fa fa-check"></i><b>9.2</b> More topics</a></li>
+<li class="chapter" data-level="9.3" data-path="real-work-with-real-data-12.html"><a href="real-work-with-real-data-12.html#standards-for-production-jobs"><i class="fa fa-check"></i><b>9.3</b> Standards for production jobs</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="postgres-examples-part-a-13.html"><a href="postgres-examples-part-a-13.html"><i class="fa fa-check"></i><b>10</b> Postgres Examples, part A (13)</a><ul>
+<li class="chapter" data-level="10.1" data-path="postgres-examples-part-a-13.html"><a href="postgres-examples-part-a-13.html#verify-docker-is-up-and-running"><i class="fa fa-check"></i><b>10.1</b> Verify Docker is up and running:</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="postgres-examples-part-b-14.html"><a href="postgres-examples-part-b-14.html"><i class="fa fa-check"></i><b>11</b> Postgres Examples, part B (14)</a><ul>
+<li class="chapter" data-level="11.1" data-path="postgres-examples-part-b-14.html"><a href="postgres-examples-part-b-14.html#verify-docker-is-up-and-running-1"><i class="fa fa-check"></i><b>11.1</b> Verify Docker is up and running:</a></li>
+<li class="chapter" data-level="11.2" data-path="postgres-examples-part-b-14.html"><a href="postgres-examples-part-b-14.html#sql-execution-steps"><i class="fa fa-check"></i><b>11.2</b> SQL Execution Steps</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="other-resources.html"><a href="other-resources.html"><i class="fa fa-check"></i><b>12</b> Other resources</a><ul>
+<li class="chapter" data-level="12.1" data-path="other-resources.html"><a href="other-resources.html#editing-this-book"><i class="fa fa-check"></i><b>12.1</b> Editing this book</a></li>
+<li class="chapter" data-level="12.2" data-path="other-resources.html"><a href="other-resources.html#docker-alternatives"><i class="fa fa-check"></i><b>12.2</b> Docker alternatives</a></li>
+<li class="chapter" data-level="12.3" data-path="other-resources.html"><a href="other-resources.html#docker-and-r"><i class="fa fa-check"></i><b>12.3</b> Docker and R</a></li>
+<li class="chapter" data-level="12.4" data-path="other-resources.html"><a href="other-resources.html#documentation-docker-and-postgres"><i class="fa fa-check"></i><b>12.4</b> Documentation Docker and Postgres</a></li>
+<li class="chapter" data-level="12.5" data-path="other-resources.html"><a href="other-resources.html#more-resources"><i class="fa fa-check"></i><b>12.5</b> More Resources</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="13" data-path="mapping-your-local-environment-92.html"><a href="mapping-your-local-environment-92.html"><i class="fa fa-check"></i><b>13</b> Mapping your local environment (92)</a><ul>
+<li class="chapter" data-level="13.1" data-path="mapping-your-local-environment-92.html"><a href="mapping-your-local-environment-92.html#environment-tools-used-in-this-chapter"><i class="fa fa-check"></i><b>13.1</b> Environment Tools Used in this Chapter</a></li>
+<li class="chapter" data-level="13.2" data-path="mapping-your-local-environment-92.html"><a href="mapping-your-local-environment-92.html#communicating-with-docker-applications"><i class="fa fa-check"></i><b>13.2</b> Communicating with Docker Applications</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">R, Databases and Docker</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="docker-hosting-for-windows-02" class="section level1">
+<h1><span class="header-section-number">Chapter 2</span> Docker Hosting for Windows (02)</h1>
+<p>Skip these instructions if your computer has either OSX or a Unix variant.</p>
+<div id="hardware-requirements" class="section level2">
+<h2><span class="header-section-number">2.1</span> Hardware requirements</h2>
+<p>You will need an Intel or AMD processor with 64-bit hardware and the hardware virtualization feature. Most machines you buy today will have that, but older ones may not. You will need to go into the BIOS / firmware and enable the virtualization feature. You will need at least 4 gigabytes of RAM!</p>
+</div>
+<div id="software-requirements" class="section level2">
+<h2><span class="header-section-number">2.2</span> Software requirements</h2>
+<p>You will need Windows 7 64-bit or later. If you can afford it, I highly recommend upgrading to Windows 10 Pro.</p>
+<div id="windows-7-8-8.1-and-windows-10-home-64-bit" class="section level3">
+<h3><span class="header-section-number">2.2.1</span> Windows 7, 8, 8.1 and Windows 10 Home (64 bit)</h3>
+<p>Install Docker Toolbox. The instructions are here: <a href="https://docs.docker.com/toolbox/toolbox_install_windows/" class="uri">https://docs.docker.com/toolbox/toolbox_install_windows/</a>. Make sure you try the test cases and they work!</p>
+</div>
+<div id="windows-10-pro" class="section level3">
+<h3><span class="header-section-number">2.2.2</span> Windows 10 Pro</h3>
+<p>Install Docker for Windows <em>stable</em>. The instructions are here: <a href="https://docs.docker.com/docker-for-windows/install/#start-docker-for-windows" class="uri">https://docs.docker.com/docker-for-windows/install/#start-docker-for-windows</a>. Again, make sure you try the test cases and they work.</p>
+</div>
+</div>
+<div id="docker-for-windows-settings" class="section level2">
+<h2><span class="header-section-number">2.3</span> Docker for Windows settings</h2>
+<div id="shared-drives" class="section level3">
+<h3><span class="header-section-number">2.3.1</span> Shared drives</h3>
+<p>If you’re going to mount host files into container filesystems (as we do in the following chapters), you need to set up shared drives. Open the Docker settings dialog and select <code>Shared Drives</code>. Check the drives you want to share. In this screenshot, the <code>D:</code> drive is my 1 terabyte hard drive.</p>
+<p><img src="screenshots/2018-08-26_15_16_51-Shared_Drives.png" width="90%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="kubernetes" class="section level3">
+<h3><span class="header-section-number">2.3.2</span> Kubernetes</h3>
+<p>Kubernetes is a container orchestration / cloud management package that’s a major DevOps tool. It’s heavily supported by Red Hat and Google, and as a result is becoming a required skill for DevOps.</p>
+<p>However, it’s overkill for this project at the moment. So you should make sure it’s not enabled.</p>
+<p>Go to the <code>Kubernetes</code> dialog and make sure the <code>Enable Kubernetes</code> checkbox is cleared.</p>
+<p><img src="screenshots/2018-08-26_15_26_22-Kubernetes.png" width="90%" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="git-github-and-line-endings" class="section level2">
+<h2><span class="header-section-number">2.4</span> Git, GitHub and line endings</h2>
+<p>Git was originally developed for Linux - in fact, it was created by Linus Torvalds to manage hundreds of different versions of the Linux kernel on different machines all around the world. As usage has grown, it’s achieved a huge following and is the version control system used by most large open source projects, including this one.</p>
+<p>If you’re on Windows, there are some things about Git and GitHub you need to watch. First of all, there are quite a few tools for running Git on Windows, but the RStudio default and recommended one is Git for Windows (<a href="https://git-scm.com/download/win" class="uri">https://git-scm.com/download/win</a>).</p>
+<p>By default, text files on Linux end with a single linefeed (<code>\n</code>) character. But on Windows, text files end with a carriage return and a line feed (<code>\r\n</code>). See <a href="https://en.wikipedia.org/wiki/Newline" class="uri">https://en.wikipedia.org/wiki/Newline</a> for the gory details.</p>
+<p>Git defaults to checking files out in the native mode. So if you’re on Linux, a text file will show up with the Linux convention, and if you’re on Windows, it will show up with the Windows convention.</p>
+<p>Most of the time this doesn’t cause any problems. But Docker containers usually run Linux, and if you have files from a repository on Windows that you’ve sent to the container, the container may malfunction or give weird results. <em>This kind of situation has caused a lot of grief for contributors to this project, so beware.</em></p>
+<p>In particular, executable <code>sh</code> or <code>bash</code> scripts will fail in a Docker container if they have Windows line endings. You may see an error message with <code>\r</code> in it, which means the shell saw the carriage return (<code>\r</code>) and gave up. But often you’ll see no hint at all what the problem was.</p>
+<p>So you need a way to tell Git that some files need to be checked out with Linux line endings. See <a href="https://help.github.com/articles/dealing-with-line-endings/" class="uri">https://help.github.com/articles/dealing-with-line-endings/</a> for the details. Summary:</p>
+<ol style="list-style-type: decimal">
+<li>You’ll need a <code>.gitattributes</code> file in the root of the repository.</li>
+<li>In that file, all text files (scripts, program source, data, etc.) that are destined for a Docker container will need to have the designator <code>&lt;spec&gt; text eol=lf</code>, where <code>&lt;spec&gt;</code> is the file name specifier, for example, <code>*.sh</code>.</li>
+</ol>
+<p>This repo includes a sample: <a href="https://github.com/smithjd/sql-pet/blob/master/.gitattributes">.gitattributes</a></p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="learning-goals-and-use-cases.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/smithjd/sql-pet/edit/master/r-database-docker/02-docker_hosting_for_windows.Rmd",
+"text": "Edit"
+},
+"download": ["r-database-docker.pdf"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

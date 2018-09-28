@@ -16,7 +16,7 @@ bookdown::render_book(
   output_dir = "../docs"
 )
 
-# PDF
+PDF
 bookdown::render_book(
   input = "index.Rmd",
   new_session = TRUE,
