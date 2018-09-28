@@ -9,7 +9,7 @@ Docker commands can be run from a terminal (e.g., the Rstudio Terminal pane) or 
 
 1. The program that you are sending a command to.
 2. The parameters or commands that are being sent
-3. `stdout = TRUE, stderr = TRUE` are two parameters that are standard in this book, so that the comand's full output is shown in the book.
+3. `stdout = TRUE, stderr = TRUE` are two parameters that are standard in this book, so that the command's full output is shown in the book.
 
 
 The `docker version` command returns the details about the docker daemon that is running on your computer.
@@ -56,7 +56,7 @@ if (system2("docker", "ps -a", stdout = TRUE) %>%
 }
 ```
 
-The convention we use in this book is to assemble a command with `glue` so that the you can see all of its separate parts.  The following chunk just constructs the command, but does not execute it.  If you have problems executing a commnad, you can always copy the command and execute in your terminal session.
+The convention we use in this book is to assemble a command with `glue` so that the you can see all of its separate parts.  The following chunk just constructs the command, but does not execute it.  If you have problems executing a command, you can always copy the command and execute in your terminal session.
 
 ```r
 docker_cmd <- glue(
@@ -87,12 +87,12 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "c2516bfcf8bb3e36655adef1d398a33aa91d852b53cefa2fe75e3d08d97c46af"
+## [1] "80b07e0f5fae72166d374a457e4b22e9a3ca3ecad1baa5a81f984db99841e78b"
 ```
 
-Docker returns a long string of numbers.  If you are running this command for the first time, Docker downloads the Postgres image, which takes a bit of time.
+Docker returns a long string of numbers.  If you are running this command for the first time, Docker downloads the PostgreSQL image, which takes a bit of time.
 
-The following comand shows that a container named `cattle` is running `postgres:10`.  `postgres` is waiting for a connection:
+The following command shows that a container named `cattle` is running `postgres:10`.  `postgres` is waiting for a connection:
 
 ```r
 system2("docker", "ps", stdout = TRUE, stderr = TRUE)
@@ -100,13 +100,13 @@ system2("docker", "ps", stdout = TRUE, stderr = TRUE)
 
 ```
 ## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES"   
-## [2] "c2516bfcf8bb        postgres:10         \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
+## [2] "80b07e0f5fae        postgres:10         \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
 ```
 ## Connect, read and write to Postgres from R
 
 ### Pause for some security considerations
 
-We use the following `wait_for_postgres` function, which will repeatedly try to connect to Postgres.  Postgres can take different amounts of time to come up and be ready to accept connections from R, depending on various facgtors that will be discussed later on.
+We use the following `wait_for_postgres` function, which will repeatedly try to connect to PostgreSQL.  PostgreSQL can take different amounts of time to come up and be ready to accept connections from R, depending on various factors that will be discussed later on.
 
 ```r
 #' Connect to Postgres, waiting if it is not ready
@@ -139,7 +139,7 @@ wait_for_postgres <- function(user, password, dbname, seconds_to_test = 10) {
   con
 }
 ```
-When we call `wait_for_postgres` we'll use environment variables that R obtains from reading a file named `.Rprofile`.  That file is not uploaded to github and R looks for it in your default directory.  To see whether you have already created that file, execute:
+When we call `wait_for_postgres` we'll use environment variables that R obtains from reading a file named `.Rprofile`.  That file is not uploaded to Github and R looks for it in your default directory.  To see whether you have already created that file, execute:
 
 
 ```r
@@ -155,7 +155,7 @@ It should contain lines such as:
   DEFAULT_POSTGRES_PASSWORD=postgres
   DEFAULT_POSTGRES_USER_NAME=postgres
 ```
-Those are the default values for the username and password, but this approach demonstrates how they would be kept secret and not uploaded to github or some other public location.
+Those are the default values for the username and password, but this approach demonstrates how they would be kept secret and not uploaded to Github or some other public location.
 
 This is how the `wait_for_postgres` function is used:
 
@@ -165,7 +165,7 @@ con <- wait_for_postgres(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
                          dbname = "postgres",
                          seconds_to_test = 10)
 ```
-Show that you can connect but that Postgres database doesn't contain any tables:
+Show that you can connect but that PostgreSQL database doesn't contain any tables:
 
 
 ```r
@@ -182,11 +182,41 @@ The goal is to put the password in an untracked file that will **not** be commit
 
 We have chosen to call the file `dev_environment.csv` in the current working directory where you are executing this script. That file name appears in the `.gitignore` file, so that you will not accidentally commit it. We are going to create that file now.
 
-You will be prompted for the database password. By default, a postgres database defines a database user named `postgres`, whose password is `postgres`. If you have changed the password or created a new user with a different password, then enter those new values when prompted. Otherwise, enter `postgres` and `postgres` at the two prompts.
+You will be prompted for the database password. By default, a PostgreSQL database defines a database user named `postgres`, whose password is `postgres`. If you have changed the password or created a new user with a different password, then enter those new values when prompted. Otherwise, enter `postgres` and `postgres` at the two prompts.
 
-In an interactive environment, you could execute a snippet of code that prompts the user for their username and password with the followoing snippet (which isn't run in the book):
+In an interactive environment, you could execute a snippet of code that prompts the user for their username and password with the following snippet (which isn't run in the book):
 
 
+```r
+prompt_for_postgres <- function(seconds_to_test){
+  for (i in 1:seconds_to_test) {
+    db_ready <- DBI::dbCanConnect(RPostgres::Postgres(),
+                                  host = "localhost",
+                                  port = "5432",
+                                  user = dplyr::filter(environment_variables, variable == "username")[, "value"],
+                                  password = dplyr::filter(environment_variables, variable == "password")[, "value"],
+                                  dbname = "postgres")
+    if ( !db_ready ) {Sys.sleep(1)}
+    else {con <- DBI::dbConnect(RPostgres::Postgres(),
+                                host = "localhost",
+                                port = "5432",
+                                user = dplyr::filter(environment_variables, variable == "username")[, "value"],
+                                password = dplyr::filter(environment_variables, variable == "password")[, "value"],
+                                dbname = "postgres")
+    }
+    if (i == seconds_to_test & !db_ready) {con <- "there is no connection "}
+  }
+  con
+}
+
+DB_USERNAME <- trimws(readline(prompt = "username: "), which = "both")
+DB_PASSWORD <- getPass::getPass(msg = "password: ")
+environment_variables = data.frame(
+  variable = c("username", "password"),
+  value = c(DB_USERNAME, DB_PASSWORD),
+  stringsAsFactors = FALSE)
+write.csv(environment_variables, "./dev_environment.csv", row.names = FALSE)
+```
 Your password is still in plain text in the file, `dev_environment.csv`, so you should protect that file from exposure. However, you do not need to worry about committing that file accidentally to your git repository, because the name of the file appears in the `.gitignore` file.
 
 For security, we use values from the `environment_variables` data.frame, rather than keeping the `username` and `password` in plain text in a source file.
@@ -194,13 +224,13 @@ For security, we use values from the `environment_variables` data.frame, rather 
 
 ### Interact with Postgres
 
-Write `mtcars` to Postgres
+Write `mtcars` to PostgreSQL
 
 ```r
 dbWriteTable(con, "mtcars", mtcars, overwrite = TRUE)
 ```
 
-List the tables in the Postgres database to show that `mtcars` is now there:
+List the tables in the PostgreSQL database to show that `mtcars` is now there:
 
 
 ```r

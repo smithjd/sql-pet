@@ -254,14 +254,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">Chapter 5</span> A persistent database in Postgres in Docker - all at once (05)</h1>
 <div id="overview" class="section level2">
 <h2><span class="header-section-number">5.1</span> Overview</h2>
-<p>You’ve already connected to Postgres with R, now you need a “realistic” (<code>dvdrental</code>) database. We’re going to demonstrate how to set one up, with two different approaches. This chapter and the next do the same job, illustrating the different approaches that you can take and helping you see the different points whwere you could swap what’s provided here with a different DBMS or a different backup file or something else.</p>
+<p>You’ve already connected to PostgreSQL with R, now you need a “realistic” (<code>dvdrental</code>) database. We’re going to demonstrate how to set one up, with two different approaches. This chapter and the next do the same job, illustrating the different approaches that you can take and helping you see the different points where you could swap what’s provided here with a different DBMS or a different backup file or something else.</p>
 <p>The code in this first version is recommended because it is an “all in one” approach. Details about how it works and how you might modify it are included below. There is another version in the the next chapter that you can use to investigate Docker commands and components.</p>
 <p>Note that this approach relies on two files that have quote that’s not shown here: <a href="./dvdrental.Dockerfile">dvdrental.Dockerfile</a> and <a href="init-dvdrental.sh" class="uri">init-dvdrental.sh</a>. They are discussed below.</p>
 <p>Note that <code>tidyverse</code>, <code>DBI</code>, <code>RPostgres</code>, and <code>glue</code> are loaded.</p>
 </div>
 <div id="first-verify-that-docker-is-up-and-running" class="section level2">
 <h2><span class="header-section-number">5.2</span> First, verify that Docker is up and running:</h2>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, <span class="st">&quot;version&quot;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" data-line-number="1"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, <span class="st">&quot;version&quot;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <pre><code>##  [1] &quot;Client:&quot;                                        
 ##  [2] &quot; Version:           18.06.1-ce&quot;                 
 ##  [3] &quot; API version:       1.38&quot;                       
@@ -284,22 +284,22 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="clean-up-if-appropriate-1" class="section level2">
 <h2><span class="header-section-number">5.3</span> Clean up if appropriate</h2>
 <p>Remove the <code>sql-pet</code> container if it exists (e.g., from a prior run)</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" data-line-number="1"><span class="cf">if</span> (<span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, <span class="st">&quot;ps -a&quot;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb30-2" data-line-number="2"><span class="st">   </span><span class="kw">grepl</span>(<span class="dt">x =</span> ., <span class="dt">pattern =</span> <span class="st">&#39;sql-pet&#39;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb30-3" data-line-number="3"><span class="st">   </span><span class="kw">any</span>()) {</a>
-<a class="sourceLine" id="cb30-4" data-line-number="4">     <span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, <span class="st">&quot;rm -f sql-pet&quot;</span>)</a>
-<a class="sourceLine" id="cb30-5" data-line-number="5">}</a></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" data-line-number="1"><span class="cf">if</span> (<span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, <span class="st">&quot;ps -a&quot;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb31-2" data-line-number="2"><span class="st">   </span><span class="kw">grepl</span>(<span class="dt">x =</span> ., <span class="dt">pattern =</span> <span class="st">&#39;sql-pet&#39;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb31-3" data-line-number="3"><span class="st">   </span><span class="kw">any</span>()) {</a>
+<a class="sourceLine" id="cb31-4" data-line-number="4">     <span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, <span class="st">&quot;rm -f sql-pet&quot;</span>)</a>
+<a class="sourceLine" id="cb31-5" data-line-number="5">}</a></code></pre></div>
 </div>
 <div id="build-the-docker-image" class="section level2">
 <h2><span class="header-section-number">5.4</span> Build the Docker Image</h2>
 <p>Build an image that derives from postgres:10, defined in <code>dvdrental.Dockerfile</code>, that is set up to restore and load the dvdrental db on startup. The <a href="./dvdrental.Dockerfile">dvdrental.Dockerfile</a> is discussed below.</p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" data-line-number="1"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, </a>
-<a class="sourceLine" id="cb31-2" data-line-number="2">        <span class="kw">glue</span>(<span class="st">&quot;build &quot;</span>, <span class="co"># tells Docker to build an image that can be loaded as a container</span></a>
-<a class="sourceLine" id="cb31-3" data-line-number="3">          <span class="st">&quot;--tag postgres-dvdrental &quot;</span>, <span class="co"># (or -t) tells Docker to name the image</span></a>
-<a class="sourceLine" id="cb31-4" data-line-number="4">          <span class="st">&quot;--file dvdrental.Dockerfile &quot;</span>, <span class="co">#(or -f) tells Docker to read `build` instructions from the dvdrental.Dockerfile</span></a>
-<a class="sourceLine" id="cb31-5" data-line-number="5">          <span class="st">&quot; . &quot;</span>),  <span class="co"># tells Docker to look for dvdrental.Dockerfile in the current directory</span></a>
-<a class="sourceLine" id="cb31-6" data-line-number="6">          <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
-<pre><code>##  [1] &quot;Sending build context to Docker daemon  3.095MB\r\r&quot;                                                                                                                                                                                                                                                                                                                                           
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" data-line-number="1"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, </a>
+<a class="sourceLine" id="cb32-2" data-line-number="2">        <span class="kw">glue</span>(<span class="st">&quot;build &quot;</span>, <span class="co"># tells Docker to build an image that can be loaded as a container</span></a>
+<a class="sourceLine" id="cb32-3" data-line-number="3">          <span class="st">&quot;--tag postgres-dvdrental &quot;</span>, <span class="co"># (or -t) tells Docker to name the image</span></a>
+<a class="sourceLine" id="cb32-4" data-line-number="4">          <span class="st">&quot;--file dvdrental.Dockerfile &quot;</span>, <span class="co">#(or -f) tells Docker to read `build` instructions from the dvdrental.Dockerfile</span></a>
+<a class="sourceLine" id="cb32-5" data-line-number="5">          <span class="st">&quot; . &quot;</span>),  <span class="co"># tells Docker to look for dvdrental.Dockerfile in the current directory</span></a>
+<a class="sourceLine" id="cb32-6" data-line-number="6">          <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<pre><code>##  [1] &quot;Sending build context to Docker daemon  3.081MB\r\r&quot;                                                                                                                                                                                                                                                                                                                                           
 ##  [2] &quot;Step 1/4 : FROM postgres:10&quot;                                                                                                                                                                                                                                                                                                                                                                   
 ##  [3] &quot; ---&gt; ac25c2bac3c4&quot;                                                                                                                                                                                                                                                                                                                                                                            
 ##  [4] &quot;Step 2/4 : WORKDIR /tmp&quot;                                                                                                                                                                                                                                                                                                                                                                       
@@ -316,47 +316,47 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="run-the-docker-image" class="section level2">
 <h2><span class="header-section-number">5.5</span> Run the Docker Image</h2>
-<p>Run docker to bring up postgres. The first time it runs it will take a minute to create the Postgres environment. There are two important parts to this that may not be obvious:</p>
+<p>Run docker to bring up postgres. The first time it runs it will take a minute to create the PostgreSQL environment. There are two important parts to this that may not be obvious:</p>
 <ul>
-<li>The <code>source=</code> paramter points to <a href="./dvdrental.Dockerfile">dvdrental.Dockerfile</a>, which does most of the heavy lifting. It has detailed, line-by-line comments to explain what it is doing.<br />
+<li>The <code>source=</code> parameter points to <a href="./dvdrental.Dockerfile">dvdrental.Dockerfile</a>, which does most of the heavy lifting. It has detailed, line-by-line comments to explain what it is doing.<br />
 </li>
-<li><em>Inside</em> <a href="./dvdrental.Dockerfile">dvdrental.Dockerfile</a> the comand <code>COPY init-dvdrental.sh /docker-entrypoint-initdb.d/</code> copies <a href="init-dvdrental.sh" class="uri">init-dvdrental.sh</a> from the local file system into the specified location in the Docker container. When the Postgres Docker container initializes, it looks for that file and executes it.</li>
+<li><em>Inside</em> <a href="./dvdrental.Dockerfile">dvdrental.Dockerfile</a> the command <code>COPY init-dvdrental.sh /docker-entrypoint-initdb.d/</code> copies <a href="init-dvdrental.sh" class="uri">init-dvdrental.sh</a> from the local file system into the specified location in the Docker container. When the PostgreSQL Docker container initializes, it looks for that file and executes it.</li>
 </ul>
 <p>Doing all of that work behind the scenes involves two layers of complexity. Depending on how you look at it, that may be more or less difficult to understand than the method shown in the next Chapter.</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" data-line-number="1">wd &lt;-<span class="st"> </span><span class="kw">getwd</span>()</a>
-<a class="sourceLine" id="cb33-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb33-3" data-line-number="3">docker_cmd &lt;-<span class="st"> </span><span class="kw">glue</span>(</a>
-<a class="sourceLine" id="cb33-4" data-line-number="4">  <span class="st">&quot;run &quot;</span>,      <span class="co"># Run is the Docker command.  Everything that follows are `run` parameters.</span></a>
-<a class="sourceLine" id="cb33-5" data-line-number="5">  <span class="st">&quot;--detach &quot;</span>, <span class="co"># (or `-d`) tells Docker to disconnect from the terminal / program issuing the command</span></a>
-<a class="sourceLine" id="cb33-6" data-line-number="6">  <span class="st">&quot; --name sql-pet &quot;</span>,     <span class="co"># tells Docker to give the container a name: `sql-pet`</span></a>
-<a class="sourceLine" id="cb33-7" data-line-number="7">  <span class="st">&quot;--publish 5432:5432 &quot;</span>, <span class="co"># tells Docker to expose the Postgres port 5432 to the local network with 5432</span></a>
-<a class="sourceLine" id="cb33-8" data-line-number="8">  <span class="st">&quot;--mount &quot;</span>, <span class="co"># tells Docker to mount a volume -- mapping Docker&#39;s internal file structure to the host file structure</span></a>
-<a class="sourceLine" id="cb33-9" data-line-number="9">  <span class="st">&quot;type=bind,&quot;</span>, <span class="co"># tells Docker that the mount command points to an actual file on the host system</span></a>
-<a class="sourceLine" id="cb33-10" data-line-number="10">  <span class="st">&#39;source=&quot;&#39;</span>, <span class="co"># tells Docker where the local file will be found</span></a>
-<a class="sourceLine" id="cb33-11" data-line-number="11">  wd, <span class="st">&#39;/&quot;,&#39;</span>, <span class="co"># the current working directory, as retrieved above</span></a>
-<a class="sourceLine" id="cb33-12" data-line-number="12">  <span class="st">&quot;target=/petdir&quot;</span>, <span class="co"># tells Docker to refer to the current directory as &quot;/petdir&quot; in its file system</span></a>
-<a class="sourceLine" id="cb33-13" data-line-number="13">  <span class="st">&quot; postgres-dvdrental&quot;</span> <span class="co"># tells Docker to run the image was built in the previous step</span></a>
-<a class="sourceLine" id="cb33-14" data-line-number="14">)</a>
-<a class="sourceLine" id="cb33-15" data-line-number="15"></a>
-<a class="sourceLine" id="cb33-16" data-line-number="16"><span class="co"># if you are curious you can paste this string into a terminal window after the command &#39;docker&#39;:</span></a>
-<a class="sourceLine" id="cb33-17" data-line-number="17">docker_cmd</a></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" data-line-number="1">wd &lt;-<span class="st"> </span><span class="kw">getwd</span>()</a>
+<a class="sourceLine" id="cb34-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb34-3" data-line-number="3">docker_cmd &lt;-<span class="st"> </span><span class="kw">glue</span>(</a>
+<a class="sourceLine" id="cb34-4" data-line-number="4">  <span class="st">&quot;run &quot;</span>,      <span class="co"># Run is the Docker command.  Everything that follows are `run` parameters.</span></a>
+<a class="sourceLine" id="cb34-5" data-line-number="5">  <span class="st">&quot;--detach &quot;</span>, <span class="co"># (or `-d`) tells Docker to disconnect from the terminal / program issuing the command</span></a>
+<a class="sourceLine" id="cb34-6" data-line-number="6">  <span class="st">&quot; --name sql-pet &quot;</span>,     <span class="co"># tells Docker to give the container a name: `sql-pet`</span></a>
+<a class="sourceLine" id="cb34-7" data-line-number="7">  <span class="st">&quot;--publish 5432:5432 &quot;</span>, <span class="co"># tells Docker to expose the Postgres port 5432 to the local network with 5432</span></a>
+<a class="sourceLine" id="cb34-8" data-line-number="8">  <span class="st">&quot;--mount &quot;</span>, <span class="co"># tells Docker to mount a volume -- mapping Docker&#39;s internal file structure to the host file structure</span></a>
+<a class="sourceLine" id="cb34-9" data-line-number="9">  <span class="st">&quot;type=bind,&quot;</span>, <span class="co"># tells Docker that the mount command points to an actual file on the host system</span></a>
+<a class="sourceLine" id="cb34-10" data-line-number="10">  <span class="st">&#39;source=&quot;&#39;</span>, <span class="co"># tells Docker where the local file will be found</span></a>
+<a class="sourceLine" id="cb34-11" data-line-number="11">  wd, <span class="st">&#39;/&quot;,&#39;</span>, <span class="co"># the current working directory, as retrieved above</span></a>
+<a class="sourceLine" id="cb34-12" data-line-number="12">  <span class="st">&quot;target=/petdir&quot;</span>, <span class="co"># tells Docker to refer to the current directory as &quot;/petdir&quot; in its file system</span></a>
+<a class="sourceLine" id="cb34-13" data-line-number="13">  <span class="st">&quot; postgres-dvdrental&quot;</span> <span class="co"># tells Docker to run the image was built in the previous step</span></a>
+<a class="sourceLine" id="cb34-14" data-line-number="14">)</a>
+<a class="sourceLine" id="cb34-15" data-line-number="15"></a>
+<a class="sourceLine" id="cb34-16" data-line-number="16"><span class="co"># if you are curious you can paste this string into a terminal window after the command &#39;docker&#39;:</span></a>
+<a class="sourceLine" id="cb34-17" data-line-number="17">docker_cmd</a></code></pre></div>
 <pre><code>## run --detach  --name sql-pet --publish 5432:5432 --mount type=bind,source=&quot;/Users/jds/Documents/Library/R/r-system/sql-pet/r-database-docker/&quot;,target=/petdir postgres-dvdrental</code></pre>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" data-line-number="1"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, docker_cmd, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
-<pre><code>## [1] &quot;db0f99b783c33d20f1266213e81026fc60893285f85e86db092ed8b0a4549495&quot;</code></pre>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" data-line-number="1"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, docker_cmd, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<pre><code>## [1] &quot;fc61dd4507af01fc53ea38c2a7cd96ae8b1f50564a5f2cf2c54f44d15fdfe9fc&quot;</code></pre>
 </div>
 <div id="connect-to-postgres-with-r" class="section level2">
 <h2><span class="header-section-number">5.6</span> Connect to Postgres with R</h2>
-<p>Use the DBI package to connect to Postgres. But first, wait for Docker &amp; Postgres to come up before connecting.</p>
+<p>Use the DBI package to connect to PostgreSQL. But first, wait for Docker &amp; PostgreSQL to come up before connecting.</p>
 <p>We have loaded the <code>wait_for_postgres</code> function behind the scenes.</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" data-line-number="1">con &lt;-<span class="st"> </span><span class="kw">wait_for_postgres</span>(<span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),</a>
-<a class="sourceLine" id="cb37-2" data-line-number="2">                         <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),</a>
-<a class="sourceLine" id="cb37-3" data-line-number="3">                         <span class="dt">dbname =</span> <span class="st">&quot;dvdrental&quot;</span>,</a>
-<a class="sourceLine" id="cb37-4" data-line-number="4">                         <span class="dt">seconds_to_test =</span> <span class="dv">10</span>)</a>
-<a class="sourceLine" id="cb37-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb37-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb37-7" data-line-number="7"><span class="co"># if (con == &quot;it&#39;s not there&quot;) {stop()}</span></a>
-<a class="sourceLine" id="cb37-8" data-line-number="8"></a>
-<a class="sourceLine" id="cb37-9" data-line-number="9"><span class="kw">dbListTables</span>(con)</a></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" data-line-number="1">con &lt;-<span class="st"> </span><span class="kw">wait_for_postgres</span>(<span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),</a>
+<a class="sourceLine" id="cb38-2" data-line-number="2">                         <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),</a>
+<a class="sourceLine" id="cb38-3" data-line-number="3">                         <span class="dt">dbname =</span> <span class="st">&quot;dvdrental&quot;</span>,</a>
+<a class="sourceLine" id="cb38-4" data-line-number="4">                         <span class="dt">seconds_to_test =</span> <span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb38-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb38-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb38-7" data-line-number="7"><span class="co"># if (con == &quot;it&#39;s not there&quot;) {stop()}</span></a>
+<a class="sourceLine" id="cb38-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb38-9" data-line-number="9"><span class="kw">dbListTables</span>(con)</a></code></pre></div>
 <pre><code>##  [1] &quot;actor_info&quot;                 &quot;customer_list&quot;             
 ##  [3] &quot;film_list&quot;                  &quot;nicer_but_slower_film_list&quot;
 ##  [5] &quot;sales_by_film_category&quot;     &quot;staff&quot;                     
@@ -368,29 +368,29 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## [17] &quot;city&quot;                       &quot;store&quot;                     
 ## [19] &quot;film&quot;                       &quot;address&quot;                   
 ## [21] &quot;film_actor&quot;                 &quot;customer&quot;</code></pre>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb39-1" data-line-number="1"><span class="kw">dbListFields</span>(con, <span class="st">&quot;rental&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" data-line-number="1"><span class="kw">dbListFields</span>(con, <span class="st">&quot;rental&quot;</span>)</a></code></pre></div>
 <pre><code>## [1] &quot;rental_id&quot;    &quot;rental_date&quot;  &quot;inventory_id&quot; &quot;customer_id&quot; 
 ## [5] &quot;return_date&quot;  &quot;staff_id&quot;     &quot;last_update&quot;</code></pre>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" data-line-number="1"><span class="kw">dbDisconnect</span>(con)</a>
-<a class="sourceLine" id="cb41-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb41-3" data-line-number="3"><span class="kw">Sys.sleep</span>(<span class="dv">2</span>) <span class="co"># Can take a moment to disconnect.</span></a></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb42-1" data-line-number="1"><span class="kw">dbDisconnect</span>(con)</a>
+<a class="sourceLine" id="cb42-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb42-3" data-line-number="3"><span class="kw">Sys.sleep</span>(<span class="dv">2</span>) <span class="co"># Can take a moment to disconnect.</span></a></code></pre></div>
 </div>
 <div id="stop-and-start-to-demonstrate-persistence" class="section level2">
 <h2><span class="header-section-number">5.7</span> Stop and start to demonstrate persistence</h2>
 <p>Stop the container</p>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb42-1" data-line-number="1"><span class="kw">system2</span>(<span class="st">&#39;docker&#39;</span>, <span class="st">&#39;stop sql-pet&#39;</span>,</a>
-<a class="sourceLine" id="cb42-2" data-line-number="2">        <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb43-1" data-line-number="1"><span class="kw">system2</span>(<span class="st">&#39;docker&#39;</span>, <span class="st">&#39;stop sql-pet&#39;</span>,</a>
+<a class="sourceLine" id="cb43-2" data-line-number="2">        <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <pre><code>## [1] &quot;sql-pet&quot;</code></pre>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb44-1" data-line-number="1"><span class="kw">Sys.sleep</span>(<span class="dv">3</span>) <span class="co"># can take a moment for Docker to stop the container.</span></a></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" data-line-number="1"><span class="kw">Sys.sleep</span>(<span class="dv">3</span>) <span class="co"># can take a moment for Docker to stop the container.</span></a></code></pre></div>
 <p>Restart the container and verify that the dvdrental tables are still there</p>
-<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" data-line-number="1"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>,  <span class="st">&quot;start sql-pet&quot;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb46-1" data-line-number="1"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>,  <span class="st">&quot;start sql-pet&quot;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <pre><code>## [1] &quot;sql-pet&quot;</code></pre>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb47-1" data-line-number="1">con &lt;-<span class="st"> </span><span class="kw">wait_for_postgres</span>(<span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),</a>
-<a class="sourceLine" id="cb47-2" data-line-number="2">                         <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),</a>
-<a class="sourceLine" id="cb47-3" data-line-number="3">                         <span class="dt">dbname =</span> <span class="st">&quot;dvdrental&quot;</span>,</a>
-<a class="sourceLine" id="cb47-4" data-line-number="4">                         <span class="dt">seconds_to_test =</span> <span class="dv">10</span>)</a>
-<a class="sourceLine" id="cb47-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb47-6" data-line-number="6"><span class="kw">glimpse</span>(<span class="kw">dbReadTable</span>(con, <span class="st">&quot;film&quot;</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb48-1" data-line-number="1">con &lt;-<span class="st"> </span><span class="kw">wait_for_postgres</span>(<span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),</a>
+<a class="sourceLine" id="cb48-2" data-line-number="2">                         <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),</a>
+<a class="sourceLine" id="cb48-3" data-line-number="3">                         <span class="dt">dbname =</span> <span class="st">&quot;dvdrental&quot;</span>,</a>
+<a class="sourceLine" id="cb48-4" data-line-number="4">                         <span class="dt">seconds_to_test =</span> <span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb48-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb48-6" data-line-number="6"><span class="kw">glimpse</span>(<span class="kw">dbReadTable</span>(con, <span class="st">&quot;film&quot;</span>))</a></code></pre></div>
 <pre><code>## Observations: 1,000
 ## Variables: 13
 ## $ film_id          &lt;int&gt; 133, 384, 8, 98, 1, 2, 3, 4, 5, 6, 7, 9, 10, ...
@@ -407,15 +407,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## $ special_features &lt;chr&gt; &quot;{Trailers}&quot;, &quot;{\&quot;Behind the Scenes\&quot;}&quot;, &quot;{Tr...
 ## $ fulltext         &lt;chr&gt; &quot;&#39;chamber&#39;:1 &#39;fate&#39;:4 &#39;husband&#39;:11 &#39;italian&#39;:...</code></pre>
 <p>It’s always good to have R disconnect from the database</p>
-<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb49-1" data-line-number="1"><span class="kw">dbDisconnect</span>(con)</a></code></pre></div>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb50-1" data-line-number="1"><span class="kw">dbDisconnect</span>(con)</a></code></pre></div>
 <p>Stop the container &amp; show that the container is still there, so can be started again.</p>
-<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb50-1" data-line-number="1"><span class="kw">system2</span>(<span class="st">&#39;docker&#39;</span>, <span class="st">&#39;stop sql-pet&#39;</span>,</a>
-<a class="sourceLine" id="cb50-2" data-line-number="2">        <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb51-1" data-line-number="1"><span class="kw">system2</span>(<span class="st">&#39;docker&#39;</span>, <span class="st">&#39;stop sql-pet&#39;</span>,</a>
+<a class="sourceLine" id="cb51-2" data-line-number="2">        <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <pre><code>## [1] &quot;sql-pet&quot;</code></pre>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb52-1" data-line-number="1"><span class="co"># show that the container still exists even though it&#39;s not running</span></a>
-<a class="sourceLine" id="cb52-2" data-line-number="2">psout &lt;-<span class="st"> </span><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, <span class="st">&quot;ps -a&quot;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb52-3" data-line-number="3">psout[<span class="kw">grepl</span>(<span class="dt">x =</span> psout, <span class="dt">pattern =</span> <span class="st">&#39;sql-pet&#39;</span>)]</a></code></pre></div>
-<pre><code>## [1] &quot;db0f99b783c3        postgres-dvdrental   \&quot;docker-entrypoint.s…\&quot;   23 seconds ago      Exited (0) Less than a second ago                       sql-pet&quot;</code></pre>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb53-1" data-line-number="1"><span class="co"># show that the container still exists even though it&#39;s not running</span></a>
+<a class="sourceLine" id="cb53-2" data-line-number="2">psout &lt;-<span class="st"> </span><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, <span class="st">&quot;ps -a&quot;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb53-3" data-line-number="3">psout[<span class="kw">grepl</span>(<span class="dt">x =</span> psout, <span class="dt">pattern =</span> <span class="st">&#39;sql-pet&#39;</span>)]</a></code></pre></div>
+<pre><code>## [1] &quot;fc61dd4507af        postgres-dvdrental   \&quot;docker-entrypoint.s…\&quot;   22 seconds ago      Exited (0) Less than a second ago                       sql-pet&quot;</code></pre>
 </div>
 <div id="cleaning-up" class="section level2">
 <h2><span class="header-section-number">5.8</span> Cleaning up</h2>

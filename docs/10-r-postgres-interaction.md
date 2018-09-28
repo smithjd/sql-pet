@@ -1,7 +1,7 @@
 # Introduction to interacting with Postgres from R (10)
 
 
-Note that `tidyverse`, `DBI`, `RPostgres`, `glue`, and `knitr` are loaded.  Also, we've sourced the `[db-login-batch-code.R]('r-database-docker/book-src/db-login-batch-code.R')` file which is used to log in to Postgres.
+Note that `tidyverse`, `DBI`, `RPostgres`, `glue`, and `knitr` are loaded.  Also, we've sourced the `[db-login-batch-code.R]('r-database-docker/book-src/db-login-batch-code.R')` file which is used to log in to PostgreSQL.
 
 
 
@@ -21,7 +21,7 @@ Note that `tidyverse`, `DBI`, `RPostgres`, `glue`, and `knitr` are loaded.  Also
 
 ## Get some basic information about your database
 
-Assume that the Docker container with Postgres and the dvdrental database are ready to go.
+Assume that the Docker container with PostgreSQL and the dvdrental database are ready to go.
 
 ```r
 system2("docker",  "start sql-pet", stdout = TRUE, stderr = TRUE)
@@ -42,7 +42,7 @@ You usually need to use both the available documentation for your [database](htt
 
 ![](./screenshots/ER-diagram-symbols.png)
 
-Depending on how skeptical you are about the documenttion, you might want to get an overview of a database by pulling data from the database `information_schema`.  Here's a selection of useful information although you may want more (or less).  There is a lot to choose from [a vast list of metadata](https://www.postgresql.org/docs/current/static/infoschema-columns.html).  Note that information schemas are somewhat consistent across different DBMS' that you may encounter.
+Depending on how skeptical you are about the documentation, you might want to get an overview of a database by pulling data from the database `information_schema`.  Here's a selection of useful information although you may want more (or less).  There is a lot to choose from [a vast list of metadata](https://www.postgresql.org/docs/current/static/infoschema-columns.html).  Note that information schemas are somewhat consistent across different DBMS' that you may encounter.
 
 
 have we hidden "in_schema()" as in:

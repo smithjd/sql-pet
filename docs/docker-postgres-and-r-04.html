@@ -259,7 +259,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ol style="list-style-type: decimal">
 <li>The program that you are sending a command to.</li>
 <li>The parameters or commands that are being sent</li>
-<li><code>stdout = TRUE, stderr = TRUE</code> are two parameters that are standard in this book, so that the comand’s full output is shown in the book.</li>
+<li><code>stdout = TRUE, stderr = TRUE</code> are two parameters that are standard in this book, so that the command’s full output is shown in the book.</li>
 </ol>
 <p>The <code>docker version</code> command returns the details about the docker daemon that is running on your computer.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, <span class="st">&quot;version&quot;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
@@ -295,7 +295,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb3-8" data-line-number="8"><span class="st">   </span><span class="kw">any</span>()) {</a>
 <a class="sourceLine" id="cb3-9" data-line-number="9">     <span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, <span class="st">&quot;rm -f sql-pet&quot;</span>)</a>
 <a class="sourceLine" id="cb3-10" data-line-number="10">}</a></code></pre></div>
-<p>The convention we use in this book is to assemble a command with <code>glue</code> so that the you can see all of its separate parts. The following chunk just constructs the command, but does not execute it. If you have problems executing a commnad, you can always copy the command and execute in your terminal session.</p>
+<p>The convention we use in this book is to assemble a command with <code>glue</code> so that the you can see all of its separate parts. The following chunk just constructs the command, but does not execute it. If you have problems executing a command, you can always copy the command and execute in your terminal session.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">docker_cmd &lt;-<span class="st"> </span><span class="kw">glue</span>(</a>
 <a class="sourceLine" id="cb4-2" data-line-number="2">  <span class="st">&quot;run &quot;</span>,      <span class="co"># Run is the Docker command.  Everything that follows are `docker run` parameters.</span></a>
 <a class="sourceLine" id="cb4-3" data-line-number="3">  <span class="st">&quot;--detach &quot;</span>, <span class="co"># (or `-d`) tells Docker to disconnect from the terminal / program issuing the command</span></a>
@@ -311,18 +311,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>##  docker run --detach --name cattle --publish 5432:5432  postgres:10</code></pre>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="co"># this is how R submits it to Docker:</span></a>
 <a class="sourceLine" id="cb7-2" data-line-number="2"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, docker_cmd, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
-<pre><code>## [1] &quot;b078442d112c9e52557f85413a0eae4bf7e2c6ab52dcd60e836bff813ba5a0f8&quot;</code></pre>
-<p>Docker returns a long string of numbers. If you are running this command for the first time, Docker downloads the Postgres image, which takes a bit of time.</p>
-<p>The following comand shows that a container named <code>cattle</code> is running <code>postgres:10</code>. <code>postgres</code> is waiting for a connection:</p>
+<pre><code>## [1] &quot;8745858885a246b26644ac2c49e2168b9971edabbf0211b3fae0f6d1451d4449&quot;</code></pre>
+<p>Docker returns a long string of numbers. If you are running this command for the first time, Docker downloads the PostgreSQL image, which takes a bit of time.</p>
+<p>The following command shows that a container named <code>cattle</code> is running <code>postgres:10</code>. <code>postgres</code> is waiting for a connection:</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, <span class="st">&quot;ps&quot;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <pre><code>## [1] &quot;CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES&quot;   
-## [2] &quot;b078442d112c        postgres:10         \&quot;docker-entrypoint.s…\&quot;   1 second ago        Up Less than a second   0.0.0.0:5432-&gt;5432/tcp   cattle&quot;</code></pre>
+## [2] &quot;8745858885a2        postgres:10         \&quot;docker-entrypoint.s…\&quot;   1 second ago        Up Less than a second   0.0.0.0:5432-&gt;5432/tcp   cattle&quot;</code></pre>
 </div>
 <div id="connect-read-and-write-to-postgres-from-r" class="section level2">
 <h2><span class="header-section-number">4.3</span> Connect, read and write to Postgres from R</h2>
 <div id="pause-for-some-security-considerations" class="section level3">
 <h3><span class="header-section-number">4.3.1</span> Pause for some security considerations</h3>
-<p>We use the following <code>wait_for_postgres</code> function, which will repeatedly try to connect to Postgres. Postgres can take different amounts of time to come up and be ready to accept connections from R, depending on various facgtors that will be discussed later on.</p>
+<p>We use the following <code>wait_for_postgres</code> function, which will repeatedly try to connect to PostgreSQL. PostgreSQL can take different amounts of time to come up and be ready to accept connections from R, depending on various factors that will be discussed later on.</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="co">#&#39; Connect to Postgres, waiting if it is not ready</span></a>
 <a class="sourceLine" id="cb11-2" data-line-number="2"><span class="co">#&#39;</span></a>
 <a class="sourceLine" id="cb11-3" data-line-number="3"><span class="co">#&#39; @export</span></a>
@@ -352,19 +352,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb11-27" data-line-number="27">  }</a>
 <a class="sourceLine" id="cb11-28" data-line-number="28">  con</a>
 <a class="sourceLine" id="cb11-29" data-line-number="29">}</a></code></pre></div>
-<p>When we call <code>wait_for_postgres</code> we’ll use environment variables that R obtains from reading a file named <code>.Rprofile</code>. That file is not uploaded to github and R looks for it in your default directory. To see whether you have already created that file, execute:</p>
+<p>When we call <code>wait_for_postgres</code> we’ll use environment variables that R obtains from reading a file named <code>.Rprofile</code>. That file is not uploaded to Github and R looks for it in your default directory. To see whether you have already created that file, execute:</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw">dir</span>(<span class="dt">path =</span> <span class="st">&quot;~&quot;</span>, <span class="dt">pattern =</span> <span class="st">&quot;.Rprofile&quot;</span>, <span class="dt">all.files =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <pre><code>## [1] &quot;.Rprofile&quot;</code></pre>
 <p>It should contain lines such as:</p>
 <pre><code>  DEFAULT_POSTGRES_PASSWORD=postgres
   DEFAULT_POSTGRES_USER_NAME=postgres</code></pre>
-<p>Those are the default values for the username and password, but this approach demonstrates how they would be kept secret and not uploaded to github or some other public location.</p>
+<p>Those are the default values for the username and password, but this approach demonstrates how they would be kept secret and not uploaded to Github or some other public location.</p>
 <p>This is how the <code>wait_for_postgres</code> function is used:</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1">con &lt;-<span class="st"> </span><span class="kw">wait_for_postgres</span>(<span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),</a>
 <a class="sourceLine" id="cb15-2" data-line-number="2">                         <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),</a>
 <a class="sourceLine" id="cb15-3" data-line-number="3">                         <span class="dt">dbname =</span> <span class="st">&quot;postgres&quot;</span>,</a>
 <a class="sourceLine" id="cb15-4" data-line-number="4">                         <span class="dt">seconds_to_test =</span> <span class="dv">10</span>)</a></code></pre></div>
-<p>Show that you can connect but that Postgres database doesn’t contain any tables:</p>
+<p>Show that you can connect but that PostgreSQL database doesn’t contain any tables:</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="kw">dbListTables</span>(con)</a></code></pre></div>
 <pre><code>## character(0)</code></pre>
 </div>
@@ -372,27 +372,55 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3><span class="header-section-number">4.3.2</span> Alternative: put the database password in an environment file</h3>
 <p>The goal is to put the password in an untracked file that will <strong>not</strong> be committed in your source code repository. Your code can reference the name of the variable, but the value of that variable will not appear in open text in your source code.</p>
 <p>We have chosen to call the file <code>dev_environment.csv</code> in the current working directory where you are executing this script. That file name appears in the <code>.gitignore</code> file, so that you will not accidentally commit it. We are going to create that file now.</p>
-<p>You will be prompted for the database password. By default, a postgres database defines a database user named <code>postgres</code>, whose password is <code>postgres</code>. If you have changed the password or created a new user with a different password, then enter those new values when prompted. Otherwise, enter <code>postgres</code> and <code>postgres</code> at the two prompts.</p>
-<p>In an interactive environment, you could execute a snippet of code that prompts the user for their username and password with the followoing snippet (which isn’t run in the book):</p>
+<p>You will be prompted for the database password. By default, a PostgreSQL database defines a database user named <code>postgres</code>, whose password is <code>postgres</code>. If you have changed the password or created a new user with a different password, then enter those new values when prompted. Otherwise, enter <code>postgres</code> and <code>postgres</code> at the two prompts.</p>
+<p>In an interactive environment, you could execute a snippet of code that prompts the user for their username and password with the following snippet (which isn’t run in the book):</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1">prompt_for_postgres &lt;-<span class="st"> </span><span class="cf">function</span>(seconds_to_test){</a>
+<a class="sourceLine" id="cb18-2" data-line-number="2">  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>seconds_to_test) {</a>
+<a class="sourceLine" id="cb18-3" data-line-number="3">    db_ready &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbCanConnect</span>(RPostgres<span class="op">::</span><span class="kw">Postgres</span>(),</a>
+<a class="sourceLine" id="cb18-4" data-line-number="4">                                  <span class="dt">host =</span> <span class="st">&quot;localhost&quot;</span>,</a>
+<a class="sourceLine" id="cb18-5" data-line-number="5">                                  <span class="dt">port =</span> <span class="st">&quot;5432&quot;</span>,</a>
+<a class="sourceLine" id="cb18-6" data-line-number="6">                                  <span class="dt">user =</span> dplyr<span class="op">::</span><span class="kw">filter</span>(environment_variables, variable <span class="op">==</span><span class="st"> &quot;username&quot;</span>)[, <span class="st">&quot;value&quot;</span>],</a>
+<a class="sourceLine" id="cb18-7" data-line-number="7">                                  <span class="dt">password =</span> dplyr<span class="op">::</span><span class="kw">filter</span>(environment_variables, variable <span class="op">==</span><span class="st"> &quot;password&quot;</span>)[, <span class="st">&quot;value&quot;</span>],</a>
+<a class="sourceLine" id="cb18-8" data-line-number="8">                                  <span class="dt">dbname =</span> <span class="st">&quot;postgres&quot;</span>)</a>
+<a class="sourceLine" id="cb18-9" data-line-number="9">    <span class="cf">if</span> ( <span class="op">!</span>db_ready ) {<span class="kw">Sys.sleep</span>(<span class="dv">1</span>)}</a>
+<a class="sourceLine" id="cb18-10" data-line-number="10">    <span class="cf">else</span> {con &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbConnect</span>(RPostgres<span class="op">::</span><span class="kw">Postgres</span>(),</a>
+<a class="sourceLine" id="cb18-11" data-line-number="11">                                <span class="dt">host =</span> <span class="st">&quot;localhost&quot;</span>,</a>
+<a class="sourceLine" id="cb18-12" data-line-number="12">                                <span class="dt">port =</span> <span class="st">&quot;5432&quot;</span>,</a>
+<a class="sourceLine" id="cb18-13" data-line-number="13">                                <span class="dt">user =</span> dplyr<span class="op">::</span><span class="kw">filter</span>(environment_variables, variable <span class="op">==</span><span class="st"> &quot;username&quot;</span>)[, <span class="st">&quot;value&quot;</span>],</a>
+<a class="sourceLine" id="cb18-14" data-line-number="14">                                <span class="dt">password =</span> dplyr<span class="op">::</span><span class="kw">filter</span>(environment_variables, variable <span class="op">==</span><span class="st"> &quot;password&quot;</span>)[, <span class="st">&quot;value&quot;</span>],</a>
+<a class="sourceLine" id="cb18-15" data-line-number="15">                                <span class="dt">dbname =</span> <span class="st">&quot;postgres&quot;</span>)</a>
+<a class="sourceLine" id="cb18-16" data-line-number="16">    }</a>
+<a class="sourceLine" id="cb18-17" data-line-number="17">    <span class="cf">if</span> (i <span class="op">==</span><span class="st"> </span>seconds_to_test <span class="op">&amp;</span><span class="st"> </span><span class="op">!</span>db_ready) {con &lt;-<span class="st"> &quot;there is no connection &quot;</span>}</a>
+<a class="sourceLine" id="cb18-18" data-line-number="18">  }</a>
+<a class="sourceLine" id="cb18-19" data-line-number="19">  con</a>
+<a class="sourceLine" id="cb18-20" data-line-number="20">}</a>
+<a class="sourceLine" id="cb18-21" data-line-number="21"></a>
+<a class="sourceLine" id="cb18-22" data-line-number="22">DB_USERNAME &lt;-<span class="st"> </span><span class="kw">trimws</span>(<span class="kw">readline</span>(<span class="dt">prompt =</span> <span class="st">&quot;username: &quot;</span>), <span class="dt">which =</span> <span class="st">&quot;both&quot;</span>)</a>
+<a class="sourceLine" id="cb18-23" data-line-number="23">DB_PASSWORD &lt;-<span class="st"> </span>getPass<span class="op">::</span><span class="kw">getPass</span>(<span class="dt">msg =</span> <span class="st">&quot;password: &quot;</span>)</a>
+<a class="sourceLine" id="cb18-24" data-line-number="24">environment_variables =<span class="st"> </span><span class="kw">data.frame</span>(</a>
+<a class="sourceLine" id="cb18-25" data-line-number="25">  <span class="dt">variable =</span> <span class="kw">c</span>(<span class="st">&quot;username&quot;</span>, <span class="st">&quot;password&quot;</span>),</a>
+<a class="sourceLine" id="cb18-26" data-line-number="26">  <span class="dt">value =</span> <span class="kw">c</span>(DB_USERNAME, DB_PASSWORD),</a>
+<a class="sourceLine" id="cb18-27" data-line-number="27">  <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb18-28" data-line-number="28"><span class="kw">write.csv</span>(environment_variables, <span class="st">&quot;./dev_environment.csv&quot;</span>, <span class="dt">row.names =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
 <p>Your password is still in plain text in the file, <code>dev_environment.csv</code>, so you should protect that file from exposure. However, you do not need to worry about committing that file accidentally to your git repository, because the name of the file appears in the <code>.gitignore</code> file.</p>
 <p>For security, we use values from the <code>environment_variables</code> data.frame, rather than keeping the <code>username</code> and <code>password</code> in plain text in a source file.</p>
 </div>
 <div id="interact-with-postgres" class="section level3">
 <h3><span class="header-section-number">4.3.3</span> Interact with Postgres</h3>
-<p>Write <code>mtcars</code> to Postgres</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="kw">dbWriteTable</span>(con, <span class="st">&quot;mtcars&quot;</span>, mtcars, <span class="dt">overwrite =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
-<p>List the tables in the Postgres database to show that <code>mtcars</code> is now there:</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="kw">dbListTables</span>(con)</a></code></pre></div>
+<p>Write <code>mtcars</code> to PostgreSQL</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="kw">dbWriteTable</span>(con, <span class="st">&quot;mtcars&quot;</span>, mtcars, <span class="dt">overwrite =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<p>List the tables in the PostgreSQL database to show that <code>mtcars</code> is now there:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="kw">dbListTables</span>(con)</a></code></pre></div>
 <pre><code>## [1] &quot;mtcars&quot;</code></pre>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="co"># list the fields in mtcars:</span></a>
-<a class="sourceLine" id="cb21-2" data-line-number="2"><span class="kw">dbListFields</span>(con, <span class="st">&quot;mtcars&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1"><span class="co"># list the fields in mtcars:</span></a>
+<a class="sourceLine" id="cb22-2" data-line-number="2"><span class="kw">dbListFields</span>(con, <span class="st">&quot;mtcars&quot;</span>)</a></code></pre></div>
 <pre><code>##  [1] &quot;mpg&quot;  &quot;cyl&quot;  &quot;disp&quot; &quot;hp&quot;   &quot;drat&quot; &quot;wt&quot;   &quot;qsec&quot; &quot;vs&quot;   &quot;am&quot;   &quot;gear&quot;
 ## [11] &quot;carb&quot;</code></pre>
 <p>Download the table from the DBMS to a local data frame:</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1">mtcars_df &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="st">&quot;mtcars&quot;</span>)</a>
-<a class="sourceLine" id="cb23-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb23-3" data-line-number="3"><span class="co"># Show a few rows:</span></a>
-<a class="sourceLine" id="cb23-4" data-line-number="4">knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">head</span>(mtcars_df))</a></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1">mtcars_df &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="st">&quot;mtcars&quot;</span>)</a>
+<a class="sourceLine" id="cb24-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb24-3" data-line-number="3"><span class="co"># Show a few rows:</span></a>
+<a class="sourceLine" id="cb24-4" data-line-number="4">knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">head</span>(mtcars_df))</a></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -495,13 +523,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="clean-up" class="section level2">
 <h2><span class="header-section-number">4.4</span> Clean up</h2>
 <p>Afterwards, always disconnect from the DBMS, stop the docker container and (optionally) remove it.</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1"><span class="kw">dbDisconnect</span>(con)</a>
-<a class="sourceLine" id="cb24-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb24-3" data-line-number="3"><span class="co"># tell Docker to stop the container:</span></a>
-<a class="sourceLine" id="cb24-4" data-line-number="4"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, <span class="st">&quot;stop cattle&quot;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1"><span class="kw">dbDisconnect</span>(con)</a>
+<a class="sourceLine" id="cb25-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb25-3" data-line-number="3"><span class="co"># tell Docker to stop the container:</span></a>
+<a class="sourceLine" id="cb25-4" data-line-number="4"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, <span class="st">&quot;stop cattle&quot;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <pre><code>## [1] &quot;cattle&quot;</code></pre>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1"><span class="co"># tell Docker to remove the container from it&#39;s library of active containers:</span></a>
-<a class="sourceLine" id="cb26-2" data-line-number="2"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, <span class="st">&quot;rm cattle&quot;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1"><span class="co"># tell Docker to remove the container from it&#39;s library of active containers:</span></a>
+<a class="sourceLine" id="cb27-2" data-line-number="2"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, <span class="st">&quot;rm cattle&quot;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <pre><code>## [1] &quot;cattle&quot;</code></pre>
 <p>If we <code>stop</code> the docker container but don’t remove it (with the <code>rm cattle</code> command), the container will persist and we can start it up again later with <code>start cattle</code>. In that case, <code>mtcars</code> would still be there and we could retrieve it from R again. Since we have now removed the <code>cattle</code> container, the whole database has been deleted. (There are enough copies of <code>mtcars</code> in the world, so no great loss.)</p>
 
