@@ -1,8 +1,8 @@
 ---
-title: "Environment"
+title: "Mapping your local environment"
 author: "Sophie Yang"
 date: "September 26, 2018"
-output: html_document
+output: markdown_document
 ---
 
 ```{r setup, include=FALSE}
@@ -10,41 +10,52 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
-library(DiagrammeR)
 library(tidyverse)
 library(DBI)
 library(RPostgres)
 library(glue)
+library(knitr)
 ```
 
-## Environment Tools Used in Tutorial
+## Environment Tools Used in this Chapter
+Note that `tidyverse`, `DBI`, `RPostgres`, `glue`, and `knitr` are loaded.  Also, we've sourced the `[db-login-batch-code.R]('r-database-docker/book-src/db-login-batch-code.R')` file which is used to log in to Postgres.
+
+```{r echo=FALSE}
+read_chunk('book-src/db-login-batch-code.R')
+
+# use when debugging outside of knitr
+# source('r-database-docker/book-src/db-login-batch-code.R')
+# source('r-database-docker/book-src/db-login-interactive-code.R')  
+```
+
+```{r get_postgres_connection, eval=TRUE, echo=FALSE}
+
+```
 
 The following code block defines Tool and versions for the graph that follows.  The information order corresponds to the order shown in the graph.
 
-
 ```{r}
+library(DiagrammeR)
+
 ## OS information
 os_lbl <- .Platform$OS.type
 os_ver <- 0
-if(os_lbl == 'windows') {
+if (os_lbl == 'windows') {
   os_ver <- system2('cmd',stdout = TRUE) %>%
-    grep(x=.,pattern='Microsoft Windows \\[',value=TRUE) %>%
-    gsub(x = .,pattern="^Microsoft.+Version |\\]",replace='')
+    grep(x = .,pattern = 'Microsoft Windows \\[',value = TRUE) %>%
+    gsub(x = .,pattern = "^Microsoft.+Version |\\]", replace = '')
 }
 
-if(os_lbl == 'Unix' || os_lbl == 'Linux' || os_lbl == 'Mac') {
-  os_ver <- system2('uname','-r', stdout = TRUE)
+if (os_lbl == 'unix' || os_lbl == 'Linux' || os_lbl == 'Mac') {
+  os_ver <- system2('uname', '-r', stdout = TRUE)
 }
 
 ## Command line interface into Docker Apps
 ## CLI/system2
-cli <- array(dim=3)
+cli <- array(dim = 3)
 cli[1] <- "docker [OPTIONS] COMMAND ARGUMENTS\n\nsystem2(docker,[OPTIONS,]\n, COMMAND,ARGUMENTS)"
 cli[2] <- 'docker exec -it sql-pet bash\n\nsystem2(docker,exec -it sql-pet bash)' 
 cli[3] <- 'docker exec -ti sql-pet psql -a \n-p 5432 -d dvdrental -U postgres\n\nsystem2(docker,exec -ti sql-pet psql -a \n-p 5432 -d dvdrental -U postgres)'
-
-
-
 
 # R Information
 r_lbl       <- names(R.Version())[1:7]
@@ -55,9 +66,9 @@ rstudio_lbl <- c('RStudio version','Current program mode')
 rstudio_ver <- c(as.character(rstudioapi::versionInfo()$version),rstudioapi::versionInfo()$mode)
 
 # Docker Information
-docker_lbl<-c('client version','server version')
-docker_ver<-system2("docker", "version", stdout = TRUE) %>% 
-    grep(x = ., pattern = 'Version',value=TRUE) %>%
+docker_lbl <- c('client version','server version')
+docker_ver <- system2("docker", "version", stdout = TRUE) %>% 
+    grep(x = ., pattern = 'Version',value = TRUE) %>%
     gsub(x = ., pattern = ' +Version: +', replacement = '')
 
 # Linux Information
@@ -65,19 +76,17 @@ linux_lbl <- 'Linux Version'
 linux_ver <- system2('docker', 'exec -i sql-pet /bin/uname -r', stdout = TRUE)
 
 # Postgres Information
-con <- DBI::dbConnect(RPostgres::Postgres(),
-                       host = "localhost",
-                       port = "5432",
-                       user = "postgres",
-                       password = getPass::getPass('password'),
-                       dbname = "dvdrental" ) # note that the dbname is specified
+con <- wait_for_postgres(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
+                         password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
+                         dbname = "dvdrental",
+                         seconds_to_test = 10)
 
 postgres_ver <- dbGetQuery(con,"select version()") %>%
-  gsub(x= ., pattern = '\\(.*$', replacement = '')
+  gsub(x = ., pattern = '\\(.*$', replacement = '')
 
 ```
 
-The following code block uses the data generated from the previous code block as input to the subgraphs, the ones outlined in red.  The application nodes are the parents of the subgraphs and are not outlined in red.  The `Environment` application node represents the machine you are running the tutorial on and hosts the sub-applications.  
+The following code block uses the data generated from the previous code block as input to the subgraphs, the ones outlined in red.  The application nodes are the parents of the subgraphs and are not outlined in reds.  The `Environment` application node represents the machine you are running the tutorial on and hosts the sub-applications.  
 
 Note that the '@@' variables are populated at the end of the `Environment` defintion following the `## @@1 - @@5` source data comment.
 
