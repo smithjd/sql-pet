@@ -1,4 +1,4 @@
-# Introduction to interacting with Postgres from R (10)
+# Introduction: Postgres queries from R (10)
 
 ```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -44,54 +44,6 @@ con <- wait_for_postgres(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
                          password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
                          dbname = "dvdrental",
                          seconds_to_test = 10)
-
-```
-
-You usually need to use both the available documentation for your [database](http://www.postgresqltutorial.com/postgresql-sample-database/) and to be somewhat skeptical (e.g., empirical).  It's worth learning to interpret the symbols in an [Entity Relationship Diagram](https://en.wikipedia.org/wiki/Entity%E2%80%93relationship_model):
-
-![](./screenshots/ER-diagram-symbols.png)
-
-Depending on how skeptical you are about the documentation, you might want to get an overview of a database by pulling data from the database `information_schema`.  Here's a selection of useful information although you may want more (or less).  There is a lot to choose from [a vast list of metadata](https://www.postgresql.org/docs/current/static/infoschema-columns.html).  Note that information schemas are somewhat consistent across different DBMS' that you may encounter.
-
-
-have we hidden "in_schema()" as in:
-
-  `con %>% tbl(in_schema("aux", "df"))`
-  
-```{r}
-
-table_schema_query  <- glue("SELECT ", 
-  "table_name, column_name, data_type, ordinal_position, column_default, character_maximum_length", 
-  " FROM information_schema.columns ", 
-  "WHERE table_schema = 'public'")
- 
-  rental_meta_data  <- dbGetQuery(con, table_schema_query) 
-
-glimpse(rental_meta_data)
-```
-Pull out some rough-and-ready but useful statistics about your database.  Since we are in SQL-land we talk about variables as `columns`.
-
-Start with a list of tables names and a count of the number of columns that each one contains.
-```{r}
-
-rental_meta_data %>% count(table_name) %>% rename(number_of_columns = n) %>% as.data.frame()
-```
-
-How many column names are shared across tables (or duplicated)?
-```{r}
-
-rental_meta_data %>% count(column_name, sort = TRUE) %>% filter(n > 1)
-```
-
-How many column names are unique?
-```{r}
-rental_meta_data %>% count(column_name) %>% filter(n > 1)
-```
-
-What data types are found in the database?
-```{r}
-
-rental_meta_data %>% count(data_type)
 
 ```
 

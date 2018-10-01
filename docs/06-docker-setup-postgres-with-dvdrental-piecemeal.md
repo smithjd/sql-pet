@@ -9,7 +9,7 @@ Note that `tidyverse`, `DBI`, `RPostgres`, and `glue` are loaded.
 
 
 
-## Retrieve the backup file
+## Download the `dvdrental` backup file
 
 The first step is to get a local copy of the `dvdrental` PostgreSQL restore file.  It comes in a zip format and needs to be un-zipped.  Use the `downloader` and `here` packages to keep track of things.
 
@@ -47,7 +47,7 @@ file.remove(here("dvdrental.zip")) # the Zip file is no longer needed.
 ## [1] TRUE
 ```
 
-## Now, verify that Docker is up and running:
+## Verify that Docker is up and running:
 
 ```r
 system2("docker", "version", stdout = TRUE, stderr = TRUE)
@@ -74,6 +74,7 @@ system2("docker", "version", stdout = TRUE, stderr = TRUE)
 ## [18] "  Experimental:     true"
 ```
 
+## Clean up if appropriate
 Remove the `sql-pet` container if it exists (e.g., from a prior run)
 
 ```r
@@ -115,7 +116,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "df141df324e0f61a771555adae6fa8be6911120e7a50bbd860391d34e66b175b"
+## [1] "f20068087a48a985a7e074be76b9d96ff493e40a410cbecbd31025de223123e8"
 ```
 
 Peek inside the docker container and list the files in the `petdir` directory.  Notice that `dvdrental.tar` is in both.
@@ -137,6 +138,7 @@ dir(wd, pattern = "dvdrental.tar")
 ## [1] "dvdrental.tar"
 ```
 
+## Create the database and restore from the backup
 We can execute programs inside the Docker container with the `exec` command.  In this case we tell Docker to execute the `psql` program inside the `sql-pet` container and pass it some commands.
 
 ```r
@@ -170,6 +172,7 @@ file.remove(here("dvdrental.tar")) # the tar file is no longer needed.
 ## [1] TRUE
 ```
 
+## Connect to the database with R
 Use the DBI package to connect to PostgreSQL.  But first, wait for Docker & PostgreSQL to come up before connecting.
 
 We have loaded the `wait_for_postgres` function behind the scenes.
@@ -262,7 +265,15 @@ glimpse(dbReadTable(con, "film"))
 ## $ fulltext         <chr> "'chamber':1 'fate':4 'husband':11 'italian':...
 ```
 
-Stop the container & show that the container is still there, so can be started again.
+## Cleaning up
+
+It's always good to have R disconnect from the database
+
+```r
+dbDisconnect(con)
+```
+
+Stop the container and show that the container is still there, so can be started again.
 
 ```r
 system2('docker', 'stop sql-pet',
@@ -280,18 +291,16 @@ psout[grepl(x = psout, pattern = 'sql-pet')]
 ```
 
 ```
-## [1] "df141df324e0        postgres:10         \"docker-entrypoint.s…\"   18 seconds ago      Exited (137) Less than a second ago                       sql-pet"
+## [1] "f20068087a48        postgres:10         \"docker-entrypoint.s…\"   18 seconds ago      Exited (137) Less than a second ago                       sql-pet"
 ```
-
-## Cleaning up
 
 Next time, you can just use this command to start the container:
 
 `system2("docker",  "start sql-pet", stdout = TRUE, stderr = TRUE)`
 
-And after disconnecting from it the container can be completely removed with:
+And once stopped, the container can be removed with:
 
-`system2("docker",  "rm sql-pet -f", stdout = TRUE, stderr = TRUE)`
+`system2("docker",  "rm sql-pet", stdout = TRUE, stderr = TRUE)`
 
 ## Using the `sql-pet` container in the rest of the book
 

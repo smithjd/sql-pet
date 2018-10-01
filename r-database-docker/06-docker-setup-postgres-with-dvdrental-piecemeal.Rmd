@@ -19,7 +19,7 @@ read_chunk('book-src/db-login-batch-code.R')
 
 ```
 
-## Retrieve the backup file
+## Download the `dvdrental` backup file
 
 The first step is to get a local copy of the `dvdrental` PostgreSQL restore file.  It comes in a zip format and needs to be un-zipped.  Use the `downloader` and `here` packages to keep track of things.
 ```{r}
@@ -35,12 +35,13 @@ file.remove(here("dvdrental.zip")) # the Zip file is no longer needed.
 
 ```
 
-## Now, verify that Docker is up and running:
+## Verify that Docker is up and running:
 ```{r docker verify}
 
 system2("docker", "version", stdout = TRUE, stderr = TRUE)
 ```
 
+## Clean up if appropriate
 Remove the `sql-pet` container if it exists (e.g., from a prior run)
 ```{r}
 if (system2("docker", "ps -a", stdout = TRUE) %>% 
@@ -81,6 +82,7 @@ system2('docker', 'exec sql-pet ls petdir | grep "dvdrental.tar" ',
 dir(wd, pattern = "dvdrental.tar")
 ```
 
+## Create the database and restore from the backup
 We can execute programs inside the Docker container with the `exec` command.  In this case we tell Docker to execute the `psql` program inside the `sql-pet` container and pass it some commands.
 ```{r}
 Sys.sleep(2)  # is this really needed?
@@ -98,6 +100,7 @@ system2("docker", "exec sql-pet pg_restore -U postgres -d dvdrental petdir/dvdre
 file.remove(here("dvdrental.tar")) # the tar file is no longer needed.
 ```
 
+## Connect to the database with R
 Use the DBI package to connect to PostgreSQL.  But first, wait for Docker & PostgreSQL to come up before connecting.
 ```{r get_postgres_connection, eval=TRUE, echo=FALSE}
 
@@ -137,25 +140,34 @@ glimpse(dbReadTable(con, "film"))
 
 ```
 
-Stop the container & show that the container is still there, so can be started again.
+## Cleaning up
+
+It's always good to have R disconnect from the database
 ```{r}
+
+dbDisconnect(con)
+
+```
+
+Stop the container and show that the container is still there, so can be started again.
+```{r}
+
 system2('docker', 'stop sql-pet',
         stdout = TRUE, stderr = TRUE)
 
 # show that the container still exists even though it's not running
 psout <- system2("docker", "ps -a", stdout = TRUE)
 psout[grepl(x = psout, pattern = 'sql-pet')]
-```
 
-## Cleaning up
+```
 
 Next time, you can just use this command to start the container:
 
 `system2("docker",  "start sql-pet", stdout = TRUE, stderr = TRUE)`
 
-And after disconnecting from it the container can be completely removed with:
+And once stopped, the container can be removed with:
 
-`system2("docker",  "rm sql-pet -f", stdout = TRUE, stderr = TRUE)`
+`system2("docker",  "rm sql-pet", stdout = TRUE, stderr = TRUE)`
 
 ## Using the `sql-pet` container in the rest of the book
 

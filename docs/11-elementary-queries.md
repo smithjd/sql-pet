@@ -1,4 +1,4 @@
-# Real work with real data (11)
+# Simple queries (11)
 
 
 ## Some extra handy libraries
@@ -11,6 +11,10 @@ library(skimr)
 ```
 
 ## Basic investigation
+
+* Need both familiarity with the data and a focus question
+  + An interative process
+  + Each informs the other
 
 * R tools for data investigation
   + glimpse
@@ -32,7 +36,6 @@ We already started, but that's OK.
 
 * DBI / RPostgres packages
 * R tools like glimpse, skimr, kable.
-* examining dplyr queries (show_query on the R side v EXPLAIN on the PostgreSQL side)
 * Tutorials like: https://suzan.rbind.io/tags/dplyr/ 
 * Benjamin S. Baumer, A Grammar for Reproducible and Painless Extract-Transform-Load Operations on Medium Data: https://arxiv.org/pdf/1708.07073 
 
@@ -40,8 +43,6 @@ We already started, but that's OK.
 
 * rental 
 * date subset
-* left join staff
-* left join customer
 
 ### Subset: only retrieve what you need
 
@@ -49,7 +50,7 @@ We already started, but that's OK.
 * Rows
   + number of row
   + specific rows
-* dplyr joins in the R
+* Counts & stats
 
 ### Make the server do as much work as you can
 
@@ -62,7 +63,7 @@ discuss this simple example? http://www.postgresqltutorial.com/postgresql-left-j
 
 * show_query as a first draft
 
-## Writing your on SQL directly to the DBMS
+## Writing SQL queries directly to the DBMS
 
 * dbquery
 * Glue for constructing SQL statements
@@ -75,3 +76,9 @@ discuss this simple example? http://www.postgresqltutorial.com/postgresql-left-j
   + browsing the data
   + larger samples and complete tables
   + using what you know to write efficient queries that do most of the work on the server
+
+----
+* left join staff
+* left join customer
+
+* dplyr joins in the R

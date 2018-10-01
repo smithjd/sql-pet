@@ -1,4 +1,4 @@
-# Postgres Examples, part A (13)
+# Joins and complex queries (13)
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
@@ -52,88 +52,6 @@ con <- wait_for_postgres(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
                          seconds_to_test = 10)
 
 ```
-
-```{r}
-## Get list of database objects
-rs <- dbGetQuery(con
-                 ,"select table_catalog,table_schema,table_name,table_type 
-                     from information_schema.tables 
-                    where table_schema not in ('pg_catalog','information_schema')
-                   order by table_name
-                  ;"
-                  )
-# Get list of tables 
-kable(dbListTables(con))
-```
-
-```{r}
-rs <- dbGetQuery(con
-                 ,"select table_catalog||'.'||table_schema||'.'||table_name table_name
-                         ,column_name,ordinal_position seq --,data_type
-                         ,case when data_type = 'character varying' 
-                               then data_type || '('|| character_maximum_length||')'
-                               when data_type = 'real'
-                               then data_type || '(' || numeric_precision ||','||numeric_precision_radix||')'
-                               else data_type
-                          end data_type
---                         ,character_maximum_length,numeric_precision,numeric_precision_radix
-                     from information_schema.columns
-                    where table_name in (select table_name
-                                           from information_schema.tables
-                                         where table_schema not in ('pg_catalog','information_schema')
-                                         )
-                   order by table_name,ordinal_position;
-
-                  ;"
-                  )
-kable(head(rs, n = 20))
-
-```
-There are {r dim(rs)[1]} rows in the catalog.
-
-```{r}
-rs <- dbGetQuery(con,
-"
---SELECT conrelid::regclass as table_from
-select table_catalog||'.'||table_schema||'.'||table_name table_name
-,conname,pg_catalog.pg_get_constraintdef(r.oid, true) as condef
-FROM information_schema.columns c,pg_catalog.pg_constraint r
-WHERE 1 = 1 --r.conrelid = '16485' 
-  AND r.contype  in ('f','p') ORDER BY 1
-;"
-)
-
-
-kable(head(rs))
-```
-
-```{r}
-rs <- dbGetQuery(con,
-"select conrelid::regclass as table_from
-      ,c.conname
-      ,pg_get_constraintdef(c.oid)
-  from pg_constraint c
-  join pg_namespace n on n.oid = c.connamespace
- where c.contype in ('f','p')
-   and n.nspname = 'public'
-order by conrelid::regclass::text, contype DESC;
-")
-kable(head(rs))
-dim(rs)[1]
-```
-
-```{r}
-rs <- dbGetQuery(con,
-"SELECT r.*,
-  pg_catalog.pg_get_constraintdef(r.oid, true) as condef
-FROM pg_catalog.pg_constraint r
-WHERE 1=1 --r.conrelid = '16485' AND r.contype = 'f' ORDER BY 1;
-")
-
-head(rs)
-```
-
-
 
 ```{r}
 ## select examples

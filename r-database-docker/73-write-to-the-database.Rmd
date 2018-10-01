@@ -1,4 +1,4 @@
-# Postgres Examples, part B (14)
+# Writing to the DBMS (73)
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -7,29 +7,16 @@ library(DBI)
 library(RPostgres)
 library(glue)
 library(knitr)
+library(here)
 ```
 
 ```{r echo=FALSE}
 read_chunk('book-src/db-login-batch-code.R')
 
-# source('book-src/shared-db-login-batch-code.R')  # use when debugging outside of knitr
+# source(here('r-database-docker/book-src/db-login-batch-code.R'))  # use when debugging outside of knitr
 ```
 
 ```{r get_postgres_connection, eval=TRUE, echo=FALSE}
-
-```
-
-## Verify Docker is up and running:
-```{r}
-result <- system2("docker", "version", stdout = TRUE, stderr = TRUE)
-result
-```
-verify pet DB is available, it may be stopped.
-```{r}
-result <- system2("docker", "ps -a", stdout = TRUE, stderr = TRUE)
-result
-
-any(grepl('Up .+pet$',result))
 
 ```
 Start up the `docker-pet` container
@@ -49,13 +36,36 @@ con <- wait_for_postgres(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
                          dbname = "dvdrental",
                          seconds_to_test = 10)
 ```
-All of the material from this file has moved to files 71, 72, and 73.
+## create a new table
 
-Clean up
+This is an example from the DBI help file
 ```{r}
-# dbRemoveTable(con, "cars")
-# dbRemoveTable(con, "mtcars")
-# dbRemoveTable(con, "cust_movies")
+dbWriteTable(con, "cars", head(cars, 3)) # "cars" is a built-in dataset, not to be confused with mtcars
+dbReadTable(con, "cars")   # there are 3 rows
+
+```
+## Modify an existing table
+
+```{r}
+dbExecute(
+  con,
+  "INSERT INTO cars (speed, dist) VALUES (1, 1), (2, 2), (3, 3)"
+)
+dbReadTable(con, "cars")   # there are now 6 rows
+
+# Pass values using the param argument:
+dbExecute(
+  con,
+  "INSERT INTO cars (speed, dist) VALUES ($1, $2)",
+  param = list(4:7, 5:8)
+)
+dbReadTable(con, "cars")   # there are now 10 rows
+
+```
+
+## Clean up
+```{r}
+dbRemoveTable(con, "cars")
 
 # diconnect from the db
 dbDisconnect(con)
