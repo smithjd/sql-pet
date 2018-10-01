@@ -22,7 +22,7 @@ read_chunk('book-src/db-login-batch-code.R')
 
 ```
 
-## First, verify that Docker is up and running:
+## Verify that Docker is up and running
 ```{r docker verify}
 
 system2("docker", "version", stdout = TRUE, stderr = TRUE)
@@ -112,7 +112,6 @@ Stop the container
 system2('docker', 'stop sql-pet',
         stdout = TRUE, stderr = TRUE)
 
-Sys.sleep(3) # can take a moment for Docker to stop the container.
 ```
 Restart the container and verify that the dvdrental tables are still there
 ```{r}
@@ -127,6 +126,9 @@ con <- wait_for_postgres(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
 glimpse(dbReadTable(con, "film"))
 
 ```
+
+## Cleaning up
+
 It's always good to have R disconnect from the database
 ```{r}
 
@@ -134,7 +136,7 @@ dbDisconnect(con)
 
 ```
 
-Stop the container & show that the container is still there, so can be started again.
+Stop the container and show that the container is still there, so can be started again.
 ```{r}
 
 system2('docker', 'stop sql-pet',
@@ -145,8 +147,6 @@ psout <- system2("docker", "ps -a", stdout = TRUE)
 psout[grepl(x = psout, pattern = 'sql-pet')]
 
 ```
-
-## Cleaning up
 
 Next time, you can just use this command to start the container:
 

@@ -12,7 +12,7 @@ Note that `tidyverse`, `DBI`, `RPostgres`, and `glue` are loaded.
 
 
 
-## First, verify that Docker is up and running:
+## Verify that Docker is up and running
 
 ```r
 system2("docker", "version", stdout = TRUE, stderr = TRUE)
@@ -62,7 +62,7 @@ system2("docker",
 ```
 
 ```
-##  [1] "Sending build context to Docker daemon  3.081MB\r\r"                                                                                                                                                                                                                                                                                                                                           
+##  [1] "Sending build context to Docker daemon  3.023MB\r\r"                                                                                                                                                                                                                                                                                                                                           
 ##  [2] "Step 1/4 : FROM postgres:10"                                                                                                                                                                                                                                                                                                                                                                   
 ##  [3] " ---> ac25c2bac3c4"                                                                                                                                                                                                                                                                                                                                                                            
 ##  [4] "Step 2/4 : WORKDIR /tmp"                                                                                                                                                                                                                                                                                                                                                                       
@@ -116,7 +116,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "ea9d5d05077dcad92e47aa595728d688174d077684001d149334fd94b6e91e0f"
+## [1] "585a181a71df50def1fb872aea2001e6209a03c706f4d913ca7a340250a8d7c0"
 ```
 ## Connect to Postgres with R
 Use the DBI package to connect to PostgreSQL.  But first, wait for Docker & PostgreSQL to come up before connecting.
@@ -176,10 +176,6 @@ system2('docker', 'stop sql-pet',
 ```
 ## [1] "sql-pet"
 ```
-
-```r
-Sys.sleep(3) # can take a moment for Docker to stop the container.
-```
 Restart the container and verify that the dvdrental tables are still there
 
 ```r
@@ -216,13 +212,16 @@ glimpse(dbReadTable(con, "film"))
 ## $ special_features <chr> "{Trailers}", "{\"Behind the Scenes\"}", "{Tr...
 ## $ fulltext         <chr> "'chamber':1 'fate':4 'husband':11 'italian':...
 ```
+
+## Cleaning up
+
 It's always good to have R disconnect from the database
 
 ```r
 dbDisconnect(con)
 ```
 
-Stop the container & show that the container is still there, so can be started again.
+Stop the container and show that the container is still there, so can be started again.
 
 ```r
 system2('docker', 'stop sql-pet',
@@ -240,10 +239,8 @@ psout[grepl(x = psout, pattern = 'sql-pet')]
 ```
 
 ```
-## [1] "ea9d5d05077d        postgres-dvdrental   \"docker-entrypoint.s…\"   22 seconds ago      Exited (137) Less than a second ago                       sql-pet"
+## [1] "585a181a71df        postgres-dvdrental   \"docker-entrypoint.s…\"   20 seconds ago      Exited (137) Less than a second ago                       sql-pet"
 ```
-
-## Cleaning up
 
 Next time, you can just use this command to start the container:
 

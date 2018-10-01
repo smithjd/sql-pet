@@ -87,7 +87,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "80b07e0f5fae72166d374a457e4b22e9a3ca3ecad1baa5a81f984db99841e78b"
+## [1] "b100a8b58fa2e3a2b6c3696309cd52bcc8c6c26be83bb4346d53a78bae22c3e7"
 ```
 
 Docker returns a long string of numbers.  If you are running this command for the first time, Docker downloads the PostgreSQL image, which takes a bit of time.
@@ -99,8 +99,8 @@ system2("docker", "ps", stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES"   
-## [2] "80b07e0f5fae        postgres:10         \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
+## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED                  STATUS                  PORTS                    NAMES"   
+## [2] "b100a8b58fa2        postgres:10         \"docker-entrypoint.s…\"   Less than a second ago   Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
 ```
 ## Connect, read and write to Postgres from R
 
@@ -295,7 +295,7 @@ system2("docker", "stop cattle", stdout = TRUE, stderr = TRUE)
 ```
 
 ```r
-# tell Docker to remove the container from it's library of active containers:
+# Tell Docker to remove the container from it's library of active containers:
 system2("docker", "rm cattle", stdout = TRUE, stderr = TRUE)
 ```
 

@@ -1,7 +1,7 @@
 ---
 title: "R, Databases and Docker"
 author: "Dipti Muni, Ian Frantz, John David Smith, Mary Anne Thygesen, M. Edward (Ed) Borasky,  Scott Case, and Sophie Yang"
-date: "2018-09-28"
+date: "2018-10-01"
 site: bookdown::bookdown_site
 documentclass: book
 bibliography: [book.bib, packages.bib]
@@ -18,7 +18,7 @@ description: "A collection of tutorials for integrating R with databases using D
 * R users frequently need to make sense of complex data structures and coding schemes to address incompletely formed questions so that exploratory data analysis has to be fast. Exploratory techniques for the purpose should not be reinvented (and so would benefit from more public instruction or discussion).
 * Learning to navigate the interfaces (passwords, packages, etc.) between R and a database is difficult to simulate outside corporate walls.  Resources for interface problem diagnosis behind corporate walls may or may not address all the issues that R users face, so a simulated environment is needed.
 
-## Docker's role
+## Docker as a tool for UseRs
 
 Noam Ross's "[Docker for the UseR](https://nyhackr.blob.core.windows.net/presentations/Docker-for-the-UseR_Noam-Ross.pdf)" suggests that there are four distinct Docker use-cases for useRs.  
 
@@ -47,10 +47,9 @@ Here is how R and Docker fit on your operating system in this tutorial:
 * Ian Franz - [\@ianfrantz](https://github.com/ianfrantz)
 * Sophie Yang - [\@SophieMYang](https://github.com/SophieMYang)
 * Jim Tyhurst - [\@jimtyhurst](https://github.com/jimtyhurst)
-* Paul Refalo - [\@paulrefalo](https://github.com/paulrefalo)
 
 ## Prerequisites
-You will need
+You will need:
 
 * A computer running Windows, MacOS, or Linux (Any Linux distro that will run Docker Community Edition, R and RStudio will work),
 * [R, and RStudio](https://www.datacamp.com/community/tutorials/installing-R-windows-mac-ubuntu) and

@@ -1,0 +1,167 @@
+# Getting metadata about and from the database (21)
+
+```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(DBI)
+library(RPostgres)
+library(glue)
+require(knitr)
+``` 
+Note that `tidyverse`, `DBI`, `RPostgres`, `glue`, and `knitr` are loaded.  Also, we've sourced the `[db-login-batch-code.R]('r-database-docker/book-src/db-login-batch-code.R')` file which is used to log in to PostgreSQL.
+
+```{r echo=FALSE}
+read_chunk('book-src/db-login-batch-code.R')
+
+# use when debugging outside of knitr
+# source('r-database-docker/book-src/db-login-batch-code.R')
+# source('r-database-docker/book-src/db-login-interactive-code.R')  
+```
+
+```{r get_postgres_connection, eval=TRUE, echo=FALSE}
+
+```
+
+
+## Get some basic information about your database
+
+Assume that the Docker container with PostgreSQL and the dvdrental database are ready to go.
+```{r}
+system2("docker",  "start sql-pet", stdout = TRUE, stderr = TRUE)
+
+con <- wait_for_postgres(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
+                         password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
+                         dbname = "dvdrental",
+                         seconds_to_test = 10)
+
+```
+
+You usually need to use both the available documentation for your [database](http://www.postgresqltutorial.com/postgresql-sample-database/) and to be somewhat skeptical (e.g., empirical).  It's worth learning to interpret the symbols in an [Entity Relationship Diagram](https://en.wikipedia.org/wiki/Entity%E2%80%93relationship_model):
+
+![](./screenshots/ER-diagram-symbols.png)
+
+Depending on how skeptical you are about the documentation, you might want to get an overview of a database by pulling data from the database `information_schema`.  Here's a selection of useful information although you may want more (or less).  There is a lot to choose from [a vast list of metadata](https://www.postgresql.org/docs/current/static/infoschema-columns.html).  Note that information schemas are somewhat consistent across different DBMS' that you may encounter.
+
+
+have we hidden "in_schema()" as in:
+
+  `con %>% tbl(in_schema("aux", "df"))`
+  
+```{r}
+
+table_schema_query  <- glue("SELECT ", 
+  "table_name, column_name, data_type, ordinal_position, column_default, character_maximum_length", 
+  " FROM information_schema.columns ", 
+  "WHERE table_schema = 'public'")
+ 
+  rental_meta_data  <- dbGetQuery(con, table_schema_query) 
+
+glimpse(rental_meta_data)
+```
+Pull out some rough-and-ready but useful statistics about your database.  Since we are in SQL-land we talk about variables as `columns`.
+
+Start with a list of tables names and a count of the number of columns that each one contains.
+```{r}
+
+rental_meta_data %>% count(table_name) %>% rename(number_of_columns = n) %>% as.data.frame()
+```
+
+How many column names are shared across tables (or duplicated)?
+```{r}
+
+rental_meta_data %>% count(column_name, sort = TRUE) %>% filter(n > 1)
+```
+
+How many column names are unique?
+```{r}
+rental_meta_data %>% count(column_name) %>% filter(n > 1)
+```
+
+What data types are found in the database?
+```{r}
+
+rental_meta_data %>% count(data_type)
+
+```
+
+
+```{r}
+## Get list of database objects
+rs <- dbGetQuery(con
+                 ,"select table_catalog,table_schema,table_name,table_type 
+                     from information_schema.tables 
+                    where table_schema not in ('pg_catalog','information_schema')
+                   order by table_name
+                  ;"
+                  )
+# Get list of tables 
+kable(dbListTables(con))
+```
+
+```{r}
+rs <- dbGetQuery(con
+                 ,"select table_catalog||'.'||table_schema||'.'||table_name table_name
+                         ,column_name,ordinal_position seq --,data_type
+                         ,case when data_type = 'character varying' 
+                               then data_type || '('|| character_maximum_length||')'
+                               when data_type = 'real'
+                               then data_type || '(' || numeric_precision ||','||numeric_precision_radix||')'
+                               else data_type
+                          end data_type
+--                         ,character_maximum_length,numeric_precision,numeric_precision_radix
+                     from information_schema.columns
+                    where table_name in (select table_name
+                                           from information_schema.tables
+                                         where table_schema not in ('pg_catalog','information_schema')
+                                         )
+                   order by table_name,ordinal_position;
+
+                  ;"
+                  )
+kable(head(rs, n = 20))
+
+```
+There are {r dim(rs)[1]} rows in the catalog.
+
+```{r}
+rs <- dbGetQuery(con,
+"
+--SELECT conrelid::regclass as table_from
+select table_catalog||'.'||table_schema||'.'||table_name table_name
+,conname,pg_catalog.pg_get_constraintdef(r.oid, true) as condef
+FROM information_schema.columns c,pg_catalog.pg_constraint r
+WHERE 1 = 1 --r.conrelid = '16485' 
+  AND r.contype  in ('f','p') ORDER BY 1
+;"
+)
+
+
+kable(head(rs))
+```
+
+```{r}
+rs <- dbGetQuery(con,
+"select conrelid::regclass as table_from
+      ,c.conname
+      ,pg_get_constraintdef(c.oid)
+  from pg_constraint c
+  join pg_namespace n on n.oid = c.connamespace
+ where c.contype in ('f','p')
+   and n.nspname = 'public'
+order by conrelid::regclass::text, contype DESC;
+")
+kable(head(rs))
+dim(rs)[1]
+```
+
+```{r}
+rs <- dbGetQuery(con,
+"SELECT r.*,
+  pg_catalog.pg_get_constraintdef(r.oid, true) as condef
+FROM pg_catalog.pg_constraint r
+WHERE 1=1 --r.conrelid = '16485' AND r.contype = 'f' ORDER BY 1;
+")
+
+head(rs)
+```
+
