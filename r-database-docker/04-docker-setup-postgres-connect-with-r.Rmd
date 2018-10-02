@@ -10,12 +10,12 @@ library(getPass)
 require(knitr)
 ```
 
-## Verify that Docker running
+## Verify that Docker is running
 
 Docker commands can be run from a terminal (e.g., the Rstudio Terminal pane) or with a `system()` command.  In this tutorial, we use `system2()` so that all the output that is created externally is shown.  Note that `system2` calls are divided into several parts:
 
 1. The program that you are sending a command to.
-2. The parameters or commands that are being sent
+2. The parameters or commands that are being sent.
 3. `stdout = TRUE, stderr = TRUE` are two parameters that are standard in this book, so that the command's full output is shown in the book.
 
 ```{r echo=FALSE}
@@ -102,7 +102,7 @@ con <- wait_for_postgres(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
                          seconds_to_test = 10)
 
 ```
-Show that you can connect but that PostgreSQL database doesn't contain any tables:
+Make sure that you can connect to the PostgreSQL database that you started earlier. If you have been executing the code from this tutorial, the database will not contain any tables yet:
 
 ```{r}
 dbListTables(con)
