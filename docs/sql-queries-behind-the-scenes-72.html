@@ -25,7 +25,7 @@
 <meta name="author" content="Dipti Muni, Ian Frantz, John David Smith, Mary Anne Thygesen, M. Edward (Ed) Borasky, Scott Case, and Sophie Yang">
 
 
-<meta name="date" content="2018-10-01">
+<meta name="date" content="2018-10-02">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -159,7 +159,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.4" data-path="learning-goals-and-use-cases.html"><a href="learning-goals-and-use-cases.html#environment"><i class="fa fa-check"></i><b>3.4</b> Environment</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html"><i class="fa fa-check"></i><b>4</b> Docker, Postgres, and R (04)</a><ul>
-<li class="chapter" data-level="4.1" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#verify-that-docker-running"><i class="fa fa-check"></i><b>4.1</b> Verify that Docker running</a></li>
+<li class="chapter" data-level="4.1" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#verify-that-docker-is-running"><i class="fa fa-check"></i><b>4.1</b> Verify that Docker is running</a></li>
 <li class="chapter" data-level="4.2" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#clean-up-if-appropriate"><i class="fa fa-check"></i><b>4.2</b> Clean up if appropriate</a></li>
 <li class="chapter" data-level="4.3" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#connect-read-and-write-to-postgres-from-r"><i class="fa fa-check"></i><b>4.3</b> Connect, read and write to Postgres from R</a><ul>
 <li class="chapter" data-level="4.3.1" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#pause-for-some-security-considerations"><i class="fa fa-check"></i><b>4.3.1</b> Pause for some security considerations</a></li>
@@ -213,7 +213,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="9.1" data-path="postgres-examples-part-b-14.html"><a href="postgres-examples-part-b-14.html#verify-docker-is-up-and-running"><i class="fa fa-check"></i><b>9.1</b> Verify Docker is up and running:</a></li>
 </ul></li>
 <li class="chapter" data-level="10" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html"><i class="fa fa-check"></i><b>10</b> Getting metadata about and from the database (21)</a><ul>
-<li class="chapter" data-level="10.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#get-some-basic-information-about-your-database-1"><i class="fa fa-check"></i><b>10.1</b> Get some basic information about your database</a></li>
+<li class="chapter" data-level="10.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#look-at-the-data-and-its-metadata"><i class="fa fa-check"></i><b>10.1</b> Look at the data and its metadata</a><ul>
+<li class="chapter" data-level="10.1.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#the-information_schema-with-dbplyr"><i class="fa fa-check"></i><b>10.1.1</b> The information_schema with dbplyr</a></li>
+<li class="chapter" data-level="10.1.2" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#submitting-sql-statements-directly"><i class="fa fa-check"></i><b>10.1.2</b> Submitting SQL statements directly</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="11" data-path="explain-queries-71.html"><a href="explain-queries-71.html"><i class="fa fa-check"></i><b>11</b> Explain queries (71)</a><ul>
 <li class="chapter" data-level="11.1" data-path="explain-queries-71.html"><a href="explain-queries-71.html#performance-considertations"><i class="fa fa-check"></i><b>11.1</b> Performance considertations</a></li>
@@ -265,14 +268,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="sql-queries-behind-the-scenes-72" class="section level1">
 <h1><span class="header-section-number">Chapter 12</span> SQL queries behind the scenes (72)</h1>
 <p>Start up the <code>docker-pet</code> container</p>
-<div class="sourceCode" id="cb177"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb177-1" data-line-number="1">result &lt;-<span class="st"> </span><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, <span class="st">&quot;start sql-pet&quot;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb177-2" data-line-number="2">result</a></code></pre></div>
+<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb187-1" data-line-number="1">result &lt;-<span class="st"> </span><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, <span class="st">&quot;start sql-pet&quot;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb187-2" data-line-number="2">result</a></code></pre></div>
 <pre><code>## [1] &quot;sql-pet&quot;</code></pre>
 <p>now connect to the database with R</p>
-<div class="sourceCode" id="cb179"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb179-1" data-line-number="1">con &lt;-<span class="st"> </span><span class="kw">wait_for_postgres</span>(<span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),</a>
-<a class="sourceLine" id="cb179-2" data-line-number="2">                         <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),</a>
-<a class="sourceLine" id="cb179-3" data-line-number="3">                         <span class="dt">dbname =</span> <span class="st">&quot;dvdrental&quot;</span>,</a>
-<a class="sourceLine" id="cb179-4" data-line-number="4">                         <span class="dt">seconds_to_test =</span> <span class="dv">10</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb189-1" data-line-number="1">con &lt;-<span class="st"> </span><span class="kw">wait_for_postgres</span>(<span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),</a>
+<a class="sourceLine" id="cb189-2" data-line-number="2">                         <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),</a>
+<a class="sourceLine" id="cb189-3" data-line-number="3">                         <span class="dt">dbname =</span> <span class="st">&quot;dvdrental&quot;</span>,</a>
+<a class="sourceLine" id="cb189-4" data-line-number="4">                         <span class="dt">seconds_to_test =</span> <span class="dv">10</span>)</a></code></pre></div>
 <div id="sql-execution-steps" class="section level2">
 <h2><span class="header-section-number">12.1</span> SQL Execution Steps</h2>
 <ul>
@@ -281,9 +284,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>Plan/optimize the data acquisition path</li>
 <li>Execute the optimized query / acquire and return data</li>
 </ul>
-<div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb180-1" data-line-number="1"><span class="kw">dbWriteTable</span>(con, <span class="st">&quot;mtcars&quot;</span>, mtcars, <span class="dt">overwrite =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb180-2" data-line-number="2">rs &lt;-<span class="st"> </span><span class="kw">dbSendQuery</span>(con, <span class="st">&quot;SELECT * FROM mtcars WHERE cyl = 4&quot;</span>)</a>
-<a class="sourceLine" id="cb180-3" data-line-number="3"><span class="kw">dbFetch</span>(rs)</a></code></pre></div>
+<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb190-1" data-line-number="1"><span class="kw">dbWriteTable</span>(con, <span class="st">&quot;mtcars&quot;</span>, mtcars, <span class="dt">overwrite =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb190-2" data-line-number="2">rs &lt;-<span class="st"> </span><span class="kw">dbSendQuery</span>(con, <span class="st">&quot;SELECT * FROM mtcars WHERE cyl = 4&quot;</span>)</a>
+<a class="sourceLine" id="cb190-3" data-line-number="3"><span class="kw">dbFetch</span>(rs)</a></code></pre></div>
 <pre><code>##     mpg cyl  disp  hp drat    wt  qsec vs am gear carb
 ## 1  22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
 ## 2  24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2
@@ -296,13 +299,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 9  26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2
 ## 10 30.4   4  95.1 113 3.77 1.513 16.90  1  1    5    2
 ## 11 21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2</code></pre>
-<div class="sourceCode" id="cb182"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb182-1" data-line-number="1"><span class="kw">dbClearResult</span>(rs)</a></code></pre></div>
+<div class="sourceCode" id="cb192"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb192-1" data-line-number="1"><span class="kw">dbClearResult</span>(rs)</a></code></pre></div>
 </div>
 <div id="passing-values-to-sql-statements" class="section level2">
 <h2><span class="header-section-number">12.2</span> Passing values to SQL statements</h2>
-<div class="sourceCode" id="cb183"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb183-1" data-line-number="1"><span class="co">#Pass one set of values with the param argument:</span></a>
-<a class="sourceLine" id="cb183-2" data-line-number="2">rs &lt;-<span class="st"> </span><span class="kw">dbSendQuery</span>(con,<span class="st">&quot;SELECT * FROM mtcars WHERE cyl = 4&quot;</span>)</a>
-<a class="sourceLine" id="cb183-3" data-line-number="3"><span class="kw">dbFetch</span>(rs)</a></code></pre></div>
+<div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb193-1" data-line-number="1"><span class="co">#Pass one set of values with the param argument:</span></a>
+<a class="sourceLine" id="cb193-2" data-line-number="2">rs &lt;-<span class="st"> </span><span class="kw">dbSendQuery</span>(con,<span class="st">&quot;SELECT * FROM mtcars WHERE cyl = 4&quot;</span>)</a>
+<a class="sourceLine" id="cb193-3" data-line-number="3"><span class="kw">dbFetch</span>(rs)</a></code></pre></div>
 <pre><code>##     mpg cyl  disp  hp drat    wt  qsec vs am gear carb
 ## 1  22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
 ## 2  24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2
@@ -315,13 +318,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 9  26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2
 ## 10 30.4   4  95.1 113 3.77 1.513 16.90  1  1    5    2
 ## 11 21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2</code></pre>
-<div class="sourceCode" id="cb185"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb185-1" data-line-number="1"><span class="kw">dbClearResult</span>(rs)</a></code></pre></div>
+<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb195-1" data-line-number="1"><span class="kw">dbClearResult</span>(rs)</a></code></pre></div>
 </div>
 <div id="pass-multiple-sets-of-values-with-dbbind" class="section level2">
 <h2><span class="header-section-number">12.3</span> Pass multiple sets of values with dbBind():</h2>
-<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb186-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbSendQuery</span>(con, <span class="st">&quot;SELECT * FROM mtcars WHERE cyl = $1&quot;</span>)</a>
-<a class="sourceLine" id="cb186-2" data-line-number="2"><span class="kw">dbBind</span>(rs, <span class="kw">list</span>(6L)) <span class="co"># cyl = 6</span></a>
-<a class="sourceLine" id="cb186-3" data-line-number="3"><span class="kw">dbFetch</span>(rs)</a></code></pre></div>
+<div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb196-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbSendQuery</span>(con, <span class="st">&quot;SELECT * FROM mtcars WHERE cyl = $1&quot;</span>)</a>
+<a class="sourceLine" id="cb196-2" data-line-number="2"><span class="kw">dbBind</span>(rs, <span class="kw">list</span>(6L)) <span class="co"># cyl = 6</span></a>
+<a class="sourceLine" id="cb196-3" data-line-number="3"><span class="kw">dbFetch</span>(rs)</a></code></pre></div>
 <pre><code>##    mpg cyl  disp  hp drat    wt  qsec vs am gear carb
 ## 1 21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
 ## 2 21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
@@ -330,8 +333,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 5 19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4
 ## 6 17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4
 ## 7 19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6</code></pre>
-<div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb188-1" data-line-number="1"><span class="kw">dbBind</span>(rs, <span class="kw">list</span>(8L)) <span class="co"># cyl = 8</span></a>
-<a class="sourceLine" id="cb188-2" data-line-number="2"><span class="kw">dbFetch</span>(rs)</a></code></pre></div>
+<div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb198-1" data-line-number="1"><span class="kw">dbBind</span>(rs, <span class="kw">list</span>(8L)) <span class="co"># cyl = 8</span></a>
+<a class="sourceLine" id="cb198-2" data-line-number="2"><span class="kw">dbFetch</span>(rs)</a></code></pre></div>
 <pre><code>##     mpg cyl  disp  hp drat    wt  qsec vs am gear carb
 ## 1  18.7   8 360.0 175 3.15 3.440 17.02  0  0    3    2
 ## 2  14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4
@@ -347,19 +350,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 12 19.2   8 400.0 175 3.08 3.845 17.05  0  0    3    2
 ## 13 15.8   8 351.0 264 4.22 3.170 14.50  0  1    5    4
 ## 14 15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8</code></pre>
-<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb190-1" data-line-number="1"><span class="kw">dbClearResult</span>(rs)</a></code></pre></div>
+<div class="sourceCode" id="cb200"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb200-1" data-line-number="1"><span class="kw">dbClearResult</span>(rs)</a></code></pre></div>
 </div>
 <div id="clean-up-2" class="section level2">
 <h2><span class="header-section-number">12.4</span> Clean up</h2>
-<div class="sourceCode" id="cb191"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb191-1" data-line-number="1"><span class="co"># dbRemoveTable(con, &quot;cars&quot;)</span></a>
-<a class="sourceLine" id="cb191-2" data-line-number="2"><span class="kw">dbRemoveTable</span>(con, <span class="st">&quot;mtcars&quot;</span>)</a>
-<a class="sourceLine" id="cb191-3" data-line-number="3"><span class="co"># dbRemoveTable(con, &quot;cust_movies&quot;)</span></a>
-<a class="sourceLine" id="cb191-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb191-5" data-line-number="5"><span class="co"># diconnect from the db</span></a>
-<a class="sourceLine" id="cb191-6" data-line-number="6"><span class="kw">dbDisconnect</span>(con)</a>
-<a class="sourceLine" id="cb191-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb191-8" data-line-number="8">result &lt;-<span class="st"> </span><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, <span class="st">&quot;stop sql-pet&quot;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb191-9" data-line-number="9">result</a></code></pre></div>
+<div class="sourceCode" id="cb201"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb201-1" data-line-number="1"><span class="co"># dbRemoveTable(con, &quot;cars&quot;)</span></a>
+<a class="sourceLine" id="cb201-2" data-line-number="2"><span class="kw">dbRemoveTable</span>(con, <span class="st">&quot;mtcars&quot;</span>)</a>
+<a class="sourceLine" id="cb201-3" data-line-number="3"><span class="co"># dbRemoveTable(con, &quot;cust_movies&quot;)</span></a>
+<a class="sourceLine" id="cb201-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb201-5" data-line-number="5"><span class="co"># diconnect from the db</span></a>
+<a class="sourceLine" id="cb201-6" data-line-number="6"><span class="kw">dbDisconnect</span>(con)</a>
+<a class="sourceLine" id="cb201-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb201-8" data-line-number="8">result &lt;-<span class="st"> </span><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, <span class="st">&quot;stop sql-pet&quot;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb201-9" data-line-number="9">result</a></code></pre></div>
 <pre><code>## [1] &quot;sql-pet&quot;</code></pre>
 
 </div>

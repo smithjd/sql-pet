@@ -1,14 +1,12 @@
 # Getting metadata about and from the database (21)
 
 
-Note that `tidyverse`, `DBI`, `RPostgres`, `glue`, and `knitr` are loaded.  Also, we've sourced the `[db-login-batch-code.R]('r-database-docker/book-src/db-login-batch-code.R')` file which is used to log in to PostgreSQL.
+Note that `tidyverse`, `DBI`, `RPostgres`, `glue`, and `knitr` are loaded.  Also, we've sourced the [`db-login-batch-code.R`]('r-database-docker/book-src/db-login-batch-code.R') file which is used to log in to PostgreSQL.
 
 
 
 
-
-
-## Get some basic information about your database
+## Look at the data and its metadata
 
 Assume that the Docker container with PostgreSQL and the dvdrental database are ready to go.
 
@@ -26,78 +24,172 @@ con <- wait_for_postgres(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
                          dbname = "dvdrental",
                          seconds_to_test = 10)
 ```
+So far in this books we've most often looked at the data by listing a few observations or using a tool like `glimpse`.
 
-You usually need to use both the available documentation for your [database](http://www.postgresqltutorial.com/postgresql-sample-database/) and to be somewhat skeptical (e.g., empirical).  It's worth learning to interpret the symbols in an [Entity Relationship Diagram](https://en.wikipedia.org/wiki/Entity%E2%80%93relationship_model):
+```r
+rental <- tbl(con, "rental")
+
+kable(head(rental))
+```
+
+
+\begin{tabular}{r|l|r|r|l|r|l}
+\hline
+rental\_id & rental\_date & inventory\_id & customer\_id & return\_date & staff\_id & last\_update\\
+\hline
+2 & 2005-05-24 22:54:33 & 1525 & 459 & 2005-05-28 19:40:33 & 1 & 2006-02-16 02:30:53\\
+\hline
+3 & 2005-05-24 23:03:39 & 1711 & 408 & 2005-06-01 22:12:39 & 1 & 2006-02-16 02:30:53\\
+\hline
+4 & 2005-05-24 23:04:41 & 2452 & 333 & 2005-06-03 01:43:41 & 2 & 2006-02-16 02:30:53\\
+\hline
+5 & 2005-05-24 23:05:21 & 2079 & 222 & 2005-06-02 04:33:21 & 1 & 2006-02-16 02:30:53\\
+\hline
+6 & 2005-05-24 23:08:07 & 2792 & 549 & 2005-05-27 01:32:07 & 1 & 2006-02-16 02:30:53\\
+\hline
+7 & 2005-05-24 23:11:53 & 3995 & 269 & 2005-05-29 20:34:53 & 2 & 2006-02-16 02:30:53\\
+\hline
+\end{tabular}
+
+```r
+glimpse(rental)
+```
+
+```
+## Observations: ??
+## Variables: 7
+## $ rental_id    <int> 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 1...
+## $ rental_date  <dttm> 2005-05-24 22:54:33, 2005-05-24 23:03:39, 2005-0...
+## $ inventory_id <int> 1525, 1711, 2452, 2079, 2792, 3995, 2346, 2580, 1...
+## $ customer_id  <int> 459, 408, 333, 222, 549, 269, 239, 126, 399, 142,...
+## $ return_date  <dttm> 2005-05-28 19:40:33, 2005-06-01 22:12:39, 2005-0...
+## $ staff_id     <int> 1, 1, 2, 1, 1, 2, 2, 1, 2, 2, 2, 1, 1, 1, 2, 1, 2...
+## $ last_update  <dttm> 2006-02-16 02:30:53, 2006-02-16 02:30:53, 2006-0...
+```
+
+For large or complex databases, however, you need to use both the available documentation for your database (e.g.,  [the dvdrental](http://www.postgresqltutorial.com/postgresql-sample-database/) dataase) and the other empirical tools that are available.  For example it's worth learning to interpret the symbols in an [Entity Relationship Diagram](https://en.wikipedia.org/wiki/Entity%E2%80%93relationship_model):
 
 ![](./screenshots/ER-diagram-symbols.png)
 
-Depending on how skeptical you are about the documentation, you might want to get an overview of a database by pulling data from the database `information_schema`.  Here's a selection of useful information although you may want more (or less).  There is a lot to choose from [a vast list of metadata](https://www.postgresql.org/docs/current/static/infoschema-columns.html).  Note that information schemas are somewhat consistent across different DBMS' that you may encounter.
+The `information_schema` is a trove of information *about* the database.  Its format is more or less consistent across the different SQL implementations that are available.   Here we explore some of what's available using several different methods.  Postgres stores [a lot of metadata](https://www.postgresql.org/docs/current/static/infoschema-columns.html).
 
+### The information_schema with dbplyr
+For this chapter R needs the `dbplyr` package to access alternate schemas.  A [schema](http://www.postgresqltutorial.com/postgresql-server-and-database-objects/) is an object that contains one or more tables.  Most often there will be a default schema, but to access the metadata, you need to explicitly specify which schema contains the data you want.
 
-have we hidden "in_schema()" as in:
-
-  `con %>% tbl(in_schema("aux", "df"))`
-  
 
 ```r
-table_schema_query  <- glue("SELECT ", 
-  "table_name, column_name, data_type, ordinal_position, column_default, character_maximum_length", 
-  " FROM information_schema.columns ", 
-  "WHERE table_schema = 'public'")
- 
-  rental_meta_data  <- dbGetQuery(con, table_schema_query) 
-
-glimpse(rental_meta_data)
+library(dbplyr)
 ```
 
 ```
-## Observations: 128
-## Variables: 6
-## $ table_name               <chr> "actor_info", "actor_info", "actor_in...
-## $ column_name              <chr> "actor_id", "first_name", "last_name"...
-## $ data_type                <chr> "integer", "character varying", "char...
-## $ ordinal_position         <int> 1, 2, 3, 4, 1, 2, 3, 4, 5, 6, 7, 8, 9...
-## $ column_default           <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, N...
-## $ character_maximum_length <int> NA, 45, 45, NA, NA, NA, 50, 10, 20, 5...
+## 
+## Attaching package: 'dbplyr'
 ```
+
+```
+## The following objects are masked from 'package:dplyr':
+## 
+##     ident, sql
+```
+
+```r
+columns_info_schema_table <- tbl(con, in_schema("information_schema", "columns")) 
+
+columns_info_schema_info <- columns_info_schema_table %>% 
+  select(table_schema, table_name, column_name, data_type, ordinal_position, 
+         column_default, character_maximum_length) %>% 
+  collect(n = Inf)
+
+columns_info_schema_info
+```
+
+```
+## # A tibble: 1,855 x 7
+##    table_schema table_name column_name data_type ordinal_position
+##    <chr>        <chr>      <chr>       <chr>                <int>
+##  1 pg_catalog   pg_proc    proname     name                     1
+##  2 pg_catalog   pg_proc    pronamespa~ oid                      2
+##  3 pg_catalog   pg_proc    proowner    oid                      3
+##  4 pg_catalog   pg_proc    prolang     oid                      4
+##  5 pg_catalog   pg_proc    procost     real                     5
+##  6 pg_catalog   pg_proc    prorows     real                     6
+##  7 pg_catalog   pg_proc    provariadic oid                      7
+##  8 pg_catalog   pg_proc    protransfo~ regproc                  8
+##  9 pg_catalog   pg_proc    proisagg    boolean                  9
+## 10 pg_catalog   pg_proc    proiswindow boolean                 10
+## # ... with 1,845 more rows, and 2 more variables: column_default <chr>,
+## #   character_maximum_length <int>
+```
+For the moment we're going to drop everything except the columns that are in the `public` schema.
+
+```r
+public_table_columns <- columns_info_schema_info %>% 
+  filter(table_schema == "public") %>% 
+  select(-table_schema)
+
+public_table_columns
+```
+
+```
+## # A tibble: 128 x 6
+##    table_name column_name data_type ordinal_position column_default
+##    <chr>      <chr>       <chr>                <int> <chr>         
+##  1 customer   store_id    smallint                 2 <NA>          
+##  2 customer   first_name  characte~                3 <NA>          
+##  3 customer   last_name   characte~                4 <NA>          
+##  4 customer   email       characte~                5 <NA>          
+##  5 customer   address_id  smallint                 6 <NA>          
+##  6 customer   active      integer                 10 <NA>          
+##  7 customer   customer_id integer                  1 nextval('cust~
+##  8 customer   activebool  boolean                  7 true          
+##  9 customer   create_date date                     8 ('now'::text)~
+## 10 customer   last_update timestam~                9 now()         
+## # ... with 118 more rows, and 1 more variable:
+## #   character_maximum_length <int>
+```
+
+
 Pull out some rough-and-ready but useful statistics about your database.  Since we are in SQL-land we talk about variables as `columns`.
 
 Start with a list of tables names and a count of the number of columns that each one contains.
 
 ```r
-rental_meta_data %>% count(table_name) %>% rename(number_of_columns = n) %>% as.data.frame()
+public_table_columns %>% 
+  count(table_name, sort = TRUE) %>% 
+  rename(number_of_columns = n) %>% 
+  as.data.frame() # we want to look at all of them, so bypass the nice tibble row limit
 ```
 
 ```
 ##                    table_name number_of_columns
-## 1                       actor                 4
-## 2                  actor_info                 4
-## 3                     address                 8
-## 4                    category                 3
-## 5                        city                 4
-## 6                     country                 3
-## 7                    customer                10
-## 8               customer_list                 9
-## 9                        film                13
-## 10                 film_actor                 3
-## 11              film_category                 3
-## 12                  film_list                 8
-## 13                  inventory                 4
-## 14                   language                 3
-## 15 nicer_but_slower_film_list                 8
-## 16                    payment                 6
-## 17                     rental                 7
-## 18     sales_by_film_category                 2
-## 19             sales_by_store                 3
-## 20                      staff                11
-## 21                 staff_list                 8
-## 22                      store                 4
+## 1                        film                13
+## 2                       staff                11
+## 3                    customer                10
+## 4               customer_list                 9
+## 5                     address                 8
+## 6                   film_list                 8
+## 7  nicer_but_slower_film_list                 8
+## 8                  staff_list                 8
+## 9                      rental                 7
+## 10                    payment                 6
+## 11                      actor                 4
+## 12                 actor_info                 4
+## 13                       city                 4
+## 14                  inventory                 4
+## 15                      store                 4
+## 16                   category                 3
+## 17                    country                 3
+## 18                 film_actor                 3
+## 19              film_category                 3
+## 20                   language                 3
+## 21             sales_by_store                 3
+## 22     sales_by_film_category                 2
 ```
 
 How many column names are shared across tables (or duplicated)?
 
 ```r
-rental_meta_data %>% count(column_name, sort = TRUE) %>% filter(n > 1)
+public_table_columns %>% count(column_name, sort = TRUE) %>% filter(n > 1)
 ```
 
 ```
@@ -120,7 +212,7 @@ rental_meta_data %>% count(column_name, sort = TRUE) %>% filter(n > 1)
 How many column names are unique?
 
 ```r
-rental_meta_data %>% count(column_name) %>% filter(n > 1)
+public_table_columns %>% count(column_name) %>% filter(n > 1)
 ```
 
 ```
@@ -143,7 +235,7 @@ rental_meta_data %>% count(column_name) %>% filter(n > 1)
 What data types are found in the database?
 
 ```r
-rental_meta_data %>% count(data_type)
+public_table_columns %>% count(data_type)
 ```
 
 ```
@@ -165,6 +257,29 @@ rental_meta_data %>% count(data_type)
 ## 13 USER-DEFINED                    3
 ```
 
+### Submitting SQL statements directly
+
+```r
+table_schema_query  <- glue("SELECT ", 
+  "table_name, column_name, data_type, ordinal_position, column_default, character_maximum_length", 
+  " FROM information_schema.columns ", 
+  "WHERE table_schema = 'public'")
+ 
+  rental_meta_data  <- dbGetQuery(con, table_schema_query) 
+
+glimpse(rental_meta_data)
+```
+
+```
+## Observations: 128
+## Variables: 6
+## $ table_name               <chr> "actor_info", "actor_info", "actor_in...
+## $ column_name              <chr> "actor_id", "first_name", "last_name"...
+## $ data_type                <chr> "integer", "character varying", "char...
+## $ ordinal_position         <int> 1, 2, 3, 4, 1, 2, 3, 4, 5, 6, 7, 8, 9...
+## $ column_default           <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, N...
+## $ character_maximum_length <int> NA, 45, 45, NA, NA, NA, 50, 10, 20, 5...
+```
 
 
 ```r
