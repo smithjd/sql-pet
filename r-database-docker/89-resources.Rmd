@@ -14,7 +14,7 @@
 * Scott Came's materials about Docker and R [on his website](http://www.cascadia-analytics.com/2018/07/21/docker-r-p1.html) and at the 2018 UseR Conference focus on **R inside Docker**.
 * It's worth studying the [ROpensci Docker tutorial](https://ropenscilabs.github.io/r-docker-tutorial/)
 
-## Documentation Docker and Postgres
+## Documentation for Docker and Postgres
 
 * [The Postgres image documentation](https://docs.docker.com/samples/library/postgres/)
 * [Dockerize PostgreSQL](https://docs.docker.com/engine/examples/postgresql_service/)
