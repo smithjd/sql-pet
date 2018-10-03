@@ -116,7 +116,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "f20068087a48a985a7e074be76b9d96ff493e40a410cbecbd31025de223123e8"
+## [1] "569798b50767d3310e7369b2690248165b6ce5757df23f83368e43383cc1cd0e"
 ```
 
 Peek inside the docker container and list the files in the `petdir` directory.  Notice that `dvdrental.tar` is in both.
@@ -291,7 +291,7 @@ psout[grepl(x = psout, pattern = 'sql-pet')]
 ```
 
 ```
-## [1] "f20068087a48        postgres:10         \"docker-entrypoint.s…\"   18 seconds ago      Exited (137) Less than a second ago                       sql-pet"
+## [1] "569798b50767        postgres:10         \"docker-entrypoint.s…\"   19 seconds ago      Exited (137) Less than a second ago                       sql-pet"
 ```
 
 Next time, you can just use this command to start the container:

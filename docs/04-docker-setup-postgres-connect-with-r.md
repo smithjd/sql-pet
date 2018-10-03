@@ -3,12 +3,12 @@
 We always load the tidyverse and some other packages, but don't show it unless we are using packages other than `tidyverse`, `DBI`, `RPostgres`, and `glue`.
 
 
-## Verify that Docker running
+## Verify that Docker is running
 
 Docker commands can be run from a terminal (e.g., the Rstudio Terminal pane) or with a `system()` command.  In this tutorial, we use `system2()` so that all the output that is created externally is shown.  Note that `system2` calls are divided into several parts:
 
 1. The program that you are sending a command to.
-2. The parameters or commands that are being sent
+2. The parameters or commands that are being sent.
 3. `stdout = TRUE, stderr = TRUE` are two parameters that are standard in this book, so that the command's full output is shown in the book.
 
 
@@ -87,7 +87,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "b100a8b58fa2e3a2b6c3696309cd52bcc8c6c26be83bb4346d53a78bae22c3e7"
+## [1] "12b9285bd4144529d98b79a9d723e4dd944e369956bd6ec81fc7f42f20fcb0c9"
 ```
 
 Docker returns a long string of numbers.  If you are running this command for the first time, Docker downloads the PostgreSQL image, which takes a bit of time.
@@ -100,7 +100,7 @@ system2("docker", "ps", stdout = TRUE, stderr = TRUE)
 
 ```
 ## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED                  STATUS                  PORTS                    NAMES"   
-## [2] "b100a8b58fa2        postgres:10         \"docker-entrypoint.s…\"   Less than a second ago   Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
+## [2] "12b9285bd414        postgres:10         \"docker-entrypoint.s…\"   Less than a second ago   Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
 ```
 ## Connect, read and write to Postgres from R
 
@@ -111,13 +111,11 @@ We use the following `wait_for_postgres` function, which will repeatedly try to 
 ```r
 #' Connect to Postgres, waiting if it is not ready
 #'
-#' @export
-#'
 #' @param user Username that will be found
 #' @param password Password that corresponds to the username
 #' @param dbname the name of the database in the database
 #' @param seconds_to_test the number of iterations to try while waiting for Postgres to be ready
-#'
+#' @export
 wait_for_postgres <- function(user, password, dbname, seconds_to_test = 10) {
   for (i in 1:seconds_to_test) {
     db_ready <- DBI::dbCanConnect(RPostgres::Postgres(),
@@ -165,7 +163,7 @@ con <- wait_for_postgres(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
                          dbname = "postgres",
                          seconds_to_test = 10)
 ```
-Show that you can connect but that PostgreSQL database doesn't contain any tables:
+Make sure that you can connect to the PostgreSQL database that you started earlier. If you have been executing the code from this tutorial, the database will not contain any tables yet:
 
 
 ```r

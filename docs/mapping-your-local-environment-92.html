@@ -25,7 +25,7 @@
 <meta name="author" content="Dipti Muni, Ian Frantz, John David Smith, Mary Anne Thygesen, M. Edward (Ed) Borasky, Scott Case, and Sophie Yang">
 
 
-<meta name="date" content="2018-10-01">
+<meta name="date" content="2018-10-02">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -159,7 +159,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.4" data-path="learning-goals-and-use-cases.html"><a href="learning-goals-and-use-cases.html#environment"><i class="fa fa-check"></i><b>3.4</b> Environment</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html"><i class="fa fa-check"></i><b>4</b> Docker, Postgres, and R (04)</a><ul>
-<li class="chapter" data-level="4.1" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#verify-that-docker-running"><i class="fa fa-check"></i><b>4.1</b> Verify that Docker running</a></li>
+<li class="chapter" data-level="4.1" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#verify-that-docker-is-running"><i class="fa fa-check"></i><b>4.1</b> Verify that Docker is running</a></li>
 <li class="chapter" data-level="4.2" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#clean-up-if-appropriate"><i class="fa fa-check"></i><b>4.2</b> Clean up if appropriate</a></li>
 <li class="chapter" data-level="4.3" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#connect-read-and-write-to-postgres-from-r"><i class="fa fa-check"></i><b>4.3</b> Connect, read and write to Postgres from R</a><ul>
 <li class="chapter" data-level="4.3.1" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#pause-for-some-security-considerations"><i class="fa fa-check"></i><b>4.3.1</b> Pause for some security considerations</a></li>
@@ -213,7 +213,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="9.1" data-path="postgres-examples-part-b-14.html"><a href="postgres-examples-part-b-14.html#verify-docker-is-up-and-running"><i class="fa fa-check"></i><b>9.1</b> Verify Docker is up and running:</a></li>
 </ul></li>
 <li class="chapter" data-level="10" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html"><i class="fa fa-check"></i><b>10</b> Getting metadata about and from the database (21)</a><ul>
-<li class="chapter" data-level="10.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#get-some-basic-information-about-your-database-1"><i class="fa fa-check"></i><b>10.1</b> Get some basic information about your database</a></li>
+<li class="chapter" data-level="10.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#look-at-the-data-and-its-metadata"><i class="fa fa-check"></i><b>10.1</b> Look at the data and its metadata</a><ul>
+<li class="chapter" data-level="10.1.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#the-information_schema-with-dbplyr"><i class="fa fa-check"></i><b>10.1.1</b> The information_schema with dbplyr</a></li>
+<li class="chapter" data-level="10.1.2" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#submitting-sql-statements-directly"><i class="fa fa-check"></i><b>10.1.2</b> Submitting SQL statements directly</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="11" data-path="explain-queries-71.html"><a href="explain-queries-71.html"><i class="fa fa-check"></i><b>11</b> Explain queries (71)</a><ul>
 <li class="chapter" data-level="11.1" data-path="explain-queries-71.html"><a href="explain-queries-71.html#performance-considertations"><i class="fa fa-check"></i><b>11.1</b> Performance considertations</a></li>
@@ -264,161 +267,161 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="mapping-your-local-environment-92" class="section level1">
 <h1><span class="header-section-number">Chapter 15</span> Mapping your local environment (92)</h1>
-<div class="sourceCode" id="cb208"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb208-1" data-line-number="1"><span class="kw">library</span>(tidyverse)</a></code></pre></div>
-<pre><code>## ── Attaching packages ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
+<div class="sourceCode" id="cb218"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb218-1" data-line-number="1"><span class="kw">library</span>(tidyverse)</a></code></pre></div>
+<pre><code>## ── Attaching packages ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
 <pre><code>## ✔ ggplot2 3.0.0     ✔ purrr   0.2.5
 ## ✔ tibble  1.4.2     ✔ dplyr   0.7.6
 ## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
 ## ✔ readr   1.1.1     ✔ forcats 0.3.0</code></pre>
-<pre><code>## ── Conflicts ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+<pre><code>## ── Conflicts ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()</code></pre>
-<div class="sourceCode" id="cb212"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb212-1" data-line-number="1"><span class="kw">library</span>(DBI)</a>
-<a class="sourceLine" id="cb212-2" data-line-number="2"><span class="kw">library</span>(RPostgres)</a>
-<a class="sourceLine" id="cb212-3" data-line-number="3"><span class="kw">library</span>(glue)</a></code></pre></div>
+<div class="sourceCode" id="cb222"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb222-1" data-line-number="1"><span class="kw">library</span>(DBI)</a>
+<a class="sourceLine" id="cb222-2" data-line-number="2"><span class="kw">library</span>(RPostgres)</a>
+<a class="sourceLine" id="cb222-3" data-line-number="3"><span class="kw">library</span>(glue)</a></code></pre></div>
 <pre><code>## 
 ## Attaching package: &#39;glue&#39;</code></pre>
 <pre><code>## The following object is masked from &#39;package:dplyr&#39;:
 ## 
 ##     collapse</code></pre>
-<div class="sourceCode" id="cb215"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb215-1" data-line-number="1"><span class="kw">library</span>(knitr)</a></code></pre></div>
+<div class="sourceCode" id="cb225"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb225-1" data-line-number="1"><span class="kw">library</span>(knitr)</a></code></pre></div>
 <div id="environment-tools-used-in-this-chapter" class="section level2">
 <h2><span class="header-section-number">15.1</span> Environment Tools Used in this Chapter</h2>
 <p>Note that <code>tidyverse</code>, <code>DBI</code>, <code>RPostgres</code>, <code>glue</code>, and <code>knitr</code> are loaded. Also, we’ve sourced the <code>[db-login-batch-code.R]('r-database-docker/book-src/db-login-batch-code.R')</code> file which is used to log in to PostgreSQL.</p>
 <p>library(rstudioapi)</p>
 <p>The following code block defines Tool and versions for the graph that follows. The information order corresponds to the order shown in the graph.</p>
-<div class="sourceCode" id="cb216"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb216-1" data-line-number="1"><span class="kw">library</span>(DiagrammeR)</a>
-<a class="sourceLine" id="cb216-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb216-3" data-line-number="3">## OS information</a>
-<a class="sourceLine" id="cb216-4" data-line-number="4">os_lbl &lt;-<span class="st"> </span>.Platform<span class="op">$</span>OS.type</a>
-<a class="sourceLine" id="cb216-5" data-line-number="5">os_ver &lt;-<span class="st"> </span><span class="dv">0</span></a>
-<a class="sourceLine" id="cb216-6" data-line-number="6"><span class="cf">if</span> (os_lbl <span class="op">==</span><span class="st"> &#39;windows&#39;</span>) {</a>
-<a class="sourceLine" id="cb216-7" data-line-number="7">  os_ver &lt;-<span class="st"> </span><span class="kw">system2</span>(<span class="st">&#39;cmd&#39;</span>,<span class="dt">stdout =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb216-8" data-line-number="8"><span class="st">    </span><span class="kw">grep</span>(<span class="dt">x =</span> .,<span class="dt">pattern =</span> <span class="st">&#39;Microsoft Windows </span><span class="ch">\\</span><span class="st">[&#39;</span>,<span class="dt">value =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb216-9" data-line-number="9"><span class="st">    </span><span class="kw">gsub</span>(<span class="dt">x =</span> .,<span class="dt">pattern =</span> <span class="st">&quot;^Microsoft.+Version |</span><span class="ch">\\</span><span class="st">]&quot;</span>, <span class="dt">replace =</span> <span class="st">&#39;&#39;</span>)</a>
-<a class="sourceLine" id="cb216-10" data-line-number="10">}</a>
-<a class="sourceLine" id="cb216-11" data-line-number="11"></a>
-<a class="sourceLine" id="cb216-12" data-line-number="12"><span class="cf">if</span> (os_lbl <span class="op">==</span><span class="st"> &#39;unix&#39;</span> <span class="op">||</span><span class="st"> </span>os_lbl <span class="op">==</span><span class="st"> &#39;Linux&#39;</span> <span class="op">||</span><span class="st"> </span>os_lbl <span class="op">==</span><span class="st"> &#39;Mac&#39;</span>) {</a>
-<a class="sourceLine" id="cb216-13" data-line-number="13">  os_ver &lt;-<span class="st"> </span><span class="kw">system2</span>(<span class="st">&#39;uname&#39;</span>, <span class="st">&#39;-r&#39;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb216-14" data-line-number="14">}</a>
-<a class="sourceLine" id="cb216-15" data-line-number="15"></a>
-<a class="sourceLine" id="cb216-16" data-line-number="16">## Command line interface into Docker Apps</a>
-<a class="sourceLine" id="cb216-17" data-line-number="17">## CLI/system2</a>
-<a class="sourceLine" id="cb216-18" data-line-number="18">cli &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="dv">3</span>)</a>
-<a class="sourceLine" id="cb216-19" data-line-number="19">cli[<span class="dv">1</span>] &lt;-<span class="st"> &quot;docker [OPTIONS] COMMAND ARGUMENTS</span><span class="ch">\n\n</span><span class="st">system2(docker,[OPTIONS,]</span><span class="ch">\n</span><span class="st">, COMMAND,ARGUMENTS)&quot;</span></a>
-<a class="sourceLine" id="cb216-20" data-line-number="20">cli[<span class="dv">2</span>] &lt;-<span class="st"> &#39;docker exec -it sql-pet bash</span><span class="ch">\n\n</span><span class="st">system2(docker,exec -it sql-pet bash)&#39;</span> </a>
-<a class="sourceLine" id="cb216-21" data-line-number="21">cli[<span class="dv">3</span>] &lt;-<span class="st"> &#39;docker exec -ti sql-pet psql -a </span><span class="ch">\n</span><span class="st">-p 5432 -d dvdrental -U postgres</span><span class="ch">\n\n</span><span class="st">system2(docker,exec -ti sql-pet psql -a </span><span class="ch">\n</span><span class="st">-p 5432 -d dvdrental -U postgres)&#39;</span></a>
-<a class="sourceLine" id="cb216-22" data-line-number="22"></a>
-<a class="sourceLine" id="cb216-23" data-line-number="23"><span class="co"># R Information</span></a>
-<a class="sourceLine" id="cb216-24" data-line-number="24">r_lbl       &lt;-<span class="st"> </span><span class="kw">names</span>(<span class="kw">R.Version</span>())[<span class="dv">1</span><span class="op">:</span><span class="dv">7</span>]</a>
-<a class="sourceLine" id="cb216-25" data-line-number="25">r_ver       &lt;-<span class="st"> </span><span class="kw">R.Version</span>()[<span class="dv">1</span><span class="op">:</span><span class="dv">7</span>]</a>
-<a class="sourceLine" id="cb216-26" data-line-number="26"></a>
-<a class="sourceLine" id="cb216-27" data-line-number="27"><span class="co"># RStudio Information</span></a>
-<a class="sourceLine" id="cb216-28" data-line-number="28">rstudio_lbl &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;RStudio version&#39;</span>,<span class="st">&#39;Current program mode&#39;</span>)</a>
-<a class="sourceLine" id="cb216-29" data-line-number="29">rstudio_ver &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">as.character</span>(rstudioapi<span class="op">::</span><span class="kw">versionInfo</span>()<span class="op">$</span>version),rstudioapi<span class="op">::</span><span class="kw">versionInfo</span>()<span class="op">$</span>mode)</a>
-<a class="sourceLine" id="cb216-30" data-line-number="30"></a>
-<a class="sourceLine" id="cb216-31" data-line-number="31"><span class="co"># Docker Information</span></a>
-<a class="sourceLine" id="cb216-32" data-line-number="32">docker_lbl &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;client version&#39;</span>,<span class="st">&#39;server version&#39;</span>)</a>
-<a class="sourceLine" id="cb216-33" data-line-number="33">docker_ver &lt;-<span class="st"> </span><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, <span class="st">&quot;version&quot;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb216-34" data-line-number="34"><span class="st">    </span><span class="kw">grep</span>(<span class="dt">x =</span> ., <span class="dt">pattern =</span> <span class="st">&#39;Version&#39;</span>,<span class="dt">value =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb216-35" data-line-number="35"><span class="st">    </span><span class="kw">gsub</span>(<span class="dt">x =</span> ., <span class="dt">pattern =</span> <span class="st">&#39; +Version: +&#39;</span>, <span class="dt">replacement =</span> <span class="st">&#39;&#39;</span>)</a>
-<a class="sourceLine" id="cb216-36" data-line-number="36"></a>
-<a class="sourceLine" id="cb216-37" data-line-number="37"><span class="co"># Linux Information</span></a>
-<a class="sourceLine" id="cb216-38" data-line-number="38">linux_lbl &lt;-<span class="st"> &#39;Linux Version&#39;</span></a>
-<a class="sourceLine" id="cb216-39" data-line-number="39">linux_ver &lt;-<span class="st"> </span><span class="kw">system2</span>(<span class="st">&#39;docker&#39;</span>, <span class="st">&#39;exec -i sql-pet /bin/uname -r&#39;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb216-40" data-line-number="40"></a>
-<a class="sourceLine" id="cb216-41" data-line-number="41"><span class="co"># Postgres Information</span></a>
-<a class="sourceLine" id="cb216-42" data-line-number="42">con &lt;-<span class="st"> </span><span class="kw">wait_for_postgres</span>(<span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),</a>
-<a class="sourceLine" id="cb216-43" data-line-number="43">                         <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),</a>
-<a class="sourceLine" id="cb216-44" data-line-number="44">                         <span class="dt">dbname =</span> <span class="st">&quot;dvdrental&quot;</span>,</a>
-<a class="sourceLine" id="cb216-45" data-line-number="45">                         <span class="dt">seconds_to_test =</span> <span class="dv">10</span>)</a>
-<a class="sourceLine" id="cb216-46" data-line-number="46"></a>
-<a class="sourceLine" id="cb216-47" data-line-number="47">postgres_ver &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,<span class="st">&quot;select version()&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb216-48" data-line-number="48"><span class="st">  </span><span class="kw">gsub</span>(<span class="dt">x =</span> ., <span class="dt">pattern =</span> <span class="st">&#39;</span><span class="ch">\\</span><span class="st">(.*$&#39;</span>, <span class="dt">replacement =</span> <span class="st">&#39;&#39;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb226"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb226-1" data-line-number="1"><span class="kw">library</span>(DiagrammeR)</a>
+<a class="sourceLine" id="cb226-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb226-3" data-line-number="3">## OS information</a>
+<a class="sourceLine" id="cb226-4" data-line-number="4">os_lbl &lt;-<span class="st"> </span>.Platform<span class="op">$</span>OS.type</a>
+<a class="sourceLine" id="cb226-5" data-line-number="5">os_ver &lt;-<span class="st"> </span><span class="dv">0</span></a>
+<a class="sourceLine" id="cb226-6" data-line-number="6"><span class="cf">if</span> (os_lbl <span class="op">==</span><span class="st"> &#39;windows&#39;</span>) {</a>
+<a class="sourceLine" id="cb226-7" data-line-number="7">  os_ver &lt;-<span class="st"> </span><span class="kw">system2</span>(<span class="st">&#39;cmd&#39;</span>,<span class="dt">stdout =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb226-8" data-line-number="8"><span class="st">    </span><span class="kw">grep</span>(<span class="dt">x =</span> .,<span class="dt">pattern =</span> <span class="st">&#39;Microsoft Windows </span><span class="ch">\\</span><span class="st">[&#39;</span>,<span class="dt">value =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb226-9" data-line-number="9"><span class="st">    </span><span class="kw">gsub</span>(<span class="dt">x =</span> .,<span class="dt">pattern =</span> <span class="st">&quot;^Microsoft.+Version |</span><span class="ch">\\</span><span class="st">]&quot;</span>, <span class="dt">replace =</span> <span class="st">&#39;&#39;</span>)</a>
+<a class="sourceLine" id="cb226-10" data-line-number="10">}</a>
+<a class="sourceLine" id="cb226-11" data-line-number="11"></a>
+<a class="sourceLine" id="cb226-12" data-line-number="12"><span class="cf">if</span> (os_lbl <span class="op">==</span><span class="st"> &#39;unix&#39;</span> <span class="op">||</span><span class="st"> </span>os_lbl <span class="op">==</span><span class="st"> &#39;Linux&#39;</span> <span class="op">||</span><span class="st"> </span>os_lbl <span class="op">==</span><span class="st"> &#39;Mac&#39;</span>) {</a>
+<a class="sourceLine" id="cb226-13" data-line-number="13">  os_ver &lt;-<span class="st"> </span><span class="kw">system2</span>(<span class="st">&#39;uname&#39;</span>, <span class="st">&#39;-r&#39;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb226-14" data-line-number="14">}</a>
+<a class="sourceLine" id="cb226-15" data-line-number="15"></a>
+<a class="sourceLine" id="cb226-16" data-line-number="16">## Command line interface into Docker Apps</a>
+<a class="sourceLine" id="cb226-17" data-line-number="17">## CLI/system2</a>
+<a class="sourceLine" id="cb226-18" data-line-number="18">cli &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="dv">3</span>)</a>
+<a class="sourceLine" id="cb226-19" data-line-number="19">cli[<span class="dv">1</span>] &lt;-<span class="st"> &quot;docker [OPTIONS] COMMAND ARGUMENTS</span><span class="ch">\n\n</span><span class="st">system2(docker,[OPTIONS,]</span><span class="ch">\n</span><span class="st">, COMMAND,ARGUMENTS)&quot;</span></a>
+<a class="sourceLine" id="cb226-20" data-line-number="20">cli[<span class="dv">2</span>] &lt;-<span class="st"> &#39;docker exec -it sql-pet bash</span><span class="ch">\n\n</span><span class="st">system2(docker,exec -it sql-pet bash)&#39;</span> </a>
+<a class="sourceLine" id="cb226-21" data-line-number="21">cli[<span class="dv">3</span>] &lt;-<span class="st"> &#39;docker exec -ti sql-pet psql -a </span><span class="ch">\n</span><span class="st">-p 5432 -d dvdrental -U postgres</span><span class="ch">\n\n</span><span class="st">system2(docker,exec -ti sql-pet psql -a </span><span class="ch">\n</span><span class="st">-p 5432 -d dvdrental -U postgres)&#39;</span></a>
+<a class="sourceLine" id="cb226-22" data-line-number="22"></a>
+<a class="sourceLine" id="cb226-23" data-line-number="23"><span class="co"># R Information</span></a>
+<a class="sourceLine" id="cb226-24" data-line-number="24">r_lbl       &lt;-<span class="st"> </span><span class="kw">names</span>(<span class="kw">R.Version</span>())[<span class="dv">1</span><span class="op">:</span><span class="dv">7</span>]</a>
+<a class="sourceLine" id="cb226-25" data-line-number="25">r_ver       &lt;-<span class="st"> </span><span class="kw">R.Version</span>()[<span class="dv">1</span><span class="op">:</span><span class="dv">7</span>]</a>
+<a class="sourceLine" id="cb226-26" data-line-number="26"></a>
+<a class="sourceLine" id="cb226-27" data-line-number="27"><span class="co"># RStudio Information</span></a>
+<a class="sourceLine" id="cb226-28" data-line-number="28">rstudio_lbl &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;RStudio version&#39;</span>,<span class="st">&#39;Current program mode&#39;</span>)</a>
+<a class="sourceLine" id="cb226-29" data-line-number="29">rstudio_ver &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">as.character</span>(rstudioapi<span class="op">::</span><span class="kw">versionInfo</span>()<span class="op">$</span>version),rstudioapi<span class="op">::</span><span class="kw">versionInfo</span>()<span class="op">$</span>mode)</a>
+<a class="sourceLine" id="cb226-30" data-line-number="30"></a>
+<a class="sourceLine" id="cb226-31" data-line-number="31"><span class="co"># Docker Information</span></a>
+<a class="sourceLine" id="cb226-32" data-line-number="32">docker_lbl &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;client version&#39;</span>,<span class="st">&#39;server version&#39;</span>)</a>
+<a class="sourceLine" id="cb226-33" data-line-number="33">docker_ver &lt;-<span class="st"> </span><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, <span class="st">&quot;version&quot;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb226-34" data-line-number="34"><span class="st">    </span><span class="kw">grep</span>(<span class="dt">x =</span> ., <span class="dt">pattern =</span> <span class="st">&#39;Version&#39;</span>,<span class="dt">value =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb226-35" data-line-number="35"><span class="st">    </span><span class="kw">gsub</span>(<span class="dt">x =</span> ., <span class="dt">pattern =</span> <span class="st">&#39; +Version: +&#39;</span>, <span class="dt">replacement =</span> <span class="st">&#39;&#39;</span>)</a>
+<a class="sourceLine" id="cb226-36" data-line-number="36"></a>
+<a class="sourceLine" id="cb226-37" data-line-number="37"><span class="co"># Linux Information</span></a>
+<a class="sourceLine" id="cb226-38" data-line-number="38">linux_lbl &lt;-<span class="st"> &#39;Linux Version&#39;</span></a>
+<a class="sourceLine" id="cb226-39" data-line-number="39">linux_ver &lt;-<span class="st"> </span><span class="kw">system2</span>(<span class="st">&#39;docker&#39;</span>, <span class="st">&#39;exec -i sql-pet /bin/uname -r&#39;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb226-40" data-line-number="40"></a>
+<a class="sourceLine" id="cb226-41" data-line-number="41"><span class="co"># Postgres Information</span></a>
+<a class="sourceLine" id="cb226-42" data-line-number="42">con &lt;-<span class="st"> </span><span class="kw">wait_for_postgres</span>(<span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),</a>
+<a class="sourceLine" id="cb226-43" data-line-number="43">                         <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),</a>
+<a class="sourceLine" id="cb226-44" data-line-number="44">                         <span class="dt">dbname =</span> <span class="st">&quot;dvdrental&quot;</span>,</a>
+<a class="sourceLine" id="cb226-45" data-line-number="45">                         <span class="dt">seconds_to_test =</span> <span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb226-46" data-line-number="46"></a>
+<a class="sourceLine" id="cb226-47" data-line-number="47">postgres_ver &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,<span class="st">&quot;select version()&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb226-48" data-line-number="48"><span class="st">  </span><span class="kw">gsub</span>(<span class="dt">x =</span> ., <span class="dt">pattern =</span> <span class="st">&#39;</span><span class="ch">\\</span><span class="st">(.*$&#39;</span>, <span class="dt">replacement =</span> <span class="st">&#39;&#39;</span>)</a></code></pre></div>
 <p>The following code block uses the data generated from the previous code block as input to the subgraphs, the ones outlined in red. The application nodes are the parents of the subgraphs and are not outlined in reds. The <code>Environment</code> application node represents the machine you are running the tutorial on and hosts the sub-applications.</p>
 <p>Note that the ‘@@’ variables are populated at the end of the <code>Environment</code> definition following the <code>## @@1 - @@5</code> source data comment.</p>
-<div class="sourceCode" id="cb217"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb217-1" data-line-number="1"><span class="kw">grViz</span>(<span class="st">&quot;</span></a>
-<a class="sourceLine" id="cb217-2" data-line-number="2"><span class="st">digraph Envgraph {</span></a>
-<a class="sourceLine" id="cb217-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb217-4" data-line-number="4"><span class="st">  # graph, node, and edge definitions</span></a>
-<a class="sourceLine" id="cb217-5" data-line-number="5"><span class="st">  graph [compound = true, nodesep = .5, ranksep = .25,</span></a>
-<a class="sourceLine" id="cb217-6" data-line-number="6"><span class="st">         color = red]</span></a>
-<a class="sourceLine" id="cb217-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb217-8" data-line-number="8"><span class="st">  node [fontname = Helvetica, fontcolor = darkslategray,</span></a>
-<a class="sourceLine" id="cb217-9" data-line-number="9"><span class="st">        shape = rectangle, fixedsize = true, width = 1,</span></a>
-<a class="sourceLine" id="cb217-10" data-line-number="10"><span class="st">        color = darkslategray]</span></a>
-<a class="sourceLine" id="cb217-11" data-line-number="11"></a>
-<a class="sourceLine" id="cb217-12" data-line-number="12"><span class="st">  edge [color = grey, arrowhead = none, arrowtail = none]</span></a>
-<a class="sourceLine" id="cb217-13" data-line-number="13"></a>
-<a class="sourceLine" id="cb217-14" data-line-number="14"><span class="st">  # subgraph for Environment information</span></a>
-<a class="sourceLine" id="cb217-15" data-line-number="15"><span class="st">  subgraph cluster1 {</span></a>
-<a class="sourceLine" id="cb217-16" data-line-number="16"><span class="st">    node [fixedsize = true, width = 3]</span></a>
-<a class="sourceLine" id="cb217-17" data-line-number="17"><span class="st">    &#39;@@1-1&#39; </span></a>
-<a class="sourceLine" id="cb217-18" data-line-number="18"><span class="st">  }</span></a>
-<a class="sourceLine" id="cb217-19" data-line-number="19"></a>
-<a class="sourceLine" id="cb217-20" data-line-number="20"><span class="st">  # subgraph for R information</span></a>
-<a class="sourceLine" id="cb217-21" data-line-number="21"><span class="st">  subgraph cluster2 {</span></a>
-<a class="sourceLine" id="cb217-22" data-line-number="22"><span class="st">    node [fixedsize = true, width = 3]</span></a>
-<a class="sourceLine" id="cb217-23" data-line-number="23"><span class="st">    &#39;@@2-1&#39; -&gt; &#39;@@2-2&#39; -&gt; &#39;@@2-3&#39; -&gt; &#39;@@2-4&#39;</span></a>
-<a class="sourceLine" id="cb217-24" data-line-number="24"><span class="st">    &#39;@@2-4&#39; -&gt; &#39;@@2-5&#39; -&gt; &#39;@@2-6&#39; -&gt; &#39;@@2-7&#39;</span></a>
-<a class="sourceLine" id="cb217-25" data-line-number="25"><span class="st">  }</span></a>
-<a class="sourceLine" id="cb217-26" data-line-number="26"></a>
-<a class="sourceLine" id="cb217-27" data-line-number="27"><span class="st">  # subgraph for RStudio information</span></a>
-<a class="sourceLine" id="cb217-28" data-line-number="28"><span class="st">  subgraph cluster3 {</span></a>
-<a class="sourceLine" id="cb217-29" data-line-number="29"><span class="st">    node [fixedsize = true, width = 3]</span></a>
-<a class="sourceLine" id="cb217-30" data-line-number="30"><span class="st">    &#39;@@3-1&#39; -&gt; &#39;@@3-2&#39;</span></a>
-<a class="sourceLine" id="cb217-31" data-line-number="31"><span class="st">  }</span></a>
-<a class="sourceLine" id="cb217-32" data-line-number="32"></a>
-<a class="sourceLine" id="cb217-33" data-line-number="33"><span class="st">  # subgraph for Docker information</span></a>
-<a class="sourceLine" id="cb217-34" data-line-number="34"><span class="st">  subgraph cluster4 {</span></a>
-<a class="sourceLine" id="cb217-35" data-line-number="35"><span class="st">    node [fixedsize = true, width = 3]</span></a>
-<a class="sourceLine" id="cb217-36" data-line-number="36"><span class="st">    &#39;@@4-1&#39; -&gt; &#39;@@4-2&#39;</span></a>
-<a class="sourceLine" id="cb217-37" data-line-number="37"><span class="st">  }</span></a>
-<a class="sourceLine" id="cb217-38" data-line-number="38"></a>
-<a class="sourceLine" id="cb217-39" data-line-number="39"><span class="st">  # subgraph for Docker-Linux information</span></a>
-<a class="sourceLine" id="cb217-40" data-line-number="40"><span class="st">  subgraph cluster5 {</span></a>
-<a class="sourceLine" id="cb217-41" data-line-number="41"><span class="st">    node [fixedsize = true, width = 3]</span></a>
-<a class="sourceLine" id="cb217-42" data-line-number="42"><span class="st">    &#39;@@5-1&#39; </span></a>
-<a class="sourceLine" id="cb217-43" data-line-number="43"><span class="st">  }</span></a>
-<a class="sourceLine" id="cb217-44" data-line-number="44"></a>
-<a class="sourceLine" id="cb217-45" data-line-number="45"><span class="st">  # subgraph for Docker-Postgres information</span></a>
-<a class="sourceLine" id="cb217-46" data-line-number="46"><span class="st">  subgraph cluster6 {</span></a>
-<a class="sourceLine" id="cb217-47" data-line-number="47"><span class="st">    node [fixedsize = true, width = 3]</span></a>
-<a class="sourceLine" id="cb217-48" data-line-number="48"><span class="st">    &#39;@@6-1&#39; </span></a>
-<a class="sourceLine" id="cb217-49" data-line-number="49"><span class="st">  }</span></a>
-<a class="sourceLine" id="cb217-50" data-line-number="50"></a>
-<a class="sourceLine" id="cb217-51" data-line-number="51"><span class="st">  # subgraph for Docker-Postgres information</span></a>
-<a class="sourceLine" id="cb217-52" data-line-number="52"><span class="st">  subgraph cluster7 {</span></a>
-<a class="sourceLine" id="cb217-53" data-line-number="53"><span class="st">    node [fixedsize = true, height = 1.25, width = 4.0]</span></a>
-<a class="sourceLine" id="cb217-54" data-line-number="54"><span class="st">    &#39;@@7-1&#39; -&gt; &#39;@@7-2&#39; -&gt; &#39;@@7-3&#39;</span></a>
-<a class="sourceLine" id="cb217-55" data-line-number="55"><span class="st">  }</span></a>
-<a class="sourceLine" id="cb217-56" data-line-number="56"></a>
-<a class="sourceLine" id="cb217-57" data-line-number="57"><span class="st">  CLI [label=&#39;CLI</span><span class="ch">\n</span><span class="st">RStudio system2&#39;,height = .75,width=3.0, color = &#39;blue&#39; ]</span></a>
-<a class="sourceLine" id="cb217-58" data-line-number="58"><span class="st">  Environment             [label = &#39;Linux,Mac,Windows&#39;,width = 2.5]</span></a>
-<a class="sourceLine" id="cb217-59" data-line-number="59"><span class="st">  Environment -&gt; R</span></a>
-<a class="sourceLine" id="cb217-60" data-line-number="60"><span class="st">  Environment -&gt; RStudio</span></a>
-<a class="sourceLine" id="cb217-61" data-line-number="61"><span class="st">  Environment -&gt; Docker</span></a>
-<a class="sourceLine" id="cb217-62" data-line-number="62"></a>
-<a class="sourceLine" id="cb217-63" data-line-number="63"><span class="st">  Environment -&gt; &#39;@@1&#39;    [lhead = cluster1] # Environment Information</span></a>
-<a class="sourceLine" id="cb217-64" data-line-number="64"><span class="st">  R           -&gt; &#39;@@2-1&#39;  [lhead = cluster2] # R Information</span></a>
-<a class="sourceLine" id="cb217-65" data-line-number="65"><span class="st">  RStudio     -&gt; &#39;@@3&#39;    [lhead = cluster3] # RStudio Information</span></a>
-<a class="sourceLine" id="cb217-66" data-line-number="66"><span class="st">  Docker      -&gt; &#39;@@4&#39;    [lhead = cluster4] # Docker Information</span></a>
-<a class="sourceLine" id="cb217-67" data-line-number="67"><span class="st">  Docker      -&gt; &#39;@@5&#39;    [lhead = cluster5] # Docker-Linux Information</span></a>
-<a class="sourceLine" id="cb217-68" data-line-number="68"><span class="st">  Docker      -&gt; &#39;@@6&#39;    [lhead = cluster6] # Docker-Postgres Information</span></a>
-<a class="sourceLine" id="cb217-69" data-line-number="69"></a>
-<a class="sourceLine" id="cb217-70" data-line-number="70"><span class="st">  &#39;@@1&#39; -&gt; CLI</span></a>
-<a class="sourceLine" id="cb217-71" data-line-number="71"><span class="st">  CLI         -&gt; &#39;@@7&#39;    [lhead = cluster7] # CLI </span></a>
-<a class="sourceLine" id="cb217-72" data-line-number="72"><span class="st">  &#39;@@7-2&#39;     -&gt; &#39;@@5&#39;</span></a>
-<a class="sourceLine" id="cb217-73" data-line-number="73"><span class="st">  &#39;@@7-3&#39;     -&gt; &#39;@@6&#39;</span></a>
-<a class="sourceLine" id="cb217-74" data-line-number="74"><span class="st">}</span></a>
-<a class="sourceLine" id="cb217-75" data-line-number="75"><span class="st">[1]: paste0(os_lbl,     &#39;:</span><span class="ch">\\</span><span class="st">n&#39;, os_ver)</span></a>
-<a class="sourceLine" id="cb217-76" data-line-number="76"><span class="st">[2]: paste0(r_lbl,      &#39;:</span><span class="ch">\\</span><span class="st">n&#39;, r_ver)</span></a>
-<a class="sourceLine" id="cb217-77" data-line-number="77"><span class="st">[3]: paste0(rstudio_lbl,&#39;:</span><span class="ch">\\</span><span class="st">n&#39;, rstudio_ver)</span></a>
-<a class="sourceLine" id="cb217-78" data-line-number="78"><span class="st">[4]: paste0(docker_lbl, &#39;:</span><span class="ch">\\</span><span class="st">n&#39;, docker_ver)</span></a>
-<a class="sourceLine" id="cb217-79" data-line-number="79"><span class="st">[5]: paste0(linux_lbl,  &#39;:</span><span class="ch">\\</span><span class="st">n&#39;, linux_ver)</span></a>
-<a class="sourceLine" id="cb217-80" data-line-number="80"><span class="st">[6]: paste0(&#39;PostgreSQL:</span><span class="ch">\\</span><span class="st">n&#39;, postgres_ver)</span></a>
-<a class="sourceLine" id="cb217-81" data-line-number="81"><span class="st">[7]: cli</span></a>
-<a class="sourceLine" id="cb217-82" data-line-number="82"><span class="st">&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb227"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb227-1" data-line-number="1"><span class="kw">grViz</span>(<span class="st">&quot;</span></a>
+<a class="sourceLine" id="cb227-2" data-line-number="2"><span class="st">digraph Envgraph {</span></a>
+<a class="sourceLine" id="cb227-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb227-4" data-line-number="4"><span class="st">  # graph, node, and edge definitions</span></a>
+<a class="sourceLine" id="cb227-5" data-line-number="5"><span class="st">  graph [compound = true, nodesep = .5, ranksep = .25,</span></a>
+<a class="sourceLine" id="cb227-6" data-line-number="6"><span class="st">         color = red]</span></a>
+<a class="sourceLine" id="cb227-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb227-8" data-line-number="8"><span class="st">  node [fontname = Helvetica, fontcolor = darkslategray,</span></a>
+<a class="sourceLine" id="cb227-9" data-line-number="9"><span class="st">        shape = rectangle, fixedsize = true, width = 1,</span></a>
+<a class="sourceLine" id="cb227-10" data-line-number="10"><span class="st">        color = darkslategray]</span></a>
+<a class="sourceLine" id="cb227-11" data-line-number="11"></a>
+<a class="sourceLine" id="cb227-12" data-line-number="12"><span class="st">  edge [color = grey, arrowhead = none, arrowtail = none]</span></a>
+<a class="sourceLine" id="cb227-13" data-line-number="13"></a>
+<a class="sourceLine" id="cb227-14" data-line-number="14"><span class="st">  # subgraph for Environment information</span></a>
+<a class="sourceLine" id="cb227-15" data-line-number="15"><span class="st">  subgraph cluster1 {</span></a>
+<a class="sourceLine" id="cb227-16" data-line-number="16"><span class="st">    node [fixedsize = true, width = 3]</span></a>
+<a class="sourceLine" id="cb227-17" data-line-number="17"><span class="st">    &#39;@@1-1&#39; </span></a>
+<a class="sourceLine" id="cb227-18" data-line-number="18"><span class="st">  }</span></a>
+<a class="sourceLine" id="cb227-19" data-line-number="19"></a>
+<a class="sourceLine" id="cb227-20" data-line-number="20"><span class="st">  # subgraph for R information</span></a>
+<a class="sourceLine" id="cb227-21" data-line-number="21"><span class="st">  subgraph cluster2 {</span></a>
+<a class="sourceLine" id="cb227-22" data-line-number="22"><span class="st">    node [fixedsize = true, width = 3]</span></a>
+<a class="sourceLine" id="cb227-23" data-line-number="23"><span class="st">    &#39;@@2-1&#39; -&gt; &#39;@@2-2&#39; -&gt; &#39;@@2-3&#39; -&gt; &#39;@@2-4&#39;</span></a>
+<a class="sourceLine" id="cb227-24" data-line-number="24"><span class="st">    &#39;@@2-4&#39; -&gt; &#39;@@2-5&#39; -&gt; &#39;@@2-6&#39; -&gt; &#39;@@2-7&#39;</span></a>
+<a class="sourceLine" id="cb227-25" data-line-number="25"><span class="st">  }</span></a>
+<a class="sourceLine" id="cb227-26" data-line-number="26"></a>
+<a class="sourceLine" id="cb227-27" data-line-number="27"><span class="st">  # subgraph for RStudio information</span></a>
+<a class="sourceLine" id="cb227-28" data-line-number="28"><span class="st">  subgraph cluster3 {</span></a>
+<a class="sourceLine" id="cb227-29" data-line-number="29"><span class="st">    node [fixedsize = true, width = 3]</span></a>
+<a class="sourceLine" id="cb227-30" data-line-number="30"><span class="st">    &#39;@@3-1&#39; -&gt; &#39;@@3-2&#39;</span></a>
+<a class="sourceLine" id="cb227-31" data-line-number="31"><span class="st">  }</span></a>
+<a class="sourceLine" id="cb227-32" data-line-number="32"></a>
+<a class="sourceLine" id="cb227-33" data-line-number="33"><span class="st">  # subgraph for Docker information</span></a>
+<a class="sourceLine" id="cb227-34" data-line-number="34"><span class="st">  subgraph cluster4 {</span></a>
+<a class="sourceLine" id="cb227-35" data-line-number="35"><span class="st">    node [fixedsize = true, width = 3]</span></a>
+<a class="sourceLine" id="cb227-36" data-line-number="36"><span class="st">    &#39;@@4-1&#39; -&gt; &#39;@@4-2&#39;</span></a>
+<a class="sourceLine" id="cb227-37" data-line-number="37"><span class="st">  }</span></a>
+<a class="sourceLine" id="cb227-38" data-line-number="38"></a>
+<a class="sourceLine" id="cb227-39" data-line-number="39"><span class="st">  # subgraph for Docker-Linux information</span></a>
+<a class="sourceLine" id="cb227-40" data-line-number="40"><span class="st">  subgraph cluster5 {</span></a>
+<a class="sourceLine" id="cb227-41" data-line-number="41"><span class="st">    node [fixedsize = true, width = 3]</span></a>
+<a class="sourceLine" id="cb227-42" data-line-number="42"><span class="st">    &#39;@@5-1&#39; </span></a>
+<a class="sourceLine" id="cb227-43" data-line-number="43"><span class="st">  }</span></a>
+<a class="sourceLine" id="cb227-44" data-line-number="44"></a>
+<a class="sourceLine" id="cb227-45" data-line-number="45"><span class="st">  # subgraph for Docker-Postgres information</span></a>
+<a class="sourceLine" id="cb227-46" data-line-number="46"><span class="st">  subgraph cluster6 {</span></a>
+<a class="sourceLine" id="cb227-47" data-line-number="47"><span class="st">    node [fixedsize = true, width = 3]</span></a>
+<a class="sourceLine" id="cb227-48" data-line-number="48"><span class="st">    &#39;@@6-1&#39; </span></a>
+<a class="sourceLine" id="cb227-49" data-line-number="49"><span class="st">  }</span></a>
+<a class="sourceLine" id="cb227-50" data-line-number="50"></a>
+<a class="sourceLine" id="cb227-51" data-line-number="51"><span class="st">  # subgraph for Docker-Postgres information</span></a>
+<a class="sourceLine" id="cb227-52" data-line-number="52"><span class="st">  subgraph cluster7 {</span></a>
+<a class="sourceLine" id="cb227-53" data-line-number="53"><span class="st">    node [fixedsize = true, height = 1.25, width = 4.0]</span></a>
+<a class="sourceLine" id="cb227-54" data-line-number="54"><span class="st">    &#39;@@7-1&#39; -&gt; &#39;@@7-2&#39; -&gt; &#39;@@7-3&#39;</span></a>
+<a class="sourceLine" id="cb227-55" data-line-number="55"><span class="st">  }</span></a>
+<a class="sourceLine" id="cb227-56" data-line-number="56"></a>
+<a class="sourceLine" id="cb227-57" data-line-number="57"><span class="st">  CLI [label=&#39;CLI</span><span class="ch">\n</span><span class="st">RStudio system2&#39;,height = .75,width=3.0, color = &#39;blue&#39; ]</span></a>
+<a class="sourceLine" id="cb227-58" data-line-number="58"><span class="st">  Environment             [label = &#39;Linux,Mac,Windows&#39;,width = 2.5]</span></a>
+<a class="sourceLine" id="cb227-59" data-line-number="59"><span class="st">  Environment -&gt; R</span></a>
+<a class="sourceLine" id="cb227-60" data-line-number="60"><span class="st">  Environment -&gt; RStudio</span></a>
+<a class="sourceLine" id="cb227-61" data-line-number="61"><span class="st">  Environment -&gt; Docker</span></a>
+<a class="sourceLine" id="cb227-62" data-line-number="62"></a>
+<a class="sourceLine" id="cb227-63" data-line-number="63"><span class="st">  Environment -&gt; &#39;@@1&#39;    [lhead = cluster1] # Environment Information</span></a>
+<a class="sourceLine" id="cb227-64" data-line-number="64"><span class="st">  R           -&gt; &#39;@@2-1&#39;  [lhead = cluster2] # R Information</span></a>
+<a class="sourceLine" id="cb227-65" data-line-number="65"><span class="st">  RStudio     -&gt; &#39;@@3&#39;    [lhead = cluster3] # RStudio Information</span></a>
+<a class="sourceLine" id="cb227-66" data-line-number="66"><span class="st">  Docker      -&gt; &#39;@@4&#39;    [lhead = cluster4] # Docker Information</span></a>
+<a class="sourceLine" id="cb227-67" data-line-number="67"><span class="st">  Docker      -&gt; &#39;@@5&#39;    [lhead = cluster5] # Docker-Linux Information</span></a>
+<a class="sourceLine" id="cb227-68" data-line-number="68"><span class="st">  Docker      -&gt; &#39;@@6&#39;    [lhead = cluster6] # Docker-Postgres Information</span></a>
+<a class="sourceLine" id="cb227-69" data-line-number="69"></a>
+<a class="sourceLine" id="cb227-70" data-line-number="70"><span class="st">  &#39;@@1&#39; -&gt; CLI</span></a>
+<a class="sourceLine" id="cb227-71" data-line-number="71"><span class="st">  CLI         -&gt; &#39;@@7&#39;    [lhead = cluster7] # CLI </span></a>
+<a class="sourceLine" id="cb227-72" data-line-number="72"><span class="st">  &#39;@@7-2&#39;     -&gt; &#39;@@5&#39;</span></a>
+<a class="sourceLine" id="cb227-73" data-line-number="73"><span class="st">  &#39;@@7-3&#39;     -&gt; &#39;@@6&#39;</span></a>
+<a class="sourceLine" id="cb227-74" data-line-number="74"><span class="st">}</span></a>
+<a class="sourceLine" id="cb227-75" data-line-number="75"><span class="st">[1]: paste0(os_lbl,     &#39;:</span><span class="ch">\\</span><span class="st">n&#39;, os_ver)</span></a>
+<a class="sourceLine" id="cb227-76" data-line-number="76"><span class="st">[2]: paste0(r_lbl,      &#39;:</span><span class="ch">\\</span><span class="st">n&#39;, r_ver)</span></a>
+<a class="sourceLine" id="cb227-77" data-line-number="77"><span class="st">[3]: paste0(rstudio_lbl,&#39;:</span><span class="ch">\\</span><span class="st">n&#39;, rstudio_ver)</span></a>
+<a class="sourceLine" id="cb227-78" data-line-number="78"><span class="st">[4]: paste0(docker_lbl, &#39;:</span><span class="ch">\\</span><span class="st">n&#39;, docker_ver)</span></a>
+<a class="sourceLine" id="cb227-79" data-line-number="79"><span class="st">[5]: paste0(linux_lbl,  &#39;:</span><span class="ch">\\</span><span class="st">n&#39;, linux_ver)</span></a>
+<a class="sourceLine" id="cb227-80" data-line-number="80"><span class="st">[6]: paste0(&#39;PostgreSQL:</span><span class="ch">\\</span><span class="st">n&#39;, postgres_ver)</span></a>
+<a class="sourceLine" id="cb227-81" data-line-number="81"><span class="st">[7]: cli</span></a>
+<a class="sourceLine" id="cb227-82" data-line-number="82"><span class="st">&quot;</span>)</a></code></pre></div>
 <p>One sub-application not shown above is your local console/terminal/cli application. In the tutorial, fully constructed docker commands are printed out and then executed. If for some reason the executed docker command fails, one can copy and paste it into your local terminal window to see additional error information. Failures seem more prevalent in the Windows environment.</p>
 </div>
 <div id="communicating-with-docker-applications" class="section level2">

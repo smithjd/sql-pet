@@ -8,7 +8,7 @@ library(RPostgres)
 library(glue)
 require(knitr)
 ``` 
-Note that `tidyverse`, `DBI`, `RPostgres`, `glue`, and `knitr` are loaded.  Also, we've sourced the `[db-login-batch-code.R]('r-database-docker/book-src/db-login-batch-code.R')` file which is used to log in to PostgreSQL.
+Note that `tidyverse`, `DBI`, `RPostgres`, `glue`, and `knitr` are loaded.  Also, we've sourced the [`db-login-batch-code.R`]('r-database-docker/book-src/db-login-batch-code.R') file which is used to log in to PostgreSQL.
 
 ```{r echo=FALSE}
 read_chunk('book-src/db-login-batch-code.R')
@@ -21,9 +21,7 @@ read_chunk('book-src/db-login-batch-code.R')
 ```{r get_postgres_connection, eval=TRUE, echo=FALSE}
 
 ```
-
-
-## Get some basic information about your database
+## Look at the data and its metadata
 
 Assume that the Docker container with PostgreSQL and the dvdrental database are ready to go.
 ```{r}
@@ -33,20 +31,77 @@ con <- wait_for_postgres(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
                          password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
                          dbname = "dvdrental",
                          seconds_to_test = 10)
+```
+So far in this books we've most often looked at the data by listing a few observations or using a tool like `glimpse`.
+```{r}
+rental <- tbl(con, "rental")
 
+kable(head(rental))
+glimpse(rental)
 ```
 
-You usually need to use both the available documentation for your [database](http://www.postgresqltutorial.com/postgresql-sample-database/) and to be somewhat skeptical (e.g., empirical).  It's worth learning to interpret the symbols in an [Entity Relationship Diagram](https://en.wikipedia.org/wiki/Entity%E2%80%93relationship_model):
+For large or complex databases, however, you need to use both the available documentation for your database (e.g.,  [the dvdrental](http://www.postgresqltutorial.com/postgresql-sample-database/) dataase) and the other empirical tools that are available.  For example it's worth learning to interpret the symbols in an [Entity Relationship Diagram](https://en.wikipedia.org/wiki/Entity%E2%80%93relationship_model):
 
 ![](./screenshots/ER-diagram-symbols.png)
 
-Depending on how skeptical you are about the documentation, you might want to get an overview of a database by pulling data from the database `information_schema`.  Here's a selection of useful information although you may want more (or less).  There is a lot to choose from [a vast list of metadata](https://www.postgresql.org/docs/current/static/infoschema-columns.html).  Note that information schemas are somewhat consistent across different DBMS' that you may encounter.
+The `information_schema` is a trove of information *about* the database.  Its format is more or less consistent across the different SQL implementations that are available.   Here we explore some of what's available using several different methods.  Postgres stores [a lot of metadata](https://www.postgresql.org/docs/current/static/infoschema-columns.html).
+
+### The information_schema with dbplyr
+For this chapter R needs the `dbplyr` package to access alternate schemas.  A [schema](http://www.postgresqltutorial.com/postgresql-server-and-database-objects/) is an object that contains one or more tables.  Most often there will be a default schema, but to access the metadata, you need to explicitly specify which schema contains the data you want.
+
+```{r}
+library(dbplyr)
+
+columns_info_schema_table <- tbl(con, in_schema("information_schema", "columns")) 
+
+columns_info_schema_info <- columns_info_schema_table %>% 
+  select(table_schema, table_name, column_name, data_type, ordinal_position, 
+         column_default, character_maximum_length) %>% 
+  collect(n = Inf)
+
+columns_info_schema_info
+```
+For the moment we're going to drop everything except the columns that are in the `public` schema.
+```{r}
+
+public_table_columns <- columns_info_schema_info %>% 
+  filter(table_schema == "public") %>% 
+  select(-table_schema)
+
+public_table_columns
+```
 
 
-have we hidden "in_schema()" as in:
+Pull out some rough-and-ready but useful statistics about your database.  Since we are in SQL-land we talk about variables as `columns`.
 
-  `con %>% tbl(in_schema("aux", "df"))`
-  
+Start with a list of tables names and a count of the number of columns that each one contains.
+```{r}
+
+public_table_columns %>% 
+  count(table_name, sort = TRUE) %>% 
+  rename(number_of_columns = n) %>% 
+  as.data.frame() # we want to look at all of them, so bypass the nice tibble row limit
+```
+
+How many column names are shared across tables (or duplicated)?
+```{r}
+
+public_table_columns %>% count(column_name, sort = TRUE) %>% filter(n > 1)
+```
+
+How many column names are unique?
+```{r}
+public_table_columns %>% count(column_name) %>% filter(n > 1)
+```
+
+What data types are found in the database?
+```{r}
+
+public_table_columns %>% count(data_type)
+
+```
+
+### Submitting SQL statements directly
 ```{r}
 
 table_schema_query  <- glue("SELECT ", 
@@ -58,32 +113,6 @@ table_schema_query  <- glue("SELECT ",
 
 glimpse(rental_meta_data)
 ```
-Pull out some rough-and-ready but useful statistics about your database.  Since we are in SQL-land we talk about variables as `columns`.
-
-Start with a list of tables names and a count of the number of columns that each one contains.
-```{r}
-
-rental_meta_data %>% count(table_name) %>% rename(number_of_columns = n) %>% as.data.frame()
-```
-
-How many column names are shared across tables (or duplicated)?
-```{r}
-
-rental_meta_data %>% count(column_name, sort = TRUE) %>% filter(n > 1)
-```
-
-How many column names are unique?
-```{r}
-rental_meta_data %>% count(column_name) %>% filter(n > 1)
-```
-
-What data types are found in the database?
-```{r}
-
-rental_meta_data %>% count(data_type)
-
-```
-
 
 ```{r}
 ## Get list of database objects

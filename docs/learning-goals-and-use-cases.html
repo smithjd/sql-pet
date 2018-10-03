@@ -25,7 +25,7 @@
 <meta name="author" content="Dipti Muni, Ian Frantz, John David Smith, Mary Anne Thygesen, M. Edward (Ed) Borasky, Scott Case, and Sophie Yang">
 
 
-<meta name="date" content="2018-10-01">
+<meta name="date" content="2018-10-02">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -159,7 +159,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.4" data-path="learning-goals-and-use-cases.html"><a href="learning-goals-and-use-cases.html#environment"><i class="fa fa-check"></i><b>3.4</b> Environment</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html"><i class="fa fa-check"></i><b>4</b> Docker, Postgres, and R (04)</a><ul>
-<li class="chapter" data-level="4.1" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#verify-that-docker-running"><i class="fa fa-check"></i><b>4.1</b> Verify that Docker running</a></li>
+<li class="chapter" data-level="4.1" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#verify-that-docker-is-running"><i class="fa fa-check"></i><b>4.1</b> Verify that Docker is running</a></li>
 <li class="chapter" data-level="4.2" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#clean-up-if-appropriate"><i class="fa fa-check"></i><b>4.2</b> Clean up if appropriate</a></li>
 <li class="chapter" data-level="4.3" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#connect-read-and-write-to-postgres-from-r"><i class="fa fa-check"></i><b>4.3</b> Connect, read and write to Postgres from R</a><ul>
 <li class="chapter" data-level="4.3.1" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#pause-for-some-security-considerations"><i class="fa fa-check"></i><b>4.3.1</b> Pause for some security considerations</a></li>
@@ -213,7 +213,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="9.1" data-path="postgres-examples-part-b-14.html"><a href="postgres-examples-part-b-14.html#verify-docker-is-up-and-running"><i class="fa fa-check"></i><b>9.1</b> Verify Docker is up and running:</a></li>
 </ul></li>
 <li class="chapter" data-level="10" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html"><i class="fa fa-check"></i><b>10</b> Getting metadata about and from the database (21)</a><ul>
-<li class="chapter" data-level="10.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#get-some-basic-information-about-your-database-1"><i class="fa fa-check"></i><b>10.1</b> Get some basic information about your database</a></li>
+<li class="chapter" data-level="10.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#look-at-the-data-and-its-metadata"><i class="fa fa-check"></i><b>10.1</b> Look at the data and its metadata</a><ul>
+<li class="chapter" data-level="10.1.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#the-information_schema-with-dbplyr"><i class="fa fa-check"></i><b>10.1.1</b> The information_schema with dbplyr</a></li>
+<li class="chapter" data-level="10.1.2" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#submitting-sql-statements-directly"><i class="fa fa-check"></i><b>10.1.2</b> Submitting SQL statements directly</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="11" data-path="explain-queries-71.html"><a href="explain-queries-71.html"><i class="fa fa-check"></i><b>11</b> Explain queries (71)</a><ul>
 <li class="chapter" data-level="11.1" data-path="explain-queries-71.html"><a href="explain-queries-71.html#performance-considertations"><i class="fa fa-check"></i><b>11.1</b> Performance considertations</a></li>
@@ -278,19 +281,26 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>After working through this tutorial, you can expect to be able to:</p>
 <ul>
 <li>Run queries against PostgreSQL in an environment that simulates what you will find in a corporate setting.</li>
-<li>Understand some of the trade offs between queries aimed at exploration or informal investigation using dplyr and those where performance is important because of the size of the database or the frequency with which a query is run. You will be able to rewrite dplyr queries as SQL and submit them directly. You will have some understanding of techniques for assessing query structure and performance.</li>
-<li>Set up a PostgreSQL database in a Docker environment and understand enough about Docker to swap databases, swap DBMS’ (e.g., MySQL for PostgreSQL, etc.)</li>
+<li>Understand some of the trade-offs between:
+<ol style="list-style-type: decimal">
+<li>queries aimed at exploration or informal investigation using <a href="https://cran.r-project.org/package=dplyr">dplyr</a>; and</li>
+<li>those where performance is important because of the size of the database or the frequency with which a query is run.</li>
+</ol></li>
+<li>Rewrite dplyr queries as SQL and submit them directly.</li>
+<li>Gain some understanding of techniques for assessing query structure and performance.</li>
+<li>Set up a PostgreSQL database in a Docker environment.</li>
+<li>Understand enough about Docker to swap databases, e.g. <a href="http://www.sportsdb.org/sd/samples">Sports DB</a> for the <a href="http://www.postgresqltutorial.com/postgresql-sample-database/">DVD rental database</a> used in this tutorial. Or swap the database management system (DBMS), e.g. <a href="https://www.mysql.com/">MySQL</a> for <a href="https://www.postgresql.org/">PostgreSQL</a>.</li>
 </ul>
 </div>
 <div id="use-cases" class="section level2">
 <h2><span class="header-section-number">3.3</span> Use cases</h2>
-<p>Imagine that you have one of several roles at <strong>DVDs R Us</strong> and that you need to:</p>
+<p>Imagine that you have one of several roles at our fictional company <strong>DVDs R Us</strong> and that you need to:</p>
 <ul>
 <li>As a data scientist, I want to know the distribution of number of rentals per month per customer, so that the Marketing department can create incentives for customers in 3 segments: Frequent Renters, Average Renters, Infrequent Renters.</li>
 <li>As the Director of Sales, I want to see the total number of rentals per month for the past 6 months and I want to know how fast our customer base is growing/shrinking per month for the past 6 months.</li>
 <li>As the Director of Marketing, I want to know which categories of DVDs are the least popular, so that I can create a campaign to draw attention to rarely used inventory.</li>
 <li>As a shipping clerk, I want to add rental information when I fulfill a shipment order.</li>
-<li>As the Director of Analytics, you want to test as much of the production R code in my shop against a new release of the DBMS that the IT department is implementing next month.</li>
+<li>As the Director of Analytics, I want to test as much of the production R code in my shop as possible against a new release of the DBMS that the IT department is implementing next month.</li>
 <li>etc.</li>
 </ul>
 </div>
