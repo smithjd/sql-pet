@@ -87,7 +87,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "12b9285bd4144529d98b79a9d723e4dd944e369956bd6ec81fc7f42f20fcb0c9"
+## [1] "016673d0d66f7f3f62bc7dbccc7a89f35ce01f50a9f2927c9cf87304b8bf4d4f"
 ```
 
 Docker returns a long string of numbers.  If you are running this command for the first time, Docker downloads the PostgreSQL image, which takes a bit of time.
@@ -100,7 +100,7 @@ system2("docker", "ps", stdout = TRUE, stderr = TRUE)
 
 ```
 ## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED                  STATUS                  PORTS                    NAMES"   
-## [2] "12b9285bd414        postgres:10         \"docker-entrypoint.s…\"   Less than a second ago   Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
+## [2] "016673d0d66f        postgres:10         \"docker-entrypoint.s…\"   Less than a second ago   Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
 ```
 ## Connect, read and write to Postgres from R
 

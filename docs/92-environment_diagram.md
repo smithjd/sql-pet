@@ -2,49 +2,6 @@
 
 
 
-
-```r
-library(tidyverse)
-```
-
-```
-## -- Attaching packages ------------------------------------------------------------------------------------------------------------------- tidyverse 1.2.1 --
-```
-
-```
-## v ggplot2 3.0.0     v purrr   0.2.5
-## v tibble  1.4.2     v dplyr   0.7.6
-## v tidyr   0.8.1     v stringr 1.3.1
-## v readr   1.1.1     v forcats 0.3.0
-```
-
-```
-## -- Conflicts ---------------------------------------------------------------------------------------------------------------------- tidyverse_conflicts() --
-## x dplyr::filter() masks stats::filter()
-## x dplyr::lag()    masks stats::lag()
-```
-
-```r
-library(DBI)
-library(RPostgres)
-library(glue)
-```
-
-```
-## 
-## Attaching package: 'glue'
-```
-
-```
-## The following object is masked from 'package:dplyr':
-## 
-##     collapse
-```
-
-```r
-library(knitr)
-```
-
 ## Environment Tools Used in this Chapter
 Note that `tidyverse`, `DBI`, `RPostgres`, `glue`, and `knitr` are loaded.  Also, we've sourced the `[db-login-batch-code.R]('r-database-docker/book-src/db-login-batch-code.R')` file which is used to log in to PostgreSQL.
 

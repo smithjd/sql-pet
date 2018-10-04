@@ -9,21 +9,18 @@ Here are some packages that we find handy in the preliminary investigation of a 
 
 ```r
 library(glue)
-```
-
-```
-## 
-## Attaching package: 'glue'
-```
-
-```
-## The following object is masked from 'package:dplyr':
-## 
-##     collapse
-```
-
-```r
 library(skimr)
+```
+
+```
+## 
+## Attaching package: 'skimr'
+```
+
+```
+## The following object is masked from 'package:knitr':
+## 
+##     kable
 ```
 
 

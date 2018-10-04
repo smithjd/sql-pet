@@ -25,7 +25,7 @@
 <meta name="author" content="Dipti Muni, Ian Frantz, John David Smith, Mary Anne Thygesen, M. Edward (Ed) Borasky, Scott Case, and Sophie Yang">
 
 
-<meta name="date" content="2018-10-02">
+<meta name="date" content="2018-10-03">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -213,9 +213,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="9.1" data-path="postgres-examples-part-b-14.html"><a href="postgres-examples-part-b-14.html#verify-docker-is-up-and-running"><i class="fa fa-check"></i><b>9.1</b> Verify Docker is up and running:</a></li>
 </ul></li>
 <li class="chapter" data-level="10" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html"><i class="fa fa-check"></i><b>10</b> Getting metadata about and from the database (21)</a><ul>
-<li class="chapter" data-level="10.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#look-at-the-data-and-its-metadata"><i class="fa fa-check"></i><b>10.1</b> Look at the data and its metadata</a><ul>
-<li class="chapter" data-level="10.1.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#the-information_schema-with-dbplyr"><i class="fa fa-check"></i><b>10.1.1</b> The information_schema with dbplyr</a></li>
-<li class="chapter" data-level="10.1.2" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#submitting-sql-statements-directly"><i class="fa fa-check"></i><b>10.1.2</b> Submitting SQL statements directly</a></li>
+<li class="chapter" data-level="10.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#always-look-at-the-data"><i class="fa fa-check"></i><b>10.1</b> Always look at the data</a><ul>
+<li class="chapter" data-level="10.1.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#look-at-the-data-itself"><i class="fa fa-check"></i><b>10.1.1</b> Look at the data itself</a></li>
+<li class="chapter" data-level="10.1.2" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#look-at-what-r-sends-to-postgresql"><i class="fa fa-check"></i><b>10.1.2</b> Look at what R sends to <code>postgreSQL</code></a></li>
+<li class="chapter" data-level="10.1.3" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#look-at-what-information_schema-conains"><i class="fa fa-check"></i><b>10.1.3</b> Look at what <code>information_schema</code> conains</a></li>
+<li class="chapter" data-level="10.1.4" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#look-at-the-tables-first"><i class="fa fa-check"></i><b>10.1.4</b> Look at the tables first</a></li>
+<li class="chapter" data-level="10.1.5" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#drill-down-into-the-columns"><i class="fa fa-check"></i><b>10.1.5</b> Drill down into the columns</a></li>
+<li class="chapter" data-level="10.1.6" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#submitting-sql-statements-directly"><i class="fa fa-check"></i><b>10.1.6</b> Submitting SQL statements directly</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="11" data-path="explain-queries-71.html"><a href="explain-queries-71.html"><i class="fa fa-check"></i><b>11</b> Explain queries (71)</a><ul>
@@ -270,8 +274,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="some-extra-handy-libraries" class="section level2">
 <h2><span class="header-section-number">8.1</span> Some extra handy libraries</h2>
 <p>Here are some packages that we find handy in the preliminary investigation of a database (or a problem that involves data from a database).</p>
-<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb97-1" data-line-number="1"><span class="kw">library</span>(glue)</a>
-<a class="sourceLine" id="cb97-2" data-line-number="2"><span class="kw">library</span>(skimr)</a></code></pre></div>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb94-1" data-line-number="1"><span class="kw">library</span>(glue)</a>
+<a class="sourceLine" id="cb94-2" data-line-number="2"><span class="kw">library</span>(skimr)</a></code></pre></div>
+<pre><code>## 
+## Attaching package: &#39;skimr&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:knitr&#39;:
+## 
+##     kable</code></pre>
 </div>
 <div id="basic-investigation" class="section level2">
 <h2><span class="header-section-number">8.2</span> Basic investigation</h2>
@@ -393,99 +402,96 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <td>Here are some packages that we find handy in the preliminary investigation of a database (or a problem that involves data from a database).</td>
 </tr>
 <tr class="even">
-<td><code>r library(glue)</code></td>
+<td><code>r library(glue) library(skimr)</code></td>
 </tr>
 <tr class="odd">
-<td><code>## ## Attaching package: 'glue'</code></td>
+<td><code>## ## Attaching package: 'skimr'</code></td>
 </tr>
 <tr class="even">
-<td><code>## The following object is masked from 'package:dplyr': ## ##     collapse</code></td>
+<td><code>## The following object is masked from 'package:knitr': ## ##     kable</code></td>
 </tr>
 <tr class="odd">
-<td><code>r library(skimr)</code></td>
-</tr>
-<tr class="even">
 <td>## More topics
 * Check this against <a href="https://github.com/Cascadia-R/Using_R_With_Databases/blob/master/Intro_To_R_With_Databases.Rmd">Aaron Makubuya’s workshop</a> at the Cascadia R Conf.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>## Standards for production jobs</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>* writing tests for your queries</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><!--chapter:end:12-a-production-perspective.Rmd--></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td># Joins and complex queries (13)</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>Libraries loaded and functions are loaded</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>## Verify Docker is up and running:</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>r result &lt;- system2(&quot;docker&quot;, &quot;version&quot;, stdout = TRUE, stderr = TRUE) result</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>##  [1] &quot;Client:&quot; ##  [2] &quot; Version:           18.06.1-ce&quot; ##  [3] &quot; API version:       1.38&quot; ##  [4] &quot; Go version:        go1.10.3&quot; ##  [5] &quot; Git commit:        e68fc7a&quot; ##  [6] &quot; Built:             Tue Aug 21 17:21:31 2018&quot; ##  [7] &quot; OS/Arch:           darwin/amd64&quot; ##  [8] &quot; Experimental:      false&quot; ##  [9] &quot;&quot; ## [10] &quot;Server:&quot; ## [11] &quot; Engine:&quot; ## [12] &quot;  Version:          18.06.1-ce&quot; ## [13] &quot;  API version:      1.38 (minimum version 1.12)&quot; ## [14] &quot;  Go version:       go1.10.3&quot; ## [15] &quot;  Git commit:       e68fc7a&quot; ## [16] &quot;  Built:            Tue Aug 21 17:29:02 2018&quot; ## [17] &quot;  OS/Arch:          linux/amd64&quot; ## [18] &quot;  Experimental:     true&quot;</code>
 verify pet DB is available, it may be stopped.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>r result &lt;- system2(&quot;docker&quot;, &quot;ps -a&quot;, stdout = TRUE, stderr = TRUE) result</code></td>
 </tr>
-<tr class="even">
-<td><code>## [1] &quot;CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES&quot; ## [2] &quot;81cce840287d        postgres:10         \&quot;docker-entrypoint.s…\&quot;   26 seconds ago      Up 5 seconds        0.0.0.0:5432-&gt;5432/tcp   sql-pet&quot;</code></td>
-</tr>
 <tr class="odd">
+<td><code>## [1] &quot;CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES&quot; ## [2] &quot;24326f8076f9        postgres:10         \&quot;docker-entrypoint.s…\&quot;   26 seconds ago      Up 5 seconds        0.0.0.0:5432-&gt;5432/tcp   sql-pet&quot;</code></td>
+</tr>
+<tr class="even">
 <td><code>r any(grepl('Up .+pet$',result))</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>## [1] TRUE</code>
 Start up the <code>docker-pet</code> container</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>r result &lt;- system2(&quot;docker&quot;, &quot;start sql-pet&quot;, stdout = TRUE, stderr = TRUE) result</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>## [1] &quot;sql-pet&quot;</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>now connect to the database with R</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>```r
 # need to wait for Docker &amp; Postgres to come up before connecting.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>con &lt;- wait_for_postgres(user = Sys.getenv(“DEFAULT_POSTGRES_USER_NAME”),
 password = Sys.getenv(“DEFAULT_POSTGRES_PASSWORD”),
 dbname = “dvdrental”,
 seconds_to_test = 10)
 ```</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>```r
 ## select examples
 ## dbGetQuery returns the entire result set as a data frame.
 ## For large returned datasets, complex or inefficient SQL statements, this may take a
 ## long time.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>## dbSendQuery: parses, compiles, creates the optimized execution plan.
 ## dbFetch: Execute optimzed execution plan and return the dataset.
 ## dbClearResult:remove pending query results from the database to your R environment
 ```</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>How many customers are there in the DVD Rental System</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>r rs1 &lt;- dbGetQuery(con,'select * from customer;') kable(head(rs1))</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>customer_id store_id first_name last_name email address_id activebool create_date last_update active</td>
 </tr>
 </tbody>
@@ -496,10 +502,10 @@ seconds_to_test = 10)
        3          1  Linda        Williams    linda.williams@sakilacustomer.org               7  TRUE         2006-02-14    2013-05-26 14:49:45         1
        4          2  Barbara      Jones       barbara.jones@sakilacustomer.org                8  TRUE         2006-02-14    2013-05-26 14:49:45         1
        5          1  Elizabeth    Brown       elizabeth.brown@sakilacustomer.org              9  TRUE         2006-02-14    2013-05-26 14:49:45         1</code></pre>
-<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb99-1" data-line-number="1">pco &lt;-<span class="st"> </span><span class="kw">dbSendQuery</span>(con,<span class="st">&#39;select * from customer;&#39;</span>)</a>
-<a class="sourceLine" id="cb99-2" data-line-number="2">rs2  &lt;-<span class="st"> </span><span class="kw">dbFetch</span>(pco)</a>
-<a class="sourceLine" id="cb99-3" data-line-number="3"><span class="kw">dbClearResult</span>(pco)</a>
-<a class="sourceLine" id="cb99-4" data-line-number="4"><span class="kw">kable</span>(<span class="kw">head</span>(rs2))</a></code></pre></div>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb98-1" data-line-number="1">pco &lt;-<span class="st"> </span><span class="kw">dbSendQuery</span>(con,<span class="st">&#39;select * from customer;&#39;</span>)</a>
+<a class="sourceLine" id="cb98-2" data-line-number="2">rs2  &lt;-<span class="st"> </span><span class="kw">dbFetch</span>(pco)</a>
+<a class="sourceLine" id="cb98-3" data-line-number="3"><span class="kw">dbClearResult</span>(pco)</a>
+<a class="sourceLine" id="cb98-4" data-line-number="4"><span class="kw">kable</span>(<span class="kw">head</span>(rs2))</a></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -590,56 +596,56 @@ seconds_to_test = 10)
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb100-1" data-line-number="1"><span class="co"># insert yourself as a new customer</span></a>
-<a class="sourceLine" id="cb100-2" data-line-number="2"><span class="kw">dbExecute</span>(con</a>
-<a class="sourceLine" id="cb100-3" data-line-number="3">         ,<span class="st">&quot;insert into customer </span></a>
-<a class="sourceLine" id="cb100-4" data-line-number="4"><span class="st">                 (store_id,first_name,last_name,email,address_id</span></a>
-<a class="sourceLine" id="cb100-5" data-line-number="5"><span class="st">                 ,activebool,create_date,last_update,active)</span></a>
-<a class="sourceLine" id="cb100-6" data-line-number="6"><span class="st">           values(2,&#39;Sophie&#39;,&#39;Yang&#39;,&#39;dodreamdo@yahoo.com&#39;,1,TRUE,&#39;2018-09-13&#39;,&#39;2018-09-13&#39;,1)              returning customer_id;</span></a>
-<a class="sourceLine" id="cb100-7" data-line-number="7"><span class="st">          &quot;</span></a>
-<a class="sourceLine" id="cb100-8" data-line-number="8">         )</a></code></pre></div>
+<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb99-1" data-line-number="1"><span class="co"># insert yourself as a new customer</span></a>
+<a class="sourceLine" id="cb99-2" data-line-number="2"><span class="kw">dbExecute</span>(con</a>
+<a class="sourceLine" id="cb99-3" data-line-number="3">         ,<span class="st">&quot;insert into customer </span></a>
+<a class="sourceLine" id="cb99-4" data-line-number="4"><span class="st">                 (store_id,first_name,last_name,email,address_id</span></a>
+<a class="sourceLine" id="cb99-5" data-line-number="5"><span class="st">                 ,activebool,create_date,last_update,active)</span></a>
+<a class="sourceLine" id="cb99-6" data-line-number="6"><span class="st">           values(2,&#39;Sophie&#39;,&#39;Yang&#39;,&#39;dodreamdo@yahoo.com&#39;,1,TRUE,&#39;2018-09-13&#39;,&#39;2018-09-13&#39;,1)              returning customer_id;</span></a>
+<a class="sourceLine" id="cb99-7" data-line-number="7"><span class="st">          &quot;</span></a>
+<a class="sourceLine" id="cb99-8" data-line-number="8">         )</a></code></pre></div>
 <pre><code>## [1] 0</code></pre>
-<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb102-1" data-line-number="1">## anti join -- Find customers who have never rented a movie.</a>
-<a class="sourceLine" id="cb102-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb102-3" data-line-number="3">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
-<a class="sourceLine" id="cb102-4" data-line-number="4">                 <span class="st">&quot;select c.first_name</span></a>
-<a class="sourceLine" id="cb102-5" data-line-number="5"><span class="st">                        ,c.last_name</span></a>
-<a class="sourceLine" id="cb102-6" data-line-number="6"><span class="st">                        ,c.email</span></a>
-<a class="sourceLine" id="cb102-7" data-line-number="7"><span class="st">                    from customer c </span></a>
-<a class="sourceLine" id="cb102-8" data-line-number="8"><span class="st">                         left outer join rental r</span></a>
-<a class="sourceLine" id="cb102-9" data-line-number="9"><span class="st">                              on c.customer_id = r.customer_id </span></a>
-<a class="sourceLine" id="cb102-10" data-line-number="10"><span class="st">                   where r.rental_id is null;</span></a>
-<a class="sourceLine" id="cb102-11" data-line-number="11"><span class="st">                 &quot;</span></a>
-<a class="sourceLine" id="cb102-12" data-line-number="12">                 )</a>
-<a class="sourceLine" id="cb102-13" data-line-number="13"><span class="kw">head</span>(rs)</a></code></pre></div>
+<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb101-1" data-line-number="1">## anti join -- Find customers who have never rented a movie.</a>
+<a class="sourceLine" id="cb101-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb101-3" data-line-number="3">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
+<a class="sourceLine" id="cb101-4" data-line-number="4">                 <span class="st">&quot;select c.first_name</span></a>
+<a class="sourceLine" id="cb101-5" data-line-number="5"><span class="st">                        ,c.last_name</span></a>
+<a class="sourceLine" id="cb101-6" data-line-number="6"><span class="st">                        ,c.email</span></a>
+<a class="sourceLine" id="cb101-7" data-line-number="7"><span class="st">                    from customer c </span></a>
+<a class="sourceLine" id="cb101-8" data-line-number="8"><span class="st">                         left outer join rental r</span></a>
+<a class="sourceLine" id="cb101-9" data-line-number="9"><span class="st">                              on c.customer_id = r.customer_id </span></a>
+<a class="sourceLine" id="cb101-10" data-line-number="10"><span class="st">                   where r.rental_id is null;</span></a>
+<a class="sourceLine" id="cb101-11" data-line-number="11"><span class="st">                 &quot;</span></a>
+<a class="sourceLine" id="cb101-12" data-line-number="12">                 )</a>
+<a class="sourceLine" id="cb101-13" data-line-number="13"><span class="kw">head</span>(rs)</a></code></pre></div>
 <pre><code>##   first_name last_name               email
 ## 1     Sophie      Yang dodreamdo@yahoo.com</code></pre>
-<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb104-1" data-line-number="1">## how many films and languages exist in the DVD rental application</a>
-<a class="sourceLine" id="cb104-2" data-line-number="2">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
-<a class="sourceLine" id="cb104-3" data-line-number="3">                <span class="st">&quot;      select &#39;film&#39; table_name,count(*) count from film </span></a>
-<a class="sourceLine" id="cb104-4" data-line-number="4"><span class="st">                 union select &#39;language&#39; table_name,count(*) count from language </span></a>
-<a class="sourceLine" id="cb104-5" data-line-number="5"><span class="st">               ;</span></a>
-<a class="sourceLine" id="cb104-6" data-line-number="6"><span class="st">                &quot;</span></a>
-<a class="sourceLine" id="cb104-7" data-line-number="7">                )</a>
-<a class="sourceLine" id="cb104-8" data-line-number="8"><span class="kw">head</span>(rs)</a></code></pre></div>
+<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb103-1" data-line-number="1">## how many films and languages exist in the DVD rental application</a>
+<a class="sourceLine" id="cb103-2" data-line-number="2">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
+<a class="sourceLine" id="cb103-3" data-line-number="3">                <span class="st">&quot;      select &#39;film&#39; table_name,count(*) count from film </span></a>
+<a class="sourceLine" id="cb103-4" data-line-number="4"><span class="st">                 union select &#39;language&#39; table_name,count(*) count from language </span></a>
+<a class="sourceLine" id="cb103-5" data-line-number="5"><span class="st">               ;</span></a>
+<a class="sourceLine" id="cb103-6" data-line-number="6"><span class="st">                &quot;</span></a>
+<a class="sourceLine" id="cb103-7" data-line-number="7">                )</a>
+<a class="sourceLine" id="cb103-8" data-line-number="8"><span class="kw">head</span>(rs)</a></code></pre></div>
 <pre><code>##   table_name count
 ## 1       film  1000
 ## 2   language     6</code></pre>
-<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb106-1" data-line-number="1">## what is the film distribution based on language</a>
-<a class="sourceLine" id="cb106-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb106-3" data-line-number="3">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
-<a class="sourceLine" id="cb106-4" data-line-number="4">                <span class="st">&quot;select l.language_id id</span></a>
-<a class="sourceLine" id="cb106-5" data-line-number="5"><span class="st">                       ,l.name</span></a>
-<a class="sourceLine" id="cb106-6" data-line-number="6"><span class="st">                       ,sum(case when f.language_id is not null then 1 else 0 end) total</span></a>
-<a class="sourceLine" id="cb106-7" data-line-number="7"><span class="st">                   from language l</span></a>
-<a class="sourceLine" id="cb106-8" data-line-number="8"><span class="st">                        full outer join film f</span></a>
-<a class="sourceLine" id="cb106-9" data-line-number="9"><span class="st">                             on l.language_id = f.language_id</span></a>
-<a class="sourceLine" id="cb106-10" data-line-number="10"><span class="st">                  group by l.language_id,l.name </span></a>
-<a class="sourceLine" id="cb106-11" data-line-number="11"><span class="st">                  order by l.name;</span></a>
-<a class="sourceLine" id="cb106-12" data-line-number="12"><span class="st">                 ;</span></a>
-<a class="sourceLine" id="cb106-13" data-line-number="13"><span class="st">                &quot;</span></a>
-<a class="sourceLine" id="cb106-14" data-line-number="14">                )</a>
-<a class="sourceLine" id="cb106-15" data-line-number="15"><span class="kw">head</span>(rs)</a></code></pre></div>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb105-1" data-line-number="1">## what is the film distribution based on language</a>
+<a class="sourceLine" id="cb105-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb105-3" data-line-number="3">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
+<a class="sourceLine" id="cb105-4" data-line-number="4">                <span class="st">&quot;select l.language_id id</span></a>
+<a class="sourceLine" id="cb105-5" data-line-number="5"><span class="st">                       ,l.name</span></a>
+<a class="sourceLine" id="cb105-6" data-line-number="6"><span class="st">                       ,sum(case when f.language_id is not null then 1 else 0 end) total</span></a>
+<a class="sourceLine" id="cb105-7" data-line-number="7"><span class="st">                   from language l</span></a>
+<a class="sourceLine" id="cb105-8" data-line-number="8"><span class="st">                        full outer join film f</span></a>
+<a class="sourceLine" id="cb105-9" data-line-number="9"><span class="st">                             on l.language_id = f.language_id</span></a>
+<a class="sourceLine" id="cb105-10" data-line-number="10"><span class="st">                  group by l.language_id,l.name </span></a>
+<a class="sourceLine" id="cb105-11" data-line-number="11"><span class="st">                  order by l.name;</span></a>
+<a class="sourceLine" id="cb105-12" data-line-number="12"><span class="st">                 ;</span></a>
+<a class="sourceLine" id="cb105-13" data-line-number="13"><span class="st">                &quot;</span></a>
+<a class="sourceLine" id="cb105-14" data-line-number="14">                )</a>
+<a class="sourceLine" id="cb105-15" data-line-number="15"><span class="kw">head</span>(rs)</a></code></pre></div>
 <pre><code>##   id                 name total
 ## 1  1 English               1000
 ## 2  5 French                   0
@@ -647,31 +653,31 @@ seconds_to_test = 10)
 ## 4  2 Italian                  0
 ## 5  3 Japanese                 0
 ## 6  4 Mandarin                 0</code></pre>
-<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb108-1" data-line-number="1">## Store analysis</a>
-<a class="sourceLine" id="cb108-2" data-line-number="2">### which store has had more rentals and income</a>
-<a class="sourceLine" id="cb108-3" data-line-number="3">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
-<a class="sourceLine" id="cb108-4" data-line-number="4">                <span class="st">&quot;select *</span></a>
-<a class="sourceLine" id="cb108-5" data-line-number="5"><span class="st">                 from (      select &#39;actor&#39; tbl_name,count(*) from actor </span></a>
-<a class="sourceLine" id="cb108-6" data-line-number="6"><span class="st">                       union select &#39;category&#39; tbl_name,count(*) from category</span></a>
-<a class="sourceLine" id="cb108-7" data-line-number="7"><span class="st">                       union select &#39;film&#39; tbl_name,count(*) from film</span></a>
-<a class="sourceLine" id="cb108-8" data-line-number="8"><span class="st">                       union select &#39;film_actor&#39; tbl_name,count(*) from film_actor</span></a>
-<a class="sourceLine" id="cb108-9" data-line-number="9"><span class="st">                       union select &#39;film_category&#39; tbl_name,count(*) from film_category</span></a>
-<a class="sourceLine" id="cb108-10" data-line-number="10"><span class="st">                       union select &#39;language&#39; tbl_name,count(*) from language</span></a>
-<a class="sourceLine" id="cb108-11" data-line-number="11"><span class="st">                       union select &#39;inventory&#39; tbl_name,count(*) from inventory</span></a>
-<a class="sourceLine" id="cb108-12" data-line-number="12"><span class="st">                       union select &#39;rental&#39; tbl_name,count(*) from rental</span></a>
-<a class="sourceLine" id="cb108-13" data-line-number="13"><span class="st">                       union select &#39;payment&#39; tbl_name,count(*) from payment</span></a>
-<a class="sourceLine" id="cb108-14" data-line-number="14"><span class="st">                       union select &#39;staff&#39; tbl_name,count(*) from staff</span></a>
-<a class="sourceLine" id="cb108-15" data-line-number="15"><span class="st">                       union select &#39;customer&#39; tbl_name,count(*) from customer</span></a>
-<a class="sourceLine" id="cb108-16" data-line-number="16"><span class="st">                       union select &#39;address&#39; tbl_name,count(*) from address</span></a>
-<a class="sourceLine" id="cb108-17" data-line-number="17"><span class="st">                       union select &#39;city&#39; tbl_name,count(*) from city</span></a>
-<a class="sourceLine" id="cb108-18" data-line-number="18"><span class="st">                       union select &#39;country&#39; tbl_name,count(*) from country</span></a>
-<a class="sourceLine" id="cb108-19" data-line-number="19"><span class="st">                       union select &#39;store&#39; tbl_name,count(*) from store</span></a>
-<a class="sourceLine" id="cb108-20" data-line-number="20"><span class="st">                       ) counts</span></a>
-<a class="sourceLine" id="cb108-21" data-line-number="21"><span class="st">                  order by tbl_name</span></a>
-<a class="sourceLine" id="cb108-22" data-line-number="22"><span class="st">                 ;</span></a>
-<a class="sourceLine" id="cb108-23" data-line-number="23"><span class="st">                &quot;</span></a>
-<a class="sourceLine" id="cb108-24" data-line-number="24">                )</a>
-<a class="sourceLine" id="cb108-25" data-line-number="25"><span class="kw">head</span>(rs)</a></code></pre></div>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb107-1" data-line-number="1">## Store analysis</a>
+<a class="sourceLine" id="cb107-2" data-line-number="2">### which store has had more rentals and income</a>
+<a class="sourceLine" id="cb107-3" data-line-number="3">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
+<a class="sourceLine" id="cb107-4" data-line-number="4">                <span class="st">&quot;select *</span></a>
+<a class="sourceLine" id="cb107-5" data-line-number="5"><span class="st">                 from (      select &#39;actor&#39; tbl_name,count(*) from actor </span></a>
+<a class="sourceLine" id="cb107-6" data-line-number="6"><span class="st">                       union select &#39;category&#39; tbl_name,count(*) from category</span></a>
+<a class="sourceLine" id="cb107-7" data-line-number="7"><span class="st">                       union select &#39;film&#39; tbl_name,count(*) from film</span></a>
+<a class="sourceLine" id="cb107-8" data-line-number="8"><span class="st">                       union select &#39;film_actor&#39; tbl_name,count(*) from film_actor</span></a>
+<a class="sourceLine" id="cb107-9" data-line-number="9"><span class="st">                       union select &#39;film_category&#39; tbl_name,count(*) from film_category</span></a>
+<a class="sourceLine" id="cb107-10" data-line-number="10"><span class="st">                       union select &#39;language&#39; tbl_name,count(*) from language</span></a>
+<a class="sourceLine" id="cb107-11" data-line-number="11"><span class="st">                       union select &#39;inventory&#39; tbl_name,count(*) from inventory</span></a>
+<a class="sourceLine" id="cb107-12" data-line-number="12"><span class="st">                       union select &#39;rental&#39; tbl_name,count(*) from rental</span></a>
+<a class="sourceLine" id="cb107-13" data-line-number="13"><span class="st">                       union select &#39;payment&#39; tbl_name,count(*) from payment</span></a>
+<a class="sourceLine" id="cb107-14" data-line-number="14"><span class="st">                       union select &#39;staff&#39; tbl_name,count(*) from staff</span></a>
+<a class="sourceLine" id="cb107-15" data-line-number="15"><span class="st">                       union select &#39;customer&#39; tbl_name,count(*) from customer</span></a>
+<a class="sourceLine" id="cb107-16" data-line-number="16"><span class="st">                       union select &#39;address&#39; tbl_name,count(*) from address</span></a>
+<a class="sourceLine" id="cb107-17" data-line-number="17"><span class="st">                       union select &#39;city&#39; tbl_name,count(*) from city</span></a>
+<a class="sourceLine" id="cb107-18" data-line-number="18"><span class="st">                       union select &#39;country&#39; tbl_name,count(*) from country</span></a>
+<a class="sourceLine" id="cb107-19" data-line-number="19"><span class="st">                       union select &#39;store&#39; tbl_name,count(*) from store</span></a>
+<a class="sourceLine" id="cb107-20" data-line-number="20"><span class="st">                       ) counts</span></a>
+<a class="sourceLine" id="cb107-21" data-line-number="21"><span class="st">                  order by tbl_name</span></a>
+<a class="sourceLine" id="cb107-22" data-line-number="22"><span class="st">                 ;</span></a>
+<a class="sourceLine" id="cb107-23" data-line-number="23"><span class="st">                &quot;</span></a>
+<a class="sourceLine" id="cb107-24" data-line-number="24">                )</a>
+<a class="sourceLine" id="cb107-25" data-line-number="25"><span class="kw">head</span>(rs)</a></code></pre></div>
 <pre><code>##   tbl_name count
 ## 1    actor   200
 ## 2  address   603
@@ -679,81 +685,81 @@ seconds_to_test = 10)
 ## 4     city   600
 ## 5  country   109
 ## 6 customer   600</code></pre>
-<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb110-1" data-line-number="1">## Store analysis</a>
-<a class="sourceLine" id="cb110-2" data-line-number="2">### which store has the largest income stream</a>
-<a class="sourceLine" id="cb110-3" data-line-number="3">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
-<a class="sourceLine" id="cb110-4" data-line-number="4">                <span class="st">&quot;select store_id,sum(amount) amt,count(*) cnt </span></a>
-<a class="sourceLine" id="cb110-5" data-line-number="5"><span class="st">                   from payment p </span></a>
-<a class="sourceLine" id="cb110-6" data-line-number="6"><span class="st">                        join staff s </span></a>
-<a class="sourceLine" id="cb110-7" data-line-number="7"><span class="st">                          on p.staff_id = s.staff_id  </span></a>
-<a class="sourceLine" id="cb110-8" data-line-number="8"><span class="st">                 group by store_id order by 2 desc</span></a>
-<a class="sourceLine" id="cb110-9" data-line-number="9"><span class="st">                 ;</span></a>
-<a class="sourceLine" id="cb110-10" data-line-number="10"><span class="st">                &quot;</span></a>
-<a class="sourceLine" id="cb110-11" data-line-number="11">                )</a>
-<a class="sourceLine" id="cb110-12" data-line-number="12"><span class="kw">head</span>(rs)</a></code></pre></div>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb109-1" data-line-number="1">## Store analysis</a>
+<a class="sourceLine" id="cb109-2" data-line-number="2">### which store has the largest income stream</a>
+<a class="sourceLine" id="cb109-3" data-line-number="3">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
+<a class="sourceLine" id="cb109-4" data-line-number="4">                <span class="st">&quot;select store_id,sum(amount) amt,count(*) cnt </span></a>
+<a class="sourceLine" id="cb109-5" data-line-number="5"><span class="st">                   from payment p </span></a>
+<a class="sourceLine" id="cb109-6" data-line-number="6"><span class="st">                        join staff s </span></a>
+<a class="sourceLine" id="cb109-7" data-line-number="7"><span class="st">                          on p.staff_id = s.staff_id  </span></a>
+<a class="sourceLine" id="cb109-8" data-line-number="8"><span class="st">                 group by store_id order by 2 desc</span></a>
+<a class="sourceLine" id="cb109-9" data-line-number="9"><span class="st">                 ;</span></a>
+<a class="sourceLine" id="cb109-10" data-line-number="10"><span class="st">                &quot;</span></a>
+<a class="sourceLine" id="cb109-11" data-line-number="11">                )</a>
+<a class="sourceLine" id="cb109-12" data-line-number="12"><span class="kw">head</span>(rs)</a></code></pre></div>
 <pre><code>##   store_id      amt  cnt
 ## 1        2 31059.92 7304
 ## 2        1 30252.12 7292</code></pre>
-<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb112-1" data-line-number="1">## Store analysis</a>
-<a class="sourceLine" id="cb112-2" data-line-number="2">### How many rentals have not been paid</a>
-<a class="sourceLine" id="cb112-3" data-line-number="3">### How many rentals have been paid</a>
-<a class="sourceLine" id="cb112-4" data-line-number="4">### How much has been paid</a>
-<a class="sourceLine" id="cb112-5" data-line-number="5">### What is the average price/movie</a>
-<a class="sourceLine" id="cb112-6" data-line-number="6">### Estimate the outstanding balance</a>
-<a class="sourceLine" id="cb112-7" data-line-number="7">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
-<a class="sourceLine" id="cb112-8" data-line-number="8">                <span class="st">&quot;select sum(case when payment_id is null then 1 else 0 end) missing</span></a>
-<a class="sourceLine" id="cb112-9" data-line-number="9"><span class="st">                       ,sum(case when payment_id is not null then 1 else 0 end) found</span></a>
-<a class="sourceLine" id="cb112-10" data-line-number="10"><span class="st">                       ,sum(p.amount) amt</span></a>
-<a class="sourceLine" id="cb112-11" data-line-number="11"><span class="st">                       ,count(*) cnt </span></a>
-<a class="sourceLine" id="cb112-12" data-line-number="12"><span class="st">                       ,round(sum(p.amount)/sum(case when payment_id is not null then 1 else 0 end),2) avg_price</span></a>
-<a class="sourceLine" id="cb112-13" data-line-number="13"><span class="st">                       ,round(round(sum(p.amount)/sum(case when payment_id is not null then 1 else 0 end),2)</span></a>
-<a class="sourceLine" id="cb112-14" data-line-number="14"><span class="st">                                  * sum(case when payment_id is null then 1 else 0 end),2) est_balance</span></a>
-<a class="sourceLine" id="cb112-15" data-line-number="15"><span class="st">                   from rental r </span></a>
-<a class="sourceLine" id="cb112-16" data-line-number="16"><span class="st">                        left outer join payment p </span></a>
-<a class="sourceLine" id="cb112-17" data-line-number="17"><span class="st">                          on r.rental_id = p.rental_id  </span></a>
-<a class="sourceLine" id="cb112-18" data-line-number="18"><span class="st">                 ;</span></a>
-<a class="sourceLine" id="cb112-19" data-line-number="19"><span class="st">                &quot;</span></a>
-<a class="sourceLine" id="cb112-20" data-line-number="20">                )</a>
-<a class="sourceLine" id="cb112-21" data-line-number="21"><span class="kw">head</span>(rs)</a></code></pre></div>
+<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb111-1" data-line-number="1">## Store analysis</a>
+<a class="sourceLine" id="cb111-2" data-line-number="2">### How many rentals have not been paid</a>
+<a class="sourceLine" id="cb111-3" data-line-number="3">### How many rentals have been paid</a>
+<a class="sourceLine" id="cb111-4" data-line-number="4">### How much has been paid</a>
+<a class="sourceLine" id="cb111-5" data-line-number="5">### What is the average price/movie</a>
+<a class="sourceLine" id="cb111-6" data-line-number="6">### Estimate the outstanding balance</a>
+<a class="sourceLine" id="cb111-7" data-line-number="7">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
+<a class="sourceLine" id="cb111-8" data-line-number="8">                <span class="st">&quot;select sum(case when payment_id is null then 1 else 0 end) missing</span></a>
+<a class="sourceLine" id="cb111-9" data-line-number="9"><span class="st">                       ,sum(case when payment_id is not null then 1 else 0 end) found</span></a>
+<a class="sourceLine" id="cb111-10" data-line-number="10"><span class="st">                       ,sum(p.amount) amt</span></a>
+<a class="sourceLine" id="cb111-11" data-line-number="11"><span class="st">                       ,count(*) cnt </span></a>
+<a class="sourceLine" id="cb111-12" data-line-number="12"><span class="st">                       ,round(sum(p.amount)/sum(case when payment_id is not null then 1 else 0 end),2) avg_price</span></a>
+<a class="sourceLine" id="cb111-13" data-line-number="13"><span class="st">                       ,round(round(sum(p.amount)/sum(case when payment_id is not null then 1 else 0 end),2)</span></a>
+<a class="sourceLine" id="cb111-14" data-line-number="14"><span class="st">                                  * sum(case when payment_id is null then 1 else 0 end),2) est_balance</span></a>
+<a class="sourceLine" id="cb111-15" data-line-number="15"><span class="st">                   from rental r </span></a>
+<a class="sourceLine" id="cb111-16" data-line-number="16"><span class="st">                        left outer join payment p </span></a>
+<a class="sourceLine" id="cb111-17" data-line-number="17"><span class="st">                          on r.rental_id = p.rental_id  </span></a>
+<a class="sourceLine" id="cb111-18" data-line-number="18"><span class="st">                 ;</span></a>
+<a class="sourceLine" id="cb111-19" data-line-number="19"><span class="st">                &quot;</span></a>
+<a class="sourceLine" id="cb111-20" data-line-number="20">                )</a>
+<a class="sourceLine" id="cb111-21" data-line-number="21"><span class="kw">head</span>(rs)</a></code></pre></div>
 <pre><code>##   missing found      amt   cnt avg_price est_balance
 ## 1    1452 14596 61312.04 16048       4.2      6098.4</code></pre>
-<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb114-1" data-line-number="1">### what is the actual outstanding balance</a>
-<a class="sourceLine" id="cb114-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb114-3" data-line-number="3">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
-<a class="sourceLine" id="cb114-4" data-line-number="4">                <span class="st">&quot;select sum(f.rental_rate) open_amt,count(*) count</span></a>
-<a class="sourceLine" id="cb114-5" data-line-number="5"><span class="st">                   from rental r </span></a>
-<a class="sourceLine" id="cb114-6" data-line-number="6"><span class="st">                        left outer join payment p </span></a>
-<a class="sourceLine" id="cb114-7" data-line-number="7"><span class="st">                          on r.rental_id = p.rental_id  </span></a>
-<a class="sourceLine" id="cb114-8" data-line-number="8"><span class="st">                        join inventory i</span></a>
-<a class="sourceLine" id="cb114-9" data-line-number="9"><span class="st">                          on r.inventory_id = i.inventory_id</span></a>
-<a class="sourceLine" id="cb114-10" data-line-number="10"><span class="st">                        join film f</span></a>
-<a class="sourceLine" id="cb114-11" data-line-number="11"><span class="st">                          on i.film_id = f.film_id</span></a>
-<a class="sourceLine" id="cb114-12" data-line-number="12"><span class="st">                  where p.rental_id is null</span></a>
-<a class="sourceLine" id="cb114-13" data-line-number="13"><span class="st">                 ;&quot;</span></a>
-<a class="sourceLine" id="cb114-14" data-line-number="14">                )  </a>
-<a class="sourceLine" id="cb114-15" data-line-number="15"><span class="kw">head</span>(rs)</a></code></pre></div>
+<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb113-1" data-line-number="1">### what is the actual outstanding balance</a>
+<a class="sourceLine" id="cb113-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb113-3" data-line-number="3">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
+<a class="sourceLine" id="cb113-4" data-line-number="4">                <span class="st">&quot;select sum(f.rental_rate) open_amt,count(*) count</span></a>
+<a class="sourceLine" id="cb113-5" data-line-number="5"><span class="st">                   from rental r </span></a>
+<a class="sourceLine" id="cb113-6" data-line-number="6"><span class="st">                        left outer join payment p </span></a>
+<a class="sourceLine" id="cb113-7" data-line-number="7"><span class="st">                          on r.rental_id = p.rental_id  </span></a>
+<a class="sourceLine" id="cb113-8" data-line-number="8"><span class="st">                        join inventory i</span></a>
+<a class="sourceLine" id="cb113-9" data-line-number="9"><span class="st">                          on r.inventory_id = i.inventory_id</span></a>
+<a class="sourceLine" id="cb113-10" data-line-number="10"><span class="st">                        join film f</span></a>
+<a class="sourceLine" id="cb113-11" data-line-number="11"><span class="st">                          on i.film_id = f.film_id</span></a>
+<a class="sourceLine" id="cb113-12" data-line-number="12"><span class="st">                  where p.rental_id is null</span></a>
+<a class="sourceLine" id="cb113-13" data-line-number="13"><span class="st">                 ;&quot;</span></a>
+<a class="sourceLine" id="cb113-14" data-line-number="14">                )  </a>
+<a class="sourceLine" id="cb113-15" data-line-number="15"><span class="kw">head</span>(rs)</a></code></pre></div>
 <pre><code>##   open_amt count
 ## 1  4297.48  1452</code></pre>
-<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb116-1" data-line-number="1">### Rank customers with highest open amounts</a>
-<a class="sourceLine" id="cb116-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb116-3" data-line-number="3">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
-<a class="sourceLine" id="cb116-4" data-line-number="4">                <span class="st">&quot;select c.customer_id,c.first_name,c.last_name,sum(f.rental_rate) open_amt,count(*) count</span></a>
-<a class="sourceLine" id="cb116-5" data-line-number="5"><span class="st">                   from rental r </span></a>
-<a class="sourceLine" id="cb116-6" data-line-number="6"><span class="st">                        left outer join payment p </span></a>
-<a class="sourceLine" id="cb116-7" data-line-number="7"><span class="st">                          on r.rental_id = p.rental_id  </span></a>
-<a class="sourceLine" id="cb116-8" data-line-number="8"><span class="st">                        join inventory i</span></a>
-<a class="sourceLine" id="cb116-9" data-line-number="9"><span class="st">                          on r.inventory_id = i.inventory_id</span></a>
-<a class="sourceLine" id="cb116-10" data-line-number="10"><span class="st">                        join film f</span></a>
-<a class="sourceLine" id="cb116-11" data-line-number="11"><span class="st">                          on i.film_id = f.film_id</span></a>
-<a class="sourceLine" id="cb116-12" data-line-number="12"><span class="st">                        join customer c</span></a>
-<a class="sourceLine" id="cb116-13" data-line-number="13"><span class="st">                          on r.customer_id = c.customer_id</span></a>
-<a class="sourceLine" id="cb116-14" data-line-number="14"><span class="st">                  where p.rental_id is null</span></a>
-<a class="sourceLine" id="cb116-15" data-line-number="15"><span class="st">                  group by c.customer_id,c.first_name,c.last_name</span></a>
-<a class="sourceLine" id="cb116-16" data-line-number="16"><span class="st">                  order by open_amt desc</span></a>
-<a class="sourceLine" id="cb116-17" data-line-number="17"><span class="st">                  limit 25</span></a>
-<a class="sourceLine" id="cb116-18" data-line-number="18"><span class="st">                 ;&quot;</span></a>
-<a class="sourceLine" id="cb116-19" data-line-number="19">                )  </a>
-<a class="sourceLine" id="cb116-20" data-line-number="20"><span class="kw">head</span>(rs)</a></code></pre></div>
+<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb115-1" data-line-number="1">### Rank customers with highest open amounts</a>
+<a class="sourceLine" id="cb115-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb115-3" data-line-number="3">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
+<a class="sourceLine" id="cb115-4" data-line-number="4">                <span class="st">&quot;select c.customer_id,c.first_name,c.last_name,sum(f.rental_rate) open_amt,count(*) count</span></a>
+<a class="sourceLine" id="cb115-5" data-line-number="5"><span class="st">                   from rental r </span></a>
+<a class="sourceLine" id="cb115-6" data-line-number="6"><span class="st">                        left outer join payment p </span></a>
+<a class="sourceLine" id="cb115-7" data-line-number="7"><span class="st">                          on r.rental_id = p.rental_id  </span></a>
+<a class="sourceLine" id="cb115-8" data-line-number="8"><span class="st">                        join inventory i</span></a>
+<a class="sourceLine" id="cb115-9" data-line-number="9"><span class="st">                          on r.inventory_id = i.inventory_id</span></a>
+<a class="sourceLine" id="cb115-10" data-line-number="10"><span class="st">                        join film f</span></a>
+<a class="sourceLine" id="cb115-11" data-line-number="11"><span class="st">                          on i.film_id = f.film_id</span></a>
+<a class="sourceLine" id="cb115-12" data-line-number="12"><span class="st">                        join customer c</span></a>
+<a class="sourceLine" id="cb115-13" data-line-number="13"><span class="st">                          on r.customer_id = c.customer_id</span></a>
+<a class="sourceLine" id="cb115-14" data-line-number="14"><span class="st">                  where p.rental_id is null</span></a>
+<a class="sourceLine" id="cb115-15" data-line-number="15"><span class="st">                  group by c.customer_id,c.first_name,c.last_name</span></a>
+<a class="sourceLine" id="cb115-16" data-line-number="16"><span class="st">                  order by open_amt desc</span></a>
+<a class="sourceLine" id="cb115-17" data-line-number="17"><span class="st">                  limit 25</span></a>
+<a class="sourceLine" id="cb115-18" data-line-number="18"><span class="st">                 ;&quot;</span></a>
+<a class="sourceLine" id="cb115-19" data-line-number="19">                )  </a>
+<a class="sourceLine" id="cb115-20" data-line-number="20"><span class="kw">head</span>(rs)</a></code></pre></div>
 <pre><code>##   customer_id first_name last_name open_amt count
 ## 1         293        Mae  Fletcher    35.90    10
 ## 2         307     Joseph       Joy    31.90    10
@@ -761,19 +767,19 @@ seconds_to_test = 10)
 ## 4         299      James    Gannon    30.91     9
 ## 5         274      Naomi  Jennings    29.92     8
 ## 6         326       Jose    Andrew    28.93     7</code></pre>
-<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb118-1" data-line-number="1">### what film has been rented the most</a>
-<a class="sourceLine" id="cb118-2" data-line-number="2">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
-<a class="sourceLine" id="cb118-3" data-line-number="3">                <span class="st">&quot;select i.film_id,f.title,rental_rate,sum(rental_rate) revenue,count(*) count  --16044</span></a>
-<a class="sourceLine" id="cb118-4" data-line-number="4"><span class="st">                   from rental r </span></a>
-<a class="sourceLine" id="cb118-5" data-line-number="5"><span class="st">                        join inventory i</span></a>
-<a class="sourceLine" id="cb118-6" data-line-number="6"><span class="st">                          on r.inventory_id = i.inventory_id</span></a>
-<a class="sourceLine" id="cb118-7" data-line-number="7"><span class="st">                        join film f</span></a>
-<a class="sourceLine" id="cb118-8" data-line-number="8"><span class="st">                          on i.film_id = f.film_id</span></a>
-<a class="sourceLine" id="cb118-9" data-line-number="9"><span class="st">                 group by i.film_id,f.title,rental_rate</span></a>
-<a class="sourceLine" id="cb118-10" data-line-number="10"><span class="st">                 order by count desc</span></a>
-<a class="sourceLine" id="cb118-11" data-line-number="11"><span class="st">                 ;&quot;</span></a>
-<a class="sourceLine" id="cb118-12" data-line-number="12">                )  </a>
-<a class="sourceLine" id="cb118-13" data-line-number="13"><span class="kw">head</span>(rs)</a></code></pre></div>
+<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb117-1" data-line-number="1">### what film has been rented the most</a>
+<a class="sourceLine" id="cb117-2" data-line-number="2">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
+<a class="sourceLine" id="cb117-3" data-line-number="3">                <span class="st">&quot;select i.film_id,f.title,rental_rate,sum(rental_rate) revenue,count(*) count  --16044</span></a>
+<a class="sourceLine" id="cb117-4" data-line-number="4"><span class="st">                   from rental r </span></a>
+<a class="sourceLine" id="cb117-5" data-line-number="5"><span class="st">                        join inventory i</span></a>
+<a class="sourceLine" id="cb117-6" data-line-number="6"><span class="st">                          on r.inventory_id = i.inventory_id</span></a>
+<a class="sourceLine" id="cb117-7" data-line-number="7"><span class="st">                        join film f</span></a>
+<a class="sourceLine" id="cb117-8" data-line-number="8"><span class="st">                          on i.film_id = f.film_id</span></a>
+<a class="sourceLine" id="cb117-9" data-line-number="9"><span class="st">                 group by i.film_id,f.title,rental_rate</span></a>
+<a class="sourceLine" id="cb117-10" data-line-number="10"><span class="st">                 order by count desc</span></a>
+<a class="sourceLine" id="cb117-11" data-line-number="11"><span class="st">                 ;&quot;</span></a>
+<a class="sourceLine" id="cb117-12" data-line-number="12">                )  </a>
+<a class="sourceLine" id="cb117-13" data-line-number="13"><span class="kw">head</span>(rs)</a></code></pre></div>
 <pre><code>##   film_id               title rental_rate revenue count
 ## 1     103  Bucket Brotherhood        4.99  169.66    34
 ## 2     738    Rocketeer Mother        0.99   32.67    33
@@ -781,20 +787,20 @@ seconds_to_test = 10)
 ## 4     767       Scalawag Duck        4.99  159.68    32
 ## 5     489      Juggler Hardly        0.99   31.68    32
 ## 6     730 Ridgemont Submarine        0.99   31.68    32</code></pre>
-<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb120-1" data-line-number="1">### what film has been generated the most revenue assuming all amounts are collected</a>
-<a class="sourceLine" id="cb120-2" data-line-number="2">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
-<a class="sourceLine" id="cb120-3" data-line-number="3">                <span class="st">&quot;select i.film_id,f.title,rental_rate</span></a>
-<a class="sourceLine" id="cb120-4" data-line-number="4"><span class="st">                       ,sum(rental_rate) revenue,count(*) count  --16044</span></a>
-<a class="sourceLine" id="cb120-5" data-line-number="5"><span class="st">                   from rental r </span></a>
-<a class="sourceLine" id="cb120-6" data-line-number="6"><span class="st">                        join inventory i</span></a>
-<a class="sourceLine" id="cb120-7" data-line-number="7"><span class="st">                          on r.inventory_id = i.inventory_id</span></a>
-<a class="sourceLine" id="cb120-8" data-line-number="8"><span class="st">                        join film f</span></a>
-<a class="sourceLine" id="cb120-9" data-line-number="9"><span class="st">                          on i.film_id = f.film_id</span></a>
-<a class="sourceLine" id="cb120-10" data-line-number="10"><span class="st">                 group by i.film_id,f.title,rental_rate</span></a>
-<a class="sourceLine" id="cb120-11" data-line-number="11"><span class="st">                 order by revenue desc</span></a>
-<a class="sourceLine" id="cb120-12" data-line-number="12"><span class="st">                 ;&quot;</span></a>
-<a class="sourceLine" id="cb120-13" data-line-number="13">                )  </a>
-<a class="sourceLine" id="cb120-14" data-line-number="14"><span class="kw">head</span>(rs)</a></code></pre></div>
+<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb119-1" data-line-number="1">### what film has been generated the most revenue assuming all amounts are collected</a>
+<a class="sourceLine" id="cb119-2" data-line-number="2">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
+<a class="sourceLine" id="cb119-3" data-line-number="3">                <span class="st">&quot;select i.film_id,f.title,rental_rate</span></a>
+<a class="sourceLine" id="cb119-4" data-line-number="4"><span class="st">                       ,sum(rental_rate) revenue,count(*) count  --16044</span></a>
+<a class="sourceLine" id="cb119-5" data-line-number="5"><span class="st">                   from rental r </span></a>
+<a class="sourceLine" id="cb119-6" data-line-number="6"><span class="st">                        join inventory i</span></a>
+<a class="sourceLine" id="cb119-7" data-line-number="7"><span class="st">                          on r.inventory_id = i.inventory_id</span></a>
+<a class="sourceLine" id="cb119-8" data-line-number="8"><span class="st">                        join film f</span></a>
+<a class="sourceLine" id="cb119-9" data-line-number="9"><span class="st">                          on i.film_id = f.film_id</span></a>
+<a class="sourceLine" id="cb119-10" data-line-number="10"><span class="st">                 group by i.film_id,f.title,rental_rate</span></a>
+<a class="sourceLine" id="cb119-11" data-line-number="11"><span class="st">                 order by revenue desc</span></a>
+<a class="sourceLine" id="cb119-12" data-line-number="12"><span class="st">                 ;&quot;</span></a>
+<a class="sourceLine" id="cb119-13" data-line-number="13">                )  </a>
+<a class="sourceLine" id="cb119-14" data-line-number="14"><span class="kw">head</span>(rs)</a></code></pre></div>
 <pre><code>##   film_id              title rental_rate revenue count
 ## 1     103 Bucket Brotherhood        4.99  169.66    34
 ## 2     767      Scalawag Duck        4.99  159.68    32
@@ -802,26 +808,26 @@ seconds_to_test = 10)
 ## 4      31      Apache Divine        4.99  154.69    31
 ## 5     369  Goodfellas Salute        4.99  154.69    31
 ## 6    1000          Zorro Ark        4.99  154.69    31</code></pre>
-<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb122-1" data-line-number="1">### which films are in one store but not the other.</a>
-<a class="sourceLine" id="cb122-2" data-line-number="2">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
-<a class="sourceLine" id="cb122-3" data-line-number="3">                <span class="st">&quot;select coalesce(i1.film_id,i2.film_id) film_id</span></a>
-<a class="sourceLine" id="cb122-4" data-line-number="4"><span class="st">                       ,f.title,f.rental_rate,i1.store_id,i1.count,i2.store_id,i2.count</span></a>
-<a class="sourceLine" id="cb122-5" data-line-number="5"><span class="st">                   from     (select film_id,store_id,count(*) count </span></a>
-<a class="sourceLine" id="cb122-6" data-line-number="6"><span class="st">                               from inventory where store_id = 1 </span></a>
-<a class="sourceLine" id="cb122-7" data-line-number="7"><span class="st">                             group by film_id,store_id) as i1</span></a>
-<a class="sourceLine" id="cb122-8" data-line-number="8"><span class="st">                         full outer join </span></a>
-<a class="sourceLine" id="cb122-9" data-line-number="9"><span class="st">                            (select film_id,store_id,count(*) count</span></a>
-<a class="sourceLine" id="cb122-10" data-line-number="10"><span class="st">                               from inventory where store_id = 2 </span></a>
-<a class="sourceLine" id="cb122-11" data-line-number="11"><span class="st">                             group by film_id,store_id</span></a>
-<a class="sourceLine" id="cb122-12" data-line-number="12"><span class="st">                            ) as i2</span></a>
-<a class="sourceLine" id="cb122-13" data-line-number="13"><span class="st">                           on i1.film_id = i2.film_id </span></a>
-<a class="sourceLine" id="cb122-14" data-line-number="14"><span class="st">                         join film f </span></a>
-<a class="sourceLine" id="cb122-15" data-line-number="15"><span class="st">                           on coalesce(i1.film_id,i2.film_id) = f.film_id</span></a>
-<a class="sourceLine" id="cb122-16" data-line-number="16"><span class="st">                  where i1.film_id is null or i2.film_id is null </span></a>
-<a class="sourceLine" id="cb122-17" data-line-number="17"><span class="st">                 order by f.title  ;</span></a>
-<a class="sourceLine" id="cb122-18" data-line-number="18"><span class="st">               &quot;</span></a>
-<a class="sourceLine" id="cb122-19" data-line-number="19">                )  </a>
-<a class="sourceLine" id="cb122-20" data-line-number="20"><span class="kw">head</span>(rs)</a></code></pre></div>
+<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb121-1" data-line-number="1">### which films are in one store but not the other.</a>
+<a class="sourceLine" id="cb121-2" data-line-number="2">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
+<a class="sourceLine" id="cb121-3" data-line-number="3">                <span class="st">&quot;select coalesce(i1.film_id,i2.film_id) film_id</span></a>
+<a class="sourceLine" id="cb121-4" data-line-number="4"><span class="st">                       ,f.title,f.rental_rate,i1.store_id,i1.count,i2.store_id,i2.count</span></a>
+<a class="sourceLine" id="cb121-5" data-line-number="5"><span class="st">                   from     (select film_id,store_id,count(*) count </span></a>
+<a class="sourceLine" id="cb121-6" data-line-number="6"><span class="st">                               from inventory where store_id = 1 </span></a>
+<a class="sourceLine" id="cb121-7" data-line-number="7"><span class="st">                             group by film_id,store_id) as i1</span></a>
+<a class="sourceLine" id="cb121-8" data-line-number="8"><span class="st">                         full outer join </span></a>
+<a class="sourceLine" id="cb121-9" data-line-number="9"><span class="st">                            (select film_id,store_id,count(*) count</span></a>
+<a class="sourceLine" id="cb121-10" data-line-number="10"><span class="st">                               from inventory where store_id = 2 </span></a>
+<a class="sourceLine" id="cb121-11" data-line-number="11"><span class="st">                             group by film_id,store_id</span></a>
+<a class="sourceLine" id="cb121-12" data-line-number="12"><span class="st">                            ) as i2</span></a>
+<a class="sourceLine" id="cb121-13" data-line-number="13"><span class="st">                           on i1.film_id = i2.film_id </span></a>
+<a class="sourceLine" id="cb121-14" data-line-number="14"><span class="st">                         join film f </span></a>
+<a class="sourceLine" id="cb121-15" data-line-number="15"><span class="st">                           on coalesce(i1.film_id,i2.film_id) = f.film_id</span></a>
+<a class="sourceLine" id="cb121-16" data-line-number="16"><span class="st">                  where i1.film_id is null or i2.film_id is null </span></a>
+<a class="sourceLine" id="cb121-17" data-line-number="17"><span class="st">                 order by f.title  ;</span></a>
+<a class="sourceLine" id="cb121-18" data-line-number="18"><span class="st">               &quot;</span></a>
+<a class="sourceLine" id="cb121-19" data-line-number="19">                )  </a>
+<a class="sourceLine" id="cb121-20" data-line-number="20"><span class="kw">head</span>(rs)</a></code></pre></div>
 <pre><code>##   film_id               title rental_rate store_id count store_id..6
 ## 1       2      Ace Goldfinger        4.99       NA  &lt;NA&gt;           2
 ## 2       3    Adaptation Holes        2.99       NA  &lt;NA&gt;           2
@@ -836,24 +842,24 @@ seconds_to_test = 10)
 ## 4        4
 ## 5        4
 ## 6     &lt;NA&gt;</code></pre>
-<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb124-1" data-line-number="1"><span class="co"># Compute the outstanding balance.</span></a>
-<a class="sourceLine" id="cb124-2" data-line-number="2">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
-<a class="sourceLine" id="cb124-3" data-line-number="3">                <span class="st">&quot;select sum(f.rental_rate) open_amt,count(*) count</span></a>
-<a class="sourceLine" id="cb124-4" data-line-number="4"><span class="st">                   from rental r </span></a>
-<a class="sourceLine" id="cb124-5" data-line-number="5"><span class="st">                        left outer join payment p </span></a>
-<a class="sourceLine" id="cb124-6" data-line-number="6"><span class="st">                          on r.rental_id = p.rental_id  </span></a>
-<a class="sourceLine" id="cb124-7" data-line-number="7"><span class="st">                        join inventory i</span></a>
-<a class="sourceLine" id="cb124-8" data-line-number="8"><span class="st">                          on r.inventory_id = i.inventory_id</span></a>
-<a class="sourceLine" id="cb124-9" data-line-number="9"><span class="st">                        join film f</span></a>
-<a class="sourceLine" id="cb124-10" data-line-number="10"><span class="st">                          on i.film_id = f.film_id</span></a>
-<a class="sourceLine" id="cb124-11" data-line-number="11"><span class="st">                  where p.rental_id is null</span></a>
-<a class="sourceLine" id="cb124-12" data-line-number="12"><span class="st">                 ;&quot;</span></a>
-<a class="sourceLine" id="cb124-13" data-line-number="13">                )  </a>
-<a class="sourceLine" id="cb124-14" data-line-number="14"><span class="kw">head</span>(rs)</a></code></pre></div>
+<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb123-1" data-line-number="1"><span class="co"># Compute the outstanding balance.</span></a>
+<a class="sourceLine" id="cb123-2" data-line-number="2">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
+<a class="sourceLine" id="cb123-3" data-line-number="3">                <span class="st">&quot;select sum(f.rental_rate) open_amt,count(*) count</span></a>
+<a class="sourceLine" id="cb123-4" data-line-number="4"><span class="st">                   from rental r </span></a>
+<a class="sourceLine" id="cb123-5" data-line-number="5"><span class="st">                        left outer join payment p </span></a>
+<a class="sourceLine" id="cb123-6" data-line-number="6"><span class="st">                          on r.rental_id = p.rental_id  </span></a>
+<a class="sourceLine" id="cb123-7" data-line-number="7"><span class="st">                        join inventory i</span></a>
+<a class="sourceLine" id="cb123-8" data-line-number="8"><span class="st">                          on r.inventory_id = i.inventory_id</span></a>
+<a class="sourceLine" id="cb123-9" data-line-number="9"><span class="st">                        join film f</span></a>
+<a class="sourceLine" id="cb123-10" data-line-number="10"><span class="st">                          on i.film_id = f.film_id</span></a>
+<a class="sourceLine" id="cb123-11" data-line-number="11"><span class="st">                  where p.rental_id is null</span></a>
+<a class="sourceLine" id="cb123-12" data-line-number="12"><span class="st">                 ;&quot;</span></a>
+<a class="sourceLine" id="cb123-13" data-line-number="13">                )  </a>
+<a class="sourceLine" id="cb123-14" data-line-number="14"><span class="kw">head</span>(rs)</a></code></pre></div>
 <pre><code>##   open_amt count
 ## 1  4297.48  1452</code></pre>
 <p>list what’s there</p>
-<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb126-1" data-line-number="1"><span class="kw">dbListTables</span>(con)</a></code></pre></div>
+<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb125-1" data-line-number="1"><span class="kw">dbListTables</span>(con)</a></code></pre></div>
 <pre><code>##  [1] &quot;actor_info&quot;                 &quot;customer_list&quot;             
 ##  [3] &quot;film_list&quot;                  &quot;nicer_but_slower_film_list&quot;
 ##  [5] &quot;sales_by_film_category&quot;     &quot;staff&quot;                     
@@ -866,15 +872,15 @@ seconds_to_test = 10)
 ## [19] &quot;film&quot;                       &quot;address&quot;                   
 ## [21] &quot;film_actor&quot;                 &quot;customer&quot;</code></pre>
 <p>Clean up</p>
-<div class="sourceCode" id="cb128"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb128-1" data-line-number="1"><span class="co"># dbRemoveTable(con, &quot;cars&quot;)</span></a>
-<a class="sourceLine" id="cb128-2" data-line-number="2"><span class="co"># dbRemoveTable(con, &quot;mtcars&quot;)</span></a>
-<a class="sourceLine" id="cb128-3" data-line-number="3"><span class="co"># dbRemoveTable(con, &quot;cust_movies&quot;)</span></a>
-<a class="sourceLine" id="cb128-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb128-5" data-line-number="5"><span class="co"># diconnect from the db</span></a>
-<a class="sourceLine" id="cb128-6" data-line-number="6"><span class="kw">dbDisconnect</span>(con)</a>
-<a class="sourceLine" id="cb128-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb128-8" data-line-number="8">result &lt;-<span class="st"> </span><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, <span class="st">&quot;stop sql-pet&quot;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb128-9" data-line-number="9">result</a></code></pre></div>
+<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb127-1" data-line-number="1"><span class="co"># dbRemoveTable(con, &quot;cars&quot;)</span></a>
+<a class="sourceLine" id="cb127-2" data-line-number="2"><span class="co"># dbRemoveTable(con, &quot;mtcars&quot;)</span></a>
+<a class="sourceLine" id="cb127-3" data-line-number="3"><span class="co"># dbRemoveTable(con, &quot;cust_movies&quot;)</span></a>
+<a class="sourceLine" id="cb127-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb127-5" data-line-number="5"><span class="co"># diconnect from the db</span></a>
+<a class="sourceLine" id="cb127-6" data-line-number="6"><span class="kw">dbDisconnect</span>(con)</a>
+<a class="sourceLine" id="cb127-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb127-8" data-line-number="8">result &lt;-<span class="st"> </span><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, <span class="st">&quot;stop sql-pet&quot;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb127-9" data-line-number="9">result</a></code></pre></div>
 <pre><code>## [1] &quot;sql-pet&quot;</code></pre>
 
 </div>
