@@ -29,18 +29,18 @@ library(skimr)
 * find out how the data is used by those who enter it and others who've used it before
   + why is there missing data?
 
-## Using Dplyr
+## Using `dplyr`
 
 We already started, but that's OK.
 
-### finding out what's in the database
+### Finding out what's in the database
 
 * DBI / RPostgres packages
 * R tools like glimpse, skimr, kable.
 * Tutorials like: https://suzan.rbind.io/tags/dplyr/ 
 * Benjamin S. Baumer, A Grammar for Reproducible and Painless Extract-Transform-Load Operations on Medium Data: https://arxiv.org/pdf/1708.07073 
 
-### sample query
+### Sample query
 
 * rental 
 * date subset
@@ -57,10 +57,10 @@ We already started, but that's OK.
 
 discuss this simple example? http://www.postgresqltutorial.com/postgresql-left-join/ 
 
-* dplyr joins on the server side
+* `dplyr` joins on the server side
 * Where you put `(collect(n = Inf))` really matters
 
-## What is dplyr sending to the server?
+## What is `dplyr` sending to the server?
 
 * show_query as a first draft
 
@@ -70,7 +70,7 @@ discuss this simple example? http://www.postgresqltutorial.com/postgresql-left-j
 * Glue for constructing SQL statements
   + parameterizing SQL queries
 
-## Chosing between dplyr and native SQL
+## Choosing between `dplyr` and native SQL
 
 * performance considerations: first get the right data, then worry about performance
 * Trade offs between leaving the data in PostgreSQL vs what's kept in R: 

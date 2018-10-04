@@ -36,7 +36,6 @@ con <- wait_for_postgres(
   seconds_to_test = 10
 )
 ```
-
 ### Look at the data itself
 
 So far in this books we've most often looked at the data by listing a few observations or using a tool like `glimpse`.
@@ -52,7 +51,6 @@ glimpse(rental)
 ```{r}
 rental %>% dplyr::show_query()
 ```
-
 For large or complex databases, however, you need to use both the available documentation for your database (e.g.,  [the dvdrental](http://www.postgresqltutorial.com/postgresql-sample-database/) database) and the other empirical tools that are available.  For example it's worth learning to interpret the symbols in an [Entity Relationship Diagram](https://en.wikipedia.org/wiki/Entity%E2%80%93relationship_model):
 
 ![](./screenshots/ER-diagram-symbols.png)
@@ -144,7 +142,8 @@ columns_info_schema_info %>%
 
 Pull out some rough-and-ready but useful statistics about your database.  Since we are in SQL-land we talk about variables as `columns`.
 
-Create a list of tables names and a count of the number of columns that each one contains.
+### Create a list of tables names and a count of the number of columns that each one contains.
+
 ```{r}
 
 columns_info_schema_table %>%
