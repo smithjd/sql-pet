@@ -23,17 +23,6 @@ if (!require(downloader)) install.packages("downloader")
 
 ```r
 if (!require(here)) install.packages("here")
-```
-
-```
-## Loading required package: here
-```
-
-```
-## here() starts at /Users/jds/Documents/Library/R/r-system/sql-pet/r-database-docker
-```
-
-```r
 library(downloader, here)
 
 download("http://www.postgresqltutorial.com/wp-content/uploads/2017/10/dvdrental.zip", destfile = here("dvdrental.zip"))
@@ -116,7 +105,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "569798b50767d3310e7369b2690248165b6ce5757df23f83368e43383cc1cd0e"
+## [1] "ccdfda6d6d71dc062d3c6bb4dca204a6dbad00b02e1ea1a42a233beb0ada864c"
 ```
 
 Peek inside the docker container and list the files in the `petdir` directory.  Notice that `dvdrental.tar` is in both.
@@ -291,7 +280,7 @@ psout[grepl(x = psout, pattern = 'sql-pet')]
 ```
 
 ```
-## [1] "569798b50767        postgres:10         \"docker-entrypoint.s…\"   19 seconds ago      Exited (137) Less than a second ago                       sql-pet"
+## [1] "ccdfda6d6d71        postgres:10         \"docker-entrypoint.s…\"   18 seconds ago      Exited (0) Less than a second ago                       sql-pet"
 ```
 
 Next time, you can just use this command to start the container:

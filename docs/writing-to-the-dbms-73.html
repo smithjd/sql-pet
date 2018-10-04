@@ -25,7 +25,7 @@
 <meta name="author" content="Dipti Muni, Ian Frantz, John David Smith, Mary Anne Thygesen, M. Edward (Ed) Borasky, Scott Case, and Sophie Yang">
 
 
-<meta name="date" content="2018-10-02">
+<meta name="date" content="2018-10-03">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -213,9 +213,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="9.1" data-path="postgres-examples-part-b-14.html"><a href="postgres-examples-part-b-14.html#verify-docker-is-up-and-running"><i class="fa fa-check"></i><b>9.1</b> Verify Docker is up and running:</a></li>
 </ul></li>
 <li class="chapter" data-level="10" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html"><i class="fa fa-check"></i><b>10</b> Getting metadata about and from the database (21)</a><ul>
-<li class="chapter" data-level="10.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#look-at-the-data-and-its-metadata"><i class="fa fa-check"></i><b>10.1</b> Look at the data and its metadata</a><ul>
-<li class="chapter" data-level="10.1.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#the-information_schema-with-dbplyr"><i class="fa fa-check"></i><b>10.1.1</b> The information_schema with dbplyr</a></li>
-<li class="chapter" data-level="10.1.2" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#submitting-sql-statements-directly"><i class="fa fa-check"></i><b>10.1.2</b> Submitting SQL statements directly</a></li>
+<li class="chapter" data-level="10.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#always-look-at-the-data"><i class="fa fa-check"></i><b>10.1</b> Always look at the data</a><ul>
+<li class="chapter" data-level="10.1.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#look-at-the-data-itself"><i class="fa fa-check"></i><b>10.1.1</b> Look at the data itself</a></li>
+<li class="chapter" data-level="10.1.2" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#look-at-what-r-sends-to-postgresql"><i class="fa fa-check"></i><b>10.1.2</b> Look at what R sends to <code>postgreSQL</code></a></li>
+<li class="chapter" data-level="10.1.3" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#look-at-what-information_schema-conains"><i class="fa fa-check"></i><b>10.1.3</b> Look at what <code>information_schema</code> conains</a></li>
+<li class="chapter" data-level="10.1.4" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#look-at-the-tables-first"><i class="fa fa-check"></i><b>10.1.4</b> Look at the tables first</a></li>
+<li class="chapter" data-level="10.1.5" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#drill-down-into-the-columns"><i class="fa fa-check"></i><b>10.1.5</b> Drill down into the columns</a></li>
+<li class="chapter" data-level="10.1.6" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#submitting-sql-statements-directly"><i class="fa fa-check"></i><b>10.1.6</b> Submitting SQL statements directly</a></li>
+<li class="chapter" data-level="10.1.7" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#what-is-the-difference-between-views-and-base-tables"><i class="fa fa-check"></i><b>10.1.7</b> What is the difference between <code>VIEW</code>s and <code>BASE TABLE</code>s?</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="11" data-path="explain-queries-71.html"><a href="explain-queries-71.html"><i class="fa fa-check"></i><b>11</b> Explain queries (71)</a><ul>
@@ -268,19 +273,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="writing-to-the-dbms-73" class="section level1">
 <h1><span class="header-section-number">Chapter 13</span> Writing to the DBMS (73)</h1>
 <p>Start up the <code>docker-pet</code> container</p>
-<div class="sourceCode" id="cb203"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb203-1" data-line-number="1">result &lt;-<span class="st"> </span><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, <span class="st">&quot;start sql-pet&quot;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb203-2" data-line-number="2">result</a></code></pre></div>
+<div class="sourceCode" id="cb213"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb213-1" data-line-number="1">result &lt;-<span class="st"> </span><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, <span class="st">&quot;start sql-pet&quot;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb213-2" data-line-number="2">result</a></code></pre></div>
 <pre><code>## [1] &quot;sql-pet&quot;</code></pre>
 <p>now connect to the database with R</p>
-<div class="sourceCode" id="cb205"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb205-1" data-line-number="1">con &lt;-<span class="st"> </span><span class="kw">wait_for_postgres</span>(<span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),</a>
-<a class="sourceLine" id="cb205-2" data-line-number="2">                         <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),</a>
-<a class="sourceLine" id="cb205-3" data-line-number="3">                         <span class="dt">dbname =</span> <span class="st">&quot;dvdrental&quot;</span>,</a>
-<a class="sourceLine" id="cb205-4" data-line-number="4">                         <span class="dt">seconds_to_test =</span> <span class="dv">10</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb215"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb215-1" data-line-number="1">con &lt;-<span class="st"> </span><span class="kw">wait_for_postgres</span>(<span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),</a>
+<a class="sourceLine" id="cb215-2" data-line-number="2">                         <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),</a>
+<a class="sourceLine" id="cb215-3" data-line-number="3">                         <span class="dt">dbname =</span> <span class="st">&quot;dvdrental&quot;</span>,</a>
+<a class="sourceLine" id="cb215-4" data-line-number="4">                         <span class="dt">seconds_to_test =</span> <span class="dv">10</span>)</a></code></pre></div>
 <div id="create-a-new-table" class="section level2">
 <h2><span class="header-section-number">13.1</span> create a new table</h2>
 <p>This is an example from the DBI help file</p>
-<div class="sourceCode" id="cb206"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb206-1" data-line-number="1"><span class="kw">dbWriteTable</span>(con, <span class="st">&quot;cars&quot;</span>, <span class="kw">head</span>(cars, <span class="dv">3</span>)) <span class="co"># &quot;cars&quot; is a built-in dataset, not to be confused with mtcars</span></a>
-<a class="sourceLine" id="cb206-2" data-line-number="2"><span class="kw">dbReadTable</span>(con, <span class="st">&quot;cars&quot;</span>)   <span class="co"># there are 3 rows</span></a></code></pre></div>
+<div class="sourceCode" id="cb216"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb216-1" data-line-number="1"><span class="kw">dbWriteTable</span>(con, <span class="st">&quot;cars&quot;</span>, <span class="kw">head</span>(cars, <span class="dv">3</span>)) <span class="co"># &quot;cars&quot; is a built-in dataset, not to be confused with mtcars</span></a>
+<a class="sourceLine" id="cb216-2" data-line-number="2"><span class="kw">dbReadTable</span>(con, <span class="st">&quot;cars&quot;</span>)   <span class="co"># there are 3 rows</span></a></code></pre></div>
 <pre><code>##   speed dist
 ## 1     4    2
 ## 2     4   10
@@ -288,12 +293,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="modify-an-existing-table" class="section level2">
 <h2><span class="header-section-number">13.2</span> Modify an existing table</h2>
-<div class="sourceCode" id="cb208"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb208-1" data-line-number="1"><span class="kw">dbExecute</span>(</a>
-<a class="sourceLine" id="cb208-2" data-line-number="2">  con,</a>
-<a class="sourceLine" id="cb208-3" data-line-number="3">  <span class="st">&quot;INSERT INTO cars (speed, dist) VALUES (1, 1), (2, 2), (3, 3)&quot;</span></a>
-<a class="sourceLine" id="cb208-4" data-line-number="4">)</a></code></pre></div>
+<div class="sourceCode" id="cb218"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb218-1" data-line-number="1"><span class="kw">dbExecute</span>(</a>
+<a class="sourceLine" id="cb218-2" data-line-number="2">  con,</a>
+<a class="sourceLine" id="cb218-3" data-line-number="3">  <span class="st">&quot;INSERT INTO cars (speed, dist) VALUES (1, 1), (2, 2), (3, 3)&quot;</span></a>
+<a class="sourceLine" id="cb218-4" data-line-number="4">)</a></code></pre></div>
 <pre><code>## [1] 3</code></pre>
-<div class="sourceCode" id="cb210"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb210-1" data-line-number="1"><span class="kw">dbReadTable</span>(con, <span class="st">&quot;cars&quot;</span>)   <span class="co"># there are now 6 rows</span></a></code></pre></div>
+<div class="sourceCode" id="cb220"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb220-1" data-line-number="1"><span class="kw">dbReadTable</span>(con, <span class="st">&quot;cars&quot;</span>)   <span class="co"># there are now 6 rows</span></a></code></pre></div>
 <pre><code>##   speed dist
 ## 1     4    2
 ## 2     4   10
@@ -301,14 +306,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 4     1    1
 ## 5     2    2
 ## 6     3    3</code></pre>
-<div class="sourceCode" id="cb212"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb212-1" data-line-number="1"><span class="co"># Pass values using the param argument:</span></a>
-<a class="sourceLine" id="cb212-2" data-line-number="2"><span class="kw">dbExecute</span>(</a>
-<a class="sourceLine" id="cb212-3" data-line-number="3">  con,</a>
-<a class="sourceLine" id="cb212-4" data-line-number="4">  <span class="st">&quot;INSERT INTO cars (speed, dist) VALUES ($1, $2)&quot;</span>,</a>
-<a class="sourceLine" id="cb212-5" data-line-number="5">  <span class="dt">param =</span> <span class="kw">list</span>(<span class="dv">4</span><span class="op">:</span><span class="dv">7</span>, <span class="dv">5</span><span class="op">:</span><span class="dv">8</span>)</a>
-<a class="sourceLine" id="cb212-6" data-line-number="6">)</a></code></pre></div>
+<div class="sourceCode" id="cb222"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb222-1" data-line-number="1"><span class="co"># Pass values using the param argument:</span></a>
+<a class="sourceLine" id="cb222-2" data-line-number="2"><span class="kw">dbExecute</span>(</a>
+<a class="sourceLine" id="cb222-3" data-line-number="3">  con,</a>
+<a class="sourceLine" id="cb222-4" data-line-number="4">  <span class="st">&quot;INSERT INTO cars (speed, dist) VALUES ($1, $2)&quot;</span>,</a>
+<a class="sourceLine" id="cb222-5" data-line-number="5">  <span class="dt">param =</span> <span class="kw">list</span>(<span class="dv">4</span><span class="op">:</span><span class="dv">7</span>, <span class="dv">5</span><span class="op">:</span><span class="dv">8</span>)</a>
+<a class="sourceLine" id="cb222-6" data-line-number="6">)</a></code></pre></div>
 <pre><code>## [1] 4</code></pre>
-<div class="sourceCode" id="cb214"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb214-1" data-line-number="1"><span class="kw">dbReadTable</span>(con, <span class="st">&quot;cars&quot;</span>)   <span class="co"># there are now 10 rows</span></a></code></pre></div>
+<div class="sourceCode" id="cb224"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb224-1" data-line-number="1"><span class="kw">dbReadTable</span>(con, <span class="st">&quot;cars&quot;</span>)   <span class="co"># there are now 10 rows</span></a></code></pre></div>
 <pre><code>##    speed dist
 ## 1      4    2
 ## 2      4   10
@@ -323,13 +328,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="clean-up-3" class="section level2">
 <h2><span class="header-section-number">13.3</span> Clean up</h2>
-<div class="sourceCode" id="cb216"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb216-1" data-line-number="1"><span class="kw">dbRemoveTable</span>(con, <span class="st">&quot;cars&quot;</span>)</a>
-<a class="sourceLine" id="cb216-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb216-3" data-line-number="3"><span class="co"># diconnect from the db</span></a>
-<a class="sourceLine" id="cb216-4" data-line-number="4"><span class="kw">dbDisconnect</span>(con)</a>
-<a class="sourceLine" id="cb216-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb216-6" data-line-number="6">result &lt;-<span class="st"> </span><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, <span class="st">&quot;stop sql-pet&quot;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb216-7" data-line-number="7">result</a></code></pre></div>
+<div class="sourceCode" id="cb226"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb226-1" data-line-number="1"><span class="kw">dbRemoveTable</span>(con, <span class="st">&quot;cars&quot;</span>)</a>
+<a class="sourceLine" id="cb226-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb226-3" data-line-number="3"><span class="co"># diconnect from the db</span></a>
+<a class="sourceLine" id="cb226-4" data-line-number="4"><span class="kw">dbDisconnect</span>(con)</a>
+<a class="sourceLine" id="cb226-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb226-6" data-line-number="6">result &lt;-<span class="st"> </span><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, <span class="st">&quot;stop sql-pet&quot;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb226-7" data-line-number="7">result</a></code></pre></div>
 <pre><code>## [1] &quot;sql-pet&quot;</code></pre>
 
 </div>

@@ -25,7 +25,7 @@
 <meta name="author" content="Dipti Muni, Ian Frantz, John David Smith, Mary Anne Thygesen, M. Edward (Ed) Borasky, Scott Case, and Sophie Yang">
 
 
-<meta name="date" content="2018-10-02">
+<meta name="date" content="2018-10-03">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -213,9 +213,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="9.1" data-path="postgres-examples-part-b-14.html"><a href="postgres-examples-part-b-14.html#verify-docker-is-up-and-running"><i class="fa fa-check"></i><b>9.1</b> Verify Docker is up and running:</a></li>
 </ul></li>
 <li class="chapter" data-level="10" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html"><i class="fa fa-check"></i><b>10</b> Getting metadata about and from the database (21)</a><ul>
-<li class="chapter" data-level="10.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#look-at-the-data-and-its-metadata"><i class="fa fa-check"></i><b>10.1</b> Look at the data and its metadata</a><ul>
-<li class="chapter" data-level="10.1.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#the-information_schema-with-dbplyr"><i class="fa fa-check"></i><b>10.1.1</b> The information_schema with dbplyr</a></li>
-<li class="chapter" data-level="10.1.2" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#submitting-sql-statements-directly"><i class="fa fa-check"></i><b>10.1.2</b> Submitting SQL statements directly</a></li>
+<li class="chapter" data-level="10.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#always-look-at-the-data"><i class="fa fa-check"></i><b>10.1</b> Always look at the data</a><ul>
+<li class="chapter" data-level="10.1.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#look-at-the-data-itself"><i class="fa fa-check"></i><b>10.1.1</b> Look at the data itself</a></li>
+<li class="chapter" data-level="10.1.2" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#look-at-what-r-sends-to-postgresql"><i class="fa fa-check"></i><b>10.1.2</b> Look at what R sends to <code>postgreSQL</code></a></li>
+<li class="chapter" data-level="10.1.3" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#look-at-what-information_schema-conains"><i class="fa fa-check"></i><b>10.1.3</b> Look at what <code>information_schema</code> conains</a></li>
+<li class="chapter" data-level="10.1.4" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#look-at-the-tables-first"><i class="fa fa-check"></i><b>10.1.4</b> Look at the tables first</a></li>
+<li class="chapter" data-level="10.1.5" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#drill-down-into-the-columns"><i class="fa fa-check"></i><b>10.1.5</b> Drill down into the columns</a></li>
+<li class="chapter" data-level="10.1.6" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#submitting-sql-statements-directly"><i class="fa fa-check"></i><b>10.1.6</b> Submitting SQL statements directly</a></li>
+<li class="chapter" data-level="10.1.7" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#what-is-the-difference-between-views-and-base-tables"><i class="fa fa-check"></i><b>10.1.7</b> What is the difference between <code>VIEW</code>s and <code>BASE TABLE</code>s?</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="11" data-path="explain-queries-71.html"><a href="explain-queries-71.html"><i class="fa fa-check"></i><b>11</b> Explain queries (71)</a><ul>
@@ -268,19 +273,30 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="getting-metadata-about-and-from-the-database-21" class="section level1">
 <h1><span class="header-section-number">Chapter 10</span> Getting metadata about and from the database (21)</h1>
 <p>Note that <code>tidyverse</code>, <code>DBI</code>, <code>RPostgres</code>, <code>glue</code>, and <code>knitr</code> are loaded. Also, we’ve sourced the <a href="&#39;r-database-docker/book-src/db-login-batch-code.R&#39;"><code>db-login-batch-code.R</code></a> file which is used to log in to PostgreSQL.</p>
-<div id="look-at-the-data-and-its-metadata" class="section level2">
-<h2><span class="header-section-number">10.1</span> Look at the data and its metadata</h2>
+<p>For this chapter R needs the <code>dbplyr</code> package to access <code>alternate schemas</code>. A <a href="http://www.postgresqltutorial.com/postgresql-server-and-database-objects/">schema</a> is an object that contains one or more tables. Most often there will be a default schema, but to access the metadata, you need to explicitly specify which schema contains the data you want.</p>
+<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb140-1" data-line-number="1"><span class="kw">library</span>(dbplyr)</a></code></pre></div>
+<pre><code>## 
+## Attaching package: &#39;dbplyr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:dplyr&#39;:
+## 
+##     ident, sql</code></pre>
+<div id="always-look-at-the-data" class="section level2">
+<h2><span class="header-section-number">10.1</span> Always look at the data</h2>
 <p>Assume that the Docker container with PostgreSQL and the dvdrental database are ready to go.</p>
-<div class="sourceCode" id="cb141"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb141-1" data-line-number="1"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>,  <span class="st">&quot;start sql-pet&quot;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb143"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb143-1" data-line-number="1"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, <span class="st">&quot;start sql-pet&quot;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <pre><code>## [1] &quot;sql-pet&quot;</code></pre>
-<div class="sourceCode" id="cb143"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb143-1" data-line-number="1">con &lt;-<span class="st"> </span><span class="kw">wait_for_postgres</span>(<span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),</a>
-<a class="sourceLine" id="cb143-2" data-line-number="2">                         <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),</a>
-<a class="sourceLine" id="cb143-3" data-line-number="3">                         <span class="dt">dbname =</span> <span class="st">&quot;dvdrental&quot;</span>,</a>
-<a class="sourceLine" id="cb143-4" data-line-number="4">                         <span class="dt">seconds_to_test =</span> <span class="dv">10</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb145"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb145-1" data-line-number="1">con &lt;-<span class="st"> </span><span class="kw">wait_for_postgres</span>(</a>
+<a class="sourceLine" id="cb145-2" data-line-number="2">  <span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),</a>
+<a class="sourceLine" id="cb145-3" data-line-number="3">  <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),</a>
+<a class="sourceLine" id="cb145-4" data-line-number="4">  <span class="dt">dbname =</span> <span class="st">&quot;dvdrental&quot;</span>,</a>
+<a class="sourceLine" id="cb145-5" data-line-number="5">  <span class="dt">seconds_to_test =</span> <span class="dv">10</span></a>
+<a class="sourceLine" id="cb145-6" data-line-number="6">)</a></code></pre></div>
+<div id="look-at-the-data-itself" class="section level3">
+<h3><span class="header-section-number">10.1.1</span> Look at the data itself</h3>
 <p>So far in this books we’ve most often looked at the data by listing a few observations or using a tool like <code>glimpse</code>.</p>
-<div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb144-1" data-line-number="1">rental &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="st">&quot;rental&quot;</span>)</a>
-<a class="sourceLine" id="cb144-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb144-3" data-line-number="3"><span class="kw">kable</span>(<span class="kw">head</span>(rental))</a></code></pre></div>
+<div class="sourceCode" id="cb146"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb146-1" data-line-number="1">rental &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">tbl</span>(con, <span class="st">&quot;rental&quot;</span>)</a>
+<a class="sourceLine" id="cb146-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb146-3" data-line-number="3"><span class="kw">kable</span>(<span class="kw">head</span>(rental))</a></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -350,7 +366,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb145"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb145-1" data-line-number="1"><span class="kw">glimpse</span>(rental)</a></code></pre></div>
+<div class="sourceCode" id="cb147"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb147-1" data-line-number="1"><span class="kw">glimpse</span>(rental)</a></code></pre></div>
 <pre><code>## Observations: ??
 ## Variables: 7
 ## $ rental_id    &lt;int&gt; 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 1...
@@ -360,170 +376,25 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## $ return_date  &lt;dttm&gt; 2005-05-28 19:40:33, 2005-06-01 22:12:39, 2005-0...
 ## $ staff_id     &lt;int&gt; 1, 1, 2, 1, 1, 2, 2, 1, 2, 2, 2, 1, 1, 1, 2, 1, 2...
 ## $ last_update  &lt;dttm&gt; 2006-02-16 02:30:53, 2006-02-16 02:30:53, 2006-0...</code></pre>
-<p>For large or complex databases, however, you need to use both the available documentation for your database (e.g., <a href="http://www.postgresqltutorial.com/postgresql-sample-database/">the dvdrental</a> dataase) and the other empirical tools that are available. For example it’s worth learning to interpret the symbols in an <a href="https://en.wikipedia.org/wiki/Entity%E2%80%93relationship_model">Entity Relationship Diagram</a>:</p>
+</div>
+<div id="look-at-what-r-sends-to-postgresql" class="section level3">
+<h3><span class="header-section-number">10.1.2</span> Look at what R sends to <code>postgreSQL</code></h3>
+<div class="sourceCode" id="cb149"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb149-1" data-line-number="1">rental <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">show_query</span>()</a></code></pre></div>
+<pre><code>## &lt;SQL&gt;
+## SELECT *
+## FROM &quot;rental&quot;</code></pre>
+<p>For large or complex databases, however, you need to use both the available documentation for your database (e.g., <a href="http://www.postgresqltutorial.com/postgresql-sample-database/">the dvdrental</a> database) and the other empirical tools that are available. For example it’s worth learning to interpret the symbols in an <a href="https://en.wikipedia.org/wiki/Entity%E2%80%93relationship_model">Entity Relationship Diagram</a>:</p>
 <p><img src="screenshots/ER-diagram-symbols.png" /></p>
 <p>The <code>information_schema</code> is a trove of information <em>about</em> the database. Its format is more or less consistent across the different SQL implementations that are available. Here we explore some of what’s available using several different methods. Postgres stores <a href="https://www.postgresql.org/docs/current/static/infoschema-columns.html">a lot of metadata</a>.</p>
-<div id="the-information_schema-with-dbplyr" class="section level3">
-<h3><span class="header-section-number">10.1.1</span> The information_schema with dbplyr</h3>
-<p>For this chapter R needs the <code>dbplyr</code> package to access alternate schemas. A <a href="http://www.postgresqltutorial.com/postgresql-server-and-database-objects/">schema</a> is an object that contains one or more tables. Most often there will be a default schema, but to access the metadata, you need to explicitly specify which schema contains the data you want.</p>
-<div class="sourceCode" id="cb147"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb147-1" data-line-number="1"><span class="kw">library</span>(dbplyr)</a></code></pre></div>
-<pre><code>## 
-## Attaching package: &#39;dbplyr&#39;</code></pre>
-<pre><code>## The following objects are masked from &#39;package:dplyr&#39;:
-## 
-##     ident, sql</code></pre>
-<div class="sourceCode" id="cb150"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb150-1" data-line-number="1">columns_info_schema_table &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;information_schema&quot;</span>, <span class="st">&quot;columns&quot;</span>)) </a>
-<a class="sourceLine" id="cb150-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb150-3" data-line-number="3">columns_info_schema_info &lt;-<span class="st"> </span>columns_info_schema_table <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb150-4" data-line-number="4"><span class="st">  </span><span class="kw">select</span>(table_schema, table_name, column_name, data_type, ordinal_position, </a>
-<a class="sourceLine" id="cb150-5" data-line-number="5">         column_default, character_maximum_length) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb150-6" data-line-number="6"><span class="st">  </span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="ot">Inf</span>)</a>
-<a class="sourceLine" id="cb150-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb150-8" data-line-number="8">columns_info_schema_info</a></code></pre></div>
-<pre><code>## # A tibble: 1,855 x 7
-##    table_schema table_name column_name data_type ordinal_position
-##    &lt;chr&gt;        &lt;chr&gt;      &lt;chr&gt;       &lt;chr&gt;                &lt;int&gt;
-##  1 pg_catalog   pg_proc    proname     name                     1
-##  2 pg_catalog   pg_proc    pronamespa… oid                      2
-##  3 pg_catalog   pg_proc    proowner    oid                      3
-##  4 pg_catalog   pg_proc    prolang     oid                      4
-##  5 pg_catalog   pg_proc    procost     real                     5
-##  6 pg_catalog   pg_proc    prorows     real                     6
-##  7 pg_catalog   pg_proc    provariadic oid                      7
-##  8 pg_catalog   pg_proc    protransfo… regproc                  8
-##  9 pg_catalog   pg_proc    proisagg    boolean                  9
-## 10 pg_catalog   pg_proc    proiswindow boolean                 10
-## # ... with 1,845 more rows, and 2 more variables: column_default &lt;chr&gt;,
-## #   character_maximum_length &lt;int&gt;</code></pre>
-<p>For the moment we’re going to drop everything except the columns that are in the <code>public</code> schema.</p>
-<div class="sourceCode" id="cb152"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb152-1" data-line-number="1">public_table_columns &lt;-<span class="st"> </span>columns_info_schema_info <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb152-2" data-line-number="2"><span class="st">  </span><span class="kw">filter</span>(table_schema <span class="op">==</span><span class="st"> &quot;public&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb152-3" data-line-number="3"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>table_schema)</a>
-<a class="sourceLine" id="cb152-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb152-5" data-line-number="5">public_table_columns</a></code></pre></div>
-<pre><code>## # A tibble: 128 x 6
-##    table_name column_name data_type ordinal_position column_default
-##    &lt;chr&gt;      &lt;chr&gt;       &lt;chr&gt;                &lt;int&gt; &lt;chr&gt;         
-##  1 customer   store_id    smallint                 2 &lt;NA&gt;          
-##  2 customer   first_name  characte…                3 &lt;NA&gt;          
-##  3 customer   last_name   characte…                4 &lt;NA&gt;          
-##  4 customer   email       characte…                5 &lt;NA&gt;          
-##  5 customer   address_id  smallint                 6 &lt;NA&gt;          
-##  6 customer   active      integer                 10 &lt;NA&gt;          
-##  7 customer   customer_id integer                  1 nextval(&#39;cust…
-##  8 customer   activebool  boolean                  7 true          
-##  9 customer   create_date date                     8 (&#39;now&#39;::text)…
-## 10 customer   last_update timestam…                9 now()         
-## # ... with 118 more rows, and 1 more variable:
-## #   character_maximum_length &lt;int&gt;</code></pre>
-<p>Pull out some rough-and-ready but useful statistics about your database. Since we are in SQL-land we talk about variables as <code>columns</code>.</p>
-<p>Start with a list of tables names and a count of the number of columns that each one contains.</p>
-<div class="sourceCode" id="cb154"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb154-1" data-line-number="1">public_table_columns <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb154-2" data-line-number="2"><span class="st">  </span><span class="kw">count</span>(table_name, <span class="dt">sort =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb154-3" data-line-number="3"><span class="st">  </span><span class="kw">rename</span>(<span class="dt">number_of_columns =</span> n) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb154-4" data-line-number="4"><span class="st">  </span><span class="kw">as.data.frame</span>() <span class="co"># we want to look at all of them, so bypass the nice tibble row limit</span></a></code></pre></div>
-<pre><code>##                    table_name number_of_columns
-## 1                        film                13
-## 2                       staff                11
-## 3                    customer                10
-## 4               customer_list                 9
-## 5                     address                 8
-## 6                   film_list                 8
-## 7  nicer_but_slower_film_list                 8
-## 8                  staff_list                 8
-## 9                      rental                 7
-## 10                    payment                 6
-## 11                      actor                 4
-## 12                 actor_info                 4
-## 13                       city                 4
-## 14                  inventory                 4
-## 15                      store                 4
-## 16                   category                 3
-## 17                    country                 3
-## 18                 film_actor                 3
-## 19              film_category                 3
-## 20                   language                 3
-## 21             sales_by_store                 3
-## 22     sales_by_film_category                 2</code></pre>
-<p>How many column names are shared across tables (or duplicated)?</p>
-<div class="sourceCode" id="cb156"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb156-1" data-line-number="1">public_table_columns <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(column_name, <span class="dt">sort =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(n <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>)</a></code></pre></div>
-<pre><code>## # A tibble: 34 x 2
-##    column_name     n
-##    &lt;chr&gt;       &lt;int&gt;
-##  1 last_update    14
-##  2 address_id      4
-##  3 film_id         4
-##  4 first_name      4
-##  5 last_name       4
-##  6 name            4
-##  7 store_id        4
-##  8 actor_id        3
-##  9 address         3
-## 10 category        3
-## # ... with 24 more rows</code></pre>
-<p>How many column names are unique?</p>
-<div class="sourceCode" id="cb158"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb158-1" data-line-number="1">public_table_columns <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(column_name) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(n <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>)</a></code></pre></div>
-<pre><code>## # A tibble: 34 x 2
-##    column_name     n
-##    &lt;chr&gt;       &lt;int&gt;
-##  1 active          2
-##  2 actor_id        3
-##  3 actors          2
-##  4 address         3
-##  5 address_id      4
-##  6 category        3
-##  7 category_id     2
-##  8 city            3
-##  9 city_id         2
-## 10 country         3
-## # ... with 24 more rows</code></pre>
-<p>What data types are found in the database?</p>
-<div class="sourceCode" id="cb160"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb160-1" data-line-number="1">public_table_columns <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(data_type)</a></code></pre></div>
-<pre><code>## # A tibble: 13 x 2
-##    data_type                       n
-##    &lt;chr&gt;                       &lt;int&gt;
-##  1 ARRAY                           1
-##  2 boolean                         2
-##  3 bytea                           1
-##  4 character                       1
-##  5 character varying              36
-##  6 date                            1
-##  7 integer                        22
-##  8 numeric                         7
-##  9 smallint                       25
-## 10 text                           11
-## 11 timestamp without time zone    17
-## 12 tsvector                        1
-## 13 USER-DEFINED                    3</code></pre>
 </div>
-<div id="submitting-sql-statements-directly" class="section level3">
-<h3><span class="header-section-number">10.1.2</span> Submitting SQL statements directly</h3>
-<div class="sourceCode" id="cb162"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb162-1" data-line-number="1">table_schema_query  &lt;-<span class="st"> </span><span class="kw">glue</span>(<span class="st">&quot;SELECT &quot;</span>, </a>
-<a class="sourceLine" id="cb162-2" data-line-number="2">  <span class="st">&quot;table_name, column_name, data_type, ordinal_position, column_default, character_maximum_length&quot;</span>, </a>
-<a class="sourceLine" id="cb162-3" data-line-number="3">  <span class="st">&quot; FROM information_schema.columns &quot;</span>, </a>
-<a class="sourceLine" id="cb162-4" data-line-number="4">  <span class="st">&quot;WHERE table_schema = &#39;public&#39;&quot;</span>)</a>
-<a class="sourceLine" id="cb162-5" data-line-number="5"> </a>
-<a class="sourceLine" id="cb162-6" data-line-number="6">  rental_meta_data  &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con, table_schema_query) </a>
-<a class="sourceLine" id="cb162-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb162-8" data-line-number="8"><span class="kw">glimpse</span>(rental_meta_data)</a></code></pre></div>
-<pre><code>## Observations: 128
-## Variables: 6
-## $ table_name               &lt;chr&gt; &quot;actor_info&quot;, &quot;actor_info&quot;, &quot;actor_in...
-## $ column_name              &lt;chr&gt; &quot;actor_id&quot;, &quot;first_name&quot;, &quot;last_name&quot;...
-## $ data_type                &lt;chr&gt; &quot;integer&quot;, &quot;character varying&quot;, &quot;char...
-## $ ordinal_position         &lt;int&gt; 1, 2, 3, 4, 1, 2, 3, 4, 5, 6, 7, 8, 9...
-## $ column_default           &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, N...
-## $ character_maximum_length &lt;int&gt; NA, 45, 45, NA, NA, NA, 50, 10, 20, 5...</code></pre>
-<div class="sourceCode" id="cb164"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb164-1" data-line-number="1">## Get list of database objects</a>
-<a class="sourceLine" id="cb164-2" data-line-number="2">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con</a>
-<a class="sourceLine" id="cb164-3" data-line-number="3">                 ,<span class="st">&quot;select table_catalog,table_schema,table_name,table_type </span></a>
-<a class="sourceLine" id="cb164-4" data-line-number="4"><span class="st">                     from information_schema.tables </span></a>
-<a class="sourceLine" id="cb164-5" data-line-number="5"><span class="st">                    where table_schema not in (&#39;pg_catalog&#39;,&#39;information_schema&#39;)</span></a>
-<a class="sourceLine" id="cb164-6" data-line-number="6"><span class="st">                   order by table_name</span></a>
-<a class="sourceLine" id="cb164-7" data-line-number="7"><span class="st">                  ;&quot;</span></a>
-<a class="sourceLine" id="cb164-8" data-line-number="8">                  )</a>
-<a class="sourceLine" id="cb164-9" data-line-number="9"><span class="co"># Get list of tables </span></a>
-<a class="sourceLine" id="cb164-10" data-line-number="10"><span class="kw">kable</span>(<span class="kw">dbListTables</span>(con))</a></code></pre></div>
+<div id="look-at-what-information_schema-conains" class="section level3">
+<h3><span class="header-section-number">10.1.3</span> Look at what <code>information_schema</code> conains</h3>
+<p>For this chapter R needs the <code>dbplyr</code> package to access alternate schemas. A <a href="http://www.postgresqltutorial.com/postgresql-server-and-database-objects/">schema</a> is an object that contains one or more tables. Most often there will be a default schema, but to access the metadata, you need to explicitly specify which schema contains the data you want.</p>
+</div>
+<div id="look-at-the-tables-first" class="section level3">
+<h3><span class="header-section-number">10.1.4</span> Look at the tables first</h3>
+<p>The simplest way to get a list of tables is with</p>
+<div class="sourceCode" id="cb151"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb151-1" data-line-number="1"><span class="kw">kable</span>(DBI<span class="op">::</span><span class="kw">dbListTables</span>(con))</a></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -599,26 +470,639 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb165"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb165-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con</a>
-<a class="sourceLine" id="cb165-2" data-line-number="2">                 ,<span class="st">&quot;select table_catalog||&#39;.&#39;||table_schema||&#39;.&#39;||table_name table_name</span></a>
-<a class="sourceLine" id="cb165-3" data-line-number="3"><span class="st">                         ,column_name,ordinal_position seq --,data_type</span></a>
-<a class="sourceLine" id="cb165-4" data-line-number="4"><span class="st">                         ,case when data_type = &#39;character varying&#39; </span></a>
-<a class="sourceLine" id="cb165-5" data-line-number="5"><span class="st">                               then data_type || &#39;(&#39;|| character_maximum_length||&#39;)&#39;</span></a>
-<a class="sourceLine" id="cb165-6" data-line-number="6"><span class="st">                               when data_type = &#39;real&#39;</span></a>
-<a class="sourceLine" id="cb165-7" data-line-number="7"><span class="st">                               then data_type || &#39;(&#39; || numeric_precision ||&#39;,&#39;||numeric_precision_radix||&#39;)&#39;</span></a>
-<a class="sourceLine" id="cb165-8" data-line-number="8"><span class="st">                               else data_type</span></a>
-<a class="sourceLine" id="cb165-9" data-line-number="9"><span class="st">                          end data_type</span></a>
-<a class="sourceLine" id="cb165-10" data-line-number="10"><span class="st">--                         ,character_maximum_length,numeric_precision,numeric_precision_radix</span></a>
-<a class="sourceLine" id="cb165-11" data-line-number="11"><span class="st">                     from information_schema.columns</span></a>
-<a class="sourceLine" id="cb165-12" data-line-number="12"><span class="st">                    where table_name in (select table_name</span></a>
-<a class="sourceLine" id="cb165-13" data-line-number="13"><span class="st">                                           from information_schema.tables</span></a>
-<a class="sourceLine" id="cb165-14" data-line-number="14"><span class="st">                                         where table_schema not in (&#39;pg_catalog&#39;,&#39;information_schema&#39;)</span></a>
-<a class="sourceLine" id="cb165-15" data-line-number="15"><span class="st">                                         )</span></a>
-<a class="sourceLine" id="cb165-16" data-line-number="16"><span class="st">                   order by table_name,ordinal_position;</span></a>
-<a class="sourceLine" id="cb165-17" data-line-number="17"></a>
-<a class="sourceLine" id="cb165-18" data-line-number="18"><span class="st">                  ;&quot;</span></a>
-<a class="sourceLine" id="cb165-19" data-line-number="19">                  )</a>
-<a class="sourceLine" id="cb165-20" data-line-number="20"><span class="kw">kable</span>(<span class="kw">head</span>(rs, <span class="dt">n =</span> <span class="dv">20</span>))</a></code></pre></div>
+<p>Often we want more detail than just a list of tables.</p>
+<div class="sourceCode" id="cb152"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb152-1" data-line-number="1"><span class="co"># table_catalog is the same as `database`.</span></a>
+<a class="sourceLine" id="cb152-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb152-3" data-line-number="3">table_info_schema_table &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, dbplyr<span class="op">::</span><span class="kw">in_schema</span>(<span class="st">&quot;information_schema&quot;</span>, <span class="st">&quot;tables&quot;</span>))</a>
+<a class="sourceLine" id="cb152-4" data-line-number="4">table_info_schema_table <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb152-5" data-line-number="5"><span class="st">  </span><span class="kw">filter</span>(table_schema <span class="op">==</span><span class="st"> &quot;public&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb152-6" data-line-number="6"><span class="st">  </span><span class="kw">select</span>(table_catalog, table_schema, table_name, table_type) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb152-7" data-line-number="7"><span class="st">  </span><span class="kw">arrange</span>(table_type, table_name) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb152-8" data-line-number="8"><span class="st">  </span><span class="kw">collect</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb152-9" data-line-number="9"><span class="st">  </span><span class="kw">kable</span>()</a></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">table_catalog</th>
+<th align="left">table_schema</th>
+<th align="left">table_name</th>
+<th align="left">table_type</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">actor</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">address</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">category</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">city</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">country</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">customer</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">film</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">film_actor</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">film_category</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">inventory</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">language</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">payment</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">rental</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">staff</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">store</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">actor_info</td>
+<td align="left">VIEW</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">customer_list</td>
+<td align="left">VIEW</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">film_list</td>
+<td align="left">VIEW</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">nicer_but_slower_film_list</td>
+<td align="left">VIEW</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">sales_by_film_category</td>
+<td align="left">VIEW</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">sales_by_store</td>
+<td align="left">VIEW</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">staff_list</td>
+<td align="left">VIEW</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb153"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb153-1" data-line-number="1">table_info_schema_table <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb153-2" data-line-number="2"><span class="st">  </span><span class="kw">filter</span>(table_schema <span class="op">==</span><span class="st"> &quot;public&quot;</span>) <span class="op">%&gt;%</span><span class="st">  </span><span class="co"># See alternative below</span></a>
+<a class="sourceLine" id="cb153-3" data-line-number="3"><span class="st">  </span><span class="kw">select</span>(table_catalog, table_schema, table_name, table_type) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb153-4" data-line-number="4"><span class="st">  </span><span class="kw">arrange</span>(table_type, table_name) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb153-5" data-line-number="5"><span class="st">  </span><span class="kw">show_query</span>()</a></code></pre></div>
+<pre><code>## &lt;SQL&gt;
+## SELECT &quot;table_catalog&quot;, &quot;table_schema&quot;, &quot;table_name&quot;, &quot;table_type&quot;
+## FROM information_schema.tables
+## WHERE (&quot;table_schema&quot; = &#39;public&#39;)
+## ORDER BY &quot;table_type&quot;, &quot;table_name&quot;</code></pre>
+<div class="sourceCode" id="cb155"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb155-1" data-line-number="1"><span class="co"># notice that VIEWS are composites made up of one or more BASE TABLES</span></a></code></pre></div>
+<p>Get list of database objects
+SophieYang: is <code>rs</code> your shorthand for <code>result</code>?</p>
+<p>Also:</p>
+<p>WHERE (“table_schema” = ‘public’)</p>
+<p>is the same as</p>
+<p>where table_schema not in (‘pg_catalog’,‘information_schema’)</p>
+<div class="sourceCode" id="cb156"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb156-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(</a>
+<a class="sourceLine" id="cb156-2" data-line-number="2">  con,</a>
+<a class="sourceLine" id="cb156-3" data-line-number="3">  <span class="st">&quot;select table_catalog,table_schema,table_name,table_type </span></a>
+<a class="sourceLine" id="cb156-4" data-line-number="4"><span class="st">  from information_schema.tables </span></a>
+<a class="sourceLine" id="cb156-5" data-line-number="5"><span class="st">  where table_schema not in (&#39;pg_catalog&#39;,&#39;information_schema&#39;)</span></a>
+<a class="sourceLine" id="cb156-6" data-line-number="6"><span class="st">  order by table_type, table_name </span></a>
+<a class="sourceLine" id="cb156-7" data-line-number="7"><span class="st">  ;&quot;</span></a>
+<a class="sourceLine" id="cb156-8" data-line-number="8">)</a>
+<a class="sourceLine" id="cb156-9" data-line-number="9"><span class="co"># Get list of tables</span></a>
+<a class="sourceLine" id="cb156-10" data-line-number="10"><span class="kw">kable</span>(rs)</a></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">table_catalog</th>
+<th align="left">table_schema</th>
+<th align="left">table_name</th>
+<th align="left">table_type</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">actor</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">address</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">category</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">city</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">country</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">customer</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">film</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">film_actor</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">film_category</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">inventory</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">language</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">payment</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">rental</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">staff</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">store</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">actor_info</td>
+<td align="left">VIEW</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">customer_list</td>
+<td align="left">VIEW</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">film_list</td>
+<td align="left">VIEW</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">nicer_but_slower_film_list</td>
+<td align="left">VIEW</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">sales_by_film_category</td>
+<td align="left">VIEW</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">sales_by_store</td>
+<td align="left">VIEW</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">staff_list</td>
+<td align="left">VIEW</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="drill-down-into-the-columns" class="section level3">
+<h3><span class="header-section-number">10.1.5</span> Drill down into the columns</h3>
+<p>Of course, the <code>DBI</code> package has the simplest way to get a little metadata.</p>
+<div class="sourceCode" id="cb157"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb157-1" data-line-number="1">DBI<span class="op">::</span><span class="kw">dbListFields</span>(con, <span class="st">&quot;rental&quot;</span>)</a></code></pre></div>
+<pre><code>## [1] &quot;rental_id&quot;    &quot;rental_date&quot;  &quot;inventory_id&quot; &quot;customer_id&quot; 
+## [5] &quot;return_date&quot;  &quot;staff_id&quot;     &quot;last_update&quot;</code></pre>
+<div class="sourceCode" id="cb159"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb159-1" data-line-number="1">columns_info_schema_table &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, dbplyr<span class="op">::</span><span class="kw">in_schema</span>(<span class="st">&quot;information_schema&quot;</span>, <span class="st">&quot;columns&quot;</span>)) </a>
+<a class="sourceLine" id="cb159-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb159-3" data-line-number="3">columns_info_schema_info &lt;-<span class="st"> </span>columns_info_schema_table <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb159-4" data-line-number="4"><span class="st">  </span><span class="kw">filter</span>(table_schema <span class="op">==</span><span class="st"> &quot;public&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb159-5" data-line-number="5"><span class="st">  </span><span class="kw">select</span>(</a>
+<a class="sourceLine" id="cb159-6" data-line-number="6">    table_name, column_name, data_type, ordinal_position,</a>
+<a class="sourceLine" id="cb159-7" data-line-number="7">    character_maximum_length, column_default</a>
+<a class="sourceLine" id="cb159-8" data-line-number="8">  ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb159-9" data-line-number="9"><span class="st">  </span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="ot">Inf</span>)</a>
+<a class="sourceLine" id="cb159-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb159-11" data-line-number="11"><span class="kw">glimpse</span>(columns_info_schema_info)</a></code></pre></div>
+<pre><code>## Observations: 128
+## Variables: 6
+## $ table_name               &lt;chr&gt; &quot;actor_info&quot;, &quot;actor_info&quot;, &quot;actor_in...
+## $ column_name              &lt;chr&gt; &quot;actor_id&quot;, &quot;first_name&quot;, &quot;last_name&quot;...
+## $ data_type                &lt;chr&gt; &quot;integer&quot;, &quot;character varying&quot;, &quot;char...
+## $ ordinal_position         &lt;int&gt; 1, 2, 3, 4, 1, 2, 3, 4, 5, 6, 7, 8, 9...
+## $ character_maximum_length &lt;int&gt; NA, 45, 45, NA, NA, NA, 50, 10, 20, 5...
+## $ column_default           &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, N...</code></pre>
+<p>With a data frame from the <code>columns</code> table in <code>information_schema</code>, we can answer a number of questions</p>
+<div class="sourceCode" id="cb161"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb161-1" data-line-number="1">columns_info_schema_info <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb161-2" data-line-number="2"><span class="st">  </span><span class="kw">filter</span>(table_name <span class="op">==</span><span class="st"> &quot;rental&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb161-3" data-line-number="3"><span class="st">  </span><span class="kw">kable</span>()</a></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">table_name</th>
+<th align="left">column_name</th>
+<th align="left">data_type</th>
+<th align="right">ordinal_position</th>
+<th align="right">character_maximum_length</th>
+<th align="left">column_default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">rental</td>
+<td align="left">rental_id</td>
+<td align="left">integer</td>
+<td align="right">1</td>
+<td align="right">NA</td>
+<td align="left">nextval(‘rental_rental_id_seq’::regclass)</td>
+</tr>
+<tr class="even">
+<td align="left">rental</td>
+<td align="left">rental_date</td>
+<td align="left">timestamp without time zone</td>
+<td align="right">2</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">rental</td>
+<td align="left">inventory_id</td>
+<td align="left">integer</td>
+<td align="right">3</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">rental</td>
+<td align="left">customer_id</td>
+<td align="left">smallint</td>
+<td align="right">4</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">rental</td>
+<td align="left">return_date</td>
+<td align="left">timestamp without time zone</td>
+<td align="right">5</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">rental</td>
+<td align="left">staff_id</td>
+<td align="left">smallint</td>
+<td align="right">6</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">rental</td>
+<td align="left">last_update</td>
+<td align="left">timestamp without time zone</td>
+<td align="right">7</td>
+<td align="right">NA</td>
+<td align="left">now()</td>
+</tr>
+</tbody>
+</table>
+<p>Pull out some rough-and-ready but useful statistics about your database. Since we are in SQL-land we talk about variables as <code>columns</code>.</p>
+<p>Create a list of tables names and a count of the number of columns that each one contains.</p>
+<div class="sourceCode" id="cb162"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb162-1" data-line-number="1">columns_info_schema_table <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb162-2" data-line-number="2"><span class="st">  </span><span class="kw">filter</span>(table_schema <span class="op">==</span><span class="st"> &quot;public&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb162-3" data-line-number="3"><span class="st">  </span><span class="kw">count</span>(table_name, <span class="dt">sort =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb162-4" data-line-number="4"><span class="st">  </span><span class="kw">kable</span>()</a></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">table_name</th>
+<th align="right">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">film</td>
+<td align="right">13</td>
+</tr>
+<tr class="even">
+<td align="left">staff</td>
+<td align="right">11</td>
+</tr>
+<tr class="odd">
+<td align="left">customer</td>
+<td align="right">10</td>
+</tr>
+<tr class="even">
+<td align="left">customer_list</td>
+<td align="right">9</td>
+</tr>
+<tr class="odd">
+<td align="left">film_list</td>
+<td align="right">8</td>
+</tr>
+<tr class="even">
+<td align="left">staff_list</td>
+<td align="right">8</td>
+</tr>
+<tr class="odd">
+<td align="left">address</td>
+<td align="right">8</td>
+</tr>
+<tr class="even">
+<td align="left">nicer_but_slower_film_list</td>
+<td align="right">8</td>
+</tr>
+<tr class="odd">
+<td align="left">rental</td>
+<td align="right">7</td>
+</tr>
+<tr class="even">
+<td align="left">payment</td>
+<td align="right">6</td>
+</tr>
+<tr class="odd">
+<td align="left">actor_info</td>
+<td align="right">4</td>
+</tr>
+<tr class="even">
+<td align="left">actor</td>
+<td align="right">4</td>
+</tr>
+<tr class="odd">
+<td align="left">store</td>
+<td align="right">4</td>
+</tr>
+<tr class="even">
+<td align="left">city</td>
+<td align="right">4</td>
+</tr>
+<tr class="odd">
+<td align="left">inventory</td>
+<td align="right">4</td>
+</tr>
+<tr class="even">
+<td align="left">film_category</td>
+<td align="right">3</td>
+</tr>
+<tr class="odd">
+<td align="left">category</td>
+<td align="right">3</td>
+</tr>
+<tr class="even">
+<td align="left">film_actor</td>
+<td align="right">3</td>
+</tr>
+<tr class="odd">
+<td align="left">language</td>
+<td align="right">3</td>
+</tr>
+<tr class="even">
+<td align="left">sales_by_store</td>
+<td align="right">3</td>
+</tr>
+<tr class="odd">
+<td align="left">country</td>
+<td align="right">3</td>
+</tr>
+<tr class="even">
+<td align="left">sales_by_film_category</td>
+<td align="right">2</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb163"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb163-1" data-line-number="1"><span class="co"># For the same query, show the SQL code that dplyr sends to PostgreSQL</span></a>
+<a class="sourceLine" id="cb163-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb163-3" data-line-number="3">columns_info_schema_table <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb163-4" data-line-number="4"><span class="st">  </span><span class="kw">filter</span>(table_schema <span class="op">==</span><span class="st"> &quot;public&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb163-5" data-line-number="5"><span class="st">  </span><span class="kw">count</span>(table_name, <span class="dt">sort =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb163-6" data-line-number="6"><span class="st">  </span><span class="kw">show_query</span>()</a></code></pre></div>
+<pre><code>## &lt;SQL&gt;
+## SELECT &quot;table_name&quot;, COUNT(*) AS &quot;n&quot;
+## FROM information_schema.columns
+## WHERE (&quot;table_schema&quot; = &#39;public&#39;)
+## GROUP BY &quot;table_name&quot;
+## ORDER BY &quot;n&quot; DESC</code></pre>
+<p>How many column names are shared across tables (or duplicated)?</p>
+<div class="sourceCode" id="cb165"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb165-1" data-line-number="1">columns_info_schema_info <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(column_name, <span class="dt">sort =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(n <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>)</a></code></pre></div>
+<pre><code>## # A tibble: 34 x 2
+##    column_name     n
+##    &lt;chr&gt;       &lt;int&gt;
+##  1 last_update    14
+##  2 address_id      4
+##  3 film_id         4
+##  4 first_name      4
+##  5 last_name       4
+##  6 name            4
+##  7 store_id        4
+##  8 actor_id        3
+##  9 address         3
+## 10 category        3
+## # ... with 24 more rows</code></pre>
+<p>How many column names are unique?</p>
+<div class="sourceCode" id="cb167"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb167-1" data-line-number="1">columns_info_schema_info <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(column_name) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(n <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>)</a></code></pre></div>
+<pre><code>## # A tibble: 34 x 2
+##    column_name     n
+##    &lt;chr&gt;       &lt;int&gt;
+##  1 active          2
+##  2 actor_id        3
+##  3 actors          2
+##  4 address         3
+##  5 address_id      4
+##  6 category        3
+##  7 category_id     2
+##  8 city            3
+##  9 city_id         2
+## 10 country         3
+## # ... with 24 more rows</code></pre>
+<p>What data types are found in the database?</p>
+<div class="sourceCode" id="cb169"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb169-1" data-line-number="1">columns_info_schema_info <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(data_type)</a></code></pre></div>
+<pre><code>## # A tibble: 13 x 2
+##    data_type                       n
+##    &lt;chr&gt;                       &lt;int&gt;
+##  1 ARRAY                           1
+##  2 boolean                         2
+##  3 bytea                           1
+##  4 character                       1
+##  5 character varying              36
+##  6 date                            1
+##  7 integer                        22
+##  8 numeric                         7
+##  9 smallint                       25
+## 10 text                           11
+## 11 timestamp without time zone    17
+## 12 tsvector                        1
+## 13 USER-DEFINED                    3</code></pre>
+</div>
+<div id="submitting-sql-statements-directly" class="section level3">
+<h3><span class="header-section-number">10.1.6</span> Submitting SQL statements directly</h3>
+<div class="sourceCode" id="cb171"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb171-1" data-line-number="1">table_schema_query &lt;-<span class="st"> </span><span class="kw">glue</span>(</a>
+<a class="sourceLine" id="cb171-2" data-line-number="2">  <span class="st">&quot;SELECT &quot;</span>,</a>
+<a class="sourceLine" id="cb171-3" data-line-number="3">  <span class="st">&quot;table_name, column_name, data_type, ordinal_position, character_maximum_length, column_default&quot;</span>,</a>
+<a class="sourceLine" id="cb171-4" data-line-number="4">  <span class="st">&quot; FROM information_schema.columns &quot;</span>,</a>
+<a class="sourceLine" id="cb171-5" data-line-number="5">  <span class="st">&quot;WHERE table_schema = &#39;public&#39;&quot;</span></a>
+<a class="sourceLine" id="cb171-6" data-line-number="6">)</a>
+<a class="sourceLine" id="cb171-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb171-8" data-line-number="8">rental_meta_data &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con, table_schema_query)</a>
+<a class="sourceLine" id="cb171-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb171-10" data-line-number="10"><span class="kw">glimpse</span>(rental_meta_data)</a></code></pre></div>
+<pre><code>## Observations: 128
+## Variables: 6
+## $ table_name               &lt;chr&gt; &quot;actor_info&quot;, &quot;actor_info&quot;, &quot;actor_in...
+## $ column_name              &lt;chr&gt; &quot;actor_id&quot;, &quot;first_name&quot;, &quot;last_name&quot;...
+## $ data_type                &lt;chr&gt; &quot;integer&quot;, &quot;character varying&quot;, &quot;char...
+## $ ordinal_position         &lt;int&gt; 1, 2, 3, 4, 1, 2, 3, 4, 5, 6, 7, 8, 9...
+## $ character_maximum_length &lt;int&gt; NA, 45, 45, NA, NA, NA, 50, 10, 20, 5...
+## $ column_default           &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, N...</code></pre>
+<div class="sourceCode" id="cb173"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb173-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(</a>
+<a class="sourceLine" id="cb173-2" data-line-number="2">  con</a>
+<a class="sourceLine" id="cb173-3" data-line-number="3">  , <span class="st">&quot;select table_catalog||&#39;.&#39;||table_schema||&#39;.&#39;||table_name table_name</span></a>
+<a class="sourceLine" id="cb173-4" data-line-number="4"><span class="st">                         ,column_name,ordinal_position seq --,data_type</span></a>
+<a class="sourceLine" id="cb173-5" data-line-number="5"><span class="st">                         ,case when data_type = &#39;character varying&#39; </span></a>
+<a class="sourceLine" id="cb173-6" data-line-number="6"><span class="st">                               then data_type || &#39;(&#39;|| character_maximum_length||&#39;)&#39;</span></a>
+<a class="sourceLine" id="cb173-7" data-line-number="7"><span class="st">                               when data_type = &#39;real&#39;</span></a>
+<a class="sourceLine" id="cb173-8" data-line-number="8"><span class="st">                               then data_type || &#39;(&#39; || numeric_precision ||&#39;,&#39;||numeric_precision_radix||&#39;)&#39;</span></a>
+<a class="sourceLine" id="cb173-9" data-line-number="9"><span class="st">                               else data_type</span></a>
+<a class="sourceLine" id="cb173-10" data-line-number="10"><span class="st">                          end data_type</span></a>
+<a class="sourceLine" id="cb173-11" data-line-number="11"><span class="st">--                         ,character_maximum_length,numeric_precision,numeric_precision_radix</span></a>
+<a class="sourceLine" id="cb173-12" data-line-number="12"><span class="st">                     from information_schema.columns</span></a>
+<a class="sourceLine" id="cb173-13" data-line-number="13"><span class="st">                    where table_name in (select table_name</span></a>
+<a class="sourceLine" id="cb173-14" data-line-number="14"><span class="st">                                           from information_schema.tables</span></a>
+<a class="sourceLine" id="cb173-15" data-line-number="15"><span class="st">                                         where table_schema not in (&#39;pg_catalog&#39;,&#39;information_schema&#39;)</span></a>
+<a class="sourceLine" id="cb173-16" data-line-number="16"><span class="st">                                         )</span></a>
+<a class="sourceLine" id="cb173-17" data-line-number="17"><span class="st">                   order by table_name,ordinal_position;</span></a>
+<a class="sourceLine" id="cb173-18" data-line-number="18"></a>
+<a class="sourceLine" id="cb173-19" data-line-number="19"><span class="st">                  ;&quot;</span></a>
+<a class="sourceLine" id="cb173-20" data-line-number="20">)</a>
+<a class="sourceLine" id="cb173-21" data-line-number="21"><span class="kw">kable</span>(<span class="kw">head</span>(rs, <span class="dt">n =</span> <span class="dv">20</span>))</a></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -757,19 +1241,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb166"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb166-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
-<a class="sourceLine" id="cb166-2" data-line-number="2"><span class="st">&quot;</span></a>
-<a class="sourceLine" id="cb166-3" data-line-number="3"><span class="st">--SELECT conrelid::regclass as table_from</span></a>
-<a class="sourceLine" id="cb166-4" data-line-number="4"><span class="st">select table_catalog||&#39;.&#39;||table_schema||&#39;.&#39;||table_name table_name</span></a>
-<a class="sourceLine" id="cb166-5" data-line-number="5"><span class="st">,conname,pg_catalog.pg_get_constraintdef(r.oid, true) as condef</span></a>
-<a class="sourceLine" id="cb166-6" data-line-number="6"><span class="st">FROM information_schema.columns c,pg_catalog.pg_constraint r</span></a>
-<a class="sourceLine" id="cb166-7" data-line-number="7"><span class="st">WHERE 1 = 1 --r.conrelid = &#39;16485&#39; </span></a>
-<a class="sourceLine" id="cb166-8" data-line-number="8"><span class="st">  AND r.contype  in (&#39;f&#39;,&#39;p&#39;) ORDER BY 1</span></a>
-<a class="sourceLine" id="cb166-9" data-line-number="9"><span class="st">;&quot;</span></a>
-<a class="sourceLine" id="cb166-10" data-line-number="10">)</a>
-<a class="sourceLine" id="cb166-11" data-line-number="11"></a>
-<a class="sourceLine" id="cb166-12" data-line-number="12"></a>
-<a class="sourceLine" id="cb166-13" data-line-number="13"><span class="kw">kable</span>(<span class="kw">head</span>(rs))</a></code></pre></div>
+<div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb174-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(</a>
+<a class="sourceLine" id="cb174-2" data-line-number="2">  con,</a>
+<a class="sourceLine" id="cb174-3" data-line-number="3">  <span class="st">&quot;</span></a>
+<a class="sourceLine" id="cb174-4" data-line-number="4"><span class="st">--SELECT conrelid::regclass as table_from</span></a>
+<a class="sourceLine" id="cb174-5" data-line-number="5"><span class="st">select table_catalog||&#39;.&#39;||table_schema||&#39;.&#39;||table_name table_name</span></a>
+<a class="sourceLine" id="cb174-6" data-line-number="6"><span class="st">,conname,pg_catalog.pg_get_constraintdef(r.oid, true) as condef</span></a>
+<a class="sourceLine" id="cb174-7" data-line-number="7"><span class="st">FROM information_schema.columns c,pg_catalog.pg_constraint r</span></a>
+<a class="sourceLine" id="cb174-8" data-line-number="8"><span class="st">WHERE 1 = 1 --r.conrelid = &#39;16485&#39; </span></a>
+<a class="sourceLine" id="cb174-9" data-line-number="9"><span class="st">  AND r.contype  in (&#39;f&#39;,&#39;p&#39;) ORDER BY 1</span></a>
+<a class="sourceLine" id="cb174-10" data-line-number="10"><span class="st">;&quot;</span></a>
+<a class="sourceLine" id="cb174-11" data-line-number="11">)</a>
+<a class="sourceLine" id="cb174-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb174-13" data-line-number="13"><span class="kw">kable</span>(<span class="kw">head</span>(rs))</a></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -811,17 +1295,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb167"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb167-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
-<a class="sourceLine" id="cb167-2" data-line-number="2"><span class="st">&quot;select conrelid::regclass as table_from</span></a>
-<a class="sourceLine" id="cb167-3" data-line-number="3"><span class="st">      ,c.conname</span></a>
-<a class="sourceLine" id="cb167-4" data-line-number="4"><span class="st">      ,pg_get_constraintdef(c.oid)</span></a>
-<a class="sourceLine" id="cb167-5" data-line-number="5"><span class="st">  from pg_constraint c</span></a>
-<a class="sourceLine" id="cb167-6" data-line-number="6"><span class="st">  join pg_namespace n on n.oid = c.connamespace</span></a>
-<a class="sourceLine" id="cb167-7" data-line-number="7"><span class="st"> where c.contype in (&#39;f&#39;,&#39;p&#39;)</span></a>
-<a class="sourceLine" id="cb167-8" data-line-number="8"><span class="st">   and n.nspname = &#39;public&#39;</span></a>
-<a class="sourceLine" id="cb167-9" data-line-number="9"><span class="st">order by conrelid::regclass::text, contype DESC;</span></a>
-<a class="sourceLine" id="cb167-10" data-line-number="10"><span class="st">&quot;</span>)</a>
-<a class="sourceLine" id="cb167-11" data-line-number="11"><span class="kw">kable</span>(<span class="kw">head</span>(rs))</a></code></pre></div>
+<div class="sourceCode" id="cb175"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb175-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(</a>
+<a class="sourceLine" id="cb175-2" data-line-number="2">  con,</a>
+<a class="sourceLine" id="cb175-3" data-line-number="3">  <span class="st">&quot;select conrelid::regclass as table_from</span></a>
+<a class="sourceLine" id="cb175-4" data-line-number="4"><span class="st">      ,c.conname</span></a>
+<a class="sourceLine" id="cb175-5" data-line-number="5"><span class="st">      ,pg_get_constraintdef(c.oid)</span></a>
+<a class="sourceLine" id="cb175-6" data-line-number="6"><span class="st">  from pg_constraint c</span></a>
+<a class="sourceLine" id="cb175-7" data-line-number="7"><span class="st">  join pg_namespace n on n.oid = c.connamespace</span></a>
+<a class="sourceLine" id="cb175-8" data-line-number="8"><span class="st"> where c.contype in (&#39;f&#39;,&#39;p&#39;)</span></a>
+<a class="sourceLine" id="cb175-9" data-line-number="9"><span class="st">   and n.nspname = &#39;public&#39;</span></a>
+<a class="sourceLine" id="cb175-10" data-line-number="10"><span class="st">order by conrelid::regclass::text, contype DESC;</span></a>
+<a class="sourceLine" id="cb175-11" data-line-number="11"><span class="st">&quot;</span></a>
+<a class="sourceLine" id="cb175-12" data-line-number="12">)</a>
+<a class="sourceLine" id="cb175-13" data-line-number="13"><span class="kw">kable</span>(<span class="kw">head</span>(rs))</a></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -863,16 +1349,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb168"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb168-1" data-line-number="1"><span class="kw">dim</span>(rs)[<span class="dv">1</span>]</a></code></pre></div>
+<div class="sourceCode" id="cb176"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb176-1" data-line-number="1"><span class="kw">dim</span>(rs)[<span class="dv">1</span>]</a></code></pre></div>
 <pre><code>## [1] 33</code></pre>
-<div class="sourceCode" id="cb170"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb170-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
-<a class="sourceLine" id="cb170-2" data-line-number="2"><span class="st">&quot;SELECT r.*,</span></a>
-<a class="sourceLine" id="cb170-3" data-line-number="3"><span class="st">  pg_catalog.pg_get_constraintdef(r.oid, true) as condef</span></a>
-<a class="sourceLine" id="cb170-4" data-line-number="4"><span class="st">FROM pg_catalog.pg_constraint r</span></a>
-<a class="sourceLine" id="cb170-5" data-line-number="5"><span class="st">WHERE 1=1 --r.conrelid = &#39;16485&#39; AND r.contype = &#39;f&#39; ORDER BY 1;</span></a>
-<a class="sourceLine" id="cb170-6" data-line-number="6"><span class="st">&quot;</span>)</a>
-<a class="sourceLine" id="cb170-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb170-8" data-line-number="8"><span class="kw">head</span>(rs)</a></code></pre></div>
+<div class="sourceCode" id="cb178"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb178-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(</a>
+<a class="sourceLine" id="cb178-2" data-line-number="2">  con,</a>
+<a class="sourceLine" id="cb178-3" data-line-number="3">  <span class="st">&quot;SELECT r.*,</span></a>
+<a class="sourceLine" id="cb178-4" data-line-number="4"><span class="st">  pg_catalog.pg_get_constraintdef(r.oid, true) as condef</span></a>
+<a class="sourceLine" id="cb178-5" data-line-number="5"><span class="st">FROM pg_catalog.pg_constraint r</span></a>
+<a class="sourceLine" id="cb178-6" data-line-number="6"><span class="st">WHERE 1=1 --r.conrelid = &#39;16485&#39; AND r.contype = &#39;f&#39; ORDER BY 1;</span></a>
+<a class="sourceLine" id="cb178-7" data-line-number="7"><span class="st">&quot;</span></a>
+<a class="sourceLine" id="cb178-8" data-line-number="8">)</a>
+<a class="sourceLine" id="cb178-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb178-10" data-line-number="10"><span class="kw">head</span>(rs)</a></code></pre></div>
 <pre><code>##                        conname connamespace contype condeferrable
 ## 1 cardinal_number_domain_check        12703       c         FALSE
 ## 2              yes_or_no_check        12703       c         FALSE
@@ -922,6 +1410,211 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 4                                                                       PRIMARY KEY (actor_id)
 ## 5                                                                     PRIMARY KEY (address_id)
 ## 6                                                                    PRIMARY KEY (category_id)</code></pre>
+</div>
+<div id="what-is-the-difference-between-views-and-base-tables" class="section level3">
+<h3><span class="header-section-number">10.1.7</span> What is the difference between <code>VIEW</code>s and <code>BASE TABLE</code>s?</h3>
+<div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb180-1" data-line-number="1">table_info_schema_table <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb180-2" data-line-number="2"><span class="st">  </span><span class="kw">filter</span>(table_schema <span class="op">==</span><span class="st"> &quot;public&quot;</span> <span class="op">&amp;</span><span class="st"> </span>table_type <span class="op">==</span><span class="st"> &quot;VIEW&quot;</span>) <span class="op">%&gt;%</span><span class="st">  </span><span class="co"># See alternative below</span></a>
+<a class="sourceLine" id="cb180-3" data-line-number="3"><span class="st">  </span><span class="kw">select</span>(table_name) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb180-4" data-line-number="4"><span class="st">  </span><span class="kw">left_join</span>(columns_info_schema_table, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;table_name&quot;</span> =<span class="st"> &quot;table_name&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb180-5" data-line-number="5"><span class="st">  </span><span class="kw">select</span>(</a>
+<a class="sourceLine" id="cb180-6" data-line-number="6">    table_name, column_name, data_type, ordinal_position,</a>
+<a class="sourceLine" id="cb180-7" data-line-number="7">    character_maximum_length, column_default</a>
+<a class="sourceLine" id="cb180-8" data-line-number="8">  ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb180-9" data-line-number="9"><span class="st">  </span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="ot">Inf</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb180-10" data-line-number="10"><span class="st">  </span><span class="kw">filter</span>(<span class="kw">str_detect</span>(table_name, <span class="st">&quot;cust&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb180-11" data-line-number="11"><span class="st">  </span><span class="kw">kable</span>()</a></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">table_name</th>
+<th align="left">column_name</th>
+<th align="left">data_type</th>
+<th align="right">ordinal_position</th>
+<th align="right">character_maximum_length</th>
+<th align="left">column_default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">customer_list</td>
+<td align="left">id</td>
+<td align="left">integer</td>
+<td align="right">1</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">customer_list</td>
+<td align="left">name</td>
+<td align="left">text</td>
+<td align="right">2</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">customer_list</td>
+<td align="left">address</td>
+<td align="left">character varying</td>
+<td align="right">3</td>
+<td align="right">50</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">customer_list</td>
+<td align="left">zip code</td>
+<td align="left">character varying</td>
+<td align="right">4</td>
+<td align="right">10</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">customer_list</td>
+<td align="left">phone</td>
+<td align="left">character varying</td>
+<td align="right">5</td>
+<td align="right">20</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">customer_list</td>
+<td align="left">city</td>
+<td align="left">character varying</td>
+<td align="right">6</td>
+<td align="right">50</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">customer_list</td>
+<td align="left">country</td>
+<td align="left">character varying</td>
+<td align="right">7</td>
+<td align="right">50</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">customer_list</td>
+<td align="left">notes</td>
+<td align="left">text</td>
+<td align="right">8</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">customer_list</td>
+<td align="left">sid</td>
+<td align="left">smallint</td>
+<td align="right">9</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb181-1" data-line-number="1">table_info_schema_table <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb181-2" data-line-number="2"><span class="st">  </span><span class="kw">filter</span>(table_schema <span class="op">==</span><span class="st"> &quot;public&quot;</span> <span class="op">&amp;</span><span class="st"> </span>table_type <span class="op">==</span><span class="st"> &quot;BASE TABLE&quot;</span>) <span class="op">%&gt;%</span><span class="st">  </span><span class="co"># See alternative below</span></a>
+<a class="sourceLine" id="cb181-3" data-line-number="3"><span class="st">  </span><span class="kw">select</span>(table_name) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb181-4" data-line-number="4"><span class="st">  </span><span class="kw">left_join</span>(columns_info_schema_table, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;table_name&quot;</span> =<span class="st"> &quot;table_name&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb181-5" data-line-number="5"><span class="st">  </span><span class="kw">select</span>(</a>
+<a class="sourceLine" id="cb181-6" data-line-number="6">    table_name, column_name, data_type, ordinal_position,</a>
+<a class="sourceLine" id="cb181-7" data-line-number="7">    character_maximum_length, column_default</a>
+<a class="sourceLine" id="cb181-8" data-line-number="8">  ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb181-9" data-line-number="9"><span class="st">  </span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="ot">Inf</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb181-10" data-line-number="10"><span class="st">  </span><span class="kw">filter</span>(<span class="kw">str_detect</span>(table_name, <span class="st">&quot;cust&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb181-11" data-line-number="11"><span class="st">  </span><span class="kw">kable</span>()</a></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">table_name</th>
+<th align="left">column_name</th>
+<th align="left">data_type</th>
+<th align="right">ordinal_position</th>
+<th align="right">character_maximum_length</th>
+<th align="left">column_default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">customer</td>
+<td align="left">store_id</td>
+<td align="left">smallint</td>
+<td align="right">2</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">customer</td>
+<td align="left">first_name</td>
+<td align="left">character varying</td>
+<td align="right">3</td>
+<td align="right">45</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">customer</td>
+<td align="left">last_name</td>
+<td align="left">character varying</td>
+<td align="right">4</td>
+<td align="right">45</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">customer</td>
+<td align="left">email</td>
+<td align="left">character varying</td>
+<td align="right">5</td>
+<td align="right">50</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">customer</td>
+<td align="left">address_id</td>
+<td align="left">smallint</td>
+<td align="right">6</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">customer</td>
+<td align="left">active</td>
+<td align="left">integer</td>
+<td align="right">10</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">customer</td>
+<td align="left">customer_id</td>
+<td align="left">integer</td>
+<td align="right">1</td>
+<td align="right">NA</td>
+<td align="left">nextval(‘customer_customer_id_seq’::regclass)</td>
+</tr>
+<tr class="even">
+<td align="left">customer</td>
+<td align="left">activebool</td>
+<td align="left">boolean</td>
+<td align="right">7</td>
+<td align="right">NA</td>
+<td align="left">true</td>
+</tr>
+<tr class="odd">
+<td align="left">customer</td>
+<td align="left">create_date</td>
+<td align="left">date</td>
+<td align="right">8</td>
+<td align="right">NA</td>
+<td align="left">(‘now’::text)::date</td>
+</tr>
+<tr class="even">
+<td align="left">customer</td>
+<td align="left">last_update</td>
+<td align="left">timestamp without time zone</td>
+<td align="right">9</td>
+<td align="right">NA</td>
+<td align="left">now()</td>
+</tr>
+</tbody>
+</table>
 
 </div>
 </div>

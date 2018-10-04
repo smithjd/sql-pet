@@ -10,6 +10,17 @@ library(glue)
 library(skimr)
 ```
 
+```
+## 
+## Attaching package: 'skimr'
+```
+
+```
+## The following object is masked from 'package:knitr':
+## 
+##     kable
+```
+
 ## Basic investigation
 
 * Need both familiarity with the data and a focus question
