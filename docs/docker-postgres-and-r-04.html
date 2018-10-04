@@ -220,6 +220,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="10.1.4" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#look-at-the-tables-first"><i class="fa fa-check"></i><b>10.1.4</b> Look at the tables first</a></li>
 <li class="chapter" data-level="10.1.5" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#drill-down-into-the-columns"><i class="fa fa-check"></i><b>10.1.5</b> Drill down into the columns</a></li>
 <li class="chapter" data-level="10.1.6" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#submitting-sql-statements-directly"><i class="fa fa-check"></i><b>10.1.6</b> Submitting SQL statements directly</a></li>
+<li class="chapter" data-level="10.1.7" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#what-is-the-difference-between-views-and-base-tables"><i class="fa fa-check"></i><b>10.1.7</b> What is the difference between <code>VIEW</code>s and <code>BASE TABLE</code>s?</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="11" data-path="explain-queries-71.html"><a href="explain-queries-71.html"><i class="fa fa-check"></i><b>11</b> Explain queries (71)</a><ul>
@@ -330,12 +331,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>##  docker run --detach --name cattle --publish 5432:5432  postgres:10</code></pre>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="co"># this is how R submits it to Docker:</span></a>
 <a class="sourceLine" id="cb7-2" data-line-number="2"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, docker_cmd, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
-<pre><code>## [1] &quot;7a239774f49b907bfcd069096a38a139d61ce8b209bf2619435b76779b553758&quot;</code></pre>
+<pre><code>## [1] &quot;c5439b0e779ef93a15155b3ec9dbdac8af82c72310fe5eebfe44e2a972fc18ab&quot;</code></pre>
 <p>Docker returns a long string of numbers. If you are running this command for the first time, Docker downloads the PostgreSQL image, which takes a bit of time.</p>
 <p>The following command shows that a container named <code>cattle</code> is running <code>postgres:10</code>. <code>postgres</code> is waiting for a connection:</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, <span class="st">&quot;ps&quot;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <pre><code>## [1] &quot;CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES&quot;   
-## [2] &quot;7a239774f49b        postgres:10         \&quot;docker-entrypoint.s…\&quot;   1 second ago        Up Less than a second   0.0.0.0:5432-&gt;5432/tcp   cattle&quot;</code></pre>
+## [2] &quot;c5439b0e779e        postgres:10         \&quot;docker-entrypoint.s…\&quot;   1 second ago        Up Less than a second   0.0.0.0:5432-&gt;5432/tcp   cattle&quot;</code></pre>
 </div>
 <div id="connect-read-and-write-to-postgres-from-r" class="section level2">
 <h2><span class="header-section-number">4.3</span> Connect, read and write to Postgres from R</h2>

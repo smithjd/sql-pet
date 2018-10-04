@@ -220,6 +220,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="10.1.4" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#look-at-the-tables-first"><i class="fa fa-check"></i><b>10.1.4</b> Look at the tables first</a></li>
 <li class="chapter" data-level="10.1.5" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#drill-down-into-the-columns"><i class="fa fa-check"></i><b>10.1.5</b> Drill down into the columns</a></li>
 <li class="chapter" data-level="10.1.6" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#submitting-sql-statements-directly"><i class="fa fa-check"></i><b>10.1.6</b> Submitting SQL statements directly</a></li>
+<li class="chapter" data-level="10.1.7" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#what-is-the-difference-between-views-and-base-tables"><i class="fa fa-check"></i><b>10.1.7</b> What is the difference between <code>VIEW</code>s and <code>BASE TABLE</code>s?</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="11" data-path="explain-queries-71.html"><a href="explain-queries-71.html"><i class="fa fa-check"></i><b>11</b> Explain queries (71)</a><ul>
@@ -318,7 +319,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb32-4" data-line-number="4">          <span class="st">&quot;--file dvdrental.Dockerfile &quot;</span>, <span class="co">#(or -f) tells Docker to read `build` instructions from the dvdrental.Dockerfile</span></a>
 <a class="sourceLine" id="cb32-5" data-line-number="5">          <span class="st">&quot; . &quot;</span>),  <span class="co"># tells Docker to look for dvdrental.Dockerfile in the current directory</span></a>
 <a class="sourceLine" id="cb32-6" data-line-number="6">          <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
-<pre><code>##  [1] &quot;Sending build context to Docker daemon  3.109MB\r\r&quot;                                                                                                                                                                                                                                                                                                                                           
+<pre><code>##  [1] &quot;Sending build context to Docker daemon  3.038MB\r\r&quot;                                                                                                                                                                                                                                                                                                                                           
 ##  [2] &quot;Step 1/4 : FROM postgres:10&quot;                                                                                                                                                                                                                                                                                                                                                                   
 ##  [3] &quot; ---&gt; ac25c2bac3c4&quot;                                                                                                                                                                                                                                                                                                                                                                            
 ##  [4] &quot;Step 2/4 : WORKDIR /tmp&quot;                                                                                                                                                                                                                                                                                                                                                                       
@@ -361,7 +362,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb34-17" data-line-number="17">docker_cmd</a></code></pre></div>
 <pre><code>## run --detach  --name sql-pet --publish 5432:5432 --mount type=bind,source=&quot;/Users/jds/Documents/Library/R/r-system/sql-pet/r-database-docker/&quot;,target=/petdir postgres-dvdrental</code></pre>
 <div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" data-line-number="1"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, docker_cmd, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
-<pre><code>## [1] &quot;0614741722d34dd4ec34f8405aee52ce3fd2d4921e8b66b57b59ad05493d8c32&quot;</code></pre>
+<pre><code>## [1] &quot;1f3545e694a9eb75abe348a6ee303a09749c072361818cfb1e852c9145998583&quot;</code></pre>
 </div>
 <div id="connect-to-postgres-with-r" class="section level2">
 <h2><span class="header-section-number">5.6</span> Connect to Postgres with R</h2>
@@ -436,7 +437,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb52-1" data-line-number="1"><span class="co"># show that the container still exists even though it&#39;s not running</span></a>
 <a class="sourceLine" id="cb52-2" data-line-number="2">psout &lt;-<span class="st"> </span><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, <span class="st">&quot;ps -a&quot;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>)</a>
 <a class="sourceLine" id="cb52-3" data-line-number="3">psout[<span class="kw">grepl</span>(<span class="dt">x =</span> psout, <span class="dt">pattern =</span> <span class="st">&#39;sql-pet&#39;</span>)]</a></code></pre></div>
-<pre><code>## [1] &quot;0614741722d3        postgres-dvdrental   \&quot;docker-entrypoint.s…\&quot;   29 seconds ago      Exited (137) Less than a second ago                       sql-pet&quot;</code></pre>
+<pre><code>## [1] &quot;1f3545e694a9        postgres-dvdrental   \&quot;docker-entrypoint.s…\&quot;   30 seconds ago      Exited (137) Less than a second ago                       sql-pet&quot;</code></pre>
 <p>Next time, you can just use this command to start the container:</p>
 <p><code>system2(&quot;docker&quot;,  &quot;start sql-pet&quot;, stdout = TRUE, stderr = TRUE)</code></p>
 <p>And once stopped, the container can be removed with:</p>

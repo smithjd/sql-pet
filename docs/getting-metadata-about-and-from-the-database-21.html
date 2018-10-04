@@ -220,6 +220,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="10.1.4" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#look-at-the-tables-first"><i class="fa fa-check"></i><b>10.1.4</b> Look at the tables first</a></li>
 <li class="chapter" data-level="10.1.5" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#drill-down-into-the-columns"><i class="fa fa-check"></i><b>10.1.5</b> Drill down into the columns</a></li>
 <li class="chapter" data-level="10.1.6" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#submitting-sql-statements-directly"><i class="fa fa-check"></i><b>10.1.6</b> Submitting SQL statements directly</a></li>
+<li class="chapter" data-level="10.1.7" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#what-is-the-difference-between-views-and-base-tables"><i class="fa fa-check"></i><b>10.1.7</b> What is the difference between <code>VIEW</code>s and <code>BASE TABLE</code>s?</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="11" data-path="explain-queries-71.html"><a href="explain-queries-71.html"><i class="fa fa-check"></i><b>11</b> Explain queries (71)</a><ul>
@@ -635,7 +636,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## ORDER BY &quot;table_type&quot;, &quot;table_name&quot;</code></pre>
 <div class="sourceCode" id="cb155"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb155-1" data-line-number="1"><span class="co"># notice that VIEWS are composites made up of one or more BASE TABLES</span></a></code></pre></div>
 <p>Get list of database objects
-<span class="citation">(<span class="citeproc-not-found" data-reference-id="SophieYang"><strong>???</strong></span>)</span>: is <code>rs</code> your shorthand for <code>result</code>?</p>
+SophieYang: is <code>rs</code> your shorthand for <code>result</code>?</p>
 <p>Also:</p>
 <p>WHERE (“table_schema” = ‘public’)</p>
 <p>is the same as</p>
@@ -1409,7 +1410,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 4                                                                       PRIMARY KEY (actor_id)
 ## 5                                                                     PRIMARY KEY (address_id)
 ## 6                                                                    PRIMARY KEY (category_id)</code></pre>
-<p>What is the difference between <code>VIEW</code>s and <code>BASE TABLE</code>s?</p>
+</div>
+<div id="what-is-the-difference-between-views-and-base-tables" class="section level3">
+<h3><span class="header-section-number">10.1.7</span> What is the difference between <code>VIEW</code>s and <code>BASE TABLE</code>s?</h3>
 <div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb180-1" data-line-number="1">table_info_schema_table <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb180-2" data-line-number="2"><span class="st">  </span><span class="kw">filter</span>(table_schema <span class="op">==</span><span class="st"> &quot;public&quot;</span> <span class="op">&amp;</span><span class="st"> </span>table_type <span class="op">==</span><span class="st"> &quot;VIEW&quot;</span>) <span class="op">%&gt;%</span><span class="st">  </span><span class="co"># See alternative below</span></a>
 <a class="sourceLine" id="cb180-3" data-line-number="3"><span class="st">  </span><span class="kw">select</span>(table_name) <span class="op">%&gt;%</span><span class="st"> </span></a>

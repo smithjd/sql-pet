@@ -220,6 +220,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="10.1.4" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#look-at-the-tables-first"><i class="fa fa-check"></i><b>10.1.4</b> Look at the tables first</a></li>
 <li class="chapter" data-level="10.1.5" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#drill-down-into-the-columns"><i class="fa fa-check"></i><b>10.1.5</b> Drill down into the columns</a></li>
 <li class="chapter" data-level="10.1.6" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#submitting-sql-statements-directly"><i class="fa fa-check"></i><b>10.1.6</b> Submitting SQL statements directly</a></li>
+<li class="chapter" data-level="10.1.7" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#what-is-the-difference-between-views-and-base-tables"><i class="fa fa-check"></i><b>10.1.7</b> What is the difference between <code>VIEW</code>s and <code>BASE TABLE</code>s?</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="11" data-path="explain-queries-71.html"><a href="explain-queries-71.html"><i class="fa fa-check"></i><b>11</b> Explain queries (71)</a><ul>
@@ -340,7 +341,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb61-12" data-line-number="12"><span class="kw">cat</span>(<span class="st">&#39;docker &#39;</span>,docker_cmd)</a></code></pre></div>
 <pre><code>## docker  run --detach  --name sql-pet --publish 5432:5432 --mount type=bind,source=&quot;/Users/jds/Documents/Library/R/r-system/sql-pet/r-database-docker/&quot;,target=/petdir postgres:10</code></pre>
 <div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb63-1" data-line-number="1"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, docker_cmd, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
-<pre><code>## [1] &quot;24326f8076f9c5f500d730d8bf906bfc63c33067a1fbd7de2334ebe799bccd52&quot;</code></pre>
+<pre><code>## [1] &quot;2b833b610d1b5d76e13baf976e7984a509eb1b5395d0e66dc8d87d57df060be2&quot;</code></pre>
 <p>Peek inside the docker container and list the files in the <code>petdir</code> directory. Notice that <code>dvdrental.tar</code> is in both.</p>
 <div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb65-1" data-line-number="1"><span class="kw">system2</span>(<span class="st">&#39;docker&#39;</span>, <span class="st">&#39;exec sql-pet ls petdir | grep &quot;dvdrental.tar&quot; &#39;</span>,</a>
 <a class="sourceLine" id="cb65-2" data-line-number="2">        <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
@@ -435,7 +436,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb89-1" data-line-number="1"><span class="co"># show that the container still exists even though it&#39;s not running</span></a>
 <a class="sourceLine" id="cb89-2" data-line-number="2">psout &lt;-<span class="st"> </span><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, <span class="st">&quot;ps -a&quot;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>)</a>
 <a class="sourceLine" id="cb89-3" data-line-number="3">psout[<span class="kw">grepl</span>(<span class="dt">x =</span> psout, <span class="dt">pattern =</span> <span class="st">&#39;sql-pet&#39;</span>)]</a></code></pre></div>
-<pre><code>## [1] &quot;24326f8076f9        postgres:10         \&quot;docker-entrypoint.s…\&quot;   19 seconds ago      Exited (0) Less than a second ago                       sql-pet&quot;</code></pre>
+<pre><code>## [1] &quot;2b833b610d1b        postgres:10         \&quot;docker-entrypoint.s…\&quot;   18 seconds ago      Exited (0) Less than a second ago                       sql-pet&quot;</code></pre>
 <p>Next time, you can just use this command to start the container:</p>
 <p><code>system2(&quot;docker&quot;,  &quot;start sql-pet&quot;, stdout = TRUE, stderr = TRUE)</code></p>
 <p>And once stopped, the container can be removed with:</p>

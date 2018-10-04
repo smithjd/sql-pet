@@ -220,6 +220,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="10.1.4" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#look-at-the-tables-first"><i class="fa fa-check"></i><b>10.1.4</b> Look at the tables first</a></li>
 <li class="chapter" data-level="10.1.5" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#drill-down-into-the-columns"><i class="fa fa-check"></i><b>10.1.5</b> Drill down into the columns</a></li>
 <li class="chapter" data-level="10.1.6" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#submitting-sql-statements-directly"><i class="fa fa-check"></i><b>10.1.6</b> Submitting SQL statements directly</a></li>
+<li class="chapter" data-level="10.1.7" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#what-is-the-difference-between-views-and-base-tables"><i class="fa fa-check"></i><b>10.1.7</b> What is the difference between <code>VIEW</code>s and <code>BASE TABLE</code>s?</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="11" data-path="explain-queries-71.html"><a href="explain-queries-71.html"><i class="fa fa-check"></i><b>11</b> Explain queries (71)</a><ul>
@@ -443,7 +444,7 @@ verify pet DB is available, it may be stopped.</td>
 <td><code>r result &lt;- system2(&quot;docker&quot;, &quot;ps -a&quot;, stdout = TRUE, stderr = TRUE) result</code></td>
 </tr>
 <tr class="odd">
-<td><code>## [1] &quot;CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES&quot; ## [2] &quot;24326f8076f9        postgres:10         \&quot;docker-entrypoint.s…\&quot;   26 seconds ago      Up 5 seconds        0.0.0.0:5432-&gt;5432/tcp   sql-pet&quot;</code></td>
+<td><code>## [1] &quot;CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES&quot; ## [2] &quot;2b833b610d1b        postgres:10         \&quot;docker-entrypoint.s…\&quot;   25 seconds ago      Up 5 seconds        0.0.0.0:5432-&gt;5432/tcp   sql-pet&quot;</code></td>
 </tr>
 <tr class="even">
 <td><code>r any(grepl('Up .+pet$',result))</code></td>

@@ -254,7 +254,7 @@ table_info_schema_table %>%
 ```
 
 Get list of database objects
-@SophieYang: is `rs` your shorthand for `result`?
+ SophieYang: is `rs` your shorthand for `result`?
 
 Also: 
 
@@ -726,6 +726,7 @@ dim(rs)[1]
 ```
 
 
+
 ```r
 rs <- dbGetQuery(
   con,
@@ -791,7 +792,7 @@ head(rs)
 ## 6                                                                    PRIMARY KEY (category_id)
 ```
 
-What is the difference between `VIEW`s and `BASE TABLE`s?
+### What is the difference between `VIEW`s and `BASE TABLE`s?
 
 ```r
 table_info_schema_table %>%
