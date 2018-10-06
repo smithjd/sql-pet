@@ -2,7 +2,7 @@
 
 
 
-* examining dplyr queries (show_query on the R side v EXPLAIN on the PostgreSQL side)
+* examining `dplyr` queries (`dplyr::show_query` on the R side v EXPLAIN on the PostgreSQL side)
 
 
 
@@ -28,14 +28,14 @@ con <- wait_for_postgres(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
                          seconds_to_test = 10)
 ```
 
-## Performance considertations
+## Performance considerations
 
 
 ```r
-## Explain a dplyr join
+## Explain a `dplyr::join`
 
 ## Explain the quivalent SQL join
-rs1 <- dbGetQuery(con
+rs1 <- DBI::dbGetQuery(con
                  ,"SELECT c.* 
                      FROM pg_catalog.pg_class c
                      JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
@@ -66,7 +66,7 @@ head(rs1)
 This came from 14-sql_pet-examples-part-b.Rmd
 
 ```r
-rs1 <- dbGetQuery(con,
+rs1 <- DBI::dbGetQuery(con,
                 "explain select r.*
                    from rental r 
                  ;"
@@ -80,7 +80,7 @@ head(rs1)
 ```
 
 ```r
-rs2 <- dbGetQuery(con,
+rs2 <- DBI::dbGetQuery(con,
                 "explain select count(*) count
                    from rental r 
                         left outer join payment p 
@@ -100,7 +100,7 @@ head(rs2)
 ```
 
 ```r
-rs3 <- dbGetQuery(con,
+rs3 <- DBI::dbGetQuery(con,
                 "explain select sum(f.rental_rate) open_amt,count(*) count
                    from rental r 
                         left outer join payment p 
@@ -125,7 +125,7 @@ head(rs3)
 ```
 
 ```r
-rs4 <- dbGetQuery(con,
+rs4 <- DBI::dbGetQuery(con,
                 "explain select c.customer_id,c.first_name,c.last_name,sum(f.rental_rate) open_amt,count(*) count
                    from rental r 
                         left outer join payment p 

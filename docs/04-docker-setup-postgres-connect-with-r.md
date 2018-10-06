@@ -1,5 +1,10 @@
 # Docker, Postgres, and R (04)
 
+At the end of this chapter, you will be able to 
+* Run, clean-up and close Docker containers.
+* Interact with Postgres using Rstudio inside Docker container.
+
+
 We always load the tidyverse and some other packages, but don't show it unless we are using packages other than `tidyverse`, `DBI`, `RPostgres`, and `glue`.
 
 
@@ -87,7 +92,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "ac8fb5005c8378b7b9694ecc7797b9097a9819dcc7e33f1ccd42235c1d77ace8"
+## [1] "ad6f484788f8d7d7a7139fae1e26ddf6a0fe71b4929be1359bd2ee5553faf763"
 ```
 
 Docker returns a long string of numbers.  If you are running this command for the first time, Docker downloads the PostgreSQL image, which takes a bit of time.
@@ -100,7 +105,7 @@ system2("docker", "ps", stdout = TRUE, stderr = TRUE)
 
 ```
 ## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES"   
-## [2] "ac8fb5005c83        postgres:10         \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
+## [2] "ad6f484788f8        postgres:10         \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
 ```
 ## Connect, read and write to Postgres from R
 

@@ -41,7 +41,7 @@ result
 
 ```
 ## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES"    
-## [2] "ccdfda6d6d71        postgres:10         \"docker-entrypoint.s…\"   26 seconds ago      Up 5 seconds        0.0.0.0:5432->5432/tcp   sql-pet"
+## [2] "baca0bf84b20        postgres:10         \"docker-entrypoint.s…\"   26 seconds ago      Up 6 seconds        0.0.0.0:5432->5432/tcp   sql-pet"
 ```
 
 ```r

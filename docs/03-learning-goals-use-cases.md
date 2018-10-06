@@ -1,5 +1,10 @@
 # Learning Goals and Use Cases
 
+At the end of this chapter, you will be able to 
+* Understand the importance of integrating R with databases using Docker.
+* Understand the learning goals that you will have achieved by end of the tutorial.
+* Learn the structure of the database and understand many use cases that can apply to you.
+
 ## Context: Why integrate R with databases using Docker? (03)
 
 * Large data stores in organizations are stored in databases that have specific access constraints and  structural characteristics.
@@ -15,7 +20,7 @@ After working through this tutorial, you can expect to be able to:
 * Understand some of the trade-offs between:
     1. queries aimed at exploration or informal investigation using [dplyr](https://cran.r-project.org/package=dplyr); and 
     2. those where performance is important because of the size of the database or the frequency with which a query is run.
-* Rewrite dplyr queries as SQL and submit them directly. 
+* Rewrite `dplyr` queries as SQL and submit them directly. 
 * Gain some understanding of techniques for assessing query structure and performance.
 * Set up a PostgreSQL database in a Docker environment.
 * Understand enough about Docker to swap databases, e.g. [Sports DB](http://www.sportsdb.org/sd/samples) for the [DVD rental database](http://www.postgresqltutorial.com/postgresql-sample-database/) used in this tutorial. Or swap the database management system (DBMS), e.g. [MySQL](https://www.mysql.com/) for [PostgreSQL](https://www.postgresql.org/).
@@ -31,7 +36,7 @@ Imagine that you have one of several roles at our fictional company **DVDs R Us*
 * As the Director of Analytics, I want to test as much of the production R code in my shop as possible against a new release of the DBMS that the IT department is implementing next month.
 * etc.
 
-## Environment
+## ERD Diagram
 
 This tutorial uses [the Postgres version of "dvd rental" database](http://www.postgresqltutorial.com/postgresql-sample-database/), which can be  [downloaded here](http://www.postgresqltutorial.com/wp-content/uploads/2017/10/dvdrental.zip).  Here's a glimpse of it's structure:
     

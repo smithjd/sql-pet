@@ -64,7 +64,7 @@ postgres_ver <- dbGetQuery(con,"select version()") %>%
   gsub(x = ., pattern = '\\(.*$', replacement = '')
 ```
 
-The following code block uses the data generated from the previous code block as input to the subgraphs, the ones outlined in red.  The application nodes are the parents of the subgraphs and are not outlined in reds.  The `Environment` application node represents the machine you are running the tutorial on and hosts the sub-applications.  
+The following code block uses the data generated from the previous code block as input to the subgraphs, the ones outlined in red.  The application nodes are the parents of the subgraphs and are not outlined in red.  The `Environment` application node represents the machine you are running the tutorial on and hosts the sub-applications.  
 
 Note that the '@@' variables are populated at the end of the `Environment` definition following the `## @@1 - @@5` source data comment.
 
@@ -155,7 +155,7 @@ digraph Envgraph {
 ")
 ```
 
-One sub-application not shown above is your local console/terminal/cli application.  In the tutorial, fully constructed docker commands are printed out and then executed.  If for some reason the executed docker command fails, one can copy and paste it into your local terminal window to see additional error information.  Failures seem more prevalent in the Windows environment.
+One sub-application not shown above is your local console/terminal/CLI application.  In the tutorial, fully constructed docker commands are printed out and then executed.  If for some reason the executed docker command fails, one can copy and paste it into your local terminal window to see additional error information.  Failures seem more prevalent in the Windows environment.
 
 ## Communicating with Docker Applications
 

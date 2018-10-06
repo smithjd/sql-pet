@@ -1,7 +1,7 @@
 ---
 title: "R, Databases and Docker"
 author: "Dipti Muni, Ian Frantz, John David Smith, Mary Anne Thygesen, M. Edward (Ed) Borasky,  Scott Case, and Sophie Yang"
-date: "2018-10-03"
+date: "2018-10-05"
 site: bookdown::bookdown_site
 documentclass: book
 bibliography: [book.bib, packages.bib]
@@ -11,6 +11,10 @@ description: "A collection of tutorials for integrating R with databases using D
 ---
 
 # Introduction
+
+At the end of this chapter, you will be able to
+* Understand the importance of using R and Docker to query a DBMS and access a service like Postgres outside of R. 
+* Setup your environment to explore the use-case for useRs.
 
 ## Using R to query a DBMS in your organization
 
@@ -41,12 +45,14 @@ Here is how R and Docker fit on your operating system in this tutorial:
 
 ## Who are we?
 
-* M. Edward (Ed) Borasky - [\@znmeb](https://github.com/znmeb)
-* John David Smith - [\@smithjd](https://github.com/smithjd)
-* Scott Came - [\@scottcame](https://github.com/scottcame)
+* Dipti Muni - [\@deemuni](https://github.com/deemuni)
 * Ian Franz - [\@ianfrantz](https://github.com/ianfrantz)
-* Sophie Yang - [\@SophieMYang](https://github.com/SophieMYang)
 * Jim Tyhurst - [\@jimtyhurst](https://github.com/jimtyhurst)
+* John David Smith - [\@smithjd](https://github.com/smithjd)
+* M. Edward (Ed) Borasky - [\@znmeb](https://github.com/znmeb)
+* Maryann Tygeson [\@maryannet](https://github.com/maryannet)
+* Scott Came - [\@scottcame](https://github.com/scottcame)
+* Sophie Yang - [\@SophieMYang](https://github.com/SophieMYang)
 
 ## Prerequisites
 You will need:

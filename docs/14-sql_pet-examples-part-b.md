@@ -42,7 +42,7 @@ result
 
 ```
 ## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                     PORTS               NAMES"    
-## [2] "ccdfda6d6d71        postgres:10         \"docker-entrypoint.s…\"   29 seconds ago      Exited (0) 2 seconds ago                       sql-pet"
+## [2] "baca0bf84b20        postgres:10         \"docker-entrypoint.s…\"   30 seconds ago      Exited (0) 2 seconds ago                       sql-pet"
 ```
 
 ```r
