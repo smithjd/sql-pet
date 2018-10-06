@@ -56,15 +56,23 @@ kable(head(rental))
 ```
 
 
-
- rental_id  rental_date            inventory_id   customer_id  return_date            staff_id  last_update         
-----------  --------------------  -------------  ------------  --------------------  ---------  --------------------
-         2  2005-05-24 22:54:33            1525           459  2005-05-28 19:40:33           1  2006-02-16 02:30:53 
-         3  2005-05-24 23:03:39            1711           408  2005-06-01 22:12:39           1  2006-02-16 02:30:53 
-         4  2005-05-24 23:04:41            2452           333  2005-06-03 01:43:41           2  2006-02-16 02:30:53 
-         5  2005-05-24 23:05:21            2079           222  2005-06-02 04:33:21           1  2006-02-16 02:30:53 
-         6  2005-05-24 23:08:07            2792           549  2005-05-27 01:32:07           1  2006-02-16 02:30:53 
-         7  2005-05-24 23:11:53            3995           269  2005-05-29 20:34:53           2  2006-02-16 02:30:53 
+\begin{tabular}{r|l|r|r|l|r|l}
+\hline
+rental\_id & rental\_date & inventory\_id & customer\_id & return\_date & staff\_id & last\_update\\
+\hline
+2 & 2005-05-24 22:54:33 & 1525 & 459 & 2005-05-28 19:40:33 & 1 & 2006-02-16 02:30:53\\
+\hline
+3 & 2005-05-24 23:03:39 & 1711 & 408 & 2005-06-01 22:12:39 & 1 & 2006-02-16 02:30:53\\
+\hline
+4 & 2005-05-24 23:04:41 & 2452 & 333 & 2005-06-03 01:43:41 & 2 & 2006-02-16 02:30:53\\
+\hline
+5 & 2005-05-24 23:05:21 & 2079 & 222 & 2005-06-02 04:33:21 & 1 & 2006-02-16 02:30:53\\
+\hline
+6 & 2005-05-24 23:08:07 & 2792 & 549 & 2005-05-27 01:32:07 & 1 & 2006-02-16 02:30:53\\
+\hline
+7 & 2005-05-24 23:11:53 & 3995 & 269 & 2005-05-29 20:34:53 & 2 & 2006-02-16 02:30:53\\
+\hline
+\end{tabular}
 
 ```r
 glimpse(rental)
@@ -116,31 +124,55 @@ kable(DBI::dbListTables(con))
 ```
 
 
-
-|x                          |
-|:--------------------------|
-|actor_info                 |
-|customer_list              |
-|film_list                  |
-|nicer_but_slower_film_list |
-|sales_by_film_category     |
-|staff                      |
-|sales_by_store             |
-|staff_list                 |
-|category                   |
-|film_category              |
-|country                    |
-|actor                      |
-|language                   |
-|inventory                  |
-|payment                    |
-|rental                     |
-|city                       |
-|store                      |
-|film                       |
-|address                    |
-|film_actor                 |
-|customer                   |
+\begin{tabular}{l}
+\hline
+x\\
+\hline
+actor\_info\\
+\hline
+customer\_list\\
+\hline
+film\_list\\
+\hline
+nicer\_but\_slower\_film\_list\\
+\hline
+sales\_by\_film\_category\\
+\hline
+staff\\
+\hline
+sales\_by\_store\\
+\hline
+staff\_list\\
+\hline
+category\\
+\hline
+film\_category\\
+\hline
+country\\
+\hline
+actor\\
+\hline
+language\\
+\hline
+inventory\\
+\hline
+payment\\
+\hline
+rental\\
+\hline
+city\\
+\hline
+store\\
+\hline
+film\\
+\hline
+address\\
+\hline
+film\_actor\\
+\hline
+customer\\
+\hline
+\end{tabular}
 ### Use the `information_schema` to investigate the database
 
 Often we want more detail than just a list of tables.  
@@ -164,31 +196,55 @@ table_info_schema_table %>%
 ```
 
 
-
-table_catalog   table_schema   table_name                   table_type 
---------------  -------------  ---------------------------  -----------
-dvdrental       public         actor                        BASE TABLE 
-dvdrental       public         address                      BASE TABLE 
-dvdrental       public         category                     BASE TABLE 
-dvdrental       public         city                         BASE TABLE 
-dvdrental       public         country                      BASE TABLE 
-dvdrental       public         customer                     BASE TABLE 
-dvdrental       public         film                         BASE TABLE 
-dvdrental       public         film_actor                   BASE TABLE 
-dvdrental       public         film_category                BASE TABLE 
-dvdrental       public         inventory                    BASE TABLE 
-dvdrental       public         language                     BASE TABLE 
-dvdrental       public         payment                      BASE TABLE 
-dvdrental       public         rental                       BASE TABLE 
-dvdrental       public         staff                        BASE TABLE 
-dvdrental       public         store                        BASE TABLE 
-dvdrental       public         actor_info                   VIEW       
-dvdrental       public         customer_list                VIEW       
-dvdrental       public         film_list                    VIEW       
-dvdrental       public         nicer_but_slower_film_list   VIEW       
-dvdrental       public         sales_by_film_category       VIEW       
-dvdrental       public         sales_by_store               VIEW       
-dvdrental       public         staff_list                   VIEW       
+\begin{tabular}{l|l|l|l}
+\hline
+table\_catalog & table\_schema & table\_name & table\_type\\
+\hline
+dvdrental & public & actor & BASE TABLE\\
+\hline
+dvdrental & public & address & BASE TABLE\\
+\hline
+dvdrental & public & category & BASE TABLE\\
+\hline
+dvdrental & public & city & BASE TABLE\\
+\hline
+dvdrental & public & country & BASE TABLE\\
+\hline
+dvdrental & public & customer & BASE TABLE\\
+\hline
+dvdrental & public & film & BASE TABLE\\
+\hline
+dvdrental & public & film\_actor & BASE TABLE\\
+\hline
+dvdrental & public & film\_category & BASE TABLE\\
+\hline
+dvdrental & public & inventory & BASE TABLE\\
+\hline
+dvdrental & public & language & BASE TABLE\\
+\hline
+dvdrental & public & payment & BASE TABLE\\
+\hline
+dvdrental & public & rental & BASE TABLE\\
+\hline
+dvdrental & public & staff & BASE TABLE\\
+\hline
+dvdrental & public & store & BASE TABLE\\
+\hline
+dvdrental & public & actor\_info & VIEW\\
+\hline
+dvdrental & public & customer\_list & VIEW\\
+\hline
+dvdrental & public & film\_list & VIEW\\
+\hline
+dvdrental & public & nicer\_but\_slower\_film\_list & VIEW\\
+\hline
+dvdrental & public & sales\_by\_film\_category & VIEW\\
+\hline
+dvdrental & public & sales\_by\_store & VIEW\\
+\hline
+dvdrental & public & staff\_list & VIEW\\
+\hline
+\end{tabular}
 `table_catalog` is synonymous with `database`.
 
 
@@ -232,31 +288,55 @@ kable(rs)
 ```
 
 
-
-table_catalog   table_schema   table_name                   table_type 
---------------  -------------  ---------------------------  -----------
-dvdrental       public         actor                        BASE TABLE 
-dvdrental       public         address                      BASE TABLE 
-dvdrental       public         category                     BASE TABLE 
-dvdrental       public         city                         BASE TABLE 
-dvdrental       public         country                      BASE TABLE 
-dvdrental       public         customer                     BASE TABLE 
-dvdrental       public         film                         BASE TABLE 
-dvdrental       public         film_actor                   BASE TABLE 
-dvdrental       public         film_category                BASE TABLE 
-dvdrental       public         inventory                    BASE TABLE 
-dvdrental       public         language                     BASE TABLE 
-dvdrental       public         payment                      BASE TABLE 
-dvdrental       public         rental                       BASE TABLE 
-dvdrental       public         staff                        BASE TABLE 
-dvdrental       public         store                        BASE TABLE 
-dvdrental       public         actor_info                   VIEW       
-dvdrental       public         customer_list                VIEW       
-dvdrental       public         film_list                    VIEW       
-dvdrental       public         nicer_but_slower_film_list   VIEW       
-dvdrental       public         sales_by_film_category       VIEW       
-dvdrental       public         sales_by_store               VIEW       
-dvdrental       public         staff_list                   VIEW       
+\begin{tabular}{l|l|l|l}
+\hline
+table\_catalog & table\_schema & table\_name & table\_type\\
+\hline
+dvdrental & public & actor & BASE TABLE\\
+\hline
+dvdrental & public & address & BASE TABLE\\
+\hline
+dvdrental & public & category & BASE TABLE\\
+\hline
+dvdrental & public & city & BASE TABLE\\
+\hline
+dvdrental & public & country & BASE TABLE\\
+\hline
+dvdrental & public & customer & BASE TABLE\\
+\hline
+dvdrental & public & film & BASE TABLE\\
+\hline
+dvdrental & public & film\_actor & BASE TABLE\\
+\hline
+dvdrental & public & film\_category & BASE TABLE\\
+\hline
+dvdrental & public & inventory & BASE TABLE\\
+\hline
+dvdrental & public & language & BASE TABLE\\
+\hline
+dvdrental & public & payment & BASE TABLE\\
+\hline
+dvdrental & public & rental & BASE TABLE\\
+\hline
+dvdrental & public & staff & BASE TABLE\\
+\hline
+dvdrental & public & store & BASE TABLE\\
+\hline
+dvdrental & public & actor\_info & VIEW\\
+\hline
+dvdrental & public & customer\_list & VIEW\\
+\hline
+dvdrental & public & film\_list & VIEW\\
+\hline
+dvdrental & public & nicer\_but\_slower\_film\_list & VIEW\\
+\hline
+dvdrental & public & sales\_by\_film\_category & VIEW\\
+\hline
+dvdrental & public & sales\_by\_store & VIEW\\
+\hline
+dvdrental & public & staff\_list & VIEW\\
+\hline
+\end{tabular}
 
 ## What columns do those tables contain?
 
@@ -313,46 +393,30 @@ kable(columns_info_schema_info)
 ```
 
 
-
-table_catalog   table_name   column_name    data_type                      ordinal_position   character_maximum_length  column_default                              full_table_name         
---------------  -----------  -------------  ----------------------------  -----------------  -------------------------  ------------------------------------------  ------------------------
-dvdrental       rental       rental_id      integer                                       1                         NA  nextval('rental_rental_id_seq'::regclass)   dvdrental.public.rental 
-dvdrental       rental       rental_date    timestamp without time zone                   2                         NA  NA                                          dvdrental.public.rental 
-dvdrental       rental       inventory_id   integer                                       3                         NA  NA                                          dvdrental.public.rental 
-dvdrental       rental       customer_id    smallint                                      4                         NA  NA                                          dvdrental.public.rental 
-dvdrental       rental       return_date    timestamp without time zone                   5                         NA  NA                                          dvdrental.public.rental 
-dvdrental       rental       staff_id       smallint                                      6                         NA  NA                                          dvdrental.public.rental 
-dvdrental       rental       last_update    timestamp without time zone                   7                         NA  now()                                       dvdrental.public.rental 
+\begin{tabular}{l|l|l|l|r|r|l|l}
+\hline
+table\_catalog & table\_name & column\_name & data\_type & ordinal\_position & character\_maximum\_length & column\_default & full\_table\_name\\
+\hline
+dvdrental & rental & rental\_id & integer & 1 & NA & nextval('rental\_rental\_id\_seq'::regclass) & dvdrental.public.rental\\
+\hline
+dvdrental & rental & rental\_date & timestamp without time zone & 2 & NA & NA & dvdrental.public.rental\\
+\hline
+dvdrental & rental & inventory\_id & integer & 3 & NA & NA & dvdrental.public.rental\\
+\hline
+dvdrental & rental & customer\_id & smallint & 4 & NA & NA & dvdrental.public.rental\\
+\hline
+dvdrental & rental & return\_date & timestamp without time zone & 5 & NA & NA & dvdrental.public.rental\\
+\hline
+dvdrental & rental & staff\_id & smallint & 6 & NA & NA & dvdrental.public.rental\\
+\hline
+dvdrental & rental & last\_update & timestamp without time zone & 7 & NA & now() & dvdrental.public.rental\\
+\hline
+\end{tabular}
 
 ### What is the difference between a `VIEW` and a `BASE TABLE`?
 
-```r
-table_info_schema_table %>%
-  filter(table_schema == "public" & table_type == "VIEW") %>%  
-  select(table_name, table_type) %>% 
-  left_join(columns_info_schema_table, by = c("table_name" = "table_name")) %>% 
-  select(
-    table_type, table_name, column_name, data_type, ordinal_position,
-    column_default
-  ) %>%
-  collect(n = Inf) %>% 
-  filter(str_detect(table_name, "cust")) %>% 
-  kable()
-```
 
-
-
-table_type   table_name      column_name   data_type            ordinal_position  column_default 
------------  --------------  ------------  ------------------  -----------------  ---------------
-VIEW         customer_list   id            integer                             1  NA             
-VIEW         customer_list   name          text                                2  NA             
-VIEW         customer_list   address       character varying                   3  NA             
-VIEW         customer_list   zip code      character varying                   4  NA             
-VIEW         customer_list   phone         character varying                   5  NA             
-VIEW         customer_list   city          character varying                   6  NA             
-VIEW         customer_list   country       character varying                   7  NA             
-VIEW         customer_list   notes         text                                8  NA             
-VIEW         customer_list   sid           smallint                            9  NA             
+The `BASE TABLE` has the underlying data in the database
 
 ```r
 table_info_schema_table %>%
@@ -369,19 +433,72 @@ table_info_schema_table %>%
 ```
 
 
+\begin{tabular}{l|l|l|l|r|l}
+\hline
+table\_type & table\_name & column\_name & data\_type & ordinal\_position & column\_default\\
+\hline
+BASE TABLE & customer & store\_id & smallint & 2 & NA\\
+\hline
+BASE TABLE & customer & first\_name & character varying & 3 & NA\\
+\hline
+BASE TABLE & customer & last\_name & character varying & 4 & NA\\
+\hline
+BASE TABLE & customer & email & character varying & 5 & NA\\
+\hline
+BASE TABLE & customer & address\_id & smallint & 6 & NA\\
+\hline
+BASE TABLE & customer & active & integer & 10 & NA\\
+\hline
+BASE TABLE & customer & customer\_id & integer & 1 & nextval('customer\_customer\_id\_seq'::regclass)\\
+\hline
+BASE TABLE & customer & activebool & boolean & 7 & true\\
+\hline
+BASE TABLE & customer & create\_date & date & 8 & ('now'::text)::date\\
+\hline
+BASE TABLE & customer & last\_update & timestamp without time zone & 9 & now()\\
+\hline
+\end{tabular}
 
-table_type   table_name   column_name   data_type                      ordinal_position  column_default                                
------------  -----------  ------------  ----------------------------  -----------------  ----------------------------------------------
-BASE TABLE   customer     store_id      smallint                                      2  NA                                            
-BASE TABLE   customer     first_name    character varying                             3  NA                                            
-BASE TABLE   customer     last_name     character varying                             4  NA                                            
-BASE TABLE   customer     email         character varying                             5  NA                                            
-BASE TABLE   customer     address_id    smallint                                      6  NA                                            
-BASE TABLE   customer     active        integer                                      10  NA                                            
-BASE TABLE   customer     customer_id   integer                                       1  nextval('customer_customer_id_seq'::regclass) 
-BASE TABLE   customer     activebool    boolean                                       7  true                                          
-BASE TABLE   customer     create_date   date                                          8  ('now'::text)::date                           
-BASE TABLE   customer     last_update   timestamp without time zone                   9  now()                                         
+Probably should explore how the `VIEW` is made up of data from BASE TABLEs.
+
+```r
+table_info_schema_table %>%
+  filter(table_schema == "public" & table_type == "VIEW") %>%  
+  select(table_name, table_type) %>% 
+  left_join(columns_info_schema_table, by = c("table_name" = "table_name")) %>% 
+  select(
+    table_type, table_name, column_name, data_type, ordinal_position,
+    column_default
+  ) %>%
+  collect(n = Inf) %>% 
+  filter(str_detect(table_name, "cust")) %>% 
+  kable()
+```
+
+
+\begin{tabular}{l|l|l|l|r|l}
+\hline
+table\_type & table\_name & column\_name & data\_type & ordinal\_position & column\_default\\
+\hline
+VIEW & customer\_list & id & integer & 1 & NA\\
+\hline
+VIEW & customer\_list & name & text & 2 & NA\\
+\hline
+VIEW & customer\_list & address & character varying & 3 & NA\\
+\hline
+VIEW & customer\_list & zip code & character varying & 4 & NA\\
+\hline
+VIEW & customer\_list & phone & character varying & 5 & NA\\
+\hline
+VIEW & customer\_list & city & character varying & 6 & NA\\
+\hline
+VIEW & customer\_list & country & character varying & 7 & NA\\
+\hline
+VIEW & customer\_list & notes & text & 8 & NA\\
+\hline
+VIEW & customer\_list & sid & smallint & 9 & NA\\
+\hline
+\end{tabular}
 
 ### Counting columns and name reuse
 Pull out some rough-and-ready but useful statistics about your database.  Since we are in SQL-land we talk about variables as `columns`.
@@ -395,31 +512,55 @@ columns_info_schema_table %>%
 ```
 
 
-
-table_name                     n
----------------------------  ---
-film                          13
-staff                         11
-customer                      10
-customer_list                  9
-film_list                      8
-staff_list                     8
-address                        8
-nicer_but_slower_film_list     8
-rental                         7
-payment                        6
-actor_info                     4
-actor                          4
-store                          4
-city                           4
-inventory                      4
-film_category                  3
-category                       3
-film_actor                     3
-language                       3
-sales_by_store                 3
-country                        3
-sales_by_film_category         2
+\begin{tabular}{l|r}
+\hline
+table\_name & n\\
+\hline
+film & 13\\
+\hline
+staff & 11\\
+\hline
+customer & 10\\
+\hline
+customer\_list & 9\\
+\hline
+film\_list & 8\\
+\hline
+staff\_list & 8\\
+\hline
+address & 8\\
+\hline
+nicer\_but\_slower\_film\_list & 8\\
+\hline
+rental & 7\\
+\hline
+payment & 6\\
+\hline
+actor\_info & 4\\
+\hline
+actor & 4\\
+\hline
+store & 4\\
+\hline
+city & 4\\
+\hline
+inventory & 4\\
+\hline
+film\_category & 3\\
+\hline
+category & 3\\
+\hline
+film\_actor & 3\\
+\hline
+language & 3\\
+\hline
+sales\_by\_store & 3\\
+\hline
+country & 3\\
+\hline
+sales\_by\_film\_category & 2\\
+\hline
+\end{tabular}
 
 ## Create a list of tables names and a count of the number of columns that each one contains.
 
@@ -464,6 +605,8 @@ columns_info_schema_info %>% count(data_type)
 
 ### Submitting SQL statements directly
 
+This chapter is about `information_schema` not about direct SQL, so we should only have direct SQL when we know that it's difficult or impossible to construct an equivalent query in dplyr.
+
 ```r
 table_schema_query <- glue(
   "SELECT ",
@@ -473,6 +616,7 @@ table_schema_query <- glue(
 )
 
 rental_meta_data <- dbGetQuery(con, table_schema_query)
+names(rental_meta_data) <- str_replace(names(rental_meta_data), "_", " ")
 
 glimpse(rental_meta_data)
 ```
@@ -480,12 +624,12 @@ glimpse(rental_meta_data)
 ```
 ## Observations: 128
 ## Variables: 6
-## $ table_name               <chr> "actor_info", "actor_info", "actor_in...
-## $ column_name              <chr> "actor_id", "first_name", "last_name"...
-## $ data_type                <chr> "integer", "character varying", "char...
-## $ ordinal_position         <int> 1, 2, 3, 4, 1, 2, 3, 4, 5, 6, 7, 8, 9...
-## $ character_maximum_length <int> NA, 45, 45, NA, NA, NA, 50, 10, 20, 5...
-## $ column_default           <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, N...
+## $ `table name`               <chr> "actor_info", "actor_info", "actor_...
+## $ `column name`              <chr> "actor_id", "first_name", "last_nam...
+## $ `data type`                <chr> "integer", "character varying", "ch...
+## $ `ordinal position`         <int> 1, 2, 3, 4, 1, 2, 3, 4, 5, 6, 7, 8,...
+## $ `character maximum_length` <int> NA, 45, 45, NA, NA, NA, 50, 10, 20,...
+## $ `column default`           <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA,...
 ```
 
 ```r
@@ -493,34 +637,56 @@ kable(head(rental_meta_data, n = 20))
 ```
 
 
+\begin{tabular}{l|l|l|r|r|l}
+\hline
+table name & column name & data type & ordinal position & character maximum\_length & column default\\
+\hline
+actor\_info & actor\_id & integer & 1 & NA & NA\\
+\hline
+actor\_info & first\_name & character varying & 2 & 45 & NA\\
+\hline
+actor\_info & last\_name & character varying & 3 & 45 & NA\\
+\hline
+actor\_info & film\_info & text & 4 & NA & NA\\
+\hline
+customer\_list & id & integer & 1 & NA & NA\\
+\hline
+customer\_list & name & text & 2 & NA & NA\\
+\hline
+customer\_list & address & character varying & 3 & 50 & NA\\
+\hline
+customer\_list & zip code & character varying & 4 & 10 & NA\\
+\hline
+customer\_list & phone & character varying & 5 & 20 & NA\\
+\hline
+customer\_list & city & character varying & 6 & 50 & NA\\
+\hline
+customer\_list & country & character varying & 7 & 50 & NA\\
+\hline
+customer\_list & notes & text & 8 & NA & NA\\
+\hline
+customer\_list & sid & smallint & 9 & NA & NA\\
+\hline
+film\_list & fid & integer & 1 & NA & NA\\
+\hline
+film\_list & title & character varying & 2 & 255 & NA\\
+\hline
+film\_list & description & text & 3 & NA & NA\\
+\hline
+film\_list & category & character varying & 4 & 25 & NA\\
+\hline
+film\_list & price & numeric & 5 & NA & NA\\
+\hline
+film\_list & length & smallint & 6 & NA & NA\\
+\hline
+film\_list & rating & USER-DEFINED & 7 & NA & NA\\
+\hline
+\end{tabular}
 
-table_name      column_name   data_type            ordinal_position   character_maximum_length  column_default 
---------------  ------------  ------------------  -----------------  -------------------------  ---------------
-actor_info      actor_id      integer                             1                         NA  NA             
-actor_info      first_name    character varying                   2                         45  NA             
-actor_info      last_name     character varying                   3                         45  NA             
-actor_info      film_info     text                                4                         NA  NA             
-customer_list   id            integer                             1                         NA  NA             
-customer_list   name          text                                2                         NA  NA             
-customer_list   address       character varying                   3                         50  NA             
-customer_list   zip code      character varying                   4                         10  NA             
-customer_list   phone         character varying                   5                         20  NA             
-customer_list   city          character varying                   6                         50  NA             
-customer_list   country       character varying                   7                         50  NA             
-customer_list   notes         text                                8                         NA  NA             
-customer_list   sid           smallint                            9                         NA  NA             
-film_list       fid           integer                             1                         NA  NA             
-film_list       title         character varying                   2                        255  NA             
-film_list       description   text                                3                         NA  NA             
-film_list       category      character varying                   4                         25  NA             
-film_list       price         numeric                             5                         NA  NA             
-film_list       length        smallint                            6                         NA  NA             
-film_list       rating        USER-DEFINED                        7                         NA  NA             
 
-names(rental_meta_data) <- str_replace(names(rental_meta_data), "_", " ")
+There are 22 rows in the catalog.
 
-There are {r dim(rs)[1]} rows in the catalog.
-
+What do we learn from the following query?  How is it useful?
 
 ```r
 rs <- dbGetQuery(
@@ -534,21 +700,40 @@ WHERE 1 = 1 --r.conrelid = '16485'
   AND r.contype  in ('f','p') ORDER BY 1
 ;"
 )
+glimpse(rs)
+```
 
+```
+## Observations: 61,215
+## Variables: 3
+## $ table_name <chr> "dvdrental.information_schema.administrable_role_au...
+## $ conname    <chr> "actor_pkey", "actor_pkey", "actor_pkey", "country_...
+## $ condef     <chr> "PRIMARY KEY (actor_id)", "PRIMARY KEY (actor_id)",...
+```
+
+```r
 kable(head(rs))
 ```
 
 
-
-table_name                                                       conname        condef                   
----------------------------------------------------------------  -------------  -------------------------
-dvdrental.information_schema.administrable_role_authorizations   actor_pkey     PRIMARY KEY (actor_id)   
-dvdrental.information_schema.administrable_role_authorizations   actor_pkey     PRIMARY KEY (actor_id)   
-dvdrental.information_schema.administrable_role_authorizations   actor_pkey     PRIMARY KEY (actor_id)   
-dvdrental.information_schema.administrable_role_authorizations   country_pkey   PRIMARY KEY (country_id) 
-dvdrental.information_schema.administrable_role_authorizations   country_pkey   PRIMARY KEY (country_id) 
-dvdrental.information_schema.administrable_role_authorizations   country_pkey   PRIMARY KEY (country_id) 
-
+\begin{tabular}{l|l|l}
+\hline
+table\_name & conname & condef\\
+\hline
+dvdrental.information\_schema.administrable\_role\_authorizations & actor\_pkey & PRIMARY KEY (actor\_id)\\
+\hline
+dvdrental.information\_schema.administrable\_role\_authorizations & actor\_pkey & PRIMARY KEY (actor\_id)\\
+\hline
+dvdrental.information\_schema.administrable\_role\_authorizations & actor\_pkey & PRIMARY KEY (actor\_id)\\
+\hline
+dvdrental.information\_schema.administrable\_role\_authorizations & country\_pkey & PRIMARY KEY (country\_id)\\
+\hline
+dvdrental.information\_schema.administrable\_role\_authorizations & country\_pkey & PRIMARY KEY (country\_id)\\
+\hline
+dvdrental.information\_schema.administrable\_role\_authorizations & country\_pkey & PRIMARY KEY (country\_id)\\
+\hline
+\end{tabular}
+What do we learn from the following query?  How is it useful? 
 
 ```r
 rs <- dbGetQuery(
@@ -563,19 +748,39 @@ rs <- dbGetQuery(
 order by conrelid::regclass::text, contype DESC;
 "
 )
+glimpse(rs)
+```
+
+```
+## Observations: 33
+## Variables: 3
+## $ table_from           <chr> "actor", "address", "address", "category"...
+## $ conname              <chr> "actor_pkey", "address_pkey", "fk_address...
+## $ pg_get_constraintdef <chr> "PRIMARY KEY (actor_id)", "PRIMARY KEY (a...
+```
+
+```r
 kable(head(rs))
 ```
 
 
-
-table_from   conname           pg_get_constraintdef                                    
------------  ----------------  --------------------------------------------------------
-actor        actor_pkey        PRIMARY KEY (actor_id)                                  
-address      address_pkey      PRIMARY KEY (address_id)                                
-address      fk_address_city   FOREIGN KEY (city_id) REFERENCES city(city_id)          
-category     category_pkey     PRIMARY KEY (category_id)                               
-city         city_pkey         PRIMARY KEY (city_id)                                   
-city         fk_city           FOREIGN KEY (country_id) REFERENCES country(country_id) 
+\begin{tabular}{l|l|l}
+\hline
+table\_from & conname & pg\_get\_constraintdef\\
+\hline
+actor & actor\_pkey & PRIMARY KEY (actor\_id)\\
+\hline
+address & address\_pkey & PRIMARY KEY (address\_id)\\
+\hline
+address & fk\_address\_city & FOREIGN KEY (city\_id) REFERENCES city(city\_id)\\
+\hline
+category & category\_pkey & PRIMARY KEY (category\_id)\\
+\hline
+city & city\_pkey & PRIMARY KEY (city\_id)\\
+\hline
+city & fk\_city & FOREIGN KEY (country\_id) REFERENCES country(country\_id)\\
+\hline
+\end{tabular}
 
 ```r
 dim(rs)[1]
@@ -585,7 +790,7 @@ dim(rs)[1]
 ## [1] 33
 ```
 
-
+This query shows the primary and foreign keys in the database.
 
 ```r
 tables <- tbl(con, dbplyr::in_schema("information_schema", "tables"))
@@ -634,46 +839,83 @@ kable(keys)
 ```
 
 
+\begin{tabular}{l|l|l|l|l|r}
+\hline
+table\_name & table\_type & constraint\_name & constraint\_type & column\_name & ordinal\_position\\
+\hline
+actor & BASE TABLE & actor\_pkey & PRIMARY KEY & actor\_id & 1\\
+\hline
+address & BASE TABLE & address\_pkey & PRIMARY KEY & address\_id & 1\\
+\hline
+address & BASE TABLE & fk\_address\_city & FOREIGN KEY & city\_id & 1\\
+\hline
+category & BASE TABLE & category\_pkey & PRIMARY KEY & category\_id & 1\\
+\hline
+city & BASE TABLE & city\_pkey & PRIMARY KEY & city\_id & 1\\
+\hline
+city & BASE TABLE & fk\_city & FOREIGN KEY & country\_id & 1\\
+\hline
+country & BASE TABLE & country\_pkey & PRIMARY KEY & country\_id & 1\\
+\hline
+customer & BASE TABLE & customer\_address\_id\_fkey & FOREIGN KEY & address\_id & 1\\
+\hline
+customer & BASE TABLE & customer\_pkey & PRIMARY KEY & customer\_id & 1\\
+\hline
+film & BASE TABLE & film\_language\_id\_fkey & FOREIGN KEY & language\_id & 1\\
+\hline
+film & BASE TABLE & film\_pkey & PRIMARY KEY & film\_id & 1\\
+\hline
+film\_actor & BASE TABLE & film\_actor\_actor\_id\_fkey & FOREIGN KEY & actor\_id & 1\\
+\hline
+film\_actor & BASE TABLE & film\_actor\_film\_id\_fkey & FOREIGN KEY & film\_id & 1\\
+\hline
+film\_actor & BASE TABLE & film\_actor\_pkey & PRIMARY KEY & actor\_id & 1\\
+\hline
+film\_actor & BASE TABLE & film\_actor\_pkey & PRIMARY KEY & film\_id & 2\\
+\hline
+film\_category & BASE TABLE & film\_category\_category\_id\_fkey & FOREIGN KEY & category\_id & 1\\
+\hline
+film\_category & BASE TABLE & film\_category\_film\_id\_fkey & FOREIGN KEY & film\_id & 1\\
+\hline
+film\_category & BASE TABLE & film\_category\_pkey & PRIMARY KEY & film\_id & 1\\
+\hline
+film\_category & BASE TABLE & film\_category\_pkey & PRIMARY KEY & category\_id & 2\\
+\hline
+inventory & BASE TABLE & inventory\_film\_id\_fkey & FOREIGN KEY & film\_id & 1\\
+\hline
+inventory & BASE TABLE & inventory\_pkey & PRIMARY KEY & inventory\_id & 1\\
+\hline
+language & BASE TABLE & language\_pkey & PRIMARY KEY & language\_id & 1\\
+\hline
+payment & BASE TABLE & payment\_customer\_id\_fkey & FOREIGN KEY & customer\_id & 1\\
+\hline
+payment & BASE TABLE & payment\_pkey & PRIMARY KEY & payment\_id & 1\\
+\hline
+payment & BASE TABLE & payment\_rental\_id\_fkey & FOREIGN KEY & rental\_id & 1\\
+\hline
+payment & BASE TABLE & payment\_staff\_id\_fkey & FOREIGN KEY & staff\_id & 1\\
+\hline
+rental & BASE TABLE & rental\_customer\_id\_fkey & FOREIGN KEY & customer\_id & 1\\
+\hline
+rental & BASE TABLE & rental\_inventory\_id\_fkey & FOREIGN KEY & inventory\_id & 1\\
+\hline
+rental & BASE TABLE & rental\_pkey & PRIMARY KEY & rental\_id & 1\\
+\hline
+rental & BASE TABLE & rental\_staff\_id\_key & FOREIGN KEY & staff\_id & 1\\
+\hline
+staff & BASE TABLE & staff\_address\_id\_fkey & FOREIGN KEY & address\_id & 1\\
+\hline
+staff & BASE TABLE & staff\_pkey & PRIMARY KEY & staff\_id & 1\\
+\hline
+store & BASE TABLE & store\_address\_id\_fkey & FOREIGN KEY & address\_id & 1\\
+\hline
+store & BASE TABLE & store\_manager\_staff\_id\_fkey & FOREIGN KEY & manager\_staff\_id & 1\\
+\hline
+store & BASE TABLE & store\_pkey & PRIMARY KEY & store\_id & 1\\
+\hline
+\end{tabular}
 
-table_name      table_type   constraint_name                  constraint_type   column_name         ordinal_position
---------------  -----------  -------------------------------  ----------------  -----------------  -----------------
-actor           BASE TABLE   actor_pkey                       PRIMARY KEY       actor_id                           1
-address         BASE TABLE   address_pkey                     PRIMARY KEY       address_id                         1
-address         BASE TABLE   fk_address_city                  FOREIGN KEY       city_id                            1
-category        BASE TABLE   category_pkey                    PRIMARY KEY       category_id                        1
-city            BASE TABLE   city_pkey                        PRIMARY KEY       city_id                            1
-city            BASE TABLE   fk_city                          FOREIGN KEY       country_id                         1
-country         BASE TABLE   country_pkey                     PRIMARY KEY       country_id                         1
-customer        BASE TABLE   customer_address_id_fkey         FOREIGN KEY       address_id                         1
-customer        BASE TABLE   customer_pkey                    PRIMARY KEY       customer_id                        1
-film            BASE TABLE   film_language_id_fkey            FOREIGN KEY       language_id                        1
-film            BASE TABLE   film_pkey                        PRIMARY KEY       film_id                            1
-film_actor      BASE TABLE   film_actor_actor_id_fkey         FOREIGN KEY       actor_id                           1
-film_actor      BASE TABLE   film_actor_film_id_fkey          FOREIGN KEY       film_id                            1
-film_actor      BASE TABLE   film_actor_pkey                  PRIMARY KEY       actor_id                           1
-film_actor      BASE TABLE   film_actor_pkey                  PRIMARY KEY       film_id                            2
-film_category   BASE TABLE   film_category_category_id_fkey   FOREIGN KEY       category_id                        1
-film_category   BASE TABLE   film_category_film_id_fkey       FOREIGN KEY       film_id                            1
-film_category   BASE TABLE   film_category_pkey               PRIMARY KEY       film_id                            1
-film_category   BASE TABLE   film_category_pkey               PRIMARY KEY       category_id                        2
-inventory       BASE TABLE   inventory_film_id_fkey           FOREIGN KEY       film_id                            1
-inventory       BASE TABLE   inventory_pkey                   PRIMARY KEY       inventory_id                       1
-language        BASE TABLE   language_pkey                    PRIMARY KEY       language_id                        1
-payment         BASE TABLE   payment_customer_id_fkey         FOREIGN KEY       customer_id                        1
-payment         BASE TABLE   payment_pkey                     PRIMARY KEY       payment_id                         1
-payment         BASE TABLE   payment_rental_id_fkey           FOREIGN KEY       rental_id                          1
-payment         BASE TABLE   payment_staff_id_fkey            FOREIGN KEY       staff_id                           1
-rental          BASE TABLE   rental_customer_id_fkey          FOREIGN KEY       customer_id                        1
-rental          BASE TABLE   rental_inventory_id_fkey         FOREIGN KEY       inventory_id                       1
-rental          BASE TABLE   rental_pkey                      PRIMARY KEY       rental_id                          1
-rental          BASE TABLE   rental_staff_id_key              FOREIGN KEY       staff_id                           1
-staff           BASE TABLE   staff_address_id_fkey            FOREIGN KEY       address_id                         1
-staff           BASE TABLE   staff_pkey                       PRIMARY KEY       staff_id                           1
-store           BASE TABLE   store_address_id_fkey            FOREIGN KEY       address_id                         1
-store           BASE TABLE   store_manager_staff_id_fkey      FOREIGN KEY       manager_staff_id                   1
-store           BASE TABLE   store_pkey                       PRIMARY KEY       store_id                           1
-
-
+What do we learn from the following query?  How is it useful? 
 
 ```r
 rs <- dbGetQuery(

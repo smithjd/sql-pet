@@ -1,6 +1,6 @@
 # Leftovers (12)
 
-Most of the content in this file has een moved elsewhere.
+Most of the content in this file has been moved elsewhere.
 
 
 ## Some extra handy libraries

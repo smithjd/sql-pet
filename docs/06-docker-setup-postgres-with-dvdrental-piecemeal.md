@@ -1,5 +1,9 @@
 # A persistent database in Postgres in Docker - piecemeal (06)
 
+At the end of this chapter, you will be able to
+* Do everything you were able to do in Chapter 5 (see steps 1-3)
+* Create the database and restore from the backup.
+
 ## Overview
 
 This chapter essentially repeats what was presented in the previous one, but does it in a step-by-step way that might be useful to understand how each of the steps involved in setting up a persistent PostgreSQL database works.  If you are satisfied with the method shown in that chapter, skip this one for now.
@@ -105,7 +109,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "ccdfda6d6d71dc062d3c6bb4dca204a6dbad00b02e1ea1a42a233beb0ada864c"
+## [1] "baca0bf84b202bc1e30fcf1e22d24854eb3b8791baba913bf626cbd72b69d87c"
 ```
 
 Peek inside the docker container and list the files in the `petdir` directory.  Notice that `dvdrental.tar` is in both.
@@ -280,7 +284,7 @@ psout[grepl(x = psout, pattern = 'sql-pet')]
 ```
 
 ```
-## [1] "ccdfda6d6d71        postgres:10         \"docker-entrypoint.s…\"   18 seconds ago      Exited (0) Less than a second ago                       sql-pet"
+## [1] "baca0bf84b20        postgres:10         \"docker-entrypoint.s…\"   18 seconds ago      Exited (0) Less than a second ago                       sql-pet"
 ```
 
 Next time, you can just use this command to start the container:
