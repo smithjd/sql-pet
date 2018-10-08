@@ -1,7 +1,7 @@
 ---
 title: "R, Databases and Docker"
 author: "Dipti Muni, Ian Frantz, John David Smith, Mary Anne Thygesen, M. Edward (Ed) Borasky,  Scott Case, and Sophie Yang"
-date: "2018-10-05"
+date: "2018-10-08"
 site: bookdown::bookdown_site
 documentclass: book
 bibliography: [book.bib, packages.bib]
@@ -13,8 +13,9 @@ description: "A collection of tutorials for integrating R with databases using D
 # Introduction
 
 At the end of this chapter, you will be able to
-* Understand the importance of using R and Docker to query a DBMS and access a service like Postgres outside of R. 
-* Setup your environment to explore the use-case for useRs.
+
+  * Understand the importance of using R and Docker to query a DBMS and access a service like Postgres outside of R. 
+  * Setup your environment to explore the use-case for useRs.
 
 ## Using R to query a DBMS in your organization
 
