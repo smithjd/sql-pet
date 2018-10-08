@@ -1,8 +1,9 @@
 # Docker Hosting for Windows (02)
 
 At the end of this chapter, you will be able to
-* Setup your environment for Windows.
-* Use Git and GitHub effectively on Windows.
+
+  * Setup your environment for Windows.
+  * Use Git and GitHub effectively on Windows.
 
 
 Skip these instructions if your computer has either OSX or a Unix variant.
