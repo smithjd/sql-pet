@@ -43,11 +43,15 @@ con <- wait_for_postgres(
   seconds_to_test = 10
 )
 ```
-## Always look at the data
+## Always *look* at the data
+
+### Connect with people who own, generate, or are the subjects of the data
+
+A good chat with people who own the data, generate it, or are the subjects can generate insights and set the context for your investigation of the database. The purpose for collecting the data or circumsances where it was collected may be burried far afield in an organization, but *usually someone knows*.  The metadata discussed in this chapter is essential but will only take you so far.
 
 ### Browse a few rows of a table
 
-So far in this books we've most often looked at the data by listing a few observations or using a tool like `glimpse`.
+Simple tools like `head` or `glimpse` are your friend.
 
 ```r
 rental <- dplyr::tbl(con, "rental")
@@ -89,23 +93,9 @@ glimpse(rental)
 ## $ staff_id     <int> 1, 1, 2, 1, 1, 2, 2, 1, 2, 2, 2, 1, 1, 1, 2, 1, 2...
 ## $ last_update  <dttm> 2006-02-16 02:30:53, 2006-02-16 02:30:53, 2006-0...
 ```
+## Database contents and structure
 
-### Look at what R sends to `postgreSQL`
-
-NOTE: This may be moved to an earlier chapter, there is no particular reason that it be here:
-
-The equivalent of `rental <- dplyr::tbl(con, "rental")` is:
-
-```r
-rental %>% dplyr::show_query()
-```
-
-```
-## <SQL>
-## SELECT *
-## FROM "rental"
-```
-## What is in the database?
+### Database structure
 
 For large or complex databases, however, you need to use both the available documentation for your database (e.g.,  [the dvdrental](http://www.postgresqltutorial.com/postgresql-sample-database/) database) and the other empirical tools that are available.  For example it's worth learning to interpret the symbols in an [Entity Relationship Diagram](https://en.wikipedia.org/wiki/Entity%E2%80%93relationship_model):
 
@@ -113,14 +103,16 @@ For large or complex databases, however, you need to use both the available docu
 
 The `information_schema` is a trove of information *about* the database.  Its format is more or less consistent across the different SQL implementations that are available.   Here we explore some of what's available using several different methods.  Postgres stores [a lot of metadata](https://www.postgresql.org/docs/current/static/infoschema-columns.html).
 
-### Look at what `information_schema` contains
+### Contents of the `information_schema` 
 For this chapter R needs the `dbplyr` package to access alternate schemas.  A [schema](http://www.postgresqltutorial.com/postgresql-server-and-database-objects/) is an object that contains one or more tables.  Most often there will be a default schema, but to access the metadata, you need to explicitly specify which schema contains the data you want.
 
-## What tables are in the database?
+### What tables are in the database?
 The simplest way to get a list of tables is with 
 
 ```r
-kable(DBI::dbListTables(con))
+table_list  <- DBI::dbListTables(con)
+
+kable(table_list)
 ```
 
 
@@ -173,26 +165,27 @@ film\_actor\\
 customer\\
 \hline
 \end{tabular}
-### Use the `information_schema` to investigate the database
+### Digging into the `information_schema`
 
-Often we want more detail than just a list of tables.  
+We usually need more detail than just a list of tables. Most SQL databases have am `information_schema` that has a standard structure to describe and control the database.
 
-The `information_schema` is different from the default, so to connect to the `tables` table we connect to the database in a different way:
+The `information_schema` is in a different schema from the default, so to connect to the `tables` table in the  `information_schema` we connect to the database in a different way:
 
 ```r
 table_info_schema_table <- tbl(con, dbplyr::in_schema("information_schema", "tables"))
 ```
-The `information_schema` is large and complex and contains 210 tables.
+The `information_schema` is large and complex and contains 210 tables.  So it's easy to get lost in it.
 
 This query retrieves a list of the tables in the database that includes additional detail, not just the name of the table.
 
 ```r
-table_info_schema_table %>%
+table_info <- table_info_schema_table %>%
   filter(table_schema == "public") %>%
   select(table_catalog, table_schema, table_name, table_type) %>%
-  arrange(table_type, table_name) %>%
-  collect() %>%
-  kable()
+  arrange(table_type, table_name) %>% 
+  collect() 
+
+kable(table_info)
 ```
 
 
@@ -245,35 +238,11 @@ dvdrental & public & sales\_by\_store & VIEW\\
 dvdrental & public & staff\_list & VIEW\\
 \hline
 \end{tabular}
-`table_catalog` is synonymous with `database`.
+In this context `table_catalog` is synonymous with `database`.
 
+Notice that *VIEWS* are composites made up of one or more *BASE TABLES*.
 
-```r
-table_info_schema_table %>%
-  filter(table_schema == "public") %>%  # See alternative below
-  select(table_catalog, table_schema, table_name, table_type) %>%
-  arrange(table_type, table_name) %>%
-  show_query()
-```
-
-```
-## <SQL>
-## SELECT "table_catalog", "table_schema", "table_name", "table_type"
-## FROM information_schema.tables
-## WHERE ("table_schema" = 'public')
-## ORDER BY "table_type", "table_name"
-```
-Notice that VIEWS are composites made up of one or more BASE TABLES.
-
-Since dplyr code is equivalent to SQL, we have a choice.  Also there are different ways of specifying what we want: 
-
-  `WHERE ("table_schema" = 'public')`
-
-is equivalent to:
-
-  `where table_schema not in ('pg_catalog','information_schema')`
-
-The SQL world has its own terminology.  For example `rs` is shorthand for `result set`.  That's equivalent to using `df` for a `data frame`.
+The SQL world has its own terminology.  For example `rs` is shorthand for `result set`.  That's equivalent to using `df` for a `data frame`.  The following SQL query returns the same information as the previous one.
 
 ```r
 rs <- dbGetQuery(
@@ -351,11 +320,15 @@ DBI::dbListFields(con, "rental")
 ## [5] "return_date"  "staff_id"     "last_update"
 ```
 
-But the `information_schema` has a lot more useful information that we can use.  This query retrieves more information about the `rental` table:
+But the `information_schema` has a lot more useful information that we can use.  
 
 ```r
-columns_info_schema_table <- tbl(con, dbplyr::in_schema("information_schema", "columns")) 
+columns_info_schema_table <- tbl(con, dbplyr::in_schema("information_schema", "columns"))
+```
 
+Since the `information_schema` contains 1855 columns, we are narrowing our focus to just one table.  This query retrieves more information about the `rental` table:
+
+```r
 columns_info_schema_info <- columns_info_schema_table %>%
   filter(table_schema == "public") %>% 
   select(
@@ -363,13 +336,12 @@ columns_info_schema_info <- columns_info_schema_table %>%
     character_maximum_length, column_default, numeric_precision, numeric_precision_radix
   ) %>%
   collect(n = Inf) %>% 
-  mutate(full_table_name = paste(table_catalog, table_schema, table_name, sep = "."),
-         data_type = case_when(
+  mutate(data_type = case_when(
            data_type == "character varying" ~ paste0(data_type, ' (', character_maximum_length, ')'),
            data_type == "real" ~ paste0(data_type, ' (', numeric_precision, ',', numeric_precision_radix,')'),
            TRUE ~ data_type)
          ) %>% 
-  filter(table_name == "rental") %>% 
+  filter(table_name == "rental") %>%
   select(-table_schema, -numeric_precision, -numeric_precision_radix)
 
 glimpse(columns_info_schema_info)
@@ -377,7 +349,7 @@ glimpse(columns_info_schema_info)
 
 ```
 ## Observations: 7
-## Variables: 8
+## Variables: 7
 ## $ table_catalog            <chr> "dvdrental", "dvdrental", "dvdrental"...
 ## $ table_name               <chr> "rental", "rental", "rental", "rental...
 ## $ column_name              <chr> "rental_id", "rental_date", "inventor...
@@ -385,7 +357,6 @@ glimpse(columns_info_schema_info)
 ## $ ordinal_position         <int> 1, 2, 3, 4, 5, 6, 7
 ## $ character_maximum_length <int> NA, NA, NA, NA, NA, NA, NA
 ## $ column_default           <chr> "nextval('rental_rental_id_seq'::regc...
-## $ full_table_name          <chr> "dvdrental.public.rental", "dvdrental...
 ```
 
 ```r
@@ -393,28 +364,27 @@ kable(columns_info_schema_info)
 ```
 
 
-\begin{tabular}{l|l|l|l|r|r|l|l}
+\begin{tabular}{l|l|l|l|r|r|l}
 \hline
-table\_catalog & table\_name & column\_name & data\_type & ordinal\_position & character\_maximum\_length & column\_default & full\_table\_name\\
+table\_catalog & table\_name & column\_name & data\_type & ordinal\_position & character\_maximum\_length & column\_default\\
 \hline
-dvdrental & rental & rental\_id & integer & 1 & NA & nextval('rental\_rental\_id\_seq'::regclass) & dvdrental.public.rental\\
+dvdrental & rental & rental\_id & integer & 1 & NA & nextval('rental\_rental\_id\_seq'::regclass)\\
 \hline
-dvdrental & rental & rental\_date & timestamp without time zone & 2 & NA & NA & dvdrental.public.rental\\
+dvdrental & rental & rental\_date & timestamp without time zone & 2 & NA & NA\\
 \hline
-dvdrental & rental & inventory\_id & integer & 3 & NA & NA & dvdrental.public.rental\\
+dvdrental & rental & inventory\_id & integer & 3 & NA & NA\\
 \hline
-dvdrental & rental & customer\_id & smallint & 4 & NA & NA & dvdrental.public.rental\\
+dvdrental & rental & customer\_id & smallint & 4 & NA & NA\\
 \hline
-dvdrental & rental & return\_date & timestamp without time zone & 5 & NA & NA & dvdrental.public.rental\\
+dvdrental & rental & return\_date & timestamp without time zone & 5 & NA & NA\\
 \hline
-dvdrental & rental & staff\_id & smallint & 6 & NA & NA & dvdrental.public.rental\\
+dvdrental & rental & staff\_id & smallint & 6 & NA & NA\\
 \hline
-dvdrental & rental & last\_update & timestamp without time zone & 7 & NA & now() & dvdrental.public.rental\\
+dvdrental & rental & last\_update & timestamp without time zone & 7 & NA & now()\\
 \hline
 \end{tabular}
 
 ### What is the difference between a `VIEW` and a `BASE TABLE`?
-
 
 The `BASE TABLE` has the underlying data in the database
 
@@ -500,6 +470,25 @@ VIEW & customer\_list & sid & smallint & 9 & NA\\
 \hline
 \end{tabular}
 
+### What data types are found in the database?
+
+```r
+columns_info_schema_info %>% count(data_type)
+```
+
+```
+## # A tibble: 3 x 2
+##   data_type                       n
+##   <chr>                       <int>
+## 1 integer                         2
+## 2 smallint                        2
+## 3 timestamp without time zone     3
+```
+
+## Characterizing how things are named
+
+Names are the handle for accessing the data.  Tables and columns may or may not be named consistently or in a way that makes sense to you.  You should look at these names *as data*.
+
 ### Counting columns and name reuse
 Pull out some rough-and-ready but useful statistics about your database.  Since we are in SQL-land we talk about variables as `columns`.
 
@@ -562,8 +551,6 @@ sales\_by\_film\_category & 2\\
 \hline
 \end{tabular}
 
-## Create a list of tables names and a count of the number of columns that each one contains.
-
 How many *column names* are shared across tables (or duplicated)?
 
 ```r
@@ -588,105 +575,11 @@ columns_info_schema_info %>% count(column_name) %>% filter(n == 1) %>% count()
 ## 1     7
 ```
 
-What data types are found in the database?
+## Database keys
 
-```r
-columns_info_schema_info %>% count(data_type)
-```
+### Direct SQL
 
-```
-## # A tibble: 3 x 2
-##   data_type                       n
-##   <chr>                       <int>
-## 1 integer                         2
-## 2 smallint                        2
-## 3 timestamp without time zone     3
-```
-
-### Submitting SQL statements directly
-
-This chapter is about `information_schema` not about direct SQL, so we should only have direct SQL when we know that it's difficult or impossible to construct an equivalent query in dplyr.
-
-```r
-table_schema_query <- glue(
-  "SELECT ",
-  "table_name, column_name, data_type, ordinal_position, character_maximum_length, column_default",
-  " FROM information_schema.columns ",
-  "WHERE table_schema = 'public'"
-)
-
-rental_meta_data <- dbGetQuery(con, table_schema_query)
-names(rental_meta_data) <- str_replace(names(rental_meta_data), "_", " ")
-
-glimpse(rental_meta_data)
-```
-
-```
-## Observations: 128
-## Variables: 6
-## $ `table name`               <chr> "actor_info", "actor_info", "actor_...
-## $ `column name`              <chr> "actor_id", "first_name", "last_nam...
-## $ `data type`                <chr> "integer", "character varying", "ch...
-## $ `ordinal position`         <int> 1, 2, 3, 4, 1, 2, 3, 4, 5, 6, 7, 8,...
-## $ `character maximum_length` <int> NA, 45, 45, NA, NA, NA, 50, 10, 20,...
-## $ `column default`           <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA,...
-```
-
-```r
-kable(head(rental_meta_data, n = 20))
-```
-
-
-\begin{tabular}{l|l|l|r|r|l}
-\hline
-table name & column name & data type & ordinal position & character maximum\_length & column default\\
-\hline
-actor\_info & actor\_id & integer & 1 & NA & NA\\
-\hline
-actor\_info & first\_name & character varying & 2 & 45 & NA\\
-\hline
-actor\_info & last\_name & character varying & 3 & 45 & NA\\
-\hline
-actor\_info & film\_info & text & 4 & NA & NA\\
-\hline
-customer\_list & id & integer & 1 & NA & NA\\
-\hline
-customer\_list & name & text & 2 & NA & NA\\
-\hline
-customer\_list & address & character varying & 3 & 50 & NA\\
-\hline
-customer\_list & zip code & character varying & 4 & 10 & NA\\
-\hline
-customer\_list & phone & character varying & 5 & 20 & NA\\
-\hline
-customer\_list & city & character varying & 6 & 50 & NA\\
-\hline
-customer\_list & country & character varying & 7 & 50 & NA\\
-\hline
-customer\_list & notes & text & 8 & NA & NA\\
-\hline
-customer\_list & sid & smallint & 9 & NA & NA\\
-\hline
-film\_list & fid & integer & 1 & NA & NA\\
-\hline
-film\_list & title & character varying & 2 & 255 & NA\\
-\hline
-film\_list & description & text & 3 & NA & NA\\
-\hline
-film\_list & category & character varying & 4 & 25 & NA\\
-\hline
-film\_list & price & numeric & 5 & NA & NA\\
-\hline
-film\_list & length & smallint & 6 & NA & NA\\
-\hline
-film\_list & rating & USER-DEFINED & 7 & NA & NA\\
-\hline
-\end{tabular}
-
-
-There are 22 rows in the catalog.
-
-What do we learn from the following query?  How is it useful?
+How do we use this output?  Could it be generated by dplyr?
 
 ```r
 rs <- dbGetQuery(
@@ -694,7 +587,7 @@ rs <- dbGetQuery(
   "
 --SELECT conrelid::regclass as table_from
 select table_catalog||'.'||table_schema||'.'||table_name table_name
-,conname,pg_catalog.pg_get_constraintdef(r.oid, true) as condef
+, conname, pg_catalog.pg_get_constraintdef(r.oid, true) as condef
 FROM information_schema.columns c,pg_catalog.pg_constraint r
 WHERE 1 = 1 --r.conrelid = '16485' 
   AND r.contype  in ('f','p') ORDER BY 1
@@ -733,7 +626,7 @@ dvdrental.information\_schema.administrable\_role\_authorizations & country\_pke
 dvdrental.information\_schema.administrable\_role\_authorizations & country\_pkey & PRIMARY KEY (country\_id)\\
 \hline
 \end{tabular}
-What do we learn from the following query?  How is it useful? 
+The following is more compact and looks more useful.  What is the difference between the two?
 
 ```r
 rs <- dbGetQuery(
@@ -789,6 +682,8 @@ dim(rs)[1]
 ```
 ## [1] 33
 ```
+
+### Database keys with dplyr
 
 This query shows the primary and foreign keys in the database.
 
@@ -981,3 +876,79 @@ head(rs)
 ## 5                                                                     PRIMARY KEY (address_id)
 ## 6                                                                    PRIMARY KEY (category_id)
 ```
+
+## Creating your own data dictionary
+
+If you are going to work with a database for an extended period it can be useful to create your own data dictionary.  Here is an illustration of the idea
+
+```r
+some_tables <- c("rental", "rental", "city", "store")
+
+all_meta <- map_df(some_tables, get_dd)
+glimpse(all_meta)
+```
+
+```
+## Observations: 22
+## Variables: 11
+## $ table_name <chr> "rental", "rental", "rental", "rental", "rental", "...
+## $ var_name   <chr> "rental_id", "rental_date", "inventory_id", "custom...
+## $ var_type   <chr> "integer", "double", "integer", "integer", "double"...
+## $ num_rows   <int> 16044, 16044, 16044, 16044, 16044, 16044, 16044, 16...
+## $ num_blank  <int> 0, 0, 0, 0, 183, 0, 0, 0, 0, 0, 0, 183, 0, 0, 0, 0,...
+## $ num_unique <int> 16044, 15815, 4580, 599, 15836, 2, 3, 16044, 15815,...
+## $ min        <chr> "1", "2005-05-24 22:53:30", "1", "1", "2005-05-25 2...
+## $ q_25       <chr> "4013", "2005-07-07 00:58:00", "1154", "148", "2005...
+## $ q_50       <chr> "8025", "2005-07-28 16:03:27", "2291", "296", "2005...
+## $ q_75       <chr> "12037", "2005-08-17 21:13:35", "3433", "446", "200...
+## $ max        <chr> "16049", "2006-02-14 15:16:03", "4581", "599", "200...
+```
+
+```r
+kable(head(all_meta))
+```
+
+
+\begin{tabular}{l|l|l|r|r|r|l|l|l|l|l}
+\hline
+table\_name & var\_name & var\_type & num\_rows & num\_blank & num\_unique & min & q\_25 & q\_50 & q\_75 & max\\
+\hline
+rental & rental\_id & integer & 16044 & 0 & 16044 & 1 & 4013 & 8025 & 12037 & 16049\\
+\hline
+rental & rental\_date & double & 16044 & 0 & 15815 & 2005-05-24 22:53:30 & 2005-07-07 00:58:00 & 2005-07-28 16:03:27 & 2005-08-17 21:13:35 & 2006-02-14 15:16:03\\
+\hline
+rental & inventory\_id & integer & 16044 & 0 & 4580 & 1 & 1154 & 2291 & 3433 & 4581\\
+\hline
+rental & customer\_id & integer & 16044 & 0 & 599 & 1 & 148 & 296 & 446 & 599\\
+\hline
+rental & return\_date & double & 16044 & 183 & 15836 & 2005-05-25 23:55:21 & 2005-07-10 15:48:58 & 2005-08-01 19:31:15 & 2005-08-20 23:32:29 & 2005-09-02 02:35:22\\
+\hline
+rental & staff\_id & integer & 16044 & 0 & 2 & 1 & 1 & 1 & 2 & 2\\
+\hline
+\end{tabular}
+
+```r
+# all_meta <- map_df(table_list, get_dd)
+```
+## Save your work!
+
+The work you do to understand the structure and contents of a database can be useful for others (including future-you).  So at the end of a session, you might look at all the data frames you want to save.  Consider saving them in a form where you can add notes at the appropriate level (as in a Google Doc representing table or columns that you annotate over time).
+
+```r
+ls()
+```
+
+```
+##  [1] "all_meta"                  "columns_info_schema_info" 
+##  [3] "columns_info_schema_table" "con"                      
+##  [5] "constraint_column_usage"   "cranex"                   
+##  [7] "fivenumsum"                "get_dd"                   
+##  [9] "key_column_usage"          "keys"                     
+## [11] "make_dd"                   "referential_constraints"  
+## [13] "rental"                    "rs"                       
+## [15] "some_tables"               "table_constraints"        
+## [17] "table_info"                "table_info_schema_table"  
+## [19] "table_list"                "tables"                   
+## [21] "wait_for_postgres"
+```
+

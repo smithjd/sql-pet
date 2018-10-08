@@ -1,9 +1,10 @@
 # A persistent database in Postgres in Docker - all at once (05)
 
 At the end of this chapter, you will be able to 
-* Setup a database with “all in one” approach.
-* Stop and start Docker image to demonstrate persistence
-* Disconnect R from database and stop container to close up even though it still exists. 
+
+  * Setup a database with “all in one” approach.
+  * Stop and start Docker image to demonstrate persistence
+  * Disconnect R from database and stop container to close up even though it still exists. 
 
 
 ## Overview
@@ -68,7 +69,7 @@ system2("docker",
 ```
 
 ```
-##  [1] "Sending build context to Docker daemon  3.052MB\r\r"                                                                                                                                                                                                                                                                                                                                           
+##  [1] "Sending build context to Docker daemon  15.32MB\r\r"                                                                                                                                                                                                                                                                                                                                           
 ##  [2] "Step 1/4 : FROM postgres:10"                                                                                                                                                                                                                                                                                                                                                                   
 ##  [3] " ---> ac25c2bac3c4"                                                                                                                                                                                                                                                                                                                                                                            
 ##  [4] "Step 2/4 : WORKDIR /tmp"                                                                                                                                                                                                                                                                                                                                                                       
@@ -114,7 +115,7 @@ docker_cmd
 ```
 
 ```
-## run --detach  --name sql-pet --publish 5432:5432 --mount type=bind,source="/Users/jds/Documents/Library/R/r-system/sql-pet/r-database-docker/",target=/petdir postgres-dvdrental
+## run --detach  --name sql-pet --publish 5432:5432 --mount type=bind,source="/Users/jds/Documents/Library/R/r-system/sql-pet/",target=/petdir postgres-dvdrental
 ```
 
 ```r
@@ -122,7 +123,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "a737202961c8a07ef22260462107124a3a2caddb8c8474c6d71e50c91dc8f824"
+## [1] "43e8995a9eb61e33091147ca282df3bf9bccba6482e167c6c14c424f4adc4018"
 ```
 ## Connect to Postgres with R
 Use the DBI package to connect to PostgreSQL.  But first, wait for Docker & PostgreSQL to come up before connecting.
@@ -245,7 +246,7 @@ psout[grepl(x = psout, pattern = 'sql-pet')]
 ```
 
 ```
-## [1] "a737202961c8        postgres-dvdrental   \"docker-entrypoint.s…\"   10 seconds ago      Exited (0) Less than a second ago                       sql-pet"
+## [1] "43e8995a9eb6        postgres-dvdrental   \"docker-entrypoint.s…\"   20 seconds ago      Exited (137) Less than a second ago                       sql-pet"
 ```
 
 Next time, you can just use this command to start the container:

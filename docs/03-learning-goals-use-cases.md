@@ -1,9 +1,10 @@
 # Learning Goals and Use Cases
 
 At the end of this chapter, you will be able to 
-* Understand the importance of integrating R with databases using Docker.
-* Understand the learning goals that you will have achieved by end of the tutorial.
-* Learn the structure of the database and understand many use cases that can apply to you.
+
+  * Understand the importance of integrating R with databases using Docker.
+  * Understand the learning goals that you will have achieved by end of the tutorial.
+  * Learn the structure of the database and understand many use cases that can apply to you.
 
 ## Context: Why integrate R with databases using Docker? (03)
 

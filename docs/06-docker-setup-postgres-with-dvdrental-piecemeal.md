@@ -101,7 +101,7 @@ cat('docker ',docker_cmd)
 ```
 
 ```
-## docker  run --detach  --name sql-pet --publish 5432:5432 --mount type=bind,source="/Users/jds/Documents/Library/R/r-system/sql-pet/r-database-docker/",target=/petdir postgres:10
+## docker  run --detach  --name sql-pet --publish 5432:5432 --mount type=bind,source="/Users/jds/Documents/Library/R/r-system/sql-pet/",target=/petdir postgres:10
 ```
 
 ```r
@@ -109,7 +109,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "baca0bf84b202bc1e30fcf1e22d24854eb3b8791baba913bf626cbd72b69d87c"
+## [1] "9d50638a4b1a92720f3c4a6069813d12c00f24a78b2c52d59ce2e7347be6eb41"
 ```
 
 Peek inside the docker container and list the files in the `petdir` directory.  Notice that `dvdrental.tar` is in both.
@@ -284,7 +284,7 @@ psout[grepl(x = psout, pattern = 'sql-pet')]
 ```
 
 ```
-## [1] "baca0bf84b20        postgres:10         \"docker-entrypoint.s…\"   18 seconds ago      Exited (0) Less than a second ago                       sql-pet"
+## [1] "9d50638a4b1a        postgres:10         \"docker-entrypoint.s…\"   19 seconds ago      Exited (0) Less than a second ago                       sql-pet"
 ```
 
 Next time, you can just use this command to start the container:
