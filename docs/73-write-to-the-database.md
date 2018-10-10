@@ -1,26 +1,17 @@
 # Writing to the DBMS (73)
 
 
-
-
-
-
 Start up the `docker-pet` container
 
 ```r
-result <- system2("docker", "start sql-pet", stdout = TRUE, stderr = TRUE)
-result
-```
-
-```
-## [1] "sql-pet"
+sp_docker_start("sql-pet")
 ```
 
 
 now connect to the database with R
 
 ```r
-con <- wait_for_postgres(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
+con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
                          password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
                          dbname = "dvdrental",
                          seconds_to_test = 10)
@@ -107,8 +98,7 @@ dbRemoveTable(con, "cars")
 # diconnect from the db
 dbDisconnect(con)
 
-result <- system2("docker", "stop sql-pet", stdout = TRUE, stderr = TRUE)
-result
+sp_docker_stop("sql-pet")
 ```
 
 ```

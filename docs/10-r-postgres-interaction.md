@@ -3,10 +3,6 @@
 
 Note that `tidyverse`, `DBI`, `RPostgres`, `glue`, and `knitr` are loaded.  Also, we've sourced the `[db-login-batch-code.R]('r-database-docker/book-src/db-login-batch-code.R')` file which is used to log in to PostgreSQL.
 
-
-
-
-
 ## Basics
 
 * Keeping passwords secure.
@@ -24,15 +20,9 @@ Note that `tidyverse`, `DBI`, `RPostgres`, `glue`, and `knitr` are loaded.  Also
 Assume that the Docker container with PostgreSQL and the dvdrental database are ready to go.
 
 ```r
-system2("docker",  "start sql-pet", stdout = TRUE, stderr = TRUE)
-```
+sp_docker_start("sql-pet")
 
-```
-## [1] "sql-pet"
-```
-
-```r
-con <- wait_for_postgres(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
+con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
                          password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
                          dbname = "dvdrental",
                          seconds_to_test = 10)

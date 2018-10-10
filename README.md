@@ -1,6 +1,6 @@
 # SQL Pet Tutorial
 
-## Next Meeting October/6 @10am (about 2-3 hours, followed by lunch)
+## Next Meeting October/13 @10am (about 2-3 hours, followed by lunch)
 Location: TBA, but could be Study room 2B at Central Library, Downtown Portland -- 801 SW 10th 
 
 **Table of Contents**
@@ -21,10 +21,11 @@ Location: TBA, but could be Study room 2B at Central Library, Downtown Portland 
 [R, Databases and Docker](https://smithjd.github.io/sql-pet/)
 
 * Tutorial materials go in the [Book](https://smithjd.github.io/sql-pet/).
-* Executable code is in the [/src](https://github.com/smithjd/sql-pet/tree/master/src) directory
+* 
+* Executable code is in the [/book-src](https://github.com/smithjd/sql-pet/tree/master/book-src) directory
   + We are using a `[Knit-then-Merge](https://bookdown.org/yihui/bookdown/new-session.html)` approach so each chapter of the book can be Knitted separately.  
-  + When the book is complete, we'll put some easy to execute examples back in the [/src](https://github.com/smithjd/sql-pet/tree/master/src) directory
-  + We store some interim stuff in the `/src` directory as they are integrated into the Book, but they will be revised & maybe deleted.
+  + When the book is complete, we'll put some easy to execute in a separate directory
+* The book depends on the `sqlrpetr` package.  It can be downloaded using `devtools::install_github("smithjd/sqlpetr")`
 
 
 ## How to contribute

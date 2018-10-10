@@ -1,7 +1,23 @@
 # Simple queries (11)
 
 
+Assume that the Docker container with PostgreSQL and the dvdrental database are ready to go. 
+
+```r
+sp_docker_start("sql-pet")
+```
+Connect to the database:
+
+```r
+con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
+                         password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
+                         dbname = "dvdrental",
+                         seconds_to_test = 10)
+```
+
 ## Some extra handy libraries
+
+https://dbplyr.tidyverse.org/articles/sql-translation.html 
 
 Here are some packages that we find handy in the preliminary investigation of a database (or a problem that involves data from a database).
 
@@ -93,3 +109,12 @@ discuss this simple example? http://www.postgresqltutorial.com/postgresql-left-j
 * left join customer
 
 * dplyr joins in the R
+
+```r
+sp_docker_stop("sql-pet")
+```
+
+```
+## [1] "sql-pet"
+```
+
