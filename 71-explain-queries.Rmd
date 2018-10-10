@@ -1,25 +1,22 @@
 # Explain queries (71)
 
-```{r setup, include=FALSE}
-source('book-src/standard-package-list.R')
+```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
+# These packages are called in almost every chapter of the book:
+library(tidyverse)
+library(DBI)
+library(RPostgres)
+library(glue)
+library(here)
+require(knitr)
+library(dbplyr)
+library(sqlpetr)
 ```
 
 * examining `dplyr` queries (`dplyr::show_query` on the R side v EXPLAIN on the PostgreSQL side)
 
-```{r echo=FALSE}
-read_chunk('book-src/db-login-batch-code.R')
-
-# source(here('r-database-docker/book-src/db-login-batch-code.R'))  # use when debugging outside of knitr
-```
-
-```{r get_postgres_connection, eval=TRUE, echo=FALSE}
-
-```
 Start up the `docker-pet` container
 ```{r}
-result <- system2("docker", "start sql-pet", stdout = TRUE, stderr = TRUE)
-result
-
+sp_docker_start("sql-pet")
 
 ```
 
@@ -27,7 +24,7 @@ result
 now connect to the database with R
 ```{r}
 
-con <- wait_for_postgres(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
+con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
                          password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
                          dbname = "dvdrental",
                          seconds_to_test = 10)
@@ -111,8 +108,6 @@ head(rs4)
 # diconnect from the db
 dbDisconnect(con)
 
-result <- system2("docker", "stop sql-pet", stdout = TRUE, stderr = TRUE)
-result
-
+sp_docker_stop("sql-pet")
 ```
 

@@ -13,11 +13,8 @@ You've already connected to PostgreSQL with R, now you need a "realistic" (`dvdr
 
 The code in this first version is recommended because it is an "all in one" approach.  Details about how it works and how you might modify it are included below.  There is another version in the the next chapter that you can use to investigate Docker commands and components.
 
-Note that this approach relies on two files that have quote that's not shown here: [dvdrental.Dockerfile](./dvdrental.Dockerfile) and [init-dvdrental.sh](init-dvdrental.sh).  They are discussed below.
 
 Note that `tidyverse`, `DBI`, `RPostgres`, and `glue` are loaded.
-
-
 
 ## Verify that Docker is up and running
 
@@ -69,7 +66,7 @@ system2("docker",
 ```
 
 ```
-##  [1] "Sending build context to Docker daemon  15.32MB\r\r"                                                                                                                                                                                                                                                                                                                                           
+##  [1] "Sending build context to Docker daemon  17.48MB\r\r"                                                                                                                                                                                                                                                                                                                                           
 ##  [2] "Step 1/4 : FROM postgres:10"                                                                                                                                                                                                                                                                                                                                                                   
 ##  [3] " ---> ac25c2bac3c4"                                                                                                                                                                                                                                                                                                                                                                            
 ##  [4] "Step 2/4 : WORKDIR /tmp"                                                                                                                                                                                                                                                                                                                                                                       
@@ -123,7 +120,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "43e8995a9eb61e33091147ca282df3bf9bccba6482e167c6c14c424f4adc4018"
+## [1] "74d46f917235602e4879f8d4835c58e581c5f3b058ade3dfcc30331546a2b516"
 ```
 ## Connect to Postgres with R
 Use the DBI package to connect to PostgreSQL.  But first, wait for Docker & PostgreSQL to come up before connecting.
@@ -132,13 +129,10 @@ We have loaded the `wait_for_postgres` function behind the scenes.
 
 
 ```r
-con <- wait_for_postgres(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
+con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
                          password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
                          dbname = "dvdrental",
                          seconds_to_test = 10)
-
-
-# if (con == "it's not there") {stop()}
 
 dbListTables(con)
 ```
@@ -168,16 +162,13 @@ dbListFields(con, "rental")
 
 ```r
 dbDisconnect(con)
-
-Sys.sleep(2) # Can take a moment to disconnect.
 ```
 ## Stop and start to demonstrate persistence
 
 Stop the container
 
 ```r
-system2('docker', 'stop sql-pet',
-        stdout = TRUE, stderr = TRUE)
+sp_docker_stop("sql-pet")
 ```
 
 ```
@@ -186,15 +177,9 @@ system2('docker', 'stop sql-pet',
 Restart the container and verify that the dvdrental tables are still there
 
 ```r
-system2("docker",  "start sql-pet", stdout = TRUE, stderr = TRUE)
-```
+sp_docker_start("sql-pet")
 
-```
-## [1] "sql-pet"
-```
-
-```r
-con <- wait_for_postgres(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
+con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
                          password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
                          dbname = "dvdrental",
                          seconds_to_test = 10)
@@ -231,8 +216,7 @@ dbDisconnect(con)
 Stop the container and show that the container is still there, so can be started again.
 
 ```r
-system2('docker', 'stop sql-pet',
-        stdout = TRUE, stderr = TRUE)
+sp_docker_stop("sql-pet")
 ```
 
 ```
@@ -246,7 +230,7 @@ psout[grepl(x = psout, pattern = 'sql-pet')]
 ```
 
 ```
-## [1] "43e8995a9eb6        postgres-dvdrental   \"docker-entrypoint.s…\"   20 seconds ago      Exited (137) Less than a second ago                       sql-pet"
+## [1] "74d46f917235        postgres-dvdrental   \"docker-entrypoint.s…\"   7 seconds ago       Exited (0) Less than a second ago                       sql-pet"
 ```
 
 Next time, you can just use this command to start the container:

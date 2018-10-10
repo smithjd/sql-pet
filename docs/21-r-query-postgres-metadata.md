@@ -1,42 +1,18 @@
 # Getting metadata about and from the database (21)
 
 
-Note that `tidyverse`, `DBI`, `RPostgres`, `glue`, and `knitr` are loaded.  Also, we've sourced the [`db-login-batch-code.R`]('r-database-docker/book-src/db-login-batch-code.R') file which is used to log in to PostgreSQL.
-
-
-For this chapter R needs the `dbplyr` package to access `alternate schemas`.  A [schema](http://www.postgresqltutorial.com/postgresql-server-and-database-objects/) is an object that contains one or more tables.  Most often there will be a default schema, but to access the metadata, you need to explicitly specify which schema contains the data you want.
-
-
-```r
-library(dbplyr)
-```
-
-```
-## 
-## Attaching package: 'dbplyr'
-```
-
-```
-## The following objects are masked from 'package:dplyr':
-## 
-##     ident, sql
-```
-
-
+Note that `tidyverse`, `DBI`, `RPostgres`, `glue`, and `knitr` are loaded.  Also, we've sourced the [`db-login-batch-code.R`]('book-src/db-login-batch-code.R') file which is used to log in to PostgreSQL.
 
 Assume that the Docker container with PostgreSQL and the dvdrental database are ready to go. 
 
 ```r
-system2("docker", "start sql-pet", stdout = TRUE, stderr = TRUE)
-```
-
-```
-## [1] "sql-pet"
+# system2("docker", "start sql-pet", stdout = TRUE, stderr = TRUE)
+sp_docker_start("sql-pet")
 ```
 Connect to the database:
 
 ```r
-con <- wait_for_postgres(
+con <-  sp_get_postgres_connection(
   user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
   password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
   dbname = "dvdrental",
@@ -494,9 +470,11 @@ Pull out some rough-and-ready but useful statistics about your database.  Since 
 
 
 ```r
-columns_info_schema_table %>%
-  filter(table_schema == "public") %>%
-  count(table_name, sort = TRUE) %>%
+public_tables <- columns_info_schema_table %>%
+  filter(table_schema == "public") %>% 
+  collect()
+
+public_tables %>% count(table_name, sort = TRUE) %>% 
   kable()
 ```
 
@@ -513,39 +491,39 @@ customer & 10\\
 \hline
 customer\_list & 9\\
 \hline
-film\_list & 8\\
-\hline
-staff\_list & 8\\
-\hline
 address & 8\\
 \hline
+film\_list & 8\\
+\hline
 nicer\_but\_slower\_film\_list & 8\\
+\hline
+staff\_list & 8\\
 \hline
 rental & 7\\
 \hline
 payment & 6\\
 \hline
-actor\_info & 4\\
-\hline
 actor & 4\\
 \hline
-store & 4\\
+actor\_info & 4\\
 \hline
 city & 4\\
 \hline
 inventory & 4\\
 \hline
-film\_category & 3\\
+store & 4\\
 \hline
 category & 3\\
 \hline
+country & 3\\
+\hline
 film\_actor & 3\\
+\hline
+film\_category & 3\\
 \hline
 language & 3\\
 \hline
 sales\_by\_store & 3\\
-\hline
-country & 3\\
 \hline
 sales\_by\_film\_category & 2\\
 \hline
@@ -554,25 +532,37 @@ sales\_by\_film\_category & 2\\
 How many *column names* are shared across tables (or duplicated)?
 
 ```r
-columns_info_schema_info %>% count(column_name, sort = TRUE) %>% filter(n > 1)
+public_tables %>% count(column_name, sort = TRUE) %>% filter(n > 1)
 ```
 
 ```
-## # A tibble: 0 x 2
-## # ... with 2 variables: column_name <chr>, n <int>
+## # A tibble: 34 x 2
+##    column_name     n
+##    <chr>       <int>
+##  1 last_update    14
+##  2 address_id      4
+##  3 film_id         4
+##  4 first_name      4
+##  5 last_name       4
+##  6 name            4
+##  7 store_id        4
+##  8 actor_id        3
+##  9 address         3
+## 10 category        3
+## # ... with 24 more rows
 ```
 
 How many column names are unique?
 
 ```r
-columns_info_schema_info %>% count(column_name) %>% filter(n == 1) %>% count()
+public_tables %>% count(column_name) %>% filter(n == 1) %>% count()
 ```
 
 ```
 ## # A tibble: 1 x 1
 ##      nn
 ##   <int>
-## 1     7
+## 1    24
 ```
 
 ## Database keys
@@ -817,10 +807,10 @@ rs <- dbGetQuery(
   con,
   "SELECT r.*,
   pg_catalog.pg_get_constraintdef(r.oid, true) as condef
-FROM pg_catalog.pg_constraint r
-WHERE 1=1 --r.conrelid = '16485' AND r.contype = 'f' ORDER BY 1;
-"
-)
+  FROM pg_catalog.pg_constraint r
+  WHERE 1=1 --r.conrelid = '16485' AND r.contype = 'f' ORDER BY 1;
+  "
+  )
 
 head(rs)
 ```
@@ -882,21 +872,48 @@ head(rs)
 If you are going to work with a database for an extended period it can be useful to create your own data dictionary.  Here is an illustration of the idea
 
 ```r
-some_tables <- c("rental", "rental", "city", "store")
+some_tables <- c("rental", "city", "store")
 
-all_meta <- map_df(some_tables, get_dd)
+all_meta <- map_df(some_tables, sp_get_dbms_data_dictionary, con = con)
+
+all_meta
+```
+
+```
+## # A tibble: 15 x 11
+##    table_name var_name var_type num_rows num_blank num_unique min   q_25 
+##    <chr>      <chr>    <chr>       <int>     <int>      <int> <chr> <chr>
+##  1 rental     rental_~ integer     16044         0      16044 1     4013 
+##  2 rental     rental_~ double      16044         0      15815 2005~ 2005~
+##  3 rental     invento~ integer     16044         0       4580 1     1154 
+##  4 rental     custome~ integer     16044         0        599 1     148  
+##  5 rental     return_~ double      16044       183      15836 2005~ 2005~
+##  6 rental     staff_id integer     16044         0          2 1     1    
+##  7 rental     last_up~ double      16044         0          3 2006~ 2006~
+##  8 city       city_id  integer       600         0        600 1     150  
+##  9 city       city     charact~      600         0        599 A Co~ Dzer~
+## 10 city       country~ integer       600         0        109 1     28   
+## 11 city       last_up~ double        600         0          1 2006~ 2006~
+## 12 store      store_id integer         2         0          2 1     1    
+## 13 store      manager~ integer         2         0          2 1     1    
+## 14 store      address~ integer         2         0          2 1     1    
+## 15 store      last_up~ double          2         0          1 2006~ 2006~
+## # ... with 3 more variables: q_50 <chr>, q_75 <chr>, max <chr>
+```
+
+```r
 glimpse(all_meta)
 ```
 
 ```
-## Observations: 22
+## Observations: 15
 ## Variables: 11
 ## $ table_name <chr> "rental", "rental", "rental", "rental", "rental", "...
 ## $ var_name   <chr> "rental_id", "rental_date", "inventory_id", "custom...
 ## $ var_type   <chr> "integer", "double", "integer", "integer", "double"...
-## $ num_rows   <int> 16044, 16044, 16044, 16044, 16044, 16044, 16044, 16...
-## $ num_blank  <int> 0, 0, 0, 0, 183, 0, 0, 0, 0, 0, 0, 183, 0, 0, 0, 0,...
-## $ num_unique <int> 16044, 15815, 4580, 599, 15836, 2, 3, 16044, 15815,...
+## $ num_rows   <int> 16044, 16044, 16044, 16044, 16044, 16044, 16044, 60...
+## $ num_blank  <int> 0, 0, 0, 0, 183, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+## $ num_unique <int> 16044, 15815, 4580, 599, 15836, 2, 3, 600, 599, 109...
 ## $ min        <chr> "1", "2005-05-24 22:53:30", "1", "1", "2005-05-25 2...
 ## $ q_25       <chr> "4013", "2005-07-07 00:58:00", "1154", "148", "2005...
 ## $ q_50       <chr> "8025", "2005-07-28 16:03:27", "2291", "296", "2005...
@@ -926,29 +943,11 @@ rental & return\_date & double & 16044 & 183 & 15836 & 2005-05-25 23:55:21 & 200
 rental & staff\_id & integer & 16044 & 0 & 2 & 1 & 1 & 1 & 2 & 2\\
 \hline
 \end{tabular}
-
-```r
-# all_meta <- map_df(table_list, get_dd)
-```
 ## Save your work!
 
 The work you do to understand the structure and contents of a database can be useful for others (including future-you).  So at the end of a session, you might look at all the data frames you want to save.  Consider saving them in a form where you can add notes at the appropriate level (as in a Google Doc representing table or columns that you annotate over time).
 
 ```r
-ls()
-```
-
-```
-##  [1] "all_meta"                  "columns_info_schema_info" 
-##  [3] "columns_info_schema_table" "con"                      
-##  [5] "constraint_column_usage"   "cranex"                   
-##  [7] "fivenumsum"                "get_dd"                   
-##  [9] "key_column_usage"          "keys"                     
-## [11] "make_dd"                   "referential_constraints"  
-## [13] "rental"                    "rs"                       
-## [15] "some_tables"               "table_constraints"        
-## [17] "table_info"                "table_info_schema_table"  
-## [19] "table_list"                "tables"                   
-## [21] "wait_for_postgres"
+# ls()
 ```
 

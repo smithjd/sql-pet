@@ -2,10 +2,6 @@
 
 
 
-
-
-
-
 ## Verify Docker is up and running:
 
 ```r
@@ -41,8 +37,8 @@ result
 ```
 
 ```
-## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                    PORTS               NAMES"    
-## [2] "9d50638a4b1a        postgres:10         \"docker-entrypoint.s…\"   29 seconds ago      Exited (0) 1 second ago                       sql-pet"
+## [1] "CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                     PORTS               NAMES"    
+## [2] "74d46f917235        postgres-dvdrental   \"docker-entrypoint.s…\"   31 seconds ago      Exited (0) 2 seconds ago                       sql-pet"
 ```
 
 ```r
@@ -55,19 +51,14 @@ any(grepl('Up .+pet$',result))
 Start up the `docker-pet` container
 
 ```r
-result <- system2("docker", "start sql-pet", stdout = TRUE, stderr = TRUE)
-result
-```
-
-```
-## [1] "sql-pet"
+sp_docker_start("sql-pet")
 ```
 
 
 now connect to the database with R
 
 ```r
-con <- wait_for_postgres(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
+con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
                          password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
                          dbname = "dvdrental",
                          seconds_to_test = 10)
@@ -84,8 +75,7 @@ Clean up
 # diconnect from the db
 dbDisconnect(con)
 
-result <- system2("docker", "stop sql-pet", stdout = TRUE, stderr = TRUE)
-result
+sp_docker_stop("sql-pet")
 ```
 
 ```

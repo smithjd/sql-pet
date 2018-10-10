@@ -1,17 +1,15 @@
 # Postgres Examples, part B (14)
 
-```{r setup, include=FALSE}
-source('book-src/standard-package-list.R')
-```
-
-```{r echo=FALSE}
-read_chunk('book-src/db-login-batch-code.R')
-
-# source('book-src/shared-db-login-batch-code.R')  # use when debugging outside of knitr
-```
-
-```{r get_postgres_connection, eval=TRUE, echo=FALSE}
-
+```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
+# These packages are called in almost every chapter of the book:
+library(tidyverse)
+library(DBI)
+library(RPostgres)
+library(glue)
+library(here)
+require(knitr)
+library(dbplyr)
+library(sqlpetr)
 ```
 
 ## Verify Docker is up and running:
@@ -29,17 +27,14 @@ any(grepl('Up .+pet$',result))
 ```
 Start up the `docker-pet` container
 ```{r}
-result <- system2("docker", "start sql-pet", stdout = TRUE, stderr = TRUE)
-result
-
+sp_docker_start("sql-pet")
 
 ```
 
 
 now connect to the database with R
 ```{r}
-
-con <- wait_for_postgres(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
+con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
                          password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
                          dbname = "dvdrental",
                          seconds_to_test = 10)
@@ -55,8 +50,6 @@ Clean up
 # diconnect from the db
 dbDisconnect(con)
 
-result <- system2("docker", "stop sql-pet", stdout = TRUE, stderr = TRUE)
-result
-
+sp_docker_stop("sql-pet")
 ```
 

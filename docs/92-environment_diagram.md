@@ -5,9 +5,6 @@
 ## Environment Tools Used in this Chapter
 Note that `tidyverse`, `DBI`, `RPostgres`, `glue`, and `knitr` are loaded.  Also, we've sourced the `[db-login-batch-code.R]('r-database-docker/book-src/db-login-batch-code.R')` file which is used to log in to PostgreSQL.
 
-
-
-
 library(rstudioapi)
 
 The following code block defines Tool and versions for the graph that follows.  The information order corresponds to the order shown in the graph.
@@ -55,7 +52,7 @@ linux_lbl <- 'Linux Version'
 linux_ver <- system2('docker', 'exec -i sql-pet /bin/uname -r', stdout = TRUE)
 
 # Postgres Information
-con <- wait_for_postgres(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
+con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
                          password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
                          dbname = "dvdrental",
                          seconds_to_test = 10)

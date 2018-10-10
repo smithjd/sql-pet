@@ -1,26 +1,17 @@
 # Getting metadata about and from the database (21)
 
 ```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
-# depending on your working directory, run one or the other of these two:
-# source("r-database-docker/book-src/standard-package-list.R")
-source("book-src/standard-package-list.R")
-# source("~/Rfunctions/make_dd.R")
+# These packages are called in almost every chapter of the book:
+library(tidyverse)
+library(DBI)
+library(RPostgres)
+library(glue)
+library(here)
+require(knitr)
+library(dbplyr)
 library(sqlpetr)
-``` 
+```
 Note that `tidyverse`, `DBI`, `RPostgres`, `glue`, and `knitr` are loaded.  Also, we've sourced the [`db-login-batch-code.R`]('book-src/db-login-batch-code.R') file which is used to log in to PostgreSQL.
-
-```{r echo=FALSE}
-# read_chunk("book-src/db-login-batch-code.R")
-
-# use when debugging outside of knitr
-# source('r-database-docker/book-src/db-login-batch-code.R')
-# source('book-src/db-login-batch-code.R')
-# source('r-database-docker/book-src/db-login-interactive-code.R')
-```
-
-```{r get_postgres_connection, eval=TRUE, echo=FALSE}
-
-```
 
 Assume that the Docker container with PostgreSQL and the dvdrental database are ready to go. 
 ```{r}
@@ -191,21 +182,23 @@ Names are the handle for accessing the data.  Tables and columns may or may not 
 Pull out some rough-and-ready but useful statistics about your database.  Since we are in SQL-land we talk about variables as `columns`.
 
 ```{r}
-columns_info_schema_table %>%
-  filter(table_schema == "public") %>%
-  count(table_name, sort = TRUE) %>%
+public_tables <- columns_info_schema_table %>%
+  filter(table_schema == "public") %>% 
+  collect()
+
+public_tables %>% count(table_name, sort = TRUE) %>% 
   kable()
 ```
 
 How many *column names* are shared across tables (or duplicated)?
 ```{r}
 
-columns_info_schema_info %>% count(column_name, sort = TRUE) %>% filter(n > 1)
+public_tables %>% count(column_name, sort = TRUE) %>% filter(n > 1)
 ```
 
 How many column names are unique?
 ```{r}
-columns_info_schema_info %>% count(column_name) %>% filter(n == 1) %>% count()
+public_tables %>% count(column_name) %>% filter(n == 1) %>% count()
 ```
 
 ## Database keys
@@ -288,10 +281,10 @@ rs <- dbGetQuery(
   con,
   "SELECT r.*,
   pg_catalog.pg_get_constraintdef(r.oid, true) as condef
-FROM pg_catalog.pg_constraint r
-WHERE 1=1 --r.conrelid = '16485' AND r.contype = 'f' ORDER BY 1;
-"
-)
+  FROM pg_catalog.pg_constraint r
+  WHERE 1=1 --r.conrelid = '16485' AND r.contype = 'f' ORDER BY 1;
+  "
+  )
 
 head(rs)
 ```
@@ -316,6 +309,6 @@ kable(head(all_meta))
 
 The work you do to understand the structure and contents of a database can be useful for others (including future-you).  So at the end of a session, you might look at all the data frames you want to save.  Consider saving them in a form where you can add notes at the appropriate level (as in a Google Doc representing table or columns that you annotate over time).
 ```{r}
-ls()
+# ls()
 ```
 

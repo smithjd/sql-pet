@@ -7,8 +7,16 @@ At the end of this chapter, you will be able to
 
 
 We always load the tidyverse and some other packages, but don't show it unless we are using packages other than `tidyverse`, `DBI`, `RPostgres`, and `glue`.
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
-source('book-src/standard-package-list.R')
+```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
+# These packages are called in almost every chapter of the book:
+library(tidyverse)
+library(DBI)
+library(RPostgres)
+library(glue)
+library(here)
+require(knitr)
+library(dbplyr)
+library(sqlpetr)
 ```
 
 ## Verify that Docker is running
@@ -19,11 +27,6 @@ Docker commands can be run from a terminal (e.g., the Rstudio Terminal pane) or 
 2. The parameters or commands that are being sent.
 3. `stdout = TRUE, stderr = TRUE` are two parameters that are standard in this book, so that the command's full output is shown in the book.
 
-```{r echo=FALSE}
-read_chunk('book-src/db-login-batch-code.R')
-read_chunk('book-src/db-login-interactive-code.R')
-
-```
 The `docker version` command returns the details about the docker daemon that is running on your computer.
 
 ```{r}
@@ -78,11 +81,9 @@ system2("docker", "ps", stdout = TRUE, stderr = TRUE)
 
 ### Pause for some security considerations
 
-We use the following `wait_for_postgres` function, which will repeatedly try to connect to PostgreSQL.  PostgreSQL can take different amounts of time to come up and be ready to accept connections from R, depending on various factors that will be discussed later on.
-```{r get_postgres_connection}
+We use the following `sp_get_postgres_connection` function, which will repeatedly try to connect to PostgreSQL.  PostgreSQL can take different amounts of time to come up and be ready to accept connections from R, depending on various factors that will be discussed later on.
 
-```
-When we call `wait_for_postgres` we'll use environment variables that R obtains from reading a file named `.Rprofile`.  That file is not uploaded to Github and R looks for it in your default directory.  To see whether you have already created that file, execute:
+When we call `sp_get_postgres_connection` we'll use environment variables that R obtains from reading a file named `.Rprofile`.  That file is not uploaded to Github and R looks for it in your default directory.  To see whether you have already created that file, execute:
 
 ```{r}
 dir(path = "~", pattern = ".Rprofile", all.files = TRUE)
@@ -95,9 +96,9 @@ It should contain lines such as:
 ```
 Those are the default values for the username and password, but this approach demonstrates how they would be kept secret and not uploaded to Github or some other public location.
 
-This is how the `wait_for_postgres` function is used:
+This is how the `sp_get_postgres_connection` function is used:
 ```{r}
-con <- wait_for_postgres(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
+con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
                          password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
                          dbname = "postgres",
                          seconds_to_test = 10)
@@ -119,13 +120,9 @@ You will be prompted for the database password. By default, a PostgreSQL databas
 
 In an interactive environment, you could execute a snippet of code that prompts the user for their username and password with the following snippet (which isn't run in the book):
 
-```{r interactive_postgres_connection, eval=FALSE, echo=TRUE}
-
-```
 Your password is still in plain text in the file, `dev_environment.csv`, so you should protect that file from exposure. However, you do not need to worry about committing that file accidentally to your git repository, because the name of the file appears in the `.gitignore` file.
 
 For security, we use values from the `environment_variables` data.frame, rather than keeping the `username` and `password` in plain text in a source file.
-
 
 ### Interact with Postgres
 
@@ -158,7 +155,7 @@ Afterwards, always disconnect from the DBMS, stop the docker container and (opti
 dbDisconnect(con)
 
 # tell Docker to stop the container:
-system2("docker", "stop cattle", stdout = TRUE, stderr = TRUE)
+sp_docker_stop("cattle")
 
 # Tell Docker to remove the container from it's library of active containers:
 system2("docker", "rm cattle", stdout = TRUE, stderr = TRUE)
