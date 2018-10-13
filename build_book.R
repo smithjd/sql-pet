@@ -9,6 +9,7 @@
 unlink("../docs", recursive = TRUE)
 
 # make the web book
+
 bookdown::render_book(
   input = "index.Rmd",
   new_session = TRUE,
@@ -17,6 +18,7 @@ bookdown::render_book(
 )
 
 # PDF
+
 bookdown::render_book(
   input = "index.Rmd",
   new_session = TRUE,

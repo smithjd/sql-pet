@@ -10,6 +10,7 @@ library(here)
 require(knitr)
 library(dbplyr)
 library(sqlpetr)
+MODE <- 'BOOK' # Either DEMO or BOOK
 ```
 Assume that the Docker container with PostgreSQL and the dvdrental database are ready to go. 
 ```{r}
@@ -32,6 +33,7 @@ Here are some packages that we find handy in the preliminary investigation of a 
 ```{r}
 library(glue)
 library(skimr)
+library(DT)
 ```
 
 ## Basic investigation
@@ -100,6 +102,23 @@ discuss this simple example? http://www.postgresqltutorial.com/postgresql-left-j
   + browsing the data
   + larger samples and complete tables
   + using what you know to write efficient queries that do most of the work on the server
+----
+```{r}
+dplyr_summary_df <-
+    read.delim(
+    '11-dplyr_sql_summary_table.tsv',
+    header = TRUE,
+    sep = '\t',
+    as.is = TRUE
+    )
+
+if (MODE == 'DEMO') {
+    View(dplyr_summary_df)
+} else {
+    kable(head(dplyr_summary_df))
+    # DT::datatable(dplyr_summary_df)  # a very nice display in some cases, but not in a PDF
+}    
+```
 
 ----
 * left join staff
