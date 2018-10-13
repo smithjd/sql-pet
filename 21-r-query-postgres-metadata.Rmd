@@ -15,7 +15,6 @@ Note that `tidyverse`, `DBI`, `RPostgres`, `glue`, and `knitr` are loaded.  Also
 
 Assume that the Docker container with PostgreSQL and the dvdrental database are ready to go. 
 ```{r}
-# system2("docker", "start sql-pet", stdout = TRUE, stderr = TRUE)
 sp_docker_start("sql-pet")
 ```
 Connect to the database:
@@ -309,6 +308,6 @@ kable(head(all_meta))
 
 The work you do to understand the structure and contents of a database can be useful for others (including future-you).  So at the end of a session, you might look at all the data frames you want to save.  Consider saving them in a form where you can add notes at the appropriate level (as in a Google Doc representing table or columns that you annotate over time).
 ```{r}
-# ls()
+ls()
 ```
 

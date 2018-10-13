@@ -3,7 +3,9 @@
 At the end of this chapter, you will be able to 
 
   * Run, clean-up and close Docker containers.
+  * See how to keep credentials secret in code that's visible to the world.
   * Interact with Postgres using Rstudio inside Docker container.
+  # Read and write to postgreSQL from R.
 
 
 We always load the tidyverse and some other packages, but don't show it unless we are using packages other than `tidyverse`, `DBI`, `RPostgres`, and `glue`.
@@ -27,25 +29,17 @@ Docker commands can be run from a terminal (e.g., the Rstudio Terminal pane) or 
 2. The parameters or commands that are being sent.
 3. `stdout = TRUE, stderr = TRUE` are two parameters that are standard in this book, so that the command's full output is shown in the book.
 
-The `docker version` command returns the details about the docker daemon that is running on your computer.
+Check that docker is up and running:
 
 ```{r}
-system2("docker", "version", stdout = TRUE, stderr = TRUE)
+sp_check_that_docker_is_up()
 ```
 
 ## Clean up if appropriate
 Remove the `cattle` and `sql-pet` containers if they exists (e.g., from a prior experiments).  
 ```{r docker cleanup}
-if (system2("docker", "ps -a", stdout = TRUE) %>% 
-   grepl(x = ., pattern = 'cattle') %>% 
-   any()) {
-     system2("docker", "rm -f cattle")
-}
-if (system2("docker", "ps -a", stdout = TRUE) %>% 
-   grepl(x = ., pattern = 'sql-pet') %>% 
-   any()) {
-     system2("docker", "rm -f sql-pet")
-}
+sp_docker_remove_container("cattle")
+sp_docker_remove_container("sql-pet")
 ```
 
 The convention we use in this book is to assemble a command with `glue` so that the you can see all of its separate parts.  The following chunk just constructs the command, but does not execute it.  If you have problems executing a command, you can always copy the command and execute in your terminal session.
@@ -61,9 +55,9 @@ docker_cmd <- glue(
 # We name containers `cattle` for "throw-aways" and `pet` for ones we treasure and keep around.  :-)
 ```
 
-Submit the command constructed above:
+Show and then submit the command constructed above:
 ```{r run the docker command, eval=TRUE, echo=TRUE}
-# this is what you would submit from a terminal:
+
 cat(glue(" docker ", docker_cmd))
 
 # this is how R submits it to Docker:
@@ -73,8 +67,8 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 Docker returns a long string of numbers.  If you are running this command for the first time, Docker downloads the PostgreSQL image, which takes a bit of time.
 
 The following command shows that a container named `cattle` is running `postgres:10`.  `postgres` is waiting for a connection:
-```{r, eval=TRUE, echo=TRUE}
-system2("docker", "ps", stdout = TRUE, stderr = TRUE)
+```{r }
+sp_check_that_docker_is_up()
 
 ```
 ## Connect, read and write to Postgres from R
@@ -83,18 +77,20 @@ system2("docker", "ps", stdout = TRUE, stderr = TRUE)
 
 We use the following `sp_get_postgres_connection` function, which will repeatedly try to connect to PostgreSQL.  PostgreSQL can take different amounts of time to come up and be ready to accept connections from R, depending on various factors that will be discussed later on.
 
-When we call `sp_get_postgres_connection` we'll use environment variables that R obtains from reading a file named `.Rprofile`.  That file is not uploaded to Github and R looks for it in your default directory.  To see whether you have already created that file, execute:
-
-```{r}
-dir(path = "~", pattern = ".Rprofile", all.files = TRUE)
-```
-
-It should contain lines such as:
-```
-  DEFAULT_POSTGRES_PASSWORD=postgres
-  DEFAULT_POSTGRES_USER_NAME=postgres
-```
-Those are the default values for the username and password, but this approach demonstrates how they would be kept secret and not uploaded to Github or some other public location.
+<table border = 2)
+<tr><td>
+When we call </i>sp_get_postgres_connection</i> we'll use environment variables that R obtains from reading a file named <i>.Renviron</i>.  That file is not uploaded to Github and R looks for it in your default directory.  To see whether you have already created that file, execute this in your R session:</br></br>
+<ul>
+<i><b>dir(path = "~", pattern = ".Renviron", all.files = TRUE)</b></i>
+</ul>
+That file should contain lines such as:</br></br>
+<ul>
+  <i><b>DEFAULT_POSTGRES_PASSWORD=postgres</br>
+  DEFAULT_POSTGRES_USER_NAME=postgres</b></i></br>
+</ul>
+Those are the PostreSQL default values for the username and password, so not secret.  But this approach demonstrates how they would be kept secret and not uploaded to Github or some other public location when you need to keep credentials secret.
+</td></tr>
+</table>
 
 This is how the `sp_get_postgres_connection` function is used:
 ```{r}
@@ -102,8 +98,11 @@ con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"
                          password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
                          dbname = "postgres",
                          seconds_to_test = 10)
-
 ```
+If you don't have an `.Rprofile` file that defines those passwords, you can just insert a string for the parameter, like:
+
+  `password = 'whatever',`
+
 Make sure that you can connect to the PostgreSQL database that you started earlier. If you have been executing the code from this tutorial, the database will not contain any tables yet:
 
 ```{r}
@@ -158,7 +157,7 @@ dbDisconnect(con)
 sp_docker_stop("cattle")
 
 # Tell Docker to remove the container from it's library of active containers:
-system2("docker", "rm cattle", stdout = TRUE, stderr = TRUE)
+sp_docker_remove_container("cattle")
 ```
 
 If we `stop` the docker container but don't remove it (with the `rm cattle` command), the container will persist and we can start it up again later with `start cattle`.  In that case, `mtcars` would still be there and we could retrieve it from R again.  Since we have now removed the `cattle` container, the whole database has been deleted.  (There are enough copies of `mtcars` in the world, so no great loss.)
