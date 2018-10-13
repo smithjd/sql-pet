@@ -38,7 +38,7 @@ result
 
 ```
 ## [1] "CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                     PORTS               NAMES"    
-## [2] "74d46f917235        postgres-dvdrental   \"docker-entrypoint.s…\"   31 seconds ago      Exited (0) 2 seconds ago                       sql-pet"
+## [2] "908bc8e8abdd        postgres-dvdrental   \"docker-entrypoint.s…\"   14 minutes ago      Exited (0) 2 seconds ago                       sql-pet"
 ```
 
 ```r

@@ -29,17 +29,13 @@ Note that `tidyverse`, `DBI`, `RPostgres`, and `glue` are loaded.
 ## Verify that Docker is up and running
 ```{r docker verify}
 
-system2("docker", "version", stdout = TRUE, stderr = TRUE)
+sp_check_that_docker_is_up()
 ```
 
 ## Clean up if appropriate
 Remove the `sql-pet` container if it exists (e.g., from a prior run)
 ```{r}
-if (system2("docker", "ps -a", stdout = TRUE) %>% 
-   grepl(x = ., pattern = 'sql-pet') %>% 
-   any()) {
-     system2("docker", "rm -f sql-pet")
-}
+sp_docker_remove_container("sql-pet")
 ```
 ## Build the Docker Image
 Build an image that derives from postgres:10, defined in `dvdrental.Dockerfile`, that is set up to restore and load the dvdrental db on startup.  The [dvdrental.Dockerfile](./dvdrental.Dockerfile) is discussed below.  
@@ -136,21 +132,20 @@ Stop the container and show that the container is still there, so can be started
 sp_docker_stop("sql-pet")
 
 # show that the container still exists even though it's not running
-psout <- system2("docker", "ps -a", stdout = TRUE)
-psout[grepl(x = psout, pattern = 'sql-pet')]
+sp_show_all_docker_containers()
 
 ```
 
-Next time, you can just use this command to start the container:
+Next time, you can just use this command to start the container: 
 
-`system2("docker",  "start sql-pet", stdout = TRUE, stderr = TRUE)`
+`sp_docker_start("sql-pet")`
 
 And once stopped, the container can be removed with:
 
-`system2("docker",  "rm sql-pet", stdout = TRUE, stderr = TRUE)`
+`sp_check_that_docker_is_up("sql-pet)`
 
 ## Using the `sql-pet` container in the rest of the book
 
 After this point in the book, we assume that Docker is up and that we can always start up our *sql-pet database* with:
 
-`system2("docker",  "start sql-pet", stdout = TRUE, stderr = TRUE)`
+`sp_docker_stop("sql-pet")`
