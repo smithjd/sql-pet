@@ -4,48 +4,21 @@
 ## Verify Docker is up and running:
 
 ```r
-result <- system2("docker", "version", stdout = TRUE, stderr = TRUE)
-result
+sp_check_that_docker_is_up()
 ```
 
 ```
-##  [1] "Client:"                                        
-##  [2] " Version:           18.06.1-ce"                 
-##  [3] " API version:       1.38"                       
-##  [4] " Go version:        go1.10.3"                   
-##  [5] " Git commit:        e68fc7a"                    
-##  [6] " Built:             Tue Aug 21 17:21:31 2018"   
-##  [7] " OS/Arch:           darwin/amd64"               
-##  [8] " Experimental:      false"                      
-##  [9] ""                                               
-## [10] "Server:"                                        
-## [11] " Engine:"                                       
-## [12] "  Version:          18.06.1-ce"                 
-## [13] "  API version:      1.38 (minimum version 1.12)"
-## [14] "  Go version:       go1.10.3"                   
-## [15] "  Git commit:       e68fc7a"                    
-## [16] "  Built:            Tue Aug 21 17:29:02 2018"   
-## [17] "  OS/Arch:          linux/amd64"                
-## [18] "  Experimental:     true"
+## [1] "Docker is up but running no containers"
 ```
 verify pet DB is available, it may be stopped.
 
 ```r
-result <- system2("docker", "ps -a", stdout = TRUE, stderr = TRUE)
-result
+sp_show_all_docker_containers()
 ```
 
 ```
 ## [1] "CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                       PORTS               NAMES"    
-## [2] "74d46f917235        postgres-dvdrental   \"docker-entrypoint.s…\"   26 seconds ago      Exited (137) 3 seconds ago                       sql-pet"
-```
-
-```r
-any(grepl('Up .+pet$',result))
-```
-
-```
-## [1] FALSE
+## [2] "908bc8e8abdd        postgres-dvdrental   \"docker-entrypoint.s…\"   14 minutes ago      Exited (137) 3 seconds ago                       sql-pet"
 ```
 Start up the `docker-pet` container
 
@@ -85,23 +58,15 @@ kable(head(rs1))
 ```
 
 
-\begin{tabular}{r|r|l|l|l|r|l|l|l|r}
-\hline
-customer\_id & store\_id & first\_name & last\_name & email & address\_id & activebool & create\_date & last\_update & active\\
-\hline
-524 & 1 & Jared & Ely & jared.ely@sakilacustomer.org & 530 & TRUE & 2006-02-14 & 2013-05-26 14:49:45 & 1\\
-\hline
-1 & 1 & Mary & Smith & mary.smith@sakilacustomer.org & 5 & TRUE & 2006-02-14 & 2013-05-26 14:49:45 & 1\\
-\hline
-2 & 1 & Patricia & Johnson & patricia.johnson@sakilacustomer.org & 6 & TRUE & 2006-02-14 & 2013-05-26 14:49:45 & 1\\
-\hline
-3 & 1 & Linda & Williams & linda.williams@sakilacustomer.org & 7 & TRUE & 2006-02-14 & 2013-05-26 14:49:45 & 1\\
-\hline
-4 & 2 & Barbara & Jones & barbara.jones@sakilacustomer.org & 8 & TRUE & 2006-02-14 & 2013-05-26 14:49:45 & 1\\
-\hline
-5 & 1 & Elizabeth & Brown & elizabeth.brown@sakilacustomer.org & 9 & TRUE & 2006-02-14 & 2013-05-26 14:49:45 & 1\\
-\hline
-\end{tabular}
+
+ customer_id   store_id  first_name   last_name   email                                  address_id  activebool   create_date   last_update            active
+------------  ---------  -----------  ----------  ------------------------------------  -----------  -----------  ------------  --------------------  -------
+         524          1  Jared        Ely         jared.ely@sakilacustomer.org                  530  TRUE         2006-02-14    2013-05-26 14:49:45         1
+           1          1  Mary         Smith       mary.smith@sakilacustomer.org                   5  TRUE         2006-02-14    2013-05-26 14:49:45         1
+           2          1  Patricia     Johnson     patricia.johnson@sakilacustomer.org             6  TRUE         2006-02-14    2013-05-26 14:49:45         1
+           3          1  Linda        Williams    linda.williams@sakilacustomer.org               7  TRUE         2006-02-14    2013-05-26 14:49:45         1
+           4          2  Barbara      Jones       barbara.jones@sakilacustomer.org                8  TRUE         2006-02-14    2013-05-26 14:49:45         1
+           5          1  Elizabeth    Brown       elizabeth.brown@sakilacustomer.org              9  TRUE         2006-02-14    2013-05-26 14:49:45         1
 
 ```r
 pco <- dbSendQuery(con,'select * from customer;')
@@ -111,23 +76,15 @@ kable(head(rs2))
 ```
 
 
-\begin{tabular}{r|r|l|l|l|r|l|l|l|r}
-\hline
-customer\_id & store\_id & first\_name & last\_name & email & address\_id & activebool & create\_date & last\_update & active\\
-\hline
-524 & 1 & Jared & Ely & jared.ely@sakilacustomer.org & 530 & TRUE & 2006-02-14 & 2013-05-26 14:49:45 & 1\\
-\hline
-1 & 1 & Mary & Smith & mary.smith@sakilacustomer.org & 5 & TRUE & 2006-02-14 & 2013-05-26 14:49:45 & 1\\
-\hline
-2 & 1 & Patricia & Johnson & patricia.johnson@sakilacustomer.org & 6 & TRUE & 2006-02-14 & 2013-05-26 14:49:45 & 1\\
-\hline
-3 & 1 & Linda & Williams & linda.williams@sakilacustomer.org & 7 & TRUE & 2006-02-14 & 2013-05-26 14:49:45 & 1\\
-\hline
-4 & 2 & Barbara & Jones & barbara.jones@sakilacustomer.org & 8 & TRUE & 2006-02-14 & 2013-05-26 14:49:45 & 1\\
-\hline
-5 & 1 & Elizabeth & Brown & elizabeth.brown@sakilacustomer.org & 9 & TRUE & 2006-02-14 & 2013-05-26 14:49:45 & 1\\
-\hline
-\end{tabular}
+
+ customer_id   store_id  first_name   last_name   email                                  address_id  activebool   create_date   last_update            active
+------------  ---------  -----------  ----------  ------------------------------------  -----------  -----------  ------------  --------------------  -------
+         524          1  Jared        Ely         jared.ely@sakilacustomer.org                  530  TRUE         2006-02-14    2013-05-26 14:49:45         1
+           1          1  Mary         Smith       mary.smith@sakilacustomer.org                   5  TRUE         2006-02-14    2013-05-26 14:49:45         1
+           2          1  Patricia     Johnson     patricia.johnson@sakilacustomer.org             6  TRUE         2006-02-14    2013-05-26 14:49:45         1
+           3          1  Linda        Williams    linda.williams@sakilacustomer.org               7  TRUE         2006-02-14    2013-05-26 14:49:45         1
+           4          2  Barbara      Jones       barbara.jones@sakilacustomer.org                8  TRUE         2006-02-14    2013-05-26 14:49:45         1
+           5          1  Elizabeth    Brown       elizabeth.brown@sakilacustomer.org              9  TRUE         2006-02-14    2013-05-26 14:49:45         1
 
 
 ```r
@@ -380,13 +337,13 @@ head(rs)
 ```
 
 ```
-##   film_id               title rental_rate revenue count
-## 1     103  Bucket Brotherhood        4.99  169.66    34
-## 2     738    Rocketeer Mother        0.99   32.67    33
-## 3     382      Grit Clockwork        0.99   31.68    32
-## 4     767       Scalawag Duck        4.99  159.68    32
-## 5     489      Juggler Hardly        0.99   31.68    32
-## 6     730 Ridgemont Submarine        0.99   31.68    32
+##   film_id              title rental_rate revenue count
+## 1     103 Bucket Brotherhood        4.99  169.66    34
+## 2     738   Rocketeer Mother        0.99   32.67    33
+## 3     331     Forward Temple        2.99   95.68    32
+## 4     767      Scalawag Duck        4.99  159.68    32
+## 5     382     Grit Clockwork        0.99   31.68    32
+## 6     489     Juggler Hardly        0.99   31.68    32
 ```
 
 
@@ -412,9 +369,9 @@ head(rs)
 ## 1     103 Bucket Brotherhood        4.99  169.66    34
 ## 2     767      Scalawag Duck        4.99  159.68    32
 ## 3     973          Wife Turn        4.99  154.69    31
-## 4      31      Apache Divine        4.99  154.69    31
-## 5     369  Goodfellas Salute        4.99  154.69    31
-## 6    1000          Zorro Ark        4.99  154.69    31
+## 4     369  Goodfellas Salute        4.99  154.69    31
+## 5    1000          Zorro Ark        4.99  154.69    31
+## 6      31      Apache Divine        4.99  154.69    31
 ```
 
 
@@ -510,8 +467,7 @@ Clean up
 # diconnect from the db
 dbDisconnect(con)
 
-result <- system2("docker", "stop sql-pet", stdout = TRUE, stderr = TRUE)
-result
+sp_docker_stop("sql-pet")
 ```
 
 ```

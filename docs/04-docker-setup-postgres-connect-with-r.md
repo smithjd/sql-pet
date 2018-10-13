@@ -3,7 +3,9 @@
 At the end of this chapter, you will be able to 
 
   * Run, clean-up and close Docker containers.
+  * See how to keep credentials secret in code that's visible to the world.
   * Interact with Postgres using Rstudio inside Docker container.
+  # Read and write to postgreSQL from R.
 
 
 We always load the tidyverse and some other packages, but don't show it unless we are using packages other than `tidyverse`, `DBI`, `RPostgres`, and `glue`.
@@ -17,48 +19,50 @@ Docker commands can be run from a terminal (e.g., the Rstudio Terminal pane) or 
 2. The parameters or commands that are being sent.
 3. `stdout = TRUE, stderr = TRUE` are two parameters that are standard in this book, so that the command's full output is shown in the book.
 
-The `docker version` command returns the details about the docker daemon that is running on your computer.
+Check that docker is up and running:
 
 
 ```r
-system2("docker", "version", stdout = TRUE, stderr = TRUE)
+sp_check_that_docker_is_up()
 ```
 
 ```
-##  [1] "Client:"                                        
-##  [2] " Version:           18.06.1-ce"                 
-##  [3] " API version:       1.38"                       
-##  [4] " Go version:        go1.10.3"                   
-##  [5] " Git commit:        e68fc7a"                    
-##  [6] " Built:             Tue Aug 21 17:21:31 2018"   
-##  [7] " OS/Arch:           darwin/amd64"               
-##  [8] " Experimental:      false"                      
-##  [9] ""                                               
-## [10] "Server:"                                        
-## [11] " Engine:"                                       
-## [12] "  Version:          18.06.1-ce"                 
-## [13] "  API version:      1.38 (minimum version 1.12)"
-## [14] "  Go version:       go1.10.3"                   
-## [15] "  Git commit:       e68fc7a"                    
-## [16] "  Built:            Tue Aug 21 17:29:02 2018"   
-## [17] "  OS/Arch:          linux/amd64"                
-## [18] "  Experimental:     true"
+## [1] "Docker is up, running these containers:"                                                                                                     
+## [2] "CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS              PORTS                    NAMES"    
+## [3] "908bc8e8abdd        postgres-dvdrental   \"docker-entrypoint.s…\"   14 minutes ago      Up 14 minutes       0.0.0.0:5432->5432/tcp   sql-pet"
 ```
 
 ## Clean up if appropriate
 Remove the `cattle` and `sql-pet` containers if they exists (e.g., from a prior experiments).  
 
 ```r
-if (system2("docker", "ps -a", stdout = TRUE) %>% 
-   grepl(x = ., pattern = 'cattle') %>% 
-   any()) {
-     system2("docker", "rm -f cattle")
-}
-if (system2("docker", "ps -a", stdout = TRUE) %>% 
-   grepl(x = ., pattern = 'sql-pet') %>% 
-   any()) {
-     system2("docker", "rm -f sql-pet")
-}
+sp_docker_remove_container("cattle")
+```
+
+```
+## Warning in system2("docker", docker_command, stdout = TRUE, stderr = TRUE):
+## running command ''docker' rm cattle 2>&1' had status 1
+```
+
+```
+## [1] "Error: No such container: cattle"
+## attr(,"status")
+## [1] 1
+```
+
+```r
+sp_docker_remove_container("sql-pet")
+```
+
+```
+## Warning in system2("docker", docker_command, stdout = TRUE, stderr = TRUE):
+## running command ''docker' rm sql-pet 2>&1' had status 1
+```
+
+```
+## [1] "Error response from daemon: You cannot remove a running container 908bc8e8abdd99af4384dc7ddf5adbb433beda9c12394a3b53683dc124102b3a. Stop the container before attempting removal or force remove"
+## attr(,"status")
+## [1] 1
 ```
 
 The convention we use in this book is to assemble a command with `glue` so that the you can see all of its separate parts.  The following chunk just constructs the command, but does not execute it.  If you have problems executing a command, you can always copy the command and execute in your terminal session.
@@ -75,10 +79,9 @@ docker_cmd <- glue(
 # We name containers `cattle` for "throw-aways" and `pet` for ones we treasure and keep around.  :-)
 ```
 
-Submit the command constructed above:
+Show and then submit the command constructed above:
 
 ```r
-# this is what you would submit from a terminal:
 cat(glue(" docker ", docker_cmd))
 ```
 
@@ -92,7 +95,16 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "40ddde8375f90c18fe87e1a199a686b34f7b6e9a6e2597516df77ad4ed01fed9"
+## Warning in system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE):
+## running command ''docker' run --detach --name cattle --publish 5432:5432
+## postgres:10 2>&1' had status 125
+```
+
+```
+## [1] "ffb19ad6250a4f38958ec7148e4dc12587bdb97106556d2e04c59db33af6dac5"                                                                                                                                                                   
+## [2] "docker: Error response from daemon: driver failed programming external connectivity on endpoint cattle (0b992c5f473afee20c4f5648b703e2ccf3d9a280267a3cf81f8387650dc398ce): Bind for 0.0.0.0:5432 failed: port is already allocated."
+## attr(,"status")
+## [1] 125
 ```
 
 Docker returns a long string of numbers.  If you are running this command for the first time, Docker downloads the PostgreSQL image, which takes a bit of time.
@@ -100,12 +112,13 @@ Docker returns a long string of numbers.  If you are running this command for th
 The following command shows that a container named `cattle` is running `postgres:10`.  `postgres` is waiting for a connection:
 
 ```r
-system2("docker", "ps", stdout = TRUE, stderr = TRUE)
+sp_check_that_docker_is_up()
 ```
 
 ```
-## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES"   
-## [2] "40ddde8375f9        postgres:10         \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
+## [1] "Docker is up, running these containers:"                                                                                                     
+## [2] "CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS              PORTS                    NAMES"    
+## [3] "908bc8e8abdd        postgres-dvdrental   \"docker-entrypoint.s…\"   14 minutes ago      Up 14 minutes       0.0.0.0:5432->5432/tcp   sql-pet"
 ```
 ## Connect, read and write to Postgres from R
 
@@ -113,23 +126,20 @@ system2("docker", "ps", stdout = TRUE, stderr = TRUE)
 
 We use the following `sp_get_postgres_connection` function, which will repeatedly try to connect to PostgreSQL.  PostgreSQL can take different amounts of time to come up and be ready to accept connections from R, depending on various factors that will be discussed later on.
 
-When we call `sp_get_postgres_connection` we'll use environment variables that R obtains from reading a file named `.Rprofile`.  That file is not uploaded to Github and R looks for it in your default directory.  To see whether you have already created that file, execute:
-
-
-```r
-dir(path = "~", pattern = ".Rprofile", all.files = TRUE)
-```
-
-```
-## [1] ".Rprofile"
-```
-
-It should contain lines such as:
-```
-  DEFAULT_POSTGRES_PASSWORD=postgres
-  DEFAULT_POSTGRES_USER_NAME=postgres
-```
-Those are the default values for the username and password, but this approach demonstrates how they would be kept secret and not uploaded to Github or some other public location.
+<table border = 2)
+<tr><td>
+When we call </i>sp_get_postgres_connection</i> we'll use environment variables that R obtains from reading a file named <i>.Renviron</i>.  That file is not uploaded to Github and R looks for it in your default directory.  To see whether you have already created that file, execute this in your R session:</br></br>
+<ul>
+<i><b>dir(path = "~", pattern = ".Renviron", all.files = TRUE)</b></i>
+</ul>
+That file should contain lines such as:</br></br>
+<ul>
+  <i><b>DEFAULT_POSTGRES_PASSWORD=postgres</br>
+  DEFAULT_POSTGRES_USER_NAME=postgres</b></i></br>
+</ul>
+Those are the PostreSQL default values for the username and password, so not secret.  But this approach demonstrates how they would be kept secret and not uploaded to Github or some other public location when you need to keep credentials secret.
+</td></tr>
+</table>
 
 This is how the `sp_get_postgres_connection` function is used:
 
@@ -139,6 +149,10 @@ con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"
                          dbname = "postgres",
                          seconds_to_test = 10)
 ```
+If you don't have an `.Rprofile` file that defines those passwords, you can just insert a string for the parameter, like:
+
+  `password = 'whatever',`
+
 Make sure that you can connect to the PostgreSQL database that you started earlier. If you have been executing the code from this tutorial, the database will not contain any tables yet:
 
 
@@ -203,23 +217,15 @@ knitr::kable(head(mtcars_df))
 ```
 
 
-\begin{tabular}{r|r|r|r|r|r|r|r|r|r|r}
-\hline
-mpg & cyl & disp & hp & drat & wt & qsec & vs & am & gear & carb\\
-\hline
-21.0 & 6 & 160 & 110 & 3.90 & 2.620 & 16.46 & 0 & 1 & 4 & 4\\
-\hline
-21.0 & 6 & 160 & 110 & 3.90 & 2.875 & 17.02 & 0 & 1 & 4 & 4\\
-\hline
-22.8 & 4 & 108 & 93 & 3.85 & 2.320 & 18.61 & 1 & 1 & 4 & 1\\
-\hline
-21.4 & 6 & 258 & 110 & 3.08 & 3.215 & 19.44 & 1 & 0 & 3 & 1\\
-\hline
-18.7 & 8 & 360 & 175 & 3.15 & 3.440 & 17.02 & 0 & 0 & 3 & 2\\
-\hline
-18.1 & 6 & 225 & 105 & 2.76 & 3.460 & 20.22 & 1 & 0 & 3 & 1\\
-\hline
-\end{tabular}
+
+  mpg   cyl   disp    hp   drat      wt    qsec   vs   am   gear   carb
+-----  ----  -----  ----  -----  ------  ------  ---  ---  -----  -----
+ 21.0     6    160   110   3.90   2.620   16.46    0    1      4      4
+ 21.0     6    160   110   3.90   2.875   17.02    0    1      4      4
+ 22.8     4    108    93   3.85   2.320   18.61    1    1      4      1
+ 21.4     6    258   110   3.08   3.215   19.44    1    0      3      1
+ 18.7     8    360   175   3.15   3.440   17.02    0    0      3      2
+ 18.1     6    225   105   2.76   3.460   20.22    1    0      3      1
 
 ## Clean up
 
@@ -238,7 +244,7 @@ sp_docker_stop("cattle")
 
 ```r
 # Tell Docker to remove the container from it's library of active containers:
-system2("docker", "rm cattle", stdout = TRUE, stderr = TRUE)
+sp_docker_remove_container("cattle")
 ```
 
 ```
