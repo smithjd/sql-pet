@@ -19,12 +19,12 @@ bookdown::render_book(
 
 # PDF
 
-bookdown::render_book(
-  input = "index.Rmd",
-  new_session = TRUE,
-  output_format = "bookdown::pdf_book",
-  output_dir = "./docs"
-)
+# bookdown::render_book(
+#   input = "index.Rmd",
+#   new_session = TRUE,
+#   output_format = "bookdown::pdf_book",
+#   output_dir = "./docs"
+# )
 
 # flag this as a non-Jekyll site for GitHub Pages
 file.create("./docs/.nojekyll")

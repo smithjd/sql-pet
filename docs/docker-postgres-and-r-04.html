@@ -25,7 +25,7 @@
 <meta name="author" content="Dipti Muni, Ian Frantz, John David Smith, Mary Anne Thygesen, M. Edward (Ed) Borasky, Scott Case, and Sophie Yang">
 
 
-<meta name="date" content="2018-10-13">
+<meta name="date" content="2018-10-14">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -141,7 +141,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#docker-and-r-on-your-machine"><i class="fa fa-check"></i><b>1.3</b> Docker and R on your machine</a></li>
 <li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#who-are-we"><i class="fa fa-check"></i><b>1.4</b> Who are we?</a></li>
 <li class="chapter" data-level="1.5" data-path="index.html"><a href="index.html#prerequisites"><i class="fa fa-check"></i><b>1.5</b> Prerequisites</a></li>
-<li class="chapter" data-level="1.6" data-path="index.html"><a href="index.html#install-docker"><i class="fa fa-check"></i><b>1.6</b> Install Docker</a></li>
+<li class="chapter" data-level="1.6" data-path="index.html"><a href="index.html#installing-docker"><i class="fa fa-check"></i><b>1.6</b> Installing Docker</a></li>
 <li class="chapter" data-level="1.7" data-path="index.html"><a href="index.html#download-the-repo"><i class="fa fa-check"></i><b>1.7</b> Download the repo</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="docker-hosting-for-windows-02.html"><a href="docker-hosting-for-windows-02.html"><i class="fa fa-check"></i><b>2</b> Docker Hosting for Windows (02)</a><ul>
@@ -331,53 +331,33 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ol>
 <p>Check that docker is up and running:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">sp_check_that_docker_is_up</span>()</a></code></pre></div>
-<pre><code>## [1] &quot;Docker is up, running these containers:&quot;                                                                                                     
-## [2] &quot;CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS              PORTS                    NAMES&quot;    
-## [3] &quot;6fd0fbdcf9f6        postgres-dvdrental   \&quot;docker-entrypoint.s…\&quot;   27 minutes ago      Up 26 minutes       0.0.0.0:5432-&gt;5432/tcp   sql-pet&quot;</code></pre>
+<pre><code>## [1] &quot;Docker is up but running no containers&quot;</code></pre>
 </div>
 <div id="clean-up-if-appropriate" class="section level2">
 <h2><span class="header-section-number">4.2</span> Clean up if appropriate</h2>
 <p>Remove the <code>cattle</code> and <code>sql-pet</code> containers if they exists (e.g., from a prior experiments).</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">sp_docker_remove_container</span>(<span class="st">&quot;cattle&quot;</span>)</a></code></pre></div>
 <pre><code>## Warning in system2(&quot;docker&quot;, docker_command, stdout = TRUE, stderr = TRUE):
-## running command &#39;&#39;docker&#39; rm cattle 2&gt;&amp;1&#39; had status 1</code></pre>
+## running command &#39;&#39;docker&#39; rm -f cattle 2&gt;&amp;1&#39; had status 1</code></pre>
 <pre><code>## [1] &quot;Error: No such container: cattle&quot;
 ## attr(,&quot;status&quot;)
 ## [1] 1</code></pre>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">sp_docker_remove_container</span>(<span class="st">&quot;sql-pet&quot;</span>)</a></code></pre></div>
 <pre><code>## Warning in system2(&quot;docker&quot;, docker_command, stdout = TRUE, stderr = TRUE):
-## running command &#39;&#39;docker&#39; rm sql-pet 2&gt;&amp;1&#39; had status 1</code></pre>
-<pre><code>## [1] &quot;Error response from daemon: You cannot remove a running container 6fd0fbdcf9f67d0b2bbf47a167b29f3624a643b4ba7cc89b1b1c09e5e5a9f4c0. Stop the container before attempting removal or force remove&quot;
+## running command &#39;&#39;docker&#39; rm -f sql-pet 2&gt;&amp;1&#39; had status 1</code></pre>
+<pre><code>## [1] &quot;Error: No such container: sql-pet&quot;
 ## attr(,&quot;status&quot;)
 ## [1] 1</code></pre>
-<p>The convention we use in this book is to assemble a command with <code>glue</code> so that the you can see all of its separate parts. The following chunk just constructs the command, but does not execute it. If you have problems executing a command, you can always copy the command and execute in your terminal session.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">docker_cmd &lt;-<span class="st"> </span><span class="kw">glue</span>(</a>
-<a class="sourceLine" id="cb9-2" data-line-number="2">  <span class="st">&quot;run &quot;</span>,      <span class="co"># Run is the Docker command.  Everything that follows are `docker run` parameters.</span></a>
-<a class="sourceLine" id="cb9-3" data-line-number="3">  <span class="st">&quot;--detach &quot;</span>, <span class="co"># (or `-d`) tells Docker to disconnect from the terminal / program issuing the command</span></a>
-<a class="sourceLine" id="cb9-4" data-line-number="4">  <span class="st">&quot;--name cattle &quot;</span>,       <span class="co"># tells Docker to give the container a name: `cattle`</span></a>
-<a class="sourceLine" id="cb9-5" data-line-number="5">  <span class="st">&quot;--publish 5432:5432 &quot;</span>, <span class="co"># tells Docker to expose the Postgres port 5432 to the local network with 5432</span></a>
-<a class="sourceLine" id="cb9-6" data-line-number="6">  <span class="st">&quot; postgres:10 &quot;</span>  <span class="co"># tells Docker the image that is to be run (after downloading if necessary)</span></a>
-<a class="sourceLine" id="cb9-7" data-line-number="7">)</a>
-<a class="sourceLine" id="cb9-8" data-line-number="8"></a>
-<a class="sourceLine" id="cb9-9" data-line-number="9"><span class="co"># We name containers `cattle` for &quot;throw-aways&quot; and `pet` for ones we treasure and keep around.  :-)</span></a></code></pre></div>
-<p>Show and then submit the command constructed above:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw">cat</span>(<span class="kw">glue</span>(<span class="st">&quot; docker &quot;</span>, docker_cmd))</a></code></pre></div>
-<pre><code>##  docker run --detach --name cattle --publish 5432:5432  postgres:10</code></pre>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="co"># this is how R submits it to Docker:</span></a>
-<a class="sourceLine" id="cb12-2" data-line-number="2"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, docker_cmd, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
-<pre><code>## Warning in system2(&quot;docker&quot;, docker_cmd, stdout = TRUE, stderr = TRUE):
-## running command &#39;&#39;docker&#39; run --detach --name cattle --publish 5432:5432
-## postgres:10 2&gt;&amp;1&#39; had status 125</code></pre>
-<pre><code>## [1] &quot;e9dd3830025bb4f9b253fddb12c8e2a6ec8d899584fb2afcc36d32211f517152&quot;                                                                                                                                                                   
-## [2] &quot;docker: Error response from daemon: driver failed programming external connectivity on endpoint cattle (b2ac2eea52801f889e04cdf19e52f5427d8850cd1294ebef9dac1d6f0387d665): Bind for 0.0.0.0:5432 failed: port is already allocated.&quot;
-## attr(,&quot;status&quot;)
-## [1] 125</code></pre>
+<p>The convention we use in this book is to put docker commands in the <code>sqlpetr</code> package so that you can ignore them if you want. However, the functions are set up so that you can easily see how to do things with Docker and modify if you want.</p>
+<p>We name containers <code>cattle</code> for “throw-aways” and <code>pet</code> for ones we treasure and keep around. :-)</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">sp_make_simple_pg</span>(<span class="st">&quot;cattle&quot;</span>)</a></code></pre></div>
+<pre><code>## [1] 0</code></pre>
 <p>Docker returns a long string of numbers. If you are running this command for the first time, Docker downloads the PostgreSQL image, which takes a bit of time.</p>
 <p>The following command shows that a container named <code>cattle</code> is running <code>postgres:10</code>. <code>postgres</code> is waiting for a connection:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="kw">sp_check_that_docker_is_up</span>()</a></code></pre></div>
-<pre><code>## [1] &quot;Docker is up, running these containers:&quot;                                                                                                     
-## [2] &quot;CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS              PORTS                    NAMES&quot;    
-## [3] &quot;6fd0fbdcf9f6        postgres-dvdrental   \&quot;docker-entrypoint.s…\&quot;   27 minutes ago      Up 26 minutes       0.0.0.0:5432-&gt;5432/tcp   sql-pet&quot;</code></pre>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw">sp_check_that_docker_is_up</span>()</a></code></pre></div>
+<pre><code>## [1] &quot;Docker is up, running these containers:&quot;                                                                                                            
+## [2] &quot;CONTAINER ID        IMAGE               COMMAND                  CREATED                  STATUS                  PORTS                    NAMES&quot;   
+## [3] &quot;77e1074f54e8        postgres:10         \&quot;docker-entrypoint.s…\&quot;   Less than a second ago   Up Less than a second   0.0.0.0:5432-&gt;5432/tcp   cattle&quot;</code></pre>
 </div>
 <div id="connect-read-and-write-to-postgres-from-r" class="section level2">
 <h2><span class="header-section-number">4.3</span> Connect, read and write to Postgres from R</h2>
@@ -399,14 +379,14 @@ Those are the PostreSQL default values for the username and password, so not sec
 </td></tr>
 </table>
 <p>This is how the <code>sp_get_postgres_connection</code> function is used:</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">con &lt;-<span class="st"> </span><span class="kw">sp_get_postgres_connection</span>(<span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),</a>
-<a class="sourceLine" id="cb17-2" data-line-number="2">                         <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),</a>
-<a class="sourceLine" id="cb17-3" data-line-number="3">                         <span class="dt">dbname =</span> <span class="st">&quot;postgres&quot;</span>,</a>
-<a class="sourceLine" id="cb17-4" data-line-number="4">                         <span class="dt">seconds_to_test =</span> <span class="dv">10</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1">con &lt;-<span class="st"> </span><span class="kw">sp_get_postgres_connection</span>(<span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),</a>
+<a class="sourceLine" id="cb13-2" data-line-number="2">                         <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),</a>
+<a class="sourceLine" id="cb13-3" data-line-number="3">                         <span class="dt">dbname =</span> <span class="st">&quot;postgres&quot;</span>,</a>
+<a class="sourceLine" id="cb13-4" data-line-number="4">                         <span class="dt">seconds_to_test =</span> <span class="dv">10</span>)</a></code></pre></div>
 <p>If you don’t have an <code>.Rprofile</code> file that defines those passwords, you can just insert a string for the parameter, like:</p>
 <p><code>password = 'whatever',</code></p>
 <p>Make sure that you can connect to the PostgreSQL database that you started earlier. If you have been executing the code from this tutorial, the database will not contain any tables yet:</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="kw">dbListTables</span>(con)</a></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="kw">dbListTables</span>(con)</a></code></pre></div>
 <pre><code>## character(0)</code></pre>
 </div>
 <div id="alternative-put-the-database-password-in-an-environment-file" class="section level3">
@@ -421,19 +401,19 @@ Those are the PostreSQL default values for the username and password, so not sec
 <div id="interact-with-postgres" class="section level3">
 <h3><span class="header-section-number">4.3.3</span> Interact with Postgres</h3>
 <p>Write <code>mtcars</code> to PostgreSQL</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="kw">dbWriteTable</span>(con, <span class="st">&quot;mtcars&quot;</span>, mtcars, <span class="dt">overwrite =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="kw">dbWriteTable</span>(con, <span class="st">&quot;mtcars&quot;</span>, mtcars, <span class="dt">overwrite =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <p>List the tables in the PostgreSQL database to show that <code>mtcars</code> is now there:</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="kw">dbListTables</span>(con)</a></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="kw">dbListTables</span>(con)</a></code></pre></div>
 <pre><code>## [1] &quot;mtcars&quot;</code></pre>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1"><span class="co"># list the fields in mtcars:</span></a>
-<a class="sourceLine" id="cb23-2" data-line-number="2"><span class="kw">dbListFields</span>(con, <span class="st">&quot;mtcars&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="co"># list the fields in mtcars:</span></a>
+<a class="sourceLine" id="cb19-2" data-line-number="2"><span class="kw">dbListFields</span>(con, <span class="st">&quot;mtcars&quot;</span>)</a></code></pre></div>
 <pre><code>##  [1] &quot;mpg&quot;  &quot;cyl&quot;  &quot;disp&quot; &quot;hp&quot;   &quot;drat&quot; &quot;wt&quot;   &quot;qsec&quot; &quot;vs&quot;   &quot;am&quot;   &quot;gear&quot;
 ## [11] &quot;carb&quot;</code></pre>
 <p>Download the table from the DBMS to a local data frame:</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1">mtcars_df &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="st">&quot;mtcars&quot;</span>)</a>
-<a class="sourceLine" id="cb25-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb25-3" data-line-number="3"><span class="co"># Show a few rows:</span></a>
-<a class="sourceLine" id="cb25-4" data-line-number="4">knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">head</span>(mtcars_df))</a></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1">mtcars_df &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="st">&quot;mtcars&quot;</span>)</a>
+<a class="sourceLine" id="cb21-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb21-3" data-line-number="3"><span class="co"># Show a few rows:</span></a>
+<a class="sourceLine" id="cb21-4" data-line-number="4">knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">head</span>(mtcars_df))</a></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -536,13 +516,13 @@ Those are the PostreSQL default values for the username and password, so not sec
 <div id="clean-up" class="section level2">
 <h2><span class="header-section-number">4.4</span> Clean up</h2>
 <p>Afterwards, always disconnect from the DBMS, stop the docker container and (optionally) remove it.</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1"><span class="kw">dbDisconnect</span>(con)</a>
-<a class="sourceLine" id="cb26-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb26-3" data-line-number="3"><span class="co"># tell Docker to stop the container:</span></a>
-<a class="sourceLine" id="cb26-4" data-line-number="4"><span class="kw">sp_docker_stop</span>(<span class="st">&quot;cattle&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1"><span class="kw">dbDisconnect</span>(con)</a>
+<a class="sourceLine" id="cb22-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb22-3" data-line-number="3"><span class="co"># tell Docker to stop the container:</span></a>
+<a class="sourceLine" id="cb22-4" data-line-number="4"><span class="kw">sp_docker_stop</span>(<span class="st">&quot;cattle&quot;</span>)</a></code></pre></div>
 <pre><code>## [1] &quot;cattle&quot;</code></pre>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1"><span class="co"># Tell Docker to remove the container from it&#39;s library of active containers:</span></a>
-<a class="sourceLine" id="cb28-2" data-line-number="2"><span class="kw">sp_docker_remove_container</span>(<span class="st">&quot;cattle&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1"><span class="co"># Tell Docker to remove the container from it&#39;s library of active containers:</span></a>
+<a class="sourceLine" id="cb24-2" data-line-number="2"><span class="kw">sp_docker_remove_container</span>(<span class="st">&quot;cattle&quot;</span>)</a></code></pre></div>
 <pre><code>## [1] &quot;cattle&quot;</code></pre>
 <p>If we <code>stop</code> the docker container but don’t remove it (with the <code>rm cattle</code> command), the container will persist and we can start it up again later with <code>start cattle</code>. In that case, <code>mtcars</code> would still be there and we could retrieve it from R again. Since we have now removed the <code>cattle</code> container, the whole database has been deleted. (There are enough copies of <code>mtcars</code> in the world, so no great loss.)</p>
 

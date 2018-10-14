@@ -25,7 +25,7 @@
 <meta name="author" content="Dipti Muni, Ian Frantz, John David Smith, Mary Anne Thygesen, M. Edward (Ed) Borasky, Scott Case, and Sophie Yang">
 
 
-<meta name="date" content="2018-10-13">
+<meta name="date" content="2018-10-14">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -141,7 +141,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#docker-and-r-on-your-machine"><i class="fa fa-check"></i><b>1.3</b> Docker and R on your machine</a></li>
 <li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#who-are-we"><i class="fa fa-check"></i><b>1.4</b> Who are we?</a></li>
 <li class="chapter" data-level="1.5" data-path="index.html"><a href="index.html#prerequisites"><i class="fa fa-check"></i><b>1.5</b> Prerequisites</a></li>
-<li class="chapter" data-level="1.6" data-path="index.html"><a href="index.html#install-docker"><i class="fa fa-check"></i><b>1.6</b> Install Docker</a></li>
+<li class="chapter" data-level="1.6" data-path="index.html"><a href="index.html#installing-docker"><i class="fa fa-check"></i><b>1.6</b> Installing Docker</a></li>
 <li class="chapter" data-level="1.7" data-path="index.html"><a href="index.html#download-the-repo"><i class="fa fa-check"></i><b>1.7</b> Download the repo</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="docker-hosting-for-windows-02.html"><a href="docker-hosting-for-windows-02.html"><i class="fa fa-check"></i><b>2</b> Docker Hosting for Windows (02)</a><ul>
@@ -314,7 +314,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">R, Databases and Docker</h1>
 <h4 class="author"><em>Dipti Muni, Ian Frantz, John David Smith, Mary Anne Thygesen, M. Edward (Ed) Borasky, Scott Case, and Sophie Yang</em></h4>
-<h4 class="date"><em>2018-10-13</em></h4>
+<h4 class="date"><em>2018-10-14</em></h4>
 </div>
 <div id="introduction" class="section level1">
 <h1><span class="header-section-number">Chapter 1</span> Introduction</h1>
@@ -372,6 +372,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>A computer running Windows, MacOS, or Linux (Any Linux distro that will run Docker Community Edition, R and RStudio will work),</li>
 <li><a href="https://www.datacamp.com/community/tutorials/installing-R-windows-mac-ubuntu">R, and RStudio</a> and</li>
 <li>Docker hosting.</li>
+<li>Install our companion package <code>sqlpetr</code> with: <code>devtools::install_github(&quot;smithjd/sqlpetr&quot;)</code>.</li>
 </ul>
 <p>The database we use is PostgreSQL 10, but you do not need to install that - it’s installed via a Docker image. RStudio 1.2 is highly recommended but not required.</p>
 <p>In addition to the current version of R and RStudio, you will need the following packages:</p>
@@ -381,10 +382,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>RPostgres</li>
 <li>glue</li>
 <li>dbplyr</li>
+<li>knitr</li>
 </ul>
 </div>
-<div id="install-docker" class="section level2">
-<h2><span class="header-section-number">1.6</span> Install Docker</h2>
+<div id="installing-docker" class="section level2">
+<h2><span class="header-section-number">1.6</span> Installing Docker</h2>
 <p>Install Docker. Installation depends on your operating system:</p>
 <ul>
 <li><a href="https://docs.docker.com/docker-for-mac/install/">On a Mac</a></li>

@@ -1,7 +1,7 @@
 ---
 title: "R, Databases and Docker"
 author: "Dipti Muni, Ian Frantz, John David Smith, Mary Anne Thygesen, M. Edward (Ed) Borasky,  Scott Case, and Sophie Yang"
-date: "`r Sys.Date()`"
+date: "2018-10-14"
 site: bookdown::bookdown_site
 documentclass: book
 bibliography: [book.bib, packages.bib]
@@ -86,11 +86,4 @@ Install Docker.  Installation depends on your operating system:
 
 First step: download [this repo](https://github.com/smithjd/sql-pet).  It contains source code to build a Docker container that has the dvdrental database in PostgreSQL and shows how to interact with the database from R.
 
-```{r include=FALSE}
-# automatically create a bib database for R packages
-knitr::write_bib(c(
-  .packages(),
-  'docker',
-  'tidyverse'
-), 'packages.bib')
-```
+
