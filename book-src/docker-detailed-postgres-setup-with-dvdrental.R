@@ -3,7 +3,7 @@
 #' author: John David Smith
 #' date: "`r Sys.Date()`"
 #' ---
-#' Step-by-step Docker container setup
+#' Step-by-step Docker container setup with dvdrental database installed
 
 #' This needs to run *outside a project* to compile correctly because of the complexities of how knitr sets working directories (or because we don't really understand how it works!)
 
@@ -23,10 +23,11 @@ library(glue)
 require(knitr)
 library(dbplyr)
 library(sqlpetr)
+library(bookdown)
 
 #' ## Download the `dvdrental` backup file
 #'
-#' The first step is to get a local copy of the `dvdrental` PostgreSQL restore file.  It comes in a zip format and needs to be un-zipped.
+#' The first step is to get a local copy of the `dvdrental` PostgreSQL **restore file**.  It comes in a zip format and needs to be un-zipped.
 
 opts_knit$set(root.dir = normalizePath('../'))
 if (!require(downloader)) install.packages("downloader")
@@ -41,21 +42,16 @@ unzip("dvdrental.zip", exdir = ".") # creates a tar archhive named "dvdrental.ta
 #'
 
 getwd()
-dir()
 
 #' ## Verify that Docker is up and running:
 #'
 
-system2("docker", "version", stdout = TRUE, stderr = TRUE)
+sp_check_that_docker_is_up()
 
 #'
 #' Remove the `sql-pet` container if it exists (e.g., from a prior run)
 
-if (system2("docker", "ps -a", stdout = TRUE) %>%
-    grepl(x = ., pattern = 'sql-pet') %>%
-    any()) {
-  system2("docker", "rm -f sql-pet")
-}
+sp_docker_remove_container("sql-pet")
 
 
 #' ## Build the Docker Container
@@ -90,8 +86,6 @@ dir(wd, pattern = "dvdrental.tar")
 #'
 #' We can execute programs inside the Docker container with the `exec` command.  In this case we tell Docker to execute the `psql` program inside the `sql-pet` container and pass it some commands as follows.
 
-Sys.sleep(2)  # is this really needed?
-
 system2("docker", "ps -a", stdout = TRUE, stderr = TRUE)
 #' inside Docker, execute the postgress SQL command-line program to create the dvdrental database:
 system2('docker', 'exec sql-pet psql -U postgres -c "CREATE DATABASE dvdrental;"',
@@ -105,8 +99,6 @@ system2('docker', 'exec sql-pet psql -U postgres -c "CREATE DATABASE dvdrental;"
 
 Sys.sleep(2)  # the wait may or may not be needed.
 system2("docker", "exec sql-pet pg_restore -U postgres -d dvdrental petdir/dvdrental.tar", stdout = TRUE, stderr = TRUE)
-
-file.remove("dvdrental.tar") # the tar file is no longer needed.
 
 #' ## Connect to the database with R
 #'
@@ -151,3 +143,9 @@ psout <- system2("docker", "ps -a", stdout = TRUE)
 psout[grepl(x = psout, pattern = 'sql-pet')]
 
 #' We are leaving the `sql-pet` container so it can be used in running the rest of the examples and book.
+#'
+#' Clean up with:
+#'
+
+file.remove("dvdrental.zip")
+file.remove("dvdrental.tar")

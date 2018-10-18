@@ -10,6 +10,7 @@ library(here)
 require(knitr)
 library(dbplyr)
 library(sqlpetr)
+library(bookdown)
 MODE <- 'BOOK' # Either DEMO or BOOK
 ```
 Assume that the Docker container with PostgreSQL and the dvdrental database are ready to go. 
@@ -38,32 +39,49 @@ library(DT)
 
 ## Basic investigation
 
-* Need both familiarity with the data and a focus question
-  + An interative process
-  + Each informs the other
+We've already seen the simplest way of getting a list of tables in a database with `DBI` functions to list tables and fields:
+```{r}
+DBI::dbListTables(con)
 
-* R tools for data investigation
-  + glimpse
-  + str
-  + View and kable
+DBI::dbListFields(con, "rental")
 
-* overview investigation: do you understand your data
-  + documentation and its limits
-  + what's *missing* from the database: (columns, records, cells)
+```
 
-* find out how the data is used by those who enter it and others who've used it before
-  + why is there missing data?
+### Using `dplyr` as the main tool
 
-## Using `dplyr`
+methods for referencing a table
+
+```{r}
+rental_table <- tbl(con, "rental")  # requires collect() function
+rental_tibble <- dbReadTable(con, "rental") # downloads the whole table into a data frame
+```
+
 
 We already started, but that's OK.
 
+### Other R tools for data investigation
+  + str
+  + glimpse
+  + skimr
+  + View, datatable and kable
+
+```{r}
+str(rental_tibble)
+glimpse(rental_tibble)
+skim(rental_tibble)
+```
+
+
 ### Finding out what's in the database
 
-* DBI / RPostgres packages
-* R tools like glimpse, skimr, kable.
-* Tutorials like: https://suzan.rbind.io/tags/dplyr/ 
-* Benjamin S. Baumer, A Grammar for Reproducible and Painless Extract-Transform-Load Operations on Medium Data: https://arxiv.org/pdf/1708.07073 
+#### List the tables and fields that are available
+
+#### ERD Diagram
+
+This tutorial uses [the Postgres version of "dvd rental" database](http://www.postgresqltutorial.com/postgresql-sample-database/), which can be  [downloaded here](http://www.postgresqltutorial.com/wp-content/uploads/2017/10/dvdrental.zip).  Here's a glimpse of it's structure:
+    
+![Entity Relationship diagram for the dvdrental database](./screenshots/dvdrental-er-diagram.png)
+
 
 ### Sample query
 
@@ -129,3 +147,7 @@ if (MODE == 'DEMO') {
 sp_docker_stop("sql-pet")
 ```
 
+## Other resources
+
+* Tutorials like: https://suzan.rbind.io/tags/dplyr/ 
+* Benjamin S. Baumer, A Grammar for Reproducible and Painless Extract-Transform-Load Operations on Medium Data: https://arxiv.org/pdf/1708.07073 

@@ -1,3 +1,8 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 # Joins and complex queries (13)
 ```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
 # These packages are called in almost every chapter of the book:
@@ -53,12 +58,12 @@ con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"
 How many customers are there in the DVD Rental System
 ```{r}
 rs1 <- dbGetQuery(con, 'select * from customer;')
-kable(head(rs1))
+sp_print_df(head(rs1))
 
 pco <- dbSendQuery(con, 'select * from customer;')
 rs2  <- dbFetch(pco)
 dbClearResult(pco)
-kable(head(rs2))
+sp_print_df(head(rs2))
 ```
 
 ```{r}
