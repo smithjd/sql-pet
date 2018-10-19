@@ -38,6 +38,13 @@ If you don't see your idea listed, and you think it fits into the goals of this 
 
 We provide more guidelines for coding style and developer's workflow in the [Contributing](https://github.com/smithjd/sql-pet/blob/master/Contributing.md) document. The [project wiki](https://github.com/smithjd/sql-pet/wiki) is also a good source of information for developers.
 
+To compile the book, you need to additionally [install webshot](https://bookdown.org/yihui/bookdown/html-widgets.html) so that HTMLwidgets are displayed properly:
+
+```
+   install.packages("webshot")
+   webshot::install_phantomjs()
+```
+
 ## Code of Conduct
 If you plan to participate in the project in any way, such as a developer, reviewer, contributor, committer, or student, you are expected to follow the project's [Code of Conduct](https://github.com/smithjd/sql-pet/blob/master/CODE_OF_CONDUCT.md). Please review those guidelines before choosing to participate in the project.
 
