@@ -41,6 +41,45 @@ colFmt <- function(x,color)
 # * `r colFmt('Cover inline tables in future section','red')`
 ```
 
+Moved this from 11-elementary-queries
+
+```r
+dplyr_summary_df <-
+    read.delim(
+    '11-dplyr_sql_summary_table.tsv',
+    header = TRUE,
+    sep = '\t',
+    as.is = TRUE
+    )
+
+head(dplyr_summary_df)
+```
+
+```
+##   In          Dplyr_Function
+## 1  Y               arrange()
+## 2 Y?              distinct()
+## 3  Y       select() rename()
+## 4  N                  pull()
+## 5  Y    mutate() transmute()
+## 6  Y summarise() summarize()
+##                                      description
+## 1                      Arrange rows by variables
+## 2           Return rows with matching conditions
+## 3                Select/rename variables by name
+## 4                     Pull out a single variable
+## 5                              Add new variables
+## 6 Reduces multiple values down to a single value
+##                            SQL_Clause Notes                 Category
+## 1                            ORDER BY    NA Basic single-table verbs
+## 2                   SELECT distinct *    NA Basic single-table verbs
+## 3       SELECT column_name alias_name    NA Basic single-table verbs
+## 4                 SELECT column_name;    NA Basic single-table verbs
+## 5 SELECT computed_value computed_name    NA Basic single-table verbs
+## 6 SELECT aggregate_functions GROUP BY    NA Basic single-table verbs
+```
+
+
 ## SQL Commands
 
 SQL commands fall into four categories.  
@@ -225,7 +264,7 @@ showing                                | store_id | manager_staff_id | address_i
 
 The `FROM` clause contains database tables/views from which the `SELECT` columns are derived.  For now, in the examples, we are only using a single table.  If the database reflects a relational model, your data is likely spread out over several tables.  The key take away when beginning your analysis is to pick the table that has most of the data that you need for your analysis.  This table becomes your main or driving table to build your SQL query statement around.  After identifying your driving table, potentially save yourself a lot of time and heart ache.  Review any view that is built on your driving table.  If one or more exist, especially if vendor built, may already have the additional information need for your analysis.
 
-Insert SQL here or link to Views dependent on what
+\textcolor{red}{Insert SQL here or link to Views dependent on what}
 
 In this tutorial, there is only a single user hitting the database and row/table locking is not necessary and considered out of scope.
 
@@ -239,7 +278,7 @@ In this tutorial, there is only a single user hitting the database and row/table
   *  The EE and MGR are role abbreviations for the EMPLOYEE table.  
   *  Since all the column names are exactly the same for the EE and MGR role, the column names need to be prefixed with their role alias, e.g., SELECT MGR.EE_NAME, EE.EE_NAME ... shows the manager name and her employee name who work for her.
   *  It is a good habit to always alias your tables and prefix your column names with the table alias to eliminate any ambiguity as to where the column came from.  This is critical where there is inconsistent table column naming convention.
-  * Cover inline tables in future section
+  * \textcolor{red}{Cover inline tables in future section}
   
 ```
 Side Note: Do not create an unintended Cartesian join.  If one has more than one table in the FROM clause, make sure that every table in the FROM clause joins to at least one other table.  If your result set has an unexpectantly high rowcount and long runtime, check for a missing join in the FROM clause.

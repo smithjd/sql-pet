@@ -38,6 +38,14 @@ con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"
 
 
 ```
+discuss this simple example? http://www.postgresqltutorial.com/postgresql-left-join/ 
+
+* `dplyr` joins on the server side
+* Where you put `(collect(n = Inf))` really matters
+
+```{r}
+
+```
 
 ## Different strategies for interacting with the database
 
@@ -77,9 +85,9 @@ dbExecute(con,
   )
 
 ```
-
+## Joins
+### anti join -- Find customers who have never rented a movie.
 ```{r}
-## anti join -- Find customers who have never rented a movie.
 
 rs <- dbGetQuery(con,
                  "select c.first_name
@@ -93,9 +101,11 @@ rs <- dbGetQuery(con,
                  )
 sp_print_df(head(rs))
 ```
+### Union
 
+how many films and languages exist in the DVD rental application
 ```{r }
-## how many films and languages exist in the DVD rental application
+
 rs <- dbGetQuery(con,
                 "      select 'film' table_name,count(*) count from film 
                  union select 'language' table_name,count(*) count from language 
@@ -119,6 +129,7 @@ rs <- dbGetQuery(con,
                 )
 sp_print_df(head(rs))
 ```
+
 
 ```{r}
 ## Store analysis
@@ -148,9 +159,12 @@ rs <- dbGetQuery(con,
 sp_print_df(head(rs))
 ```
 
-```{r}
 ## Store analysis
+
 ### which store has the largest income stream
+```{r}
+
+
 rs <- dbGetQuery(con,
                 "select store_id,sum(amount) amt,count(*) cnt 
                    from payment p 
@@ -163,13 +177,14 @@ rs <- dbGetQuery(con,
 sp_print_df(head(rs))
 ```
 
-```{r}
-## Store analysis
+
 ### How many rentals have not been paid
 ### How many rentals have been paid
 ### How much has been paid
 ### What is the average price/movie
 ### Estimate the outstanding balance
+
+```{r}
 rs <- dbGetQuery(con,
                 "select sum(case when payment_id is null then 1 else 0 end) missing
                        ,sum(case when payment_id is not null then 1 else 0 end) found
@@ -187,8 +202,9 @@ rs <- dbGetQuery(con,
 sp_print_df(head(rs))
 ```
 
-```{r}
 ### what is the actual outstanding balance
+```{r}
+
 
 rs <- dbGetQuery(con,
                 "select sum(f.rental_rate) open_amt,count(*) count
@@ -205,8 +221,9 @@ rs <- dbGetQuery(con,
 sp_print_df(head(rs))
 ```
 
-```{r}
 ### Rank customers with highest open amounts
+
+```{r}
 
 rs <- dbGetQuery(con,
                 "select c.customer_id,c.first_name,c.last_name,sum(f.rental_rate) open_amt,count(*) count
@@ -227,9 +244,9 @@ rs <- dbGetQuery(con,
                 )  
 sp_print_df(head(rs))
 ```
-
-```{r}
 ### what film has been rented the most
+```{r}
+
 rs <- dbGetQuery(con,
                 "select i.film_id,f.title,rental_rate,sum(rental_rate) revenue,count(*) count  --16044
                    from rental r 
@@ -244,8 +261,9 @@ rs <- dbGetQuery(con,
 sp_print_df(head(rs))
 ```
 
-```{r}
 ### what film has been generated the most revenue assuming all amounts are collected
+```{r}
+
 rs <- dbGetQuery(con,
                 "select i.film_id,f.title,rental_rate
                        ,sum(rental_rate) revenue,count(*) count  --16044
@@ -261,8 +279,9 @@ rs <- dbGetQuery(con,
 sp_print_df(head(rs))
 ```
 
-```{r}
 ### which films are in one store but not the other.
+```{r}
+
 rs <- dbGetQuery(con,
                 "select coalesce(i1.film_id,i2.film_id) film_id
                        ,f.title,f.rental_rate,i1.store_id,i1.count,i2.store_id,i2.count
@@ -284,8 +303,8 @@ rs <- dbGetQuery(con,
 sp_print_df(head(rs))
 ```
 
+## Compute the outstanding balance.
 ```{r}
-# Compute the outstanding balance.
 rs <- dbGetQuery(con,
                 "select sum(f.rental_rate) open_amt,count(*) count
                    from rental r 
@@ -300,17 +319,9 @@ rs <- dbGetQuery(con,
                 )  
 sp_print_df(head(rs))
 ```
-list what's there
-```{r}
-dbListTables(con)
-```
 
-Clean up
-```{r}
-# dbRemoveTable(con, "cars")
-# dbRemoveTable(con, "mtcars")
-# dbRemoveTable(con, "cust_movies")
 
+```{r}
 # diconnect from the db
 dbDisconnect(con)
 

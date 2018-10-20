@@ -1,4 +1,4 @@
-# Simple queries (11)
+# Introduction to dbms queries (11)
 
 ```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
 # These packages are called in almost every chapter of the book:
@@ -27,119 +27,181 @@ con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"
 
 ## Downloading the data from the database
 
-We've already seen the simplest way of getting a list of tables in a database with `DBI` functions to list tables and fields:
+As we show later on, the database serves as a store of data and as an engine for subsetting, joining, and doing computation.  We begin with simple extraction, or "downloading" data.
+
+### Finding out what's there
+
+We've already seen the simplest way of getting a list of tables in a database with `DBI` functions that  list tables and fields.  Here are the (public) tables in the database:
 ```{r}
 DBI::dbListTables(con)
-
 ```
-Later on we'll discuss how to get more extensive data about each table from the database's own store of metadata.
-
-
-List the fields in a specific table:
+Here are the fields (or columns or variables) in one specific table:
 ```{r}
 DBI::dbListFields(con, "rental")
-
 ```
 
-### Using `dplyr` as the main tool
+Later on we'll discuss how to get more extensive data about each table and column from the database's own store of metadata.
 
-methods for referencing a table
+### Downloading an entire table
 
-`DBI::dbReadTable` will download an entire table into an R data frame.
+There are many different methods of getting data from a dbms, and we'll explore the different ways of controlling each one of them.
+
+`DBI::dbReadTable` will download an entire table into an R [tibble](https://tibble.tidyverse.org/).
 ```{r}
 
 rental_tibble <- DBI::dbReadTable(con, "rental") 
 str(rental_tibble)
 ```
+That's very simple, but if the table is large it may not be a good idea.
 
-### Adventures in lazy evaluation
+### Referencing a table for many different purposes
+
+The `dplyr::tbl` function gives us more control over access to a table.  It returns a connection object that dplyr uses for contructing queries and retrieving data from the dbms.
 ```{r}
-rental_table <- dplyr::tbl(con, "rental")  # requires collect() function
+rental_table <- dplyr::tbl(con, "rental")
+```
+Consider the structure of the connection object:
+```{r}
 str(rental_table)
-
-head(rental_table)
 ```
+It containes a list of variables in the table, among other things:
+```{r}
+rental_table$ops$vars
+```
+But because of lazy loading, R has not retrieved any actual data from the dbms.  We can trigger data extraction in several ways.  Although printing `rental_table` just prints the connection object, `head` triggers a query and prints its results:
 
 ```{r}
-rental_table %>% 
-  count(staff_id, inventory_id) %>% 
-  head
-
-rental_table %>% 
-  count(staff_id, inventory_id) %>% 
-  show_query()
+rental_table %>% head
+```
+### Subsetting variables
 
 
+```{r}
+rental_table %>% select(rental_date, return_date) %>% head
 ```
 
-We already started, but that's OK.
+We won't discuss dplyr methods for subsetting variables, deriving new ones, or subsetting rows based on the values found in the table because they are covered well in other places, including:
 
-### Other R tools for data investigation
-  + str
+  * Comprehensive reference: [https://dplyr.tidyverse.org/](https://dplyr.tidyverse.org/)
+  * Good tutorial: [https://suzan.rbind.io/tags/dplyr/](https://suzan.rbind.io/tags/dplyr/) 
+
+### Controlling number of rows returned
+
+The `collect` function triggers the creation of a tibble and controls the number of rows that the dbms sends to R.
+```{r}
+rental_table %>% collect(n = 3) %>% head
+```
+In this case the `collect` function triggers the execution of a query that counts the number of records in the table by `staff_id`:
+```{r}
+rental_table %>% 
+  count(staff_id) %>% 
+  collect()
+```
+
+The `collect` function affects how much is downloaded, not how many rows the dbms needs to process the query. This query processes all of the rows in the table but only displays one row of output.
+```{r}
+rental_table %>% 
+  count(staff_id) %>% 
+  collect(n = 1)
+```
+### Examining dplyr's SQL query and re-using SQL code
+
+The `show_query` function shows how dplyr is translating your query:
+```{r}
+rental_table %>% 
+  count(staff_id) %>% 
+  show_query()
+```
+Here is an extensive discussion of how dplyr code is translated into SQL:
+
+* [https://dbplyr.tidyverse.org/articles/sql-translation.html](https://dbplyr.tidyverse.org/articles/sql-translation.html) 
+
+The SQL code can be submitted directly to the dbms with the `DBI::dbGetQuery` function:
+```{r}
+query_result <- DBI::dbGetQuery(con,
+  'SELECT "staff_id", COUNT(*) AS "n"
+   FROM "rental"
+   GROUP BY "staff_id";
+  ')
+
+query_result
+```
+
+R markdown can also execute that SQL code in a chunk with the following header:
+
+  {`sql, connection=con, output.var = "mydataframe"`}
+
+```{sql, connection=con, output.var = "mydataframe"}
+SELECT "staff_id", COUNT(*) AS "n"
+FROM "rental"
+GROUP BY "staff_id";
+```
+Rmarkdown will store the query result in a tibble:
+```{r}
+mydataframe
+```
+
+## Investigating a single table
+
+Dealing with a large, complex database highlights the utility of specific tools in R.  We include brief examples that we find to be handy:
+
+  + Base R structure: str
+  + printing out some of the data: datatable / kable / View
+  + summary statistics: summary
   + glimpse
   + skimr
-  + View, datatable and kable
 
-## Some extra handy libraries
+### `str` - a base package workhorse
 
-[https://dbplyr.tidyverse.org/articles/sql-translation.html](https://dbplyr.tidyverse.org/articles/sql-translation.html) 
+`str` is a workhorse function that lists variables, their type and a sample of the first few variable values.
+```{r}
+str(rental_tibble)
+```
+
+### Always just look at your data with `head`, `View` or `datadtable`
+
+There is no substitute for looking at your data and R provides several ways to just browse it.  The `head` and `tail` functions help control the number of rows that are displayed.  In every-day practice you would look at more than just 6 rows, but hear we wrap `head` around the data frame:
+```{r}
+sp_print_df(head(rental_tibble))
+```
+### The `summary` function in base
+
+The basic statistics that the base package `summary` provides can serve a unique diagnostic purpose in this context.  For example, the following output shows that `rental_id` is a sequential number from 1 to 16,049 with no gaps.  The same is true of `inventory_id`.  The number of NA's is a good first guess as to the number of dvd's rented out or lost on 2005-09-02 02:35:22.
+```{r}
+summary(rental_tibble)
+```
 
 Here are some packages that we find handy in the preliminary investigation of a database (or a problem that involves data from a database).
 ```{r}
-library(glue)
-library(skimr)
 ```
+### The `glimpse` function in the `tibble` package
 
-
+The `tibble` package's `glimpse` function is a more compact version of `str`:
 ```{r}
-str(rental_tibble)
 glimpse(rental_tibble)
+```
+### The `skim` function in the `skmir` package
+
+The `skimr` package has several functions that make it easy to examine an unknown data frame and assess what it contains. It is also extensible.
+```{r}
+library(skimr)
+
 skim(rental_tibble)
+
+skim_to_wide(rental_tibble)
 ```
 
+## Dividing the work between R on your machine and the dbms
 
-### Finding out what's in the database
-
-#### List the tables and fields that are available
-
-#### ERD Diagram
-
-This tutorial uses [the Postgres version of "dvd rental" database](http://www.postgresqltutorial.com/postgresql-sample-database/), which can be  [downloaded here](http://www.postgresqltutorial.com/wp-content/uploads/2017/10/dvdrental.zip).  Here's a glimpse of it's structure:
-    
-![Entity Relationship diagram for the dvdrental database](./screenshots/dvdrental-er-diagram.png)
-
-
-### Sample query
-
-* rental 
-* date subset
-
-### Subset: only retrieve what you need
-
-* Columns
-* Rows
-  + number of row
-  + specific rows
-* Counts & stats
+They work together.
 
 ### Make the server do as much work as you can
 
-discuss this simple example? http://www.postgresqltutorial.com/postgresql-left-join/ 
+* show_query as a first draft of SQL.  May or may not use SQL code submitted directly.
 
-* `dplyr` joins on the server side
-* Where you put `(collect(n = Inf))` really matters
+### Criteria for choosing between `dplyr` and native SQL
 
-## What is `dplyr` sending to the server?
-
-* show_query as a first draft
-
-## Writing SQL queries directly to the DBMS
-
-* dbquery
-* Glue for constructing SQL statements
-  + parameterizing SQL queries
-
-## Choosing between `dplyr` and native SQL
+This probably belongs later in the book.
 
 * performance considerations: first get the right data, then worry about performance
 * Trade offs between leaving the data in PostgreSQL vs what's kept in R: 
@@ -147,25 +209,9 @@ discuss this simple example? http://www.postgresqltutorial.com/postgresql-left-j
   + larger samples and complete tables
   + using what you know to write efficient queries that do most of the work on the server
 
+### dplyr tools
 
-```{r}
-dplyr_summary_df <-
-    read.delim(
-    '11-dplyr_sql_summary_table.tsv',
-    header = TRUE,
-    sep = '\t',
-    as.is = TRUE
-    )
-
-head(dplyr_summary_df)
-
-```
-
-
-  * left join staff
-  * left join customer
-
-  * dplyr joins in the R
+Where you place the `collect` function matters.
 ```{r}
 dbDisconnect(con)
 sp_docker_stop("sql-pet")
@@ -173,6 +219,5 @@ sp_docker_stop("sql-pet")
 
 ## Other resources
 
-  * Tutorials like: [https://suzan.rbind.io/tags/dplyr/](https://suzan.rbind.io/tags/dplyr/) 
   * Benjamin S. Baumer, A Grammar for Reproducible and Painless Extract-Transform-Load Operations on Medium Data: [https://arxiv.org/pdf/1708.07073](https://arxiv.org/pdf/1708.07073) 
 
