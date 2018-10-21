@@ -1,0 +1,313 @@
+# Getting metadata about and from the database (21)
+
+```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
+# These packages are called in almost every chapter of the book:
+library(tidyverse)
+library(DBI)
+library(RPostgres)
+library(glue)
+library(here)
+require(knitr)
+library(dbplyr)
+library(sqlpetr)
+```
+Note that `tidyverse`, `DBI`, `RPostgres`, `glue`, and `knitr` are loaded.  Also, we've sourced the [`db-login-batch-code.R`]('book-src/db-login-batch-code.R') file which is used to log in to PostgreSQL.
+
+Assume that the Docker container with PostgreSQL and the dvdrental database are ready to go. 
+```{r}
+sp_docker_start("sql-pet")
+```
+Connect to the database:
+```{r}
+con <-  sp_get_postgres_connection(
+  user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
+  password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
+  dbname = "dvdrental",
+  seconds_to_test = 10
+)
+```
+## Always *look* at the data
+
+### Connect with people who own, generate, or are the subjects of the data
+
+A good chat with people who own the data, generate it, or are the subjects can generate insights and set the context for your investigation of the database. The purpose for collecting the data or circumsances where it was collected may be burried far afield in an organization, but *usually someone knows*.  The metadata discussed in this chapter is essential but will only take you so far.
+
+### Browse a few rows of a table
+
+Simple tools like `head` or `glimpse` are your friend.
+```{r}
+rental <- dplyr::tbl(con, "rental")
+
+kable(head(rental))
+glimpse(rental)
+```
+## Database contents and structure
+
+### Database structure
+
+For large or complex databases, however, you need to use both the available documentation for your database (e.g.,  [the dvdrental](http://www.postgresqltutorial.com/postgresql-sample-database/) database) and the other empirical tools that are available.  For example it's worth learning to interpret the symbols in an [Entity Relationship Diagram](https://en.wikipedia.org/wiki/Entity%E2%80%93relationship_model):
+
+![](./screenshots/ER-diagram-symbols.png)
+
+The `information_schema` is a trove of information *about* the database.  Its format is more or less consistent across the different SQL implementations that are available.   Here we explore some of what's available using several different methods.  Postgres stores [a lot of metadata](https://www.postgresql.org/docs/current/static/infoschema-columns.html).
+
+### Contents of the `information_schema` 
+For this chapter R needs the `dbplyr` package to access alternate schemas.  A [schema](http://www.postgresqltutorial.com/postgresql-server-and-database-objects/) is an object that contains one or more tables.  Most often there will be a default schema, but to access the metadata, you need to explicitly specify which schema contains the data you want.
+
+### What tables are in the database?
+The simplest way to get a list of tables is with 
+```{r}
+
+table_list  <- DBI::dbListTables(con)
+
+kable(table_list)
+```
+### Digging into the `information_schema`
+
+We usually need more detail than just a list of tables. Most SQL databases have an `information_schema` that has a standard structure to describe and control the database.
+
+The `information_schema` is in a different schema from the default, so to connect to the `tables` table in the  `information_schema` we connect to the database in a different way:
+```{r}
+table_info_schema_table <- tbl(con, dbplyr::in_schema("information_schema", "tables"))
+```
+The `information_schema` is large and complex and contains `r table_info_schema_table %>% collect %>% dim %>% pluck(1)` tables.  So it's easy to get lost in it.
+
+This query retrieves a list of the tables in the database that includes additional detail, not just the name of the table.
+```{r}
+table_info <- table_info_schema_table %>%
+  filter(table_schema == "public") %>%
+  select(table_catalog, table_schema, table_name, table_type) %>%
+  arrange(table_type, table_name) %>% 
+  collect() 
+
+kable(table_info)
+```
+In this context `table_catalog` is synonymous with `database`.
+
+Notice that *VIEWS* are composites made up of one or more *BASE TABLES*.
+
+The SQL world has its own terminology.  For example `rs` is shorthand for `result set`.  That's equivalent to using `df` for a `data frame`.  The following SQL query returns the same information as the previous one.
+```{r}
+rs <- dbGetQuery(
+  con,
+  "select table_catalog, table_schema, table_name, table_type 
+  from information_schema.tables 
+  where table_schema not in ('pg_catalog','information_schema')
+  order by table_type, table_name 
+  ;"
+)
+kable(rs)
+```
+
+## What columns do those tables contain?
+
+Of course, the `DBI` package has a `dbListFields` function that provides the simplest way to get the minimum, a list of column names:
+```{r}
+DBI::dbListFields(con, "rental")
+```
+
+But the `information_schema` has a lot more useful information that we can use.  
+```{r}
+columns_info_schema_table <- tbl(con, dbplyr::in_schema("information_schema", "columns"))
+```
+
+Since the `information_schema` contains `r columns_info_schema_table %>% collect %>% dim %>% pluck(1)` columns, we are narrowing our focus to just one table.  This query retrieves more information about the `rental` table:
+```{r}
+columns_info_schema_info <- columns_info_schema_table %>%
+  filter(table_schema == "public") %>% 
+  select(
+    table_catalog, table_schema, table_name, column_name, data_type, ordinal_position,
+    character_maximum_length, column_default, numeric_precision, numeric_precision_radix
+  ) %>%
+  collect(n = Inf) %>% 
+  mutate(data_type = case_when(
+           data_type == "character varying" ~ paste0(data_type, ' (', character_maximum_length, ')'),
+           data_type == "real" ~ paste0(data_type, ' (', numeric_precision, ',', numeric_precision_radix,')'),
+           TRUE ~ data_type)
+         ) %>% 
+  filter(table_name == "rental") %>%
+  select(-table_schema, -numeric_precision, -numeric_precision_radix)
+
+glimpse(columns_info_schema_info)
+
+kable(columns_info_schema_info)
+
+```
+
+### What is the difference between a `VIEW` and a `BASE TABLE`?
+
+The `BASE TABLE` has the underlying data in the database
+```{r}
+table_info_schema_table %>%
+  filter(table_schema == "public" & table_type == "BASE TABLE") %>% 
+  select(table_name, table_type) %>% 
+  left_join(columns_info_schema_table, by = c("table_name" = "table_name")) %>% 
+  select(
+    table_type, table_name, column_name, data_type, ordinal_position,
+    column_default
+  ) %>%
+  collect(n = Inf) %>% 
+  filter(str_detect(table_name, "cust")) %>% 
+  kable()
+ 
+```
+
+Probably should explore how the `VIEW` is made up of data from BASE TABLEs.
+```{r}
+table_info_schema_table %>%
+  filter(table_schema == "public" & table_type == "VIEW") %>%  
+  select(table_name, table_type) %>% 
+  left_join(columns_info_schema_table, by = c("table_name" = "table_name")) %>% 
+  select(
+    table_type, table_name, column_name, data_type, ordinal_position,
+    column_default
+  ) %>%
+  collect(n = Inf) %>% 
+  filter(str_detect(table_name, "cust")) %>% 
+  kable()
+```
+
+### What data types are found in the database?
+```{r}
+
+columns_info_schema_info %>% count(data_type)
+```
+
+## Characterizing how things are named
+
+Names are the handle for accessing the data.  Tables and columns may or may not be named consistently or in a way that makes sense to you.  You should look at these names *as data*.
+
+### Counting columns and name reuse
+Pull out some rough-and-ready but useful statistics about your database.  Since we are in SQL-land we talk about variables as `columns`.
+
+```{r}
+public_tables <- columns_info_schema_table %>%
+  filter(table_schema == "public") %>% 
+  collect()
+
+public_tables %>% count(table_name, sort = TRUE) %>% 
+  kable()
+```
+
+How many *column names* are shared across tables (or duplicated)?
+```{r}
+
+public_tables %>% count(column_name, sort = TRUE) %>% filter(n > 1)
+```
+
+How many column names are unique?
+```{r}
+public_tables %>% count(column_name) %>% filter(n == 1) %>% count()
+```
+
+## Database keys
+
+### Direct SQL
+
+How do we use this output?  Could it be generated by dplyr?
+```{r}
+rs <- dbGetQuery(
+  con,
+  "
+--SELECT conrelid::regclass as table_from
+select table_catalog||'.'||table_schema||'.'||table_name table_name
+, conname, pg_catalog.pg_get_constraintdef(r.oid, true) as condef
+FROM information_schema.columns c,pg_catalog.pg_constraint r
+WHERE 1 = 1 --r.conrelid = '16485' 
+  AND r.contype  in ('f','p') ORDER BY 1
+;"
+)
+glimpse(rs)
+kable(head(rs))
+```
+The following is more compact and looks more useful.  What is the difference between the two?
+```{r}
+rs <- dbGetQuery(
+  con,
+  "select conrelid::regclass as table_from
+      ,c.conname
+      ,pg_get_constraintdef(c.oid)
+  from pg_constraint c
+  join pg_namespace n on n.oid = c.connamespace
+ where c.contype in ('f','p')
+   and n.nspname = 'public'
+order by conrelid::regclass::text, contype DESC;
+"
+)
+glimpse(rs)
+kable(head(rs))
+dim(rs)[1]
+```
+
+### Database keys with dplyr
+
+This query shows the primary and foreign keys in the database.
+```{r}
+tables <- tbl(con, dbplyr::in_schema("information_schema", "tables"))
+table_constraints <- tbl(con, dbplyr::in_schema("information_schema", "table_constraints"))
+key_column_usage <- tbl(con, dbplyr::in_schema("information_schema", "key_column_usage"))
+referential_constraints <- tbl(con, dbplyr::in_schema("information_schema", "referential_constraints"))
+constraint_column_usage <- tbl(con, dbplyr::in_schema("information_schema", "constraint_column_usage"))
+
+keys <- tables %>% 
+  left_join(table_constraints, by = c(
+    "table_catalog" = "table_catalog",
+    "table_schema" =  "table_schema",
+    "table_name" = "table_name"
+  )) %>% 
+  # table_constraints %>% 
+  filter(constraint_type %in% c("FOREIGN KEY", "PRIMARY KEY")) %>% 
+  left_join(key_column_usage, 
+            by = c(
+              "table_catalog" = "table_catalog",
+              "constraint_catalog" = "constraint_catalog",
+              "constraint_schema" = "constraint_schema",
+              "table_name" = "table_name",
+              "table_schema" = "table_schema",
+              "constraint_name" = "constraint_name"
+              )) %>%
+  # left_join(constraint_column_usage) %>% # does this table add anything useful?
+  select(table_name, table_type, constraint_name, constraint_type, column_name, ordinal_position) %>%
+  arrange(table_name) %>% 
+collect()
+glimpse(keys)
+kable(keys)
+```
+
+What do we learn from the following query?  How is it useful? 
+```{r}
+rs <- dbGetQuery(
+  con,
+  "SELECT r.*,
+  pg_catalog.pg_get_constraintdef(r.oid, true) as condef
+  FROM pg_catalog.pg_constraint r
+  WHERE 1=1 --r.conrelid = '16485' AND r.contype = 'f' ORDER BY 1;
+  "
+  )
+
+head(rs)
+```
+
+## Creating your own data dictionary
+
+If you are going to work with a database for an extended period it can be useful to create your own data dictionary.  Here is an illustration of the idea
+```{r}
+
+some_tables <- c("rental", "city", "store")
+
+all_meta <- map_df(some_tables, sp_get_dbms_data_dictionary, con = con)
+
+all_meta
+
+glimpse(all_meta)
+
+kable(head(all_meta))
+
+```
+## Save your work!
+
+The work you do to understand the structure and contents of a database can be useful for others (including future-you).  So at the end of a session, you might look at all the data frames you want to save.  Consider saving them in a form where you can add notes at the appropriate level (as in a Google Doc representing table or columns that you annotate over time).
+```{r}
+ls()
+```
+

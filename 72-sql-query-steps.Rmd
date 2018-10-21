@@ -1,0 +1,73 @@
+# SQL queries behind the scenes (72)
+
+```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
+# These packages are called in almost every chapter of the book:
+library(tidyverse)
+library(DBI)
+library(RPostgres)
+library(glue)
+library(here)
+require(knitr)
+library(dbplyr)
+library(sqlpetr)
+```
+
+Start up the `docker-pet` container
+```{r}
+sp_docker_start("sql-pet")
+
+```
+
+
+now connect to the database with R
+```{r}
+
+con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
+                         password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
+                         dbname = "dvdrental",
+                         seconds_to_test = 10)
+```
+
+## SQL Execution Steps
+
+*  Parse the incoming SQL query
+*  Compile the SQL query
+*  Plan/optimize the data acquisition path
+*  Execute the optimized query / acquire and return data
+
+```{r}
+dbWriteTable(con, "mtcars", mtcars, overwrite = TRUE)
+rs <- dbSendQuery(con, "SELECT * FROM mtcars WHERE cyl = 4")
+dbFetch(rs)
+dbClearResult(rs)
+```
+
+## Passing values to SQL statements
+```{r}
+#Pass one set of values with the param argument:
+rs <- dbSendQuery(con,"SELECT * FROM mtcars WHERE cyl = 4")
+dbFetch(rs)
+dbClearResult(rs)
+```
+## Pass multiple sets of values with dbBind():
+```{r}
+rs <- dbSendQuery(con, "SELECT * FROM mtcars WHERE cyl = $1")
+dbBind(rs, list(6L)) # cyl = 6
+dbFetch(rs)
+dbBind(rs, list(8L)) # cyl = 8
+dbFetch(rs)
+dbClearResult(rs)
+```
+
+## Clean up
+```{r}
+# dbRemoveTable(con, "cars")
+dbRemoveTable(con, "mtcars")
+# dbRemoveTable(con, "cust_movies")
+
+# diconnect from the db
+dbDisconnect(con)
+
+sp_docker_stop("sql-pet")
+```
+

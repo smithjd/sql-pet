@@ -1,6 +1,6 @@
 # SQL Pet Tutorial
 
-## Next Meeting October/6 @10am (about 2-3 hours, followed by lunch)
+## Next Meeting October/13 @10am (about 2-3 hours, followed by lunch)
 Location: TBA, but could be Study room 2B at Central Library, Downtown Portland -- 801 SW 10th 
 
 **Table of Contents**
@@ -21,10 +21,11 @@ Location: TBA, but could be Study room 2B at Central Library, Downtown Portland 
 [R, Databases and Docker](https://smithjd.github.io/sql-pet/)
 
 * Tutorial materials go in the [Book](https://smithjd.github.io/sql-pet/).
-* Executable code is in the [/src](https://github.com/smithjd/sql-pet/tree/master/src) directory
+* 
+* Executable code is in the [/book-src](https://github.com/smithjd/sql-pet/tree/master/book-src) directory
   + We are using a `[Knit-then-Merge](https://bookdown.org/yihui/bookdown/new-session.html)` approach so each chapter of the book can be Knitted separately.  
-  + When the book is complete, we'll put some easy to execute examples back in the [/src](https://github.com/smithjd/sql-pet/tree/master/src) directory
-  + We store some interim stuff in the `/src` directory as they are integrated into the Book, but they will be revised & maybe deleted.
+  + When the book is complete, we'll put some easy to execute in a separate directory
+* The book depends on the `sqlrpetr` package.  It can be downloaded using `devtools::install_github("smithjd/sqlpetr")`
 
 
 ## How to contribute
@@ -36,6 +37,13 @@ If you don't see your idea listed, and you think it fits into the goals of this 
 * If your contribution is major, such as a new learning module or a significant restructuring of current code and training material, start by opening an issue first. That way, before you do any work, other people can weigh in on the discussion to make sure that your goals are aligned with the direction of the project.
 
 We provide more guidelines for coding style and developer's workflow in the [Contributing](https://github.com/smithjd/sql-pet/blob/master/Contributing.md) document. The [project wiki](https://github.com/smithjd/sql-pet/wiki) is also a good source of information for developers.
+
+To compile the book, you need to additionally [install webshot](https://bookdown.org/yihui/bookdown/html-widgets.html) so that HTMLwidgets are displayed properly:
+
+```
+   install.packages("webshot")
+   webshot::install_phantomjs()
+```
 
 ## Code of Conduct
 If you plan to participate in the project in any way, such as a developer, reviewer, contributor, committer, or student, you are expected to follow the project's [Code of Conduct](https://github.com/smithjd/sql-pet/blob/master/CODE_OF_CONDUCT.md). Please review those guidelines before choosing to participate in the project.
