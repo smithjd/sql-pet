@@ -18,8 +18,12 @@ sp_show_all_docker_containers()
 ```
 
 ```
-## [1] "CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                     PORTS               NAMES"    
-## [2] "55ba7582259a        postgres-dvdrental   \"docker-entrypoint.s…\"   24 seconds ago      Exited (0) 2 seconds ago                       sql-pet"
+## [1] "CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                     PORTS               NAMES"                  
+## [2] "55441bbc223d        postgres-dvdrental   \"docker-entrypoint.s…\"   21 seconds ago      Exited (0) 2 seconds ago                       sql-pet"              
+## [3] "424d4c3dfc89        rstats               \"/init\"                  4 days ago          Exited (0) 4 days ago                          containers_rstats_1"  
+## [4] "4c3eb1dc5043        postgis              \"docker-entrypoint.s…\"   4 days ago          Exited (0) 4 days ago                          containers_postgis_1" 
+## [5] "8da9d3a59732        dpage/pgadmin4       \"/entrypoint.sh\"         4 days ago          Exited (0) 4 days ago                          containers_pgadmin4_1"
+## [6] "7030e81489b8        2feef91d6764         \"/bin/sh -c 'su - rs…\"   4 days ago          Exited (1) 4 days ago                          laughing_johnson"
 ```
 Start up the `docker-pet` container
 
@@ -66,24 +70,8 @@ rs1 <- dbGetQuery(con, 'select * from customer;')
 sp_print_df(head(rs1))
 ```
 
-
-\begin{tabular}{r|r|l|l|l|r|l|l|l|r}
-\hline
-customer\_id & store\_id & first\_name & last\_name & email & address\_id & activebool & create\_date & last\_update & active\\
-\hline
-524 & 1 & Jared & Ely & jared.ely@sakilacustomer.org & 530 & TRUE & 2006-02-14 & 2013-05-26 14:49:45 & 1\\
-\hline
-1 & 1 & Mary & Smith & mary.smith@sakilacustomer.org & 5 & TRUE & 2006-02-14 & 2013-05-26 14:49:45 & 1\\
-\hline
-2 & 1 & Patricia & Johnson & patricia.johnson@sakilacustomer.org & 6 & TRUE & 2006-02-14 & 2013-05-26 14:49:45 & 1\\
-\hline
-3 & 1 & Linda & Williams & linda.williams@sakilacustomer.org & 7 & TRUE & 2006-02-14 & 2013-05-26 14:49:45 & 1\\
-\hline
-4 & 2 & Barbara & Jones & barbara.jones@sakilacustomer.org & 8 & TRUE & 2006-02-14 & 2013-05-26 14:49:45 & 1\\
-\hline
-5 & 1 & Elizabeth & Brown & elizabeth.brown@sakilacustomer.org & 9 & TRUE & 2006-02-14 & 2013-05-26 14:49:45 & 1\\
-\hline
-\end{tabular}
+<!--html_preserve--><div id="htmlwidget-154df6020c41a84475d2" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-154df6020c41a84475d2">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[524,1,2,3,4,5],[1,1,1,1,2,1],["Jared","Mary","Patricia","Linda","Barbara","Elizabeth"],["Ely","Smith","Johnson","Williams","Jones","Brown"],["jared.ely@sakilacustomer.org","mary.smith@sakilacustomer.org","patricia.johnson@sakilacustomer.org","linda.williams@sakilacustomer.org","barbara.jones@sakilacustomer.org","elizabeth.brown@sakilacustomer.org"],[530,5,6,7,8,9],[true,true,true,true,true,true],["2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14"],["2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z"],[1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>address_id<\/th>\n      <th>activebool<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n      <th>active<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,6,10]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ```r
 pco <- dbSendQuery(con, 'select * from customer;')
@@ -92,24 +80,8 @@ dbClearResult(pco)
 sp_print_df(head(rs2))
 ```
 
-
-\begin{tabular}{r|r|l|l|l|r|l|l|l|r}
-\hline
-customer\_id & store\_id & first\_name & last\_name & email & address\_id & activebool & create\_date & last\_update & active\\
-\hline
-524 & 1 & Jared & Ely & jared.ely@sakilacustomer.org & 530 & TRUE & 2006-02-14 & 2013-05-26 14:49:45 & 1\\
-\hline
-1 & 1 & Mary & Smith & mary.smith@sakilacustomer.org & 5 & TRUE & 2006-02-14 & 2013-05-26 14:49:45 & 1\\
-\hline
-2 & 1 & Patricia & Johnson & patricia.johnson@sakilacustomer.org & 6 & TRUE & 2006-02-14 & 2013-05-26 14:49:45 & 1\\
-\hline
-3 & 1 & Linda & Williams & linda.williams@sakilacustomer.org & 7 & TRUE & 2006-02-14 & 2013-05-26 14:49:45 & 1\\
-\hline
-4 & 2 & Barbara & Jones & barbara.jones@sakilacustomer.org & 8 & TRUE & 2006-02-14 & 2013-05-26 14:49:45 & 1\\
-\hline
-5 & 1 & Elizabeth & Brown & elizabeth.brown@sakilacustomer.org & 9 & TRUE & 2006-02-14 & 2013-05-26 14:49:45 & 1\\
-\hline
-\end{tabular}
+<!--html_preserve--><div id="htmlwidget-40e10961e4e810033dbf" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-40e10961e4e810033dbf">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[524,1,2,3,4,5],[1,1,1,1,2,1],["Jared","Mary","Patricia","Linda","Barbara","Elizabeth"],["Ely","Smith","Johnson","Williams","Jones","Brown"],["jared.ely@sakilacustomer.org","mary.smith@sakilacustomer.org","patricia.johnson@sakilacustomer.org","linda.williams@sakilacustomer.org","barbara.jones@sakilacustomer.org","elizabeth.brown@sakilacustomer.org"],[530,5,6,7,8,9],[true,true,true,true,true,true],["2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14"],["2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z"],[1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>address_id<\/th>\n      <th>activebool<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n      <th>active<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,6,10]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ## Use dbExecute
 
@@ -145,14 +117,8 @@ rs <- dbGetQuery(con,
 sp_print_df(head(rs))
 ```
 
-
-\begin{tabular}{l|l|l}
-\hline
-first\_name & last\_name & email\\
-\hline
-Sophie & Yang & dodreamdo@yahoo.com\\
-\hline
-\end{tabular}
+<!--html_preserve--><div id="htmlwidget-126f0265a76070890970" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-126f0265a76070890970">{"x":{"filter":"none","data":[["1"],["Sophie"],["Yang"],["dodreamdo@yahoo.com"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 ### Union
 
 how many films and languages exist in the DVD rental application
@@ -167,16 +133,8 @@ rs <- dbGetQuery(con,
 sp_print_df(head(rs))
 ```
 
-
-\begin{tabular}{l|r}
-\hline
-table\_name & count\\
-\hline
-film & 1000\\
-\hline
-language & 6\\
-\hline
-\end{tabular}
+<!--html_preserve--><div id="htmlwidget-39c5ae19f43b490668c8" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-39c5ae19f43b490668c8">{"x":{"filter":"none","data":[["1","2"],["film","language"],[1000,6]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_name<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":2},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ```r
 ## what is the film distribution based on language
@@ -196,24 +154,8 @@ rs <- dbGetQuery(con,
 sp_print_df(head(rs))
 ```
 
-
-\begin{tabular}{r|l|r}
-\hline
-id & name & total\\
-\hline
-1 & English & 1000\\
-\hline
-5 & French & 0\\
-\hline
-6 & German & 0\\
-\hline
-2 & Italian & 0\\
-\hline
-3 & Japanese & 0\\
-\hline
-4 & Mandarin & 0\\
-\hline
-\end{tabular}
+<!--html_preserve--><div id="htmlwidget-e5afb565642e4905fd08" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-e5afb565642e4905fd08">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[1,5,6,2,3,4],["English             ","French              ","German              ","Italian             ","Japanese            ","Mandarin            "],[1000,0,0,0,0,0]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>id<\/th>\n      <th>name<\/th>\n      <th>total<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 
 
@@ -245,24 +187,8 @@ rs <- dbGetQuery(con,
 sp_print_df(head(rs))
 ```
 
-
-\begin{tabular}{l|r}
-\hline
-tbl\_name & count\\
-\hline
-actor & 200\\
-\hline
-address & 603\\
-\hline
-category & 16\\
-\hline
-city & 600\\
-\hline
-country & 109\\
-\hline
-customer & 600\\
-\hline
-\end{tabular}
+<!--html_preserve--><div id="htmlwidget-48450a6da5ad05ec4a6d" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-48450a6da5ad05ec4a6d">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["actor","address","category","city","country","customer"],[200,603,16,600,109,600]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>tbl_name<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":2},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ## Store analysis
 
@@ -281,16 +207,8 @@ rs <- dbGetQuery(con,
 sp_print_df(head(rs))
 ```
 
-
-\begin{tabular}{r|r|r}
-\hline
-store\_id & amt & cnt\\
-\hline
-2 & 31059.92 & 7304\\
-\hline
-1 & 30252.12 & 7292\\
-\hline
-\end{tabular}
+<!--html_preserve--><div id="htmlwidget-620a0659aba84665b7fa" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-620a0659aba84665b7fa">{"x":{"filter":"none","data":[["1","2"],[2,1],[31059.92,30252.12],[7304,7292]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>store_id<\/th>\n      <th>amt<\/th>\n      <th>cnt<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 
 ### How many rentals have not been paid
@@ -318,14 +236,8 @@ rs <- dbGetQuery(con,
 sp_print_df(head(rs))
 ```
 
-
-\begin{tabular}{r|r|r|r|r|r}
-\hline
-missing & found & amt & cnt & avg\_price & est\_balance\\
-\hline
-1452 & 14596 & 61312.04 & 16048 & 4.2 & 6098.4\\
-\hline
-\end{tabular}
+<!--html_preserve--><div id="htmlwidget-39c702b200f2d8b9dc81" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-39c702b200f2d8b9dc81">{"x":{"filter":"none","data":[["1"],[1452],[14596],[61312.04],[16048],[4.2],[6098.4]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>missing<\/th>\n      <th>found<\/th>\n      <th>amt<\/th>\n      <th>cnt<\/th>\n      <th>avg_price<\/th>\n      <th>est_balance<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ### what is the actual outstanding balance
 
@@ -345,14 +257,8 @@ rs <- dbGetQuery(con,
 sp_print_df(head(rs))
 ```
 
-
-\begin{tabular}{r|r}
-\hline
-open\_amt & count\\
-\hline
-4297.48 & 1452\\
-\hline
-\end{tabular}
+<!--html_preserve--><div id="htmlwidget-37288eab5d5d22a45bba" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-37288eab5d5d22a45bba">{"x":{"filter":"none","data":[["1"],[4297.48],[1452]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>open_amt<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ### Rank customers with highest open amounts
 
@@ -378,24 +284,8 @@ rs <- dbGetQuery(con,
 sp_print_df(head(rs))
 ```
 
-
-\begin{tabular}{r|l|l|r|r}
-\hline
-customer\_id & first\_name & last\_name & open\_amt & count\\
-\hline
-293 & Mae & Fletcher & 35.90 & 10\\
-\hline
-307 & Joseph & Joy & 31.90 & 10\\
-\hline
-316 & Steven & Curley & 31.90 & 10\\
-\hline
-299 & James & Gannon & 30.91 & 9\\
-\hline
-274 & Naomi & Jennings & 29.92 & 8\\
-\hline
-326 & Jose & Andrew & 28.93 & 7\\
-\hline
-\end{tabular}
+<!--html_preserve--><div id="htmlwidget-ca928938c03c0a6921a0" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-ca928938c03c0a6921a0">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[293,307,316,299,274,326],["Mae","Joseph","Steven","James","Naomi","Jose"],["Fletcher","Joy","Curley","Gannon","Jennings","Andrew"],[35.9,31.9,31.9,30.91,29.92,28.93],[10,10,10,9,8,7]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>open_amt<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,4,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 ### what film has been rented the most
 
 ```r
@@ -413,24 +303,8 @@ rs <- dbGetQuery(con,
 sp_print_df(head(rs))
 ```
 
-
-\begin{tabular}{r|l|r|r|r}
-\hline
-film\_id & title & rental\_rate & revenue & count\\
-\hline
-103 & Bucket Brotherhood & 4.99 & 169.66 & 34\\
-\hline
-738 & Rocketeer Mother & 0.99 & 32.67 & 33\\
-\hline
-382 & Grit Clockwork & 0.99 & 31.68 & 32\\
-\hline
-767 & Scalawag Duck & 4.99 & 159.68 & 32\\
-\hline
-489 & Juggler Hardly & 0.99 & 31.68 & 32\\
-\hline
-730 & Ridgemont Submarine & 0.99 & 31.68 & 32\\
-\hline
-\end{tabular}
+<!--html_preserve--><div id="htmlwidget-af59cdb6df8ddea6e8ec" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-af59cdb6df8ddea6e8ec">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[103,738,382,767,489,730],["Bucket Brotherhood","Rocketeer Mother","Grit Clockwork","Scalawag Duck","Juggler Hardly","Ridgemont Submarine"],[4.99,0.99,0.99,4.99,0.99,0.99],[169.66,32.67,31.68,159.68,31.68,31.68],[34,33,32,32,32,32]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>film_id<\/th>\n      <th>title<\/th>\n      <th>rental_rate<\/th>\n      <th>revenue<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ### what film has been generated the most revenue assuming all amounts are collected
 
@@ -450,24 +324,8 @@ rs <- dbGetQuery(con,
 sp_print_df(head(rs))
 ```
 
-
-\begin{tabular}{r|l|r|r|r}
-\hline
-film\_id & title & rental\_rate & revenue & count\\
-\hline
-103 & Bucket Brotherhood & 4.99 & 169.66 & 34\\
-\hline
-767 & Scalawag Duck & 4.99 & 159.68 & 32\\
-\hline
-973 & Wife Turn & 4.99 & 154.69 & 31\\
-\hline
-31 & Apache Divine & 4.99 & 154.69 & 31\\
-\hline
-369 & Goodfellas Salute & 4.99 & 154.69 & 31\\
-\hline
-1000 & Zorro Ark & 4.99 & 154.69 & 31\\
-\hline
-\end{tabular}
+<!--html_preserve--><div id="htmlwidget-2234d90f2a8e1e8310a7" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2234d90f2a8e1e8310a7">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[103,767,973,31,369,1000],["Bucket Brotherhood","Scalawag Duck","Wife Turn","Apache Divine","Goodfellas Salute","Zorro Ark"],[4.99,4.99,4.99,4.99,4.99,4.99],[169.66,159.68,154.69,154.69,154.69,154.69],[34,32,31,31,31,31]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>film_id<\/th>\n      <th>title<\/th>\n      <th>rental_rate<\/th>\n      <th>revenue<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ### which films are in one store but not the other.
 
@@ -493,24 +351,8 @@ rs <- dbGetQuery(con,
 sp_print_df(head(rs))
 ```
 
-
-\begin{tabular}{r|l|r|r|r|r|r}
-\hline
-film\_id & title & rental\_rate & store\_id & count & store\_id..6 & count..7\\
-\hline
-2 & Ace Goldfinger & 4.99 & NA & NA & 2 & 3\\
-\hline
-3 & Adaptation Holes & 2.99 & NA & NA & 2 & 4\\
-\hline
-5 & African Egg & 2.99 & NA & NA & 2 & 3\\
-\hline
-8 & Airport Pollock & 4.99 & NA & NA & 2 & 4\\
-\hline
-13 & Ali Forever & 4.99 & NA & NA & 2 & 4\\
-\hline
-20 & Amelie Hellfighters & 4.99 & 1 & 3 & NA & NA\\
-\hline
-\end{tabular}
+<!--html_preserve--><div id="htmlwidget-d3f79bbf578ed387a072" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-d3f79bbf578ed387a072">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[2,3,5,8,13,20],["Ace Goldfinger","Adaptation Holes","African Egg","Airport Pollock","Ali Forever","Amelie Hellfighters"],[4.99,2.99,2.99,4.99,4.99,4.99],[null,null,null,null,null,1],[null,null,null,null,null,3],[2,2,2,2,2,null],[3,4,3,4,4,null]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>film_id<\/th>\n      <th>title<\/th>\n      <th>rental_rate<\/th>\n      <th>store_id<\/th>\n      <th>count<\/th>\n      <th>store_id..6<\/th>\n      <th>count..7<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4,5,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ## Compute the outstanding balance.
 
@@ -530,14 +372,8 @@ rs <- dbGetQuery(con,
 sp_print_df(head(rs))
 ```
 
-
-\begin{tabular}{r|r}
-\hline
-open\_amt & count\\
-\hline
-4297.48 & 1452\\
-\hline
-\end{tabular}
+<!--html_preserve--><div id="htmlwidget-0a52dc1a9a19a1c7ac16" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-0a52dc1a9a19a1c7ac16">{"x":{"filter":"none","data":[["1"],[4297.48],[1452]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>open_amt<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 
 

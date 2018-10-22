@@ -48,15 +48,11 @@ kable(rs)
 ```
 
 
-\begin{tabular}{l|l}
-\hline
-showing & db\\
-\hline
-DB Names in Docker & postgres\\
-\hline
-DB Names in Docker & dvdrental\\
-\hline
-\end{tabular}
+
+showing              db        
+-------------------  ----------
+DB Names in Docker   postgres  
+DB Names in Docker   dvdrental 
 
 Which databases are available?
 
@@ -127,13 +123,10 @@ kable(display_rows)
 ```
 
 
-\begin{tabular}{r}
-\hline
-x\\
-\hline
-5\\
-\hline
-\end{tabular}
+
+|  x|
+|--:|
+|  5|
 
 Since we will only be working in the `dvdrental` database in this tutorial and reduce the number of output columns shown, only the 'result set description' will be used. 
 
@@ -160,17 +153,12 @@ kable(rs1)
 ```
 
 
-\begin{tabular}{l|l|l|r}
-\hline
-showing & db & table\_schema & tbl\_vws\\
-\hline
-DB Schemas & dvdrental & pg\_catalog & 121\\
-\hline
-DB Schemas & dvdrental & public & 22\\
-\hline
-DB Schemas & dvdrental & information\_schema & 67\\
-\hline
-\end{tabular}
+
+showing      db          table_schema          tbl_vws
+-----------  ----------  -------------------  --------
+DB Schemas   dvdrental   pg_catalog                121
+DB Schemas   dvdrental   public                     22
+DB Schemas   dvdrental   information_schema         67
 
 We see that there are three schemas.  The pg_catalog is the standard PostgreSQL meta data and core schema.  Postgres uses this schema to manage the internal workings of the database.  DBA's are the primary users of pg_catalog. We used the pg_catalog schema to answer the question 'How many databases reside in the Docker Container?', but normally the data analyst is not interested in analyzing database data.
 
@@ -191,17 +179,12 @@ kable(rs1)
 ```
 
 
-\begin{tabular}{l|l|l|r}
-\hline
-showing & db & table\_schema & tbl\_vws\\
-\hline
-1. ORDER BY table\_catalog & dvdrental & pg\_catalog & 121\\
-\hline
-1. ORDER BY table\_catalog & dvdrental & public & 22\\
-\hline
-1. ORDER BY table\_catalog & dvdrental & information\_schema & 67\\
-\hline
-\end{tabular}
+
+showing                     db          table_schema          tbl_vws
+--------------------------  ----------  -------------------  --------
+1. ORDER BY table_catalog   dvdrental   pg_catalog                121
+1. ORDER BY table_catalog   dvdrental   public                     22
+1. ORDER BY table_catalog   dvdrental   information_schema         67
 
 ```r
 # Add an order by clause to order the output by tbl_vws in descending order.
@@ -215,17 +198,12 @@ kable(rs2)
 ```
 
 
-\begin{tabular}{l|l|l|r}
-\hline
-showing & db & table\_schema & tbl\_vws\\
-\hline
-2. ORDER BY tbl\_vws desc & dvdrental & pg\_catalog & 121\\
-\hline
-2. ORDER BY tbl\_vws desc & dvdrental & public & 22\\
-\hline
-2. ORDER BY tbl\_vws desc & dvdrental & information\_schema & 67\\
-\hline
-\end{tabular}
+
+showing                    db          table_schema          tbl_vws
+-------------------------  ----------  -------------------  --------
+2. ORDER BY tbl_vws desc   dvdrental   pg_catalog                121
+2. ORDER BY tbl_vws desc   dvdrental   public                     22
+2. ORDER BY tbl_vws desc   dvdrental   information_schema         67
 
 
 ```r
@@ -240,21 +218,14 @@ kable(head (rs3,display_rows))
 ```
 
 
-\begin{tabular}{l|l}
-\hline
-showing & ?column?\\
-\hline
-3. all information\_schema tables & your code goes here\\
-\hline
-3. all information\_schema tables & your code goes here\\
-\hline
-3. all information\_schema tables & your code goes here\\
-\hline
-3. all information\_schema tables & your code goes here\\
-\hline
-3. all information\_schema tables & your code goes here\\
-\hline
-\end{tabular}
+
+showing                            ?column?            
+---------------------------------  --------------------
+3. all information_schema tables   your code goes here 
+3. all information_schema tables   your code goes here 
+3. all information_schema tables   your code goes here 
+3. all information_schema tables   your code goes here 
+3. all information_schema tables   your code goes here 
 
 
 ```r
@@ -290,21 +261,14 @@ kable(head(rs5,display_rows))
 ```
 
 
-\begin{tabular}{l|l}
-\hline
-showing & ?column?\\
-\hline
-5. information\_schema.tables & your code goes here\\
-\hline
-5. information\_schema.tables & your code goes here\\
-\hline
-5. information\_schema.tables & your code goes here\\
-\hline
-5. information\_schema.tables & your code goes here\\
-\hline
-5. information\_schema.tables & your code goes here\\
-\hline
-\end{tabular}
+
+showing                        ?column?            
+-----------------------------  --------------------
+5. information_schema.tables   your code goes here 
+5. information_schema.tables   your code goes here 
+5. information_schema.tables   your code goes here 
+5. information_schema.tables   your code goes here 
+5. information_schema.tables   your code goes here 
 
 ```r
 # Modify the SQL below with your interesting column names.
@@ -319,21 +283,14 @@ kable(head(rs6,display_rows))
 ```
 
 
-\begin{tabular}{l|l}
-\hline
-showing & ?column?\\
-\hline
-6. information\_schema.tables & your code goes here\\
-\hline
-6. information\_schema.tables & your code goes here\\
-\hline
-6. information\_schema.tables & your code goes here\\
-\hline
-6. information\_schema.tables & your code goes here\\
-\hline
-6. information\_schema.tables & your code goes here\\
-\hline
-\end{tabular}
+
+showing                        ?column?            
+-----------------------------  --------------------
+6. information_schema.tables   your code goes here 
+6. information_schema.tables   your code goes here 
+6. information_schema.tables   your code goes here 
+6. information_schema.tables   your code goes here 
+6. information_schema.tables   your code goes here 
 
 In the next exercise we combine both the table and column output from the previous exercises.  Review the following code block.  The last two lines of the WHERE clause are swithced.  Will the result set be the same or different?  Execute the code block and review the two datasets.
 
@@ -351,21 +308,14 @@ kable(head(rs7,display_rows))
 ```
 
 
-\begin{tabular}{l|l|l|l}
-\hline
-showing & db\_info & table\_name & table\_type\\
-\hline
-7. information\_schema.tables & dvdrental.information\_schema & collations & VIEW\\
-\hline
-7. information\_schema.tables & dvdrental.information\_schema & collation\_character\_set\_applicability & VIEW\\
-\hline
-7. information\_schema.tables & dvdrental.information\_schema & column\_domain\_usage & VIEW\\
-\hline
-7. information\_schema.tables & dvdrental.information\_schema & column\_privileges & VIEW\\
-\hline
-7. information\_schema.tables & dvdrental.information\_schema & column\_udt\_usage & VIEW\\
-\hline
-\end{tabular}
+
+showing                        db_info                        table_name                              table_type 
+-----------------------------  -----------------------------  --------------------------------------  -----------
+7. information_schema.tables   dvdrental.information_schema   collations                              VIEW       
+7. information_schema.tables   dvdrental.information_schema   collation_character_set_applicability   VIEW       
+7. information_schema.tables   dvdrental.information_schema   column_domain_usage                     VIEW       
+7. information_schema.tables   dvdrental.information_schema   column_privileges                       VIEW       
+7. information_schema.tables   dvdrental.information_schema   column_udt_usage                        VIEW       
 
 ```r
 rs8 <- DBI::dbGetQuery(con,"SELECT '8. information_schema.tables' showing
@@ -380,21 +330,14 @@ kable(head(rs8,display_rows))
 ```
 
 
-\begin{tabular}{l|l|l|l}
-\hline
-showing & db\_info & table\_name & table\_type\\
-\hline
-8. information\_schema.tables & dvdrental.information\_schema & column\_options & VIEW\\
-\hline
-8. information\_schema.tables & dvdrental.information\_schema & \_pg\_foreign\_table\_columns & VIEW\\
-\hline
-8. information\_schema.tables & dvdrental.information\_schema & view\_column\_usage & VIEW\\
-\hline
-8. information\_schema.tables & dvdrental.information\_schema & triggered\_update\_columns & VIEW\\
-\hline
-8. information\_schema.tables & dvdrental.information\_schema & tables & VIEW\\
-\hline
-\end{tabular}
+
+showing                        db_info                        table_name                  table_type 
+-----------------------------  -----------------------------  --------------------------  -----------
+8. information_schema.tables   dvdrental.information_schema   column_options              VIEW       
+8. information_schema.tables   dvdrental.information_schema   _pg_foreign_table_columns   VIEW       
+8. information_schema.tables   dvdrental.information_schema   view_column_usage           VIEW       
+8. information_schema.tables   dvdrental.information_schema   triggered_update_columns    VIEW       
+8. information_schema.tables   dvdrental.information_schema   tables                      VIEW       
 
 Operator/Element |	Associativity |	Description
 -----------------|----------------|-------------
@@ -449,69 +392,45 @@ kable(head(rs1))
 ```
 
 
-\begin{tabular}{l|l|l|l}
-\hline
-db & table\_schema & table\_name & table\_type\\
-\hline
-dvdrental & public & actor\_info & VIEW\\
-\hline
-dvdrental & public & customer\_list & VIEW\\
-\hline
-dvdrental & public & film\_list & VIEW\\
-\hline
-dvdrental & public & nicer\_but\_slower\_film\_list & VIEW\\
-\hline
-dvdrental & public & sales\_by\_film\_category & VIEW\\
-\hline
-dvdrental & public & staff & BASE TABLE\\
-\hline
-\end{tabular}
+
+db          table_schema   table_name                   table_type 
+----------  -------------  ---------------------------  -----------
+dvdrental   public         actor_info                   VIEW       
+dvdrental   public         customer_list                VIEW       
+dvdrental   public         film_list                    VIEW       
+dvdrental   public         nicer_but_slower_film_list   VIEW       
+dvdrental   public         sales_by_film_category       VIEW       
+dvdrental   public         staff                        BASE TABLE 
 
 ```r
 kable(head(rs2))
 ```
 
 
-\begin{tabular}{l|l|l|r}
-\hline
-db & table\_schema & table\_type & tbls\\
-\hline
-dvdrental & information\_schema & BASE TABLE & 7\\
-\hline
-dvdrental & information\_schema & VIEW & 60\\
-\hline
-dvdrental & pg\_catalog & BASE TABLE & 62\\
-\hline
-dvdrental & public & BASE TABLE & 15\\
-\hline
-dvdrental & public & VIEW & 7\\
-\hline
-dvdrental & pg\_catalog & VIEW & 59\\
-\hline
-\end{tabular}
+
+db          table_schema         table_type    tbls
+----------  -------------------  -----------  -----
+dvdrental   information_schema   BASE TABLE       7
+dvdrental   information_schema   VIEW            60
+dvdrental   pg_catalog           BASE TABLE      62
+dvdrental   public               BASE TABLE      15
+dvdrental   public               VIEW             7
+dvdrental   pg_catalog           VIEW            59
 
 ```r
 kable(head(rs3))
 ```
 
 
-\begin{tabular}{l|l|l}
-\hline
-db & table\_schema & tbls\\
-\hline
-dvdrental & information\_schema & BASE TABLE\\
-\hline
-dvdrental & information\_schema & VIEW\\
-\hline
-dvdrental & pg\_catalog & BASE TABLE\\
-\hline
-dvdrental & public & BASE TABLE\\
-\hline
-dvdrental & public & VIEW\\
-\hline
-dvdrental & pg\_catalog & VIEW\\
-\hline
-\end{tabular}
+
+db          table_schema         tbls       
+----------  -------------------  -----------
+dvdrental   information_schema   BASE TABLE 
+dvdrental   information_schema   VIEW       
+dvdrental   pg_catalog           BASE TABLE 
+dvdrental   public               BASE TABLE 
+dvdrental   public               VIEW       
+dvdrental   pg_catalog           VIEW       
 
 
 www.dataquest.io/blog/postgres-internals
@@ -596,46 +515,30 @@ kable(head(tbl_fk_df))
 ```
 
 
-\begin{tabular}{l|l|l|l|l|l|r|l|l|r|r|r|r|l|l|r|r|r}
-\hline
-table\_name & column\_name & constraint\_name & constraint\_type & ref\_table & ref\_table\_col & src\_tbl\_id & type.x & shape.x & width.x & height.x & fontsize.x & fk\_tbl\_id & type.y & shape.y & width.y & height.y & fontsize.y\\
-\hline
-address & city\_id & fk\_address\_city & FOREIGN KEY & city & city\_id & 2 & table & rectangle & 1 & 0.5 & 18 & 4 & table & rectangle & 1 & 0.5 & 18\\
-\hline
-city & country\_id & fk\_city & FOREIGN KEY & country & country\_id & 4 & table & rectangle & 1 & 0.5 & 18 & 5 & table & rectangle & 1 & 0.5 & 18\\
-\hline
-customer & address\_id & customer\_address\_id\_fkey & FOREIGN KEY & address & address\_id & 6 & table & rectangle & 1 & 0.5 & 18 & 2 & table & rectangle & 1 & 0.5 & 18\\
-\hline
-film & language\_id & film\_language\_id\_fkey & FOREIGN KEY & language & language\_id & 7 & table & rectangle & 1 & 0.5 & 18 & 11 & table & rectangle & 1 & 0.5 & 18\\
-\hline
-film\_actor & actor\_id & film\_actor\_actor\_id\_fkey & FOREIGN KEY & actor & actor\_id & 8 & table & rectangle & 1 & 0.5 & 18 & 1 & table & rectangle & 1 & 0.5 & 18\\
-\hline
-film\_actor & film\_id & film\_actor\_film\_id\_fkey & FOREIGN KEY & film & film\_id & 8 & table & rectangle & 1 & 0.5 & 18 & 7 & table & rectangle & 1 & 0.5 & 18\\
-\hline
-\end{tabular}
+
+table_name   column_name   constraint_name            constraint_type   ref_table   ref_table_col    src_tbl_id  type.x   shape.x      width.x   height.x   fontsize.x   fk_tbl_id  type.y   shape.y      width.y   height.y   fontsize.y
+-----------  ------------  -------------------------  ----------------  ----------  --------------  -----------  -------  ----------  --------  ---------  -----------  ----------  -------  ----------  --------  ---------  -----------
+address      city_id       fk_address_city            FOREIGN KEY       city        city_id                   2  table    rectangle          1        0.5           18           4  table    rectangle          1        0.5           18
+city         country_id    fk_city                    FOREIGN KEY       country     country_id                4  table    rectangle          1        0.5           18           5  table    rectangle          1        0.5           18
+customer     address_id    customer_address_id_fkey   FOREIGN KEY       address     address_id                6  table    rectangle          1        0.5           18           2  table    rectangle          1        0.5           18
+film         language_id   film_language_id_fkey      FOREIGN KEY       language    language_id               7  table    rectangle          1        0.5           18          11  table    rectangle          1        0.5           18
+film_actor   actor_id      film_actor_actor_id_fkey   FOREIGN KEY       actor       actor_id                  8  table    rectangle          1        0.5           18           1  table    rectangle          1        0.5           18
+film_actor   film_id       film_actor_film_id_fkey    FOREIGN KEY       film        film_id                   8  table    rectangle          1        0.5           18           7  table    rectangle          1        0.5           18
 
 ```r
 kable(head(tbl_pk_df))
 ```
 
 
-\begin{tabular}{l|l|l|l|l|l|r|l|l|r|r|r|r|l|l|r|r|r}
-\hline
-table\_name & column\_name & constraint\_name & constraint\_type & ref\_table & ref\_table\_col & src\_tbl\_id & type.x & shape.x & width.x & height.x & fontsize.x & fk\_tbl\_id & type.y & shape.y & width.y & height.y & fontsize.y\\
-\hline
-actor & actor\_id & actor\_pkey & PRIMARY KEY &  &  & 1 & table & rectangle & 1 & 0.5 & 18 & NA & NA & NA & NA & NA & NA\\
-\hline
-address & address\_id & address\_pkey & PRIMARY KEY &  &  & 2 & table & rectangle & 1 & 0.5 & 18 & NA & NA & NA & NA & NA & NA\\
-\hline
-category & category\_id & category\_pkey & PRIMARY KEY &  &  & 3 & table & rectangle & 1 & 0.5 & 18 & NA & NA & NA & NA & NA & NA\\
-\hline
-city & city\_id & city\_pkey & PRIMARY KEY &  &  & 4 & table & rectangle & 1 & 0.5 & 18 & NA & NA & NA & NA & NA & NA\\
-\hline
-country & country\_id & country\_pkey & PRIMARY KEY &  &  & 5 & table & rectangle & 1 & 0.5 & 18 & NA & NA & NA & NA & NA & NA\\
-\hline
-customer & customer\_id & customer\_pkey & PRIMARY KEY &  &  & 6 & table & rectangle & 1 & 0.5 & 18 & NA & NA & NA & NA & NA & NA\\
-\hline
-\end{tabular}
+
+table_name   column_name   constraint_name   constraint_type   ref_table   ref_table_col    src_tbl_id  type.x   shape.x      width.x   height.x   fontsize.x   fk_tbl_id  type.y   shape.y    width.y   height.y   fontsize.y
+-----------  ------------  ----------------  ----------------  ----------  --------------  -----------  -------  ----------  --------  ---------  -----------  ----------  -------  --------  --------  ---------  -----------
+actor        actor_id      actor_pkey        PRIMARY KEY                                             1  table    rectangle          1        0.5           18          NA  NA       NA              NA         NA           NA
+address      address_id    address_pkey      PRIMARY KEY                                             2  table    rectangle          1        0.5           18          NA  NA       NA              NA         NA           NA
+category     category_id   category_pkey     PRIMARY KEY                                             3  table    rectangle          1        0.5           18          NA  NA       NA              NA         NA           NA
+city         city_id       city_pkey         PRIMARY KEY                                             4  table    rectangle          1        0.5           18          NA  NA       NA              NA         NA           NA
+country      country_id    country_pkey      PRIMARY KEY                                             5  table    rectangle          1        0.5           18          NA  NA       NA              NA         NA           NA
+customer     customer_id   customer_pkey     PRIMARY KEY                                             6  table    rectangle          1        0.5           18          NA  NA       NA              NA         NA           NA
 
 
 ```r
@@ -665,7 +568,8 @@ graph <-
 render_graph(graph)
 ```
 
-![](22-drilling-into-db-environment_files/figure-latex/unnamed-chunk-13-1.pdf)<!-- --> 
+<!--html_preserve--><div id="htmlwidget-c8dacd4c7eeaee6adc13" style="width:672px;height:480px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-c8dacd4c7eeaee6adc13">{"x":{"diagram":"digraph {\n\ngraph [layout = \"neato\",\n       outputorder = \"edgesfirst\",\n       bgcolor = \"white\"]\n\nnode [fontname = \"Helvetica\",\n      fontsize = \"10\",\n      shape = \"circle\",\n      fixedsize = \"true\",\n      width = \"0.5\",\n      style = \"filled\",\n      fillcolor = \"aliceblue\",\n      color = \"gray70\",\n      fontcolor = \"gray50\"]\n\nedge [fontname = \"Helvetica\",\n     fontsize = \"8\",\n     len = \"1.5\",\n     color = \"gray80\",\n     arrowsize = \"0.5\"]\n\n  \"1\" [label = \"actor\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"2\" [label = \"address\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"3\" [label = \"category\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"4\" [label = \"city\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"5\" [label = \"country\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"6\" [label = \"customer\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"7\" [label = \"film\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"8\" [label = \"film_actor\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"9\" [label = \"film_category\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"10\" [label = \"inventory\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"11\" [label = \"language\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"12\" [label = \"payment\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"13\" [label = \"rental\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"14\" [label = \"staff\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"15\" [label = \"store\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n\"2\"->\"4\" [label = \"fk_address_city\", fontsize = \"15\"] \n\"4\"->\"5\" [label = \"fk_city\", fontsize = \"15\"] \n\"6\"->\"2\" [label = \"customer_address_id_fkey\", fontsize = \"15\"] \n\"7\"->\"11\" [label = \"film_language_id_fkey\", fontsize = \"15\"] \n\"8\"->\"1\" [label = \"film_actor_actor_id_fkey\", fontsize = \"15\"] \n\"8\"->\"7\" [label = \"film_actor_film_id_fkey\", fontsize = \"15\"] \n\"9\"->\"3\" [label = \"film_category_category_id_fkey\", fontsize = \"15\"] \n\"9\"->\"7\" [label = \"film_category_film_id_fkey\", fontsize = \"15\"] \n\"10\"->\"7\" [label = \"inventory_film_id_fkey\", fontsize = \"15\"] \n\"12\"->\"14\" [label = \"payment_staff_id_fkey\", fontsize = \"15\"] \n\"12\"->\"6\" [label = \"payment_customer_id_fkey\", fontsize = \"15\"] \n\"12\"->\"13\" [label = \"payment_rental_id_fkey\", fontsize = \"15\"] \n\"13\"->\"6\" [label = \"rental_customer_id_fkey\", fontsize = \"15\"] \n\"13\"->\"14\" [label = \"rental_staff_id_key\", fontsize = \"15\"] \n\"13\"->\"10\" [label = \"rental_inventory_id_fkey\", fontsize = \"15\"] \n\"14\"->\"2\" [label = \"staff_address_id_fkey\", fontsize = \"15\"] \n\"15\"->\"2\" [label = \"store_address_id_fkey\", fontsize = \"15\"] \n\"15\"->\"14\" [label = \"store_manager_staff_id_fkey\", fontsize = \"15\"] \n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 
 ```r

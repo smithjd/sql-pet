@@ -308,24 +308,8 @@ There is no substitute for looking at your data and R provides several ways to j
 sp_print_df(head(rental_tibble))
 ```
 
-
-\begin{tabular}{r|l|r|r|l|r|l}
-\hline
-rental\_id & rental\_date & inventory\_id & customer\_id & return\_date & staff\_id & last\_update\\
-\hline
-2 & 2005-05-24 22:54:33 & 1525 & 459 & 2005-05-28 19:40:33 & 1 & 2006-02-16 02:30:53\\
-\hline
-3 & 2005-05-24 23:03:39 & 1711 & 408 & 2005-06-01 22:12:39 & 1 & 2006-02-16 02:30:53\\
-\hline
-4 & 2005-05-24 23:04:41 & 2452 & 333 & 2005-06-03 01:43:41 & 2 & 2006-02-16 02:30:53\\
-\hline
-5 & 2005-05-24 23:05:21 & 2079 & 222 & 2005-06-02 04:33:21 & 1 & 2006-02-16 02:30:53\\
-\hline
-6 & 2005-05-24 23:08:07 & 2792 & 549 & 2005-05-27 01:32:07 & 1 & 2006-02-16 02:30:53\\
-\hline
-7 & 2005-05-24 23:11:53 & 3995 & 269 & 2005-05-29 20:34:53 & 2 & 2006-02-16 02:30:53\\
-\hline
-\end{tabular}
+<!--html_preserve--><div id="htmlwidget-2e2a04cc737b9a7d5848" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2e2a04cc737b9a7d5848">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[2,3,4,5,6,7],["2005-05-25T05:54:33Z","2005-05-25T06:03:39Z","2005-05-25T06:04:41Z","2005-05-25T06:05:21Z","2005-05-25T06:08:07Z","2005-05-25T06:11:53Z"],[1525,1711,2452,2079,2792,3995],[459,408,333,222,549,269],["2005-05-29T02:40:33Z","2005-06-02T05:12:39Z","2005-06-03T08:43:41Z","2005-06-02T11:33:21Z","2005-05-27T08:32:07Z","2005-05-30T03:34:53Z"],[1,1,2,1,1,2],["2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>rental_id<\/th>\n      <th>rental_date<\/th>\n      <th>inventory_id<\/th>\n      <th>customer_id<\/th>\n      <th>return_date<\/th>\n      <th>staff_id<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 ### The `summary` function in base
 
 The basic statistics that the base package `summary` provides can serve a unique diagnostic purpose in this context.  For example, the following output shows that `rental_id` is a sequential number from 1 to 16,049 with no gaps.  The same is true of `inventory_id`.  The number of NA's is a good first guess as to the number of dvd's rented out or lost on 2005-09-02 02:35:22.
@@ -410,7 +394,7 @@ skim(rental_tibble)
 ##  n obs: 16044 
 ##  n variables: 7 
 ## 
-## -- Variable type:integer ----------------------------------------------------------------------------
+## ── Variable type:integer ────────────────────────────────────────────────────────────
 ##      variable missing complete     n    mean      sd p0     p25    p50
 ##   customer_id       0    16044 16044  297.14  172.45  1  148     296  
 ##  inventory_id       0    16044 16044 2291.84 1322.21  1 1154    2291  
@@ -422,7 +406,7 @@ skim(rental_tibble)
 ##  12037.25 16049 ▇▇▇▇▇▇▇▇
 ##      2        2 ▇▁▁▁▁▁▁▇
 ## 
-## -- Variable type:POSIXct ----------------------------------------------------------------------------
+## ── Variable type:POSIXct ────────────────────────────────────────────────────────────
 ##     variable missing complete     n        min        max     median
 ##  last_update       0    16044 16044 2006-02-15 2006-02-23 2006-02-16
 ##  rental_date       0    16044 16044 2005-05-24 2006-02-14 2005-07-28
@@ -441,13 +425,13 @@ skim_to_wide(rental_tibble)
 ## # A tibble: 7 x 17
 ##   type  variable missing complete n     mean  sd    p0    p25   p50   p75  
 ##   <chr> <chr>    <chr>   <chr>    <chr> <chr> <chr> <chr> <chr> <chr> <chr>
-## 1 inte~ custome~ 0       16044    16044 " 29~ " 17~ 1     " 14~ " 29~ "  4~
-## 2 inte~ invento~ 0       16044    16044 2291~ 1322~ 1     "115~ "229~ " 34~
-## 3 inte~ rental_~ 0       16044    16044 8025~ 4632~ 1     4013~ 8025~ 1203~
-## 4 inte~ staff_id 0       16044    16044 "   ~ "   ~ 1     "   ~ "   ~ "   ~
-## 5 POSI~ last_up~ 0       16044    16044 <NA>  <NA>  <NA>  <NA>  <NA>  <NA> 
-## 6 POSI~ rental_~ 0       16044    16044 <NA>  <NA>  <NA>  <NA>  <NA>  <NA> 
-## 7 POSI~ return_~ 183     15861    16044 <NA>  <NA>  <NA>  <NA>  <NA>  <NA> 
+## 1 inte… custome… 0       16044    16044 " 29… " 17… 1     " 14… " 29… "  4…
+## 2 inte… invento… 0       16044    16044 2291… 1322… 1     "115… "229… " 34…
+## 3 inte… rental_… 0       16044    16044 8025… 4632… 1     4013… 8025… 1203…
+## 4 inte… staff_id 0       16044    16044 "   … "   … 1     "   … "   … "   …
+## 5 POSI… last_up… 0       16044    16044 <NA>  <NA>  <NA>  <NA>  <NA>  <NA> 
+## 6 POSI… rental_… 0       16044    16044 <NA>  <NA>  <NA>  <NA>  <NA>  <NA> 
+## 7 POSI… return_… 183     15861    16044 <NA>  <NA>  <NA>  <NA>  <NA>  <NA> 
 ## # ... with 6 more variables: p100 <chr>, hist <chr>, min <chr>, max <chr>,
 ## #   median <chr>, n_unique <chr>
 ```

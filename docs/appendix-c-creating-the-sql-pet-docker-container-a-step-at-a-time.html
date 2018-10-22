@@ -25,7 +25,7 @@
 <meta name="author" content="Dipti Muni, Ian Frantz, John David Smith, Mary Anne Thygesen, M. Edward (Ed) Borasky, Scott Case, and Sophie Yang">
 
 
-<meta name="date" content="2018-10-19">
+<meta name="date" content="2018-10-21">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -33,7 +33,7 @@
   
   
 <link rel="prev" href="appendix-c-mapping-your-local-environment-92.html">
-
+<link rel="next" href="references.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -63,7 +63,7 @@
 <style type="text/css">
 a.sourceLine { display: inline-block; line-height: 1.25; }
 a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; position: absolute; }
+a.sourceLine:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -76,13 +76,11 @@ code.sourceCode { white-space: pre-wrap; }
 a.sourceLine { text-indent: -1em; padding-left: 1em; }
 }
 pre.numberSource a.sourceLine
-  { position: relative; }
-pre.numberSource a.sourceLine:empty
-  { position: absolute; }
+  { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
   { content: attr(data-line-number);
-    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all;
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -327,7 +325,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="16.4" data-path="appendix-appendix-a-other-resources-89.html"><a href="appendix-appendix-a-other-resources-89.html#documentation-for-docker-and-postgres"><i class="fa fa-check"></i><b>16.4</b> Documentation for Docker and Postgres</a></li>
 <li class="chapter" data-level="16.5" data-path="appendix-appendix-a-other-resources-89.html"><a href="appendix-appendix-a-other-resources-89.html#more-resources"><i class="fa fa-check"></i><b>16.5</b> More Resources</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="chapter" data-level="17" data-path="appendix-c-mapping-your-local-environment-92.html"><a href="appendix-c-mapping-your-local-environment-92.html"><i class="fa fa-check"></i><b>17</b> APPENDIX C - Mapping your local environment (92)</a><ul>
 <li class="chapter" data-level="17.1" data-path="appendix-c-mapping-your-local-environment-92.html"><a href="appendix-c-mapping-your-local-environment-92.html#environment-tools-used-in-this-chapter"><i class="fa fa-check"></i><b>17.1</b> Environment Tools Used in this Chapter</a></li>
 <li class="chapter" data-level="17.2" data-path="appendix-c-mapping-your-local-environment-92.html"><a href="appendix-c-mapping-your-local-environment-92.html#communicating-with-docker-applications-1"><i class="fa fa-check"></i><b>17.2</b> Communicating with Docker Applications</a></li>
@@ -340,6 +337,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="18.5" data-path="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html"><a href="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html#connect-to-the-database-with-r"><i class="fa fa-check"></i><b>18.5</b> Connect to the database with R</a></li>
 <li class="chapter" data-level="18.6" data-path="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html"><a href="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html#cleaning-up-1"><i class="fa fa-check"></i><b>18.6</b> Cleaning up</a></li>
 </ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -380,12 +378,12 @@ PostgreSQL database works. If you are satisfied with the method shown in
 Chapter 5, skip this and only come back if you’re interested in picking
 apart the steps.</p>
 <div class="sourceCode" id="cb279"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb279-1" data-line-number="1"><span class="kw">library</span>(tidyverse)</a></code></pre></div>
-<pre><code>## ── Attaching packages ───────────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
+<pre><code>## ── Attaching packages ──────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
 <pre><code>## ✔ ggplot2 3.0.0     ✔ purrr   0.2.5
 ## ✔ tibble  1.4.2     ✔ dplyr   0.7.7
 ## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
 ## ✔ readr   1.1.1     ✔ forcats 0.3.0</code></pre>
-<pre><code>## ── Conflicts ──────────────────────────────────────────────────────── tidyverse_conflicts() ──
+<pre><code>## ── Conflicts ─────────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <div class="sourceCode" id="cb283"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb283-1" data-line-number="1"><span class="kw">library</span>(DBI)</a>
@@ -406,7 +404,7 @@ apart the steps.</p>
 ##     ident, sql</code></pre>
 <div class="sourceCode" id="cb291"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb291-1" data-line-number="1"><span class="kw">library</span>(sqlpetr)</a>
 <a class="sourceLine" id="cb291-2" data-line-number="2"><span class="kw">library</span>(here)</a></code></pre></div>
-<pre><code>## here() starts at /Users/jds/Documents/Library/R/r-system/sql-pet</code></pre>
+<pre><code>## here() starts at /home/znmeb/Projects/sql-pet</code></pre>
 </div>
 <div id="download-the-dvdrental-backup-file" class="section level2">
 <h2><span class="header-section-number">18.2</span> Download the <code>dvdrental</code> backup file</h2>
@@ -424,8 +422,12 @@ apart the steps.</p>
 <div class="sourceCode" id="cb296"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb296-1" data-line-number="1"><span class="kw">dir</span>(<span class="dt">path =</span> <span class="kw">here</span>(), <span class="dt">pattern =</span> <span class="st">&quot;^dvdrental(.tar|.zip)&quot;</span>)</a></code></pre></div>
 <pre><code>## [1] &quot;dvdrental.tar&quot; &quot;dvdrental.zip&quot;</code></pre>
 <div class="sourceCode" id="cb298"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb298-1" data-line-number="1"><span class="kw">sp_show_all_docker_containers</span>()</a></code></pre></div>
-<pre><code>## [1] &quot;CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                     PORTS               NAMES&quot;    
-## [2] &quot;e95e8001cf4b        postgres-dvdrental   \&quot;docker-entrypoint.s…\&quot;   56 seconds ago      Exited (0) 5 seconds ago                       sql-pet&quot;</code></pre>
+<pre><code>## [1] &quot;CONTAINER ID        IMAGE                COMMAND                  CREATED              STATUS                     PORTS               NAMES&quot;                  
+## [2] &quot;55441bbc223d        postgres-dvdrental   \&quot;docker-entrypoint.s…\&quot;   About a minute ago   Exited (0) 5 seconds ago                       sql-pet&quot;              
+## [3] &quot;424d4c3dfc89        rstats               \&quot;/init\&quot;                  4 days ago           Exited (0) 4 days ago                          containers_rstats_1&quot;  
+## [4] &quot;4c3eb1dc5043        postgis              \&quot;docker-entrypoint.s…\&quot;   4 days ago           Exited (0) 4 days ago                          containers_postgis_1&quot; 
+## [5] &quot;8da9d3a59732        dpage/pgadmin4       \&quot;/entrypoint.sh\&quot;         4 days ago           Exited (0) 4 days ago                          containers_pgadmin4_1&quot;
+## [6] &quot;7030e81489b8        2feef91d6764         \&quot;/bin/sh -c &#39;su - rs…\&quot;   4 days ago           Exited (1) 4 days ago                          laughing_johnson&quot;</code></pre>
 <p>Remove the <code>sql-pet</code> container if it exists (e.g., from a prior run)</p>
 <div class="sourceCode" id="cb300"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb300-1" data-line-number="1"><span class="cf">if</span> (<span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, <span class="st">&quot;ps -a&quot;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb300-2" data-line-number="2"><span class="st">    </span><span class="kw">grepl</span>(<span class="dt">x =</span> ., <span class="dt">pattern =</span> <span class="st">&#39;sql-pet&#39;</span>) <span class="op">%&gt;%</span></a>
@@ -441,7 +443,7 @@ Docker directories that need to be shared. Expose the standard
 PostgreSQL port 5432.</p>
 <div class="sourceCode" id="cb302"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb302-1" data-line-number="1">wd &lt;-<span class="st"> </span><span class="kw">here</span>()</a>
 <a class="sourceLine" id="cb302-2" data-line-number="2">wd</a></code></pre></div>
-<pre><code>## [1] &quot;/Users/jds/Documents/Library/R/r-system/sql-pet&quot;</code></pre>
+<pre><code>## [1] &quot;/home/znmeb/Projects/sql-pet&quot;</code></pre>
 <div class="sourceCode" id="cb304"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb304-1" data-line-number="1">docker_cmd &lt;-<span class="st"> </span><span class="kw">glue</span>(</a>
 <a class="sourceLine" id="cb304-2" data-line-number="2">  <span class="st">&quot;run &quot;</span>,      <span class="co"># Run is the Docker command.  Everything that follows are `run` parameters.</span></a>
 <a class="sourceLine" id="cb304-3" data-line-number="3">  <span class="st">&quot;--detach &quot;</span>, <span class="co"># (or `-d`) tells Docker to disconnect from the terminal / program issuing the command</span></a>
@@ -453,9 +455,9 @@ PostgreSQL port 5432.</p>
 <a class="sourceLine" id="cb304-9" data-line-number="9">)</a>
 <a class="sourceLine" id="cb304-10" data-line-number="10"></a>
 <a class="sourceLine" id="cb304-11" data-line-number="11">docker_cmd</a></code></pre></div>
-<pre><code>## run --detach  --name sql-pet --publish 5432:5432 --mount type=bind,source=&quot;/Users/jds/Documents/Library/R/r-system/sql-pet&quot;,target=/petdir postgres:10</code></pre>
+<pre><code>## run --detach  --name sql-pet --publish 5432:5432 --mount type=bind,source=&quot;/home/znmeb/Projects/sql-pet&quot;,target=/petdir postgres:10</code></pre>
 <div class="sourceCode" id="cb306"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb306-1" data-line-number="1"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, docker_cmd, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
-<pre><code>## [1] &quot;c70603d9b0fc8a898b1c4822d76f9eff97b139ec12f693d2a8cf0c82ad39bbcc&quot;</code></pre>
+<pre><code>## [1] &quot;8b06559f66b5734eca00cbe5f1488e1f81f70e5c93d14cf64066f72d10f51ed9&quot;</code></pre>
 <p>Peek inside the docker container and list the files in the <code>petdir</code>
 directory. Notice that <code>dvdrental.tar</code> is in both.</p>
 <div class="sourceCode" id="cb308"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb308-1" data-line-number="1"><span class="co"># local file system:</span></a>
@@ -473,8 +475,12 @@ directory. Notice that <code>dvdrental.tar</code> is in both.</p>
 command. In this case we tell Docker to execute the <code>psql</code> program
 inside the <code>sql-pet</code> container and pass it some commands as follows.</p>
 <div class="sourceCode" id="cb313"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb313-1" data-line-number="1"><span class="kw">sp_show_all_docker_containers</span>()</a></code></pre></div>
-<pre><code>## [1] &quot;CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES&quot;    
-## [2] &quot;c70603d9b0fc        postgres:10         \&quot;docker-entrypoint.s…\&quot;   4 seconds ago       Up 3 seconds        0.0.0.0:5432-&gt;5432/tcp   sql-pet&quot;</code></pre>
+<pre><code>## [1] &quot;CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES&quot;                  
+## [2] &quot;8b06559f66b5        postgres:10         \&quot;docker-entrypoint.s…\&quot;   5 seconds ago       Up 3 seconds            0.0.0.0:5432-&gt;5432/tcp   sql-pet&quot;              
+## [3] &quot;424d4c3dfc89        rstats              \&quot;/init\&quot;                  4 days ago          Exited (0) 4 days ago                            containers_rstats_1&quot;  
+## [4] &quot;4c3eb1dc5043        postgis             \&quot;docker-entrypoint.s…\&quot;   4 days ago          Exited (0) 4 days ago                            containers_postgis_1&quot; 
+## [5] &quot;8da9d3a59732        dpage/pgadmin4      \&quot;/entrypoint.sh\&quot;         4 days ago          Exited (0) 4 days ago                            containers_pgadmin4_1&quot;
+## [6] &quot;7030e81489b8        2feef91d6764        \&quot;/bin/sh -c &#39;su - rs…\&quot;   4 days ago          Exited (1) 4 days ago                            laughing_johnson&quot;</code></pre>
 <p>inside Docker, execute the postgress SQL command-line program to create the dvdrental database:</p>
 <div class="sourceCode" id="cb315"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb315-1" data-line-number="1"><span class="kw">system2</span>(<span class="st">&#39;docker&#39;</span>, <span class="st">&#39;exec sql-pet psql -U postgres -c &quot;CREATE DATABASE dvdrental;&quot;&#39;</span>,</a>
 <a class="sourceLine" id="cb315-2" data-line-number="2">        <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
@@ -546,8 +552,12 @@ started again.</p>
 <pre><code>## [1] &quot;sql-pet&quot;</code></pre>
 <p>show that the container still exists even though it’s not running</p>
 <div class="sourceCode" id="cb331"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb331-1" data-line-number="1"><span class="kw">sp_show_all_docker_containers</span>()</a></code></pre></div>
-<pre><code>## [1] &quot;CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES&quot;    
-## [2] &quot;c70603d9b0fc        postgres:10         \&quot;docker-entrypoint.s…\&quot;   15 seconds ago      Exited (0) Less than a second ago                       sql-pet&quot;</code></pre>
+<pre><code>## [1] &quot;CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES&quot;                  
+## [2] &quot;8b06559f66b5        postgres:10         \&quot;docker-entrypoint.s…\&quot;   18 seconds ago      Exited (0) Less than a second ago                       sql-pet&quot;              
+## [3] &quot;424d4c3dfc89        rstats              \&quot;/init\&quot;                  4 days ago          Exited (0) 4 days ago                                   containers_rstats_1&quot;  
+## [4] &quot;4c3eb1dc5043        postgis             \&quot;docker-entrypoint.s…\&quot;   4 days ago          Exited (0) 4 days ago                                   containers_postgis_1&quot; 
+## [5] &quot;8da9d3a59732        dpage/pgadmin4      \&quot;/entrypoint.sh\&quot;         4 days ago          Exited (0) 4 days ago                                   containers_pgadmin4_1&quot;
+## [6] &quot;7030e81489b8        2feef91d6764        \&quot;/bin/sh -c &#39;su - rs…\&quot;   4 days ago          Exited (1) 4 days ago                                   laughing_johnson&quot;</code></pre>
 <p>We are leaving the <code>sql-pet</code> container intact so it can be used in running the
 rest of the examples and book.</p>
 <p>Clean up by removing the local files used in creating the database:</p>
@@ -556,6 +566,33 @@ rest of the examples and book.</p>
 <div class="sourceCode" id="cb335"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb335-1" data-line-number="1"><span class="kw">file.remove</span>(<span class="kw">here</span>(<span class="st">&quot;dvdrental.tar&quot;</span>))</a></code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
 
+<p>#Chapter 19 APPENDIX D - Quick Guide to SQL</p>
+<p>SQL stands for Structured Query Language. It is a database language where we can perform certain operations on the existing database and we can use it create a new database. There are four main categories where the SQL commands fall into: DDL, DML, DCL, and TCL.</p>
+<p>##Data Definition Langauge (DDL)</p>
+<p>It consists of the SQL commands that can be used to define database schema. The DDL commands include:</p>
+<pre><code>1. CREATE 
+2. ALTER
+3. TRUNCATE
+4. COMMENT
+5. RENAME
+6. DROP</code></pre>
+<p>##Data Manipulation Langauge (DML)</p>
+<p>These four SQL commands deals with the manipulation of data in the database.</p>
+<pre><code>1. SELECT
+2. INSERT
+3. UPDATE
+4. DELETE</code></pre>
+<p>##Data Control Language (DCL)</p>
+<p>The DCL commands deals with user’s rights, permissions and other controls in database management system.</p>
+<pre><code>1. GRANT
+2. REVOKE</code></pre>
+<p>##Transaction Control Language (TCL)</p>
+<p>These commands deals with the control over transaction within the database. Transaction combines a set of tasks into single execution.</p>
+<pre><code>1. SET TRANSACTION
+2. SAVEPOINT
+3. ROLLBACK
+4. COMMIT</code></pre>
+
 </div>
 </div>
             </section>
@@ -563,8 +600,8 @@ rest of the examples and book.</p>
           </div>
         </div>
       </div>
-<a href="appendix-c-mapping-your-local-environment-92.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="appendix-c-mapping-your-local-environment-92.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
