@@ -1,114 +1,124 @@
-# Docker, Postgres, and R
+# Docker, Postgres, and R (04)
+
+At the end of this chapter, you will be able to 
+
+  * Run, clean-up and close Docker containers.
+  * See how to keep credentials secret in code that's visible to the world.
+  * Interact with Postgres using Rstudio inside Docker container.
+  # Read and write to postgreSQL from R.
+
 
 We always load the tidyverse and some other packages, but don't show it unless we are using packages other than `tidyverse`, `DBI`, `RPostgres`, and `glue`.
 
-## Verify that Docker running
+
+Devtools install of sqlpetr if not already installed
+
+
+
+## Verify that Docker is running
 
 Docker commands can be run from a terminal (e.g., the Rstudio Terminal pane) or with a `system()` command.  In this tutorial, we use `system2()` so that all the output that is created externally is shown.  Note that `system2` calls are divided into several parts:
 
 1. The program that you are sending a command to.
-2. The parameters or commands that are being sent
-3. `stdout = TRUE, stderr = TRUE` are two parameters that are standard in this book, so that the comand's full output is shown in the book.
+2. The parameters or commands that are being sent.
+3. `stdout = TRUE, stderr = TRUE` are two parameters that are standard in this book, so that the command's full output is shown in the book.
 
-The `docker version` command returns the details about the docker daemon that is running on your computer.
+Check that docker is up and running:
 
-```r
-system2("docker", "version", stdout = TRUE, stderr = TRUE)
-```
-
-```
-##  [1] "Client:"                                        
-##  [2] " Version:           18.06.1-ce"                 
-##  [3] " API version:       1.38"                       
-##  [4] " Go version:        go1.10.3"                   
-##  [5] " Git commit:        e68fc7a"                    
-##  [6] " Built:             Tue Aug 21 17:21:31 2018"   
-##  [7] " OS/Arch:           darwin/amd64"               
-##  [8] " Experimental:      false"                      
-##  [9] ""                                               
-## [10] "Server:"                                        
-## [11] " Engine:"                                       
-## [12] "  Version:          18.06.1-ce"                 
-## [13] "  API version:      1.38 (minimum version 1.12)"
-## [14] "  Go version:       go1.10.3"                   
-## [15] "  Git commit:       e68fc7a"                    
-## [16] "  Built:            Tue Aug 21 17:29:02 2018"   
-## [17] "  OS/Arch:          linux/amd64"                
-## [18] "  Experimental:     true"
-```
-
-The convention we use in this book is to assemble a command with `paste0` so that the parts of the command can be specified separately.  This chunk just constructs the command, but does not execute.  If you have problems, you can copy the command and execute in your terminal session.
-
-chunk the following... 
 
 ```r
-docker_cmd <- glue(
-  "run ",      # Run is the Docker command.  Everything that follows are `run` parameters.
-  "--detach ", # (or `-d`) tells Docker to disconnect from the terminal / program issuing the command
-  "--name cattle ",       # tells Docker to give the container a name: `cattle`
-  "--publish 5432:5432 ", # tells Docker to expose the Postgres port 5432 to the local network with 5432
-  " postgres:10"  # tells Docker the image that is to be run (after downloading if necessary)
-)
-docker_cmd
+sp_check_that_docker_is_up()
 ```
 
 ```
-## run --detach --name cattle --publish 5432:5432  postgres:10
+## [1] "Docker is up but running no containers"
 ```
+
+## Clean up if appropriate
+Remove the `cattle` and `sql-pet` containers if they exists (e.g., from a prior experiments).  
 
 ```r
-# Naming containers `cattle` for throw-aways and `pet` for ones we treasure and keep around.  :-)
-```
-
-Remove `cattle` if it exists.
-
-Submit the command constructed above:
-
-```r
-system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
+sp_docker_remove_container("cattle")
 ```
 
 ```
-## Warning in system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE):
-## running command ''docker' run --detach --name cattle --publish 5432:5432
-## postgres:10 2>&1' had status 125
+## Warning in system2("docker", docker_command, stdout = TRUE, stderr = TRUE):
+## running command ''docker' rm -f cattle 2>&1' had status 1
 ```
 
 ```
-## [1] "249b0658664a0d878ccfe6332878ee7f1e2ff8143706394db679793badd43e74"                                                                                                                                                                   
-## [2] "docker: Error response from daemon: driver failed programming external connectivity on endpoint cattle (a4f8447968a1778c9bb5a5d1a075f0842b6395b43e3d0d669a067c13f6227b5c): Bind for 0.0.0.0:5432 failed: port is already allocated."
+## [1] "Error: No such container: cattle"
 ## attr(,"status")
-## [1] 125
+## [1] 1
 ```
-Possible errors here: if docker isn't ready, you'll see errors.
-
-Docker returns a long string of numbers.  If you are running this command for the first time, Docker is downloading the Postgres image and it takes a bit of time.
-
-The following comand shows that `postgres:10` is still running:
 
 ```r
-system2("docker", "ps", stdout = TRUE, stderr = TRUE)
+sp_docker_remove_container("sql-pet")
 ```
 
 ```
-## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES"    
-## [2] "fdbefcf484f1        postgres:10         \"docker-entrypoint.s…\"   37 seconds ago      Up 11 seconds       0.0.0.0:5432->5432/tcp   sql-pet"
+## [1] "sql-pet"
+```
+
+The convention we use in this book is to put docker commands in the `sqlpetr` package so that you can ignore them if you want.  However, the functions are set up so that you can easily see how to do things with Docker and modify if you want.
+
+We name containers `cattle` for "throw-aways" and `pet` for ones we treasure and keep around.  :-)
+
+```r
+sp_make_simple_pg("cattle")
+```
+
+```
+## [1] 0
+```
+
+Docker returns a long string of numbers.  If you are running this command for the first time, Docker downloads the PostgreSQL image, which takes a bit of time.
+
+The following command shows that a container named `cattle` is running `postgres:10`.  `postgres` is waiting for a connection:
+
+```r
+sp_check_that_docker_is_up()
+```
+
+```
+## [1] "Docker is up, running these containers:"                                                                                                       
+## [2] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES"   
+## [3] "c9033dd56c41        postgres:10         \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
 ```
 ## Connect, read and write to Postgres from R
 
-Create a connection to Postgres after waiting 3 seconds so that Docker has time to do its thing.
+### Pause for some security considerations
+
+We use the following `sp_get_postgres_connection` function, which will repeatedly try to connect to PostgreSQL.  PostgreSQL can take different amounts of time to come up and be ready to accept connections from R, depending on various factors that will be discussed later on.
+
+<table border = 2)
+<tr><td>
+When we call </i>sp_get_postgres_connection</i> we'll use environment variables that R obtains from reading a file named <i>.Renviron</i>.  That file is not uploaded to Github and R looks for it in your default directory.  To see whether you have already created that file, execute this in your R session:</br></br>
+<ul>
+<i><b>dir(path = "~", pattern = ".Renviron", all.files = TRUE)</b></i>
+</ul>
+That file should contain lines such as:</br></br>
+<ul>
+  <i><b>DEFAULT_POSTGRES_PASSWORD=postgres</br>
+  DEFAULT_POSTGRES_USER_NAME=postgres</b></i></br>
+</ul>
+Those are the PostreSQL default values for the username and password, so not secret.  But this approach demonstrates how they would be kept secret and not uploaded to Github or some other public location when you need to keep credentials secret.
+</td></tr>
+</table>
+
+This is how the `sp_get_postgres_connection` function is used:
 
 ```r
-Sys.sleep(3)
-
-con <- DBI::dbConnect(RPostgres::Postgres(),
-                      host = "localhost",
-                      port = "5432",
-                      user = "postgres",
-                      password = "postgres")
+con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
+                         password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
+                         dbname = "postgres",
+                         seconds_to_test = 10)
 ```
+If you don't have an `.Rprofile` file that defines those passwords, you can just insert a string for the parameter, like:
 
-Show that you can connect but that Postgres database doesn't contain any tables:
+  `password = 'whatever',`
+
+Make sure that you can connect to the PostgreSQL database that you started earlier. If you have been executing the code from this tutorial, the database will not contain any tables yet:
 
 
 ```r
@@ -119,13 +129,29 @@ dbListTables(con)
 ## character(0)
 ```
 
-Write `mtcars` to Postgres
+### Alternative: put the database password in an environment file
+
+The goal is to put the password in an untracked file that will **not** be committed in your source code repository. Your code can reference the name of the variable, but the value of that variable will not appear in open text in your source code.
+
+We have chosen to call the file `dev_environment.csv` in the current working directory where you are executing this script. That file name appears in the `.gitignore` file, so that you will not accidentally commit it. We are going to create that file now.
+
+You will be prompted for the database password. By default, a PostgreSQL database defines a database user named `postgres`, whose password is `postgres`. If you have changed the password or created a new user with a different password, then enter those new values when prompted. Otherwise, enter `postgres` and `postgres` at the two prompts.
+
+In an interactive environment, you could execute a snippet of code that prompts the user for their username and password with the following snippet (which isn't run in the book):
+
+Your password is still in plain text in the file, `dev_environment.csv`, so you should protect that file from exposure. However, you do not need to worry about committing that file accidentally to your git repository, because the name of the file appears in the `.gitignore` file.
+
+For security, we use values from the `environment_variables` data.frame, rather than keeping the `username` and `password` in plain text in a source file.
+
+### Interact with Postgres
+
+Write `mtcars` to PostgreSQL
 
 ```r
-dbWriteTable(con, "mtcars", mtcars)
+dbWriteTable(con, "mtcars", mtcars, overwrite = TRUE)
 ```
 
-List the tables in the Postgres database to show that `mtcars` is now there:
+List the tables in the PostgreSQL database to show that `mtcars` is now there:
 
 
 ```r
@@ -182,7 +208,7 @@ Afterwards, always disconnect from the DBMS, stop the docker container and (opti
 dbDisconnect(con)
 
 # tell Docker to stop the container:
-system2("docker", "stop cattle", stdout = TRUE, stderr = TRUE)
+sp_docker_stop("cattle")
 ```
 
 ```
@@ -190,8 +216,8 @@ system2("docker", "stop cattle", stdout = TRUE, stderr = TRUE)
 ```
 
 ```r
-# tell Docker to remove the container from it's library of active containers:
-system2("docker", "rm cattle", stdout = TRUE, stderr = TRUE)
+# Tell Docker to remove the container from it's library of active containers:
+sp_docker_remove_container("cattle")
 ```
 
 ```

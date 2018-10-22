@@ -1,4 +1,10 @@
-# Docker Hosting for Windows
+# Docker Hosting for Windows (02)
+
+At the end of this chapter, you will be able to
+
+  * Setup your environment for Windows.
+  * Use Git and GitHub effectively on Windows.
+
 
 Skip these instructions if your computer has either OSX or a Unix variant.
 
@@ -17,7 +23,7 @@ Install Docker for Windows *stable*. The instructions are here: <https://docs.do
 ## Docker for Windows settings
 
 ### Shared drives
-If you're going to mount host files into container filesystems (as we do in the following chapters), you need to set up shared drives. Open the Docker settings dialog and select `Shared Drives`. Check the drives you want to share. In this screenshot, the `D:` drive is my 1 terabyte hard drive.
+If you're going to mount host files into container file systems (as we do in the following chapters), you need to set up shared drives. Open the Docker settings dialog and select `Shared Drives`. Check the drives you want to share. In this screenshot, the `D:` drive is my 1 terabyte hard drive.
 
 
 \begin{center}\includegraphics[width=0.9\linewidth]{screenshots/2018-08-26_15_16_51-Shared_Drives} \end{center}
@@ -33,7 +39,7 @@ Go to the `Kubernetes` dialog and make sure the `Enable Kubernetes` checkbox is 
 \begin{center}\includegraphics[width=0.9\linewidth]{screenshots/2018-08-26_15_26_22-Kubernetes} \end{center}
 
 ## Git, GitHub and line endings
-Git was originally developed for Linux - in fact, it was created by Linus Torvalds to manage hundreds of different versions of the Linux kernel on different machines all around the world. As usage has grown, it's achieved a huge following and is the version control system used by most large open source projects, including this one.
+[Git](https://git-scm.com/) was originally developed for Linux - in fact, it was created by Linus Torvalds to manage hundreds of different versions of the Linux kernel on different machines all around the world. As usage has grown, Git has achieved a huge following and is the version control system used by most large open source projects, including this one.
 
 If you're on Windows, there are some things about Git and GitHub you need to watch. First of all, there are quite a few tools for running Git on Windows, but the RStudio default and recommended one is Git for Windows (<https://git-scm.com/download/win>).
 

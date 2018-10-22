@@ -1,24 +1,32 @@
 ---
 title: "R, Databases and Docker"
-author: "Dipti Muni, Ian Frantz, John David Smith, Mary Anne Thygesen, M. Edward (Ed) Borasky,  Scott Case, and Sophie Yang"
-date: "2018-09-16"
-site: bookdown::bookdown_site
+author: Dipti Muni, Ian Frantz, John David Smith, Mary Anne Thygesen, M. Edward (Ed)
+  Borasky,  Scott Case, and Sophie Yang
+date: "2018-10-19"
+bibliography:
+- book.bib
+- packages.bib
+description: A collection of tutorials for integrating R with databases using Docker
 documentclass: book
-bibliography: [book.bib, packages.bib]
-biblio-style: apalike
 link-citations: yes
-description: "A collection of tutorials for integrating R with databases using Docker"
+site: bookdown::bookdown_site
+biblio-style: apalike
 ---
 
 # Introduction
 
+At the end of this chapter, you will be able to
+
+  * Understand the importance of using R and Docker to query a DBMS and access a service like Postgres outside of R. 
+  * Setup your environment to explore the use-case for useRs.
+
 ## Using R to query a DBMS in your organization
 
-* Large data stores in organizations are stored in databases that have specific access constraints and structural characteristics.  Data documentation may be incomplete, often emphsizes operational issues rather than analytical ones, and often needs to be confirmed on the fly.  Data volumes and query performance are important design constraints.
+* Large data stores in organizations are stored in databases that have specific access constraints and structural characteristics.  Data documentation may be incomplete, often emphasizes operational issues rather than analytic ones, and often needs to be confirmed on the fly.  Data volumes and query performance are important design constraints.
 * R users frequently need to make sense of complex data structures and coding schemes to address incompletely formed questions so that exploratory data analysis has to be fast. Exploratory techniques for the purpose should not be reinvented (and so would benefit from more public instruction or discussion).
 * Learning to navigate the interfaces (passwords, packages, etc.) between R and a database is difficult to simulate outside corporate walls.  Resources for interface problem diagnosis behind corporate walls may or may not address all the issues that R users face, so a simulated environment is needed.
 
-## Docker's role
+## Docker as a tool for UseRs
 
 Noam Ross's "[Docker for the UseR](https://nyhackr.blob.core.windows.net/presentations/Docker-for-the-UseR_Noam-Ross.pdf)" suggests that there are four distinct Docker use-cases for useRs.  
 
@@ -29,8 +37,15 @@ Noam Ross's "[Docker for the UseR](https://nyhackr.blob.core.windows.net/present
 
 This book explores #2 because it allows us to work on the database access issues [described above][Using R to query a DBMS in your organization] and to practice on an industrial-scale DBMS.  
 
-* Docker is a relatively easy way to simulate the relationship between an R/Rstudio session and a database -- all on on a single machine, provided you have Docker installed and running.
-* You may want to run PostgresSQL on a Docker container, avoiding any OS or system dependencies that might come up. 
+* Docker is a relatively easy way to simulate the relationship between an R/RStudio session and a database -- all on on a single machine, provided you have Docker installed and running.
+* You may want to run PostgreSQL on a Docker container, avoiding any OS or system dependencies that might come up. 
+
+## Why write a book about DBMS access from R using Docker?
+
+* Large data stores in organizations are stored in databases that have specific access constraints and  structural characteristics.
+* Learning to navigate the gap between R and the database is difficult to simulate outside corporate walls.
+* R users frequently need to make sense of complex data structures using diagnostic techniques that should not be reinvented (and so would benefit from more public instruction and  commentary).
+* Docker is a relatively easy way to simulate the relationship between an R/Rstudio session and database -- all on on a single machine.
 
 ## Docker and R on your machine
 
@@ -41,40 +56,15 @@ Here is how R and Docker fit on your operating system in this tutorial:
 
 ## Who are we?
 
-* M. Edward (Ed) Borasky - [\@znmeb](https://github.com/znmeb)
-* John David Smith - [\@smithjd](https://github.com/smithjd)
-* Scott Came - [\@scottcame](https://github.com/scottcame)
+We have been collaborating on this book since the Summer of 2018, each of us chipping into the project as time permits:
+
+* Dipti Muni - [\@deemuni](https://github.com/deemuni)
 * Ian Franz - [\@ianfrantz](https://github.com/ianfrantz)
-* Sophie Yang - [\@SophieMYang](https://github.com/SophieMYang)
 * Jim Tyhurst - [\@jimtyhurst](https://github.com/jimtyhurst)
-* Paul Refalo - [\@paulrefalo](https://github.com/paulrefalo)
-
-## Prerequisites
-You will need
-
-* A computer running Windows, MacOS, or Linux (Any Linux distro that will run Docker Community Edition, R and RStudio will work),
-* [R, and Rstudio](https://www.datacamp.com/community/tutorials/installing-R-windows-mac-ubuntu) and
-* Docker hosting.
-
-The database we use is PostgreSQL 10, but you do not need to install that - it's installed via a Docker image. RStudio 1.2 is highly recommended but not required.
-
-In addition to the current version of R and Rstudio, you will need the following packages:
-
-* tidyverse
-* DBI
-* RPostgres
-* glue
-
-## Install Docker
-
-Install Docker.  Installation depends on your operating system:
-
-  + [On a Mac](https://docs.docker.com/docker-for-mac/install/)
-  + [On UNIX flavors](https://docs.docker.com/install/#supported-platforms)
-  + For Windows, [consider these issues and follow these instructions](https://smithjd.github.io/sql-pet/docker-hosting-for-windows.html).
-
-## Download the repo
-
-First step: download [this repo](https://github.com/smithjd/sql-pet).  It contains source code to build a Docker container that has the dvdrental database in Postgress and shows how to interact with the database from R.
+* John David Smith - [\@smithjd](https://github.com/smithjd)
+* M. Edward (Ed) Borasky - [\@znmeb](https://github.com/znmeb)
+* Maryann Tygeson [\@maryannet](https://github.com/maryannet)
+* Scott Came - [\@scottcame](https://github.com/scottcame)
+* Sophie Yang - [\@SophieMYang](https://github.com/SophieMYang)
 
 

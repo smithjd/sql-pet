@@ -1,0 +1,154 @@
+# The dvdrental database in Postgres in Docker (05)
+
+At the end of this chapter, you will be able to 
+
+  * Setup the `dvdrental` database
+  * Stop and start Docker container to demonstrate persistence
+  * Connect to and disconnect R from the `dvdrental` database
+  * Execute the code in subsequent chapters
+
+## Overview
+
+In the last chapter we connected to PostgreSQL from R.  Now we set up a "realistic" database named `dvdrental`. There are two different approaches to doing this: this chapter sets it up in a way that doesn't delve into the Docker details.  If you are interested, you can examine the functions provided in `sqlpetr` to see how it works or look at an alternative approach in  [docker-detailed-postgres-setup-with-dvdrental.R](./book-src/docker-detailed-postgres-setup-with-dvdrental.R))
+
+```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
+# These packages are called in almost every chapter of the book:
+library(tidyverse)
+library(DBI)
+library(RPostgres)
+library(glue)
+library(here)
+require(knitr)
+library(dbplyr)
+library(sqlpetr)
+library(bookdown)
+```
+Note that `tidyverse`, `DBI`, `RPostgres`, and `glue` are loaded.
+
+## Verify that Docker is up and running
+```{r docker verify}
+
+sp_check_that_docker_is_up()
+```
+
+## Clean up if appropriate
+Remove the `sql-pet` container if it exists (e.g., from a prior run)
+```{r}
+sp_docker_remove_container("sql-pet")
+```
+## Build the Docker Image
+Build an image that derives from postgres:10, defined in `dvdrental.Dockerfile`, that is set up to restore and load the dvdrental db on startup.  The [dvdrental.Dockerfile](./dvdrental.Dockerfile) is discussed below.  
+```{r}
+
+system2("docker", 
+        glue("build ", # tells Docker to build an image that can be loaded as a container
+          "--tag postgres-dvdrental ", # (or -t) tells Docker to name the image
+          "--file dvdrental.Dockerfile ", #(or -f) tells Docker to read `build` instructions from the dvdrental.Dockerfile
+          " . "),  # tells Docker to look for dvdrental.Dockerfile in the current directory
+          stdout = TRUE, stderr = TRUE)
+
+```
+
+## Run the Docker Image
+Run docker to bring up postgres.  The first time it runs it will take a minute to create the PostgreSQL environment.  There are two important parts to this that may not be obvious:
+
+  * The `source=` parameter points to [dvdrental.Dockerfile](./dvdrental.Dockerfile), which does most of the heavy lifting.  It has detailed, line-by-line comments to explain what it is doing.  
+  *  *Inside* [dvdrental.Dockerfile](./dvdrental.Dockerfile) the command `COPY init-dvdrental.sh /docker-entrypoint-initdb.d/` copies  [init-dvdrental.sh](init-dvdrental.sh) from the local file system into the specified location in the Docker container.  When the PostgreSQL Docker container initializes, it looks for that file and executes it. 
+  
+Doing all of that work behind the scenes involves two layers of complexity.  Depending on how you look at it, that may be more or less difficult to understand than the method shown in the next Chapter.
+
+```{r}
+
+wd <- getwd()
+
+docker_cmd <- glue(
+  "run ",      # Run is the Docker command.  Everything that follows are `run` parameters.
+  "--detach ", # (or `-d`) tells Docker to disconnect from the terminal / program issuing the command
+  " --name sql-pet ",     # tells Docker to give the container a name: `sql-pet`
+  "--publish 5432:5432 ", # tells Docker to expose the Postgres port 5432 to the local network with 5432
+  "--mount ", # tells Docker to mount a volume -- mapping Docker's internal file structure to the host file structure
+  "type=bind,", # tells Docker that the mount command points to an actual file on the host system
+  'source="', # tells Docker where the local file will be found
+  wd, '",', # the current working directory, as retrieved above
+  "target=/petdir", # tells Docker to refer to the current directory as "/petdir" in its file system
+  " postgres-dvdrental" # tells Docker to run the image was built in the previous step
+)
+
+# if you are curious you can paste this string into a terminal window after the command 'docker':
+docker_cmd
+
+system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
+
+```
+## Connect to Postgres with R
+
+Use the DBI package to connect to PostgreSQL.  
+
+```{r }
+con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
+                         password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
+                         dbname = "dvdrental",
+                         seconds_to_test = 10)
+```
+
+List the tables in the database and the fields in one of those tables.  Then disconnect from the database.
+```{r }
+dbListTables(con)
+
+dbListFields(con, "rental")
+dbDisconnect(con)
+
+```
+## Stop and start to demonstrate persistence
+
+Stop the container
+```{r}
+sp_docker_stop("sql-pet")
+```
+Restart the container and verify that the dvdrental tables are still there
+```{r}
+sp_docker_start("sql-pet")
+
+con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
+                         password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
+                         dbname = "dvdrental",
+                         seconds_to_test = 10)
+```
+
+Check that you can still see the fields in the `rental` table:
+```{r}
+dbListFields(con, "rental")
+```
+
+## Cleaning up
+
+Always have R disconnect from the database when you're done.
+```{r}
+
+dbDisconnect(con)
+
+```
+
+Stop the container and show that the container is still there, so can be started again.
+```{r}
+
+sp_docker_stop("sql-pet")
+
+# show that the container still exists even though it's not running
+sp_show_all_docker_containers()
+
+```
+
+Next time, you can just use this command to start the container: 
+
+`sp_docker_start("sql-pet")`
+
+And once stopped, the container can be removed with:
+
+`sp_check_that_docker_is_up("sql-pet)`
+
+## Using the `sql-pet` container in the rest of the book
+
+After this point in the book, we assume that Docker is up and that we can always start up our *sql-pet database* with:
+
+`sp_docker_stop("sql-pet")`
