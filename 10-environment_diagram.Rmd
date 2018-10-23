@@ -1,3 +1,8 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 # Mapping your local environment (10)
 
 ```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
@@ -168,9 +173,27 @@ digraph Envgraph {
 [5]: paste0(linux_lbl,  ':\\n', linux_ver)
 [6]: paste0('PostgreSQL:\\n', postgres_ver)
 [7]: cli
-")
+") %>% 
+  DiagrammeRsvg::export_svg() %>% 
+  cat(file = "diagrams/envgraph.svg")
+
+# convert to PDF and PNG - LaTeX doesn't read SVGs by default
+magick::image_read_svg("diagrams/envgraph.svg") %>%
+  magick::image_write(
+    path = "diagrams/envgraph.pdf", 
+    format = "pdf"
+  )
+magick::image_read_svg("diagrams/envgraph.svg") %>%
+  magick::image_write(
+    path = "diagrams/envgraph.png", 
+    format = "png"
+  )
 ```
 
+```{r echo=FALSE}
+# display the PNG/PDF - this works in both HTML and PDF
+knitr::include_graphics("diagrams/envgraph.png", auto_pdf = TRUE)
+```
 
 ## Communicating with Docker Applications
 
