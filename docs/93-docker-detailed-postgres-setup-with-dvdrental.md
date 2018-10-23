@@ -23,7 +23,7 @@ library(tidyverse)
 ```
 
 ```
-## ── Attaching packages ───────────────────────────────────────────── tidyverse 1.2.1 ──
+## ── Attaching packages ──────────────────────────────────────────── tidyverse 1.2.1 ──
 ```
 
 ```
@@ -34,7 +34,7 @@ library(tidyverse)
 ```
 
 ```
-## ── Conflicts ──────────────────────────────────────────────── tidyverse_conflicts() ──
+## ── Conflicts ─────────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()
 ```
@@ -128,7 +128,7 @@ sp_show_all_docker_containers()
 
 ```
 ## [1] "CONTAINER ID        IMAGE                COMMAND                  CREATED              STATUS                     PORTS               NAMES"                  
-## [2] "958e75fb879c        postgres-dvdrental   \"docker-entrypoint.s…\"   About a minute ago   Exited (0) 5 seconds ago                       sql-pet"              
+## [2] "79707c17d50b        postgres-dvdrental   \"docker-entrypoint.s…\"   About a minute ago   Exited (0) 4 seconds ago                       sql-pet"              
 ## [3] "424d4c3dfc89        rstats               \"/init\"                  5 days ago           Exited (0) 5 days ago                          containers_rstats_1"  
 ## [4] "4c3eb1dc5043        postgis              \"docker-entrypoint.s…\"   5 days ago           Exited (0) 5 days ago                          containers_postgis_1" 
 ## [5] "8da9d3a59732        dpage/pgadmin4       \"/entrypoint.sh\"         5 days ago           Exited (0) 5 days ago                          containers_pgadmin4_1"
@@ -192,7 +192,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "f41069fa7b4c086ad3704f765e2feb8d87f93e1b1ed75c6b749971b9c3a1dc48"
+## [1] "99efd522fb1a85e08fd4e0967a10fe231065efd114d5f458dd0c0d3f8023cb1a"
 ```
 
 Peek inside the docker container and list the files in the `petdir`
@@ -236,7 +236,7 @@ sp_show_all_docker_containers()
 
 ```
 ## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES"                  
-## [2] "f41069fa7b4c        postgres:10         \"docker-entrypoint.s…\"   4 seconds ago       Up 3 seconds            0.0.0.0:5432->5432/tcp   sql-pet"              
+## [2] "99efd522fb1a        postgres:10         \"docker-entrypoint.s…\"   4 seconds ago       Up 3 seconds            0.0.0.0:5432->5432/tcp   sql-pet"              
 ## [3] "424d4c3dfc89        rstats              \"/init\"                  5 days ago          Exited (0) 5 days ago                            containers_rstats_1"  
 ## [4] "4c3eb1dc5043        postgis             \"docker-entrypoint.s…\"   5 days ago          Exited (0) 5 days ago                            containers_postgis_1" 
 ## [5] "8da9d3a59732        dpage/pgadmin4      \"/entrypoint.sh\"         5 days ago          Exited (0) 5 days ago                            containers_pgadmin4_1"
@@ -381,7 +381,7 @@ sp_show_all_docker_containers()
 
 ```
 ## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES"                  
-## [2] "f41069fa7b4c        postgres:10         \"docker-entrypoint.s…\"   17 seconds ago      Exited (0) Less than a second ago                       sql-pet"              
+## [2] "99efd522fb1a        postgres:10         \"docker-entrypoint.s…\"   16 seconds ago      Exited (0) Less than a second ago                       sql-pet"              
 ## [3] "424d4c3dfc89        rstats              \"/init\"                  5 days ago          Exited (0) 5 days ago                                   containers_rstats_1"  
 ## [4] "4c3eb1dc5043        postgis             \"docker-entrypoint.s…\"   5 days ago          Exited (0) 5 days ago                                   containers_postgis_1" 
 ## [5] "8da9d3a59732        dpage/pgadmin4      \"/entrypoint.sh\"         5 days ago          Exited (0) 5 days ago                                   containers_pgadmin4_1"

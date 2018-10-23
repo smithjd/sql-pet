@@ -9,7 +9,6 @@
 unlink("docs", recursive = TRUE)
 
 # PDF
-
 bookdown::render_book(
   input = "index.Rmd",
   new_session = TRUE,
@@ -17,7 +16,7 @@ bookdown::render_book(
   output_dir = "./docs"
 )
 
-# make the web book
+# "GitBook" website
 
 bookdown::render_book(
   input = "index.Rmd",

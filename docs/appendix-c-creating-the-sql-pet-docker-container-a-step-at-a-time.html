@@ -25,7 +25,7 @@
 <meta name="author" content="Dipti Muni, Ian Frantz, John David Smith, Mary Anne Thygesen, M. Edward (Ed) Borasky, Scott Case, and Sophie Yang">
 
 
-<meta name="date" content="2018-10-22">
+<meta name="date" content="2018-10-23">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -376,12 +376,12 @@ PostgreSQL database works. If you are satisfied with the method shown in
 Chapter 5, skip this and only come back if you’re interested in picking
 apart the steps.</p>
 <div class="sourceCode" id="cb280"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb280-1" data-line-number="1"><span class="kw">library</span>(tidyverse)</a></code></pre></div>
-<pre><code>## ── Attaching packages ───────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
+<pre><code>## ── Attaching packages ──────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
 <pre><code>## ✔ ggplot2 3.0.0     ✔ purrr   0.2.5
 ## ✔ tibble  1.4.2     ✔ dplyr   0.7.7
 ## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
 ## ✔ readr   1.1.1     ✔ forcats 0.3.0</code></pre>
-<pre><code>## ── Conflicts ──────────────────────────────────────────────── tidyverse_conflicts() ──
+<pre><code>## ── Conflicts ─────────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <div class="sourceCode" id="cb284"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb284-1" data-line-number="1"><span class="kw">library</span>(DBI)</a>
@@ -421,7 +421,7 @@ apart the steps.</p>
 <pre><code>## [1] &quot;dvdrental.tar&quot; &quot;dvdrental.zip&quot;</code></pre>
 <div class="sourceCode" id="cb299"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb299-1" data-line-number="1"><span class="kw">sp_show_all_docker_containers</span>()</a></code></pre></div>
 <pre><code>## [1] &quot;CONTAINER ID        IMAGE                COMMAND                  CREATED              STATUS                     PORTS               NAMES&quot;                  
-## [2] &quot;958e75fb879c        postgres-dvdrental   \&quot;docker-entrypoint.s…\&quot;   About a minute ago   Exited (0) 5 seconds ago                       sql-pet&quot;              
+## [2] &quot;79707c17d50b        postgres-dvdrental   \&quot;docker-entrypoint.s…\&quot;   About a minute ago   Exited (0) 4 seconds ago                       sql-pet&quot;              
 ## [3] &quot;424d4c3dfc89        rstats               \&quot;/init\&quot;                  5 days ago           Exited (0) 5 days ago                          containers_rstats_1&quot;  
 ## [4] &quot;4c3eb1dc5043        postgis              \&quot;docker-entrypoint.s…\&quot;   5 days ago           Exited (0) 5 days ago                          containers_postgis_1&quot; 
 ## [5] &quot;8da9d3a59732        dpage/pgadmin4       \&quot;/entrypoint.sh\&quot;         5 days ago           Exited (0) 5 days ago                          containers_pgadmin4_1&quot;
@@ -455,7 +455,7 @@ PostgreSQL port 5432.</p>
 <a class="sourceLine" id="cb305-11" data-line-number="11">docker_cmd</a></code></pre></div>
 <pre><code>## run --detach  --name sql-pet --publish 5432:5432 --mount type=bind,source=&quot;/home/znmeb/Projects/sql-pet&quot;,target=/petdir postgres:10</code></pre>
 <div class="sourceCode" id="cb307"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb307-1" data-line-number="1"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, docker_cmd, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
-<pre><code>## [1] &quot;f41069fa7b4c086ad3704f765e2feb8d87f93e1b1ed75c6b749971b9c3a1dc48&quot;</code></pre>
+<pre><code>## [1] &quot;99efd522fb1a85e08fd4e0967a10fe231065efd114d5f458dd0c0d3f8023cb1a&quot;</code></pre>
 <p>Peek inside the docker container and list the files in the <code>petdir</code>
 directory. Notice that <code>dvdrental.tar</code> is in both.</p>
 <div class="sourceCode" id="cb309"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb309-1" data-line-number="1"><span class="co"># local file system:</span></a>
@@ -474,7 +474,7 @@ command. In this case we tell Docker to execute the <code>psql</code> program
 inside the <code>sql-pet</code> container and pass it some commands as follows.</p>
 <div class="sourceCode" id="cb314"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb314-1" data-line-number="1"><span class="kw">sp_show_all_docker_containers</span>()</a></code></pre></div>
 <pre><code>## [1] &quot;CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES&quot;                  
-## [2] &quot;f41069fa7b4c        postgres:10         \&quot;docker-entrypoint.s…\&quot;   4 seconds ago       Up 3 seconds            0.0.0.0:5432-&gt;5432/tcp   sql-pet&quot;              
+## [2] &quot;99efd522fb1a        postgres:10         \&quot;docker-entrypoint.s…\&quot;   4 seconds ago       Up 3 seconds            0.0.0.0:5432-&gt;5432/tcp   sql-pet&quot;              
 ## [3] &quot;424d4c3dfc89        rstats              \&quot;/init\&quot;                  5 days ago          Exited (0) 5 days ago                            containers_rstats_1&quot;  
 ## [4] &quot;4c3eb1dc5043        postgis             \&quot;docker-entrypoint.s…\&quot;   5 days ago          Exited (0) 5 days ago                            containers_postgis_1&quot; 
 ## [5] &quot;8da9d3a59732        dpage/pgadmin4      \&quot;/entrypoint.sh\&quot;         5 days ago          Exited (0) 5 days ago                            containers_pgadmin4_1&quot;
@@ -551,7 +551,7 @@ started again.</p>
 <p>show that the container still exists even though it’s not running</p>
 <div class="sourceCode" id="cb332"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb332-1" data-line-number="1"><span class="kw">sp_show_all_docker_containers</span>()</a></code></pre></div>
 <pre><code>## [1] &quot;CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES&quot;                  
-## [2] &quot;f41069fa7b4c        postgres:10         \&quot;docker-entrypoint.s…\&quot;   17 seconds ago      Exited (0) Less than a second ago                       sql-pet&quot;              
+## [2] &quot;99efd522fb1a        postgres:10         \&quot;docker-entrypoint.s…\&quot;   16 seconds ago      Exited (0) Less than a second ago                       sql-pet&quot;              
 ## [3] &quot;424d4c3dfc89        rstats              \&quot;/init\&quot;                  5 days ago          Exited (0) 5 days ago                                   containers_rstats_1&quot;  
 ## [4] &quot;4c3eb1dc5043        postgis             \&quot;docker-entrypoint.s…\&quot;   5 days ago          Exited (0) 5 days ago                                   containers_postgis_1&quot; 
 ## [5] &quot;8da9d3a59732        dpage/pgadmin4      \&quot;/entrypoint.sh\&quot;         5 days ago          Exited (0) 5 days ago                                   containers_pgadmin4_1&quot;

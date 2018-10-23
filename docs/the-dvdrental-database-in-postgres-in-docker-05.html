@@ -25,7 +25,7 @@
 <meta name="author" content="Dipti Muni, Ian Frantz, John David Smith, Mary Anne Thygesen, M. Edward (Ed) Borasky, Scott Case, and Sophie Yang">
 
 
-<meta name="date" content="2018-10-22">
+<meta name="date" content="2018-10-23">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -394,7 +394,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb30-4" data-line-number="4">          <span class="st">&quot;--file dvdrental.Dockerfile &quot;</span>, <span class="co">#(or -f) tells Docker to read `build` instructions from the dvdrental.Dockerfile</span></a>
 <a class="sourceLine" id="cb30-5" data-line-number="5">          <span class="st">&quot; . &quot;</span>),  <span class="co"># tells Docker to look for dvdrental.Dockerfile in the current directory</span></a>
 <a class="sourceLine" id="cb30-6" data-line-number="6">          <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
-<pre><code>##  [1] &quot;Sending build context to Docker daemon  26.81MB\r\r&quot;                                                                                                                                                                                                                                                                                                                                           
+<pre><code>##  [1] &quot;Sending build context to Docker daemon  28.25MB\r\r&quot;                                                                                                                                                                                                                                                                                                                                           
 ##  [2] &quot;Step 1/4 : FROM postgres:10&quot;                                                                                                                                                                                                                                                                                                                                                                   
 ##  [3] &quot; ---&gt; fc21dac1eb4e&quot;                                                                                                                                                                                                                                                                                                                                                                            
 ##  [4] &quot;Step 2/4 : WORKDIR /tmp&quot;                                                                                                                                                                                                                                                                                                                                                                       
@@ -437,7 +437,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb32-17" data-line-number="17">docker_cmd</a></code></pre></div>
 <pre><code>## run --detach  --name sql-pet --publish 5432:5432 --mount type=bind,source=&quot;/home/znmeb/Projects/sql-pet&quot;,target=/petdir postgres-dvdrental</code></pre>
 <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" data-line-number="1"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, docker_cmd, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
-<pre><code>## [1] &quot;958e75fb879cee29cdab1606de1a164878ea7314c5df5f79bad7d91b7c3fad6e&quot;</code></pre>
+<pre><code>## [1] &quot;79707c17d50bccdbf7fb2f6ef18e80603fc180ee427d1590915b4f90e9da4172&quot;</code></pre>
 </div>
 <div id="connect-to-postgres-with-r" class="section level2">
 <h2><span class="header-section-number">6.6</span> Connect to Postgres with R</h2>
@@ -491,7 +491,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb50-1" data-line-number="1"><span class="co"># show that the container still exists even though it&#39;s not running</span></a>
 <a class="sourceLine" id="cb50-2" data-line-number="2"><span class="kw">sp_show_all_docker_containers</span>()</a></code></pre></div>
 <pre><code>## [1] &quot;CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS               NAMES&quot;                  
-## [2] &quot;958e75fb879c        postgres-dvdrental   \&quot;docker-entrypoint.s…\&quot;   10 seconds ago      Exited (0) Less than a second ago                       sql-pet&quot;              
+## [2] &quot;79707c17d50b        postgres-dvdrental   \&quot;docker-entrypoint.s…\&quot;   10 seconds ago      Exited (0) Less than a second ago                       sql-pet&quot;              
 ## [3] &quot;424d4c3dfc89        rstats               \&quot;/init\&quot;                  5 days ago          Exited (0) 5 days ago                                   containers_rstats_1&quot;  
 ## [4] &quot;4c3eb1dc5043        postgis              \&quot;docker-entrypoint.s…\&quot;   5 days ago          Exited (0) 5 days ago                                   containers_postgis_1&quot; 
 ## [5] &quot;8da9d3a59732        dpage/pgadmin4       \&quot;/entrypoint.sh\&quot;         5 days ago          Exited (0) 5 days ago                                   containers_pgadmin4_1&quot;
