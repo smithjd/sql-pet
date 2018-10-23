@@ -1,17 +1,15 @@
-# A persistent database in Postgres in Docker - all at once (05)
+# The dvdrental database in Postgres in Docker (05)
 
 At the end of this chapter, you will be able to 
 
-  * Setup a database with “all in one” approach.
-  * Stop and start Docker image to demonstrate persistence
-  * Disconnect R from database and stop container to close up even though it still exists. 
-
+  * Setup the `dvdrental` database
+  * Stop and start Docker container to demonstrate persistence
+  * Connect to and disconnect R from the `dvdrental` database
+  * Execute the code in subsequent chapters
 
 ## Overview
 
-You've already connected to PostgreSQL with R, now you need a "realistic" (`dvdrental`) database. We're going to demonstrate how to set one up, with two different approaches.  This chapter and the next do the same job, illustrating the different approaches that you can take and helping you see the different points where you could swap what's provided here with a different DBMS or a different backup file or something else.
-
-The code in this first version is recommended because it is an "all in one" approach.  Details about how it works and how you might modify it are included below.  There is another version in the the next chapter that you can use to investigate Docker commands and components.
+In the last chapter we connected to PostgreSQL from R.  Now we set up a "realistic" database named `dvdrental`. There are two different approaches to doing this: this chapter sets it up in a way that doesn't delve into the Docker details.  If you are interested, you can examine the functions provided in `sqlpetr` to see how it works or look at an alternative approach in  [docker-detailed-postgres-setup-with-dvdrental.R](./book-src/docker-detailed-postgres-setup-with-dvdrental.R))
 
 
 Note that `tidyverse`, `DBI`, `RPostgres`, and `glue` are loaded.
@@ -56,7 +54,7 @@ system2("docker",
 ```
 
 ```
-##  [1] "Sending build context to Docker daemon  17.43MB\r\r"                                                                                                                                                                                                                                                                                                                                           
+##  [1] "Sending build context to Docker daemon  26.81MB\r\r"                                                                                                                                                                                                                                                                                                                                           
 ##  [2] "Step 1/4 : FROM postgres:10"                                                                                                                                                                                                                                                                                                                                                                   
 ##  [3] " ---> fc21dac1eb4e"                                                                                                                                                                                                                                                                                                                                                                            
 ##  [4] "Step 2/4 : WORKDIR /tmp"                                                                                                                                                                                                                                                                                                                                                                       
@@ -92,7 +90,7 @@ docker_cmd <- glue(
   "--mount ", # tells Docker to mount a volume -- mapping Docker's internal file structure to the host file structure
   "type=bind,", # tells Docker that the mount command points to an actual file on the host system
   'source="', # tells Docker where the local file will be found
-  wd, '/",', # the current working directory, as retrieved above
+  wd, '",', # the current working directory, as retrieved above
   "target=/petdir", # tells Docker to refer to the current directory as "/petdir" in its file system
   " postgres-dvdrental" # tells Docker to run the image was built in the previous step
 )
@@ -102,7 +100,7 @@ docker_cmd
 ```
 
 ```
-## run --detach  --name sql-pet --publish 5432:5432 --mount type=bind,source="/home/znmeb/Projects/sql-pet/",target=/petdir postgres-dvdrental
+## run --detach  --name sql-pet --publish 5432:5432 --mount type=bind,source="/home/znmeb/Projects/sql-pet",target=/petdir postgres-dvdrental
 ```
 
 ```r
@@ -110,12 +108,11 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "55441bbc223d0e02939bc4a26ca9c71f1125525de896587c481ce39748593309"
+## [1] "958e75fb879cee29cdab1606de1a164878ea7314c5df5f79bad7d91b7c3fad6e"
 ```
 ## Connect to Postgres with R
-Use the DBI package to connect to PostgreSQL.  But first, wait for Docker & PostgreSQL to come up before connecting.
 
-We have loaded the `wait_for_postgres` function behind the scenes.
+Use the DBI package to connect to PostgreSQL.  
 
 
 ```r
@@ -123,7 +120,11 @@ con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"
                          password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
                          dbname = "dvdrental",
                          seconds_to_test = 10)
+```
 
+List the tables in the database and the fields in one of those tables.  Then disconnect from the database.
+
+```r
 dbListTables(con)
 ```
 
@@ -173,31 +174,22 @@ con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"
                          password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
                          dbname = "dvdrental",
                          seconds_to_test = 10)
+```
 
-glimpse(dbReadTable(con, "film"))
+Check that you can still see the fields in the `rental` table:
+
+```r
+dbListFields(con, "rental")
 ```
 
 ```
-## Observations: 1,000
-## Variables: 13
-## $ film_id          <int> 133, 384, 8, 98, 1, 2, 3, 4, 5, 6, 7, 9, 10, ...
-## $ title            <chr> "Chamber Italian", "Grosse Wonderful", "Airpo...
-## $ description      <chr> "A Fateful Reflection of a Moose And a Husban...
-## $ release_year     <int> 2006, 2006, 2006, 2006, 2006, 2006, 2006, 200...
-## $ language_id      <int> 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...
-## $ rental_duration  <int> 7, 5, 6, 4, 6, 3, 7, 5, 6, 3, 6, 3, 6, 6, 6, ...
-## $ rental_rate      <dbl> 4.99, 4.99, 4.99, 4.99, 0.99, 4.99, 2.99, 2.9...
-## $ length           <int> 117, 49, 54, 73, 86, 48, 50, 117, 130, 169, 6...
-## $ replacement_cost <dbl> 14.99, 19.99, 15.99, 12.99, 20.99, 12.99, 18....
-## $ rating           <chr> "NC-17", "R", "R", "PG-13", "PG", "G", "NC-17...
-## $ last_update      <dttm> 2013-05-26 14:50:58, 2013-05-26 14:50:58, 20...
-## $ special_features <chr> "{Trailers}", "{\"Behind the Scenes\"}", "{Tr...
-## $ fulltext         <chr> "'chamber':1 'fate':4 'husband':11 'italian':...
+## [1] "rental_id"    "rental_date"  "inventory_id" "customer_id" 
+## [5] "return_date"  "staff_id"     "last_update"
 ```
 
 ## Cleaning up
 
-It's always good to have R disconnect from the database
+Always have R disconnect from the database when you're done.
 
 ```r
 dbDisconnect(con)
@@ -220,11 +212,11 @@ sp_show_all_docker_containers()
 
 ```
 ## [1] "CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS               NAMES"                  
-## [2] "55441bbc223d        postgres-dvdrental   \"docker-entrypoint.s…\"   11 seconds ago      Exited (0) Less than a second ago                       sql-pet"              
-## [3] "424d4c3dfc89        rstats               \"/init\"                  4 days ago          Exited (0) 4 days ago                                   containers_rstats_1"  
-## [4] "4c3eb1dc5043        postgis              \"docker-entrypoint.s…\"   4 days ago          Exited (0) 4 days ago                                   containers_postgis_1" 
-## [5] "8da9d3a59732        dpage/pgadmin4       \"/entrypoint.sh\"         4 days ago          Exited (0) 4 days ago                                   containers_pgadmin4_1"
-## [6] "7030e81489b8        2feef91d6764         \"/bin/sh -c 'su - rs…\"   4 days ago          Exited (1) 4 days ago                                   laughing_johnson"
+## [2] "958e75fb879c        postgres-dvdrental   \"docker-entrypoint.s…\"   10 seconds ago      Exited (0) Less than a second ago                       sql-pet"              
+## [3] "424d4c3dfc89        rstats               \"/init\"                  5 days ago          Exited (0) 5 days ago                                   containers_rstats_1"  
+## [4] "4c3eb1dc5043        postgis              \"docker-entrypoint.s…\"   5 days ago          Exited (0) 5 days ago                                   containers_postgis_1" 
+## [5] "8da9d3a59732        dpage/pgadmin4       \"/entrypoint.sh\"         5 days ago          Exited (0) 5 days ago                                   containers_pgadmin4_1"
+## [6] "7030e81489b8        2feef91d6764         \"/bin/sh -c 'su - rs…\"   5 days ago          Exited (1) 5 days ago                                   laughing_johnson"
 ```
 
 Next time, you can just use this command to start the container: 
