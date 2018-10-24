@@ -44,7 +44,6 @@ system2("docker",
         glue("build ", # tells Docker to build an image that can be loaded as a container
           "--tag postgres-dvdrental ", # (or -t) tells Docker to name the image
           "--file dvdrental.Dockerfile ", #(or -f) tells Docker to read `build` instructions from the dvdrental.Dockerfile
-          " . "),  # tells Docker to look for dvdrental.Dockerfile in the current directory
           " . "),  # tells Docker to look for dvdrental.Dockerfile, and files it references, in the current directory
           stdout = TRUE, stderr = TRUE)
 
@@ -69,7 +68,6 @@ docker_cmd <- glue(
   "--publish 5432:5432 ", # tells Docker to expose the Postgres port 5432 to the local network with 5432
   "--mount ", # tells Docker to mount a volume -- mapping Docker's internal file structure to the host file structure
   "type=bind,", # tells Docker that the mount command points to an actual file on the host system
-  'source="', # tells Docker where the local file will be found
   'source="', # specifies the directory on the host to mount into the container at the mount point specified by `target=`
   wd, '",', # the current working directory, as retrieved above
   "target=/petdir", # tells Docker to refer to the current directory as "/petdir" in its file system
