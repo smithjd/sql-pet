@@ -1,0 +1,25 @@
+# Explain queries (11)
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+MODE <- 'BOOK'  Either DEMO or BOOK
+```
+
+```{r}
+# library(knitr)
+dplyr_summary_df <-
+    read.delim(
+    'c:/git/sql-pet/11_dplyr_sql_summary_table.rmd',
+    header = TRUE,
+    sep = '|',
+    as.is = TRUE
+    )
+
+if (MODE == 'DEMO') {
+    View(dplyr_summary_df)
+} else {
+    kable(dplyr_summary_df)
+}    
+```
+
