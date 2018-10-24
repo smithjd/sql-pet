@@ -1,4 +1,4 @@
-# Introduction to dbms queries (11)
+# Introduction to DBMS queries (11)
 
 
 Assume that the Docker container with PostgreSQL and the dvdrental database are ready to go. 
@@ -17,7 +17,7 @@ con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"
 
 ## Downloading the data from the database
 
-As we show later on, the database serves as a store of data and as an engine for subsetting, joining, and doing computation.  We begin with simple extraction, or "downloading" data.
+As we show later on, the database serves as a store of data and as an engine for sub-setting, joining, and doing computation.  We begin with simple extraction, or "downloading" data.
 
 ### Finding out what's there
 
@@ -55,7 +55,7 @@ Later on we'll discuss how to get more extensive data about each table and colum
 
 ### Downloading an entire table
 
-There are many different methods of getting data from a dbms, and we'll explore the different ways of controlling each one of them.
+There are many different methods of getting data from a DBMS, and we'll explore the different ways of controlling each one of them.
 
 `DBI::dbReadTable` will download an entire table into an R [tibble](https://tibble.tidyverse.org/).
 
@@ -78,7 +78,7 @@ That's very simple, but if the table is large it may not be a good idea.
 
 ### Referencing a table for many different purposes
 
-The `dplyr::tbl` function gives us more control over access to a table.  It returns a connection object that dplyr uses for contructing queries and retrieving data from the dbms.
+The `dplyr::tbl` function gives us more control over access to a table.  It returns a connection object that dplyr uses for constructing queries and retrieving data from the DBMS.
 
 ```r
 rental_table <- dplyr::tbl(con, "rental")
@@ -106,7 +106,7 @@ str(rental_table)
 ##   ..- attr(*, "class")= chr [1:3] "op_base_remote" "op_base" "op"
 ##  - attr(*, "class")= chr [1:4] "tbl_dbi" "tbl_sql" "tbl_lazy" "tbl"
 ```
-It containes a list of variables in the table, among other things:
+It contains a list of variables in the table, among other things:
 
 ```r
 rental_table$ops$vars
@@ -116,7 +116,7 @@ rental_table$ops$vars
 ## [1] "rental_id"    "rental_date"  "inventory_id" "customer_id" 
 ## [5] "return_date"  "staff_id"     "last_update"
 ```
-But because of lazy loading, R has not retrieved any actual data from the dbms.  We can trigger data extraction in several ways.  Although printing `rental_table` just prints the connection object, `head` triggers a query and prints its results:
+But because of lazy loading, R has not retrieved any actual data from the DBMS.  We can trigger data extraction in several ways.  Although printing `rental_table` just prints the connection object, `head` triggers a query and prints its results:
 
 
 ```r
@@ -137,7 +137,7 @@ rental_table %>% head
 ## # ... with 3 more variables: return_date <dttm>, staff_id <int>,
 ## #   last_update <dttm>
 ```
-### Subsetting variables
+### Sub-setting variables
 
 
 
@@ -158,14 +158,14 @@ rental_table %>% select(rental_date, return_date) %>% head
 ## 6 2005-05-24 23:11:53 2005-05-29 20:34:53
 ```
 
-We won't discuss dplyr methods for subsetting variables, deriving new ones, or subsetting rows based on the values found in the table because they are covered well in other places, including:
+We won't discuss dplyr methods for sub-setting variables, deriving new ones, or sub-setting rows based on the values found in the table because they are covered well in other places, including:
 
   * Comprehensive reference: [https://dplyr.tidyverse.org/](https://dplyr.tidyverse.org/)
   * Good tutorial: [https://suzan.rbind.io/tags/dplyr/](https://suzan.rbind.io/tags/dplyr/) 
 
 ### Controlling number of rows returned
 
-The `collect` function triggers the creation of a tibble and controls the number of rows that the dbms sends to R.
+The `collect` function triggers the creation of a tibble and controls the number of rows that the DBMS sends to R.
 
 ```r
 rental_table %>% collect(n = 3) %>% head
@@ -197,7 +197,7 @@ rental_table %>%
 ## 2        1 8040
 ```
 
-The `collect` function affects how much is downloaded, not how many rows the dbms needs to process the query. This query processes all of the rows in the table but only displays one row of output.
+The `collect` function affects how much is downloaded, not how many rows the DBMS needs to process the query. This query processes all of the rows in the table but only displays one row of output.
 
 ```r
 rental_table %>% 
@@ -231,7 +231,7 @@ Here is an extensive discussion of how dplyr code is translated into SQL:
 
 * [https://dbplyr.tidyverse.org/articles/sql-translation.html](https://dbplyr.tidyverse.org/articles/sql-translation.html) 
 
-The SQL code can be submitted directly to the dbms with the `DBI::dbGetQuery` function:
+The SQL code can be submitted directly to the DBMS with the `DBI::dbGetQuery` function:
 
 ```r
 query_result <- DBI::dbGetQuery(con,
@@ -249,7 +249,7 @@ query_result
 ## 2        1 8040
 ```
 
-R markdown can also execute that SQL code in a chunk with the following header:
+When you create a report to run repeated, you might want to put that query into R markdown.  That way you can also execute that SQL code in a chunk with the following header:
 
   {`sql, connection=con, output.var = "mydataframe"`}
 
@@ -308,8 +308,9 @@ There is no substitute for looking at your data and R provides several ways to j
 sp_print_df(head(rental_tibble))
 ```
 
-<!--html_preserve--><div id="htmlwidget-2e2a04cc737b9a7d5848" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-2e2a04cc737b9a7d5848">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[2,3,4,5,6,7],["2005-05-25T05:54:33Z","2005-05-25T06:03:39Z","2005-05-25T06:04:41Z","2005-05-25T06:05:21Z","2005-05-25T06:08:07Z","2005-05-25T06:11:53Z"],[1525,1711,2452,2079,2792,3995],[459,408,333,222,549,269],["2005-05-29T02:40:33Z","2005-06-02T05:12:39Z","2005-06-03T08:43:41Z","2005-06-02T11:33:21Z","2005-05-27T08:32:07Z","2005-05-30T03:34:53Z"],[1,1,2,1,1,2],["2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>rental_id<\/th>\n      <th>rental_date<\/th>\n      <th>inventory_id<\/th>\n      <th>customer_id<\/th>\n      <th>return_date<\/th>\n      <th>staff_id<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-7741e7b0bd6a82d6839a" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-7741e7b0bd6a82d6839a">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[2,3,4,5,6,7],["2005-05-25T05:54:33Z","2005-05-25T06:03:39Z","2005-05-25T06:04:41Z","2005-05-25T06:05:21Z","2005-05-25T06:08:07Z","2005-05-25T06:11:53Z"],[1525,1711,2452,2079,2792,3995],[459,408,333,222,549,269],["2005-05-29T02:40:33Z","2005-06-02T05:12:39Z","2005-06-03T08:43:41Z","2005-06-02T11:33:21Z","2005-05-27T08:32:07Z","2005-05-30T03:34:53Z"],[1,1,2,1,1,2],["2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>rental_id<\/th>\n      <th>rental_date<\/th>\n      <th>inventory_id<\/th>\n      <th>customer_id<\/th>\n      <th>return_date<\/th>\n      <th>staff_id<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
 ### The `summary` function in base
 
 The basic statistics that the base package `summary` provides can serve a unique diagnostic purpose in this context.  For example, the following output shows that `rental_id` is a sequential number from 1 to 16,049 with no gaps.  The same is true of `inventory_id`.  The number of NA's is a good first guess as to the number of dvd's rented out or lost on 2005-09-02 02:35:22.
@@ -418,25 +419,10 @@ skim(rental_tibble)
 ```
 
 ```r
-skim_to_wide(rental_tibble)
+wide_rental_skim <- skim_to_wide(rental_tibble)
 ```
 
-```
-## # A tibble: 7 x 17
-##   type  variable missing complete n     mean  sd    p0    p25   p50   p75  
-##   <chr> <chr>    <chr>   <chr>    <chr> <chr> <chr> <chr> <chr> <chr> <chr>
-## 1 inte… custome… 0       16044    16044 " 29… " 17… 1     " 14… " 29… "  4…
-## 2 inte… invento… 0       16044    16044 2291… 1322… 1     "115… "229… " 34…
-## 3 inte… rental_… 0       16044    16044 8025… 4632… 1     4013… 8025… 1203…
-## 4 inte… staff_id 0       16044    16044 "   … "   … 1     "   … "   … "   …
-## 5 POSI… last_up… 0       16044    16044 <NA>  <NA>  <NA>  <NA>  <NA>  <NA> 
-## 6 POSI… rental_… 0       16044    16044 <NA>  <NA>  <NA>  <NA>  <NA>  <NA> 
-## 7 POSI… return_… 183     15861    16044 <NA>  <NA>  <NA>  <NA>  <NA>  <NA> 
-## # ... with 6 more variables: p100 <chr>, hist <chr>, min <chr>, max <chr>,
-## #   median <chr>, n_unique <chr>
-```
-
-## Dividing the work between R on your machine and the dbms
+## Dividing the work between R on your machine and the DBMS
 
 They work together.
 
@@ -456,7 +442,7 @@ This probably belongs later in the book.
 
 ### dplyr tools
 
-Where you place the `collect` function matters.
+Where you place the `collect` function matters.⁄
 
 ```r
 dbDisconnect(con)

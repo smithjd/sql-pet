@@ -1,14 +1,21 @@
 # Writing to the DBMS (73)
 
+At the end of this chapter, you will be able to 
 
-Start up the `docker-pet` container
+  * Write queries in R using docker container.
+  * Start and connect to the database with R.
+  * Create, Modify, and remove the table.
+
+
+Start up the `docker-pet` container:
+
 
 ```r
 sp_docker_start("sql-pet")
 ```
 
 
-now connect to the database with R
+Now connect to the database with R using your login info:
 
 ```r
 con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
@@ -16,12 +23,14 @@ con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"
                          dbname = "dvdrental",
                          seconds_to_test = 10)
 ```
-## create a new table
+## Create a new table
 
-This is an example from the DBI help file
+This is an example from the DBI help file.
+
 
 ```r
 dbWriteTable(con, "cars", head(cars, 3)) # "cars" is a built-in dataset, not to be confused with mtcars
+
 dbReadTable(con, "cars")   # there are 3 rows
 ```
 
@@ -32,6 +41,10 @@ dbReadTable(con, "cars")   # there are 3 rows
 ## 3     7    4
 ```
 ## Modify an existing table
+
+To add additional rows or instances to the "cars" table, we will use INSERT command with their values.
+
+There are two different ways of adding values: list them or pass values using the param argument. 
 
 
 ```r
@@ -90,7 +103,10 @@ dbReadTable(con, "cars")   # there are now 10 rows
 ## 10     7    8
 ```
 
-## Clean up
+## Remove table and Clean up
+
+Here you will remove the table "cars", disconnect from the database and exit docker.
+
 
 ```r
 dbRemoveTable(con, "cars")
