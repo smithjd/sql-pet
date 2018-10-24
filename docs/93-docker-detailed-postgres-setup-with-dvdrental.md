@@ -23,7 +23,7 @@ library(tidyverse)
 ```
 
 ```
-## ── Attaching packages ──────────────────────────────────────────── tidyverse 1.2.1 ──
+## ── Attaching packages ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
 ```
 
 ```
@@ -34,7 +34,7 @@ library(tidyverse)
 ```
 
 ```
-## ── Conflicts ─────────────────────────────────────────────── tidyverse_conflicts() ──
+## ── Conflicts ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()
 ```
@@ -85,7 +85,7 @@ library(here)
 ```
 
 ```
-## here() starts at /home/znmeb/Projects/sql-pet
+## here() starts at /Users/jds/Documents/Library/R/r-system/sql-pet
 ```
 
 ## Download the `dvdrental` backup file
@@ -127,12 +127,8 @@ sp_show_all_docker_containers()
 ```
 
 ```
-## [1] "CONTAINER ID        IMAGE                COMMAND                  CREATED              STATUS                     PORTS               NAMES"                  
-## [2] "55441bbc223d        postgres-dvdrental   \"docker-entrypoint.s…\"   About a minute ago   Exited (0) 5 seconds ago                       sql-pet"              
-## [3] "424d4c3dfc89        rstats               \"/init\"                  4 days ago           Exited (0) 4 days ago                          containers_rstats_1"  
-## [4] "4c3eb1dc5043        postgis              \"docker-entrypoint.s…\"   4 days ago           Exited (0) 4 days ago                          containers_postgis_1" 
-## [5] "8da9d3a59732        dpage/pgadmin4       \"/entrypoint.sh\"         4 days ago           Exited (0) 4 days ago                          containers_pgadmin4_1"
-## [6] "7030e81489b8        2feef91d6764         \"/bin/sh -c 'su - rs…\"   4 days ago           Exited (1) 4 days ago                          laughing_johnson"
+## [1] "CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                     PORTS               NAMES"    
+## [2] "5168f9441a09        postgres-dvdrental   \"docker-entrypoint.s…\"   53 seconds ago      Exited (0) 5 seconds ago                       sql-pet"
 ```
 
 Remove the `sql-pet` container if it exists (e.g., from a prior run)
@@ -163,7 +159,7 @@ wd
 ```
 
 ```
-## [1] "/home/znmeb/Projects/sql-pet"
+## [1] "/Users/jds/Documents/Library/R/r-system/sql-pet"
 ```
 
 ```r
@@ -181,7 +177,7 @@ docker_cmd
 ```
 
 ```
-## run --detach  --name sql-pet --publish 5432:5432 --mount type=bind,source="/home/znmeb/Projects/sql-pet",target=/petdir postgres:10
+## run --detach  --name sql-pet --publish 5432:5432 --mount type=bind,source="/Users/jds/Documents/Library/R/r-system/sql-pet",target=/petdir postgres:10
 ```
 
 
@@ -192,7 +188,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "8b06559f66b5734eca00cbe5f1488e1f81f70e5c93d14cf64066f72d10f51ed9"
+## [1] "56169e33668cb74341b0487eaa50bad750c2a5e87399c7b7d8ef2302981351a0"
 ```
 
 Peek inside the docker container and list the files in the `petdir`
@@ -235,12 +231,8 @@ sp_show_all_docker_containers()
 ```
 
 ```
-## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES"                  
-## [2] "8b06559f66b5        postgres:10         \"docker-entrypoint.s…\"   5 seconds ago       Up 3 seconds            0.0.0.0:5432->5432/tcp   sql-pet"              
-## [3] "424d4c3dfc89        rstats              \"/init\"                  4 days ago          Exited (0) 4 days ago                            containers_rstats_1"  
-## [4] "4c3eb1dc5043        postgis             \"docker-entrypoint.s…\"   4 days ago          Exited (0) 4 days ago                            containers_postgis_1" 
-## [5] "8da9d3a59732        dpage/pgadmin4      \"/entrypoint.sh\"         4 days ago          Exited (0) 4 days ago                            containers_pgadmin4_1"
-## [6] "7030e81489b8        2feef91d6764        \"/bin/sh -c 'su - rs…\"   4 days ago          Exited (1) 4 days ago                            laughing_johnson"
+## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES"    
+## [2] "56169e33668c        postgres:10         \"docker-entrypoint.s…\"   4 seconds ago       Up 3 seconds        0.0.0.0:5432->5432/tcp   sql-pet"
 ```
 inside Docker, execute the postgress SQL command-line program to create the dvdrental database:
 
@@ -380,12 +372,8 @@ sp_show_all_docker_containers()
 ```
 
 ```
-## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES"                  
-## [2] "8b06559f66b5        postgres:10         \"docker-entrypoint.s…\"   18 seconds ago      Exited (0) Less than a second ago                       sql-pet"              
-## [3] "424d4c3dfc89        rstats              \"/init\"                  4 days ago          Exited (0) 4 days ago                                   containers_rstats_1"  
-## [4] "4c3eb1dc5043        postgis             \"docker-entrypoint.s…\"   4 days ago          Exited (0) 4 days ago                                   containers_postgis_1" 
-## [5] "8da9d3a59732        dpage/pgadmin4      \"/entrypoint.sh\"         4 days ago          Exited (0) 4 days ago                                   containers_pgadmin4_1"
-## [6] "7030e81489b8        2feef91d6764        \"/bin/sh -c 'su - rs…\"   4 days ago          Exited (1) 4 days ago                                   laughing_johnson"
+## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES"    
+## [2] "56169e33668c        postgres:10         \"docker-entrypoint.s…\"   15 seconds ago      Exited (0) Less than a second ago                       sql-pet"
 ```
 
 We are leaving the `sql-pet` container intact so it can be used in running the

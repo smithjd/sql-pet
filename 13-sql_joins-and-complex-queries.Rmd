@@ -47,65 +47,14 @@ discuss this simple example? http://www.postgresqltutorial.com/postgresql-left-j
 
 ```
 
-## Different strategies for interacting with the database
-
-
-select examples
-    dbGetQuery returns the entire result set as a data frame.  
-        For large returned datasets, complex or inefficient SQL statements, this may take a 
-        long time.
-
-      dbSendQuery: parses, compiles, creates the optimized execution plan.  
-          dbFetch: Execute optimzed execution plan and return the dataset.
-    dbClearResult: remove pending query results from the database to your R environment
-
-## Use dbGetQuery
-
-How many customers are there in the DVD Rental System
-```{r}
-rs1 <- dbGetQuery(con, 'select * from customer;')
-sp_print_df(head(rs1))
-
-pco <- dbSendQuery(con, 'select * from customer;')
-rs2  <- dbFetch(pco)
-dbClearResult(pco)
-sp_print_df(head(rs2))
-```
-
-## Use dbExecute
-```{r}
-# insert yourself as a new customer
-dbExecute(con,
-  "insert into customer 
-  (store_id,first_name,last_name,email,address_id
-  ,activebool,create_date,last_update,active)
-  values(2,'Sophie','Yang','dodreamdo@yahoo.com',1,TRUE,'2018-09-13','2018-09-13',1)
-  returning customer_id;
-  "
-  )
-
-```
 ## Joins
-### anti join -- Find customers who have never rented a movie.
-```{r}
 
-rs <- dbGetQuery(con,
-                 "select c.first_name
-                        ,c.last_name
-                        ,c.email
-                    from customer c 
-                         left outer join rental r
-                              on c.customer_id = r.customer_id 
-                   where r.rental_id is null;
-                 "
-                 )
-sp_print_df(head(rs))
-```
+Anti joins
+
 ### Union
 
-how many films and languages exist in the DVD rental application
+#### how many films and languages exist in the DVD rental application
 ```{r }
-
 rs <- dbGetQuery(con,
                 "      select 'film' table_name,count(*) count from film 
                  union select 'language' table_name,count(*) count from language 
@@ -113,7 +62,11 @@ rs <- dbGetQuery(con,
                 "
                 )
 sp_print_df(head(rs))
-## what is the film distribution based on language
+```
+
+#### what is the film distribution based on language
+```{r }
+
 
 rs <- dbGetQuery(con,
                 "select l.language_id id
@@ -130,10 +83,10 @@ rs <- dbGetQuery(con,
 sp_print_df(head(rs))
 ```
 
-
-```{r}
 ## Store analysis
 ### which store has had more rentals and income
+
+```{r}
 rs <- dbGetQuery(con,
                 "select *
                  from (      select 'actor' tbl_name,count(*) from actor 
@@ -161,7 +114,7 @@ sp_print_df(head(rs))
 
 ## Store analysis
 
-### which store has the largest income stream
+### which store has the largest income stream?
 ```{r}
 
 
@@ -303,7 +256,7 @@ rs <- dbGetQuery(con,
 sp_print_df(head(rs))
 ```
 
-## Compute the outstanding balance.
+### Compute the outstanding balance.
 ```{r}
 rs <- dbGetQuery(con,
                 "select sum(f.rental_rate) open_amt,count(*) count
@@ -321,11 +274,75 @@ sp_print_df(head(rs))
 ```
 
 
+## Different strategies for interacting with the database
+
+
+select examples
+    dbGetQuery returns the entire result set as a data frame.  
+        For large returned datasets, complex or inefficient SQL statements, this may take a 
+        long time.
+
+      dbSendQuery: parses, compiles, creates the optimized execution plan.  
+          dbFetch: Execute optimzed execution plan and return the dataset.
+    dbClearResult: remove pending query results from the database to your R environment
+
+### Use dbGetQuery
+
+How many customers are there in the DVD Rental System
+```{r}
+rs1 <- dbGetQuery(con, 'select * from customer;')
+sp_print_df(head(rs1))
+
+pco <- dbSendQuery(con, 'select * from customer;')
+rs2  <- dbFetch(pco)
+dbClearResult(pco)
+sp_print_df(head(rs2))
+```
+
+### Use dbExecute
+```{r}
+# insert yourself as a new customer
+dbExecute(con,
+  "insert into customer 
+  (store_id,first_name,last_name,email,address_id
+  ,activebool,create_date,last_update,active)
+  values(2,'Sophie','Yang','dodreamdo@yahoo.com',1,TRUE,'2018-09-13','2018-09-13',1)
+  returning customer_id;
+  "
+  )
+
+```
+
+### anti join -- Find sophie who have never rented a movie.
+```{r}
+
+rs <- dbGetQuery(con,
+                 "select c.first_name
+                        ,c.last_name
+                        ,c.email
+                    from customer c 
+                         left outer join rental r
+                              on c.customer_id = r.customer_id 
+                   where r.rental_id is null;
+                 "
+                 )
+sp_print_df(head(rs))
+```
+
+
 ```{r}
 # diconnect from the db
 dbDisconnect(con)
 
 sp_docker_stop("sql-pet")
 
+```
+
+```{r}
+knitr::knit_exit()
+```
+testit
+```{r}
+ls()
 ```
 

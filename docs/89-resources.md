@@ -21,6 +21,12 @@
 * Postgres & Docker [documentation](https://docs.docker.com/samples/library/postgres/#postgres_db)
 * Usage examples of [Postgres with Docker](https://amattn.com/p/tutorial_postgresql_usage_examples_with_docker.html)
 
+## SQL and dplyr
+
+* [Why SQL is not for analysis but dplyr is](https://blog.exploratory.io/why-sql-is-not-for-analysis-but-dplyr-is-5e180fef6aa7)
+* [Data Manipulation with dplyr (With 50 Examples)](https://www.listendata.com/2016/08/dplyr-tutorial.html)
+
 ## More Resources
 * David Severski describes some [key elements of connecting to databases with R](https://github.com/davidski/database_connections) for MacOS users
 * This tutorial picks up ideas and tips from Ed Borasky's [Data Science pet containers](https://github.com/hackoregon/data-science-pet-containers), which creates a framework based on that Hack Oregon example and explains why this repo is named pet-sql.
+
