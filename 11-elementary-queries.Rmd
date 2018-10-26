@@ -1,7 +1,7 @@
 # Introduction to DBMS queries (11)
 
-```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
-# These packages are called in almost every chapter of the book:
+This chapter uses the following packages:
+```{r setup, echo=TRUE, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(DBI)
 library(RPostgres)
@@ -70,13 +70,11 @@ It contains a list of variables in the table, among other things:
 ```{r}
 rental_table$ops$vars
 ```
-<<But because of lazy loading, R has not retrieved any actual data from the DBMS.  We can trigger data extraction in several ways.  Although printing `rental_table` just prints the connection object, `head` triggers a query and prints its results:
+But because of lazy loading, R has not retrieved any actual data from the DBMS.  We can trigger data extraction in several ways.  Although printing `rental_table` just prints the connection object, `head` triggers a query and prints its results:
 
 ```{r}
-# rental_table %>% head
+rental_table %>% head
 ```
-
-smy
 Because R is lazy and smart, R only retrieves the first 10 rows of data from the DBMS by default.  This is a key paradigm shift for those new to working R-dplyr with databases.  When working locally, R has everything in memory in an R object, (dataframe/data.table)  In the code block below, we see that nrows returns NA.  Dplyr syntax is being converted to SQL syntax and pushed down to the DBMS, but only 10 rows are fetched back your R environment.
 
 See section **Controlling number of rows returned** to see how to tell R to quit being lazy, get to work, and return all the rows.
@@ -88,9 +86,6 @@ Printing `rental_table` in the next code block, returns all the rows, but in the
 nrow(rental_table)
 rental_table
 ```
-
-
-
 
 
 
