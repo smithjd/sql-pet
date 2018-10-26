@@ -22,9 +22,19 @@ At the end of this chapter, you will be able to
 
 ## Using R to query a DBMS in your organization
 
-* Large data stores in organizations are stored in databases that have specific access constraints and structural characteristics.  Data documentation may be incomplete, often emphasizes operational issues rather than analytic ones, and often needs to be confirmed on the fly.  Data volumes and query performance are important design constraints.
-* R users frequently need to make sense of complex data structures and coding schemes to address incompletely formed questions so that exploratory data analysis has to be fast. Exploratory techniques for the purpose should not be reinvented (and so would benefit from more public instruction or discussion).
-* Learning to navigate the interfaces (passwords, packages, etc.) between R and a database is difficult to simulate outside corporate walls.  Resources for interface problem diagnosis behind corporate walls may or may not address all the issues that R users face, so a simulated environment is needed.
+### Why write a book about DBMS access from R using Docker?
+
+* Large data stores in organizations are stored in databases that have specific access constraints and structural characteristics.  
+            * Data documentation may be incomplete, often emphasizes operational issues rather than analytic ones, and often needs to be confirmed on the fly.  
+            * Data volumes and query performance are important design constraints.
+            
+* R users frequently need to make sense of complex data structures and coding schemes to address incompletely formed questions so that exploratory data analysis has to be fast. 
+            * Exploratory and diagnostic techniques for the purpose should not be reinvented and would benefit from more public instruction or discussion.
+            
+* Learning to navigate the interfaces (passwords, packages, etc.) or gap between R and a database is difficult to simulate outside corporate walls.  
+            * Resources for interface problem diagnosis behind corporate walls may or may not address all the issues that R users face, so a simulated environment is needed.
+            
+* Docker is a relatively easy way to simulate the relationship between an R/Rstudio session and database -- all on a single machine.
 
 ## Docker as a tool for UseRs
 
@@ -40,12 +50,6 @@ This book explores #2 because it allows us to work on the database access issues
 * Docker is a relatively easy way to simulate the relationship between an R/RStudio session and a database -- all on on a single machine, provided you have Docker installed and running.
 * You may want to run PostgreSQL on a Docker container, avoiding any OS or system dependencies that might come up. 
 
-## Why write a book about DBMS access from R using Docker?
-
-* Large data stores in organizations are stored in databases that have specific access constraints and  structural characteristics.
-* Learning to navigate the gap between R and the database is difficult to simulate outside corporate walls.
-* R users frequently need to make sense of complex data structures using diagnostic techniques that should not be reinvented (and so would benefit from more public instruction and  commentary).
-* Docker is a relatively easy way to simulate the relationship between an R/Rstudio session and database -- all on on a single machine.
 
 ## Docker and R on your machine
 
