@@ -2,7 +2,7 @@
 title: "R, Databases and Docker"
 author: Dipti Muni, Ian Frantz, John David Smith, Mary Anne Thygesen, M. Edward (Ed)
   Borasky,  Scott Case, and Sophie Yang
-date: "2018-10-23"
+date: "2018-10-25"
 bibliography:
 - book.bib
 - packages.bib

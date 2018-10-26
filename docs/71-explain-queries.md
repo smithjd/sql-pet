@@ -83,12 +83,13 @@ head(rs2)
 ```
 
 ```
-##                                                                                                QUERY PLAN
-## 1                                                       Aggregate  (cost=2086.78..2086.80 rows=1 width=8)
-## 2                                             ->  Merge Anti Join  (cost=0.57..2066.73 rows=8022 width=0)
-## 3                                                                 Merge Cond: (r.rental_id = p.rental_id)
-## 4              ->  Index Only Scan using rental_pkey on rental r  (cost=0.29..1024.95 rows=16044 width=4)
-## 5         ->  Index Only Scan using idx_fk_rental_id on payment p  (cost=0.29..819.23 rows=14596 width=4)
+##                                                                        QUERY PLAN
+## 1                                 Aggregate  (cost=896.49..896.50 rows=1 width=8)
+## 2                     ->  Hash Anti Join  (cost=436.41..892.86 rows=1452 width=0)
+## 3                                          Hash Cond: (r.rental_id = p.rental_id)
+## 4                ->  Seq Scan on rental r  (cost=0.00..310.44 rows=16044 width=4)
+## 5                              ->  Hash  (cost=253.96..253.96 rows=14596 width=4)
+## 6               ->  Seq Scan on payment p  (cost=0.00..253.96 rows=14596 width=4)
 ```
 
 ```r
@@ -107,13 +108,13 @@ head(rs3)
 ```
 
 ```
-##                                                                  QUERY PLAN
-## 1                        Aggregate  (cost=2353.64..2353.65 rows=1 width=40)
-## 2                  ->  Hash Join  (cost=205.14..2313.53 rows=8022 width=12)
-## 3                                        Hash Cond: (i.film_id = f.film_id)
-## 4                   ->  Hash Join  (cost=128.64..2215.88 rows=8022 width=2)
-## 5                              Hash Cond: (r.inventory_id = i.inventory_id)
-## 6               ->  Merge Anti Join  (cost=0.57..2066.73 rows=8022 width=4)
+##                                                                        QUERY PLAN
+## 1                              Aggregate  (cost=1101.11..1101.12 rows=1 width=40)
+## 2                         ->  Hash Join  (cost=987.51..1093.84 rows=1452 width=6)
+## 3                                              Hash Cond: (i.film_id = f.film_id)
+## 4                         ->  Hash Join  (cost=911.01..1013.52 rows=1452 width=2)
+## 5                                    Hash Cond: (i.inventory_id = r.inventory_id)
+## 6               ->  Seq Scan on inventory i  (cost=0.00..70.81 rows=4581 width=6)
 ```
 
 ```r
@@ -138,11 +139,11 @@ head(rs4)
 
 ```
 ##                                                          QUERY PLAN
-## 1                  Sort  (cost=2452.49..2453.99 rows=599 width=260)
+## 1                   Sort  (cost=1166.25..1167.75 rows=600 width=57)
 ## 2                               Sort Key: (sum(f.rental_rate)) DESC
-## 3     ->  HashAggregate  (cost=2417.37..2424.86 rows=599 width=260)
+## 3      ->  HashAggregate  (cost=1131.07..1138.57 rows=600 width=57)
 ## 4                                          Group Key: c.customer_id
-## 5         ->  Hash Join  (cost=227.62..2357.21 rows=8022 width=232)
+## 5         ->  Hash Join  (cost=1010.01..1120.18 rows=1452 width=23)
 ## 6                        Hash Cond: (r.customer_id = c.customer_id)
 ```
 
