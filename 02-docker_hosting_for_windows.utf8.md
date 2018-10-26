@@ -25,8 +25,7 @@ Install Docker for Windows *stable*. The instructions are here: <https://docs.do
 ### Shared drives
 If you're going to mount host files into container file systems (as we do in the following chapters), you need to set up shared drives. Open the Docker settings dialog and select `Shared Drives`. Check the drives you want to share. In this screenshot, the `D:` drive is my 1 terabyte hard drive.
 
-
-\begin{center}\includegraphics[width=0.9\linewidth]{screenshots/2018-08-26_15_16_51-Shared_Drives} \end{center}
+<img src="screenshots/2018-08-26_15_16_51-Shared_Drives.png" width="90%" style="display: block; margin: auto;" />
 
 ### Kubernetes
 Kubernetes is a container orchestration / cloud management package that's a major DevOps tool. It's heavily supported by Red Hat and Google, and as a result is becoming a required skill for DevOps.
@@ -35,8 +34,7 @@ However, it's overkill for this project at the moment. So you should make sure i
 
 Go to the `Kubernetes` dialog and make sure the `Enable Kubernetes` checkbox is cleared.
 
-
-\begin{center}\includegraphics[width=0.9\linewidth]{screenshots/2018-08-26_15_26_22-Kubernetes} \end{center}
+<img src="screenshots/2018-08-26_15_26_22-Kubernetes.png" width="90%" style="display: block; margin: auto;" />
 
 ## Git, GitHub and line endings
 [Git](https://git-scm.com/) was originally developed for Linux - in fact, it was created by Linus Torvalds to manage hundreds of different versions of the Linux kernel on different machines all around the world. As usage has grown, Git has achieved a huge following and is the version control system used by most large open source projects, including this one.

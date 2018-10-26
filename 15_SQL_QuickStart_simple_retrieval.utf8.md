@@ -1,4 +1,6 @@
-# SQL Quick start - simple retrieval (15)
+# SQL QuickStart - simple retrieval (15)
+
+
 
 
 Start up the `docker-pet` container
@@ -40,45 +42,6 @@ colFmt <- function(x,color)
 # sample call
 # * `r colFmt('Cover inline tables in future section','red')`
 ```
-
-Moved this from 11-elementary-queries
-
-```r
-dplyr_summary_df <-
-    read.delim(
-    '11-dplyr_sql_summary_table.tsv',
-    header = TRUE,
-    sep = '\t',
-    as.is = TRUE
-    )
-
-head(dplyr_summary_df)
-```
-
-```
-##   In          Dplyr_Function
-## 1  Y               arrange()
-## 2 Y?              distinct()
-## 3  Y       select() rename()
-## 4  N                  pull()
-## 5  Y    mutate() transmute()
-## 6  Y summarise() summarize()
-##                                      description
-## 1                      Arrange rows by variables
-## 2           Return rows with matching conditions
-## 3                Select/rename variables by name
-## 4                     Pull out a single variable
-## 5                              Add new variables
-## 6 Reduces multiple values down to a single value
-##                            SQL_Clause Notes                 Category
-## 1                            ORDER BY    NA Basic single-table verbs
-## 2                   SELECT distinct *    NA Basic single-table verbs
-## 3       SELECT column_name alias_name    NA Basic single-table verbs
-## 4                 SELECT column_name;    NA Basic single-table verbs
-## 5 SELECT computed_value computed_name    NA Basic single-table verbs
-## 6 SELECT aggregate_functions GROUP BY    NA Basic single-table verbs
-```
-
 
 ## SQL Commands
 
@@ -122,7 +85,8 @@ A SQL SELECT statement consists of 1 to 6 clauses.  In the table below, `object`
 |HAVING     |           |Provides the filter condition on the the GROUP BY clause.
 |ORDER BY   | arrange() |Contains a list of column names indicating the order of the column value.  Each column can be either ASCending or DEScending.
 
-## Query statement structure
+
+## 
 
 A SQL query statement consists of six distinct parts and each part is referred to as a clause.  The foundation of the SQL language is based set theory and the result of a SQL query is referred to as a result set.  A SQL query statement is "guaranteed" to return the same set of data, 
 but not necessarily in the same order.  However, in practice, the result set is usually in the same order.
@@ -133,7 +97,7 @@ show every column.  A summarized row set requires one or more summary columns an
 Sales reps may be interested a detailed sales report showing all their activity.  At the end of the month, the sales rep may be interested at a 
 summary level based on product line dollars.  The sales manager may be more interest in territory dollars.
 
-## SQL Clauses
+SQL Clauses
 
 1.  Select Clause
 2.  From Clause
@@ -150,9 +114,9 @@ For lack of a better term, a SQL-QBE, a very simple SQL Query by example, is use
     Side Note: This version of Postgres requires all SQL statments be terminated with a semi-colon.  
 Some older flavors of SQL and GUI tools do not require the SQL statement to be terminated with a semi-colon, ';' for the command to be executed.  It is recommended that you always terminate your SQL commands with a semi-colon.
 
-## SELECT Clause: Column Selection -- Vertical Partioning of Data 
+### SELECT Clause: Column Selection -- Vertical Partioning of Data 
 
-### 1.  Simplest SQL query: All rows and all columns from a single table.  
+#### 1.  Simplest SQL query: All rows and all columns from a single table.  
 
     dvdrental=# select * from store;  
     
@@ -161,7 +125,7 @@ Some older flavors of SQL and GUI tools do not require the SQL statement to be t
     1 |                1 |          1 | 2006-02-15 09:57:12
     2 |                2 |          2 | 2006-02-15 09:57:12   
                 
-### 2.  Same Query as 1, but only show first two columns; 
+#### 2.  Same Query as 1, but only show first two columns; 
 
     dvdrental=# select STORE_ID, manager_staff_id from store;                
     
@@ -170,7 +134,7 @@ Some older flavors of SQL and GUI tools do not require the SQL statement to be t
         1 |                1                             
         2 |                2                             
                 
-### 3.  Same Query as 2, but reverse the column order               
+#### 3.  Same Query as 2, but reverse the column order               
 
     dvdrental=# select manager_staff_id,store_id from store;
     
@@ -179,7 +143,7 @@ Some older flavors of SQL and GUI tools do not require the SQL statement to be t
                 1 |        1                            
                         2 |        2          
                         
-### 4.  Rename Columns -- SQL column alias in the result set
+#### 4.  Rename Columns -- SQL column alias in the result set
 
     dvdrental=# select manager_staff_id mgr_sid,store_id "store id" from store;  
     
@@ -199,7 +163,7 @@ Some older flavors of SQL and GUI tools do not require the SQL statement to be t
       1.  Some database table column names are not user friendly.
       2.  When multiple tables are joined, the column names may be the same in one or more tables and one needs to distinguish between the column names from the different tables.
       
-### 5.  Adding labels and Additional Columns to the Result Set
+#### 5.  Adding labels and Additional Columns to the Result Set
 
     dvdrental=# select 'derived column' showing
                        ,*
@@ -219,13 +183,13 @@ showing     | store_id | manager_staff_id | address_id |     last_update     |  
     2.  The db and dtts, date timestamp, are new columns generated from Postgres System Information Functions.
     3.  Note that `user` is not a function call, no parenthesis.  
     
-## SQL Comments
+### SQL Comments
 
 https://pgexercises.com/questions/basic
 
 SQL supports both a single line comment, preceed the line with two dashes, `--`, and a C like block comment, \\*  ... */.
 
-### 6.  Single line comment --
+#### 6.  Single line comment --
 
     dvdrental=# select 'single line comment, dtts' showing       
                       ,*
@@ -241,7 +205,7 @@ showing          | store_id | manager_staff_id | address_id |     last_update   
  
     The dtts  line is commented out with the two dashes and is dropped from the end of the result set columns.
     
-### 7.  Multi-line comment /\*...\*/
+#### 7.  Multi-line comment /\*...\*/
 
     dvdrental=# select 'block comment drop db, user, and dtts' showing
                       ,*
@@ -260,15 +224,15 @@ showing                                | store_id | manager_staff_id | address_i
     The three columns db, user, and dtts, between the /\* and \*/ have been commented and no longer appear as the end columns of the result set.
     
 
-## FROM Clause 
+### FROM Clause 
 
 The `FROM` clause contains database tables/views from which the `SELECT` columns are derived.  For now, in the examples, we are only using a single table.  If the database reflects a relational model, your data is likely spread out over several tables.  The key take away when beginning your analysis is to pick the table that has most of the data that you need for your analysis.  This table becomes your main or driving table to build your SQL query statement around.  After identifying your driving table, potentially save yourself a lot of time and heart ache.  Review any view that is built on your driving table.  If one or more exist, especially if vendor built, may already have the additional information need for your analysis.
 
-\textcolor{red}{Insert SQL here or link to Views dependent on what}
+Insert SQL here or link to Views dependent on what
 
 In this tutorial, there is only a single user hitting the database and row/table locking is not necessary and considered out of scope.
 
-### Table Uses
+#### Table Uses
 
   *  A table can be used more than once in a FROM clause.  These are self-referencing table.  An example is an EMPLOYEE table which contains a foriegn key to her manager.  Her manager also has a foriegn key to her manager, etc up the corporate ladder.  
   *  In the example above, the EMPLOYEE table plays two roles, employee and manager.  The next line shows the FROM clause showing both rows.  
@@ -278,13 +242,13 @@ In this tutorial, there is only a single user hitting the database and row/table
   *  The EE and MGR are role abbreviations for the EMPLOYEE table.  
   *  Since all the column names are exactly the same for the EE and MGR role, the column names need to be prefixed with their role alias, e.g., SELECT MGR.EE_NAME, EE.EE_NAME ... shows the manager name and her employee name who work for her.
   *  It is a good habit to always alias your tables and prefix your column names with the table alias to eliminate any ambiguity as to where the column came from.  This is critical where there is inconsistent table column naming convention.
-  * \textcolor{red}{Cover inline tables in future section}
+  * Cover inline tables in future section
   
 ```
 Side Note: Do not create an unintended Cartesian join.  If one has more than one table in the FROM clause, make sure that every table in the FROM clause joins to at least one other table.  If your result set has an unexpectantly high rowcount and long runtime, check for a missing join in the FROM clause.
 ```
 
-## WHERE Clause: Row Selection -- Horizontal Partitioning of Data                                          
+### WHERE Clause: Row Selection -- Horizontal Partitioning of Data                                          
 
 In the previous SELECT clause section, the SELECT statement either partitioned data vertically across the table columns or derived vertical column values.  This section provides examples that partitions the table data across rows in the table.
 
@@ -312,7 +276,7 @@ When the filter logic is complex, it is sometimes easier to represent the where 
 1.  (A and B)' = A' or B'
 2.  (A or B)'  = A' and B'
 
-### Example Continued
+#### Example Continued
 
 We begin with `1`, our simplest SQL query.
 
@@ -323,7 +287,7 @@ We begin with `1`, our simplest SQL query.
     1 |                1 |          1 | 2006-02-15 09:57:12
     2 |                2 |          2 | 2006-02-15 09:57:12 
 
-### 7 WHERE condition logically never TRUE.
+#### 7 WHERE condition logically never TRUE.
 
     dvdrental=# select * from store where 1 = 0;
     
@@ -332,7 +296,7 @@ We begin with `1`, our simplest SQL query.
 
     Since 1 = 0 is always false, no rows are ever returned.  Initially this construct seems useless, but actually is quite handy when debugging large scripts where a portion of the script needs to be turned off or when creating an empty table with the exact same column names and types as the FROM table(s).  
 
-### 8 WHERE condition logically always TRUE.
+#### 8 WHERE condition logically always TRUE.
 
     dvdrental=# select * from store where 1 = 1;
     
@@ -343,7 +307,7 @@ We begin with `1`, our simplest SQL query.
     
     Since 1 = 1 is always true, all rows are always returned.  Initially this construct seems useless, but actually is also quite handy when debugging large scripts and creating a backup of table.
     
-### 9 WHERE equality condition 
+#### 9 WHERE equality condition 
 
     dvdrental=# select * from store where store_id = 2;
     
@@ -353,7 +317,7 @@ We begin with `1`, our simplest SQL query.
         
         The only row where the store_id = 2 is row 2.  Only row 2 is kept and all others are dropped.
         
-### 10 WHERE NOT equal conditions 
+#### 10 WHERE NOT equal conditions 
 
     dvdrental=# select * from store where store_id <> 2;  # <> syntactically the same as !=
     
@@ -363,7 +327,7 @@ We begin with `1`, our simplest SQL query.
         
         The only row where the store_id <> 2 is row 1.  Only row 1 is kept and all others are dropped.
 
-### 10 WHERE OR condition
+#### 10 WHERE OR condition
 
     dvdrental=# select * from store where manager_staff_id = 1 or store_id <> 2 or address_id = 3; 
     
@@ -400,7 +364,7 @@ UNIQUE|The UNIQUE operator searches every row of a specified table for uniquenes
 
 
     
-## TO-DO's
+ ## TO-DO's
  
  1.  inline tables
  2.  correlated subqueries
