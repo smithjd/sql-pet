@@ -1,4 +1,9 @@
-# Drilling into Your DB Environment
+---
+title: "Drilling into Your DB Environment"
+author: "Sophie Yang"
+date: "October 12, 2018"
+output: html_document
+---
 
 ```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
 # These packages are called in almost every chapter of the book:
@@ -10,7 +15,43 @@ library(here)
 require(knitr)
 library(dbplyr)
 library(sqlpetr)
-display_rows <- 5
+
+library(DiagrammeR)
+```
+
+```{r, echo=FALSE}
+MODE = 'DEMO'  #DEMO or BOOK
+
+if (MODE == 'DEMO') {
+    display_rows <- 10
+} else {
+    display_rows <-10
+}
+
+display_rs <- function (MODE,RS,display_rows){
+    if(MODE == 'DEMO') {
+        if (nrow(RS)==0){
+            cat(glue(as.character(match.call()$RS)),' is empty')
+        } else {
+            View(x=RS,title=as.character(match.call()$RS))
+        }
+    } else {
+        kable(head(RS,display_rows))
+    }        
+}
+```
+
+```{r}
+
+dplyr_summary_df <-
+    read.delim(
+    'c:/docker/11_dplyr_sql_summary_table.rmd',
+    header = TRUE,
+    sep = '|',
+    as.is = TRUE
+    )
+
+display_rs(MODE,dplyr_summary_df,display_rows)
 ```
 
 Start up the `docker-pet` container
@@ -20,7 +61,7 @@ sp_docker_start("sql-pet")
 ```
 
 Now connect to the `dvdrental` database with R
-```{r}
+```{r, echo=FALSE}
 con <- sp_get_postgres_connection(
   user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
   password =  Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
@@ -29,45 +70,102 @@ con <- sp_get_postgres_connection(
 con
 ```
 
+### Which Server?
+
+Your data may actually be spread across multiple servers, DEV, QA, and PROD servers.
+
+For this tutorial, your laptop is a server for the Docker Postgres databases.  A database is a collection of files that Postgres manages in the background.  
+
+```{r, echo=FALSE}
+grViz("
+digraph DB_Environment {
+    graph [overlap = true, fontsize = 10, rankdir=LR, height= 10]
+
+    node [shape = box,fontname = Helvetica,fontcolor=blue]
+         Servers;
+
+    node [shape = box,fontname = Helvetica,fontcolor='']
+        DBs; Schemas; Tables;
+
+    edge [arrowhead = crow, arrowtail = tee]       
+    Servers -> DBs -> Schemas -> Tables
+}
+")
+```
+
 ### Which database?
 
 Your DBA will create your user accounts and priviledges for the database(s) that you can access.  
 
-One of the challenges when working with a database(s) is finding where your data actually resides.    Your best resources will be one or more subject matter experts, `SME`, and your DBA.  Your data may actually reside in multiple databases, e.g., a detail and summary databases.  In our tutorial, we focus on the one database, `dvdrental`.  Database names usually reflect something about the data that they contain.
+One of the challenges when working with a database(s) is finding where your data actually resides.    Your best resources will be one or more vendor consultants, business subject matter experts, `SME`, and your DBA(s).  Don't be surprised if the vendor consultants and SME's don't always agree what the data actually means.  The data form, fit, and function could have changed overtime due to an application upgrade or a government regulatory mandate.
 
-Your laptop is a server for the Docker Postgres databases.  A database is a collection of files that Postgres manages in the background.  
+Your data may actually reside in multiple databases, e.g., a detail and summary databases.  It is not unusual to have 100's of databases in a corporate environment.  Today some of your databases may physically reside on site or newer ones may reside in the cloud.
 
-### How many databases reside in the Docker Container?
+```{r, echo=FALSE}
+mermaid("
+graph LR
+  A{DB}-->DB1
+  A-->DBx
+  A-->DBn
+
+
+  DB1-->Schema1_1
+  DB1-->Schema1_x[Schema1_x]
+  DB1-->Schema1_n
+
+  DBx-->Schema{Schema}
+  Schema-->Schema_x_1
+  Schema-->Schema_x_x
+  Schema_x_x-->Table_x_1
+  Schema_x_x-->Table_x_x
+  Schema_x_x-->Table_x_n
+  Schema-->Schema_x_n
+  
+
+  DBn-->Schema_n_1
+  DBn-->Schema_n_x
+  DBn-->Schema_n_n
+")
+```
+
+In our tutorial, we focus on the one database, `dvdrental`.  Database names usually reflect something about the data that they contain.
+
+### How do I check for databases?
+
+Each vendor tracks database information in their own tables.  We can find the Postgres databases in the pg_database;  Two Oracle objects that contain DB information are V$DATABASE and V$INSTANCE.
 
 ```{r}
 rs <-
   DBI::dbGetQuery(
   con,
   "SELECT 'DB Names in Docker' showing
-          ,datname DB
-     FROM pg_database
+          ,datname DB,*
+     FROM pg_catalog.pg_database
     WHERE datistemplate = false;
   "
   )
 kable(rs)
 ```
 
-Which databases are available?
+### How do I change my database connections
 
 ```
-Modify the connection call to connect to the `postgres` database.
+Exercise: In the next codeblock, modify the connection call to connect to the `postgres` database.
+
+The code block will then disconnect you from the postgres database and reconnect you to the dvdrental database.
 ```
 
 ```{r}
-
+# connect to postgres DB
 con <- sp_get_postgres_connection(
   user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
   password =  Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
-  dbname = "your code goes here",
+  dbname = "eneter db name here",
   seconds_to_test = 10)
 
 con
-if (con != 'There is no connection')
+# Disconnect if successful
+if (class(con) == 'PqConnection')
     dbDisconnect(con)
 
 #Answer: con <PqConnection> postgres@localhost:5432
@@ -82,18 +180,26 @@ con <- sp_get_postgres_connection(
 con
 ```
 
-Note that the two Sys.getenv function calls work in this tutorial because both the user and password are available in both databases.  This is a common practice in organinzations that have implemented single sign on across their organization.
+Note that the two Sys.getenv function calls work in this tutorial because both the user and password are available in both databases.  This is a common practice in organizations that have implemented single sign on across their organization.
 
+### SQL_BE_STINGER_01: 
 ```
-Gotcha:
-
-   If one has data in multiple databases or multiple environments, Development, Integration, and Prodution, it is very easy to connect to the wrong database in the wrong environment.  Always double check your connection information when logging in and before performing any inserts, updates, or deletes against the database.
+   If one has data in multiple databases or multiple environments, Development, Integration, and Prodution, it is very easy to connect to the wrong database in the wrong environment especially when testing changes.  
+   
+   Always double check your connection information when logging in and before performing any inserts, updates, or deletes against the database.
 ```
 
-The following code block should be used to reduce propagating the above gotcha.  Current_database(), CURRENT_DATE or CURRENT_TIMESTAMP, and 'result set' are the most useful and last three not so much.  Instead of the host IP address having the actual hostname would be a nice addition.
+The following code block, customize to your liking, should be used to reduce propagating the above STINGER.  Current_database(), CURRENT_DATE or CURRENT_TIMESTAMP, and showing are the most useful and last three not so much.  Instead of the host IP address which is great if you are a computer, having the actual host name mnemonic name would be a nice. Most organization naming conventions will indicate something useful about the host.
+
+#### dplyr feature implemented in SQL
+```{r, echo=FALSE}
+kable(dplyr_summary_df %>% filter(grepl('^mutate\\(\\)',Dplyr.Function)))
+```
+## SQL_BE_01 How do implement standardized SQL MetaData Information?
 
 ```{r}
-rs1 <-
+#SQL_BE_01|Standard SQL MetaData Columns
+SQL_BE_01 <-
   DBI::dbGetQuery(
   con,
   "SELECT current_database() DB
@@ -105,125 +211,431 @@ rs1 <-
          ,inet_server_port() port
   "
   )
-kable(display_rows)
+kable(head(SQL_BE_01,display_rows))
 ```
 
-Since we will only be working in the `dvdrental` database in this tutorial and reduce the number of output columns shown, only the 'result set description' will be used. 
+
+
+We will work only in the `dvdrental` database.  To reduce scrolling back and forth in the tutorial, the only metadata column we will use is the `showing` column.
 
 ### Which Schema?
 
-In the code block below, we look at the `information_schema.table` which contains information about all the schemas and table/views within our dvdrental database.  Databases can have one or more schemas, containers that hold tables or views.  Schemas partition the database into big logical blocks of related data.  Schema names usually reflect an application or logically related datasets.  Occasionally a DBA will set up a new schema and use a users name.  
+```{r, echo=FALSE}
+grViz("
+digraph DB_Environment {
+    graph [overlap = true, fontsize = 10, rankdir=LR, height= 10]
 
-What schemas are in the `dvdrental` database?
-How many entries are in each schema?
+    node [shape = box,fontname = Helvetica,fontcolor=blue]
+         Schemas;
 
+    node [shape = box,fontname = Helvetica,fontcolor='']
+        Servers; DBs; Tables;
+
+    edge [arrowhead = crow, tail = tee]       
+    Servers -> DBs -> Schemas -> Tables
+}
+")
+```
+
+In the code block below, we look at the `information_schema.table` which contains information about all the schemas and table/views within our dvdrental database.  Databases can have one or more schemas, containers that hold tables or views.  Schemas partition the database into big logical blocks of related data and/or applications.  Schema names usually reflect an application or logically related data sets.  Occasionally a DBA will set up a new schema named after a user.  This is typically a sandbox environment.  
+
+
+#### dplyr
+```{r, echo=FALSE}
+kable(dplyr_summary_df %>% filter(grepl('^group_by\\(\\)',Dplyr.Function)))
+```
+
+## SQL_BE_02:Database Schemas from ANSI standard INFORMATION_SCHEMA.TABLES
 ```{r}
-## Database Schemas
-#  
-rs1 <-
+SQL_BE_02 <-
   DBI::dbGetQuery(
   con,
-  "SELECT 'DB Schemas' showing,t.table_catalog DB,t.table_schema,COUNT(*) tbl_vws
+  "SELECT 'DB Schema tables and views' showing
+          ,t.table_catalog DB
+          ,t.table_schema
+          ,COUNT(*) tbl_vws
      FROM information_schema.tables t
     GROUP BY t.table_catalog,t.table_schema
   "
   )
-kable(rs1)
+display_rs(MODE,SQL_BE_02,display_rows)
 
 ```
+
+    *  What schemas are in the `dvdrental` database?
+    *  How many tables and/or views are in each schema?
+    
+In the SQL-Quick Start section, we mentioned that SQL statements can either be detailed or grouped.  SQL_BE_02 is our first example of a GROUPED statement.  It has a GROUP BY clause:
+
+    GROUP BY t.table_catalog,t.table_schema
+    
+and an aggregation in the SELECT clause:
+
+    COUNT(*) tbl_vws
+    
+Every non-constant column in the SELECT CLAUSE that is not part of an aggregate function must be included in the group by clause. Note that the `showing` column, value 'DB Schema tables and views' is not included in the `GROUP BY` clause.     
 
 We see that there are three schemas.  The pg_catalog is the standard PostgreSQL meta data and core schema.  Postgres uses this schema to manage the internal workings of the database.  DBA's are the primary users of pg_catalog. We used the pg_catalog schema to answer the question 'How many databases reside in the Docker Container?', but normally the data analyst is not interested in analyzing database data.
 
 The information_schema contains ANSI standardized views used across the different SQL vendors, (Oracle, Sysbase, MS SQL Server, IBM DB2, etc). The information_schema contains a plethora of metadata that will help you locate your data tables, understand the relationships between the tables, and write efficient SQL queries.
 
 ### Exercises
-```{r ORDER BY}
-#
-# Add an order by clause to order the output by the table catalog.
-rs1 <- DBI::dbGetQuery(con,"SELECT '1. ORDER BY table_catalog' showing
-                                  ,t.table_catalog DB,t.table_schema,COUNT(*) tbl_vws 
-                              FROM information_schema.tables t
-                            GROUP BY t.table_catalog,t.table_schema
-                            "
-                      )
-kable(rs1)
-# Add an order by clause to order the output by tbl_vws in descending order.
-rs2 <- DBI::dbGetQuery(con,"SELECT '2. ORDER BY tbl_vws desc' showing
-                                  ,t.table_catalog DB,t.table_schema,COUNT(*) tbl_vws 
-                              FROM information_schema.tables t
-                            GROUP BY t.table_catalog,t.table_schema
-                            "
-                      )
-kable(rs2)
+
+In SQL_BE_02 we saw the most common aggregation form, one or more aggregate functions in the SELECT clause and a GROUP BY clause.  
+
+## SQL_BE_03:Group By No Aggregation -- Deduplication
+
+```{r}
+SQL_BE_03 <-
+  DBI::dbGetQuery(
+  con,
+  "SELECT 'DB Schemas' showing
+          ,t.table_catalog DB
+          ,t.table_schema
+          ,COUNT(*) tbl_vws  -- delete or comment this line out
+     FROM information_schema.tables t
+    GROUP BY t.table_catalog,t.table_schema
+  "
+  )
+kable(head(SQL_BE_03,display_rows))
+
+```
+
+    *  What is the net effect?
+    
+You have basically created a de-duped list, a distinct list.  Normally one needs to know why there are duplicates in the data and get them cleaned up before proceeding. 
+
+## SQL_BE_04:Distinct list take 2
+
+```{r}
+# DISTINCT clause dedupe the list
+SQL_BE_04 <-
+  DBI::dbGetQuery(
+  con,
+  "SELECT 'DB Schemas-distinct' showing  -- add DISTINCT after SELECT
+          ,t.table_catalog DB 
+          ,t.table_schema 
+     FROM information_schema.tables t
+  "
+  )
+kable(head(SQL_BE_04,display_rows+10))
+
+```
+
+    *  How many distinct rows did you get?  Should be 3.
+    
+## SQL_BE_05 - How to Drill Down and Aggregate at Lower Level    
+    
+In SQL_BE_02 we created a list of the number of objects in each schema and labeled it `tbl_vws`.  To avoid retyping column names, one often just copies and pastes the necessary columns from the SELECT clause into the `GROUP BY` clause.  
+
+```{r}
+#SQL_BE_05:drilling down from table_schema to table_type
+SQL_BE_05 <-
+  DBI::dbGetQuery(
+  con,
+  "SELECT 'GROUP BY t.table_catalog,t.table_schema' showing  
+          ,t.table_catalog DB 
+          ,t.table_schema 
+          -- add the new drill down column table_type here --
+          --,COUNT(*) count --uncomment this line to add the aggregate function
+     FROM information_schema.tables t
+    --uncomment following line and copy and paste the necessary columns from the SELECT clause
+    --GROUP BY 
+  "
+  )
+kable(head(SQL_BE_05,display_rows))
+```      
+
+    *  How many rows were returned?
+    *  Which schemas have more views than tables?
+    *  Which schemas have more tables than views?
+
+```
+SQL-BE-STINGER_02: GROUP BY STINGERS
+
+In the previous exercise: 
+1.  if you copied the SELECT columns directly into the 
+
+    GROUP BY 'DB Schemas-table types' showing
+             ,t.table_catalog DB 
+             ,t.table_schema 
+             ,table_type 
+
+    You got an 'ERROR: syntax error at or near "showing"' 
+    Fix: Do not include the constant derived column values in the GROUP BY
+
+2.  if you copied the SELECT columns directly into the
+
+    GROUP BY ,t.table_catalog DB 
+             ,t.table_schema 
+             ,table_type 
+             
+    You got an 'ERROR: syntax error at or near ","'  
+    Fix: The first column in the GROUP BY clause cannot begin with a comma, ',', an easy copy and paste mistake.
+    
+3.  if you copied the SELECT columns directly into the
+
+    GROUP BY t.table_catalog DB 
+             ,t.table_schema 
+             ,table_type     
+
+    You got an 'ERROR: syntax error at or near "DB"'
+    Fix: The GROUP BY clause wants the actual column name, NOT the column name and alias.  This is the most common STINGER of the three, especially if one has a large set of group by columns.
+
+```
+## SQL_BE_06 - How to FILTER GROUPS
+
+In the SQL Quick Start Section we looked at the SQL SELECT detail statement and used the WHERE clause to filter which detail rows that get returned.  In the following exercise, we look at filtering which GROUPS get returned.  
+
+Instructions: 
+
+1.  Execute the code block before modifying it to see the counts associated with each group.
+2.  Answer the before question(s) that follow the code block.
+3.  See the comment above the HAVING clause in the code block and modify the code block accordingly.
+4.  Answer the after question(s) that follow the code block.
+
+```{r}
+#SQL_BE_06: GROUP BY FILTERING
+SQL_BE_06 <-
+  DBI::dbGetQuery(
+  con,
+  "SELECT 'HAVING COUNT(*) BETWEEN 5 and 20 or COUNT(*) > 60' showing  
+          ,t.table_catalog DB 
+          ,t.table_schema 
+          ,table_type
+          ,COUNT(*) count 
+     FROM information_schema.tables t
+    GROUP BY t.table_catalog 
+          ,t.table_schema 
+          ,table_type
+    /* uncomment the following line and return all groups that have a count 
+       between 5 and 20 or a COUNT > 60
+    */
+    --HAVING COUNT(*) BETWEEN X and Y or COUNT(*) > Z
+  "  )
+kable(head(SQL_BE_06,display_rows))
+```      
+
+Before Questions:
+
+    *  How many groups are there before modifying the code block?
+    *  How many table types have counts between 5 and 20?
+    *  How many table types have counts greater than 60? 
+
+After Questions:
+
+    *  How many groups are there after modifying the code block?
+    *  Did the code block return the rows identified in the before questions?
+    
+
+The key difference between WHERE and HAVING filtering is scope.  WHERE filters at the row level and HAVING filters at the GROUP BY level.
+
+In practice, WHERE filters can be very simple to very complex, but HAVING filters are rarely compound conditional statements.  Common applications of the HAVING clause is to identify duplicate data.  
+
+## SQL_BE_07 - HOW to ORDER Result Set on a Single Column
+
+There is one final SQL SELECT clause, the `ORDER BY` clause which can be used with either a detail or aggregate SQL statement.  In SQL_BE_05  we drilled down and counted the different table types in the different schemas.
+
+In SQL_BE_07, we add a single level ORDER BY clause.  Execute the following code block before adding the ORDER BY clause.  
+
+1.  Is the output sorted by the `table_schema`?  It maybe or may not be?  Remember that SQL returns result sets and doesn't guarantee that the result set is always returned in the same order without an explicit `ORDER BY` clause.
+
+```{r}
+#SQL_BE_07: SORT BY CLAUSE
+SQL_BE_07 <-
+  DBI::dbGetQuery(
+  con,
+  "SELECT 'ORDER BY t.table_schema' showing  
+          ,t.table_catalog DB 
+          ,t.table_schema 
+          ,table_type
+          ,COUNT(*) count 
+     FROM information_schema.tables t
+    GROUP BY t.table_catalog 
+          ,t.table_schema 
+          ,t.table_type
+    -- add an ORDER BY table schema clause here--
+  "  )
+kable(head(SQL_BE_07,display_rows))
+```      
+
+## SQL_BE_08 - HOW to ORDER Result Set on a Multiple Columns and Descending Order
+
+In SQL_BE_08, we add another level to the ORDER BY clause with two levels table_type and counts in descending order.  Execute the following code block before updating the ORDER BY clause.  
+
+1.  Is the output for each group sorted in descending order?  Some groups maybe or may not be sorted in descending order?  
+
+
+```{r}
+#SQL_BE_08: SORT BY CLAUSE
+SQL_BE_08 <-
+  DBI::dbGetQuery(
+  con,
+  "SELECT 'ORDER BY table_schema, count(*) desc' showing  
+          ,t.table_catalog DB 
+          ,t.table_schema 
+          ,table_type
+          ,COUNT(*) count 
+     FROM information_schema.tables t
+    GROUP BY t.table_catalog 
+          ,t.table_schema 
+          ,t.table_type
+    -- Update the ORDER BY clause with the counts in descending order --
+    ORDER BY t.table_schema
+  "  )
+kable(head(SQL_BE_08,display_rows))
+```      
+
+Note that the ORDER BY clause either references the column name table_schema, or the aggregate function count(*).
+
+```
+SQL-BE-STINGER_03: ORDER BY column position
+
+THE ORDER BY clause is an odd duck because all the other clauses either refer to a column name or derived value.  The ORDER BY clause also allows one to reference the column by their numeric sequence in the list.  
+The ORDER BY clause could have been written as 
+
+    ORDER BY 3, 5 desc
+    
+The big time stinger comes when additional columns are added to the `SELECT` clause and the result set is no longer sorted as expected.  Don't be lazy, always explcitly list the `ORDER BY` values by name, not position to avoid the big time stinger.
+
+```
+
+### Table and Column Data -- MetaData
+
+Database user applications keep track of user application data.  The database itself is a special application and has its own schemas, information_schema and pg_catalog which it maintains to monitor the state of the database itself and user application data, the `dvdrental` application in the `public` schema.  In Docker Installation section, Postgres database application was installed and then the user database `dvdrental` was installed. The `dvdrental` database objects reside in the public schema and the database knows about and tracks them in the `information_schema` and the `pg_catalog` schemas.  In the next couple of SQL_BE's, we will ignore the `pg_catalog`.
+
+#### SQL LIKE and String Wildcards
+
+SQL recognizes two string wildcard characters, '_' and '%', any single character and any string of characters including a 0 length string.  To perform more advance string searches and manipulation, one needs regular expressions.  
+
+LIKE      | Description
+----------|---------------------------------
+where table_name like 'table%'  | find rows where table_name begins with 'table'.
+where table_name like 'table_'  | find rows where table_name begins with 'table' followed by any single character, e.g. 'tables'
+where table_name like '%usage'  | find rows where table_name ends with 'usage'
+where table_name like '%col%'   | find rows where 'col' is anywhere in table_name.
+
+## SQL_BE_09 looks for table metadata just in the information_schema.
+
+
+```{r}
+#SQL_BE_09: Table Metadata
+SQL_BE_09 <-
+  DBI::dbGetQuery(
+  con,
+  "SELECT 'SQL_BE_09 SQL Order of Precedence' SQL_BE
+          ,table_catalog || '.' || table_schema db_info     
+          ,table_type
+          ,table_name
+         ,'table_schema = ''information_schema'' AND '||
+          'table_name like ''table%'' and table_type = ''VIEW''' showing  
+     FROM information_schema.tables t
+   -- add a where clause to check the information_schema for any table_name 
+   -- that begins with 'table' any where in the name
+   -- and and has a table_type = VIEW
+    where table_schema = 'information_schema'
+      and table_name like 'table%' 
+      and table_type = 'VIEW'
+    ORDER BY table_type
+  "  )
+display_rs(MODE,SQL_BE_09,display_rows)
+
+```
+
+    *  How many rows are in the result set?
+
+## SQL_BE_10: Column Metadata
+
+In the next SQL_BE, we look for column metadata tables.
+
+```{r}
+## SQL_BE_10: Column Metadata
+SQL_BE_10 <-
+  DBI::dbGetQuery(
+  con,
+  "SELECT 'SQL_BE_10 SQL Order of Precedence' SQL_BE
+          ,table_catalog || '.' || table_schema db_info  
+          ,table_type
+          ,table_name
+         ,'table_schema = ''information_schema'' AND '||
+          'table_name like ''%col%'' and table_type = ''VIEW''' showing 
+     FROM information_schema.tables t
+   -- add a where clause to return any table_name that contains 'col' any where in the name
+    where table_schema = 'information_schema'
+      and table_name like '%col%' 
+      and table_type = 'VIEW'
+    ORDER BY table_type
+  "  )
+display_rs(MODE,SQL_BE_10,display_rows)
+```
+
+    * How many rows are in the result set?
+    * If we combine the result sets from SQL_BE_09 and SQL_BE_10, how many rows should we get.
+
+## SQL_BE_11 Table and Column Metadata
+
+```
+Combine SQL_BE_09 and SQL_BE_10.  
+Set table_schema = information_schema
+    table_name begins with table% or table_name contains %col%
+    table_type = VIEW
+```
+
+
+```{r}
+#SQL_BE_11: Column Metadata
+SQL_BE_11 <-
+  DBI::dbGetQuery(
+  con,
+  "SELECT 'SQL_BE_11 SQL Order of Precedence' SQL_BE
+          ,table_catalog || '.' || table_schema db_info 
+          ,table_type
+          ,table_name
+          ,'table_schema = ''information_schema'' table_name like ''table%''' ||
+           'OR table_name like ''%col%'' table_type = ''VIEW'' ' showing
+          
+      FROM information_schema.tables t
+     where table_schema = 'information_schema'
+       and table_name like 'table%' OR table_name like '%col%'
+       and table_type = 'VIEW'
+     ORDER BY table_type
+  "  )
+display_rs(MODE,SQL_BE_11,display_rows)
+```
+
+# SQL_BE_12 AND OR-Logical Precedence
+
+```
+Same as SQL_BE_11 but swapping the order of the last two lines in the where clause.
+Set table_schema = information_schema
+    table_type = VIEW
+    table_name begins with table% or table_name contains %col%
 ```
 
 ```{r}
-# Complete the SQL statement to show everything about all the tables.
-
-rs3 <- DBI::dbGetQuery(con,"SELECT '3. all information_schema tables' showing
-                                  ,'your code goes here' 
-                              FROM information_schema.tables t
-                            "
+SQL_BE_12 <- DBI::dbGetQuery(con,
+"SELECT 'SQL_BE_12 SQL Order of Precedence' SQL_BE
+    ,table_catalog || '.' || table_schema db_info
+    ,table_name
+    ,table_type
+	,'table_schema = ''information_schema'' table_type = ''VIEW'' table_name LIKE ''table%'' table_name LIKE ''%col%'' ' showing
+FROM information_schema.tables t
+WHERE table_schema = 'information_schema'
+    AND table_type = 'VIEW'
+    AND table_name LIKE 'table%' OR table_name LIKE '%col%'
+ORDER BY table_type;"                            
                       )
-kable(head (rs3,display_rows))
+display_rs(MODE,SQL_BE_12,display_rows)
 ```
 
-```{r}
-# Use the results from above to pull interesting columns from just the information_schema
-rs4 <- DBI::dbGetQuery(con,"SELECT '4. information_schema.tables' showing
-                                  ,'your code goes here' 
-                              FROM information_schema.tables t
-                             where 'your code goes here' = 'your code goes here'
-                            "
-                      )
-head(rs4,display_rows)
+    *  How many rows are in the result set?
+    *  What is/are the table type(s)?
+    *  Is this the expected result set?
+    *  Does this result set match the previous result set?
+    
+Below is a table of Operator Precedence in decreasing order.  The ones we are interested in this exercise are the last three logical operators.
 
-# Modify the SQL below with your interesting column names.
-# Update the where clause to return only rows from the information schema and begin with 'tab'
-rs5 <- DBI::dbGetQuery(con,"SELECT '5. information_schema.tables' showing
-                                  ,'your code goes here' 
-                              FROM information_schema.tables t
-                             where 'your code goes here' = 'your code goes here'
-                            "
-                      )
-kable(head(rs5,display_rows))
-
-# Modify the SQL below with your interesting column names.
-# Update the where clause to return only rows from the information schema and begin with 'col'
-rs6 <- DBI::dbGetQuery(con,"SELECT '6. information_schema.tables' showing
-                                  ,'your code goes here' 
-                              FROM information_schema.tables t
-                             where 'your code goes here' = 'your code goes here'
-                            "
-                      )
-kable(head(rs6,display_rows))
-
-
-```
-
-In the next exercise we combine both the table and column output from the previous exercises.  Review the following code block.  The last two lines of the WHERE clause are swithced.  Will the result set be the same or different?  Execute the code block and review the two datasets.
-
-```{r}
-rs7 <- DBI::dbGetQuery(con,"SELECT '7. information_schema.tables' showing
-                                  ,table_catalog||'.'||table_schema db_info, table_name, table_type
-                              FROM information_schema.tables t
-                             where table_schema = 'information_schema'
-                               and table_name like 'table%' OR table_name like '%col%'
-                               and table_type = 'VIEW'
-                            "
-                      )
-kable(head(rs7,display_rows))
-
-rs8 <- DBI::dbGetQuery(con,"SELECT '8. information_schema.tables' showing
-                                  ,table_catalog||'.'||table_schema db_info, table_name, table_type
-                              FROM information_schema.tables t
-                             where table_schema = 'information_schema'
-                               and table_type = 'VIEW'
-                               and table_name like 'table%' OR table_name like '%col%'
-                            "
-                      )
-kable(head(rs8,display_rows))
-```
+https://www.postgresql.org/docs/7.2/static/sql-precedence.html
 
 Operator/Element |	Associativity |	Description
 -----------------|----------------|-------------
@@ -251,11 +663,286 @@ OR|	left|	logical disjunction
 
 
 
-```{r}
+|SQL_BE_11 WHERE CLAUSE                    | SQL_BE_12 WHERE CLAUSE
+|------------------------------------------|------------------------------------
+|where table_schema = 'information_schema' |where table_schema = 'information_schema'
+|  and table_name like 'table%' OR table_name like '%col%'|and table_type = 'VIEW'
+|  and table_type = 'VIEW'|and table_name like 'table%' OR table_name like '%col%'
 
-rs1 <- DBI::dbGetQuery(con,"SELECT t.table_catalog DB ,t.table_schema
-                                  ,t.table_name,t.table_type
-                              FROM information_schema.tables t")
+According to the Logical Order of Precedence, AND and OR have left Associativity.  The SQL_BE_09 WHERE clause ends with an AND clause, table_type = 'VIEW'.  Everything in the result set must therefore also have a table_type = 'VIEW'.  The SQL_BE_10 WHERE clause ends with an OR clause, table_name like '%col%'.  Everything to the left of the OR clause must be TRUE OR any table_name like '%col%' is also TRUE.  Hence the SQL_BE_10 WHERE clause picked up an extra row, the 'BASE TABLE' row.
+
+```
+SQL-BE-STINGER: Orphaned OR clause. 
+
+Do not orphan an OR clause within a WHERE clause.  If one or more OR conditions are necessary in a WHERE clause, do not leave them dangling if they actually part of a multi-condidional AND clause.  Wrap the multi-conditonal OR clause in parentheses.
+```
+
+# SQL_BE_13 AND (OR-Logical Precedence)
+
+```{r}
+SQL_BE_13 <- DBI::dbGetQuery(con,
+"SELECT 'SQL_BE_13 SQL Order of Precedence' SQL_BE
+        ,table_catalog||'.'||table_schema db_info, table_name, table_type
+        ,'(table_name like ''table%'' OR table_name like ''%col%'')' showing
+   FROM information_schema.tables t
+  where table_schema = 'information_schema'
+    and table_type = 'VIEW'
+    --- Correct hanging OR Clause
+    and (table_name like 'table%' OR table_name like '%col%')
+ ORDER BY table_type;
+"
+)
+display_rs(MODE,SQL_BE_13,display_rows)
+
+```
+
+
+```{r, echo=FALSE}
+grViz("
+digraph DB_Environment {
+    graph [overlap = true, fontsize = 10, rankdir=LR, height= 10]
+
+    node [shape = box,fontname = Helvetica,fontcolor=blue]
+         Tables;
+
+    node [shape = box,fontname = Helvetica,fontcolor='']
+        Servers; DBs; Schemas;
+
+    edge [arrowhead = crow, tail = tee]       
+    Servers -> DBs -> Schemas -> Tables
+}
+")
+```
+
+
+
+### Which Table or View
+
+In the last section we drilled down and found three schemas.  We know that the `information_schema.tables` table contains the tables and views of all three schemas, information_schema, pg_catalog, and public.  We are interested in the table and view names in the public schema.  
+
+In SQL_BE_08 we drilled down to the table_type level and found that there are 15 base tables and 7 views.  In SQL_BE_09 we drill down to the actual table names in the public schema.  
+
+
+
+
+#### Combining Multiple Result Sets
+
+The `UNION` keyword is used to combine two or more result sets.  The result sets must have the exact same data type structure for every column in the data set.  Most SQL flavors do not require the column names to match.  The first SELECT statement column names are used for the entire data set.  The exception is DB2. 
+
+The table below shows which SQL flavor use the first SQL statement column names for the UNION'ed set.
+
+|Key Word|DB2|MS-SS|MYSQL|Oracle|Postgres
+|--------|---|-----------|-----|---------------
+| UNION  |No |Yes  |Yes  | Yes |Yes
+
+
+RESULT-SET1 UNION RESULT-SET2 returns RESULT-SET3 which contains the unique rows from both RESULT-SET1 and RESULT-SET2.  This is both the merging of both sets and removing of any duplicate rows.  
+
+In the code block below, SQL_BE_09 and SQL_BE_10 are combined via a UNION.  The showing column has been modified to '14. Union SQL_BE_09' and '14.  Union SQL_BE_10' for both queries.  Recall that SQL_BE_09 had 3 rows and SQL_BE_10 had 13 rows.
+
+  *  How many rows will be in the result set from the UNION? 
+  
+## SQL_BE_14 UNION Stacked Sets 
+
+```{r}
+SQL_BE_14 <- DBI::dbGetQuery(con,
+"SELECT '14. Union SQL_BE_09' showing
+       ,table_catalog||'.'||table_schema db_info, table_name, table_type
+   FROM information_schema.tables t
+  where table_schema = 'information_schema'
+    and table_name like 'table%' 
+    and table_type = 'VIEW'
+union 
+ SELECT '14. Union SQL_BE_10' showing
+       ,table_catalog||'.'||table_schema db_info, table_name, table_type
+   FROM information_schema.tables t
+  where table_schema = 'information_schema'
+     and table_type = 'VIEW'
+     and table_name like '%col%'
+-- ORDER BY showing
+ "
+)
+display_rs(MODE,SQL_BE_14,display_rows)
+   
+
+```
+
+### SQL_BE_STINGER_02 Union Order By Clause
+```
+SQL_BE_STINGER: A SELECT statement may have an ORDER BY clause.  However when multiple SELECT statements are combined with a UNION statement, only the last SELECT statement is allowed to have an ORDER BY clause.  The ORDER BY clause is applied to the UNIONed sets.    
+```
+
+## SQL_BE_15 UNION {ALL}
+
+There are two forms of UNION, UNION and UNION ALL.  UNION ALL stacks all the rows.  Execut the following code block.
+
+    *  What is the row count.
+
+Modify the following code block with a UNION ALL and change the first showing alias to showme.
+
+
+    *  What is the expected row count?
+    *  What are the column names of the SQL_BE_11 result set?
+
+```{r}
+SQL_BE_15 <- DBI::dbGetQuery(con,
+"SELECT '15. Union SQL_BE_09' showing
+        ,table_catalog||'.'||table_schema db_info
+        , table_name, table_type
+    FROM information_schema.tables t
+   where table_schema = 'information_schema'
+     and table_name like 'table%' 
+     and table_type = 'VIEW'
+ UNION --modify this line
+SELECT '15. Union SQL_BE_09' showing
+        ,table_catalog||'.'||table_schema db_info
+        , table_name, table_type
+    FROM information_schema.tables t
+   where table_schema = 'information_schema'
+     and table_name like 'table%' 
+     and table_type = 'VIEW'
+")
+display_rs(MODE,SQL_BE_15,display_rows)  
+
+```
+
+### SQL_BE_16 EXCEPT EMPTY set
+
+#### Diff'ing result sets
+
+In SQL_BE_11 and SQL_BE_12 we can eye-ball the difference between the two sets.  When the datasets are large eye-balling it will cause you to go cross-eyed.  In SQL_BE_16, we use the `EXCEPT` key word and let SQL find the differences.  
+
+```
+EXCEPT takes the first dataset and subtracts out all rows that are also in the second dataset.  The newly created dataset are all rows in the first dataset not in the second dataset.
+```
+|Key Word|DB2|MS-SS|MYSQL|Orcle|Postgress
+|--------|---|-----------|-----|---------------
+| EXCEPT |Yes|Yes  |Yes  |     |Yes
+| MINUS  |   |     |     | Yes |
+
+In the code block below we subtract SQL_BE_11 which has 16 rows, from SQL_BE_12 which has 17 rows.  
+
+    *  What is the expected row count for this operation?
+
+```{r}
+SQL_BE_16 <- DBI::dbGetQuery(con,
+"SELECT '16. Union SQL_BE_16' showing
+        ,table_catalog||'.'||table_schema db_info
+        , table_name, table_type
+    FROM information_schema.tables t
+   where table_schema = 'information_schema'
+     and table_name like 'table%' OR table_name like '%col%'
+     and table_type = 'VIEW'
+ EXCEPT 
+ SELECT '16. Union SQL_BE_16' showing
+       ,table_catalog||'.'||table_schema db_info, table_name, table_type
+   FROM information_schema.tables t
+  where table_schema = 'information_schema'
+    and table_type = 'VIEW'
+    and table_name like 'table%' OR table_name like '%col%'
+  ORDER BY table_type
+"
+)
+
+display_rs(MODE,SQL_BE_16,display_rows) 
+   
+
+```
+
+### SQL_BE_17 EXCEPT NOT EMPTY
+
+In the next exercise, the order of the two SELECT statements are swapped.
+
+```{r}
+SQL_BE_17 <- DBI::dbGetQuery(con,
+"SELECT '17. Union SQL_BE_17' showing
+       ,table_catalog||'.'||table_schema db_info, table_name, table_type
+   FROM information_schema.tables t
+  where table_schema = 'information_schema'
+    and table_type = 'VIEW'
+    and table_name like 'table%' OR table_name like '%col%'
+EXCEPT 
+ SELECT '17. Union SQL_BE_17' showing
+        ,table_catalog||'.'||table_schema db_info
+        , table_name, table_type
+    FROM information_schema.tables t
+   where table_schema = 'information_schema'
+     and table_name like 'table%' OR table_name like '%col%'
+     and table_type = 'VIEW'
+  ORDER BY table_type
+"
+)
+
+display_rs(MODE,SQL_BE_17,display_rows)
+```
+
+    *  How many rows are returned?
+
+
+
+## STINGER_BE_
+
+```
+A cross join, every possible row combination, is not normally the desired result set.  The result size is the product of the number of rows in Left table and the number rows in the right table, L-rows * R-rows in size. So two tables with 1000 rows each results in a set with 1,000,000 rows. 
+```
+## SQL_BE_18 Describe Table Script
+
+```{r Table Column Metadata}
+
+# https://stackoverflow.com/questions/109325/postgresql-describe-table
+
+SQL_BE_18 <- DBI::dbGetQuery(con,
+"SELECT  
+    f.attnum AS number,  
+    f.attname AS name,  
+    f.attnum,  
+    f.attnotnull AS notnull,  
+    pg_catalog.format_type(f.atttypid,f.atttypmod) AS type,  
+    CASE  
+        WHEN p.contype = 'p' THEN 't'  
+        ELSE 'f'  
+    END AS primarykey,  
+    CASE  
+        WHEN p.contype = 'u' THEN 't'  
+        ELSE 'f'
+    END AS uniquekey,
+    CASE
+        WHEN p.contype = 'f' THEN g.relname
+    END AS foreignkey,
+    CASE
+        WHEN p.contype = 'f' THEN p.confkey
+    END AS foreignkey_fieldnum,
+    CASE
+        WHEN p.contype = 'f' THEN g.relname
+    END AS foreignkey,
+    CASE
+        WHEN p.contype = 'f' THEN p.conkey
+    END AS foreignkey_connnum,
+    CASE
+        WHEN f.atthasdef = 't' THEN d.adsrc
+    END AS default
+FROM pg_attribute f  
+    JOIN pg_class c ON c.oid = f.attrelid  
+    JOIN pg_type t ON t.oid = f.atttypid  
+    LEFT JOIN pg_attrdef d ON d.adrelid = c.oid AND d.adnum = f.attnum  
+    LEFT JOIN pg_namespace n ON n.oid = c.relnamespace  
+    LEFT JOIN pg_constraint p ON p.conrelid = c.oid AND f.attnum = ANY (p.conkey)  
+    LEFT JOIN pg_class AS g ON p.confrelid = g.oid  
+WHERE c.relkind = 'r'::char  
+    AND n.nspname = 'public'  -- Replace with Schema name  
+    AND c.relname = 'actor'  -- Replace with table name  
+    AND f.attnum > 0 ORDER BY number
+")
+display_rs(MODE,SQL_BE_18,display_rows)
+```
+
+## Figure out view and clean this up
+
+```{r}
+rs1 <- DBI::dbGetQuery(con,"SELECT distinct t.table_catalog DB ,t.table_schema
+                                  ,t.table_type tbls
+                              FROM information_schema.tables t
+                            ")
 
 rs2 <- DBI::dbGetQuery(con,"SELECT t.table_catalog DB ,t.table_schema
                                   ,t.table_type,COUNT(*) tbls
@@ -264,123 +951,144 @@ rs2 <- DBI::dbGetQuery(con,"SELECT t.table_catalog DB ,t.table_schema
                                   ,t.table_type
                             ")
 
-rs3 <- DBI::dbGetQuery(con,"SELECT distinct t.table_catalog DB ,t.table_schema
-                                  ,t.table_type tbls
-                              FROM information_schema.tables t
-                            ")
+rs3 <- DBI::dbGetQuery(con,"SELECT t.table_catalog DB ,t.table_schema
+                                  ,t.table_name,t.table_type
+                              FROM information_schema.tables t")
+
+
+
+
 
 
 
 #kable(head(rs1 %>% arrange (table_name)))
-kable(head(rs1))
-kable(head(rs2))
-kable(head(rs3))
+View(rs1)
+View(rs2)
+View(rs3)
 ```
 
-
-www.dataquest.io/blog/postgres-internals
-
 ```{r}
-## Explain a `dplyr::join
-
-tbl_pk_fk_df <- DBI::dbGetQuery(con,
+x <- DBI::dbGetQuery(con,
 "
-SELECT --t.table_catalog,t.table_schema,
-   c.table_name
-	,kcu.column_name
-	,c.constraint_name
-	,c.constraint_type
-	,coalesce(c2.table_name, '') ref_table
-	,coalesce(kcu2.column_name, '') ref_table_col
-FROM information_schema.tables t
-LEFT JOIN information_schema.table_constraints c
-  ON t.table_catalog = c.table_catalog
-    AND t.table_schema = c.table_schema
-    AND t.table_name = c.table_name
-LEFT JOIN information_schema.key_column_usage kcu
-	ON c.constraint_schema = kcu.constraint_schema
-		AND c.constraint_name = kcu.constraint_name
-LEFT JOIN information_schema.referential_constraints rc
-	ON c.constraint_schema = rc.constraint_schema
-		AND c.constraint_name = rc.constraint_name
-LEFT JOIN information_schema.table_constraints c2
-	ON rc.unique_constraint_schema = c2.constraint_schema
-		AND rc.unique_constraint_name = c2.constraint_name
-LEFT JOIN information_schema.key_column_usage kcu2
-	ON c2.constraint_schema = kcu2.constraint_schema
-		AND c2.constraint_name = kcu2.constraint_name
-		AND kcu.ordinal_position = kcu2.ordinal_position
-WHERE c.constraint_type IN ('PRIMARY KEY', 'FOREIGN KEY')
-  AND c.table_catalog = 'dvdrental'
-	AND c.table_schema = 'public'
-ORDER BY c.table_name;
+select cl_d.relname
+  from pg_rewrite r
+  join pg_class cl_r on r.ev_class=cl_r.oid
+  join pg_depend as d on r.oid = d.objid
+join pg_class as cl_d on d.refobjid=cl_d.oid
+where cl_d.relkind in ('r','v') and cl_r.relname='actor_info'
+group by cl_d.relname
+order by cl_d.relname
 ")
+View(x)
 
-# View(tbl_pk_fk_df)
-
-tables_df <- tbl_pk_fk_df %>% distinct(table_name)
-# View(tables_df)
+y <- DBI::dbGetQuery(con,
+"SELECT classid::regclass depender_object_class,
+    CASE classid
+        WHEN 'pg_class'::regclass THEN objid::regclass::text
+        WHEN 'pg_type'::regclass THEN objid::regtype::text
+        WHEN 'pg_proc'::regclass THEN objid::regprocedure::text
+        ELSE objid::text 
+    END AS depender_object_identity,
+    objsubid,
+    refclassid::regclass  referenced_object_class,
+    CASE refclassid
+        WHEN 'pg_class'::regclass THEN refobjid::regclass::text
+        WHEN 'pg_type'::regclass THEN refobjid::regtype::text
+        WHEN 'pg_proc'::regclass THEN refobjid::regprocedure::text
+        ELSE refobjid::text
+    END referenced_object_identity,
+    refobjsubid,
+    CASE deptype
+        WHEN 'p' THEN 'pinned'
+        WHEN 'i' THEN 'internal'
+        WHEN 'a' THEN 'automatic'
+        WHEN 'n' THEN 'normal'
+    END AS dependency_type
+FROM pg_catalog.pg_depend 
+WHERE (objid >= 16384 OR refobjid >= 16384)
+  and CASE classid
+        WHEN 'pg_class'::regclass THEN objid::regclass::text
+        WHEN 'pg_type'::regclass THEN objid::regtype::text
+        WHEN 'pg_proc'::regclass THEN objid::regprocedure::text
+        ELSE objid::text 
+    END like '%actor%'
+")
+View(y)
 ```
 
 
 
-```{r create nodes}
-library(DiagrammeR)
+```{r}
+a <- DBI::dbGetQuery(con,
+"
+select * from pg_namespace
+")
+View(a)
 
-table_nodes_ndf <- create_node_df(
-  n <- nrow(tables_df)
-  ,type  <- 'table'
-  ,label <- tables_df$table_name
-  ,shape = "rectangle"
-  ,width = 1
-  ,height = .5
-  ,fontsize = 18
-)
+b <- DBI::dbGetQuery(con,
+"
+select r.ev_class,r.ev_class::regclass,* from pg_rewrite r
+")
+View(b)
 
-tbl_pk_fk_ids_df <- inner_join(tbl_pk_fk_df,table_nodes_ndf
-                ,by = c('table_name'='label')
-                ,suffix(c('st','s'))
-                ) %>% 
-     rename('src_tbl_id' = id) %>%
-     left_join(table_nodes_ndf
-               ,by = c('ref_table'='label') 
-               ,suffix(c('st','t'))
-               ) %>%
-     rename('fk_tbl_id' = id) 
 
-tbl_fk_df <- tbl_pk_fk_ids_df %>% filter(constraint_type == 'FOREIGN KEY')     
-tbl_pk_df <- tbl_pk_fk_ids_df %>% filter(constraint_type == 'PRIMARY KEY') 
-# View(tbl_pk_fk_ids_df)
-kable(head(tbl_fk_df))
-kable(head(tbl_pk_df))
+c  <- DBI::dbGetQuery(con,"SELECT classid::regclass, objid::regclass, refobjsubid::regclass, refclassid::regclass,refobjid::regclass,refobjsubid::regclass
+                              FROM pg_depend t where 'actor'::regclass = refobjid::regclass ")
+View(c)
 
+d  <- DBI::dbGetQuery(con,
+"select distinct(r.ev_class::regclass) as views ,d.refobjid,'pg_class'::regclass 
+            from pg_depend d join pg_rewrite r on r.oid = d.objid 
+           where d.refclassid = 'pg_class'::regclass
+             and d.refobjid = 'public.actor'::regclass
+             and d.classid = 'pg_rewrite'::regclass; 
+ 
+")
+View(d)
 ```
 
 ```{r}
-# Create an edge data frame, edf
+a <- DBI::dbGetQuery(con,
+"
+SELECT *
+  FROM pg_class v
+ where v.relname = 'film_list'
+")
+#View(a)
 
-fk_edf <-
-  create_edge_df(
-    from = tbl_fk_df$src_tbl_id,
-    to = tbl_fk_df$fk_tbl_id,
-    rel = "fk",
-    label=tbl_fk_df$constraint_name,
-    fontsize = 15
-  )
-# View(fk_edf)
+# https://www.alberton.info/postgresql_meta_info.html#.W8eRvZfzIU
+
+z <- DBI::dbGetQuery(con,
+"
+SELECT v.relname AS dependent_view
+,t.relname AS referenced_relation,nv.nspname
+,dv.classid::regclass,t.oid::regclass,dv.refclassid::regclass,dv.refobjid::regclass,dv.objid::regclass
+FROM pg_depend dv
+left JOIN pg_class v ON v.oid = dv.refobjid
+LEFT JOIN pg_namespace nv ON v.relnamespace = nv.oid
+LEFT JOIN pg_depend dt
+ON dv.classid = dt.classid
+AND dv.objid = dt.objid
+AND dv.refobjid <> dt.refobjid
+AND dv.refclassid = dt.refclassid
+AND dv.classid = 'pg_catalog.pg_rewrite'::regclass
+AND dv.refclassid = 'pg_catalog.pg_class'::regclass
+LEFT JOIN pg_class t ON t.oid = dt.refobjid
+LEFT JOIN pg_namespace nt
+ON t.relnamespace = nt.oid
+AND nv.nspname = 'public'
+AND nt.nspname = 'public'
+WHERE dv.deptype = 'i'
+AND v.relkind = 'v'
+AND t.relkind IN ('r', 'v')
+AND v.relname = 'film_list' -- VIEW NAME
+--GROUP BY v.relname, t.relname;
+")
+View(z)
 ```
 
-```{r}
-graph <-
-  create_graph(
-    nodes_df = table_nodes_ndf,
-    edges_df = fk_edf,
-    graph_name = 'Simple FK Graph'
-    )
 
-# View the graph
-render_graph(graph)
-```
+
 
 ```{r}
 dbDisconnect(con)
