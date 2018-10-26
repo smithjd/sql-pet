@@ -1,24 +1,32 @@
----
-title: "10 Environment Diagram"
-author: "Sophie Yang"
-date: "October 7, 2018"
-output: html_document
----
-
-
-
 # Mapping your local environment (10)
 
 
 
+## Basics
 
+* Keeping passwords secure.
+* Coverage in this book.  There are many SQL tutorials that are available.  For example, we are drawing some materials from  [a tutorial we recommend](http://www.postgresqltutorial.com/postgresql-sample-database/).  In particular, we will not replicate the lessons there, which you might want to complete.  Instead, we are showing strategies that are recommended for R users.  That will include some translations of queries that are discussed there.
+
+## Ask yourself, what are you aiming for?
+
+* Differences between production and data warehouse environments.
+* Learning to keep your DBAs happy:
+  + You are your own DBA in this simulation, so you can wreak havoc and learn from it, but you can learn to be DBA-friendly here.
+  + In the end it's the subject-matter experts that understand your data, but you have to work with your DBAs first.
+
+## Get some basic information about your database
+
+Assume that the Docker container with PostgreSQL and the dvdrental database are ready to go.
 Start up the `docker-pet` container
+
 
 ```r
 sp_docker_start("sql-pet")
 ```
 
-Now connect to the `dvdrental` database with R
+Now connect to the `dvdrental` database with R.  
+The following code block confirms that one can connect to the Postgres database.  The connection is needed for some of the examples/exercises used in this section.  If the connection is successful, the output is `<PostgreSQLConnection>`.
+
 
 ```r
 con <- sp_get_postgres_connection(
@@ -33,7 +41,6 @@ con
 ## <PqConnection> dvdrental@localhost:5432
 ```
 
-The following code block confirms that one can connect to the Postgres database.  The connection is needed for some of the examples/exercises used in this section.  If the connection is successful, the output is `<PostgreSQLConnection>`.
 
 
 
@@ -55,17 +62,7 @@ One assumption we made is that most users use `RStudio` to interface with `R`. T
 
 R-SQL processing, the purpose of this tutorial, is performed via a database connection. This should be a simple task, but often turns out to take a lot of time to actually get it to work.  We assume that your final write ups are done in some flavor of an Rmd document and others will have access to the database to confirm or further your analysis.
 
-For this tutorial, the following are the hardcoded values used to make the Postgres database connection.
-
-     con <- dbConnect(drv = "PostgreSQL",
-                     user = "postgres",
-                     password = "postgres",
-                     host = "localhost",
-                     port = 5432,
-                     dbname = "dvdrental"                 
-                     ) 
-                     
-The main focus of the entire tutorial is SQL processing through a dbConnection.  The remainder of this section focuses on some specific Docker commands.                      
+One focus of this tutorial is SQL processing through a dbConnection and we will come back to this in a future section.  The remainder of this section focuses on some specific Docker commands.                      
                      
 2.  bash
 
@@ -95,7 +92,7 @@ dvdrental=# select '"hello world" talking to you live from postgres session with
  "hello world" talking to you live from postgres session within Docker!
 (1 row)
 
-dvdrental=# \q
+dvdrental=# `\q`
 ```
 
 All SQL commands need to end with a semi-colon. To exit `psql`, use a '\q' at the command prompt.

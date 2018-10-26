@@ -31,7 +31,9 @@ sp_check_that_docker_is_up()
 ```
 
 ```
-## [1] "Docker is up but running no containers"
+## [1] "Docker is up, running these containers:"                                                                                                     
+## [2] "CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS              PORTS                    NAMES"    
+## [3] "1c0c30c4a413        postgres-dvdrental   \"docker-entrypoint.s…\"   40 seconds ago      Up 7 seconds        0.0.0.0:5432->5432/tcp   sql-pet"
 ```
 
 ## Clean up if appropriate
@@ -81,9 +83,9 @@ sp_check_that_docker_is_up()
 ```
 
 ```
-## [1] "Docker is up, running these containers:"                                                                                                            
-## [2] "CONTAINER ID        IMAGE               COMMAND                  CREATED                  STATUS                  PORTS                    NAMES"   
-## [3] "e24be30e3db5        postgres:10         \"docker-entrypoint.s…\"   Less than a second ago   Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
+## [1] "Docker is up, running these containers:"                                                                                                       
+## [2] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES"   
+## [3] "e227b58912d2        postgres:10         \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
 ```
 ## Connect, read and write to Postgres from R
 

@@ -33,7 +33,7 @@ display_rs <- function (MODE,RS,display_rows){
         if (nrow(RS)==0){
             cat(glue(as.character(match.call()$RS)),' is empty')
         } else {
-            View(x=RS,title=as.character(match.call()$RS))
+            kable(x=RS,title=as.character(match.call()$RS))
         }
     } else {
         kable(head(RS,display_rows))
@@ -44,8 +44,8 @@ display_rs <- function (MODE,RS,display_rows){
 ```{r}
 
 dplyr_summary_df <-
-    read.delim(
-    'c:/docker/11_dplyr_sql_summary_table.rmd',
+    read.delim( here(
+    '11_dplyr_sql_summary_table.rmd'),
     header = TRUE,
     sep = '|',
     as.is = TRUE
@@ -962,9 +962,9 @@ rs3 <- DBI::dbGetQuery(con,"SELECT t.table_catalog DB ,t.table_schema
 
 
 #kable(head(rs1 %>% arrange (table_name)))
-View(rs1)
-View(rs2)
-View(rs3)
+kable(rs1)
+kable(rs2)
+kable(rs3)
 ```
 
 ```{r}
@@ -979,7 +979,7 @@ where cl_d.relkind in ('r','v') and cl_r.relname='actor_info'
 group by cl_d.relname
 order by cl_d.relname
 ")
-View(x)
+kable(x)
 
 y <- DBI::dbGetQuery(con,
 "SELECT classid::regclass depender_object_class,
@@ -1013,7 +1013,7 @@ WHERE (objid >= 16384 OR refobjid >= 16384)
         ELSE objid::text 
     END like '%actor%'
 ")
-View(y)
+kable(y)
 ```
 
 
@@ -1023,18 +1023,18 @@ a <- DBI::dbGetQuery(con,
 "
 select * from pg_namespace
 ")
-View(a)
+kable(a)
 
 b <- DBI::dbGetQuery(con,
 "
 select r.ev_class,r.ev_class::regclass,* from pg_rewrite r
 ")
-View(b)
+kable(b)
 
 
 c  <- DBI::dbGetQuery(con,"SELECT classid::regclass, objid::regclass, refobjsubid::regclass, refclassid::regclass,refobjid::regclass,refobjsubid::regclass
                               FROM pg_depend t where 'actor'::regclass = refobjid::regclass ")
-View(c)
+kable(c)
 
 d  <- DBI::dbGetQuery(con,
 "select distinct(r.ev_class::regclass) as views ,d.refobjid,'pg_class'::regclass 
@@ -1044,7 +1044,7 @@ d  <- DBI::dbGetQuery(con,
              and d.classid = 'pg_rewrite'::regclass; 
  
 ")
-View(d)
+kable(d)
 ```
 
 ```{r}
@@ -1054,7 +1054,7 @@ SELECT *
   FROM pg_class v
  where v.relname = 'film_list'
 ")
-#View(a)
+#kable(a)
 
 # https://www.alberton.info/postgresql_meta_info.html#.W8eRvZfzIU
 
@@ -1084,7 +1084,7 @@ AND t.relkind IN ('r', 'v')
 AND v.relname = 'film_list' -- VIEW NAME
 --GROUP BY v.relname, t.relname;
 ")
-View(z)
+kable(z)
 ```
 
 

@@ -58,7 +58,7 @@ dplyr_summary_df <-
     )
 
 head(dplyr_summary_df)
-
+```
 ## Databases and Third Normal Form - 3NF
 
 Most relational database applications are designed to be third normal form "like", 3NF.  The key benefits of 3NF are 
@@ -152,7 +152,7 @@ rs <-
   "
   select * from store;
   ")
-kable(rs,caption='select all columns')  
+kable(rs,caption = 'select all columns')  
 ```  
                 
 #### 2.  Same Query as 1, but only show first two columns; 
@@ -164,7 +164,7 @@ rs <-
   "
   select STORE_ID, manager_staff_id from store;  
   ")
-kable(rs,caption='select first two columns only') 
+kable(rs,caption = 'select first two columns only') 
 ```
 
 #### 3.  Same Query as 2, but reverse the column order               
@@ -176,7 +176,7 @@ rs <-
   "
   select manager_staff_id,store_id from store;  
   ")
-kable(rs,caption='reverse the column order') 
+kable(rs,caption = 'reverse the column order') 
 ```
     
        
@@ -190,7 +190,7 @@ rs <-
   "
   select manager_staff_id mgr_sid,store_id st_id from store;    
   ")
-kable(rs,caption='Rename Columns') 
+kable(rs,caption = 'Rename Columns') 
 ```
 
 
@@ -219,7 +219,7 @@ rs <-
         ,to_char(now(),'YYYY/MM/DD HH24:MI:SS') dtts 
     from store;    
   ")
-kable(rs,caption='Adding Meta Data Columns') 
+kable(rs,caption = 'Adding Meta Data Columns') 
 ```
  
     All the previous examples easily fit on a single line.  This one is longer.  Each column is entered on its own line, indented past the select keyword, and preceeded by a comma.  
@@ -246,7 +246,7 @@ rs <-
     --  ,to_char(now(),'YYYY/MM/DD HH24:MI:SS') dtts
     from store;    
   ")
-kable(rs,caption='Sincle line comment') 
+kable(rs,caption = 'Sincle line comment') 
 ```
 
     The dtts  line is commented out with the two dashes and is dropped from the end of the result set columns.
@@ -267,7 +267,7 @@ rs <-
         */
     from store;    
   ")
-kable(rs,caption='Multi-line comment') 
+kable(rs,caption = 'Multi-line comment') 
 ```
 
     The three columns db, user, and dtts, between the /\* and \*/ have been commented and no longer appear as the end columns of the result set.
@@ -335,7 +335,7 @@ rs <-
   "
   select * from store;
   ")
-kable(rs,caption='select all columns')  
+kable(rs,caption = 'select all columns')  
 ```  
 
 #### 8 WHERE condition logically never TRUE.
@@ -347,7 +347,7 @@ rs <-
   "
   select * from store where 1 = 0;
   ")
-kable(rs,caption='WHERE always FALSE')  
+kable(rs,caption = 'WHERE always FALSE')  
 ```  
 
     Since 1 = 0 is always false, no rows are ever returned.  Initially this construct seems useless, but actually is quite handy when debugging large scripts where a portion of the script needs to be turned off or when creating an empty table with the exact same column names and types as the FROM table(s).  
@@ -361,7 +361,7 @@ rs <-
   "
   select * from store where 1 = 1;
   ")
-kable(rs,caption='WHERE always TRUE')  
+kable(rs,caption = 'WHERE always TRUE')  
 ```  
     
     Since 1 = 1 is always true, all rows are always returned.  Initially this construct seems useless, but actually is also quite handy when debugging large scripts and creating a backup of table.
@@ -375,7 +375,7 @@ rs <-
   "
   select * from store where store_id = 2;
   ")
-kable(rs,caption='WHERE EQUAL')  
+kable(rs,caption = 'WHERE EQUAL')  
 ```        
         
         The only row where the store_id = 2 is row 2 and it is the only row returned.
@@ -389,7 +389,7 @@ rs <-
   "
   select * from store where store_id <> 2;
   ")
-kable(rs,caption='WHERE NOT EQUAL')  
+kable(rs,caption = 'WHERE NOT EQUAL')  
 ```        
 
     <> is syntactically the same as !=
@@ -405,7 +405,7 @@ rs <-
   "
   select * from store where manager_staff_id = 1 or store_id < 3; 
   ")
-kable(rs,caption='WHERE OR condition')  
+kable(rs,caption = 'WHERE OR condition')  
 ```      
 
     The first condition manager_staff_id = 1 returns a single row and the second condition store_id < 3 returns two rows.  

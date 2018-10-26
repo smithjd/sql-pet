@@ -298,27 +298,8 @@ one_percent_sample
 ```
 
 ```
-##    rental_id         rental_date inventory_id customer_id
-## 1       1929 2005-06-17 06:49:30          573         327
-## 2       1930 2005-06-17 06:50:46           79         112
-## 3       1931 2005-06-17 06:51:56         1411         391
-## 4       1932 2005-06-17 06:54:41         3185         120
-## 5       1933 2005-06-17 06:54:42          980          13
-## 6       1934 2005-06-17 07:04:57         4000          16
-## 7       1935 2005-06-17 07:14:15         1962         295
-## 8       1936 2005-06-17 07:15:41         3037         213
-## 9       1937 2005-06-17 07:16:46         1266         385
-## 10      1938 2005-06-17 07:18:36          570         454
-## 11      1939 2005-06-17 07:26:45          605          11
-## 12      1940 2005-06-17 07:42:22          105         451
-## 13      1941 2005-06-17 07:42:45         1063         519
-## 14      1942 2005-06-17 07:43:39          261         143
-## 15      1943 2005-06-17 07:49:17         4327         144
-## 16      1944 2005-06-17 07:50:53          318          16
-## 17      1945 2005-06-17 07:51:26         3366         207
-## 18      1946 2005-06-17 07:58:39         2335         389
-## 19      1947 2005-06-17 08:02:20         3344         479
-## 20      1948 2005-06-17 08:06:53           46          89
+## [1] rental_id    rental_date  inventory_id customer_id 
+## <0 rows> (or 0-length row.names)
 ```
 
 ### Examining `dplyr`'s SQL query and re-using SQL code
@@ -360,7 +341,7 @@ DBI::dbGetQuery(con,
 
 When you create a report to run repeatedly, you might want to put that query into R markdown.  That way you can also execute that SQL code in a chunk with the following header:
 
-  {`sql, connection=con, output.var = "miscellaneous_rental_query"`}
+  {`sql, connection=con, output.var = "query_results"`}
 
 
 ```sql
@@ -371,7 +352,7 @@ GROUP BY "staff_id";
 Rmarkdown stored that query result in a tibble:
 
 ```r
-any_query
+query_results
 ```
 
 ```
@@ -502,7 +483,7 @@ skim(rental_tibble)
 ##  n obs: 16044 
 ##  n variables: 7 
 ## 
-## ── Variable type:integer ───────────────────────────────────────────────────────────────────────────────
+## ── Variable type:integer ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ##      variable missing complete     n    mean      sd p0     p25    p50
 ##   customer_id       0    16044 16044  297.14  172.45  1  148     296  
 ##  inventory_id       0    16044 16044 2291.84 1322.21  1 1154    2291  
@@ -514,7 +495,7 @@ skim(rental_tibble)
 ##  12037.25 16049 ▇▇▇▇▇▇▇▇
 ##      2        2 ▇▁▁▁▁▁▁▇
 ## 
-## ── Variable type:POSIXct ───────────────────────────────────────────────────────────────────────────────
+## ── Variable type:POSIXct ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ##     variable missing complete     n        min        max     median
 ##  last_update       0    16044 16044 2006-02-15 2006-02-23 2006-02-16
 ##  rental_date       0    16044 16044 2005-05-24 2006-02-14 2005-07-28
