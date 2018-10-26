@@ -1,4 +1,5 @@
 # SQL Quick start - simple retrieval (15)
+
 ```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
 # These packages are called in almost every chapter of the book:
 library(tidyverse)
@@ -58,8 +59,26 @@ dplyr_summary_df <-
 
 head(dplyr_summary_df)
 
-```
+## Databases and Third Normal Form - 3NF
 
+Most relational database applications are designed to be third normal form "like", 3NF.  The key benefits of 3NF are 
+
+1.  speedy on-line transactional processing, OLTP.
+2.  improved referential integrity, reduce modification anomalies that can occur during an insert, update, or delete operation.
+3.  reduced storage, elimination of redundant data.
+
+3NF is great for database application input performance, but not so great for getting the data back out for the data analyst or report writer.  As a data analyst, you might get the ubiquitous Excel spreadsheet with all the information needed to start an Exploratory Data Analysis, EDA.  The spreadsheet may have provider, patient, diagnosis, procedure, and insurance information all "neatly" arranged on a single row.  At least "neatly" when compared to the same information stored in the database, in at least 5 tables.  
+
+For this tutorial, the most important thing to know about 3NF is that the data you are looking for gets spread across many many tables.  Working in a relational database requires you to 
+
+1.  find the many many different tables that contains your data.   
+2.  Understand the relationships that tie the tables together correctly to ensure that data is not dropped or duplicated.  Data that is dropped or duplicated can either over or understate your aggregated numeric values.  
+
+![hospital-billing-erd](ERD_Hospital_Billing_System.png)
+
+https://www.smartdraw.com/entity-relationship-diagram/examples/hospital-billing-entity-relationship-diagram/
+
+Real life applications have 100's or even 1000's of tables supporting the application.  The goal is to transform the application data model into a useful data analysis model using the DDL and DML SQL statements.  
 
 ## SQL Commands
 
@@ -72,105 +91,111 @@ DML:Data Manipulation Language  |Users and developers execute these commands to 
 DCL:Data Control Language       |DBA's execute these commands to grant/revoke access to 
 TCL:Transaction Control Language|Developers execute these commands when developing applications. 
 
-Data analysts use the SELECT DML command to learn interesting things about the data stored in the database.  Applications are used to control the insert, update, and deletion of data in the database.  Data users can update the database objects via the application which enforces referential integrity in the database, but not directly against the application database objects.  
+Data analysts use the SELECT DML command to learn interesting things about the data stored in the database.  Applications are used to control the insert, update, and deletion of data in the database.  Data users can update the database objects via the application which enforces referential integrity in the database.  Data users should never directly update data application database objects. Leave this task to the developers and DBA's. 
 
-DBA's can setup a sandbox within the database for a data analyst.  The application(s) do not maintain the data in the sandbox.  In addition to the SELECT command, data analysts may be granted any or all the commands in the DDL and DML sections in the table below.  The most common ones are the DML commands with a star, "*. "
+DBA's can setup a sandbox within the database for a data analyst.  The application(s) do not maintain the data in the sandbox.  
 
-|DDL     |DML         |DCL     |TCL
-|--------|------------|--------|----------
-|ALTER   |CALL        |GRANT   |COMMIT
-|CREATE  |DELETE*     |REVOKE  |ROLLBACK
-|DROP    |EXPLAIN PLAN|        |SAVEPOINT
-|RENAME  |INSERT*     |        |SET TRANSACTION
-|TRUNCATE|LOCK TABLE  |        |
-|        |MERGE       |        |
-|        |SELECT*     |        |
-|        |UPDATE*     |        |
-
-Most relational database applications are designed for speed, speedy on-line transactional processing, OLTP, and a lot of parent child relationships.  Such applications can have 100's or even 1000's of tables supporting the application.  The goal is to transform the application data model into a useful data analysis model using the DDL and DML SQL statements.  
 
 The `sql-pet` database is tiny, but for the purposes of these exercises, we assume that data so large that it will not easily fit into the memory of your laptop.
 
-A SQL SELECT statement consists of 1 to 6 clauses.  In the table below, `object` refers to either a database table or a view object.    
+This tutorial focuses on the most frequently used SQL statement, the SQL SELECT statement.  
+
+A SQL SELECT statement consists of 1 to 6 clauses.  
 
 |SQL Clause | DPLYR Verb| SQL Description
 |-----------|-----------|-------------------
 |SELECT     | SELECT()  |Contains a list of column names from an object or a derived value.
 |           | mutate()  |
-|  FROM     |           |Contains a list of related objects from which the SELECT list of columns is derived.
+|  FROM     |           |Contains a list of related tables from which the SELECT list of columns is derived.
 | WHERE     | filter()  |Provides the filter conditions the objects in the FROM clause must meet.
-|GROUP BY   | group_by()|Contains a list unique column values returned from the WHERE clause.
+|GROUP BY   | group_by()|Contains a list rollup aggregation columns.
 |HAVING     |           |Provides the filter condition on the the GROUP BY clause.
 |ORDER BY   | arrange() |Contains a list of column names indicating the order of the column value.  Each column can be either ASCending or DEScending.
 
-## Query statement structure
-
-A SQL query statement consists of six distinct parts and each part is referred to as a clause.  The foundation of the SQL language is based set theory and the result of a SQL query is referred to as a result set.  A SQL query statement is "guaranteed" to return the same set of data, 
+The foundation of the SQL language is based set theory and the result of a SQL SELECT statement is referred to as a result set.  A SQL SELECT statement is "guaranteed" to return the same set of data, 
 but not necessarily in the same order.  However, in practice, the result set is usually in the same order.
 
-For this tutorial, a SQL query either returns a detailed row set or a summarized row set.  The detailed row set can show, but is not required to 
-show every column.  A summarized row set requires one or more summary columns and the associated aggregated summary values. 
+SQL SELECT statements can be broken up into two categories, SELECT detail statements and SELECT aggregate statements.
 
-Sales reps may be interested a detailed sales report showing all their activity.  At the end of the month, the sales rep may be interested at a 
-summary level based on product line dollars.  The sales manager may be more interest in territory dollars.
+|SELECT DETAIL              | SELECT AGGREGATE
+|---------------------------|-------------------------------
+|select det_col1...det_coln | select det_agg1..., agg1,...,aggn
+|  from same                |   from same
+| where same                |  where same
+|                           | group by det_agg1
+|                           | having <aggregation condition>
+|order by same              | order by same
 
-## SQL Clauses
+The difference between the two statements is the AGGREGATE has 
 
-1.  Select Clause
-2.  From Clause
-3.  Where Clause
-4.  Group By Clause
-5.  Having Clause
-6.  Order By Clause
+1.  select clause has one or more detail columns, det_agg1..., on which values get aggregated against/rolled up to.
+2.  select clause zero or more aggregated values, agg1, ..., aggn
+3.  group by clause is required and matches the one or more detail columns, det_agg1.
+4.  having clause is optional and adds a filter condition on one or more agg1 ... aggn values.
+ 
+## SQL SELECT Quick Start
 
-This section focuses on getting new SQL users familiar with the six SQL query clauses and a single table.   SQL queries from multiple tables are discussed
-in the JOIN section of this tutorial.  
+This section focuses on getting new SQL users familiar with the six SQL query clauses and a single table.   SQL queries from multiple tables are discussed in the JOIN section of this tutorial.  The JOIN section resolves the issue introduced with 3NF, the splitting of data into many many tables, back into a denormalaized format similar to the Excel spreadsheet.
 
-For lack of a better term, a SQL-QBE, a very simple SQL Query by example, is used to illustrate some SQL feature.  
+The DBI::dbGetQuery function is used to submit SQL SELECT statements to the Postgres database.  At a minimum it requires two parameters, a connection object and a SQL SELECT statement.
 
-    Side Note: This version of Postgres requires all SQL statments be terminated with a semi-colon.  
-Some older flavors of SQL and GUI tools do not require the SQL statement to be terminated with a semi-colon, ';' for the command to be executed.  It is recommended that you always terminate your SQL commands with a semi-colon.
+In the following section we only look at SELECT DETAIL statements.
 
-## SELECT Clause: Column Selection -- Vertical Partioning of Data 
+### SELECT Clause: Column Selection -- Vertical Partioning of Data 
 
-### 1.  Simplest SQL query: All rows and all columns from a single table.  
+#### 1.  Simplest SQL query: All rows and all columns from a single table.  
 
-    dvdrental=# select * from store;  
-    
- store_id | manager_staff_id | address_id |     last_update
-----------+------------------+------------+---------------------
-    1 |                1 |          1 | 2006-02-15 09:57:12
-    2 |                2 |          2 | 2006-02-15 09:57:12   
+```{r}
+rs <-
+  DBI::dbGetQuery(
+  con,
+  "
+  select * from store;
+  ")
+kable(rs,caption='select all columns')  
+```  
                 
-### 2.  Same Query as 1, but only show first two columns; 
+#### 2.  Same Query as 1, but only show first two columns; 
 
-    dvdrental=# select STORE_ID, manager_staff_id from store;                
-    
- store_id | manager_staff_id                                             
-----------+------------------                                            
-        1 |                1                             
-        2 |                2                             
-                
-### 3.  Same Query as 2, but reverse the column order               
+```{r}
+rs <-
+  DBI::dbGetQuery(
+  con,
+  "
+  select STORE_ID, manager_staff_id from store;  
+  ")
+kable(rs,caption='select first two columns only') 
+```
 
-    dvdrental=# select manager_staff_id,store_id from store;
+#### 3.  Same Query as 2, but reverse the column order               
+dvdrental=# select manager_staff_id,store_id from store;
+```{r}
+rs <-
+  DBI::dbGetQuery(
+  con,
+  "
+  select manager_staff_id,store_id from store;  
+  ")
+kable(rs,caption='reverse the column order') 
+```
     
- manager_staff_id | store_id                            
-------------------+----------                           
-                1 |        1                            
-                        2 |        2          
+       
                         
-### 4.  Rename Columns -- SQL column alias in the result set
+#### 4.  Rename Columns -- SQL column alias in the result set
 
-    dvdrental=# select manager_staff_id mgr_sid,store_id "store id" from store;  
-    
- mgr_sid | store id
----------+----------
-       1 |        1
-       2 |        2
-                        
+```{r}
+rs <-
+  DBI::dbGetQuery(
+  con,
+  "
+  select manager_staff_id mgr_sid,store_id st_id from store;    
+  ")
+kable(rs,caption='Rename Columns') 
+```
+
+
     The manager_staff_id has changed to mgr_sid.
-    store_id has changed to store id.  In practice, aliasing column names that have a space is not done.
+    store_id has changed to st_id.  
     
     Note that the column names have changed in the result set only, not in the actual database table.  
     The DBA's will not allow a space or other special characters in a database table column name.  
@@ -180,19 +205,22 @@ Some older flavors of SQL and GUI tools do not require the SQL statement to be t
       1.  Some database table column names are not user friendly.
       2.  When multiple tables are joined, the column names may be the same in one or more tables and one needs to distinguish between the column names from the different tables.
       
-### 5.  Adding labels and Additional Columns to the Result Set
+#### 5.  Adding Meta Data Columns to the Result Set
 
-    dvdrental=# select 'derived column' showing
-                       ,*
-                       ,current_database() db
-                       ,user
-                       ,to_char(now(),'YYYY/MM/DD HH24:MI:SS') dtts 
-                  from store; 
-    
-showing     | store_id | manager_staff_id | address_id |     last_update     |    db     |   user   |        dtts             
-----------------+----------+------------------+------------+---------------------+-----------+----------+---------------------    
- derived column |        1 |                1 |          1 | 2006-02-15 09:57:12 | dvdrental | postgres | 2018/10/07 20:20:28    
- derived column |        2 |                2 |          2 | 2006-02-15 09:57:12 | dvdrental | postgres | 2018/10/07 20:20:28     
+```{r}
+rs <-
+  DBI::dbGetQuery(
+  con,
+  "
+  select 'derived column' showing
+        ,*
+        ,current_database() db
+        ,user
+        ,to_char(now(),'YYYY/MM/DD HH24:MI:SS') dtts 
+    from store;    
+  ")
+kable(rs,caption='Adding Meta Data Columns') 
+```
  
     All the previous examples easily fit on a single line.  This one is longer.  Each column is entered on its own line, indented past the select keyword, and preceeded by a comma.  
     
@@ -200,72 +228,75 @@ showing     | store_id | manager_staff_id | address_id |     last_update     |  
     2.  The db and dtts, date timestamp, are new columns generated from Postgres System Information Functions.
     3.  Note that `user` is not a function call, no parenthesis.  
     
-## SQL Comments
-
-https://pgexercises.com/questions/basic
+### SQL Comments
 
 SQL supports both a single line comment, preceed the line with two dashes, `--`, and a C like block comment, \\*  ... */.
 
-### 6.  Single line comment --
+#### 6.  Single line comment --
 
-    dvdrental=# select 'single line comment, dtts' showing       
-                      ,*
-                      ,current_database() db
-                      ,user
-    --                   ,to_char(now(),'YYYY/MM/DD HH24:MI:SS') dtts
-                 from store;
+```{r}
+rs <-
+  DBI::dbGetQuery(
+  con,
+  "
+  select 'single line comment, dtts' showing       
+        ,*
+        ,current_database() db
+        ,user
+    --  ,to_char(now(),'YYYY/MM/DD HH24:MI:SS') dtts
+    from store;    
+  ")
+kable(rs,caption='Sincle line comment') 
+```
 
-showing          | store_id | manager_staff_id | address_id |     last_update     |    db     |   user
------------------+----------+------------------+------------+---------------------+-----------+----------
- single line comment, dtts |        1 |                1 |          1 | 2006-02-15 09:57:12 | dvdrental | postgres
- single line comment, dtts |        2 |                2 |          2 | 2006-02-15 09:57:12 | dvdrental | postgres
- 
     The dtts  line is commented out with the two dashes and is dropped from the end of the result set columns.
     
-### 7.  Multi-line comment /\*...\*/
+#### 7.  Multi-line comment /\*...\*/
 
-    dvdrental=# select 'block comment drop db, user, and dtts' showing
-                      ,*
-                /*
-                      ,current_database() db
-                      ,user
-                      ,to_char(now(),'YYYY/MM/DD HH24:MI:SS') dtts
-                */
-                  from store;
-                  
-showing                                | store_id | manager_staff_id | address_id |     last_update
----------------------------------------+----------+------------------+------------+---------------------
- block comment drop db, user, and dtts |        1 |                1 |          1 | 2006-02-15 09:57:12
- block comment drop db, user, and dtts |        2 |                2 |          2 | 2006-02-15 09:57:12    
+```{r}
+rs <-
+  DBI::dbGetQuery(
+  con,
+  "
+  select 'block comment drop db, user, and dtts' showing
+        ,*
+        /*
+        ,current_database() db
+        ,user
+        ,to_char(now(),'YYYY/MM/DD HH24:MI:SS') dtts
+        */
+    from store;    
+  ")
+kable(rs,caption='Multi-line comment') 
+```
 
     The three columns db, user, and dtts, between the /\* and \*/ have been commented and no longer appear as the end columns of the result set.
     
+### FROM Clause 
 
-## FROM Clause 
-
-The `FROM` clause contains database tables/views from which the `SELECT` columns are derived.  For now, in the examples, we are only using a single table.  If the database reflects a relational model, your data is likely spread out over several tables.  The key take away when beginning your analysis is to pick the table that has most of the data that you need for your analysis.  This table becomes your main or driving table to build your SQL query statement around.  After identifying your driving table, potentially save yourself a lot of time and heart ache.  Review any view that is built on your driving table.  If one or more exist, especially if vendor built, may already have the additional information need for your analysis.
+The `FROM` clause contains one or more datasets, usually database tables/views, from which the `SELECT` columns are derived.  For now, in the examples, we are only using a single table.  If the database reflects a relational model, your data is likely spread out over several tables.  The key take away when beginning your analysis is to pick the table that has most of the data that you need for your analysis.  This table becomes your main or driving table to build your SQL query statement around.  After identifying your driving table, potentially save yourself a lot of time and heart ache,  review any view that is built on your driving table.  If one or more exist, especially, if vendor built, may already have the additional information needed for your analysis.
 
 `r colFmt('Insert SQL here or link to Views dependent on what','red')`
 
 In this tutorial, there is only a single user hitting the database and row/table locking is not necessary and considered out of scope.
 
-### Table Uses
+#### Table Uses
 
-  *  A table can be used more than once in a FROM clause.  These are self-referencing table.  An example is an EMPLOYEE table which contains a foriegn key to her manager.  Her manager also has a foriegn key to her manager, etc up the corporate ladder.  
-  *  In the example above, the EMPLOYEE table plays two roles, employee and manager.  The next line shows the FROM clause showing both rows.  
+  *  A table can be used more than once in a FROM clause.  These are self-referencing tables.  An example is an EMPLOYEE table which contains a foriegn key to her manager.  Her manager also has a foriegn key to her manager, etc up the corporate ladder.  
+  *  In the example above, the EMPLOYEE table plays two roles, employee and manager.  The next line shows the FROM clause showing the same table used twice.  
     
      FROM EMPLOYEE EE, EMPLOYEE MGR
        
-  *  The EE and MGR are role abbreviations for the EMPLOYEE table.  
-  *  Since all the column names are exactly the same for the EE and MGR role, the column names need to be prefixed with their role alias, e.g., SELECT MGR.EE_NAME, EE.EE_NAME ... shows the manager name and her employee name who work for her.
-  *  It is a good habit to always alias your tables and prefix your column names with the table alias to eliminate any ambiguity as to where the column came from.  This is critical where there is inconsistent table column naming convention.
+  *  The EE and MGR are aliases for the EMPLOYEE table and represent the different roles the EMPLOYEE table plays.  
+  *  Since all the column names are exactly the same for the EE and MGR role, the column names need to be prefixed with their role alias, e.g., SELECT MGR.EE_NAME, EE.EE_NAME ... shows the manager name and her employee name(s) who work for her.
+  *  It is a good habit to always alias your tables and prefix your column names with the table alias to eliminate any ambiguity as to where the column came from.  This is critical where there is inconsistent table column naming convention.  It also helps when debugging larger SQL queries.
   * `r colFmt('Cover inline tables in future section','red')`
   
 ```
-Side Note: Do not create an unintended Cartesian join.  If one has more than one table in the FROM clause, make sure that every table in the FROM clause joins to at least one other table.  If your result set has an unexpectantly high rowcount and long runtime, check for a missing join in the FROM clause.
+Side Note: Do not create an unintended Cartesian join.  If one has more than one table in the FROM clause, make sure that every table in the FROM clause joins to at least one other table in the WHERE clause.  If your result set has an unexpectantly high rowcount and long runtime, check for a missing join in the FROM clause.
 ```
 
-## WHERE Clause: Row Selection -- Horizontal Partitioning of Data                                          
+### WHERE Clause: Row Selection -- Horizontal Partitioning of Data                                          
 
 In the previous SELECT clause section, the SELECT statement either partitioned data vertically across the table columns or derived vertical column values.  This section provides examples that partitions the table data across rows in the table.
 
@@ -293,60 +324,91 @@ When the filter logic is complex, it is sometimes easier to represent the where 
 1.  (A and B)' = A' or B'
 2.  (A or B)'  = A' and B'
 
-### Example Continued
+#### Examples Continued
 
 We begin with `1`, our simplest SQL query.
 
-    dvdrental=# select * from store;  
-    
- store_id | manager_staff_id | address_id |     last_update
-----------+------------------+------------+---------------------
-    1 |                1 |          1 | 2006-02-15 09:57:12
-    2 |                2 |          2 | 2006-02-15 09:57:12 
+```{r}
+rs <-
+  DBI::dbGetQuery(
+  con,
+  "
+  select * from store;
+  ")
+kable(rs,caption='select all columns')  
+```  
 
-### 7 WHERE condition logically never TRUE.
+#### 8 WHERE condition logically never TRUE.
 
-    dvdrental=# select * from store where 1 = 0;
-    
- store_id | manager_staff_id | address_id |     last_update
-----------+------------------+------------+---------------------
+```{r}
+rs <-
+  DBI::dbGetQuery(
+  con,
+  "
+  select * from store where 1 = 0;
+  ")
+kable(rs,caption='WHERE always FALSE')  
+```  
 
     Since 1 = 0 is always false, no rows are ever returned.  Initially this construct seems useless, but actually is quite handy when debugging large scripts where a portion of the script needs to be turned off or when creating an empty table with the exact same column names and types as the FROM table(s).  
 
-### 8 WHERE condition logically always TRUE.
+#### 9 WHERE condition logically always TRUE.
 
-    dvdrental=# select * from store where 1 = 1;
-    
- store_id | manager_staff_id | address_id |     last_update
-----------+------------------+------------+---------------------
-    1 |                1 |          1 | 2006-02-15 09:57:12
-    2 |                2 |          2 | 2006-02-15 09:57:12
+```{r}
+rs <-
+  DBI::dbGetQuery(
+  con,
+  "
+  select * from store where 1 = 1;
+  ")
+kable(rs,caption='WHERE always TRUE')  
+```  
     
     Since 1 = 1 is always true, all rows are always returned.  Initially this construct seems useless, but actually is also quite handy when debugging large scripts and creating a backup of table.
     
-### 9 WHERE equality condition 
+#### 10 WHERE equality condition 
 
-    dvdrental=# select * from store where store_id = 2;
-    
- store_id | manager_staff_id | address_id |     last_update
-----------+------------------+------------+---------------------
-    2 |                2 |          2 | 2006-02-15 09:57:12        
+```{r}
+rs <-
+  DBI::dbGetQuery(
+  con,
+  "
+  select * from store where store_id = 2;
+  ")
+kable(rs,caption='WHERE EQUAL')  
+```        
         
-        The only row where the store_id = 2 is row 2.  Only row 2 is kept and all others are dropped.
+        The only row where the store_id = 2 is row 2 and it is the only row returned.
         
-### 10 WHERE NOT equal conditions 
+#### 11 WHERE NOT equal conditions 
 
-    dvdrental=# select * from store where store_id <> 2;  # <> syntactically the same as !=
-    
- store_id | manager_staff_id | address_id |     last_update
-----------+------------------+------------+---------------------
-    1     |                1 |          1 | 2006-02-15 09:57:12       
+```{r}
+rs <-
+  DBI::dbGetQuery(
+  con,
+  "
+  select * from store where store_id <> 2;
+  ")
+kable(rs,caption='WHERE NOT EQUAL')  
+```        
+
+    <> is syntactically the same as !=
         
-        The only row where the store_id <> 2 is row 1.  Only row 1 is kept and all others are dropped.
+        The only row where the store_id <> 2 is row 1 and only row 1 is returned.  
 
-### 10 WHERE OR condition
+#### 12 WHERE OR condition
 
-    dvdrental=# select * from store where manager_staff_id = 1 or store_id <> 2 or address_id = 3; 
+```{r}
+rs <-
+  DBI::dbGetQuery(
+  con,
+  "
+  select * from store where manager_staff_id = 1 or store_id < 3; 
+  ")
+kable(rs,caption='WHERE OR condition')  
+```      
+
+    The first condition manager_staff_id = 1 returns a single row and the second condition store_id < 3 returns two rows.  
     
 Following table is modified from http://www.tutorialspoint.com/sql/sql-operators
 
@@ -379,28 +441,60 @@ IS NULL|The NULL operator is used to compare a value with a NULL value.
 UNIQUE|The UNIQUE operator searches every row of a specified table for uniqueness (no duplicates). 
 
 
-
+https://pgexercises.com/questions/basic
     
-## TO-DO's
+ ## TO-DO's
  
  1.  inline tables
  2.  correlated subqueries
- 3.  Binding order
+ 
+ 
 
-      3.1  FROM
-      3.2  ON
-      3.3  JOIN
-      3.4  WHERE
-      3.5  GROUP BY
-      3.6  WITH CUBE/ROLLUP
-      3.7  HAVING
-      3.8  SELECT
-      3.9  DISTINCT
-      3.10 ORDER BY
-      3.11 TOP
-      3.12 OFFSET/FETCH
+ 
+
+ 
+## Paradigm Shift from R-Dplyr to SQL
+ 
+Paraphrasing what some have said with an R dplyr background and no SQL experience, "It is like working from the inside out."  This sentiment occurs because 
+
+1.  The SQL SELECT statement begins at the end, the SELECT clause, and drills backwards, loosely speaking, to derive the desired result set.
+2.  SQL SELECT statements are an all or nothing proposition.  One gets nothing if there is any kind of syntax error.  
+3.  SQL SELECT result sets can be quite opaque.  The WHERE clause can be very dense and difficult to trace through.  It is rarely ever linear in nature.  
+4.  Validating all the permutations in the where clause can be tough and tedious.
+
+### Big bang versus piped incremental steps.
+
+1.  Dplyr starts with one or more sources joined together in a conceptually similar way that SQL joins sources.
+2.  The pipe and filter() function breaks down the filter conditions into small managable logical steps. This makes it much easier to understand what is happening in the derivation of the final tibble.  Adding  tees through out the pipe line gives one full trace back of all the data transformations at every pipe.
+
+Helpful tidyverse functions that output tibbles: tbl_module function in https://github.com/nhemerson/tibbleColumns package; 
+
+Mental picture: SQL approach: Imagine a data lake named Niagera Falls and drinking from it without drowning.  R-Dplyr approach: Imagine a resturant at the bottom of the Niagera Falls data lake and having a refreshing dring out of the water faucet.
+
+
+### SQL Execution Order
+
+The table below is derived from this site.  https://www.periscopedata.com/blog/sql-query-order-of-operations  It shows what goes on under the hood SQL SELECT hood.
+ 
+ 
+SEQ|SQL             |Function                                | Dplyr
+---|----------------|----------------------------------------|-------------------------
+1  |WITH            |Common Table expression, CTE, one or more datasets/tables used FROM clause.|.data parameter in dplyr functions
+2  |FROM            |Choose and join tables to get base data|.data parameter in dplyr functions
+3  |ON              |Choose and join tables to get base data|dplyr join family of functions
+4  |JOIN            |Choose and join tables to get base data|dplyr join family of functions
+5  |WHERE           |filters the base data|dplyr filter()
+6  |GROUP BY        |aggregates the base data|dplyr group_by family of functions
+7  |WITH CUBE/ROLLUP|aggregates the base data|is this part of the dplyr grammar
+8  |HAVING          |filters aggregated data|dplyr filter()
+9  |SELECT          |Returns final data set|dplyr select()
+10 |DISTINCT        |Dedupe the final data set|dplyr distinct()
+11 |ORDER BY        |Sorts the final data set|arrange()
+12 |TOP/LIMIT       |Limits the number of rows in data set
+13 |OFFSET/FETCH    |Limits the number of rows in data set
+
+The SEQ column shows the standard order of SQL execution.  One take away for this tutorial is that the SELECT clause actually executes late in the process, even though it is the first clause in the entire SELECT statement.  A second take away is that SQL execution order, or tweaked order, plays a critical role in SQL query tuning. 
+
       
-  4.  dplyr comparison of select features
-  5.  dplyr comparison of fetch versus where.
   6.  SQL for View table dependencies.
   7.  Add cartesian join exercise.
