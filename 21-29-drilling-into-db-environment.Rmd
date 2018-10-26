@@ -277,9 +277,9 @@ rs3 <- DBI::dbGetQuery(con,"SELECT distinct t.table_catalog DB ,t.table_schema
 
 
 #kable(head(rs1 %>% arrange (table_name)))
-View(rs1)
-View(rs2)
-View(rs3)
+kable(head(rs1))
+kable(head(rs2))
+kable(head(rs3))
 ```
 
 
@@ -356,8 +356,8 @@ tbl_pk_fk_ids_df <- inner_join(tbl_pk_fk_df,table_nodes_ndf
 tbl_fk_df <- tbl_pk_fk_ids_df %>% filter(constraint_type == 'FOREIGN KEY')     
 tbl_pk_df <- tbl_pk_fk_ids_df %>% filter(constraint_type == 'PRIMARY KEY') 
 # View(tbl_pk_fk_ids_df)
-View(tbl_fk_df)
-View(tbl_pk_df)
+kable(head(tbl_fk_df))
+kable(head(tbl_pk_df))
 
 ```
 
