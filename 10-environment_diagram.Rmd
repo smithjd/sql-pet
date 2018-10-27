@@ -106,7 +106,7 @@ Below is a high level diagram of our tutorial environment.  The single black or 
 
 
 ```{r Environment Graph,eval=TRUE, echo=FALSE}
-grViz("
+envgraph_widget <- grViz("
 digraph Envgraph {
 
   # graph, node, and edge definitions
@@ -171,8 +171,29 @@ digraph Envgraph {
 [6]: paste0('PostgreSQL:\\n', postgres_ver)
 [7]: cli
 ")
+
+# export the widget to an SVG file
+envgraph_widget %>% 
+  DiagrammeRsvg::export_svg() %>% 
+  cat(file = "diagrams/envgraph.svg")
+
+# convert to PDF and PNG - LaTeX doesn't read SVGs by default
+magick::image_read("diagrams/envgraph.svg") %>%
+  magick::image_write(
+    path = "diagrams/envgraph.pdf", 
+    format = "pdf"
+  )
+magick::image_read_svg("diagrams/envgraph.svg") %>%
+  magick::image_write(
+    path = "diagrams/envgraph.png", 
+    format = "png"
+  )
 ```
 
+```{r echo=FALSE}
+# display the PNG/PDF - this works in both HTML and PDF
+knitr::include_graphics("diagrams/envgraph.png", auto_pdf = TRUE)
+```
 
 ## Communicating with Docker Applications
 
