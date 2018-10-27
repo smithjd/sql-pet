@@ -25,7 +25,7 @@
 <meta name="author" content="Dipti Muni, Ian Frantz, John David Smith, Mary Anne Thygesen, M. Edward (Ed) Borasky, Scott Case, and Sophie Yang">
 
 
-<meta name="date" content="2018-10-26">
+<meta name="date" content="2018-10-27">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -33,7 +33,7 @@
   
   
 <link rel="prev" href="joins-and-complex-queries-13.html">
-<link rel="next" href="sql-be-12-and-or-logical-precedence.html">
+<link rel="next" href="drilling-into-your-db-environment-21-29.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -48,9 +48,6 @@
 
 
 <script src="libs/htmlwidgets-1.3/htmlwidgets.js"></script>
-<script src="libs/viz-0.3/viz.js"></script>
-<link href="libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
-<script src="libs/grViz-binding-1.0.0/grViz.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
 <script src="libs/datatables-binding-0.4/datatables.js"></script>
 <link href="libs/dt-core-1.10.16/css/jquery.dataTables.min.css" rel="stylesheet" />
@@ -58,18 +55,12 @@
 <script src="libs/dt-core-1.10.16/js/jquery.dataTables.min.js"></script>
 <link href="libs/crosstalk-1.0.0/css/crosstalk.css" rel="stylesheet" />
 <script src="libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
-<script src="libs/d3-3.3.8/d3.min.js"></script>
-<script src="libs/dagre-0.4.0/dagre-d3.min.js"></script>
-<link href="libs/mermaid-0.3.0/dist/mermaid.css" rel="stylesheet" />
-<script src="libs/mermaid-0.3.0/dist/mermaid.slim.min.js"></script>
-<script src="libs/chromatography-0.1/chromatography.js"></script>
-<script src="libs/DiagrammeR-binding-1.0.0/DiagrammeR.js"></script>
 
 
 <style type="text/css">
 a.sourceLine { display: inline-block; line-height: 1.25; }
 a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; position: absolute; }
+a.sourceLine:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -82,13 +73,11 @@ code.sourceCode { white-space: pre-wrap; }
 a.sourceLine { text-indent: -1em; padding-left: 1em; }
 }
 pre.numberSource a.sourceLine
-  { position: relative; }
-pre.numberSource a.sourceLine:empty
-  { position: absolute; }
+  { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
   { content: attr(data-line-number);
-    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all;
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -274,112 +263,80 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="11.4" data-path="sql-quick-start-simple-retrieval-15.html"><a href="sql-quick-start-simple-retrieval-15.html#paradigm-shift-from-r-dplyr-to-sql"><i class="fa fa-check"></i><b>11.4</b> Paradigm Shift from R-Dplyr to SQL</a><ul>
 <li class="chapter" data-level="11.4.1" data-path="sql-quick-start-simple-retrieval-15.html"><a href="sql-quick-start-simple-retrieval-15.html#big-bang-versus-piped-incremental-steps."><i class="fa fa-check"></i><b>11.4.1</b> Big bang versus piped incremental steps.</a></li>
 <li class="chapter" data-level="11.4.2" data-path="sql-quick-start-simple-retrieval-15.html"><a href="sql-quick-start-simple-retrieval-15.html#sql-execution-order"><i class="fa fa-check"></i><b>11.4.2</b> SQL Execution Order</a></li>
-<li class="chapter" data-level="11.4.3" data-path="sql-quick-start-simple-retrieval-15.html"><a href="sql-quick-start-simple-retrieval-15.html#which-server"><i class="fa fa-check"></i><b>11.4.3</b> Which Server?</a></li>
-<li class="chapter" data-level="11.4.4" data-path="sql-quick-start-simple-retrieval-15.html"><a href="sql-quick-start-simple-retrieval-15.html#which-database"><i class="fa fa-check"></i><b>11.4.4</b> Which database?</a></li>
-<li class="chapter" data-level="11.4.5" data-path="sql-quick-start-simple-retrieval-15.html"><a href="sql-quick-start-simple-retrieval-15.html#how-do-i-check-for-databases"><i class="fa fa-check"></i><b>11.4.5</b> How do I check for databases?</a></li>
-<li class="chapter" data-level="11.4.6" data-path="sql-quick-start-simple-retrieval-15.html"><a href="sql-quick-start-simple-retrieval-15.html#how-do-i-change-my-database-connections"><i class="fa fa-check"></i><b>11.4.6</b> How do I change my database connections</a></li>
-<li class="chapter" data-level="11.4.7" data-path="sql-quick-start-simple-retrieval-15.html"><a href="sql-quick-start-simple-retrieval-15.html#sql_be_stinger_01"><i class="fa fa-check"></i><b>11.4.7</b> SQL_BE_STINGER_01:</a></li>
-<li class="chapter" data-level="11.4.8" data-path="sql-quick-start-simple-retrieval-15.html"><a href="sql-quick-start-simple-retrieval-15.html#which-schema"><i class="fa fa-check"></i><b>11.4.8</b> Which Schema?</a></li>
 </ul></li>
-<li class="chapter" data-level="11.5" data-path="sql-quick-start-simple-retrieval-15.html"><a href="sql-quick-start-simple-retrieval-15.html#sql_be_02database-schemas-from-ansi-standard-information_schema.tables"><i class="fa fa-check"></i><b>11.5</b> SQL_BE_02:Database Schemas from ANSI standard INFORMATION_SCHEMA.TABLES</a><ul>
-<li class="chapter" data-level="11.5.1" data-path="sql-quick-start-simple-retrieval-15.html"><a href="sql-quick-start-simple-retrieval-15.html#exercises-1"><i class="fa fa-check"></i><b>11.5.1</b> Exercises</a></li>
 </ul></li>
-<li class="chapter" data-level="11.6" data-path="sql-quick-start-simple-retrieval-15.html"><a href="sql-quick-start-simple-retrieval-15.html#sql_be_03group-by-no-aggregation-deduplication"><i class="fa fa-check"></i><b>11.6</b> SQL_BE_03:Group By No Aggregation – Deduplication</a></li>
-<li class="chapter" data-level="11.7" data-path="sql-quick-start-simple-retrieval-15.html"><a href="sql-quick-start-simple-retrieval-15.html#sql_be_04distinct-list-take-2"><i class="fa fa-check"></i><b>11.7</b> SQL_BE_04:Distinct list take 2</a></li>
-<li class="chapter" data-level="11.8" data-path="sql-quick-start-simple-retrieval-15.html"><a href="sql-quick-start-simple-retrieval-15.html#sql_be_05---how-to-drill-down-and-aggregate-at-lower-level"><i class="fa fa-check"></i><b>11.8</b> SQL_BE_05 - How to Drill Down and Aggregate at Lower Level</a></li>
-<li class="chapter" data-level="11.9" data-path="sql-quick-start-simple-retrieval-15.html"><a href="sql-quick-start-simple-retrieval-15.html#sql_be_06---how-to-filter-groups"><i class="fa fa-check"></i><b>11.9</b> SQL_BE_06 - How to FILTER GROUPS</a></li>
-<li class="chapter" data-level="11.10" data-path="sql-quick-start-simple-retrieval-15.html"><a href="sql-quick-start-simple-retrieval-15.html#sql_be_07---how-to-order-result-set-on-a-single-column"><i class="fa fa-check"></i><b>11.10</b> SQL_BE_07 - HOW to ORDER Result Set on a Single Column</a></li>
-<li class="chapter" data-level="11.11" data-path="sql-quick-start-simple-retrieval-15.html"><a href="sql-quick-start-simple-retrieval-15.html#sql_be_08---how-to-order-result-set-on-a-multiple-columns-and-descending-order"><i class="fa fa-check"></i><b>11.11</b> SQL_BE_08 - HOW to ORDER Result Set on a Multiple Columns and Descending Order</a><ul>
-<li class="chapter" data-level="11.11.1" data-path="sql-quick-start-simple-retrieval-15.html"><a href="sql-quick-start-simple-retrieval-15.html#table-and-column-data-metadata"><i class="fa fa-check"></i><b>11.11.1</b> Table and Column Data – MetaData</a></li>
+<li class="chapter" data-level="12" data-path="drilling-into-your-db-environment-21-29.html"><a href="drilling-into-your-db-environment-21-29.html"><i class="fa fa-check"></i><b>12</b> Drilling into Your DB Environment (21-29)</a><ul>
+<li class="chapter" data-level="12.0.1" data-path="drilling-into-your-db-environment-21-29.html"><a href="drilling-into-your-db-environment-21-29.html#which-database"><i class="fa fa-check"></i><b>12.0.1</b> Which database?</a></li>
+<li class="chapter" data-level="12.0.2" data-path="drilling-into-your-db-environment-21-29.html"><a href="drilling-into-your-db-environment-21-29.html#how-many-databases-reside-in-the-docker-container"><i class="fa fa-check"></i><b>12.0.2</b> How many databases reside in the Docker Container?</a></li>
+<li class="chapter" data-level="12.0.3" data-path="drilling-into-your-db-environment-21-29.html"><a href="drilling-into-your-db-environment-21-29.html#which-schema"><i class="fa fa-check"></i><b>12.0.3</b> Which Schema?</a></li>
+<li class="chapter" data-level="12.0.4" data-path="drilling-into-your-db-environment-21-29.html"><a href="drilling-into-your-db-environment-21-29.html#exercises-1"><i class="fa fa-check"></i><b>12.0.4</b> Exercises</a></li>
 </ul></li>
-<li class="chapter" data-level="11.12" data-path="sql-quick-start-simple-retrieval-15.html"><a href="sql-quick-start-simple-retrieval-15.html#sql_be_09-looks-for-table-metadata-just-in-the-information_schema."><i class="fa fa-check"></i><b>11.12</b> SQL_BE_09 looks for table metadata just in the information_schema.</a></li>
-<li class="chapter" data-level="11.13" data-path="sql-quick-start-simple-retrieval-15.html"><a href="sql-quick-start-simple-retrieval-15.html#sql_be_10-column-metadata"><i class="fa fa-check"></i><b>11.13</b> SQL_BE_10: Column Metadata</a></li>
-<li class="chapter" data-level="11.14" data-path="sql-quick-start-simple-retrieval-15.html"><a href="sql-quick-start-simple-retrieval-15.html#sql_be_11-table-and-column-metadata"><i class="fa fa-check"></i><b>11.14</b> SQL_BE_11 Table and Column Metadata</a></li>
+<li class="chapter" data-level="13" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html"><i class="fa fa-check"></i><b>13</b> Getting metadata about and from the database (21)</a><ul>
+<li class="chapter" data-level="13.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#always-look-at-the-data"><i class="fa fa-check"></i><b>13.1</b> Always <em>look</em> at the data</a><ul>
+<li class="chapter" data-level="13.1.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#connect-with-people-who-own-generate-or-are-the-subjects-of-the-data"><i class="fa fa-check"></i><b>13.1.1</b> Connect with people who own, generate, or are the subjects of the data</a></li>
+<li class="chapter" data-level="13.1.2" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#browse-a-few-rows-of-a-table"><i class="fa fa-check"></i><b>13.1.2</b> Browse a few rows of a table</a></li>
 </ul></li>
-<li class="chapter" data-level="12" data-path="sql-be-12-and-or-logical-precedence.html"><a href="sql-be-12-and-or-logical-precedence.html"><i class="fa fa-check"></i><b>12</b> SQL_BE_12 AND OR-Logical Precedence</a></li>
-<li class="chapter" data-level="13" data-path="sql-be-13-and-or-logical-precedence.html"><a href="sql-be-13-and-or-logical-precedence.html"><i class="fa fa-check"></i><b>13</b> SQL_BE_13 AND (OR-Logical Precedence)</a><ul>
-<li class="chapter" data-level="13.0.1" data-path="sql-be-13-and-or-logical-precedence.html"><a href="sql-be-13-and-or-logical-precedence.html#which-table-or-view"><i class="fa fa-check"></i><b>13.0.1</b> Which Table or View</a></li>
-<li class="chapter" data-level="13.1" data-path="sql-be-13-and-or-logical-precedence.html"><a href="sql-be-13-and-or-logical-precedence.html#sql_be_14-union-stacked-sets"><i class="fa fa-check"></i><b>13.1</b> SQL_BE_14 UNION Stacked Sets</a><ul>
-<li class="chapter" data-level="13.1.1" data-path="sql-be-13-and-or-logical-precedence.html"><a href="sql-be-13-and-or-logical-precedence.html#sql_be_stinger_02-union-order-by-clause"><i class="fa fa-check"></i><b>13.1.1</b> SQL_BE_STINGER_02 Union Order By Clause</a></li>
+<li class="chapter" data-level="13.2" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#database-contents-and-structure"><i class="fa fa-check"></i><b>13.2</b> Database contents and structure</a><ul>
+<li class="chapter" data-level="13.2.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#database-structure"><i class="fa fa-check"></i><b>13.2.1</b> Database structure</a></li>
+<li class="chapter" data-level="13.2.2" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#contents-of-the-information_schema"><i class="fa fa-check"></i><b>13.2.2</b> Contents of the <code>information_schema</code></a></li>
+<li class="chapter" data-level="13.2.3" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#what-tables-are-in-the-database"><i class="fa fa-check"></i><b>13.2.3</b> What tables are in the database?</a></li>
+<li class="chapter" data-level="13.2.4" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#digging-into-the-information_schema"><i class="fa fa-check"></i><b>13.2.4</b> Digging into the <code>information_schema</code></a></li>
 </ul></li>
-<li class="chapter" data-level="13.2" data-path="sql-be-13-and-or-logical-precedence.html"><a href="sql-be-13-and-or-logical-precedence.html#sql_be_15-union-all"><i class="fa fa-check"></i><b>13.2</b> SQL_BE_15 UNION {ALL}</a><ul>
-<li class="chapter" data-level="13.2.1" data-path="sql-be-13-and-or-logical-precedence.html"><a href="sql-be-13-and-or-logical-precedence.html#sql_be_16-except-empty-set"><i class="fa fa-check"></i><b>13.2.1</b> SQL_BE_16 EXCEPT EMPTY set</a></li>
-<li class="chapter" data-level="13.2.2" data-path="sql-be-13-and-or-logical-precedence.html"><a href="sql-be-13-and-or-logical-precedence.html#sql_be_17-except-not-empty"><i class="fa fa-check"></i><b>13.2.2</b> SQL_BE_17 EXCEPT NOT EMPTY</a></li>
+<li class="chapter" data-level="13.3" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#what-columns-do-those-tables-contain"><i class="fa fa-check"></i><b>13.3</b> What columns do those tables contain?</a><ul>
+<li class="chapter" data-level="13.3.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#what-is-the-difference-between-a-view-and-a-base-table"><i class="fa fa-check"></i><b>13.3.1</b> What is the difference between a <code>VIEW</code> and a <code>BASE TABLE</code>?</a></li>
+<li class="chapter" data-level="13.3.2" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#what-data-types-are-found-in-the-database"><i class="fa fa-check"></i><b>13.3.2</b> What data types are found in the database?</a></li>
 </ul></li>
-<li class="chapter" data-level="13.3" data-path="sql-be-13-and-or-logical-precedence.html"><a href="sql-be-13-and-or-logical-precedence.html#stinger_be_"><i class="fa fa-check"></i><b>13.3</b> STINGER_BE_</a></li>
-<li class="chapter" data-level="13.4" data-path="sql-be-13-and-or-logical-precedence.html"><a href="sql-be-13-and-or-logical-precedence.html#sql_be_18-describe-table-script"><i class="fa fa-check"></i><b>13.4</b> SQL_BE_18 Describe Table Script</a></li>
-<li class="chapter" data-level="13.5" data-path="sql-be-13-and-or-logical-precedence.html"><a href="sql-be-13-and-or-logical-precedence.html#figure-out-view-and-clean-this-up"><i class="fa fa-check"></i><b>13.5</b> Figure out view and clean this up</a></li>
+<li class="chapter" data-level="13.4" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#characterizing-how-things-are-named"><i class="fa fa-check"></i><b>13.4</b> Characterizing how things are named</a><ul>
+<li class="chapter" data-level="13.4.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#counting-columns-and-name-reuse"><i class="fa fa-check"></i><b>13.4.1</b> Counting columns and name reuse</a></li>
 </ul></li>
-<li class="chapter" data-level="14" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html"><i class="fa fa-check"></i><b>14</b> Getting metadata about and from the database (21)</a><ul>
-<li class="chapter" data-level="14.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#always-look-at-the-data"><i class="fa fa-check"></i><b>14.1</b> Always <em>look</em> at the data</a><ul>
-<li class="chapter" data-level="14.1.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#connect-with-people-who-own-generate-or-are-the-subjects-of-the-data"><i class="fa fa-check"></i><b>14.1.1</b> Connect with people who own, generate, or are the subjects of the data</a></li>
-<li class="chapter" data-level="14.1.2" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#browse-a-few-rows-of-a-table"><i class="fa fa-check"></i><b>14.1.2</b> Browse a few rows of a table</a></li>
+<li class="chapter" data-level="13.5" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#database-keys"><i class="fa fa-check"></i><b>13.5</b> Database keys</a><ul>
+<li class="chapter" data-level="13.5.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#direct-sql"><i class="fa fa-check"></i><b>13.5.1</b> Direct SQL</a></li>
+<li class="chapter" data-level="13.5.2" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#database-keys-with-dplyr"><i class="fa fa-check"></i><b>13.5.2</b> Database keys with dplyr</a></li>
 </ul></li>
-<li class="chapter" data-level="14.2" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#database-contents-and-structure"><i class="fa fa-check"></i><b>14.2</b> Database contents and structure</a><ul>
-<li class="chapter" data-level="14.2.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#database-structure"><i class="fa fa-check"></i><b>14.2.1</b> Database structure</a></li>
-<li class="chapter" data-level="14.2.2" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#contents-of-the-information_schema"><i class="fa fa-check"></i><b>14.2.2</b> Contents of the <code>information_schema</code></a></li>
-<li class="chapter" data-level="14.2.3" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#what-tables-are-in-the-database"><i class="fa fa-check"></i><b>14.2.3</b> What tables are in the database?</a></li>
-<li class="chapter" data-level="14.2.4" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#digging-into-the-information_schema"><i class="fa fa-check"></i><b>14.2.4</b> Digging into the <code>information_schema</code></a></li>
+<li class="chapter" data-level="13.6" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#creating-your-own-data-dictionary"><i class="fa fa-check"></i><b>13.6</b> Creating your own data dictionary</a></li>
 </ul></li>
-<li class="chapter" data-level="14.3" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#what-columns-do-those-tables-contain"><i class="fa fa-check"></i><b>14.3</b> What columns do those tables contain?</a><ul>
-<li class="chapter" data-level="14.3.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#what-is-the-difference-between-a-view-and-a-base-table"><i class="fa fa-check"></i><b>14.3.1</b> What is the difference between a <code>VIEW</code> and a <code>BASE TABLE</code>?</a></li>
-<li class="chapter" data-level="14.3.2" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#what-data-types-are-found-in-the-database"><i class="fa fa-check"></i><b>14.3.2</b> What data types are found in the database?</a></li>
+<li class="chapter" data-level="14" data-path="drilling-into-your-db-environment-22.html"><a href="drilling-into-your-db-environment-22.html"><i class="fa fa-check"></i><b>14</b> Drilling into Your DB Environment (22)</a><ul>
+<li class="chapter" data-level="14.1" data-path="drilling-into-your-db-environment-22.html"><a href="drilling-into-your-db-environment-22.html#which-database-1"><i class="fa fa-check"></i><b>14.1</b> Which database?</a></li>
+<li class="chapter" data-level="14.2" data-path="drilling-into-your-db-environment-22.html"><a href="drilling-into-your-db-environment-22.html#how-many-databases-reside-in-the-docker-container-1"><i class="fa fa-check"></i><b>14.2</b> How many databases reside in the Docker Container?</a></li>
+<li class="chapter" data-level="14.3" data-path="drilling-into-your-db-environment-22.html"><a href="drilling-into-your-db-environment-22.html#which-schema-1"><i class="fa fa-check"></i><b>14.3</b> Which Schema?</a></li>
+<li class="chapter" data-level="14.4" data-path="drilling-into-your-db-environment-22.html"><a href="drilling-into-your-db-environment-22.html#exercises-2"><i class="fa fa-check"></i><b>14.4</b> Exercises</a></li>
 </ul></li>
-<li class="chapter" data-level="14.4" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#characterizing-how-things-are-named"><i class="fa fa-check"></i><b>14.4</b> Characterizing how things are named</a><ul>
-<li class="chapter" data-level="14.4.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#counting-columns-and-name-reuse"><i class="fa fa-check"></i><b>14.4.1</b> Counting columns and name reuse</a></li>
+<li class="chapter" data-level="15" data-path="explain-queries-71.html"><a href="explain-queries-71.html"><i class="fa fa-check"></i><b>15</b> Explain queries (71)</a><ul>
+<li class="chapter" data-level="15.1" data-path="explain-queries-71.html"><a href="explain-queries-71.html#performance-considerations"><i class="fa fa-check"></i><b>15.1</b> Performance considerations</a></li>
+<li class="chapter" data-level="15.2" data-path="explain-queries-71.html"><a href="explain-queries-71.html#clean-up-1"><i class="fa fa-check"></i><b>15.2</b> Clean up</a></li>
 </ul></li>
-<li class="chapter" data-level="14.5" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#database-keys"><i class="fa fa-check"></i><b>14.5</b> Database keys</a><ul>
-<li class="chapter" data-level="14.5.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#direct-sql"><i class="fa fa-check"></i><b>14.5.1</b> Direct SQL</a></li>
-<li class="chapter" data-level="14.5.2" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#database-keys-with-dplyr"><i class="fa fa-check"></i><b>14.5.2</b> Database keys with dplyr</a></li>
+<li class="chapter" data-level="16" data-path="sql-queries-behind-the-scenes-72.html"><a href="sql-queries-behind-the-scenes-72.html"><i class="fa fa-check"></i><b>16</b> SQL queries behind the scenes (72)</a><ul>
+<li class="chapter" data-level="16.1" data-path="sql-queries-behind-the-scenes-72.html"><a href="sql-queries-behind-the-scenes-72.html#sql-execution-steps"><i class="fa fa-check"></i><b>16.1</b> SQL Execution Steps</a></li>
+<li class="chapter" data-level="16.2" data-path="sql-queries-behind-the-scenes-72.html"><a href="sql-queries-behind-the-scenes-72.html#passing-values-to-sql-statements"><i class="fa fa-check"></i><b>16.2</b> Passing values to SQL statements</a></li>
+<li class="chapter" data-level="16.3" data-path="sql-queries-behind-the-scenes-72.html"><a href="sql-queries-behind-the-scenes-72.html#pass-multiple-sets-of-values-with-dbbind"><i class="fa fa-check"></i><b>16.3</b> Pass multiple sets of values with dbBind():</a></li>
+<li class="chapter" data-level="16.4" data-path="sql-queries-behind-the-scenes-72.html"><a href="sql-queries-behind-the-scenes-72.html#clean-up-2"><i class="fa fa-check"></i><b>16.4</b> Clean up</a></li>
 </ul></li>
-<li class="chapter" data-level="14.6" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#creating-your-own-data-dictionary"><i class="fa fa-check"></i><b>14.6</b> Creating your own data dictionary</a></li>
+<li class="chapter" data-level="17" data-path="writing-to-the-dbms-73.html"><a href="writing-to-the-dbms-73.html"><i class="fa fa-check"></i><b>17</b> Writing to the DBMS (73)</a><ul>
+<li class="chapter" data-level="17.1" data-path="writing-to-the-dbms-73.html"><a href="writing-to-the-dbms-73.html#create-a-new-table"><i class="fa fa-check"></i><b>17.1</b> Create a new table</a></li>
+<li class="chapter" data-level="17.2" data-path="writing-to-the-dbms-73.html"><a href="writing-to-the-dbms-73.html#modify-an-existing-table"><i class="fa fa-check"></i><b>17.2</b> Modify an existing table</a></li>
+<li class="chapter" data-level="17.3" data-path="writing-to-the-dbms-73.html"><a href="writing-to-the-dbms-73.html#remove-table-and-clean-up"><i class="fa fa-check"></i><b>17.3</b> Remove table and Clean up</a></li>
 </ul></li>
-<li class="chapter" data-level="15" data-path="drilling-into-your-db-environment-22.html"><a href="drilling-into-your-db-environment-22.html"><i class="fa fa-check"></i><b>15</b> Drilling into Your DB Environment (22)</a><ul>
-<li class="chapter" data-level="15.1" data-path="drilling-into-your-db-environment-22.html"><a href="drilling-into-your-db-environment-22.html#which-database-1"><i class="fa fa-check"></i><b>15.1</b> Which database?</a></li>
-<li class="chapter" data-level="15.2" data-path="drilling-into-your-db-environment-22.html"><a href="drilling-into-your-db-environment-22.html#how-many-databases-reside-in-the-docker-container"><i class="fa fa-check"></i><b>15.2</b> How many databases reside in the Docker Container?</a></li>
-<li class="chapter" data-level="15.3" data-path="drilling-into-your-db-environment-22.html"><a href="drilling-into-your-db-environment-22.html#which-schema-1"><i class="fa fa-check"></i><b>15.3</b> Which Schema?</a></li>
-<li class="chapter" data-level="15.4" data-path="drilling-into-your-db-environment-22.html"><a href="drilling-into-your-db-environment-22.html#exercises-2"><i class="fa fa-check"></i><b>15.4</b> Exercises</a></li>
+<li class="chapter" data-level="18" data-path="appendix-appendix-a-other-resources-89.html"><a href="appendix-appendix-a-other-resources-89.html"><i class="fa fa-check"></i><b>18</b> (APPENDIX) Appendix A: Other resources (89)</a><ul>
+<li class="chapter" data-level="18.1" data-path="appendix-appendix-a-other-resources-89.html"><a href="appendix-appendix-a-other-resources-89.html#editing-this-book"><i class="fa fa-check"></i><b>18.1</b> Editing this book</a></li>
+<li class="chapter" data-level="18.2" data-path="appendix-appendix-a-other-resources-89.html"><a href="appendix-appendix-a-other-resources-89.html#docker-alternatives"><i class="fa fa-check"></i><b>18.2</b> Docker alternatives</a></li>
+<li class="chapter" data-level="18.3" data-path="appendix-appendix-a-other-resources-89.html"><a href="appendix-appendix-a-other-resources-89.html#docker-and-r"><i class="fa fa-check"></i><b>18.3</b> Docker and R</a></li>
+<li class="chapter" data-level="18.4" data-path="appendix-appendix-a-other-resources-89.html"><a href="appendix-appendix-a-other-resources-89.html#documentation-for-docker-and-postgres"><i class="fa fa-check"></i><b>18.4</b> Documentation for Docker and Postgres</a></li>
+<li class="chapter" data-level="18.5" data-path="appendix-appendix-a-other-resources-89.html"><a href="appendix-appendix-a-other-resources-89.html#sql-and-dplyr"><i class="fa fa-check"></i><b>18.5</b> SQL and dplyr</a></li>
+<li class="chapter" data-level="18.6" data-path="appendix-appendix-a-other-resources-89.html"><a href="appendix-appendix-a-other-resources-89.html#more-resources"><i class="fa fa-check"></i><b>18.6</b> More Resources</a></li>
 </ul></li>
-<li class="chapter" data-level="16" data-path="explain-queries-71.html"><a href="explain-queries-71.html"><i class="fa fa-check"></i><b>16</b> Explain queries (71)</a><ul>
-<li class="chapter" data-level="16.1" data-path="explain-queries-71.html"><a href="explain-queries-71.html#performance-considerations"><i class="fa fa-check"></i><b>16.1</b> Performance considerations</a></li>
-<li class="chapter" data-level="16.2" data-path="explain-queries-71.html"><a href="explain-queries-71.html#clean-up-1"><i class="fa fa-check"></i><b>16.2</b> Clean up</a></li>
+<li class="chapter" data-level="19" data-path="appendix-b-mapping-your-local-environment-92.html"><a href="appendix-b-mapping-your-local-environment-92.html"><i class="fa fa-check"></i><b>19</b> APPENDIX B - Mapping your local environment (92)</a><ul>
+<li class="chapter" data-level="19.1" data-path="appendix-b-mapping-your-local-environment-92.html"><a href="appendix-b-mapping-your-local-environment-92.html#environment-tools-used-in-this-chapter"><i class="fa fa-check"></i><b>19.1</b> Environment Tools Used in this Chapter</a></li>
+<li class="chapter" data-level="19.2" data-path="appendix-b-mapping-your-local-environment-92.html"><a href="appendix-b-mapping-your-local-environment-92.html#communicating-with-docker-applications-1"><i class="fa fa-check"></i><b>19.2</b> Communicating with Docker Applications</a></li>
 </ul></li>
-<li class="chapter" data-level="17" data-path="sql-queries-behind-the-scenes-72.html"><a href="sql-queries-behind-the-scenes-72.html"><i class="fa fa-check"></i><b>17</b> SQL queries behind the scenes (72)</a><ul>
-<li class="chapter" data-level="17.1" data-path="sql-queries-behind-the-scenes-72.html"><a href="sql-queries-behind-the-scenes-72.html#sql-execution-steps"><i class="fa fa-check"></i><b>17.1</b> SQL Execution Steps</a></li>
-<li class="chapter" data-level="17.2" data-path="sql-queries-behind-the-scenes-72.html"><a href="sql-queries-behind-the-scenes-72.html#passing-values-to-sql-statements"><i class="fa fa-check"></i><b>17.2</b> Passing values to SQL statements</a></li>
-<li class="chapter" data-level="17.3" data-path="sql-queries-behind-the-scenes-72.html"><a href="sql-queries-behind-the-scenes-72.html#pass-multiple-sets-of-values-with-dbbind"><i class="fa fa-check"></i><b>17.3</b> Pass multiple sets of values with dbBind():</a></li>
-<li class="chapter" data-level="17.4" data-path="sql-queries-behind-the-scenes-72.html"><a href="sql-queries-behind-the-scenes-72.html#clean-up-2"><i class="fa fa-check"></i><b>17.4</b> Clean up</a></li>
+<li class="chapter" data-level="20" data-path="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html"><a href="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html"><i class="fa fa-check"></i><b>20</b> APPENDIX C - Creating the sql-pet Docker container a step at a time</a><ul>
+<li class="chapter" data-level="20.1" data-path="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html"><a href="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html#overview-1"><i class="fa fa-check"></i><b>20.1</b> Overview</a></li>
+<li class="chapter" data-level="20.2" data-path="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html"><a href="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html#download-the-dvdrental-backup-file"><i class="fa fa-check"></i><b>20.2</b> Download the <code>dvdrental</code> backup file</a></li>
+<li class="chapter" data-level="20.3" data-path="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html"><a href="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html#build-the-docker-container"><i class="fa fa-check"></i><b>20.3</b> Build the Docker Container</a></li>
+<li class="chapter" data-level="20.4" data-path="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html"><a href="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html#create-the-database-and-restore-from-the-backup"><i class="fa fa-check"></i><b>20.4</b> Create the database and restore from the backup</a></li>
+<li class="chapter" data-level="20.5" data-path="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html"><a href="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html#connect-to-the-database-with-r"><i class="fa fa-check"></i><b>20.5</b> Connect to the database with R</a></li>
+<li class="chapter" data-level="20.6" data-path="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html"><a href="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html#cleaning-up-1"><i class="fa fa-check"></i><b>20.6</b> Cleaning up</a></li>
 </ul></li>
-<li class="chapter" data-level="18" data-path="writing-to-the-dbms-73.html"><a href="writing-to-the-dbms-73.html"><i class="fa fa-check"></i><b>18</b> Writing to the DBMS (73)</a><ul>
-<li class="chapter" data-level="18.1" data-path="writing-to-the-dbms-73.html"><a href="writing-to-the-dbms-73.html#create-a-new-table"><i class="fa fa-check"></i><b>18.1</b> Create a new table</a></li>
-<li class="chapter" data-level="18.2" data-path="writing-to-the-dbms-73.html"><a href="writing-to-the-dbms-73.html#modify-an-existing-table"><i class="fa fa-check"></i><b>18.2</b> Modify an existing table</a></li>
-<li class="chapter" data-level="18.3" data-path="writing-to-the-dbms-73.html"><a href="writing-to-the-dbms-73.html#remove-table-and-clean-up"><i class="fa fa-check"></i><b>18.3</b> Remove table and Clean up</a></li>
-</ul></li>
-<li class="chapter" data-level="19" data-path="appendix-appendix-a-other-resources-89.html"><a href="appendix-appendix-a-other-resources-89.html"><i class="fa fa-check"></i><b>19</b> (APPENDIX) Appendix A: Other resources (89)</a><ul>
-<li class="chapter" data-level="19.1" data-path="appendix-appendix-a-other-resources-89.html"><a href="appendix-appendix-a-other-resources-89.html#editing-this-book"><i class="fa fa-check"></i><b>19.1</b> Editing this book</a></li>
-<li class="chapter" data-level="19.2" data-path="appendix-appendix-a-other-resources-89.html"><a href="appendix-appendix-a-other-resources-89.html#docker-alternatives"><i class="fa fa-check"></i><b>19.2</b> Docker alternatives</a></li>
-<li class="chapter" data-level="19.3" data-path="appendix-appendix-a-other-resources-89.html"><a href="appendix-appendix-a-other-resources-89.html#docker-and-r"><i class="fa fa-check"></i><b>19.3</b> Docker and R</a></li>
-<li class="chapter" data-level="19.4" data-path="appendix-appendix-a-other-resources-89.html"><a href="appendix-appendix-a-other-resources-89.html#documentation-for-docker-and-postgres"><i class="fa fa-check"></i><b>19.4</b> Documentation for Docker and Postgres</a></li>
-<li class="chapter" data-level="19.5" data-path="appendix-appendix-a-other-resources-89.html"><a href="appendix-appendix-a-other-resources-89.html#sql-and-dplyr"><i class="fa fa-check"></i><b>19.5</b> SQL and dplyr</a></li>
-<li class="chapter" data-level="19.6" data-path="appendix-appendix-a-other-resources-89.html"><a href="appendix-appendix-a-other-resources-89.html#more-resources"><i class="fa fa-check"></i><b>19.6</b> More Resources</a></li>
-</ul></li>
-<li class="chapter" data-level="20" data-path="appendix-b-mapping-your-local-environment-92.html"><a href="appendix-b-mapping-your-local-environment-92.html"><i class="fa fa-check"></i><b>20</b> APPENDIX B - Mapping your local environment (92)</a><ul>
-<li class="chapter" data-level="20.1" data-path="appendix-b-mapping-your-local-environment-92.html"><a href="appendix-b-mapping-your-local-environment-92.html#environment-tools-used-in-this-chapter"><i class="fa fa-check"></i><b>20.1</b> Environment Tools Used in this Chapter</a></li>
-<li class="chapter" data-level="20.2" data-path="appendix-b-mapping-your-local-environment-92.html"><a href="appendix-b-mapping-your-local-environment-92.html#communicating-with-docker-applications-1"><i class="fa fa-check"></i><b>20.2</b> Communicating with Docker Applications</a></li>
-</ul></li>
-<li class="chapter" data-level="21" data-path="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html"><a href="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html"><i class="fa fa-check"></i><b>21</b> APPENDIX C - Creating the sql-pet Docker container a step at a time</a><ul>
-<li class="chapter" data-level="21.1" data-path="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html"><a href="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html#overview-1"><i class="fa fa-check"></i><b>21.1</b> Overview</a></li>
-<li class="chapter" data-level="21.2" data-path="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html"><a href="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html#download-the-dvdrental-backup-file"><i class="fa fa-check"></i><b>21.2</b> Download the <code>dvdrental</code> backup file</a></li>
-<li class="chapter" data-level="21.3" data-path="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html"><a href="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html#build-the-docker-container"><i class="fa fa-check"></i><b>21.3</b> Build the Docker Container</a></li>
-<li class="chapter" data-level="21.4" data-path="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html"><a href="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html#create-the-database-and-restore-from-the-backup"><i class="fa fa-check"></i><b>21.4</b> Create the database and restore from the backup</a></li>
-<li class="chapter" data-level="21.5" data-path="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html"><a href="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html#connect-to-the-database-with-r"><i class="fa fa-check"></i><b>21.5</b> Connect to the database with R</a></li>
-<li class="chapter" data-level="21.6" data-path="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html"><a href="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html#cleaning-up-1"><i class="fa fa-check"></i><b>21.6</b> Cleaning up</a></li>
-</ul></li>
-<li class="chapter" data-level="22" data-path="appendix-d-quick-guide-to-sql-94.html"><a href="appendix-d-quick-guide-to-sql-94.html"><i class="fa fa-check"></i><b>22</b> APPENDIX D - Quick Guide to SQL (94)</a><ul>
-<li class="chapter" data-level="22.1" data-path="appendix-d-quick-guide-to-sql-94.html"><a href="appendix-d-quick-guide-to-sql-94.html#small-architecture"><i class="fa fa-check"></i><b>22.1</b> Small architecture</a></li>
-<li class="chapter" data-level="22.2" data-path="appendix-d-quick-guide-to-sql-94.html"><a href="appendix-d-quick-guide-to-sql-94.html#medium-architecture"><i class="fa fa-check"></i><b>22.2</b> Medium architecture</a></li>
-<li class="chapter" data-level="22.3" data-path="appendix-d-quick-guide-to-sql-94.html"><a href="appendix-d-quick-guide-to-sql-94.html#large-architecture-95"><i class="fa fa-check"></i><b>22.3</b> Large architecture (95)</a></li>
-</ul></li>
+<li class="chapter" data-level="21" data-path="appendix-d-quick-guide-to-sql-94.html"><a href="appendix-d-quick-guide-to-sql-94.html"><i class="fa fa-check"></i><b>21</b> APPENDIX D - Quick Guide to SQL (94)</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -475,7 +432,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>Understand the relationships that tie the tables together correctly to ensure that data is not dropped or duplicated. Data that is dropped or duplicated can either over or understate your aggregated numeric values.</li>
 </ol>
 <div class="figure">
-<img src="ERD_Hospital_Billing_System.PNG" alt="hospital-billing-erd" />
+<img src="ERD_Hospital_Billing_System.png" alt="hospital-billing-erd" />
 <p class="caption">hospital-billing-erd</p>
 </div>
 <p><a href="https://www.smartdraw.com/entity-relationship-diagram/examples/hospital-billing-entity-relationship-diagram/" class="uri">https://www.smartdraw.com/entity-relationship-diagram/examples/hospital-billing-entity-relationship-diagram/</a></p>
@@ -793,7 +750,7 @@ Some motivations for aliasing the result set column names are
 <td align="left">2006-02-15 09:57:12</td>
 <td align="left">dvdrental</td>
 <td align="left">postgres</td>
-<td align="left">2018/10/27 03:39:04</td>
+<td align="left">2018/10/27 07:48:44</td>
 </tr>
 <tr class="even">
 <td align="left">derived column</td>
@@ -803,7 +760,7 @@ Some motivations for aliasing the result set column names are
 <td align="left">2006-02-15 09:57:12</td>
 <td align="left">dvdrental</td>
 <td align="left">postgres</td>
-<td align="left">2018/10/27 03:39:04</td>
+<td align="left">2018/10/27 07:48:44</td>
 </tr>
 </tbody>
 </table>
@@ -1417,11 +1374,13 @@ Some motivations for aliasing the result set column names are
 <td>12</td>
 <td>TOP/LIMIT</td>
 <td>Limits the number of rows in data set</td>
+<td></td>
 </tr>
 <tr class="odd">
 <td>13</td>
 <td>OFFSET/FETCH</td>
 <td>Limits the number of rows in data set</td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -1431,1290 +1390,7 @@ Some motivations for aliasing the result set column names are
 <li>Add cartesian join exercise.</li>
 </ol>
 
-<div class="sourceCode" id="cb171"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb171-1" data-line-number="1">dplyr_summary_df &lt;-</a>
-<a class="sourceLine" id="cb171-2" data-line-number="2"><span class="st">    </span><span class="kw">read.delim</span>( <span class="kw">here</span>(</a>
-<a class="sourceLine" id="cb171-3" data-line-number="3">    <span class="st">&#39;11_dplyr_sql_summary_table.rmd&#39;</span>),</a>
-<a class="sourceLine" id="cb171-4" data-line-number="4">    <span class="dt">header =</span> <span class="ot">TRUE</span>,</a>
-<a class="sourceLine" id="cb171-5" data-line-number="5">    <span class="dt">sep =</span> <span class="st">&#39;|&#39;</span>,</a>
-<a class="sourceLine" id="cb171-6" data-line-number="6">    <span class="dt">as.is =</span> <span class="ot">TRUE</span></a>
-<a class="sourceLine" id="cb171-7" data-line-number="7">    )</a>
-<a class="sourceLine" id="cb171-8" data-line-number="8"></a>
-<a class="sourceLine" id="cb171-9" data-line-number="9"><span class="kw">display_rs</span>(MODE,dplyr_summary_df,display_rows)</a></code></pre></div>
-<p>In Dplyr.Function description SQL.Clause Notes Category<br />
-— ——————————————————————————————————————————————————————————- —————————————————————– ——————————————————————- ————————– ——————————————-
-– ————————————– ——————————————- ——————————– ————————- ————-<br />
-Y arrange() Arrange rows by variables ORDER BY Basic single-table verbs<br />
-Y? distinct() Return rows with matching conditions SELECT distinct * Basic single-table verbs<br />
-Y select() rename() Select/rename variables by name SELECT column_name alias_name Basic single-table verbs<br />
-N pull() Pull out a single variable SELECT column_name; Basic single-table verbs<br />
-Y mutate() transmute() Add new variables SELECT computed_value computed_name Basic single-table verbs<br />
-Y summarise() summarize() Reduces multiple values down to a single value SELECT aggregate_functions GROUP BY Basic single-table verbs<br />
-N group_by() ungroup() Objects exported from other packages GROUP BY no ungroup Basic single-table verbs<br />
-N distinct() Select distinct/unique rows SELECT distinct {colname1,…colnamen} Basic single-table verbs<br />
-N do() Do anything NA Basic single-table verbs<br />
-N sample_n() sample_frac() Sample n rows from a table ORDER BY RANDOM() LIMIT 10 Basic single-table verbs<br />
-N slice() Select rows by position SELECT row_number() over (partition by expression(s) order_by exp) Basic single-table verbs<br />
-Y tally() count() add_tally() add_count() Count/tally observations by group GROUP BY Single-table helpers<br />
-Y top_n() Select top (or bottom) n rows (by value) ORDER BY VALUE {DESC} LIMIT 10 Single-table helpers<br />
-N arrange_all() arrange_at() arrange_if() Arrange rows by a selection of variables ORDER BY scoped-Operate on a selection of variables
-N filter_all() filter_if() filter_at() Filter within a selection of variables scoped-Operate on a selection of variables
-N group_by_all() group_by_at() group_by_if() Group by a selection of variables scoped-Operate on a selection of variables
-N select_all() rename_all() select_if() rename_if() select_at() rename_at() Select and rename a selection of variables scoped-Operate on a selection of variables
-N summarise_all() summarise_if() summarise_at() summarize_all() summarize_if() summarize_at() mutate_all() mutate_if() mutate_at() transmute_all() transmute_if() transmute_at() Summarise and mutate multiple columns. scoped-Operate on a selection of variables
-N all_vars() any_vars() Apply predicate to all variables scoped-Operate on a selection of variables
-N vars() Select variables scoped-Operate on a selection of variables
-N funs() Create a list of functions calls. scoped-Operate on a selection of variables
-N all_equal() all.equal(<tbl_df>) Flexible equality comparison for data frames Two-table verbs<br />
-N bind_rows() bind_cols() combine() Efficiently bind multiple data frames by row and column Two-table verbs<br />
-N intersect() union() union_all() setdiff() setequal() Set operations Two-table verbs<br />
-N inner_join() left_join() right_join() full_join() semi_join() anti_join() Join two tbls together Two-table verbs<br />
-N inner_join(<tbl_df>) left_join(<tbl_df>) right_join(<tbl_df>) full_join(<tbl_df>) semi_join(<tbl_df>) anti_join(<tbl_df>) Join data frame tbls Two-table verbs<br />
-N auto_copy() Copy tables to same source, if necessary Remote tables<br />
-N compute() collect() collapse() Force computation of a database query Remote tables<br />
-N copy_to() Copy a local data frame to a remote src Remote tables<br />
-N ident() Flag a character vector as SQL identifiers Remote tables<br />
-N explain() show_query() Explain details of a tbl Remote tables<br />
-N tbl() is.tbl() as.tbl() Create a table from a data source Remote tables<br />
-N src_mysql() src_postgres() src_sqlite() Source for database backends Remote tables<br />
-N sql() SQL escaping. Remote tables<br />
-N groups() group_vars() Return grouping variables Metadata<br />
-N between() Do values in a numeric vector fall in specified range? Vector functions<br />
-N case_when() A general vectorised if Vector functions<br />
-N coalesce() Find first non-missing element Vector functions<br />
-N cumall() cumany() cummean() Cumulativate versions of any, all, and mean Vector functions<br />
-N desc() Descending order Vector functions<br />
-N if_else() Vectorised if Vector functions<br />
-N lead() lag() Lead and lag. Vector functions<br />
-N order_by() A helper function for ordering window function output Vector functions<br />
-N n() The number of observations in the current group. Vector functions<br />
-N n_distinct() Efficiently count the number of unique values in a set of vector Vector functions<br />
-N na_if() Convert values to NA Vector functions<br />
-N near() Compare two numeric vectors Vector functions<br />
-N nth() first() last() Extract the first, last or nth value from a vector Vector functions<br />
-N row_number() ntile() min_rank() dense_rank() percent_rank() cume_dist() Windowed rank functions. Vector functions<br />
-N recode() recode_factor() Recode values Vector functions<br />
-N band_members band_instruments band_instruments2 Band membership Data<br />
-N nasa NASA spatio-temporal data Data<br />
-N starwars Starwars characters Data<br />
-N storms Storm tracks data Data<br />
-N tbl_cube() A data cube tbl Other backends<br />
-N as.table(<tbl_cube>) as.data.frame(<tbl_cube>) as_data_frame(<tbl_cube>) Coerce a tbl_cube to other data structures Other backends<br />
-N as.tbl_cube() Coerce an existing data structure into a tbl_cube Other backends<br />
-N rowwise() Group input by rows Other backends</p>
-<p>Start up the <code>docker-pet</code> container</p>
-<div class="sourceCode" id="cb172"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb172-1" data-line-number="1"><span class="kw">sp_docker_start</span>(<span class="st">&quot;sql-pet&quot;</span>)</a></code></pre></div>
-<p>Now connect to the <code>dvdrental</code> database with R</p>
-<pre><code>## &lt;PqConnection&gt; dvdrental@localhost:5432</code></pre>
 </div>
-<div id="which-server" class="section level3">
-<h3><span class="header-section-number">11.4.3</span> Which Server?</h3>
-<p>Your data may actually be spread across multiple servers, DEV, QA, and PROD servers.</p>
-<p>For this tutorial, your laptop is a server for the Docker Postgres databases. A database is a collection of files that Postgres manages in the background.</p>
-<div id="htmlwidget-1d9f9b9fdca3023baa83" style="width:672px;height:480px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-1d9f9b9fdca3023baa83">{"x":{"diagram":"\ndigraph DB_Environment {\n    graph [overlap = true, fontsize = 10, rankdir=LR, height= 10]\n\n    node [shape = box,fontname = Helvetica,fontcolor=blue]\n         Servers;\n\n    node [shape = box,fontname = Helvetica,fontcolor=\"\"]\n        DBs; Schemas; Tables;\n\n    edge [arrowhead = crow, arrowtail = tee]       \n    Servers -> DBs -> Schemas -> Tables\n}\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
-</div>
-<div id="which-database" class="section level3">
-<h3><span class="header-section-number">11.4.4</span> Which database?</h3>
-<p>Your DBA will create your user accounts and priviledges for the database(s) that you can access.</p>
-<p>One of the challenges when working with a database(s) is finding where your data actually resides. Your best resources will be one or more vendor consultants, business subject matter experts, <code>SME</code>, and your DBA(s). Don’t be surprised if the vendor consultants and SME’s don’t always agree what the data actually means. The data form, fit, and function could have changed overtime due to an application upgrade or a government regulatory mandate.</p>
-<p>Your data may actually reside in multiple databases, e.g., a detail and summary databases. It is not unusual to have 100’s of databases in a corporate environment. Today some of your databases may physically reside on site or newer ones may reside in the cloud.</p>
-<div id="htmlwidget-b18b48ec4ad649442f3b" style="width:672px;height:480px;" class="DiagrammeR html-widget"></div>
-<script type="application/json" data-for="htmlwidget-b18b48ec4ad649442f3b">{"x":{"diagram":"\ngraph LR\n  A{DB}-->DB1\n  A-->DBx\n  A-->DBn\n\n\n  DB1-->Schema1_1\n  DB1-->Schema1_x[Schema1_x]\n  DB1-->Schema1_n\n\n  DBx-->Schema{Schema}\n  Schema-->Schema_x_1\n  Schema-->Schema_x_x\n  Schema_x_x-->Table_x_1\n  Schema_x_x-->Table_x_x\n  Schema_x_x-->Table_x_n\n  Schema-->Schema_x_n\n  \n\n  DBn-->Schema_n_1\n  DBn-->Schema_n_x\n  DBn-->Schema_n_n\n"},"evals":[],"jsHooks":[]}</script>
-<p>In our tutorial, we focus on the one database, <code>dvdrental</code>. Database names usually reflect something about the data that they contain.</p>
-</div>
-<div id="how-do-i-check-for-databases" class="section level3">
-<h3><span class="header-section-number">11.4.5</span> How do I check for databases?</h3>
-<p>Each vendor tracks database information in their own tables. We can find the Postgres databases in the pg_database; Two Oracle objects that contain DB information are V<span class="math inline">\(DATABASE and V\)</span>INSTANCE.</p>
-<div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb174-1" data-line-number="1">rs &lt;-</a>
-<a class="sourceLine" id="cb174-2" data-line-number="2"><span class="st">  </span>DBI<span class="op">::</span><span class="kw">dbGetQuery</span>(</a>
-<a class="sourceLine" id="cb174-3" data-line-number="3">  con,</a>
-<a class="sourceLine" id="cb174-4" data-line-number="4">  <span class="st">&quot;SELECT &#39;DB Names in Docker&#39; showing</span></a>
-<a class="sourceLine" id="cb174-5" data-line-number="5"><span class="st">          ,datname DB,*</span></a>
-<a class="sourceLine" id="cb174-6" data-line-number="6"><span class="st">     FROM pg_catalog.pg_database</span></a>
-<a class="sourceLine" id="cb174-7" data-line-number="7"><span class="st">    WHERE datistemplate = false;</span></a>
-<a class="sourceLine" id="cb174-8" data-line-number="8"><span class="st">  &quot;</span></a>
-<a class="sourceLine" id="cb174-9" data-line-number="9">  )</a>
-<a class="sourceLine" id="cb174-10" data-line-number="10"><span class="kw">kable</span>(rs)</a></code></pre></div>
-<table>
-<thead>
-<tr class="header">
-<th align="left">showing</th>
-<th align="left">db</th>
-<th align="left">datname</th>
-<th align="right">datdba</th>
-<th align="right">encoding</th>
-<th align="left">datcollate</th>
-<th align="left">datctype</th>
-<th align="left">datistemplate</th>
-<th align="left">datallowconn</th>
-<th align="right">datconnlimit</th>
-<th align="right">datlastsysoid</th>
-<th align="left">datfrozenxid</th>
-<th align="left">datminmxid</th>
-<th align="right">dattablespace</th>
-<th align="left">datacl</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">DB Names in Docker</td>
-<td align="left">postgres</td>
-<td align="left">postgres</td>
-<td align="right">10</td>
-<td align="right">6</td>
-<td align="left">en_US.utf8</td>
-<td align="left">en_US.utf8</td>
-<td align="left">FALSE</td>
-<td align="left">TRUE</td>
-<td align="right">-1</td>
-<td align="right">12993</td>
-<td align="left">548</td>
-<td align="left">1</td>
-<td align="right">1663</td>
-<td align="left">NA</td>
-</tr>
-<tr class="even">
-<td align="left">DB Names in Docker</td>
-<td align="left">dvdrental</td>
-<td align="left">dvdrental</td>
-<td align="right">10</td>
-<td align="right">6</td>
-<td align="left">en_US.utf8</td>
-<td align="left">en_US.utf8</td>
-<td align="left">FALSE</td>
-<td align="left">TRUE</td>
-<td align="right">-1</td>
-<td align="right">12993</td>
-<td align="left">548</td>
-<td align="left">1</td>
-<td align="right">1663</td>
-<td align="left">NA</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="how-do-i-change-my-database-connections" class="section level3">
-<h3><span class="header-section-number">11.4.6</span> How do I change my database connections</h3>
-<pre><code>Exercise: In the next codeblock, modify the connection call to connect to the `postgres` database.
-
-The code block will then disconnect you from the postgres database and reconnect you to the dvdrental database.</code></pre>
-<div class="sourceCode" id="cb176"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb176-1" data-line-number="1"><span class="co"># connect to postgres DB</span></a>
-<a class="sourceLine" id="cb176-2" data-line-number="2">con &lt;-<span class="st"> </span><span class="kw">sp_get_postgres_connection</span>(</a>
-<a class="sourceLine" id="cb176-3" data-line-number="3">  <span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),</a>
-<a class="sourceLine" id="cb176-4" data-line-number="4">  <span class="dt">password =</span>  <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),</a>
-<a class="sourceLine" id="cb176-5" data-line-number="5">  <span class="dt">dbname =</span> <span class="st">&quot;eneter db name here&quot;</span>,</a>
-<a class="sourceLine" id="cb176-6" data-line-number="6">  <span class="dt">seconds_to_test =</span> <span class="dv">10</span>)</a>
-<a class="sourceLine" id="cb176-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb176-8" data-line-number="8">con</a></code></pre></div>
-<pre><code>## [1] &quot;There is no connection&quot;</code></pre>
-<div class="sourceCode" id="cb178"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb178-1" data-line-number="1"><span class="co"># Disconnect if successful</span></a>
-<a class="sourceLine" id="cb178-2" data-line-number="2"><span class="cf">if</span> (<span class="kw">class</span>(con) <span class="op">==</span><span class="st"> &#39;PqConnection&#39;</span>)</a>
-<a class="sourceLine" id="cb178-3" data-line-number="3">    <span class="kw">dbDisconnect</span>(con)</a>
-<a class="sourceLine" id="cb178-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb178-5" data-line-number="5"><span class="co">#Answer: con &lt;PqConnection&gt; postgres@localhost:5432</span></a>
-<a class="sourceLine" id="cb178-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb178-7" data-line-number="7"><span class="co"># Reconnect to dvdrental</span></a>
-<a class="sourceLine" id="cb178-8" data-line-number="8"></a>
-<a class="sourceLine" id="cb178-9" data-line-number="9">con &lt;-<span class="st"> </span><span class="kw">sp_get_postgres_connection</span>(</a>
-<a class="sourceLine" id="cb178-10" data-line-number="10">  <span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),</a>
-<a class="sourceLine" id="cb178-11" data-line-number="11">  <span class="dt">password =</span>  <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),</a>
-<a class="sourceLine" id="cb178-12" data-line-number="12">  <span class="dt">dbname =</span> <span class="st">&quot;dvdrental&quot;</span>,</a>
-<a class="sourceLine" id="cb178-13" data-line-number="13">  <span class="dt">seconds_to_test =</span> <span class="dv">10</span>)</a>
-<a class="sourceLine" id="cb178-14" data-line-number="14">con</a></code></pre></div>
-<pre><code>## &lt;PqConnection&gt; dvdrental@localhost:5432</code></pre>
-<p>Note that the two Sys.getenv function calls work in this tutorial because both the user and password are available in both databases. This is a common practice in organizations that have implemented single sign on across their organization.</p>
-</div>
-<div id="sql_be_stinger_01" class="section level3">
-<h3><span class="header-section-number">11.4.7</span> SQL_BE_STINGER_01:</h3>
-<pre><code>   If one has data in multiple databases or multiple environments, Development, Integration, and Prodution, it is very easy to connect to the wrong database in the wrong environment especially when testing changes.  
-   
-   Always double check your connection information when logging in and before performing any inserts, updates, or deletes against the database.</code></pre>
-<p>The following code block, customize to your liking, should be used to reduce propagating the above STINGER. Current_database(), CURRENT_DATE or CURRENT_TIMESTAMP, and showing are the most useful and last three not so much. Instead of the host IP address which is great if you are a computer, having the actual host name mnemonic name would be a nice. Most organization naming conventions will indicate something useful about the host.</p>
-<div id="dplyr-feature-implemented-in-sql" class="section level4">
-<h4><span class="header-section-number">11.4.7.1</span> dplyr feature implemented in SQL</h4>
-<table>
-<thead>
-<tr class="header">
-<th align="left">In</th>
-<th align="left">Dplyr.Function</th>
-<th align="left">description</th>
-<th align="left">SQL.Clause</th>
-<th align="left">Notes</th>
-<th align="left">Category</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">Y</td>
-<td align="left">mutate() transmute()</td>
-<td align="left">Add new variables</td>
-<td align="left">SELECT computed_value computed_name</td>
-<td align="left"></td>
-<td align="left">Basic single-table verbs</td>
-</tr>
-<tr class="even">
-<td align="left">## SQ</td>
-<td align="left">L_BE_01 How do implemen</td>
-<td align="left">t standardized SQL M</td>
-<td align="left">etaData Information?</td>
-<td align="left"></td>
-<td align="left"></td>
-</tr>
-</tbody>
-</table>
-<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb181-1" data-line-number="1"><span class="co">#SQL_BE_01|Standard SQL MetaData Columns</span></a>
-<a class="sourceLine" id="cb181-2" data-line-number="2">SQL_BE_<span class="dv">01</span> &lt;-</a>
-<a class="sourceLine" id="cb181-3" data-line-number="3"><span class="st">  </span>DBI<span class="op">::</span><span class="kw">dbGetQuery</span>(</a>
-<a class="sourceLine" id="cb181-4" data-line-number="4">  con,</a>
-<a class="sourceLine" id="cb181-5" data-line-number="5">  <span class="st">&quot;SELECT current_database() DB</span></a>
-<a class="sourceLine" id="cb181-6" data-line-number="6"><span class="st">         ,CURRENT_DATE</span></a>
-<a class="sourceLine" id="cb181-7" data-line-number="7"><span class="st">         ,CURRENT_TIMESTAMP</span></a>
-<a class="sourceLine" id="cb181-8" data-line-number="8"><span class="st">         ,&#39;result set description&#39; showing</span></a>
-<a class="sourceLine" id="cb181-9" data-line-number="9"><span class="st">         ,session_user</span></a>
-<a class="sourceLine" id="cb181-10" data-line-number="10"><span class="st">         ,inet_server_addr() host</span></a>
-<a class="sourceLine" id="cb181-11" data-line-number="11"><span class="st">         ,inet_server_port() port</span></a>
-<a class="sourceLine" id="cb181-12" data-line-number="12"><span class="st">  &quot;</span></a>
-<a class="sourceLine" id="cb181-13" data-line-number="13">  )</a>
-<a class="sourceLine" id="cb181-14" data-line-number="14"><span class="kw">kable</span>(<span class="kw">head</span>(SQL_BE_<span class="dv">01</span>,display_rows))</a></code></pre></div>
-<table>
-<thead>
-<tr class="header">
-<th align="left">db</th>
-<th align="left">current_date</th>
-<th align="left">current_timestamp</th>
-<th align="left">showing</th>
-<th align="left">session_user</th>
-<th align="left">host</th>
-<th align="right">port</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">dvdrental</td>
-<td align="left">2018-10-27</td>
-<td align="left">2018-10-26 20:39:16</td>
-<td align="left">result set description</td>
-<td align="left">postgres</td>
-<td align="left">172.17.0.2</td>
-<td align="right">5432</td>
-</tr>
-</tbody>
-</table>
-<p>We will work only in the <code>dvdrental</code> database. To reduce scrolling back and forth in the tutorial, the only metadata column we will use is the <code>showing</code> column.</p>
-</div>
-</div>
-<div id="which-schema" class="section level3">
-<h3><span class="header-section-number">11.4.8</span> Which Schema?</h3>
-<div id="htmlwidget-514d280a38cf86ead40b" style="width:672px;height:480px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-514d280a38cf86ead40b">{"x":{"diagram":"\ndigraph DB_Environment {\n    graph [overlap = true, fontsize = 10, rankdir=LR, height= 10]\n\n    node [shape = box,fontname = Helvetica,fontcolor=blue]\n         Schemas;\n\n    node [shape = box,fontname = Helvetica,fontcolor=\"\"]\n        Servers; DBs; Tables;\n\n    edge [arrowhead = crow, tail = tee]       \n    Servers -> DBs -> Schemas -> Tables\n}\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
-<p>In the code block below, we look at the <code>information_schema.table</code> which contains information about all the schemas and table/views within our dvdrental database. Databases can have one or more schemas, containers that hold tables or views. Schemas partition the database into big logical blocks of related data and/or applications. Schema names usually reflect an application or logically related data sets. Occasionally a DBA will set up a new schema named after a user. This is typically a sandbox environment.</p>
-<div id="dplyr" class="section level4">
-<h4><span class="header-section-number">11.4.8.1</span> dplyr</h4>
-<table>
-<thead>
-<tr class="header">
-<th align="left">In</th>
-<th align="left">Dplyr.Function</th>
-<th align="left">description</th>
-<th align="left">SQL.Clause</th>
-<th align="left">Notes</th>
-<th align="left">Category</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">N</td>
-<td align="left">group_by() ungroup()</td>
-<td align="left">Objects exported from other packages</td>
-<td align="left">GROUP BY no ungroup</td>
-<td align="left"></td>
-<td align="left">Basic single-table verbs</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-<div id="sql_be_02database-schemas-from-ansi-standard-information_schema.tables" class="section level2">
-<h2><span class="header-section-number">11.5</span> SQL_BE_02:Database Schemas from ANSI standard INFORMATION_SCHEMA.TABLES</h2>
-<div class="sourceCode" id="cb182"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb182-1" data-line-number="1">SQL_BE_<span class="dv">02</span> &lt;-</a>
-<a class="sourceLine" id="cb182-2" data-line-number="2"><span class="st">  </span>DBI<span class="op">::</span><span class="kw">dbGetQuery</span>(</a>
-<a class="sourceLine" id="cb182-3" data-line-number="3">  con,</a>
-<a class="sourceLine" id="cb182-4" data-line-number="4">  <span class="st">&quot;SELECT &#39;DB Schema tables and views&#39; showing</span></a>
-<a class="sourceLine" id="cb182-5" data-line-number="5"><span class="st">          ,t.table_catalog DB</span></a>
-<a class="sourceLine" id="cb182-6" data-line-number="6"><span class="st">          ,t.table_schema</span></a>
-<a class="sourceLine" id="cb182-7" data-line-number="7"><span class="st">          ,COUNT(*) tbl_vws</span></a>
-<a class="sourceLine" id="cb182-8" data-line-number="8"><span class="st">     FROM information_schema.tables t</span></a>
-<a class="sourceLine" id="cb182-9" data-line-number="9"><span class="st">    GROUP BY t.table_catalog,t.table_schema</span></a>
-<a class="sourceLine" id="cb182-10" data-line-number="10"><span class="st">  &quot;</span></a>
-<a class="sourceLine" id="cb182-11" data-line-number="11">  )</a>
-<a class="sourceLine" id="cb182-12" data-line-number="12"><span class="kw">display_rs</span>(MODE,SQL_BE_<span class="dv">02</span>,display_rows)</a></code></pre></div>
-<table>
-<thead>
-<tr class="header">
-<th align="left">showing</th>
-<th align="left">db</th>
-<th align="left">table_schema</th>
-<th align="right">tbl_vws</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">DB Schema tables and views</td>
-<td align="left">dvdrental</td>
-<td align="left">pg_catalog</td>
-<td align="right">121</td>
-</tr>
-<tr class="even">
-<td align="left">DB Schema tables and views</td>
-<td align="left">dvdrental</td>
-<td align="left">public</td>
-<td align="right">22</td>
-</tr>
-<tr class="odd">
-<td align="left">DB Schema tables and views</td>
-<td align="left">dvdrental</td>
-<td align="left">information_schema</td>
-<td align="right">67</td>
-</tr>
-</tbody>
-</table>
-<pre><code>*  What schemas are in the `dvdrental` database?
-*  How many tables and/or views are in each schema?</code></pre>
-<p>In the SQL-Quick Start section, we mentioned that SQL statements can either be detailed or grouped. SQL_BE_02 is our first example of a GROUPED statement. It has a GROUP BY clause:</p>
-<pre><code>GROUP BY t.table_catalog,t.table_schema</code></pre>
-<p>and an aggregation in the SELECT clause:</p>
-<pre><code>COUNT(*) tbl_vws</code></pre>
-<p>Every non-constant column in the SELECT CLAUSE that is not part of an aggregate function must be included in the group by clause. Note that the <code>showing</code> column, value ‘DB Schema tables and views’ is not included in the <code>GROUP BY</code> clause.</p>
-<p>We see that there are three schemas. The pg_catalog is the standard PostgreSQL meta data and core schema. Postgres uses this schema to manage the internal workings of the database. DBA’s are the primary users of pg_catalog. We used the pg_catalog schema to answer the question ‘How many databases reside in the Docker Container?’, but normally the data analyst is not interested in analyzing database data.</p>
-<p>The information_schema contains ANSI standardized views used across the different SQL vendors, (Oracle, Sysbase, MS SQL Server, IBM DB2, etc). The information_schema contains a plethora of metadata that will help you locate your data tables, understand the relationships between the tables, and write efficient SQL queries.</p>
-<div id="exercises-1" class="section level3">
-<h3><span class="header-section-number">11.5.1</span> Exercises</h3>
-<p>In SQL_BE_02 we saw the most common aggregation form, one or more aggregate functions in the SELECT clause and a GROUP BY clause.</p>
-</div>
-</div>
-<div id="sql_be_03group-by-no-aggregation-deduplication" class="section level2">
-<h2><span class="header-section-number">11.6</span> SQL_BE_03:Group By No Aggregation – Deduplication</h2>
-<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb186-1" data-line-number="1">SQL_BE_<span class="dv">03</span> &lt;-</a>
-<a class="sourceLine" id="cb186-2" data-line-number="2"><span class="st">  </span>DBI<span class="op">::</span><span class="kw">dbGetQuery</span>(</a>
-<a class="sourceLine" id="cb186-3" data-line-number="3">  con,</a>
-<a class="sourceLine" id="cb186-4" data-line-number="4">  <span class="st">&quot;SELECT &#39;DB Schemas&#39; showing</span></a>
-<a class="sourceLine" id="cb186-5" data-line-number="5"><span class="st">          ,t.table_catalog DB</span></a>
-<a class="sourceLine" id="cb186-6" data-line-number="6"><span class="st">          ,t.table_schema</span></a>
-<a class="sourceLine" id="cb186-7" data-line-number="7"><span class="st">          ,COUNT(*) tbl_vws  -- delete or comment this line out</span></a>
-<a class="sourceLine" id="cb186-8" data-line-number="8"><span class="st">     FROM information_schema.tables t</span></a>
-<a class="sourceLine" id="cb186-9" data-line-number="9"><span class="st">    GROUP BY t.table_catalog,t.table_schema</span></a>
-<a class="sourceLine" id="cb186-10" data-line-number="10"><span class="st">  &quot;</span></a>
-<a class="sourceLine" id="cb186-11" data-line-number="11">  )</a>
-<a class="sourceLine" id="cb186-12" data-line-number="12"><span class="kw">kable</span>(<span class="kw">head</span>(SQL_BE_<span class="dv">03</span>,display_rows))</a></code></pre></div>
-<table>
-<thead>
-<tr class="header">
-<th align="left">showing</th>
-<th align="left">db</th>
-<th align="left">table_schema</th>
-<th align="right">tbl_vws</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">DB Schemas</td>
-<td align="left">dvdrental</td>
-<td align="left">pg_catalog</td>
-<td align="right">121</td>
-</tr>
-<tr class="even">
-<td align="left">DB Schemas</td>
-<td align="left">dvdrental</td>
-<td align="left">public</td>
-<td align="right">22</td>
-</tr>
-<tr class="odd">
-<td align="left">DB Schemas</td>
-<td align="left">dvdrental</td>
-<td align="left">information_schema</td>
-<td align="right">67</td>
-</tr>
-</tbody>
-</table>
-<pre><code>*  What is the net effect?</code></pre>
-<p>You have basically created a de-duped list, a distinct list. Normally one needs to know why there are duplicates in the data and get them cleaned up before proceeding.</p>
-</div>
-<div id="sql_be_04distinct-list-take-2" class="section level2">
-<h2><span class="header-section-number">11.7</span> SQL_BE_04:Distinct list take 2</h2>
-<div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb188-1" data-line-number="1"><span class="co"># DISTINCT clause dedupe the list</span></a>
-<a class="sourceLine" id="cb188-2" data-line-number="2">SQL_BE_<span class="dv">04</span> &lt;-</a>
-<a class="sourceLine" id="cb188-3" data-line-number="3"><span class="st">  </span>DBI<span class="op">::</span><span class="kw">dbGetQuery</span>(</a>
-<a class="sourceLine" id="cb188-4" data-line-number="4">  con,</a>
-<a class="sourceLine" id="cb188-5" data-line-number="5">  <span class="st">&quot;SELECT &#39;DB Schemas-distinct&#39; showing  -- add DISTINCT after SELECT</span></a>
-<a class="sourceLine" id="cb188-6" data-line-number="6"><span class="st">          ,t.table_catalog DB </span></a>
-<a class="sourceLine" id="cb188-7" data-line-number="7"><span class="st">          ,t.table_schema </span></a>
-<a class="sourceLine" id="cb188-8" data-line-number="8"><span class="st">     FROM information_schema.tables t</span></a>
-<a class="sourceLine" id="cb188-9" data-line-number="9"><span class="st">  &quot;</span></a>
-<a class="sourceLine" id="cb188-10" data-line-number="10">  )</a>
-<a class="sourceLine" id="cb188-11" data-line-number="11"><span class="kw">kable</span>(<span class="kw">head</span>(SQL_BE_<span class="dv">04</span>,display_rows<span class="op">+</span><span class="dv">10</span>))</a></code></pre></div>
-<table>
-<thead>
-<tr class="header">
-<th align="left">showing</th>
-<th align="left">db</th>
-<th align="left">table_schema</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">DB Schemas-distinct</td>
-<td align="left">dvdrental</td>
-<td align="left">public</td>
-</tr>
-<tr class="even">
-<td align="left">DB Schemas-distinct</td>
-<td align="left">dvdrental</td>
-<td align="left">public</td>
-</tr>
-<tr class="odd">
-<td align="left">DB Schemas-distinct</td>
-<td align="left">dvdrental</td>
-<td align="left">public</td>
-</tr>
-<tr class="even">
-<td align="left">DB Schemas-distinct</td>
-<td align="left">dvdrental</td>
-<td align="left">public</td>
-</tr>
-<tr class="odd">
-<td align="left">DB Schemas-distinct</td>
-<td align="left">dvdrental</td>
-<td align="left">public</td>
-</tr>
-<tr class="even">
-<td align="left">DB Schemas-distinct</td>
-<td align="left">dvdrental</td>
-<td align="left">public</td>
-</tr>
-<tr class="odd">
-<td align="left">DB Schemas-distinct</td>
-<td align="left">dvdrental</td>
-<td align="left">pg_catalog</td>
-</tr>
-<tr class="even">
-<td align="left">DB Schemas-distinct</td>
-<td align="left">dvdrental</td>
-<td align="left">pg_catalog</td>
-</tr>
-<tr class="odd">
-<td align="left">DB Schemas-distinct</td>
-<td align="left">dvdrental</td>
-<td align="left">public</td>
-</tr>
-<tr class="even">
-<td align="left">DB Schemas-distinct</td>
-<td align="left">dvdrental</td>
-<td align="left">public</td>
-</tr>
-<tr class="odd">
-<td align="left">DB Schemas-distinct</td>
-<td align="left">dvdrental</td>
-<td align="left">public</td>
-</tr>
-<tr class="even">
-<td align="left">DB Schemas-distinct</td>
-<td align="left">dvdrental</td>
-<td align="left">public</td>
-</tr>
-<tr class="odd">
-<td align="left">DB Schemas-distinct</td>
-<td align="left">dvdrental</td>
-<td align="left">public</td>
-</tr>
-<tr class="even">
-<td align="left">DB Schemas-distinct</td>
-<td align="left">dvdrental</td>
-<td align="left">public</td>
-</tr>
-<tr class="odd">
-<td align="left">DB Schemas-distinct</td>
-<td align="left">dvdrental</td>
-<td align="left">public</td>
-</tr>
-<tr class="even">
-<td align="left">DB Schemas-distinct</td>
-<td align="left">dvdrental</td>
-<td align="left">public</td>
-</tr>
-<tr class="odd">
-<td align="left">DB Schemas-distinct</td>
-<td align="left">dvdrental</td>
-<td align="left">public</td>
-</tr>
-<tr class="even">
-<td align="left">DB Schemas-distinct</td>
-<td align="left">dvdrental</td>
-<td align="left">public</td>
-</tr>
-<tr class="odd">
-<td align="left">DB Schemas-distinct</td>
-<td align="left">dvdrental</td>
-<td align="left">public</td>
-</tr>
-<tr class="even">
-<td align="left">DB Schemas-distinct</td>
-<td align="left">dvdrental</td>
-<td align="left">public</td>
-</tr>
-</tbody>
-</table>
-<pre><code>*  How many distinct rows did you get?  Should be 3.</code></pre>
-</div>
-<div id="sql_be_05---how-to-drill-down-and-aggregate-at-lower-level" class="section level2">
-<h2><span class="header-section-number">11.8</span> SQL_BE_05 - How to Drill Down and Aggregate at Lower Level</h2>
-<p>In SQL_BE_02 we created a list of the number of objects in each schema and labeled it <code>tbl_vws</code>. To avoid retyping column names, one often just copies and pastes the necessary columns from the SELECT clause into the <code>GROUP BY</code> clause.</p>
-<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb190-1" data-line-number="1"><span class="co">#SQL_BE_05:drilling down from table_schema to table_type</span></a>
-<a class="sourceLine" id="cb190-2" data-line-number="2">SQL_BE_<span class="dv">05</span> &lt;-</a>
-<a class="sourceLine" id="cb190-3" data-line-number="3"><span class="st">  </span>DBI<span class="op">::</span><span class="kw">dbGetQuery</span>(</a>
-<a class="sourceLine" id="cb190-4" data-line-number="4">  con,</a>
-<a class="sourceLine" id="cb190-5" data-line-number="5">  <span class="st">&quot;SELECT &#39;GROUP BY t.table_catalog,t.table_schema&#39; showing  </span></a>
-<a class="sourceLine" id="cb190-6" data-line-number="6"><span class="st">          ,t.table_catalog DB </span></a>
-<a class="sourceLine" id="cb190-7" data-line-number="7"><span class="st">          ,t.table_schema </span></a>
-<a class="sourceLine" id="cb190-8" data-line-number="8"><span class="st">          -- add the new drill down column table_type here --</span></a>
-<a class="sourceLine" id="cb190-9" data-line-number="9"><span class="st">          --,COUNT(*) count --uncomment this line to add the aggregate function</span></a>
-<a class="sourceLine" id="cb190-10" data-line-number="10"><span class="st">     FROM information_schema.tables t</span></a>
-<a class="sourceLine" id="cb190-11" data-line-number="11"><span class="st">    --uncomment following line and copy and paste the necessary columns from the SELECT clause</span></a>
-<a class="sourceLine" id="cb190-12" data-line-number="12"><span class="st">    --GROUP BY </span></a>
-<a class="sourceLine" id="cb190-13" data-line-number="13"><span class="st">  &quot;</span></a>
-<a class="sourceLine" id="cb190-14" data-line-number="14">  )</a>
-<a class="sourceLine" id="cb190-15" data-line-number="15"><span class="kw">kable</span>(<span class="kw">head</span>(SQL_BE_<span class="dv">05</span>,display_rows))</a></code></pre></div>
-<table>
-<thead>
-<tr class="header">
-<th align="left">showing</th>
-<th align="left">db</th>
-<th align="left">table_schema</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">GROUP BY t.table_catalog,t.table_schema</td>
-<td align="left">dvdrental</td>
-<td align="left">public</td>
-</tr>
-<tr class="even">
-<td align="left">GROUP BY t.table_catalog,t.table_schema</td>
-<td align="left">dvdrental</td>
-<td align="left">public</td>
-</tr>
-<tr class="odd">
-<td align="left">GROUP BY t.table_catalog,t.table_schema</td>
-<td align="left">dvdrental</td>
-<td align="left">public</td>
-</tr>
-<tr class="even">
-<td align="left">GROUP BY t.table_catalog,t.table_schema</td>
-<td align="left">dvdrental</td>
-<td align="left">public</td>
-</tr>
-<tr class="odd">
-<td align="left">GROUP BY t.table_catalog,t.table_schema</td>
-<td align="left">dvdrental</td>
-<td align="left">public</td>
-</tr>
-<tr class="even">
-<td align="left">GROUP BY t.table_catalog,t.table_schema</td>
-<td align="left">dvdrental</td>
-<td align="left">public</td>
-</tr>
-<tr class="odd">
-<td align="left">GROUP BY t.table_catalog,t.table_schema</td>
-<td align="left">dvdrental</td>
-<td align="left">pg_catalog</td>
-</tr>
-<tr class="even">
-<td align="left">GROUP BY t.table_catalog,t.table_schema</td>
-<td align="left">dvdrental</td>
-<td align="left">pg_catalog</td>
-</tr>
-<tr class="odd">
-<td align="left">GROUP BY t.table_catalog,t.table_schema</td>
-<td align="left">dvdrental</td>
-<td align="left">public</td>
-</tr>
-<tr class="even">
-<td align="left">GROUP BY t.table_catalog,t.table_schema</td>
-<td align="left">dvdrental</td>
-<td align="left">public</td>
-</tr>
-</tbody>
-</table>
-<pre><code>*  How many rows were returned?
-*  Which schemas have more views than tables?
-*  Which schemas have more tables than views?</code></pre>
-<pre><code>SQL-BE-STINGER_02: GROUP BY STINGERS
-
-In the previous exercise: 
-1.  if you copied the SELECT columns directly into the 
-
-    GROUP BY &#39;DB Schemas-table types&#39; showing
-             ,t.table_catalog DB 
-             ,t.table_schema 
-             ,table_type 
-
-    You got an &#39;ERROR: syntax error at or near &quot;showing&quot;&#39; 
-    Fix: Do not include the constant derived column values in the GROUP BY
-
-2.  if you copied the SELECT columns directly into the
-
-    GROUP BY ,t.table_catalog DB 
-             ,t.table_schema 
-             ,table_type 
-             
-    You got an &#39;ERROR: syntax error at or near &quot;,&quot;&#39;  
-    Fix: The first column in the GROUP BY clause cannot begin with a comma, &#39;,&#39;, an easy copy and paste mistake.
-    
-3.  if you copied the SELECT columns directly into the
-
-    GROUP BY t.table_catalog DB 
-             ,t.table_schema 
-             ,table_type     
-
-    You got an &#39;ERROR: syntax error at or near &quot;DB&quot;&#39;
-    Fix: The GROUP BY clause wants the actual column name, NOT the column name and alias.  This is the most common STINGER of the three, especially if one has a large set of group by columns.
-</code></pre>
-</div>
-<div id="sql_be_06---how-to-filter-groups" class="section level2">
-<h2><span class="header-section-number">11.9</span> SQL_BE_06 - How to FILTER GROUPS</h2>
-<p>In the SQL Quick Start Section we looked at the SQL SELECT detail statement and used the WHERE clause to filter which detail rows that get returned. In the following exercise, we look at filtering which GROUPS get returned.</p>
-<p>Instructions:</p>
-<ol style="list-style-type: decimal">
-<li>Execute the code block before modifying it to see the counts associated with each group.</li>
-<li>Answer the before question(s) that follow the code block.</li>
-<li>See the comment above the HAVING clause in the code block and modify the code block accordingly.</li>
-<li>Answer the after question(s) that follow the code block.</li>
-</ol>
-<div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb193-1" data-line-number="1"><span class="co">#SQL_BE_06: GROUP BY FILTERING</span></a>
-<a class="sourceLine" id="cb193-2" data-line-number="2">SQL_BE_<span class="dv">06</span> &lt;-</a>
-<a class="sourceLine" id="cb193-3" data-line-number="3"><span class="st">  </span>DBI<span class="op">::</span><span class="kw">dbGetQuery</span>(</a>
-<a class="sourceLine" id="cb193-4" data-line-number="4">  con,</a>
-<a class="sourceLine" id="cb193-5" data-line-number="5">  <span class="st">&quot;SELECT &#39;HAVING COUNT(*) BETWEEN 5 and 20 or COUNT(*) &gt; 60&#39; showing  </span></a>
-<a class="sourceLine" id="cb193-6" data-line-number="6"><span class="st">          ,t.table_catalog DB </span></a>
-<a class="sourceLine" id="cb193-7" data-line-number="7"><span class="st">          ,t.table_schema </span></a>
-<a class="sourceLine" id="cb193-8" data-line-number="8"><span class="st">          ,table_type</span></a>
-<a class="sourceLine" id="cb193-9" data-line-number="9"><span class="st">          ,COUNT(*) count </span></a>
-<a class="sourceLine" id="cb193-10" data-line-number="10"><span class="st">     FROM information_schema.tables t</span></a>
-<a class="sourceLine" id="cb193-11" data-line-number="11"><span class="st">    GROUP BY t.table_catalog </span></a>
-<a class="sourceLine" id="cb193-12" data-line-number="12"><span class="st">          ,t.table_schema </span></a>
-<a class="sourceLine" id="cb193-13" data-line-number="13"><span class="st">          ,table_type</span></a>
-<a class="sourceLine" id="cb193-14" data-line-number="14"><span class="st">    /* uncomment the following line and return all groups that have a count </span></a>
-<a class="sourceLine" id="cb193-15" data-line-number="15"><span class="st">       between 5 and 20 or a COUNT &gt; 60</span></a>
-<a class="sourceLine" id="cb193-16" data-line-number="16"><span class="st">    */</span></a>
-<a class="sourceLine" id="cb193-17" data-line-number="17"><span class="st">    --HAVING COUNT(*) BETWEEN X and Y or COUNT(*) &gt; Z</span></a>
-<a class="sourceLine" id="cb193-18" data-line-number="18"><span class="st">  &quot;</span>  )</a>
-<a class="sourceLine" id="cb193-19" data-line-number="19"><span class="kw">kable</span>(<span class="kw">head</span>(SQL_BE_<span class="dv">06</span>,display_rows))</a></code></pre></div>
-<table>
-<thead>
-<tr class="header">
-<th align="left">showing</th>
-<th align="left">db</th>
-<th align="left">table_schema</th>
-<th align="left">table_type</th>
-<th align="right">count</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">HAVING COUNT(<em>) BETWEEN 5 and 20 or COUNT(</em>) &gt; 60</td>
-<td align="left">dvdrental</td>
-<td align="left">information_schema</td>
-<td align="left">BASE TABLE</td>
-<td align="right">7</td>
-</tr>
-<tr class="even">
-<td align="left">HAVING COUNT(<em>) BETWEEN 5 and 20 or COUNT(</em>) &gt; 60</td>
-<td align="left">dvdrental</td>
-<td align="left">information_schema</td>
-<td align="left">VIEW</td>
-<td align="right">60</td>
-</tr>
-<tr class="odd">
-<td align="left">HAVING COUNT(<em>) BETWEEN 5 and 20 or COUNT(</em>) &gt; 60</td>
-<td align="left">dvdrental</td>
-<td align="left">pg_catalog</td>
-<td align="left">BASE TABLE</td>
-<td align="right">62</td>
-</tr>
-<tr class="even">
-<td align="left">HAVING COUNT(<em>) BETWEEN 5 and 20 or COUNT(</em>) &gt; 60</td>
-<td align="left">dvdrental</td>
-<td align="left">public</td>
-<td align="left">BASE TABLE</td>
-<td align="right">15</td>
-</tr>
-<tr class="odd">
-<td align="left">HAVING COUNT(<em>) BETWEEN 5 and 20 or COUNT(</em>) &gt; 60</td>
-<td align="left">dvdrental</td>
-<td align="left">public</td>
-<td align="left">VIEW</td>
-<td align="right">7</td>
-</tr>
-<tr class="even">
-<td align="left">HAVING COUNT(<em>) BETWEEN 5 and 20 or COUNT(</em>) &gt; 60</td>
-<td align="left">dvdrental</td>
-<td align="left">pg_catalog</td>
-<td align="left">VIEW</td>
-<td align="right">59</td>
-</tr>
-</tbody>
-</table>
-<p>Before Questions:</p>
-<pre><code>*  How many groups are there before modifying the code block?
-*  How many table types have counts between 5 and 20?
-*  How many table types have counts greater than 60? </code></pre>
-<p>After Questions:</p>
-<pre><code>*  How many groups are there after modifying the code block?
-*  Did the code block return the rows identified in the before questions?</code></pre>
-<p>The key difference between WHERE and HAVING filtering is scope. WHERE filters at the row level and HAVING filters at the GROUP BY level.</p>
-<p>In practice, WHERE filters can be very simple to very complex, but HAVING filters are rarely compound conditional statements. Common applications of the HAVING clause is to identify duplicate data.</p>
-</div>
-<div id="sql_be_07---how-to-order-result-set-on-a-single-column" class="section level2">
-<h2><span class="header-section-number">11.10</span> SQL_BE_07 - HOW to ORDER Result Set on a Single Column</h2>
-<p>There is one final SQL SELECT clause, the <code>ORDER BY</code> clause which can be used with either a detail or aggregate SQL statement. In SQL_BE_05 we drilled down and counted the different table types in the different schemas.</p>
-<p>In SQL_BE_07, we add a single level ORDER BY clause. Execute the following code block before adding the ORDER BY clause.</p>
-<ol style="list-style-type: decimal">
-<li>Is the output sorted by the <code>table_schema</code>? It maybe or may not be? Remember that SQL returns result sets and doesn’t guarantee that the result set is always returned in the same order without an explicit <code>ORDER BY</code> clause.</li>
-</ol>
-<div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb196-1" data-line-number="1"><span class="co">#SQL_BE_07: SORT BY CLAUSE</span></a>
-<a class="sourceLine" id="cb196-2" data-line-number="2">SQL_BE_<span class="dv">07</span> &lt;-</a>
-<a class="sourceLine" id="cb196-3" data-line-number="3"><span class="st">  </span>DBI<span class="op">::</span><span class="kw">dbGetQuery</span>(</a>
-<a class="sourceLine" id="cb196-4" data-line-number="4">  con,</a>
-<a class="sourceLine" id="cb196-5" data-line-number="5">  <span class="st">&quot;SELECT &#39;ORDER BY t.table_schema&#39; showing  </span></a>
-<a class="sourceLine" id="cb196-6" data-line-number="6"><span class="st">          ,t.table_catalog DB </span></a>
-<a class="sourceLine" id="cb196-7" data-line-number="7"><span class="st">          ,t.table_schema </span></a>
-<a class="sourceLine" id="cb196-8" data-line-number="8"><span class="st">          ,table_type</span></a>
-<a class="sourceLine" id="cb196-9" data-line-number="9"><span class="st">          ,COUNT(*) count </span></a>
-<a class="sourceLine" id="cb196-10" data-line-number="10"><span class="st">     FROM information_schema.tables t</span></a>
-<a class="sourceLine" id="cb196-11" data-line-number="11"><span class="st">    GROUP BY t.table_catalog </span></a>
-<a class="sourceLine" id="cb196-12" data-line-number="12"><span class="st">          ,t.table_schema </span></a>
-<a class="sourceLine" id="cb196-13" data-line-number="13"><span class="st">          ,t.table_type</span></a>
-<a class="sourceLine" id="cb196-14" data-line-number="14"><span class="st">    -- add an ORDER BY table schema clause here--</span></a>
-<a class="sourceLine" id="cb196-15" data-line-number="15"><span class="st">  &quot;</span>  )</a>
-<a class="sourceLine" id="cb196-16" data-line-number="16"><span class="kw">kable</span>(<span class="kw">head</span>(SQL_BE_<span class="dv">07</span>,display_rows))</a></code></pre></div>
-<table>
-<thead>
-<tr class="header">
-<th align="left">showing</th>
-<th align="left">db</th>
-<th align="left">table_schema</th>
-<th align="left">table_type</th>
-<th align="right">count</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">ORDER BY t.table_schema</td>
-<td align="left">dvdrental</td>
-<td align="left">information_schema</td>
-<td align="left">BASE TABLE</td>
-<td align="right">7</td>
-</tr>
-<tr class="even">
-<td align="left">ORDER BY t.table_schema</td>
-<td align="left">dvdrental</td>
-<td align="left">information_schema</td>
-<td align="left">VIEW</td>
-<td align="right">60</td>
-</tr>
-<tr class="odd">
-<td align="left">ORDER BY t.table_schema</td>
-<td align="left">dvdrental</td>
-<td align="left">pg_catalog</td>
-<td align="left">BASE TABLE</td>
-<td align="right">62</td>
-</tr>
-<tr class="even">
-<td align="left">ORDER BY t.table_schema</td>
-<td align="left">dvdrental</td>
-<td align="left">public</td>
-<td align="left">BASE TABLE</td>
-<td align="right">15</td>
-</tr>
-<tr class="odd">
-<td align="left">ORDER BY t.table_schema</td>
-<td align="left">dvdrental</td>
-<td align="left">public</td>
-<td align="left">VIEW</td>
-<td align="right">7</td>
-</tr>
-<tr class="even">
-<td align="left">ORDER BY t.table_schema</td>
-<td align="left">dvdrental</td>
-<td align="left">pg_catalog</td>
-<td align="left">VIEW</td>
-<td align="right">59</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div id="sql_be_08---how-to-order-result-set-on-a-multiple-columns-and-descending-order" class="section level2">
-<h2><span class="header-section-number">11.11</span> SQL_BE_08 - HOW to ORDER Result Set on a Multiple Columns and Descending Order</h2>
-<p>In SQL_BE_08, we add another level to the ORDER BY clause with two levels table_type and counts in descending order. Execute the following code block before updating the ORDER BY clause.</p>
-<ol style="list-style-type: decimal">
-<li>Is the output for each group sorted in descending order? Some groups maybe or may not be sorted in descending order?</li>
-</ol>
-<div class="sourceCode" id="cb197"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb197-1" data-line-number="1"><span class="co">#SQL_BE_08: SORT BY CLAUSE</span></a>
-<a class="sourceLine" id="cb197-2" data-line-number="2">SQL_BE_<span class="dv">08</span> &lt;-</a>
-<a class="sourceLine" id="cb197-3" data-line-number="3"><span class="st">  </span>DBI<span class="op">::</span><span class="kw">dbGetQuery</span>(</a>
-<a class="sourceLine" id="cb197-4" data-line-number="4">  con,</a>
-<a class="sourceLine" id="cb197-5" data-line-number="5">  <span class="st">&quot;SELECT &#39;ORDER BY table_schema, count(*) desc&#39; showing  </span></a>
-<a class="sourceLine" id="cb197-6" data-line-number="6"><span class="st">          ,t.table_catalog DB </span></a>
-<a class="sourceLine" id="cb197-7" data-line-number="7"><span class="st">          ,t.table_schema </span></a>
-<a class="sourceLine" id="cb197-8" data-line-number="8"><span class="st">          ,table_type</span></a>
-<a class="sourceLine" id="cb197-9" data-line-number="9"><span class="st">          ,COUNT(*) count </span></a>
-<a class="sourceLine" id="cb197-10" data-line-number="10"><span class="st">     FROM information_schema.tables t</span></a>
-<a class="sourceLine" id="cb197-11" data-line-number="11"><span class="st">    GROUP BY t.table_catalog </span></a>
-<a class="sourceLine" id="cb197-12" data-line-number="12"><span class="st">          ,t.table_schema </span></a>
-<a class="sourceLine" id="cb197-13" data-line-number="13"><span class="st">          ,t.table_type</span></a>
-<a class="sourceLine" id="cb197-14" data-line-number="14"><span class="st">    -- Update the ORDER BY clause with the counts in descending order --</span></a>
-<a class="sourceLine" id="cb197-15" data-line-number="15"><span class="st">    ORDER BY t.table_schema</span></a>
-<a class="sourceLine" id="cb197-16" data-line-number="16"><span class="st">  &quot;</span>  )</a>
-<a class="sourceLine" id="cb197-17" data-line-number="17"><span class="kw">kable</span>(<span class="kw">head</span>(SQL_BE_<span class="dv">08</span>,display_rows))</a></code></pre></div>
-<table>
-<thead>
-<tr class="header">
-<th align="left">showing</th>
-<th align="left">db</th>
-<th align="left">table_schema</th>
-<th align="left">table_type</th>
-<th align="right">count</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">ORDER BY table_schema, count(*) desc</td>
-<td align="left">dvdrental</td>
-<td align="left">information_schema</td>
-<td align="left">BASE TABLE</td>
-<td align="right">7</td>
-</tr>
-<tr class="even">
-<td align="left">ORDER BY table_schema, count(*) desc</td>
-<td align="left">dvdrental</td>
-<td align="left">information_schema</td>
-<td align="left">VIEW</td>
-<td align="right">60</td>
-</tr>
-<tr class="odd">
-<td align="left">ORDER BY table_schema, count(*) desc</td>
-<td align="left">dvdrental</td>
-<td align="left">pg_catalog</td>
-<td align="left">BASE TABLE</td>
-<td align="right">62</td>
-</tr>
-<tr class="even">
-<td align="left">ORDER BY table_schema, count(*) desc</td>
-<td align="left">dvdrental</td>
-<td align="left">pg_catalog</td>
-<td align="left">VIEW</td>
-<td align="right">59</td>
-</tr>
-<tr class="odd">
-<td align="left">ORDER BY table_schema, count(*) desc</td>
-<td align="left">dvdrental</td>
-<td align="left">public</td>
-<td align="left">BASE TABLE</td>
-<td align="right">15</td>
-</tr>
-<tr class="even">
-<td align="left">ORDER BY table_schema, count(*) desc</td>
-<td align="left">dvdrental</td>
-<td align="left">public</td>
-<td align="left">VIEW</td>
-<td align="right">7</td>
-</tr>
-</tbody>
-</table>
-<p>Note that the ORDER BY clause either references the column name table_schema, or the aggregate function count(*).</p>
-<pre><code>SQL-BE-STINGER_03: ORDER BY column position
-
-THE ORDER BY clause is an odd duck because all the other clauses either refer to a column name or derived value.  The ORDER BY clause also allows one to reference the column by their numeric sequence in the list.  
-The ORDER BY clause could have been written as 
-
-    ORDER BY 3, 5 desc
-    
-The big time stinger comes when additional columns are added to the `SELECT` clause and the result set is no longer sorted as expected.  Don&#39;t be lazy, always explcitly list the `ORDER BY` values by name, not position to avoid the big time stinger.
-</code></pre>
-<div id="table-and-column-data-metadata" class="section level3">
-<h3><span class="header-section-number">11.11.1</span> Table and Column Data – MetaData</h3>
-<p>Database user applications keep track of user application data. The database itself is a special application and has its own schemas, information_schema and pg_catalog which it maintains to monitor the state of the database itself and user application data, the <code>dvdrental</code> application in the <code>public</code> schema. In Docker Installation section, Postgres database application was installed and then the user database <code>dvdrental</code> was installed. The <code>dvdrental</code> database objects reside in the public schema and the database knows about and tracks them in the <code>information_schema</code> and the <code>pg_catalog</code> schemas. In the next couple of SQL_BE’s, we will ignore the <code>pg_catalog</code>.</p>
-<div id="sql-like-and-string-wildcards" class="section level4">
-<h4><span class="header-section-number">11.11.1.1</span> SQL LIKE and String Wildcards</h4>
-<p>SQL recognizes two string wildcard characters, ’_’ and ‘%’, any single character and any string of characters including a 0 length string. To perform more advance string searches and manipulation, one needs regular expressions.</p>
-<table>
-<colgroup>
-<col width="23%" />
-<col width="76%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>LIKE</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>where table_name like ‘table%’</td>
-<td>find rows where table_name begins with ‘table’.</td>
-</tr>
-<tr class="even">
-<td>where table_name like ‘table_’</td>
-<td>find rows where table_name begins with ‘table’ followed by any single character, e.g. ‘tables’</td>
-</tr>
-<tr class="odd">
-<td>where table_name like ‘%usage’</td>
-<td>find rows where table_name ends with ‘usage’</td>
-</tr>
-<tr class="even">
-<td>where table_name like ‘%col%’</td>
-<td>find rows where ‘col’ is anywhere in table_name.</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-<div id="sql_be_09-looks-for-table-metadata-just-in-the-information_schema." class="section level2">
-<h2><span class="header-section-number">11.12</span> SQL_BE_09 looks for table metadata just in the information_schema.</h2>
-<div class="sourceCode" id="cb199"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb199-1" data-line-number="1"><span class="co">#SQL_BE_09: Table Metadata</span></a>
-<a class="sourceLine" id="cb199-2" data-line-number="2">SQL_BE_<span class="dv">09</span> &lt;-</a>
-<a class="sourceLine" id="cb199-3" data-line-number="3"><span class="st">  </span>DBI<span class="op">::</span><span class="kw">dbGetQuery</span>(</a>
-<a class="sourceLine" id="cb199-4" data-line-number="4">  con,</a>
-<a class="sourceLine" id="cb199-5" data-line-number="5">  <span class="st">&quot;SELECT &#39;SQL_BE_09 SQL Order of Precedence&#39; SQL_BE</span></a>
-<a class="sourceLine" id="cb199-6" data-line-number="6"><span class="st">          ,table_catalog || &#39;.&#39; || table_schema db_info     </span></a>
-<a class="sourceLine" id="cb199-7" data-line-number="7"><span class="st">          ,table_type</span></a>
-<a class="sourceLine" id="cb199-8" data-line-number="8"><span class="st">          ,table_name</span></a>
-<a class="sourceLine" id="cb199-9" data-line-number="9"><span class="st">         ,&#39;table_schema = &#39;&#39;information_schema&#39;&#39; AND &#39;||</span></a>
-<a class="sourceLine" id="cb199-10" data-line-number="10"><span class="st">          &#39;table_name like &#39;&#39;table%&#39;&#39; and table_type = &#39;&#39;VIEW&#39;&#39;&#39; showing  </span></a>
-<a class="sourceLine" id="cb199-11" data-line-number="11"><span class="st">     FROM information_schema.tables t</span></a>
-<a class="sourceLine" id="cb199-12" data-line-number="12"><span class="st">   -- add a where clause to check the information_schema for any table_name </span></a>
-<a class="sourceLine" id="cb199-13" data-line-number="13"><span class="st">   -- that begins with &#39;table&#39; any where in the name</span></a>
-<a class="sourceLine" id="cb199-14" data-line-number="14"><span class="st">   -- and and has a table_type = VIEW</span></a>
-<a class="sourceLine" id="cb199-15" data-line-number="15"><span class="st">    where table_schema = &#39;information_schema&#39;</span></a>
-<a class="sourceLine" id="cb199-16" data-line-number="16"><span class="st">      and table_name like &#39;table%&#39; </span></a>
-<a class="sourceLine" id="cb199-17" data-line-number="17"><span class="st">      and table_type = &#39;VIEW&#39;</span></a>
-<a class="sourceLine" id="cb199-18" data-line-number="18"><span class="st">    ORDER BY table_type</span></a>
-<a class="sourceLine" id="cb199-19" data-line-number="19"><span class="st">  &quot;</span>  )</a>
-<a class="sourceLine" id="cb199-20" data-line-number="20"><span class="kw">display_rs</span>(MODE,SQL_BE_<span class="dv">09</span>,display_rows)</a></code></pre></div>
-<table>
-<thead>
-<tr class="header">
-<th align="left">sql_be</th>
-<th align="left">db_info</th>
-<th align="left">table_type</th>
-<th align="left">table_name</th>
-<th align="left">showing</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">SQL_BE_09 SQL Order of Precedence</td>
-<td align="left">dvdrental.information_schema</td>
-<td align="left">VIEW</td>
-<td align="left">table_constraints</td>
-<td align="left">table_schema = ‘information_schema’ AND table_name like ‘table%’ and table_type = ‘VIEW’</td>
-</tr>
-<tr class="even">
-<td align="left">SQL_BE_09 SQL Order of Precedence</td>
-<td align="left">dvdrental.information_schema</td>
-<td align="left">VIEW</td>
-<td align="left">table_privileges</td>
-<td align="left">table_schema = ‘information_schema’ AND table_name like ‘table%’ and table_type = ‘VIEW’</td>
-</tr>
-<tr class="odd">
-<td align="left">SQL_BE_09 SQL Order of Precedence</td>
-<td align="left">dvdrental.information_schema</td>
-<td align="left">VIEW</td>
-<td align="left">tables</td>
-<td align="left">table_schema = ‘information_schema’ AND table_name like ‘table%’ and table_type = ‘VIEW’</td>
-</tr>
-</tbody>
-</table>
-<pre><code>*  How many rows are in the result set?</code></pre>
-</div>
-<div id="sql_be_10-column-metadata" class="section level2">
-<h2><span class="header-section-number">11.13</span> SQL_BE_10: Column Metadata</h2>
-<p>In the next SQL_BE, we look for column metadata tables.</p>
-<div class="sourceCode" id="cb201"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb201-1" data-line-number="1">## SQL_BE_10: Column Metadata</a>
-<a class="sourceLine" id="cb201-2" data-line-number="2">SQL_BE_<span class="dv">10</span> &lt;-</a>
-<a class="sourceLine" id="cb201-3" data-line-number="3"><span class="st">  </span>DBI<span class="op">::</span><span class="kw">dbGetQuery</span>(</a>
-<a class="sourceLine" id="cb201-4" data-line-number="4">  con,</a>
-<a class="sourceLine" id="cb201-5" data-line-number="5">  <span class="st">&quot;SELECT &#39;SQL_BE_10 SQL Order of Precedence&#39; SQL_BE</span></a>
-<a class="sourceLine" id="cb201-6" data-line-number="6"><span class="st">          ,table_catalog || &#39;.&#39; || table_schema db_info  </span></a>
-<a class="sourceLine" id="cb201-7" data-line-number="7"><span class="st">          ,table_type</span></a>
-<a class="sourceLine" id="cb201-8" data-line-number="8"><span class="st">          ,table_name</span></a>
-<a class="sourceLine" id="cb201-9" data-line-number="9"><span class="st">         ,&#39;table_schema = &#39;&#39;information_schema&#39;&#39; AND &#39;||</span></a>
-<a class="sourceLine" id="cb201-10" data-line-number="10"><span class="st">          &#39;table_name like &#39;&#39;%col%&#39;&#39; and table_type = &#39;&#39;VIEW&#39;&#39;&#39; showing </span></a>
-<a class="sourceLine" id="cb201-11" data-line-number="11"><span class="st">     FROM information_schema.tables t</span></a>
-<a class="sourceLine" id="cb201-12" data-line-number="12"><span class="st">   -- add a where clause to return any table_name that contains &#39;col&#39; any where in the name</span></a>
-<a class="sourceLine" id="cb201-13" data-line-number="13"><span class="st">    where table_schema = &#39;information_schema&#39;</span></a>
-<a class="sourceLine" id="cb201-14" data-line-number="14"><span class="st">      and table_name like &#39;%col%&#39; </span></a>
-<a class="sourceLine" id="cb201-15" data-line-number="15"><span class="st">      and table_type = &#39;VIEW&#39;</span></a>
-<a class="sourceLine" id="cb201-16" data-line-number="16"><span class="st">    ORDER BY table_type</span></a>
-<a class="sourceLine" id="cb201-17" data-line-number="17"><span class="st">  &quot;</span>  )</a>
-<a class="sourceLine" id="cb201-18" data-line-number="18"><span class="kw">display_rs</span>(MODE,SQL_BE_<span class="dv">10</span>,display_rows)</a></code></pre></div>
-<table>
-<thead>
-<tr class="header">
-<th align="left">sql_be</th>
-<th align="left">db_info</th>
-<th align="left">table_type</th>
-<th align="left">table_name</th>
-<th align="left">showing</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">SQL_BE_10 SQL Order of Precedence</td>
-<td align="left">dvdrental.information_schema</td>
-<td align="left">VIEW</td>
-<td align="left">collations</td>
-<td align="left">table_schema = ‘information_schema’ AND table_name like ‘%col%’ and table_type = ‘VIEW’</td>
-</tr>
-<tr class="even">
-<td align="left">SQL_BE_10 SQL Order of Precedence</td>
-<td align="left">dvdrental.information_schema</td>
-<td align="left">VIEW</td>
-<td align="left">collation_character_set_applicability</td>
-<td align="left">table_schema = ‘information_schema’ AND table_name like ‘%col%’ and table_type = ‘VIEW’</td>
-</tr>
-<tr class="odd">
-<td align="left">SQL_BE_10 SQL Order of Precedence</td>
-<td align="left">dvdrental.information_schema</td>
-<td align="left">VIEW</td>
-<td align="left">column_domain_usage</td>
-<td align="left">table_schema = ‘information_schema’ AND table_name like ‘%col%’ and table_type = ‘VIEW’</td>
-</tr>
-<tr class="even">
-<td align="left">SQL_BE_10 SQL Order of Precedence</td>
-<td align="left">dvdrental.information_schema</td>
-<td align="left">VIEW</td>
-<td align="left">column_privileges</td>
-<td align="left">table_schema = ‘information_schema’ AND table_name like ‘%col%’ and table_type = ‘VIEW’</td>
-</tr>
-<tr class="odd">
-<td align="left">SQL_BE_10 SQL Order of Precedence</td>
-<td align="left">dvdrental.information_schema</td>
-<td align="left">VIEW</td>
-<td align="left">column_udt_usage</td>
-<td align="left">table_schema = ‘information_schema’ AND table_name like ‘%col%’ and table_type = ‘VIEW’</td>
-</tr>
-<tr class="even">
-<td align="left">SQL_BE_10 SQL Order of Precedence</td>
-<td align="left">dvdrental.information_schema</td>
-<td align="left">VIEW</td>
-<td align="left">columns</td>
-<td align="left">table_schema = ‘information_schema’ AND table_name like ‘%col%’ and table_type = ‘VIEW’</td>
-</tr>
-<tr class="odd">
-<td align="left">SQL_BE_10 SQL Order of Precedence</td>
-<td align="left">dvdrental.information_schema</td>
-<td align="left">VIEW</td>
-<td align="left">constraint_column_usage</td>
-<td align="left">table_schema = ‘information_schema’ AND table_name like ‘%col%’ and table_type = ‘VIEW’</td>
-</tr>
-<tr class="even">
-<td align="left">SQL_BE_10 SQL Order of Precedence</td>
-<td align="left">dvdrental.information_schema</td>
-<td align="left">VIEW</td>
-<td align="left">key_column_usage</td>
-<td align="left">table_schema = ‘information_schema’ AND table_name like ‘%col%’ and table_type = ‘VIEW’</td>
-</tr>
-<tr class="odd">
-<td align="left">SQL_BE_10 SQL Order of Precedence</td>
-<td align="left">dvdrental.information_schema</td>
-<td align="left">VIEW</td>
-<td align="left">role_column_grants</td>
-<td align="left">table_schema = ‘information_schema’ AND table_name like ‘%col%’ and table_type = ‘VIEW’</td>
-</tr>
-<tr class="even">
-<td align="left">SQL_BE_10 SQL Order of Precedence</td>
-<td align="left">dvdrental.information_schema</td>
-<td align="left">VIEW</td>
-<td align="left">triggered_update_columns</td>
-<td align="left">table_schema = ‘information_schema’ AND table_name like ‘%col%’ and table_type = ‘VIEW’</td>
-</tr>
-<tr class="odd">
-<td align="left">SQL_BE_10 SQL Order of Precedence</td>
-<td align="left">dvdrental.information_schema</td>
-<td align="left">VIEW</td>
-<td align="left">view_column_usage</td>
-<td align="left">table_schema = ‘information_schema’ AND table_name like ‘%col%’ and table_type = ‘VIEW’</td>
-</tr>
-<tr class="even">
-<td align="left">SQL_BE_10 SQL Order of Precedence</td>
-<td align="left">dvdrental.information_schema</td>
-<td align="left">VIEW</td>
-<td align="left">_pg_foreign_table_columns</td>
-<td align="left">table_schema = ‘information_schema’ AND table_name like ‘%col%’ and table_type = ‘VIEW’</td>
-</tr>
-<tr class="odd">
-<td align="left">SQL_BE_10 SQL Order of Precedence</td>
-<td align="left">dvdrental.information_schema</td>
-<td align="left">VIEW</td>
-<td align="left">column_options</td>
-<td align="left">table_schema = ‘information_schema’ AND table_name like ‘%col%’ and table_type = ‘VIEW’</td>
-</tr>
-</tbody>
-</table>
-<pre><code>* How many rows are in the result set?
-* If we combine the result sets from SQL_BE_09 and SQL_BE_10, how many rows should we get.</code></pre>
-</div>
-<div id="sql_be_11-table-and-column-metadata" class="section level2">
-<h2><span class="header-section-number">11.14</span> SQL_BE_11 Table and Column Metadata</h2>
-<pre><code>Combine SQL_BE_09 and SQL_BE_10.  
-Set table_schema = information_schema
-    table_name begins with table% or table_name contains %col%
-    table_type = VIEW</code></pre>
-<div class="sourceCode" id="cb204"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb204-1" data-line-number="1"><span class="co">#SQL_BE_11: Column Metadata</span></a>
-<a class="sourceLine" id="cb204-2" data-line-number="2">SQL_BE_<span class="dv">11</span> &lt;-</a>
-<a class="sourceLine" id="cb204-3" data-line-number="3"><span class="st">  </span>DBI<span class="op">::</span><span class="kw">dbGetQuery</span>(</a>
-<a class="sourceLine" id="cb204-4" data-line-number="4">  con,</a>
-<a class="sourceLine" id="cb204-5" data-line-number="5">  <span class="st">&quot;SELECT &#39;SQL_BE_11 SQL Order of Precedence&#39; SQL_BE</span></a>
-<a class="sourceLine" id="cb204-6" data-line-number="6"><span class="st">          ,table_catalog || &#39;.&#39; || table_schema db_info </span></a>
-<a class="sourceLine" id="cb204-7" data-line-number="7"><span class="st">          ,table_type</span></a>
-<a class="sourceLine" id="cb204-8" data-line-number="8"><span class="st">          ,table_name</span></a>
-<a class="sourceLine" id="cb204-9" data-line-number="9"><span class="st">          ,&#39;table_schema = &#39;&#39;information_schema&#39;&#39; table_name like &#39;&#39;table%&#39;&#39;&#39; ||</span></a>
-<a class="sourceLine" id="cb204-10" data-line-number="10"><span class="st">           &#39;OR table_name like &#39;&#39;%col%&#39;&#39; table_type = &#39;&#39;VIEW&#39;&#39; &#39; showing</span></a>
-<a class="sourceLine" id="cb204-11" data-line-number="11"><span class="st">          </span></a>
-<a class="sourceLine" id="cb204-12" data-line-number="12"><span class="st">      FROM information_schema.tables t</span></a>
-<a class="sourceLine" id="cb204-13" data-line-number="13"><span class="st">     where table_schema = &#39;information_schema&#39;</span></a>
-<a class="sourceLine" id="cb204-14" data-line-number="14"><span class="st">       and table_name like &#39;table%&#39; OR table_name like &#39;%col%&#39;</span></a>
-<a class="sourceLine" id="cb204-15" data-line-number="15"><span class="st">       and table_type = &#39;VIEW&#39;</span></a>
-<a class="sourceLine" id="cb204-16" data-line-number="16"><span class="st">     ORDER BY table_type</span></a>
-<a class="sourceLine" id="cb204-17" data-line-number="17"><span class="st">  &quot;</span>  )</a>
-<a class="sourceLine" id="cb204-18" data-line-number="18"><span class="kw">display_rs</span>(MODE,SQL_BE_<span class="dv">11</span>,display_rows)</a></code></pre></div>
-<table>
-<thead>
-<tr class="header">
-<th align="left">sql_be</th>
-<th align="left">db_info</th>
-<th align="left">table_type</th>
-<th align="left">table_name</th>
-<th align="left">showing</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">SQL_BE_11 SQL Order of Precedence</td>
-<td align="left">dvdrental.information_schema</td>
-<td align="left">VIEW</td>
-<td align="left">collations</td>
-<td align="left">table_schema = ‘information_schema’ table_name like ‘table%’OR table_name like’%col%’ table_type = ‘VIEW’</td>
-</tr>
-<tr class="even">
-<td align="left">SQL_BE_11 SQL Order of Precedence</td>
-<td align="left">dvdrental.information_schema</td>
-<td align="left">VIEW</td>
-<td align="left">collation_character_set_applicability</td>
-<td align="left">table_schema = ‘information_schema’ table_name like ‘table%’OR table_name like’%col%’ table_type = ‘VIEW’</td>
-</tr>
-<tr class="odd">
-<td align="left">SQL_BE_11 SQL Order of Precedence</td>
-<td align="left">dvdrental.information_schema</td>
-<td align="left">VIEW</td>
-<td align="left">column_domain_usage</td>
-<td align="left">table_schema = ‘information_schema’ table_name like ‘table%’OR table_name like’%col%’ table_type = ‘VIEW’</td>
-</tr>
-<tr class="even">
-<td align="left">SQL_BE_11 SQL Order of Precedence</td>
-<td align="left">dvdrental.information_schema</td>
-<td align="left">VIEW</td>
-<td align="left">column_privileges</td>
-<td align="left">table_schema = ‘information_schema’ table_name like ‘table%’OR table_name like’%col%’ table_type = ‘VIEW’</td>
-</tr>
-<tr class="odd">
-<td align="left">SQL_BE_11 SQL Order of Precedence</td>
-<td align="left">dvdrental.information_schema</td>
-<td align="left">VIEW</td>
-<td align="left">column_udt_usage</td>
-<td align="left">table_schema = ‘information_schema’ table_name like ‘table%’OR table_name like’%col%’ table_type = ‘VIEW’</td>
-</tr>
-<tr class="even">
-<td align="left">SQL_BE_11 SQL Order of Precedence</td>
-<td align="left">dvdrental.information_schema</td>
-<td align="left">VIEW</td>
-<td align="left">columns</td>
-<td align="left">table_schema = ‘information_schema’ table_name like ‘table%’OR table_name like’%col%’ table_type = ‘VIEW’</td>
-</tr>
-<tr class="odd">
-<td align="left">SQL_BE_11 SQL Order of Precedence</td>
-<td align="left">dvdrental.information_schema</td>
-<td align="left">VIEW</td>
-<td align="left">constraint_column_usage</td>
-<td align="left">table_schema = ‘information_schema’ table_name like ‘table%’OR table_name like’%col%’ table_type = ‘VIEW’</td>
-</tr>
-<tr class="even">
-<td align="left">SQL_BE_11 SQL Order of Precedence</td>
-<td align="left">dvdrental.information_schema</td>
-<td align="left">VIEW</td>
-<td align="left">key_column_usage</td>
-<td align="left">table_schema = ‘information_schema’ table_name like ‘table%’OR table_name like’%col%’ table_type = ‘VIEW’</td>
-</tr>
-<tr class="odd">
-<td align="left">SQL_BE_11 SQL Order of Precedence</td>
-<td align="left">dvdrental.information_schema</td>
-<td align="left">VIEW</td>
-<td align="left">role_column_grants</td>
-<td align="left">table_schema = ‘information_schema’ table_name like ‘table%’OR table_name like’%col%’ table_type = ‘VIEW’</td>
-</tr>
-<tr class="even">
-<td align="left">SQL_BE_11 SQL Order of Precedence</td>
-<td align="left">dvdrental.information_schema</td>
-<td align="left">VIEW</td>
-<td align="left">table_constraints</td>
-<td align="left">table_schema = ‘information_schema’ table_name like ‘table%’OR table_name like’%col%’ table_type = ‘VIEW’</td>
-</tr>
-<tr class="odd">
-<td align="left">SQL_BE_11 SQL Order of Precedence</td>
-<td align="left">dvdrental.information_schema</td>
-<td align="left">VIEW</td>
-<td align="left">table_privileges</td>
-<td align="left">table_schema = ‘information_schema’ table_name like ‘table%’OR table_name like’%col%’ table_type = ‘VIEW’</td>
-</tr>
-<tr class="even">
-<td align="left">SQL_BE_11 SQL Order of Precedence</td>
-<td align="left">dvdrental.information_schema</td>
-<td align="left">VIEW</td>
-<td align="left">tables</td>
-<td align="left">table_schema = ‘information_schema’ table_name like ‘table%’OR table_name like’%col%’ table_type = ‘VIEW’</td>
-</tr>
-<tr class="odd">
-<td align="left">SQL_BE_11 SQL Order of Precedence</td>
-<td align="left">dvdrental.information_schema</td>
-<td align="left">VIEW</td>
-<td align="left">triggered_update_columns</td>
-<td align="left">table_schema = ‘information_schema’ table_name like ‘table%’OR table_name like’%col%’ table_type = ‘VIEW’</td>
-</tr>
-<tr class="even">
-<td align="left">SQL_BE_11 SQL Order of Precedence</td>
-<td align="left">dvdrental.information_schema</td>
-<td align="left">VIEW</td>
-<td align="left">view_column_usage</td>
-<td align="left">table_schema = ‘information_schema’ table_name like ‘table%’OR table_name like’%col%’ table_type = ‘VIEW’</td>
-</tr>
-<tr class="odd">
-<td align="left">SQL_BE_11 SQL Order of Precedence</td>
-<td align="left">dvdrental.information_schema</td>
-<td align="left">VIEW</td>
-<td align="left">_pg_foreign_table_columns</td>
-<td align="left">table_schema = ‘information_schema’ table_name like ‘table%’OR table_name like’%col%’ table_type = ‘VIEW’</td>
-</tr>
-<tr class="even">
-<td align="left">SQL_BE_11 SQL Order of Precedence</td>
-<td align="left">dvdrental.information_schema</td>
-<td align="left">VIEW</td>
-<td align="left">column_options</td>
-<td align="left">table_schema = ‘information_schema’ table_name like ‘table%’OR table_name like’%col%’ table_type = ‘VIEW’</td>
-</tr>
-</tbody>
-</table>
 </div>
 </div>
             </section>
@@ -2723,7 +1399,7 @@ Set table_schema = information_schema
         </div>
       </div>
 <a href="joins-and-complex-queries-13.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="sql-be-12-and-or-logical-precedence.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="drilling-into-your-db-environment-21-29.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -2764,19 +1440,6 @@ gitbook.start({
 });
 </script>
 
-<!-- dynamically load mathjax for compatibility with self-contained -->
-<script>
-  (function () {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    var src = "true";
-    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:" && /^https?:/.test(src))
-      src = src.replace(/^https?:/, '');
-    script.src = src;
-    document.getElementsByTagName("head")[0].appendChild(script);
-  })();
-</script>
 </body>
 
 </html>
