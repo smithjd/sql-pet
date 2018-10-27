@@ -149,11 +149,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
-<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#using-r-to-query-a-dbms-in-your-organization"><i class="fa fa-check"></i><b>1.1</b> Using R to query a DBMS in your organization</a></li>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#using-r-to-query-a-dbms-in-your-organization"><i class="fa fa-check"></i><b>1.1</b> Using R to query a DBMS in your organization</a><ul>
+<li class="chapter" data-level="1.1.1" data-path="index.html"><a href="index.html#why-write-a-book-about-dbms-access-from-r-using-docker"><i class="fa fa-check"></i><b>1.1.1</b> Why write a book about DBMS access from R using Docker?</a></li>
+</ul></li>
 <li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#docker-as-a-tool-for-users"><i class="fa fa-check"></i><b>1.2</b> Docker as a tool for UseRs</a></li>
-<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#why-write-a-book-about-dbms-access-from-r-using-docker"><i class="fa fa-check"></i><b>1.3</b> Why write a book about DBMS access from R using Docker?</a></li>
-<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#docker-and-r-on-your-machine"><i class="fa fa-check"></i><b>1.4</b> Docker and R on your machine</a></li>
-<li class="chapter" data-level="1.5" data-path="index.html"><a href="index.html#who-are-we"><i class="fa fa-check"></i><b>1.5</b> Who are we?</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#docker-and-r-on-your-machine"><i class="fa fa-check"></i><b>1.3</b> Docker and R on your machine</a></li>
+<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#who-are-we"><i class="fa fa-check"></i><b>1.4</b> Who are we?</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="how-to-use-this-book-01.html"><a href="how-to-use-this-book-01.html"><i class="fa fa-check"></i><b>2</b> How to use this book (01)</a><ul>
 <li class="chapter" data-level="2.1" data-path="how-to-use-this-book-01.html"><a href="how-to-use-this-book-01.html#prerequisites"><i class="fa fa-check"></i><b>2.1</b> Prerequisites</a></li>
@@ -414,11 +415,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul>
 <div id="using-r-to-query-a-dbms-in-your-organization" class="section level2">
 <h2><span class="header-section-number">1.1</span> Using R to query a DBMS in your organization</h2>
+<div id="why-write-a-book-about-dbms-access-from-r-using-docker" class="section level3">
+<h3><span class="header-section-number">1.1.1</span> Why write a book about DBMS access from R using Docker?</h3>
 <ul>
-<li>Large data stores in organizations are stored in databases that have specific access constraints and structural characteristics. Data documentation may be incomplete, often emphasizes operational issues rather than analytic ones, and often needs to be confirmed on the fly. Data volumes and query performance are important design constraints.</li>
-<li>R users frequently need to make sense of complex data structures and coding schemes to address incompletely formed questions so that exploratory data analysis has to be fast. Exploratory techniques for the purpose should not be reinvented (and so would benefit from more public instruction or discussion).</li>
-<li>Learning to navigate the interfaces (passwords, packages, etc.) between R and a database is difficult to simulate outside corporate walls. Resources for interface problem diagnosis behind corporate walls may or may not address all the issues that R users face, so a simulated environment is needed.</li>
+<li><p>Large data stores in organizations are stored in databases that have specific access constraints and structural characteristics.<br />
+* Data documentation may be incomplete, often emphasizes operational issues rather than analytic ones, and often needs to be confirmed on the fly.<br />
+* Data volumes and query performance are important design constraints.</p></li>
+<li><p>R users frequently need to make sense of complex data structures and coding schemes to address incompletely formed questions so that exploratory data analysis has to be fast.
+* Exploratory and diagnostic techniques for the purpose should not be reinvented and would benefit from more public instruction or discussion.</p></li>
+<li><p>Learning to navigate the interfaces (passwords, packages, etc.) or gap between R and a database is difficult to simulate outside corporate walls.<br />
+* Resources for interface problem diagnosis behind corporate walls may or may not address all the issues that R users face, so a simulated environment is needed.</p></li>
+<li><p>Docker is a relatively easy way to simulate the relationship between an R/Rstudio session and database – all on a single machine.</p></li>
 </ul>
+</div>
 </div>
 <div id="docker-as-a-tool-for-users" class="section level2">
 <h2><span class="header-section-number">1.2</span> Docker as a tool for UseRs</h2>
@@ -435,23 +444,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>You may want to run PostgreSQL on a Docker container, avoiding any OS or system dependencies that might come up.</li>
 </ul>
 </div>
-<div id="why-write-a-book-about-dbms-access-from-r-using-docker" class="section level2">
-<h2><span class="header-section-number">1.3</span> Why write a book about DBMS access from R using Docker?</h2>
-<ul>
-<li>Large data stores in organizations are stored in databases that have specific access constraints and structural characteristics.</li>
-<li>Learning to navigate the gap between R and the database is difficult to simulate outside corporate walls.</li>
-<li>R users frequently need to make sense of complex data structures using diagnostic techniques that should not be reinvented (and so would benefit from more public instruction and commentary).</li>
-<li>Docker is a relatively easy way to simulate the relationship between an R/Rstudio session and database – all on on a single machine.</li>
-</ul>
-</div>
 <div id="docker-and-r-on-your-machine" class="section level2">
-<h2><span class="header-section-number">1.4</span> Docker and R on your machine</h2>
+<h2><span class="header-section-number">1.3</span> Docker and R on your machine</h2>
 <p>Here is how R and Docker fit on your operating system in this tutorial:</p>
 <p><img src="screenshots/r-and-docker.png" alt="R and Docker" />
 (This diagram needs to be updated as our directory structure evolves.)</p>
 </div>
 <div id="who-are-we" class="section level2">
-<h2><span class="header-section-number">1.5</span> Who are we?</h2>
+<h2><span class="header-section-number">1.4</span> Who are we?</h2>
 <p>We have been collaborating on this book since the Summer of 2018, each of us chipping into the project as time permits:</p>
 <ul>
 <li>Dipti Muni - <a href="https://github.com/deemuni">@deemuni</a></li>
