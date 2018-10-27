@@ -21,127 +21,66 @@ if (MODE == 'DEMO') {
 ```
 
 
-\begin{tabular}{l|l|l|l|l|l}
-\hline
-In & Dplyr.Function & description & SQL.Clause & Notes & Category\\
-\hline
--- & -------------------------------------- & ------------------------------------------- & -------------------------------- & ------------------------- & -------------\\
-\hline
-Y & arrange() & Arrange rows by variables & ORDER BY &  & Basic single-table verbs\\
-\hline
-Y? & distinct() & Return rows with matching conditions & SELECT distinct * &  & Basic single-table verbs\\
-\hline
-Y & select() rename() & Select/rename variables by name & SELECT column\_name alias\_name &  & Basic single-table verbs\\
-\hline
-N & pull() & Pull out a single variable & SELECT column\_name; &  & Basic single-table verbs\\
-\hline
-Y & mutate() transmute() & Add new variables & SELECT computed\_value computed\_name &  & Basic single-table verbs\\
-\hline
-Y & summarise() summarize() & Reduces multiple values down to a single value & SELECT aggregate\_functions GROUP BY &  & Basic single-table verbs\\
-\hline
-N & group\_by() ungroup() & Objects exported from other packages & GROUP BY no ungroup &  & Basic single-table verbs\\
-\hline
-N & distinct() & Select distinct/unique rows & SELECT distinct \{colname1,...colnamen\} &  & Basic single-table verbs\\
-\hline
-N & do() & Do anything & NA &  & Basic single-table verbs\\
-\hline
-N & sample\_n() sample\_frac() & Sample n rows from a table & ORDER BY RANDOM() LIMIT 10 &  & Basic single-table verbs\\
-\hline
-N & slice() & Select rows by position & SELECT row\_number() over (partition by expression(s) order\_by exp) &  & Basic single-table verbs\\
-\hline
-Y & tally() count() add\_tally() add\_count() & Count/tally observations by group & GROUP BY &  & Single-table helpers\\
-\hline
-Y & top\_n() & Select top (or bottom) n rows (by value) & ORDER BY VALUE \{DESC\} LIMIT 10 &  & Single-table helpers\\
-\hline
-N & arrange\_all() arrange\_at() arrange\_if() & Arrange rows by a selection of variables & ORDER BY &  & scoped-Operate on a selection of variables\\
-\hline
-N & filter\_all() filter\_if() filter\_at() & Filter within a selection of variables &  &  & scoped-Operate on a selection of variables\\
-\hline
-N & group\_by\_all() group\_by\_at() group\_by\_if() & Group by a selection of variables &  &  & scoped-Operate on a selection of variables\\
-\hline
-N & select\_all() rename\_all() select\_if() rename\_if() select\_at() rename\_at() & Select and rename a selection of variables &  &  & scoped-Operate on a selection of variables\\
-\hline
-N & summarise\_all() summarise\_if() summarise\_at() summarize\_all() summarize\_if() summarize\_at() mutate\_all() mutate\_if() mutate\_at() transmute\_all() transmute\_if() transmute\_at() & Summarise and mutate multiple columns. &  &  & scoped-Operate on a selection of variables\\
-\hline
-N & all\_vars() any\_vars() & Apply predicate to all variables &  &  & scoped-Operate on a selection of variables\\
-\hline
-N & vars() & Select variables &  &  & scoped-Operate on a selection of variables\\
-\hline
-N & funs() & Create a list of functions calls. &  &  & scoped-Operate on a selection of variables\\
-\hline
-N & all\_equal() all.equal(<tbl\_df>) & Flexible equality comparison for data frames &  &  & Two-table verbs\\
-\hline
-N & bind\_rows() bind\_cols() combine() & Efficiently bind multiple data frames by row and column &  &  & Two-table verbs\\
-\hline
-N & intersect() union() union\_all() setdiff() setequal() & Set operations &  &  & Two-table verbs\\
-\hline
-N & inner\_join() left\_join() right\_join() full\_join() semi\_join() anti\_join() & Join two tbls together &  &  & Two-table verbs\\
-\hline
-N & inner\_join(<tbl\_df>) left\_join(<tbl\_df>) right\_join(<tbl\_df>) full\_join(<tbl\_df>) semi\_join(<tbl\_df>) anti\_join(<tbl\_df>) & Join data frame tbls &  &  & Two-table verbs\\
-\hline
-N & auto\_copy() & Copy tables to same source, if necessary &  &  & Remote tables\\
-\hline
-N & compute() collect() collapse() & Force computation of a database query &  &  & Remote tables\\
-\hline
-N & copy\_to() & Copy a local data frame to a remote src &  &  & Remote tables\\
-\hline
-N & ident() & Flag a character vector as SQL identifiers &  &  & Remote tables\\
-\hline
-N & explain() show\_query() & Explain details of a tbl &  &  & Remote tables\\
-\hline
-N & tbl() is.tbl() as.tbl() & Create a table from a data source &  &  & Remote tables\\
-\hline
-N & src\_mysql() src\_postgres() src\_sqlite() & Source for database backends &  &  & Remote tables\\
-\hline
-N & sql() & SQL escaping. &  &  & Remote tables\\
-\hline
-N & groups() group\_vars() & Return grouping variables &  &  & Metadata\\
-\hline
-N & between() & Do values in a numeric vector fall in specified range? &  &  & Vector functions\\
-\hline
-N & case\_when() & A general vectorised if &  &  & Vector functions\\
-\hline
-N & coalesce() & Find first non-missing element &  &  & Vector functions\\
-\hline
-N & cumall() cumany() cummean() & Cumulativate versions of any, all, and mean &  &  & Vector functions\\
-\hline
-N & desc() & Descending order &  &  & Vector functions\\
-\hline
-N & if\_else() & Vectorised if &  &  & Vector functions\\
-\hline
-N & lead() lag() & Lead and lag. &  &  & Vector functions\\
-\hline
-N & order\_by() & A helper function for ordering window function output &  &  & Vector functions\\
-\hline
-N & n() & The number of observations in the current group. &  &  & Vector functions\\
-\hline
-N & n\_distinct() & Efficiently count the number of unique values in a set of vector &  &  & Vector functions\\
-\hline
-N & na\_if() & Convert values to NA &  &  & Vector functions\\
-\hline
-N & near() & Compare two numeric vectors &  &  & Vector functions\\
-\hline
-N & nth() first() last() & Extract the first, last or nth value from a vector &  &  & Vector functions\\
-\hline
-N & row\_number() ntile() min\_rank() dense\_rank() percent\_rank() cume\_dist() & Windowed rank functions. &  &  & Vector functions\\
-\hline
-N & recode() recode\_factor() & Recode values &  &  & Vector functions\\
-\hline
-N & band\_members band\_instruments band\_instruments2 & Band membership &  &  & Data\\
-\hline
-N & nasa & NASA spatio-temporal data &  &  & Data\\
-\hline
-N & starwars & Starwars characters &  &  & Data\\
-\hline
-N & storms & Storm tracks data &  &  & Data\\
-\hline
-N & tbl\_cube() & A data cube tbl &  &  & Other backends\\
-\hline
-N & as.table(<tbl\_cube>) as.data.frame(<tbl\_cube>) as\_data\_frame(<tbl\_cube>) & Coerce a tbl\_cube to other data structures &  &  & Other backends\\
-\hline
-N & as.tbl\_cube() & Coerce an existing data structure into a tbl\_cube &  &  & Other backends\\
-\hline
-N & rowwise() & Group input by rows &  &  & Other backends\\
-\hline
-\end{tabular}
+
+In   Dplyr.Function                                                                                                                                                                   description                                                        SQL.Clause                                                           Notes                       Category                                   
+---  -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------  -----------------------------------------------------------------  -------------------------------------------------------------------  --------------------------  -------------------------------------------
+--   --------------------------------------                                                                                                                                           -------------------------------------------                        --------------------------------                                     -------------------------   -------------                              
+Y    arrange()                                                                                                                                                                        Arrange rows by variables                                          ORDER BY                                                                                         Basic single-table verbs                   
+Y?   distinct()                                                                                                                                                                       Return rows with matching conditions                               SELECT distinct *                                                                                Basic single-table verbs                   
+Y    select() rename()                                                                                                                                                                Select/rename variables by name                                    SELECT column_name alias_name                                                                    Basic single-table verbs                   
+N    pull()                                                                                                                                                                           Pull out a single variable                                         SELECT column_name;                                                                              Basic single-table verbs                   
+Y    mutate() transmute()                                                                                                                                                             Add new variables                                                  SELECT computed_value computed_name                                                              Basic single-table verbs                   
+Y    summarise() summarize()                                                                                                                                                          Reduces multiple values down to a single value                     SELECT aggregate_functions GROUP BY                                                              Basic single-table verbs                   
+N    group_by() ungroup()                                                                                                                                                             Objects exported from other packages                               GROUP BY no ungroup                                                                              Basic single-table verbs                   
+N    distinct()                                                                                                                                                                       Select distinct/unique rows                                        SELECT distinct {colname1,...colnamen}                                                           Basic single-table verbs                   
+N    do()                                                                                                                                                                             Do anything                                                        NA                                                                                               Basic single-table verbs                   
+N    sample_n() sample_frac()                                                                                                                                                         Sample n rows from a table                                         ORDER BY RANDOM() LIMIT 10                                                                       Basic single-table verbs                   
+N    slice()                                                                                                                                                                          Select rows by position                                            SELECT row_number() over (partition by expression(s) order_by exp)                               Basic single-table verbs                   
+Y    tally() count() add_tally() add_count()                                                                                                                                          Count/tally observations by group                                  GROUP BY                                                                                         Single-table helpers                       
+Y    top_n()                                                                                                                                                                          Select top (or bottom) n rows (by value)                           ORDER BY VALUE {DESC} LIMIT 10                                                                   Single-table helpers                       
+N    arrange_all() arrange_at() arrange_if()                                                                                                                                          Arrange rows by a selection of variables                           ORDER BY                                                                                         scoped-Operate on a selection of variables 
+N    filter_all() filter_if() filter_at()                                                                                                                                             Filter within a selection of variables                                                                                                                              scoped-Operate on a selection of variables 
+N    group_by_all() group_by_at() group_by_if()                                                                                                                                       Group by a selection of variables                                                                                                                                   scoped-Operate on a selection of variables 
+N    select_all() rename_all() select_if() rename_if() select_at() rename_at()                                                                                                        Select and rename a selection of variables                                                                                                                          scoped-Operate on a selection of variables 
+N    summarise_all() summarise_if() summarise_at() summarize_all() summarize_if() summarize_at() mutate_all() mutate_if() mutate_at() transmute_all() transmute_if() transmute_at()   Summarise and mutate multiple columns.                                                                                                                              scoped-Operate on a selection of variables 
+N    all_vars() any_vars()                                                                                                                                                            Apply predicate to all variables                                                                                                                                    scoped-Operate on a selection of variables 
+N    vars()                                                                                                                                                                           Select variables                                                                                                                                                    scoped-Operate on a selection of variables 
+N    funs()                                                                                                                                                                           Create a list of functions calls.                                                                                                                                   scoped-Operate on a selection of variables 
+N    all_equal() all.equal(<tbl_df>)                                                                                                                                                  Flexible equality comparison for data frames                                                                                                                        Two-table verbs                            
+N    bind_rows() bind_cols() combine()                                                                                                                                                Efficiently bind multiple data frames by row and column                                                                                                             Two-table verbs                            
+N    intersect() union() union_all() setdiff() setequal()                                                                                                                             Set operations                                                                                                                                                      Two-table verbs                            
+N    inner_join() left_join() right_join() full_join() semi_join() anti_join()                                                                                                        Join two tbls together                                                                                                                                              Two-table verbs                            
+N    inner_join(<tbl_df>) left_join(<tbl_df>) right_join(<tbl_df>) full_join(<tbl_df>) semi_join(<tbl_df>) anti_join(<tbl_df>)                                                        Join data frame tbls                                                                                                                                                Two-table verbs                            
+N    auto_copy()                                                                                                                                                                      Copy tables to same source, if necessary                                                                                                                            Remote tables                              
+N    compute() collect() collapse()                                                                                                                                                   Force computation of a database query                                                                                                                               Remote tables                              
+N    copy_to()                                                                                                                                                                        Copy a local data frame to a remote src                                                                                                                             Remote tables                              
+N    ident()                                                                                                                                                                          Flag a character vector as SQL identifiers                                                                                                                          Remote tables                              
+N    explain() show_query()                                                                                                                                                           Explain details of a tbl                                                                                                                                            Remote tables                              
+N    tbl() is.tbl() as.tbl()                                                                                                                                                          Create a table from a data source                                                                                                                                   Remote tables                              
+N    src_mysql() src_postgres() src_sqlite()                                                                                                                                          Source for database backends                                                                                                                                        Remote tables                              
+N    sql()                                                                                                                                                                            SQL escaping.                                                                                                                                                       Remote tables                              
+N    groups() group_vars()                                                                                                                                                            Return grouping variables                                                                                                                                           Metadata                                   
+N    between()                                                                                                                                                                        Do values in a numeric vector fall in specified range?                                                                                                              Vector functions                           
+N    case_when()                                                                                                                                                                      A general vectorised if                                                                                                                                             Vector functions                           
+N    coalesce()                                                                                                                                                                       Find first non-missing element                                                                                                                                      Vector functions                           
+N    cumall() cumany() cummean()                                                                                                                                                      Cumulativate versions of any, all, and mean                                                                                                                         Vector functions                           
+N    desc()                                                                                                                                                                           Descending order                                                                                                                                                    Vector functions                           
+N    if_else()                                                                                                                                                                        Vectorised if                                                                                                                                                       Vector functions                           
+N    lead() lag()                                                                                                                                                                     Lead and lag.                                                                                                                                                       Vector functions                           
+N    order_by()                                                                                                                                                                       A helper function for ordering window function output                                                                                                               Vector functions                           
+N    n()                                                                                                                                                                              The number of observations in the current group.                                                                                                                    Vector functions                           
+N    n_distinct()                                                                                                                                                                     Efficiently count the number of unique values in a set of vector                                                                                                    Vector functions                           
+N    na_if()                                                                                                                                                                          Convert values to NA                                                                                                                                                Vector functions                           
+N    near()                                                                                                                                                                           Compare two numeric vectors                                                                                                                                         Vector functions                           
+N    nth() first() last()                                                                                                                                                             Extract the first, last or nth value from a vector                                                                                                                  Vector functions                           
+N    row_number() ntile() min_rank() dense_rank() percent_rank() cume_dist()                                                                                                          Windowed rank functions.                                                                                                                                            Vector functions                           
+N    recode() recode_factor()                                                                                                                                                         Recode values                                                                                                                                                       Vector functions                           
+N    band_members band_instruments band_instruments2                                                                                                                                  Band membership                                                                                                                                                     Data                                       
+N    nasa                                                                                                                                                                             NASA spatio-temporal data                                                                                                                                           Data                                       
+N    starwars                                                                                                                                                                         Starwars characters                                                                                                                                                 Data                                       
+N    storms                                                                                                                                                                           Storm tracks data                                                                                                                                                   Data                                       
+N    tbl_cube()                                                                                                                                                                       A data cube tbl                                                                                                                                                     Other backends                             
+N    as.table(<tbl_cube>) as.data.frame(<tbl_cube>) as_data_frame(<tbl_cube>)                                                                                                         Coerce a tbl_cube to other data structures                                                                                                                          Other backends                             
+N    as.tbl_cube()                                                                                                                                                                    Coerce an existing data structure into a tbl_cube                                                                                                                   Other backends                             
+N    rowwise()                                                                                                                                                                        Group input by rows                                                                                                                                                 Other backends                             
 

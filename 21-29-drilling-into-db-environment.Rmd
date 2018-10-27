@@ -1,7 +1,7 @@
-# Drilling into Your DB Environment
+# Drilling into Your DB Environment (21-29)
 
-```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
-# These packages are called in almost every chapter of the book:
+These packaages are called in this Chapter
+```{r setup, echo=TRUE, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(DBI)
 library(RPostgres)
@@ -31,7 +31,7 @@ con
 
 ### Which database?
 
-Your DBA will create your user accounts and priviledges for the database(s) that you can access.  
+Your DBA will create your user accounts and privileges for the database(s) that you can access.  
 
 One of the challenges when working with a database(s) is finding where your data actually resides.    Your best resources will be one or more subject matter experts, `SME`, and your DBA.  Your data may actually reside in multiple databases, e.g., a detail and summary databases.  In our tutorial, we focus on the one database, `dvdrental`.  Database names usually reflect something about the data that they contain.
 
@@ -82,7 +82,7 @@ con <- sp_get_postgres_connection(
 con
 ```
 
-Note that the two Sys.getenv function calls work in this tutorial because both the user and password are available in both databases.  This is a common practice in organinzations that have implemented single sign on across their organization.
+Note that the two Sys.getenv function calls work in this tutorial because both the user and password are available in both databases.  This is a common practice in organizations that have implemented single sign on across their organization.
 
 ```
 Gotcha:
@@ -90,7 +90,7 @@ Gotcha:
    If one has data in multiple databases or multiple environments, Development, Integration, and Prodution, it is very easy to connect to the wrong database in the wrong environment.  Always double check your connection information when logging in and before performing any inserts, updates, or deletes against the database.
 ```
 
-The following code block should be used to reduce propagating the above gotcha.  Current_database(), CURRENT_DATE or CURRENT_TIMESTAMP, and 'result set' are the most useful and last three not so much.  Instead of the host IP address having the actual hostname would be a nice addition.
+The following code block should be used to reduce propagating the above gotcha.  Current_database(), CURRENT_DATE or CURRENT_TIMESTAMP, and 'result set' are the most useful and last three not so much.  Instead of the host IP address having the actual host name would be a nice addition.
 
 ```{r}
 rs1 <-
@@ -112,7 +112,7 @@ Since we will only be working in the `dvdrental` database in this tutorial and r
 
 ### Which Schema?
 
-In the code block below, we look at the `information_schema.table` which contains information about all the schemas and table/views within our dvdrental database.  Databases can have one or more schemas, containers that hold tables or views.  Schemas partition the database into big logical blocks of related data.  Schema names usually reflect an application or logically related datasets.  Occasionally a DBA will set up a new schema and use a users name.  
+In the code block below, we look at the `information_schema.table` which contains information about all the schemas and table/views within our dvdrental database.  Databases can have one or more schemas, containers that hold tables or views.  Schemas partition the database into big logical blocks of related data.  Schema names usually reflect an application or logically related data sets.  Occasionally a DBA will set up a new schema and use a users name.  
 
 What schemas are in the `dvdrental` database?
 How many entries are in each schema?
@@ -134,7 +134,7 @@ kable(rs1)
 
 We see that there are three schemas.  The pg_catalog is the standard PostgreSQL meta data and core schema.  Postgres uses this schema to manage the internal workings of the database.  DBA's are the primary users of pg_catalog. We used the pg_catalog schema to answer the question 'How many databases reside in the Docker Container?', but normally the data analyst is not interested in analyzing database data.
 
-The information_schema contains ANSI standardized views used across the different SQL vendors, (Oracle, Sysbase, MS SQL Server, IBM DB2, etc). The information_schema contains a plethora of metadata that will help you locate your data tables, understand the relationships between the tables, and write efficient SQL queries.
+The information_schema contains ANSI standardized views used across the different SQL vendors, (Oracle, Sybase, MS SQL Server, IBM DB2, etc). The information_schema contains a plethora of metadata that will help you locate your data tables, understand the relationships between the tables, and write efficient SQL queries.
 
 ### Exercises
 ```{r ORDER BY}
@@ -201,7 +201,7 @@ kable(head(rs6,display_rows))
 
 ```
 
-In the next exercise we combine both the table and column output from the previous exercises.  Review the following code block.  The last two lines of the WHERE clause are swithced.  Will the result set be the same or different?  Execute the code block and review the two datasets.
+In the next exercise we combine both the table and column output from the previous exercises.  Review the following code block.  The last two lines of the WHERE clause are switched.  Will the result set be the same or different?  Execute the code block and review the two data sets.
 
 ```{r}
 rs7 <- DBI::dbGetQuery(con,"SELECT '7. information_schema.tables' showing

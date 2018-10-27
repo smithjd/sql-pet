@@ -86,13 +86,16 @@ str(rental_tibble)
 ```
 That's very simple, but if the table is large it may not be a good idea, since R is designed to keep the entire table in memory.
 
-### Referencing a table for many different purposes
+### A reusable table reference
 
 The `dplyr::tbl` function gives us more control over access to a table.  It creates  a connection object that might look like a data frame but it's actually an list object that `dplyr` uses for constructing queries and retrieving data from the DBMS.  
 
 ```r
 rental_table <- dplyr::tbl(con, "rental")
 ```
+
+### Lazy loading and connection objects
+
 Consider the structure of the connection object:
 
 ```r
@@ -126,7 +129,8 @@ rental_table$ops$vars
 ## [1] "rental_id"    "rental_date"  "inventory_id" "customer_id" 
 ## [5] "return_date"  "staff_id"     "last_update"
 ```
-But because of lazy loading, R has not retrieved any actual data from the DBMS when you reference the `rental_table` object with `str`.  Because R is lazy and smart, it retrieves data as late as possible and only retrieves a certain number of rows.  This is a key paradigm shift for those new to working databases using R and `dplyr`.  
+
+Because of lazy loading, R has not retrieved any actual data from the DBMS when you reference the `rental_table` object with `str`.  Because R is lazy and smart, it retrieves data as late as possible and only retrieves a certain number of rows.  This is a key paradigm shift for those new to working databases using R and `dplyr`.  
 
 We can trigger data retrieval in several ways. The `head` function, for example, triggers a query and prints its results.  And R *assumes* a `print` function when it finds an object's name on the command line.  By default, these two functions print a different number of rows: `head` defaults to 6 rows and an implied `print` defaults to 10.
 
@@ -171,6 +175,9 @@ rental_table
 ## # ... with more rows, and 3 more variables: return_date <dttm>,
 ## #   staff_id <int>, last_update <dttm>
 ```
+Notice that an Rstudio option can radically change the behavior of a connection object. If you happen to have set option to "Show output inline for all R Markdown documents," printing a connection object (whether intentionally or not) will cause R to download an entire table.  That can be a problem!  For safety we recommend **not** having that option turned on when you might inadvertently download thousands of rows.
+
+<img src="screenshots/rmarkdown-inline-option.png" width="90%" style="display: block; margin: auto;" />
 
 In the code block below, we see that `nrows` is like `str` in that it does not trigger a query to the dbms: it just returns NA. See [Controlling number of rows returned] for  how to tell R to quit being lazy, get to work, and return all the rows.
 
@@ -299,26 +306,26 @@ one_percent_sample
 
 ```
 ##    rental_id         rental_date inventory_id customer_id
-## 1        752 2005-05-29 10:14:15         1720         126
-## 2        753 2005-05-29 10:16:42         1021         135
-## 3        754 2005-05-29 10:18:59          734         281
-## 4        755 2005-05-29 10:26:29         3090         576
-## 5        756 2005-05-29 10:28:45         3152         201
-## 6        757 2005-05-29 10:29:47         1067         435
-## 7        758 2005-05-29 10:31:56         1191         563
-## 8        759 2005-05-29 10:57:57         2367         179
-## 9        760 2005-05-29 11:07:25         3250          77
-## 10       761 2005-05-29 11:09:01         2342          58
-## 11       762 2005-05-29 11:15:51         3683         146
-## 12       763 2005-05-29 11:32:15         2022          50
-## 13       764 2005-05-29 11:37:35         1069         149
-## 14       765 2005-05-29 11:38:34          515          69
-## 15       766 2005-05-29 11:47:02         2154         383
-## 16       767 2005-05-29 12:20:19          687          67
-## 17       768 2005-05-29 12:30:46         2895         566
-## 18       769 2005-05-29 12:51:44         1523         575
-## 19       770 2005-05-29 12:56:50         2491         405
-## 20       771 2005-05-29 12:59:14          353         476
+## 1       4498 2005-07-08 02:07:50         4299          43
+## 2       4499 2005-07-08 02:08:48          851         199
+## 3       4500 2005-07-08 02:10:01          398         462
+## 4       4501 2005-07-08 02:12:00         1412         262
+## 5       4502 2005-07-08 02:12:04          225         470
+## 6       4503 2005-07-08 02:17:12         1503           8
+## 7       4504 2005-07-08 02:19:27          361         422
+## 8       4505 2005-07-08 02:20:04         1864         481
+## 9       4506 2005-07-08 02:22:18         1484         133
+## 10      4507 2005-07-08 02:22:45          819         505
+## 11      4508 2005-07-08 02:28:41         3996          97
+## 12      4509 2005-07-08 02:32:38         1760         230
+## 13      4510 2005-07-08 02:34:51         1085          27
+## 14      4511 2005-07-08 02:36:21         4438          75
+## 15      4512 2005-07-08 02:38:56         1569         424
+## 16      4513 2005-07-08 02:39:59         3704         182
+## 17      4514 2005-07-08 02:41:25         1938         576
+## 18      4515 2005-07-08 02:42:03         1998         229
+## 19      4516 2005-07-08 02:43:41         2314         497
+## 20      4517 2005-07-08 02:45:19          453          16
 ```
 
 ### Examining `dplyr`'s SQL query and re-using SQL code
@@ -417,24 +424,8 @@ There is no substitute for looking at your data and R provides several ways to j
 sp_print_df(head(rental_tibble))
 ```
 
-
-\begin{tabular}{r|l|r|r|l|r|l}
-\hline
-rental\_id & rental\_date & inventory\_id & customer\_id & return\_date & staff\_id & last\_update\\
-\hline
-2 & 2005-05-24 22:54:33 & 1525 & 459 & 2005-05-28 19:40:33 & 1 & 2006-02-16 02:30:53\\
-\hline
-3 & 2005-05-24 23:03:39 & 1711 & 408 & 2005-06-01 22:12:39 & 1 & 2006-02-16 02:30:53\\
-\hline
-4 & 2005-05-24 23:04:41 & 2452 & 333 & 2005-06-03 01:43:41 & 2 & 2006-02-16 02:30:53\\
-\hline
-5 & 2005-05-24 23:05:21 & 2079 & 222 & 2005-06-02 04:33:21 & 1 & 2006-02-16 02:30:53\\
-\hline
-6 & 2005-05-24 23:08:07 & 2792 & 549 & 2005-05-27 01:32:07 & 1 & 2006-02-16 02:30:53\\
-\hline
-7 & 2005-05-24 23:11:53 & 3995 & 269 & 2005-05-29 20:34:53 & 2 & 2006-02-16 02:30:53\\
-\hline
-\end{tabular}
+<!--html_preserve--><div id="htmlwidget-b18b48ec4ad649442f3b" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-b18b48ec4ad649442f3b">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[2,3,4,5,6,7],["2005-05-25T05:54:33Z","2005-05-25T06:03:39Z","2005-05-25T06:04:41Z","2005-05-25T06:05:21Z","2005-05-25T06:08:07Z","2005-05-25T06:11:53Z"],[1525,1711,2452,2079,2792,3995],[459,408,333,222,549,269],["2005-05-29T02:40:33Z","2005-06-02T05:12:39Z","2005-06-03T08:43:41Z","2005-06-02T11:33:21Z","2005-05-27T08:32:07Z","2005-05-30T03:34:53Z"],[1,1,2,1,1,2],["2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>rental_id<\/th>\n      <th>rental_date<\/th>\n      <th>inventory_id<\/th>\n      <th>customer_id<\/th>\n      <th>return_date<\/th>\n      <th>staff_id<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ### The `summary` function in base
 
@@ -518,7 +509,7 @@ skim(rental_tibble)
 ##  n obs: 16044 
 ##  n variables: 7 
 ## 
-## -- Variable type:integer -------------------------------------------------------------------------------
+## ── Variable type:integer ──────────────────────────────────────────────────────────────────────────────
 ##      variable missing complete     n    mean      sd p0     p25    p50
 ##   customer_id       0    16044 16044  297.14  172.45  1  148     296  
 ##  inventory_id       0    16044 16044 2291.84 1322.21  1 1154    2291  
@@ -530,7 +521,7 @@ skim(rental_tibble)
 ##  12037.25 16049 ▇▇▇▇▇▇▇▇
 ##      2        2 ▇▁▁▁▁▁▁▇
 ## 
-## -- Variable type:POSIXct -------------------------------------------------------------------------------
+## ── Variable type:POSIXct ──────────────────────────────────────────────────────────────────────────────
 ##     variable missing complete     n        min        max     median
 ##  last_update       0    16044 16044 2006-02-15 2006-02-23 2006-02-16
 ##  rental_date       0    16044 16044 2005-05-24 2006-02-14 2005-07-28

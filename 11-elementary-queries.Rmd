@@ -52,12 +52,15 @@ str(rental_tibble)
 ```
 That's very simple, but if the table is large it may not be a good idea, since R is designed to keep the entire table in memory.
 
-### Referencing a table for many different purposes
+### A reusable table reference
 
 The `dplyr::tbl` function gives us more control over access to a table.  It creates  a connection object that might look like a data frame but it's actually an list object that `dplyr` uses for constructing queries and retrieving data from the DBMS.  
 ```{r}
 rental_table <- dplyr::tbl(con, "rental")
 ```
+
+### Lazy loading and connection objects
+
 Consider the structure of the connection object:
 ```{r}
 str(rental_table)
@@ -66,12 +69,18 @@ Notice that the first list contains the source connection information.  Among ot
 ```{r}
 rental_table$ops$vars
 ```
-But because of lazy loading, R has not retrieved any actual data from the DBMS when you reference the `rental_table` object with `str`.  Because R is lazy and smart, it retrieves data as late as possible and only retrieves a certain number of rows.  This is a key paradigm shift for those new to working databases using R and `dplyr`.  
+
+Because of lazy loading, R has not retrieved any actual data from the DBMS when you reference the `rental_table` object with `str`.  Because R is lazy and smart, it retrieves data as late as possible and only retrieves a certain number of rows.  This is a key paradigm shift for those new to working databases using R and `dplyr`.  
 
 We can trigger data retrieval in several ways. The `head` function, for example, triggers a query and prints its results.  And R *assumes* a `print` function when it finds an object's name on the command line.  By default, these two functions print a different number of rows: `head` defaults to 6 rows and an implied `print` defaults to 10.
 ```{r}
 rental_table %>% head
 rental_table
+```
+Notice that an Rstudio option can radically change the behavior of a connection object. If you happen to have set option to "Show output inline for all R Markdown documents," printing a connection object (whether intentionally or not) will cause R to download an entire table.  That can be a problem!  For safety we recommend **not** having that option turned on when you might inadvertently download thousands of rows.
+
+```{r echo=FALSE, fig.align='center', out.width='90%'}
+knitr::include_graphics("screenshots/rmarkdown-inline-option.png")
 ```
 
 In the code block below, we see that `nrows` is like `str` in that it does not trigger a query to the dbms: it just returns NA. See [Controlling number of rows returned] for  how to tell R to quit being lazy, get to work, and return all the rows.

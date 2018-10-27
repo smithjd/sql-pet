@@ -83,7 +83,7 @@ sp_check_that_docker_is_up()
 ```
 ## [1] "Docker is up, running these containers:"                                                                                                            
 ## [2] "CONTAINER ID        IMAGE               COMMAND                  CREATED                  STATUS                  PORTS                    NAMES"   
-## [3] "59c6358888dd        postgres:10         \"docker-entrypoint.s…\"   Less than a second ago   Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
+## [3] "9be8cd12aadf        postgres:10         \"docker-entrypoint.s…\"   Less than a second ago   Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
 ```
 ## Connect, read and write to Postgres from R
 
@@ -182,23 +182,15 @@ knitr::kable(head(mtcars_df))
 ```
 
 
-\begin{tabular}{r|r|r|r|r|r|r|r|r|r|r}
-\hline
-mpg & cyl & disp & hp & drat & wt & qsec & vs & am & gear & carb\\
-\hline
-21.0 & 6 & 160 & 110 & 3.90 & 2.620 & 16.46 & 0 & 1 & 4 & 4\\
-\hline
-21.0 & 6 & 160 & 110 & 3.90 & 2.875 & 17.02 & 0 & 1 & 4 & 4\\
-\hline
-22.8 & 4 & 108 & 93 & 3.85 & 2.320 & 18.61 & 1 & 1 & 4 & 1\\
-\hline
-21.4 & 6 & 258 & 110 & 3.08 & 3.215 & 19.44 & 1 & 0 & 3 & 1\\
-\hline
-18.7 & 8 & 360 & 175 & 3.15 & 3.440 & 17.02 & 0 & 0 & 3 & 2\\
-\hline
-18.1 & 6 & 225 & 105 & 2.76 & 3.460 & 20.22 & 1 & 0 & 3 & 1\\
-\hline
-\end{tabular}
+
+  mpg   cyl   disp    hp   drat      wt    qsec   vs   am   gear   carb
+-----  ----  -----  ----  -----  ------  ------  ---  ---  -----  -----
+ 21.0     6    160   110   3.90   2.620   16.46    0    1      4      4
+ 21.0     6    160   110   3.90   2.875   17.02    0    1      4      4
+ 22.8     4    108    93   3.85   2.320   18.61    1    1      4      1
+ 21.4     6    258   110   3.08   3.215   19.44    1    0      3      1
+ 18.7     8    360   175   3.15   3.440   17.02    0    0      3      2
+ 18.1     6    225   105   2.76   3.460   20.22    1    0      3      1
 
 ## Clean up
 

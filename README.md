@@ -79,7 +79,7 @@ Do these items have a place?
     + `postgres=# \c dbname`   # connect to databse dbname
     + `postgres=# \l`          # list PostgreSQL databases
     + `postgres=# \conninfo`   # display information about current connection
-    + `postgres=# \q`          # exit psql
+    + `postgres=#  ` `\q`          # exit psql
 
 ## How to contribute
 If you'd like to contribute to this project, start by searching through the [issues](https://github.com/smithjd/sql-pet/issues) and [pull requests](https://github.com/smithjd/sql-pet/pulls) to see whether someone else has already raised a similar idea or question.
