@@ -19,7 +19,7 @@ sp_show_all_docker_containers()
 
 ```
 ## [1] "CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                     PORTS               NAMES"    
-## [2] "48efcbd16156        postgres-dvdrental   \"docker-entrypoint.s…\"   18 seconds ago      Exited (0) 2 seconds ago                       sql-pet"
+## [2] "a01b7b5e77f7        postgres-dvdrental   \"docker-entrypoint.s…\"   18 seconds ago      Exited (0) 2 seconds ago                       sql-pet"
 ```
 Start up the `docker-pet` container
 

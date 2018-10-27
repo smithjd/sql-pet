@@ -149,11 +149,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
-<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#using-r-to-query-a-dbms-in-your-organization"><i class="fa fa-check"></i><b>1.1</b> Using R to query a DBMS in your organization</a></li>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#using-r-to-query-a-dbms-in-your-organization"><i class="fa fa-check"></i><b>1.1</b> Using R to query a DBMS in your organization</a><ul>
+<li class="chapter" data-level="1.1.1" data-path="index.html"><a href="index.html#why-write-a-book-about-dbms-access-from-r-using-docker"><i class="fa fa-check"></i><b>1.1.1</b> Why write a book about DBMS access from R using Docker?</a></li>
+</ul></li>
 <li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#docker-as-a-tool-for-users"><i class="fa fa-check"></i><b>1.2</b> Docker as a tool for UseRs</a></li>
-<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#why-write-a-book-about-dbms-access-from-r-using-docker"><i class="fa fa-check"></i><b>1.3</b> Why write a book about DBMS access from R using Docker?</a></li>
-<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#docker-and-r-on-your-machine"><i class="fa fa-check"></i><b>1.4</b> Docker and R on your machine</a></li>
-<li class="chapter" data-level="1.5" data-path="index.html"><a href="index.html#who-are-we"><i class="fa fa-check"></i><b>1.5</b> Who are we?</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#docker-and-r-on-your-machine"><i class="fa fa-check"></i><b>1.3</b> Docker and R on your machine</a></li>
+<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#who-are-we"><i class="fa fa-check"></i><b>1.4</b> Who are we?</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="how-to-use-this-book-01.html"><a href="how-to-use-this-book-01.html"><i class="fa fa-check"></i><b>2</b> How to use this book (01)</a><ul>
 <li class="chapter" data-level="2.1" data-path="how-to-use-this-book-01.html"><a href="how-to-use-this-book-01.html#prerequisites"><i class="fa fa-check"></i><b>2.1</b> Prerequisites</a></li>
@@ -593,8 +594,27 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb90-3" data-line-number="3"><span class="st">  &quot;</span>)</a>
 <a class="sourceLine" id="cb90-4" data-line-number="4"></a>
 <a class="sourceLine" id="cb90-5" data-line-number="5">one_percent_sample</a></code></pre></div>
-<pre><code>## [1] rental_id    rental_date  inventory_id customer_id 
-## &lt;0 rows&gt; (or 0-length row.names)</code></pre>
+<pre><code>##    rental_id         rental_date inventory_id customer_id
+## 1      11348 2005-08-02 17:18:38         1704         389
+## 2      11349 2005-08-02 17:21:49         1871          73
+## 3      11350 2005-08-02 17:22:59         1265         598
+## 4      11351 2005-08-02 17:28:07          242         198
+## 5      11352 2005-08-02 17:29:39         2760         546
+## 6      11353 2005-08-02 17:34:45         1729         444
+## 7      11354 2005-08-02 17:35:10         1887         569
+## 8      11355 2005-08-02 17:37:43         2673         185
+## 9      11356 2005-08-02 17:42:40          303         200
+## 10     11357 2005-08-02 17:42:49         2644         148
+## 11     11358 2005-08-02 17:45:02         2361          56
+## 12     11359 2005-08-02 17:45:55         1648         466
+## 13     11360 2005-08-02 17:46:04         1750          66
+## 14     11361 2005-08-02 17:46:34         1124         547
+## 15     11362 2005-08-02 17:47:25         2628         331
+## 16     11363 2005-08-02 17:48:39         3190         274
+## 17     11364 2005-08-02 17:53:36         4515          44
+## 18     11365 2005-08-02 18:00:09         1151         508
+## 19     11366 2005-08-02 18:01:25         3583         280
+## 20     11367 2005-08-02 18:01:38         1440           1</code></pre>
 </div>
 <div id="examining-dplyrs-sql-query-and-re-using-sql-code" class="section level3">
 <h3><span class="header-section-number">8.1.7</span> Examining <code>dplyr</code>’s SQL query and re-using SQL code</h3>
@@ -719,7 +739,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##  n obs: 16044 
 ##  n variables: 7 
 ## 
-## ── Variable type:integer ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+## ── Variable type:integer ──────────────────────────────
 ##      variable missing complete     n    mean      sd p0     p25    p50
 ##   customer_id       0    16044 16044  297.14  172.45  1  148     296  
 ##  inventory_id       0    16044 16044 2291.84 1322.21  1 1154    2291  
@@ -731,7 +751,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##  12037.25 16049 ▇▇▇▇▇▇▇▇
 ##      2        2 ▇▁▁▁▁▁▁▇
 ## 
-## ── Variable type:POSIXct ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+## ── Variable type:POSIXct ──────────────────────────────
 ##     variable missing complete     n        min        max     median
 ##  last_update       0    16044 16044 2006-02-15 2006-02-23 2006-02-16
 ##  rental_date       0    16044 16044 2005-05-24 2006-02-14 2005-07-28
