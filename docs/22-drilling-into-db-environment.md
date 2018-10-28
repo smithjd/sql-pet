@@ -572,12 +572,7 @@ fkgraph_file <- sqlpetr::sp_make_image_files(
 )
 ```
 
-```
-## Warning in dir.create(directory, recursive = TRUE): 'diagrams' already
-## exists
-```
-
-<img src="diagrams/fkgraph.png" width="400" />
+![](diagrams/fkgraph.png)<!-- -->
 
 
 ```r

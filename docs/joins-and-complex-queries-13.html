@@ -361,25 +361,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="joins-and-complex-queries-13" class="section level1">
 <h1><span class="header-section-number">Chapter 10</span> Joins and complex queries (13)</h1>
 <p>Verify Docker is up and running:</p>
-<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb116-1" data-line-number="1"><span class="kw">sp_check_that_docker_is_up</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb115-1" data-line-number="1"><span class="kw">sp_check_that_docker_is_up</span>()</a></code></pre></div>
 <pre><code>## [1] &quot;Docker is up but running no containers&quot;</code></pre>
 <p>verify pet DB is available, it may be stopped.</p>
-<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb118-1" data-line-number="1"><span class="kw">sp_show_all_docker_containers</span>()</a></code></pre></div>
-<pre><code>## [1] &quot;CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                     PORTS               NAMES&quot;                  
-## [2] &quot;7a6d01c9fdee        postgres-dvdrental   \&quot;docker-entrypoint.s…\&quot;   26 seconds ago      Exited (0) 2 seconds ago                       sql-pet&quot;              
-## [3] &quot;424d4c3dfc89        rstats               \&quot;/init\&quot;                  10 days ago         Exited (0) 10 days ago                         containers_rstats_1&quot;  
-## [4] &quot;4c3eb1dc5043        postgis              \&quot;docker-entrypoint.s…\&quot;   10 days ago         Exited (0) 10 days ago                         containers_postgis_1&quot; 
-## [5] &quot;8da9d3a59732        dpage/pgadmin4       \&quot;/entrypoint.sh\&quot;         10 days ago         Exited (0) 10 days ago                         containers_pgadmin4_1&quot;
-## [6] &quot;7030e81489b8        2feef91d6764         \&quot;/bin/sh -c &#39;su - rs…\&quot;   10 days ago         Exited (1) 10 days ago                         laughing_johnson&quot;</code></pre>
+<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb117-1" data-line-number="1"><span class="kw">sp_show_all_docker_containers</span>()</a></code></pre></div>
+<pre><code>## [1] &quot;CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                     PORTS               NAMES&quot;    
+## [2] &quot;3dffcd7da689        postgres-dvdrental   \&quot;docker-entrypoint.s…\&quot;   24 seconds ago      Exited (0) 2 seconds ago                       sql-pet&quot;</code></pre>
 <p>Start up the <code>docker-pet</code> container</p>
-<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb120-1" data-line-number="1"><span class="kw">sp_docker_start</span>(<span class="st">&quot;sql-pet&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb119-1" data-line-number="1"><span class="kw">sp_docker_start</span>(<span class="st">&quot;sql-pet&quot;</span>)</a></code></pre></div>
 <p>now connect to the database with R</p>
-<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb121-1" data-line-number="1"><span class="co"># need to wait for Docker &amp; Postgres to come up before connecting.</span></a>
-<a class="sourceLine" id="cb121-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb121-3" data-line-number="3">con &lt;-<span class="st"> </span><span class="kw">sp_get_postgres_connection</span>(<span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),</a>
-<a class="sourceLine" id="cb121-4" data-line-number="4">                         <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),</a>
-<a class="sourceLine" id="cb121-5" data-line-number="5">                         <span class="dt">dbname =</span> <span class="st">&quot;dvdrental&quot;</span>,</a>
-<a class="sourceLine" id="cb121-6" data-line-number="6">                         <span class="dt">seconds_to_test =</span> <span class="dv">10</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb120-1" data-line-number="1"><span class="co"># need to wait for Docker &amp; Postgres to come up before connecting.</span></a>
+<a class="sourceLine" id="cb120-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb120-3" data-line-number="3">con &lt;-<span class="st"> </span><span class="kw">sp_get_postgres_connection</span>(<span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),</a>
+<a class="sourceLine" id="cb120-4" data-line-number="4">                         <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),</a>
+<a class="sourceLine" id="cb120-5" data-line-number="5">                         <span class="dt">dbname =</span> <span class="st">&quot;dvdrental&quot;</span>,</a>
+<a class="sourceLine" id="cb120-6" data-line-number="6">                         <span class="dt">seconds_to_test =</span> <span class="dv">10</span>)</a></code></pre></div>
 <p>discuss this simple example? <a href="http://www.postgresqltutorial.com/postgresql-left-join/" class="uri">http://www.postgresqltutorial.com/postgresql-left-join/</a></p>
 <ul>
 <li><code>dplyr</code> joins on the server side</li>
@@ -392,33 +388,33 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3><span class="header-section-number">10.1.1</span> Union</h3>
 <div id="how-many-films-and-languages-exist-in-the-dvd-rental-application" class="section level4">
 <h4><span class="header-section-number">10.1.1.1</span> how many films and languages exist in the DVD rental application</h4>
-<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb122-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
-<a class="sourceLine" id="cb122-2" data-line-number="2">                <span class="st">&quot;      select &#39;film&#39; table_name,count(*) count from film </span></a>
-<a class="sourceLine" id="cb122-3" data-line-number="3"><span class="st">                 union select &#39;language&#39; table_name,count(*) count from language </span></a>
-<a class="sourceLine" id="cb122-4" data-line-number="4"><span class="st">               ;</span></a>
-<a class="sourceLine" id="cb122-5" data-line-number="5"><span class="st">                &quot;</span></a>
-<a class="sourceLine" id="cb122-6" data-line-number="6">                )</a>
-<a class="sourceLine" id="cb122-7" data-line-number="7"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs))</a></code></pre></div>
-<div id="htmlwidget-e6f88df66977a807ac7c" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-e6f88df66977a807ac7c">{"x":{"filter":"none","data":[["1","2"],["film","language"],[1000,6]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_name<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":2},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb121-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
+<a class="sourceLine" id="cb121-2" data-line-number="2">                <span class="st">&quot;      select &#39;film&#39; table_name,count(*) count from film </span></a>
+<a class="sourceLine" id="cb121-3" data-line-number="3"><span class="st">                 union select &#39;language&#39; table_name,count(*) count from language </span></a>
+<a class="sourceLine" id="cb121-4" data-line-number="4"><span class="st">               ;</span></a>
+<a class="sourceLine" id="cb121-5" data-line-number="5"><span class="st">                &quot;</span></a>
+<a class="sourceLine" id="cb121-6" data-line-number="6">                )</a>
+<a class="sourceLine" id="cb121-7" data-line-number="7"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs))</a></code></pre></div>
+<div id="htmlwidget-81b17df239c3cf22ce71" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-81b17df239c3cf22ce71">{"x":{"filter":"none","data":[["1","2"],["film","language"],[1000,6]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_name<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":2},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="what-is-the-film-distribution-based-on-language" class="section level4">
 <h4><span class="header-section-number">10.1.1.2</span> what is the film distribution based on language</h4>
-<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb123-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
-<a class="sourceLine" id="cb123-2" data-line-number="2">                <span class="st">&quot;select l.language_id id</span></a>
-<a class="sourceLine" id="cb123-3" data-line-number="3"><span class="st">                       ,l.name</span></a>
-<a class="sourceLine" id="cb123-4" data-line-number="4"><span class="st">                       ,sum(case when f.language_id is not null then 1 else 0 end) total</span></a>
-<a class="sourceLine" id="cb123-5" data-line-number="5"><span class="st">                   from language l</span></a>
-<a class="sourceLine" id="cb123-6" data-line-number="6"><span class="st">                        full outer join film f</span></a>
-<a class="sourceLine" id="cb123-7" data-line-number="7"><span class="st">                             on l.language_id = f.language_id</span></a>
-<a class="sourceLine" id="cb123-8" data-line-number="8"><span class="st">                  group by l.language_id,l.name </span></a>
-<a class="sourceLine" id="cb123-9" data-line-number="9"><span class="st">                  order by l.name;</span></a>
-<a class="sourceLine" id="cb123-10" data-line-number="10"><span class="st">                 ;</span></a>
-<a class="sourceLine" id="cb123-11" data-line-number="11"><span class="st">                &quot;</span></a>
-<a class="sourceLine" id="cb123-12" data-line-number="12">                )</a>
-<a class="sourceLine" id="cb123-13" data-line-number="13"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs))</a></code></pre></div>
-<div id="htmlwidget-1b731e7ba8e72c52ffd4" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-1b731e7ba8e72c52ffd4">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[1,5,6,2,3,4],["English             ","French              ","German              ","Italian             ","Japanese            ","Mandarin            "],[1000,0,0,0,0,0]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>id<\/th>\n      <th>name<\/th>\n      <th>total<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb122-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
+<a class="sourceLine" id="cb122-2" data-line-number="2">                <span class="st">&quot;select l.language_id id</span></a>
+<a class="sourceLine" id="cb122-3" data-line-number="3"><span class="st">                       ,l.name</span></a>
+<a class="sourceLine" id="cb122-4" data-line-number="4"><span class="st">                       ,sum(case when f.language_id is not null then 1 else 0 end) total</span></a>
+<a class="sourceLine" id="cb122-5" data-line-number="5"><span class="st">                   from language l</span></a>
+<a class="sourceLine" id="cb122-6" data-line-number="6"><span class="st">                        full outer join film f</span></a>
+<a class="sourceLine" id="cb122-7" data-line-number="7"><span class="st">                             on l.language_id = f.language_id</span></a>
+<a class="sourceLine" id="cb122-8" data-line-number="8"><span class="st">                  group by l.language_id,l.name </span></a>
+<a class="sourceLine" id="cb122-9" data-line-number="9"><span class="st">                  order by l.name;</span></a>
+<a class="sourceLine" id="cb122-10" data-line-number="10"><span class="st">                 ;</span></a>
+<a class="sourceLine" id="cb122-11" data-line-number="11"><span class="st">                &quot;</span></a>
+<a class="sourceLine" id="cb122-12" data-line-number="12">                )</a>
+<a class="sourceLine" id="cb122-13" data-line-number="13"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs))</a></code></pre></div>
+<div id="htmlwidget-1835fa2d47532a6ec45e" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1835fa2d47532a6ec45e">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[1,5,6,2,3,4],["English             ","French              ","German              ","Italian             ","Japanese            ","Mandarin            "],[1000,0,0,0,0,0]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>id<\/th>\n      <th>name<\/th>\n      <th>total<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </div>
@@ -426,49 +422,49 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">10.2</span> Store analysis</h2>
 <div id="which-store-has-had-more-rentals-and-income" class="section level3">
 <h3><span class="header-section-number">10.2.1</span> which store has had more rentals and income</h3>
-<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb124-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
-<a class="sourceLine" id="cb124-2" data-line-number="2">                <span class="st">&quot;select *</span></a>
-<a class="sourceLine" id="cb124-3" data-line-number="3"><span class="st">                 from (      select &#39;actor&#39; tbl_name,count(*) from actor </span></a>
-<a class="sourceLine" id="cb124-4" data-line-number="4"><span class="st">                       union select &#39;category&#39; tbl_name,count(*) from category</span></a>
-<a class="sourceLine" id="cb124-5" data-line-number="5"><span class="st">                       union select &#39;film&#39; tbl_name,count(*) from film</span></a>
-<a class="sourceLine" id="cb124-6" data-line-number="6"><span class="st">                       union select &#39;film_actor&#39; tbl_name,count(*) from film_actor</span></a>
-<a class="sourceLine" id="cb124-7" data-line-number="7"><span class="st">                       union select &#39;film_category&#39; tbl_name,count(*) from film_category</span></a>
-<a class="sourceLine" id="cb124-8" data-line-number="8"><span class="st">                       union select &#39;language&#39; tbl_name,count(*) from language</span></a>
-<a class="sourceLine" id="cb124-9" data-line-number="9"><span class="st">                       union select &#39;inventory&#39; tbl_name,count(*) from inventory</span></a>
-<a class="sourceLine" id="cb124-10" data-line-number="10"><span class="st">                       union select &#39;rental&#39; tbl_name,count(*) from rental</span></a>
-<a class="sourceLine" id="cb124-11" data-line-number="11"><span class="st">                       union select &#39;payment&#39; tbl_name,count(*) from payment</span></a>
-<a class="sourceLine" id="cb124-12" data-line-number="12"><span class="st">                       union select &#39;staff&#39; tbl_name,count(*) from staff</span></a>
-<a class="sourceLine" id="cb124-13" data-line-number="13"><span class="st">                       union select &#39;customer&#39; tbl_name,count(*) from customer</span></a>
-<a class="sourceLine" id="cb124-14" data-line-number="14"><span class="st">                       union select &#39;address&#39; tbl_name,count(*) from address</span></a>
-<a class="sourceLine" id="cb124-15" data-line-number="15"><span class="st">                       union select &#39;city&#39; tbl_name,count(*) from city</span></a>
-<a class="sourceLine" id="cb124-16" data-line-number="16"><span class="st">                       union select &#39;country&#39; tbl_name,count(*) from country</span></a>
-<a class="sourceLine" id="cb124-17" data-line-number="17"><span class="st">                       union select &#39;store&#39; tbl_name,count(*) from store</span></a>
-<a class="sourceLine" id="cb124-18" data-line-number="18"><span class="st">                       ) counts</span></a>
-<a class="sourceLine" id="cb124-19" data-line-number="19"><span class="st">                  order by tbl_name</span></a>
-<a class="sourceLine" id="cb124-20" data-line-number="20"><span class="st">                 ;</span></a>
-<a class="sourceLine" id="cb124-21" data-line-number="21"><span class="st">                &quot;</span></a>
-<a class="sourceLine" id="cb124-22" data-line-number="22">                )</a>
-<a class="sourceLine" id="cb124-23" data-line-number="23"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs))</a></code></pre></div>
-<div id="htmlwidget-a9e77054111394a34326" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-a9e77054111394a34326">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["actor","address","category","city","country","customer"],[200,603,16,600,109,599]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>tbl_name<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":2},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb123-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
+<a class="sourceLine" id="cb123-2" data-line-number="2">                <span class="st">&quot;select *</span></a>
+<a class="sourceLine" id="cb123-3" data-line-number="3"><span class="st">                 from (      select &#39;actor&#39; tbl_name,count(*) from actor </span></a>
+<a class="sourceLine" id="cb123-4" data-line-number="4"><span class="st">                       union select &#39;category&#39; tbl_name,count(*) from category</span></a>
+<a class="sourceLine" id="cb123-5" data-line-number="5"><span class="st">                       union select &#39;film&#39; tbl_name,count(*) from film</span></a>
+<a class="sourceLine" id="cb123-6" data-line-number="6"><span class="st">                       union select &#39;film_actor&#39; tbl_name,count(*) from film_actor</span></a>
+<a class="sourceLine" id="cb123-7" data-line-number="7"><span class="st">                       union select &#39;film_category&#39; tbl_name,count(*) from film_category</span></a>
+<a class="sourceLine" id="cb123-8" data-line-number="8"><span class="st">                       union select &#39;language&#39; tbl_name,count(*) from language</span></a>
+<a class="sourceLine" id="cb123-9" data-line-number="9"><span class="st">                       union select &#39;inventory&#39; tbl_name,count(*) from inventory</span></a>
+<a class="sourceLine" id="cb123-10" data-line-number="10"><span class="st">                       union select &#39;rental&#39; tbl_name,count(*) from rental</span></a>
+<a class="sourceLine" id="cb123-11" data-line-number="11"><span class="st">                       union select &#39;payment&#39; tbl_name,count(*) from payment</span></a>
+<a class="sourceLine" id="cb123-12" data-line-number="12"><span class="st">                       union select &#39;staff&#39; tbl_name,count(*) from staff</span></a>
+<a class="sourceLine" id="cb123-13" data-line-number="13"><span class="st">                       union select &#39;customer&#39; tbl_name,count(*) from customer</span></a>
+<a class="sourceLine" id="cb123-14" data-line-number="14"><span class="st">                       union select &#39;address&#39; tbl_name,count(*) from address</span></a>
+<a class="sourceLine" id="cb123-15" data-line-number="15"><span class="st">                       union select &#39;city&#39; tbl_name,count(*) from city</span></a>
+<a class="sourceLine" id="cb123-16" data-line-number="16"><span class="st">                       union select &#39;country&#39; tbl_name,count(*) from country</span></a>
+<a class="sourceLine" id="cb123-17" data-line-number="17"><span class="st">                       union select &#39;store&#39; tbl_name,count(*) from store</span></a>
+<a class="sourceLine" id="cb123-18" data-line-number="18"><span class="st">                       ) counts</span></a>
+<a class="sourceLine" id="cb123-19" data-line-number="19"><span class="st">                  order by tbl_name</span></a>
+<a class="sourceLine" id="cb123-20" data-line-number="20"><span class="st">                 ;</span></a>
+<a class="sourceLine" id="cb123-21" data-line-number="21"><span class="st">                &quot;</span></a>
+<a class="sourceLine" id="cb123-22" data-line-number="22">                )</a>
+<a class="sourceLine" id="cb123-23" data-line-number="23"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs))</a></code></pre></div>
+<div id="htmlwidget-34b3847aa7e320dd024e" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-34b3847aa7e320dd024e">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["actor","address","category","city","country","customer"],[200,603,16,600,109,599]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>tbl_name<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":2},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <div id="store-analysis-1" class="section level2">
 <h2><span class="header-section-number">10.3</span> Store analysis</h2>
 <div id="which-store-has-the-largest-income-stream" class="section level3">
 <h3><span class="header-section-number">10.3.1</span> which store has the largest income stream?</h3>
-<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb125-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
-<a class="sourceLine" id="cb125-2" data-line-number="2">                <span class="st">&quot;select store_id,sum(amount) amt,count(*) cnt </span></a>
-<a class="sourceLine" id="cb125-3" data-line-number="3"><span class="st">                   from payment p </span></a>
-<a class="sourceLine" id="cb125-4" data-line-number="4"><span class="st">                        join staff s </span></a>
-<a class="sourceLine" id="cb125-5" data-line-number="5"><span class="st">                          on p.staff_id = s.staff_id  </span></a>
-<a class="sourceLine" id="cb125-6" data-line-number="6"><span class="st">                 group by store_id order by 2 desc</span></a>
-<a class="sourceLine" id="cb125-7" data-line-number="7"><span class="st">                 ;</span></a>
-<a class="sourceLine" id="cb125-8" data-line-number="8"><span class="st">                &quot;</span></a>
-<a class="sourceLine" id="cb125-9" data-line-number="9">                )</a>
-<a class="sourceLine" id="cb125-10" data-line-number="10"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs))</a></code></pre></div>
-<div id="htmlwidget-bfd3af28395259c8bc9b" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-bfd3af28395259c8bc9b">{"x":{"filter":"none","data":[["1","2"],[2,1],[31059.92,30252.12],[7304,7292]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>store_id<\/th>\n      <th>amt<\/th>\n      <th>cnt<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb124-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
+<a class="sourceLine" id="cb124-2" data-line-number="2">                <span class="st">&quot;select store_id,sum(amount) amt,count(*) cnt </span></a>
+<a class="sourceLine" id="cb124-3" data-line-number="3"><span class="st">                   from payment p </span></a>
+<a class="sourceLine" id="cb124-4" data-line-number="4"><span class="st">                        join staff s </span></a>
+<a class="sourceLine" id="cb124-5" data-line-number="5"><span class="st">                          on p.staff_id = s.staff_id  </span></a>
+<a class="sourceLine" id="cb124-6" data-line-number="6"><span class="st">                 group by store_id order by 2 desc</span></a>
+<a class="sourceLine" id="cb124-7" data-line-number="7"><span class="st">                 ;</span></a>
+<a class="sourceLine" id="cb124-8" data-line-number="8"><span class="st">                &quot;</span></a>
+<a class="sourceLine" id="cb124-9" data-line-number="9">                )</a>
+<a class="sourceLine" id="cb124-10" data-line-number="10"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs))</a></code></pre></div>
+<div id="htmlwidget-3e6a6b38ab3d1f62826c" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-3e6a6b38ab3d1f62826c">{"x":{"filter":"none","data":[["1","2"],[2,1],[31059.92,30252.12],[7304,7292]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>store_id<\/th>\n      <th>amt<\/th>\n      <th>cnt<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="how-many-rentals-have-not-been-paid" class="section level3">
 <h3><span class="header-section-number">10.3.2</span> How many rentals have not been paid</h3>
@@ -484,28 +480,46 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="estimate-the-outstanding-balance" class="section level3">
 <h3><span class="header-section-number">10.3.6</span> Estimate the outstanding balance</h3>
-<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb126-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
-<a class="sourceLine" id="cb126-2" data-line-number="2">                <span class="st">&quot;select sum(case when payment_id is null then 1 else 0 end) missing</span></a>
-<a class="sourceLine" id="cb126-3" data-line-number="3"><span class="st">                       ,sum(case when payment_id is not null then 1 else 0 end) found</span></a>
-<a class="sourceLine" id="cb126-4" data-line-number="4"><span class="st">                       ,sum(p.amount) amt</span></a>
-<a class="sourceLine" id="cb126-5" data-line-number="5"><span class="st">                       ,count(*) cnt </span></a>
-<a class="sourceLine" id="cb126-6" data-line-number="6"><span class="st">                       ,round(sum(p.amount)/sum(case when payment_id is not null then 1 else 0 end),2) avg_price</span></a>
-<a class="sourceLine" id="cb126-7" data-line-number="7"><span class="st">                       ,round(round(sum(p.amount)/sum(case when payment_id is not null then 1 else 0 end),2)</span></a>
-<a class="sourceLine" id="cb126-8" data-line-number="8"><span class="st">                                  * sum(case when payment_id is null then 1 else 0 end),2) est_balance</span></a>
-<a class="sourceLine" id="cb126-9" data-line-number="9"><span class="st">                   from rental r </span></a>
-<a class="sourceLine" id="cb126-10" data-line-number="10"><span class="st">                        left outer join payment p </span></a>
-<a class="sourceLine" id="cb126-11" data-line-number="11"><span class="st">                          on r.rental_id = p.rental_id  </span></a>
-<a class="sourceLine" id="cb126-12" data-line-number="12"><span class="st">                 ;</span></a>
-<a class="sourceLine" id="cb126-13" data-line-number="13"><span class="st">                &quot;</span></a>
-<a class="sourceLine" id="cb126-14" data-line-number="14">                )</a>
-<a class="sourceLine" id="cb126-15" data-line-number="15"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs))</a></code></pre></div>
-<div id="htmlwidget-97d9329ce0a31767de98" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-97d9329ce0a31767de98">{"x":{"filter":"none","data":[["1"],[1452],[14596],[61312.04],[16048],[4.2],[6098.4]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>missing<\/th>\n      <th>found<\/th>\n      <th>amt<\/th>\n      <th>cnt<\/th>\n      <th>avg_price<\/th>\n      <th>est_balance<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb125-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
+<a class="sourceLine" id="cb125-2" data-line-number="2">                <span class="st">&quot;select sum(case when payment_id is null then 1 else 0 end) missing</span></a>
+<a class="sourceLine" id="cb125-3" data-line-number="3"><span class="st">                       ,sum(case when payment_id is not null then 1 else 0 end) found</span></a>
+<a class="sourceLine" id="cb125-4" data-line-number="4"><span class="st">                       ,sum(p.amount) amt</span></a>
+<a class="sourceLine" id="cb125-5" data-line-number="5"><span class="st">                       ,count(*) cnt </span></a>
+<a class="sourceLine" id="cb125-6" data-line-number="6"><span class="st">                       ,round(sum(p.amount)/sum(case when payment_id is not null then 1 else 0 end),2) avg_price</span></a>
+<a class="sourceLine" id="cb125-7" data-line-number="7"><span class="st">                       ,round(round(sum(p.amount)/sum(case when payment_id is not null then 1 else 0 end),2)</span></a>
+<a class="sourceLine" id="cb125-8" data-line-number="8"><span class="st">                                  * sum(case when payment_id is null then 1 else 0 end),2) est_balance</span></a>
+<a class="sourceLine" id="cb125-9" data-line-number="9"><span class="st">                   from rental r </span></a>
+<a class="sourceLine" id="cb125-10" data-line-number="10"><span class="st">                        left outer join payment p </span></a>
+<a class="sourceLine" id="cb125-11" data-line-number="11"><span class="st">                          on r.rental_id = p.rental_id  </span></a>
+<a class="sourceLine" id="cb125-12" data-line-number="12"><span class="st">                 ;</span></a>
+<a class="sourceLine" id="cb125-13" data-line-number="13"><span class="st">                &quot;</span></a>
+<a class="sourceLine" id="cb125-14" data-line-number="14">                )</a>
+<a class="sourceLine" id="cb125-15" data-line-number="15"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs))</a></code></pre></div>
+<div id="htmlwidget-25ea70f577a80dcfd81d" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-25ea70f577a80dcfd81d">{"x":{"filter":"none","data":[["1"],[1452],[14596],[61312.04],[16048],[4.2],[6098.4]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>missing<\/th>\n      <th>found<\/th>\n      <th>amt<\/th>\n      <th>cnt<\/th>\n      <th>avg_price<\/th>\n      <th>est_balance<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="what-is-the-actual-outstanding-balance" class="section level3">
 <h3><span class="header-section-number">10.3.7</span> what is the actual outstanding balance</h3>
+<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb126-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
+<a class="sourceLine" id="cb126-2" data-line-number="2">                <span class="st">&quot;select sum(f.rental_rate) open_amt,count(*) count</span></a>
+<a class="sourceLine" id="cb126-3" data-line-number="3"><span class="st">                   from rental r </span></a>
+<a class="sourceLine" id="cb126-4" data-line-number="4"><span class="st">                        left outer join payment p </span></a>
+<a class="sourceLine" id="cb126-5" data-line-number="5"><span class="st">                          on r.rental_id = p.rental_id  </span></a>
+<a class="sourceLine" id="cb126-6" data-line-number="6"><span class="st">                        join inventory i</span></a>
+<a class="sourceLine" id="cb126-7" data-line-number="7"><span class="st">                          on r.inventory_id = i.inventory_id</span></a>
+<a class="sourceLine" id="cb126-8" data-line-number="8"><span class="st">                        join film f</span></a>
+<a class="sourceLine" id="cb126-9" data-line-number="9"><span class="st">                          on i.film_id = f.film_id</span></a>
+<a class="sourceLine" id="cb126-10" data-line-number="10"><span class="st">                  where p.rental_id is null</span></a>
+<a class="sourceLine" id="cb126-11" data-line-number="11"><span class="st">                 ;&quot;</span></a>
+<a class="sourceLine" id="cb126-12" data-line-number="12">                )  </a>
+<a class="sourceLine" id="cb126-13" data-line-number="13"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs))</a></code></pre></div>
+<div id="htmlwidget-f59baf9f364ac8db5009" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-f59baf9f364ac8db5009">{"x":{"filter":"none","data":[["1"],[4297.48],[1452]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>open_amt<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="rank-customers-with-highest-open-amounts" class="section level3">
+<h3><span class="header-section-number">10.3.8</span> Rank customers with highest open amounts</h3>
 <div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb127-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
-<a class="sourceLine" id="cb127-2" data-line-number="2">                <span class="st">&quot;select sum(f.rental_rate) open_amt,count(*) count</span></a>
+<a class="sourceLine" id="cb127-2" data-line-number="2">                <span class="st">&quot;select c.customer_id,c.first_name,c.last_name,sum(f.rental_rate) open_amt,count(*) count</span></a>
 <a class="sourceLine" id="cb127-3" data-line-number="3"><span class="st">                   from rental r </span></a>
 <a class="sourceLine" id="cb127-4" data-line-number="4"><span class="st">                        left outer join payment p </span></a>
 <a class="sourceLine" id="cb127-5" data-line-number="5"><span class="st">                          on r.rental_id = p.rental_id  </span></a>
@@ -513,110 +527,92 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb127-7" data-line-number="7"><span class="st">                          on r.inventory_id = i.inventory_id</span></a>
 <a class="sourceLine" id="cb127-8" data-line-number="8"><span class="st">                        join film f</span></a>
 <a class="sourceLine" id="cb127-9" data-line-number="9"><span class="st">                          on i.film_id = f.film_id</span></a>
-<a class="sourceLine" id="cb127-10" data-line-number="10"><span class="st">                  where p.rental_id is null</span></a>
-<a class="sourceLine" id="cb127-11" data-line-number="11"><span class="st">                 ;&quot;</span></a>
-<a class="sourceLine" id="cb127-12" data-line-number="12">                )  </a>
-<a class="sourceLine" id="cb127-13" data-line-number="13"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs))</a></code></pre></div>
-<div id="htmlwidget-2a6b781038d349450711" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-2a6b781038d349450711">{"x":{"filter":"none","data":[["1"],[4297.48],[1452]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>open_amt<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
-</div>
-<div id="rank-customers-with-highest-open-amounts" class="section level3">
-<h3><span class="header-section-number">10.3.8</span> Rank customers with highest open amounts</h3>
-<div class="sourceCode" id="cb128"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb128-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
-<a class="sourceLine" id="cb128-2" data-line-number="2">                <span class="st">&quot;select c.customer_id,c.first_name,c.last_name,sum(f.rental_rate) open_amt,count(*) count</span></a>
-<a class="sourceLine" id="cb128-3" data-line-number="3"><span class="st">                   from rental r </span></a>
-<a class="sourceLine" id="cb128-4" data-line-number="4"><span class="st">                        left outer join payment p </span></a>
-<a class="sourceLine" id="cb128-5" data-line-number="5"><span class="st">                          on r.rental_id = p.rental_id  </span></a>
-<a class="sourceLine" id="cb128-6" data-line-number="6"><span class="st">                        join inventory i</span></a>
-<a class="sourceLine" id="cb128-7" data-line-number="7"><span class="st">                          on r.inventory_id = i.inventory_id</span></a>
-<a class="sourceLine" id="cb128-8" data-line-number="8"><span class="st">                        join film f</span></a>
-<a class="sourceLine" id="cb128-9" data-line-number="9"><span class="st">                          on i.film_id = f.film_id</span></a>
-<a class="sourceLine" id="cb128-10" data-line-number="10"><span class="st">                        join customer c</span></a>
-<a class="sourceLine" id="cb128-11" data-line-number="11"><span class="st">                          on r.customer_id = c.customer_id</span></a>
-<a class="sourceLine" id="cb128-12" data-line-number="12"><span class="st">                  where p.rental_id is null</span></a>
-<a class="sourceLine" id="cb128-13" data-line-number="13"><span class="st">                  group by c.customer_id,c.first_name,c.last_name</span></a>
-<a class="sourceLine" id="cb128-14" data-line-number="14"><span class="st">                  order by open_amt desc</span></a>
-<a class="sourceLine" id="cb128-15" data-line-number="15"><span class="st">                  limit 25</span></a>
-<a class="sourceLine" id="cb128-16" data-line-number="16"><span class="st">                 ;&quot;</span></a>
-<a class="sourceLine" id="cb128-17" data-line-number="17">                )  </a>
-<a class="sourceLine" id="cb128-18" data-line-number="18"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs))</a></code></pre></div>
-<p><div id="htmlwidget-bc9aad6057b659911748" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-bc9aad6057b659911748">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[293,307,316,299,274,326],["Mae","Joseph","Steven","James","Naomi","Jose"],["Fletcher","Joy","Curley","Gannon","Jennings","Andrew"],[35.9,31.9,31.9,30.91,29.92,28.93],[10,10,10,9,8,7]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>open_amt<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,4,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<a class="sourceLine" id="cb127-10" data-line-number="10"><span class="st">                        join customer c</span></a>
+<a class="sourceLine" id="cb127-11" data-line-number="11"><span class="st">                          on r.customer_id = c.customer_id</span></a>
+<a class="sourceLine" id="cb127-12" data-line-number="12"><span class="st">                  where p.rental_id is null</span></a>
+<a class="sourceLine" id="cb127-13" data-line-number="13"><span class="st">                  group by c.customer_id,c.first_name,c.last_name</span></a>
+<a class="sourceLine" id="cb127-14" data-line-number="14"><span class="st">                  order by open_amt desc</span></a>
+<a class="sourceLine" id="cb127-15" data-line-number="15"><span class="st">                  limit 25</span></a>
+<a class="sourceLine" id="cb127-16" data-line-number="16"><span class="st">                 ;&quot;</span></a>
+<a class="sourceLine" id="cb127-17" data-line-number="17">                )  </a>
+<a class="sourceLine" id="cb127-18" data-line-number="18"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs))</a></code></pre></div>
+<p><div id="htmlwidget-c8f0f2a665feec54975c" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-c8f0f2a665feec54975c">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[293,307,316,299,274,326],["Mae","Joseph","Steven","James","Naomi","Jose"],["Fletcher","Joy","Curley","Gannon","Jennings","Andrew"],[35.9,31.9,31.9,30.91,29.92,28.93],[10,10,10,9,8,7]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>open_amt<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,4,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 ### what film has been rented the most</p>
-<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb129-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
-<a class="sourceLine" id="cb129-2" data-line-number="2">                <span class="st">&quot;select i.film_id,f.title,rental_rate,sum(rental_rate) revenue,count(*) count  --16044</span></a>
-<a class="sourceLine" id="cb129-3" data-line-number="3"><span class="st">                   from rental r </span></a>
-<a class="sourceLine" id="cb129-4" data-line-number="4"><span class="st">                        join inventory i</span></a>
-<a class="sourceLine" id="cb129-5" data-line-number="5"><span class="st">                          on r.inventory_id = i.inventory_id</span></a>
-<a class="sourceLine" id="cb129-6" data-line-number="6"><span class="st">                        join film f</span></a>
-<a class="sourceLine" id="cb129-7" data-line-number="7"><span class="st">                          on i.film_id = f.film_id</span></a>
-<a class="sourceLine" id="cb129-8" data-line-number="8"><span class="st">                 group by i.film_id,f.title,rental_rate</span></a>
-<a class="sourceLine" id="cb129-9" data-line-number="9"><span class="st">                 order by count desc</span></a>
-<a class="sourceLine" id="cb129-10" data-line-number="10"><span class="st">                 ;&quot;</span></a>
-<a class="sourceLine" id="cb129-11" data-line-number="11">                )  </a>
-<a class="sourceLine" id="cb129-12" data-line-number="12"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs))</a></code></pre></div>
-<div id="htmlwidget-dfd0cfd9c79867873cf8" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-dfd0cfd9c79867873cf8">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[103,738,382,767,489,730],["Bucket Brotherhood","Rocketeer Mother","Grit Clockwork","Scalawag Duck","Juggler Hardly","Ridgemont Submarine"],[4.99,0.99,0.99,4.99,0.99,0.99],[169.66,32.67,31.68,159.68,31.68,31.68],[34,33,32,32,32,32]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>film_id<\/th>\n      <th>title<\/th>\n      <th>rental_rate<\/th>\n      <th>revenue<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="sourceCode" id="cb128"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb128-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
+<a class="sourceLine" id="cb128-2" data-line-number="2">                <span class="st">&quot;select i.film_id,f.title,rental_rate,sum(rental_rate) revenue,count(*) count  --16044</span></a>
+<a class="sourceLine" id="cb128-3" data-line-number="3"><span class="st">                   from rental r </span></a>
+<a class="sourceLine" id="cb128-4" data-line-number="4"><span class="st">                        join inventory i</span></a>
+<a class="sourceLine" id="cb128-5" data-line-number="5"><span class="st">                          on r.inventory_id = i.inventory_id</span></a>
+<a class="sourceLine" id="cb128-6" data-line-number="6"><span class="st">                        join film f</span></a>
+<a class="sourceLine" id="cb128-7" data-line-number="7"><span class="st">                          on i.film_id = f.film_id</span></a>
+<a class="sourceLine" id="cb128-8" data-line-number="8"><span class="st">                 group by i.film_id,f.title,rental_rate</span></a>
+<a class="sourceLine" id="cb128-9" data-line-number="9"><span class="st">                 order by count desc</span></a>
+<a class="sourceLine" id="cb128-10" data-line-number="10"><span class="st">                 ;&quot;</span></a>
+<a class="sourceLine" id="cb128-11" data-line-number="11">                )  </a>
+<a class="sourceLine" id="cb128-12" data-line-number="12"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs))</a></code></pre></div>
+<div id="htmlwidget-c52caf8472cf4b74957f" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-c52caf8472cf4b74957f">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[103,738,382,767,489,730],["Bucket Brotherhood","Rocketeer Mother","Grit Clockwork","Scalawag Duck","Juggler Hardly","Ridgemont Submarine"],[4.99,0.99,0.99,4.99,0.99,0.99],[169.66,32.67,31.68,159.68,31.68,31.68],[34,33,32,32,32,32]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>film_id<\/th>\n      <th>title<\/th>\n      <th>rental_rate<\/th>\n      <th>revenue<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="what-film-has-been-generated-the-most-revenue-assuming-all-amounts-are-collected" class="section level3">
 <h3><span class="header-section-number">10.3.9</span> what film has been generated the most revenue assuming all amounts are collected</h3>
-<div class="sourceCode" id="cb130"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb130-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
-<a class="sourceLine" id="cb130-2" data-line-number="2">                <span class="st">&quot;select i.film_id,f.title,rental_rate</span></a>
-<a class="sourceLine" id="cb130-3" data-line-number="3"><span class="st">                       ,sum(rental_rate) revenue,count(*) count  --16044</span></a>
-<a class="sourceLine" id="cb130-4" data-line-number="4"><span class="st">                   from rental r </span></a>
-<a class="sourceLine" id="cb130-5" data-line-number="5"><span class="st">                        join inventory i</span></a>
-<a class="sourceLine" id="cb130-6" data-line-number="6"><span class="st">                          on r.inventory_id = i.inventory_id</span></a>
-<a class="sourceLine" id="cb130-7" data-line-number="7"><span class="st">                        join film f</span></a>
-<a class="sourceLine" id="cb130-8" data-line-number="8"><span class="st">                          on i.film_id = f.film_id</span></a>
-<a class="sourceLine" id="cb130-9" data-line-number="9"><span class="st">                 group by i.film_id,f.title,rental_rate</span></a>
-<a class="sourceLine" id="cb130-10" data-line-number="10"><span class="st">                 order by revenue desc</span></a>
-<a class="sourceLine" id="cb130-11" data-line-number="11"><span class="st">                 ;&quot;</span></a>
-<a class="sourceLine" id="cb130-12" data-line-number="12">                )  </a>
-<a class="sourceLine" id="cb130-13" data-line-number="13"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs))</a></code></pre></div>
-<div id="htmlwidget-d40cdd7964a6e479a61c" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-d40cdd7964a6e479a61c">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[103,767,973,31,369,1000],["Bucket Brotherhood","Scalawag Duck","Wife Turn","Apache Divine","Goodfellas Salute","Zorro Ark"],[4.99,4.99,4.99,4.99,4.99,4.99],[169.66,159.68,154.69,154.69,154.69,154.69],[34,32,31,31,31,31]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>film_id<\/th>\n      <th>title<\/th>\n      <th>rental_rate<\/th>\n      <th>revenue<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb129-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
+<a class="sourceLine" id="cb129-2" data-line-number="2">                <span class="st">&quot;select i.film_id,f.title,rental_rate</span></a>
+<a class="sourceLine" id="cb129-3" data-line-number="3"><span class="st">                       ,sum(rental_rate) revenue,count(*) count  --16044</span></a>
+<a class="sourceLine" id="cb129-4" data-line-number="4"><span class="st">                   from rental r </span></a>
+<a class="sourceLine" id="cb129-5" data-line-number="5"><span class="st">                        join inventory i</span></a>
+<a class="sourceLine" id="cb129-6" data-line-number="6"><span class="st">                          on r.inventory_id = i.inventory_id</span></a>
+<a class="sourceLine" id="cb129-7" data-line-number="7"><span class="st">                        join film f</span></a>
+<a class="sourceLine" id="cb129-8" data-line-number="8"><span class="st">                          on i.film_id = f.film_id</span></a>
+<a class="sourceLine" id="cb129-9" data-line-number="9"><span class="st">                 group by i.film_id,f.title,rental_rate</span></a>
+<a class="sourceLine" id="cb129-10" data-line-number="10"><span class="st">                 order by revenue desc</span></a>
+<a class="sourceLine" id="cb129-11" data-line-number="11"><span class="st">                 ;&quot;</span></a>
+<a class="sourceLine" id="cb129-12" data-line-number="12">                )  </a>
+<a class="sourceLine" id="cb129-13" data-line-number="13"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs))</a></code></pre></div>
+<div id="htmlwidget-7875c5054ee49c28530e" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-7875c5054ee49c28530e">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[103,767,973,31,369,1000],["Bucket Brotherhood","Scalawag Duck","Wife Turn","Apache Divine","Goodfellas Salute","Zorro Ark"],[4.99,4.99,4.99,4.99,4.99,4.99],[169.66,159.68,154.69,154.69,154.69,154.69],[34,32,31,31,31,31]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>film_id<\/th>\n      <th>title<\/th>\n      <th>rental_rate<\/th>\n      <th>revenue<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="which-films-are-in-one-store-but-not-the-other." class="section level3">
 <h3><span class="header-section-number">10.3.10</span> which films are in one store but not the other.</h3>
-<div class="sourceCode" id="cb131"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb131-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
-<a class="sourceLine" id="cb131-2" data-line-number="2">                <span class="st">&quot;select coalesce(i1.film_id,i2.film_id) film_id</span></a>
-<a class="sourceLine" id="cb131-3" data-line-number="3"><span class="st">                       ,f.title,f.rental_rate,i1.store_id,i1.count,i2.store_id,i2.count</span></a>
-<a class="sourceLine" id="cb131-4" data-line-number="4"><span class="st">                   from     (select film_id,store_id,count(*) count </span></a>
-<a class="sourceLine" id="cb131-5" data-line-number="5"><span class="st">                               from inventory where store_id = 1 </span></a>
-<a class="sourceLine" id="cb131-6" data-line-number="6"><span class="st">                             group by film_id,store_id) as i1</span></a>
-<a class="sourceLine" id="cb131-7" data-line-number="7"><span class="st">                         full outer join </span></a>
-<a class="sourceLine" id="cb131-8" data-line-number="8"><span class="st">                            (select film_id,store_id,count(*) count</span></a>
-<a class="sourceLine" id="cb131-9" data-line-number="9"><span class="st">                               from inventory where store_id = 2 </span></a>
-<a class="sourceLine" id="cb131-10" data-line-number="10"><span class="st">                             group by film_id,store_id</span></a>
-<a class="sourceLine" id="cb131-11" data-line-number="11"><span class="st">                            ) as i2</span></a>
-<a class="sourceLine" id="cb131-12" data-line-number="12"><span class="st">                           on i1.film_id = i2.film_id </span></a>
-<a class="sourceLine" id="cb131-13" data-line-number="13"><span class="st">                         join film f </span></a>
-<a class="sourceLine" id="cb131-14" data-line-number="14"><span class="st">                           on coalesce(i1.film_id,i2.film_id) = f.film_id</span></a>
-<a class="sourceLine" id="cb131-15" data-line-number="15"><span class="st">                  where i1.film_id is null or i2.film_id is null </span></a>
-<a class="sourceLine" id="cb131-16" data-line-number="16"><span class="st">                 order by f.title  ;</span></a>
-<a class="sourceLine" id="cb131-17" data-line-number="17"><span class="st">               &quot;</span></a>
-<a class="sourceLine" id="cb131-18" data-line-number="18">                )  </a>
-<a class="sourceLine" id="cb131-19" data-line-number="19"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs))</a></code></pre></div>
-<div id="htmlwidget-daf72f0699c0ae3dec49" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-daf72f0699c0ae3dec49">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[2,3,5,8,13,20],["Ace Goldfinger","Adaptation Holes","African Egg","Airport Pollock","Ali Forever","Amelie Hellfighters"],[4.99,2.99,2.99,4.99,4.99,4.99],[null,null,null,null,null,1],[null,null,null,null,null,3],[2,2,2,2,2,null],[3,4,3,4,4,null]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>film_id<\/th>\n      <th>title<\/th>\n      <th>rental_rate<\/th>\n      <th>store_id<\/th>\n      <th>count<\/th>\n      <th>store_id..6<\/th>\n      <th>count..7<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4,5,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="sourceCode" id="cb130"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb130-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
+<a class="sourceLine" id="cb130-2" data-line-number="2">                <span class="st">&quot;select coalesce(i1.film_id,i2.film_id) film_id</span></a>
+<a class="sourceLine" id="cb130-3" data-line-number="3"><span class="st">                       ,f.title,f.rental_rate,i1.store_id,i1.count,i2.store_id,i2.count</span></a>
+<a class="sourceLine" id="cb130-4" data-line-number="4"><span class="st">                   from     (select film_id,store_id,count(*) count </span></a>
+<a class="sourceLine" id="cb130-5" data-line-number="5"><span class="st">                               from inventory where store_id = 1 </span></a>
+<a class="sourceLine" id="cb130-6" data-line-number="6"><span class="st">                             group by film_id,store_id) as i1</span></a>
+<a class="sourceLine" id="cb130-7" data-line-number="7"><span class="st">                         full outer join </span></a>
+<a class="sourceLine" id="cb130-8" data-line-number="8"><span class="st">                            (select film_id,store_id,count(*) count</span></a>
+<a class="sourceLine" id="cb130-9" data-line-number="9"><span class="st">                               from inventory where store_id = 2 </span></a>
+<a class="sourceLine" id="cb130-10" data-line-number="10"><span class="st">                             group by film_id,store_id</span></a>
+<a class="sourceLine" id="cb130-11" data-line-number="11"><span class="st">                            ) as i2</span></a>
+<a class="sourceLine" id="cb130-12" data-line-number="12"><span class="st">                           on i1.film_id = i2.film_id </span></a>
+<a class="sourceLine" id="cb130-13" data-line-number="13"><span class="st">                         join film f </span></a>
+<a class="sourceLine" id="cb130-14" data-line-number="14"><span class="st">                           on coalesce(i1.film_id,i2.film_id) = f.film_id</span></a>
+<a class="sourceLine" id="cb130-15" data-line-number="15"><span class="st">                  where i1.film_id is null or i2.film_id is null </span></a>
+<a class="sourceLine" id="cb130-16" data-line-number="16"><span class="st">                 order by f.title  ;</span></a>
+<a class="sourceLine" id="cb130-17" data-line-number="17"><span class="st">               &quot;</span></a>
+<a class="sourceLine" id="cb130-18" data-line-number="18">                )  </a>
+<a class="sourceLine" id="cb130-19" data-line-number="19"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs))</a></code></pre></div>
+<div id="htmlwidget-4410818a1c01d086ca7e" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-4410818a1c01d086ca7e">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[2,3,5,8,13,20],["Ace Goldfinger","Adaptation Holes","African Egg","Airport Pollock","Ali Forever","Amelie Hellfighters"],[4.99,2.99,2.99,4.99,4.99,4.99],[null,null,null,null,null,1],[null,null,null,null,null,3],[2,2,2,2,2,null],[3,4,3,4,4,null]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>film_id<\/th>\n      <th>title<\/th>\n      <th>rental_rate<\/th>\n      <th>store_id<\/th>\n      <th>count<\/th>\n      <th>store_id..6<\/th>\n      <th>count..7<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4,5,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="compute-the-outstanding-balance." class="section level3">
 <h3><span class="header-section-number">10.3.11</span> Compute the outstanding balance.</h3>
-<div class="sourceCode" id="cb132"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb132-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
-<a class="sourceLine" id="cb132-2" data-line-number="2">                <span class="st">&quot;select sum(f.rental_rate) open_amt,count(*) count</span></a>
-<a class="sourceLine" id="cb132-3" data-line-number="3"><span class="st">                   from rental r </span></a>
-<a class="sourceLine" id="cb132-4" data-line-number="4"><span class="st">                        left outer join payment p </span></a>
-<a class="sourceLine" id="cb132-5" data-line-number="5"><span class="st">                          on r.rental_id = p.rental_id  </span></a>
-<a class="sourceLine" id="cb132-6" data-line-number="6"><span class="st">                        join inventory i</span></a>
-<a class="sourceLine" id="cb132-7" data-line-number="7"><span class="st">                          on r.inventory_id = i.inventory_id</span></a>
-<a class="sourceLine" id="cb132-8" data-line-number="8"><span class="st">                        join film f</span></a>
-<a class="sourceLine" id="cb132-9" data-line-number="9"><span class="st">                          on i.film_id = f.film_id</span></a>
-<a class="sourceLine" id="cb132-10" data-line-number="10"><span class="st">                  where p.rental_id is null</span></a>
-<a class="sourceLine" id="cb132-11" data-line-number="11"><span class="st">                 ;&quot;</span></a>
-<a class="sourceLine" id="cb132-12" data-line-number="12">                )  </a>
-<a class="sourceLine" id="cb132-13" data-line-number="13"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs))</a></code></pre></div>
-<div id="htmlwidget-ffb109107b7420413f5d" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-ffb109107b7420413f5d">{"x":{"filter":"none","data":[["1"],[4297.48],[1452]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>open_amt<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="sourceCode" id="cb131"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb131-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
+<a class="sourceLine" id="cb131-2" data-line-number="2">                <span class="st">&quot;select sum(f.rental_rate) open_amt,count(*) count</span></a>
+<a class="sourceLine" id="cb131-3" data-line-number="3"><span class="st">                   from rental r </span></a>
+<a class="sourceLine" id="cb131-4" data-line-number="4"><span class="st">                        left outer join payment p </span></a>
+<a class="sourceLine" id="cb131-5" data-line-number="5"><span class="st">                          on r.rental_id = p.rental_id  </span></a>
+<a class="sourceLine" id="cb131-6" data-line-number="6"><span class="st">                        join inventory i</span></a>
+<a class="sourceLine" id="cb131-7" data-line-number="7"><span class="st">                          on r.inventory_id = i.inventory_id</span></a>
+<a class="sourceLine" id="cb131-8" data-line-number="8"><span class="st">                        join film f</span></a>
+<a class="sourceLine" id="cb131-9" data-line-number="9"><span class="st">                          on i.film_id = f.film_id</span></a>
+<a class="sourceLine" id="cb131-10" data-line-number="10"><span class="st">                  where p.rental_id is null</span></a>
+<a class="sourceLine" id="cb131-11" data-line-number="11"><span class="st">                 ;&quot;</span></a>
+<a class="sourceLine" id="cb131-12" data-line-number="12">                )  </a>
+<a class="sourceLine" id="cb131-13" data-line-number="13"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs))</a></code></pre></div>
+<div id="htmlwidget-b646a185e7c1916abd65" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-b646a185e7c1916abd65">{"x":{"filter":"none","data":[["1"],[4297.48],[1452]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>open_amt<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <div id="different-strategies-for-interacting-with-the-database" class="section level2">
@@ -631,51 +627,51 @@ dbClearResult: remove pending query results from the database to your R environm
 <div id="use-dbgetquery" class="section level3">
 <h3><span class="header-section-number">10.4.1</span> Use dbGetQuery</h3>
 <p>How many customers are there in the DVD Rental System</p>
-<div class="sourceCode" id="cb134"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb134-1" data-line-number="1">rs1 &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con, <span class="st">&#39;select * from customer;&#39;</span>)</a>
-<a class="sourceLine" id="cb134-2" data-line-number="2"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs1))</a></code></pre></div>
-<div id="htmlwidget-7422a054d613b7c69903" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-7422a054d613b7c69903">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[524,1,2,3,4,5],[1,1,1,1,2,1],["Jared","Mary","Patricia","Linda","Barbara","Elizabeth"],["Ely","Smith","Johnson","Williams","Jones","Brown"],["jared.ely@sakilacustomer.org","mary.smith@sakilacustomer.org","patricia.johnson@sakilacustomer.org","linda.williams@sakilacustomer.org","barbara.jones@sakilacustomer.org","elizabeth.brown@sakilacustomer.org"],[530,5,6,7,8,9],[true,true,true,true,true,true],["2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14"],["2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z"],[1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>address_id<\/th>\n      <th>activebool<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n      <th>active<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,6,10]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
-<div class="sourceCode" id="cb135"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb135-1" data-line-number="1">pco &lt;-<span class="st"> </span><span class="kw">dbSendQuery</span>(con, <span class="st">&#39;select * from customer;&#39;</span>)</a>
-<a class="sourceLine" id="cb135-2" data-line-number="2">rs2  &lt;-<span class="st"> </span><span class="kw">dbFetch</span>(pco)</a>
-<a class="sourceLine" id="cb135-3" data-line-number="3"><span class="kw">dbClearResult</span>(pco)</a>
-<a class="sourceLine" id="cb135-4" data-line-number="4"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs2))</a></code></pre></div>
-<div id="htmlwidget-dc611ffcf8dade82b8c6" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-dc611ffcf8dade82b8c6">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[524,1,2,3,4,5],[1,1,1,1,2,1],["Jared","Mary","Patricia","Linda","Barbara","Elizabeth"],["Ely","Smith","Johnson","Williams","Jones","Brown"],["jared.ely@sakilacustomer.org","mary.smith@sakilacustomer.org","patricia.johnson@sakilacustomer.org","linda.williams@sakilacustomer.org","barbara.jones@sakilacustomer.org","elizabeth.brown@sakilacustomer.org"],[530,5,6,7,8,9],[true,true,true,true,true,true],["2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14"],["2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z"],[1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>address_id<\/th>\n      <th>activebool<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n      <th>active<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,6,10]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="sourceCode" id="cb133"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb133-1" data-line-number="1">rs1 &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con, <span class="st">&#39;select * from customer;&#39;</span>)</a>
+<a class="sourceLine" id="cb133-2" data-line-number="2"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs1))</a></code></pre></div>
+<div id="htmlwidget-036aa327fe7bc526eca6" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-036aa327fe7bc526eca6">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[524,1,2,3,4,5],[1,1,1,1,2,1],["Jared","Mary","Patricia","Linda","Barbara","Elizabeth"],["Ely","Smith","Johnson","Williams","Jones","Brown"],["jared.ely@sakilacustomer.org","mary.smith@sakilacustomer.org","patricia.johnson@sakilacustomer.org","linda.williams@sakilacustomer.org","barbara.jones@sakilacustomer.org","elizabeth.brown@sakilacustomer.org"],[530,5,6,7,8,9],[true,true,true,true,true,true],["2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14"],["2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z"],[1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>address_id<\/th>\n      <th>activebool<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n      <th>active<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,6,10]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="sourceCode" id="cb134"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb134-1" data-line-number="1">pco &lt;-<span class="st"> </span><span class="kw">dbSendQuery</span>(con, <span class="st">&#39;select * from customer;&#39;</span>)</a>
+<a class="sourceLine" id="cb134-2" data-line-number="2">rs2  &lt;-<span class="st"> </span><span class="kw">dbFetch</span>(pco)</a>
+<a class="sourceLine" id="cb134-3" data-line-number="3"><span class="kw">dbClearResult</span>(pco)</a>
+<a class="sourceLine" id="cb134-4" data-line-number="4"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs2))</a></code></pre></div>
+<div id="htmlwidget-9dbb60ad50fc42ca19ac" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-9dbb60ad50fc42ca19ac">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[524,1,2,3,4,5],[1,1,1,1,2,1],["Jared","Mary","Patricia","Linda","Barbara","Elizabeth"],["Ely","Smith","Johnson","Williams","Jones","Brown"],["jared.ely@sakilacustomer.org","mary.smith@sakilacustomer.org","patricia.johnson@sakilacustomer.org","linda.williams@sakilacustomer.org","barbara.jones@sakilacustomer.org","elizabeth.brown@sakilacustomer.org"],[530,5,6,7,8,9],[true,true,true,true,true,true],["2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14"],["2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z"],[1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>address_id<\/th>\n      <th>activebool<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n      <th>active<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,6,10]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="use-dbexecute" class="section level3">
 <h3><span class="header-section-number">10.4.2</span> Use dbExecute</h3>
-<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb136-1" data-line-number="1"><span class="co"># insert yourself as a new customer</span></a>
-<a class="sourceLine" id="cb136-2" data-line-number="2"><span class="kw">dbExecute</span>(con,</a>
-<a class="sourceLine" id="cb136-3" data-line-number="3">  <span class="st">&quot;insert into customer </span></a>
-<a class="sourceLine" id="cb136-4" data-line-number="4"><span class="st">  (store_id,first_name,last_name,email,address_id</span></a>
-<a class="sourceLine" id="cb136-5" data-line-number="5"><span class="st">  ,activebool,create_date,last_update,active)</span></a>
-<a class="sourceLine" id="cb136-6" data-line-number="6"><span class="st">  values(2,&#39;Sophie&#39;,&#39;Yang&#39;,&#39;dodreamdo@yahoo.com&#39;,1,TRUE,&#39;2018-09-13&#39;,&#39;2018-09-13&#39;,1)</span></a>
-<a class="sourceLine" id="cb136-7" data-line-number="7"><span class="st">  returning customer_id;</span></a>
-<a class="sourceLine" id="cb136-8" data-line-number="8"><span class="st">  &quot;</span></a>
-<a class="sourceLine" id="cb136-9" data-line-number="9">  )</a></code></pre></div>
+<div class="sourceCode" id="cb135"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb135-1" data-line-number="1"><span class="co"># insert yourself as a new customer</span></a>
+<a class="sourceLine" id="cb135-2" data-line-number="2"><span class="kw">dbExecute</span>(con,</a>
+<a class="sourceLine" id="cb135-3" data-line-number="3">  <span class="st">&quot;insert into customer </span></a>
+<a class="sourceLine" id="cb135-4" data-line-number="4"><span class="st">  (store_id,first_name,last_name,email,address_id</span></a>
+<a class="sourceLine" id="cb135-5" data-line-number="5"><span class="st">  ,activebool,create_date,last_update,active)</span></a>
+<a class="sourceLine" id="cb135-6" data-line-number="6"><span class="st">  values(2,&#39;Sophie&#39;,&#39;Yang&#39;,&#39;dodreamdo@yahoo.com&#39;,1,TRUE,&#39;2018-09-13&#39;,&#39;2018-09-13&#39;,1)</span></a>
+<a class="sourceLine" id="cb135-7" data-line-number="7"><span class="st">  returning customer_id;</span></a>
+<a class="sourceLine" id="cb135-8" data-line-number="8"><span class="st">  &quot;</span></a>
+<a class="sourceLine" id="cb135-9" data-line-number="9">  )</a></code></pre></div>
 <pre><code>## [1] 0</code></pre>
 </div>
 <div id="anti-join-find-sophie-who-have-never-rented-a-movie." class="section level3">
 <h3><span class="header-section-number">10.4.3</span> anti join – Find sophie who have never rented a movie.</h3>
-<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb138-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
-<a class="sourceLine" id="cb138-2" data-line-number="2">                 <span class="st">&quot;select c.first_name</span></a>
-<a class="sourceLine" id="cb138-3" data-line-number="3"><span class="st">                        ,c.last_name</span></a>
-<a class="sourceLine" id="cb138-4" data-line-number="4"><span class="st">                        ,c.email</span></a>
-<a class="sourceLine" id="cb138-5" data-line-number="5"><span class="st">                    from customer c </span></a>
-<a class="sourceLine" id="cb138-6" data-line-number="6"><span class="st">                         left outer join rental r</span></a>
-<a class="sourceLine" id="cb138-7" data-line-number="7"><span class="st">                              on c.customer_id = r.customer_id </span></a>
-<a class="sourceLine" id="cb138-8" data-line-number="8"><span class="st">                   where r.rental_id is null;</span></a>
-<a class="sourceLine" id="cb138-9" data-line-number="9"><span class="st">                 &quot;</span></a>
-<a class="sourceLine" id="cb138-10" data-line-number="10">                 )</a>
-<a class="sourceLine" id="cb138-11" data-line-number="11"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs))</a></code></pre></div>
-<div id="htmlwidget-cfa030eb26b6a430f1c7" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-cfa030eb26b6a430f1c7">{"x":{"filter":"none","data":[["1"],["Sophie"],["Yang"],["dodreamdo@yahoo.com"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script>
-<div class="sourceCode" id="cb139"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb139-1" data-line-number="1"><span class="co"># diconnect from the db</span></a>
-<a class="sourceLine" id="cb139-2" data-line-number="2"><span class="kw">dbDisconnect</span>(con)</a>
-<a class="sourceLine" id="cb139-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb139-4" data-line-number="4"><span class="kw">sp_docker_stop</span>(<span class="st">&quot;sql-pet&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb137"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb137-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,</a>
+<a class="sourceLine" id="cb137-2" data-line-number="2">                 <span class="st">&quot;select c.first_name</span></a>
+<a class="sourceLine" id="cb137-3" data-line-number="3"><span class="st">                        ,c.last_name</span></a>
+<a class="sourceLine" id="cb137-4" data-line-number="4"><span class="st">                        ,c.email</span></a>
+<a class="sourceLine" id="cb137-5" data-line-number="5"><span class="st">                    from customer c </span></a>
+<a class="sourceLine" id="cb137-6" data-line-number="6"><span class="st">                         left outer join rental r</span></a>
+<a class="sourceLine" id="cb137-7" data-line-number="7"><span class="st">                              on c.customer_id = r.customer_id </span></a>
+<a class="sourceLine" id="cb137-8" data-line-number="8"><span class="st">                   where r.rental_id is null;</span></a>
+<a class="sourceLine" id="cb137-9" data-line-number="9"><span class="st">                 &quot;</span></a>
+<a class="sourceLine" id="cb137-10" data-line-number="10">                 )</a>
+<a class="sourceLine" id="cb137-11" data-line-number="11"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs))</a></code></pre></div>
+<div id="htmlwidget-1476782156e935e5404c" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1476782156e935e5404c">{"x":{"filter":"none","data":[["1"],["Sophie"],["Yang"],["dodreamdo@yahoo.com"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script>
+<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb138-1" data-line-number="1"><span class="co"># diconnect from the db</span></a>
+<a class="sourceLine" id="cb138-2" data-line-number="2"><span class="kw">dbDisconnect</span>(con)</a>
+<a class="sourceLine" id="cb138-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb138-4" data-line-number="4"><span class="kw">sp_docker_stop</span>(<span class="st">&quot;sql-pet&quot;</span>)</a></code></pre></div>
 <pre><code>## [1] &quot;sql-pet&quot;</code></pre>
-<div class="sourceCode" id="cb141"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb141-1" data-line-number="1">knitr<span class="op">::</span><span class="kw">knit_exit</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb140-1" data-line-number="1">knitr<span class="op">::</span><span class="kw">knit_exit</span>()</a></code></pre></div>
 
 </div>
 </div>

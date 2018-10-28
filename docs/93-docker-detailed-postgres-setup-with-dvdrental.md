@@ -23,18 +23,18 @@ library(tidyverse)
 ```
 
 ```
-## ── Attaching packages ────────────────────────────────── tidyverse 1.2.1 ──
+## ── Attaching packages ───────────────────────────────────── tidyverse 1.2.1 ──
 ```
 
 ```
 ## ✔ ggplot2 3.1.0     ✔ purrr   0.2.5
 ## ✔ tibble  1.4.2     ✔ dplyr   0.7.7
-## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
+## ✔ tidyr   0.8.2     ✔ stringr 1.3.1
 ## ✔ readr   1.1.1     ✔ forcats 0.3.0
 ```
 
 ```
-## ── Conflicts ───────────────────────────────────── tidyverse_conflicts() ──
+## ── Conflicts ──────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()
 ```
@@ -127,12 +127,8 @@ sp_show_all_docker_containers()
 ```
 
 ```
-## [1] "CONTAINER ID        IMAGE                COMMAND                  CREATED              STATUS                     PORTS               NAMES"                  
-## [2] "7a6d01c9fdee        postgres-dvdrental   \"docker-entrypoint.s…\"   About a minute ago   Exited (0) 4 seconds ago                       sql-pet"              
-## [3] "424d4c3dfc89        rstats               \"/init\"                  10 days ago          Exited (0) 10 days ago                         containers_rstats_1"  
-## [4] "4c3eb1dc5043        postgis              \"docker-entrypoint.s…\"   10 days ago          Exited (0) 10 days ago                         containers_postgis_1" 
-## [5] "8da9d3a59732        dpage/pgadmin4       \"/entrypoint.sh\"         10 days ago          Exited (0) 10 days ago                         containers_pgadmin4_1"
-## [6] "7030e81489b8        2feef91d6764         \"/bin/sh -c 'su - rs…\"   10 days ago          Exited (1) 10 days ago                         laughing_johnson"
+## [1] "CONTAINER ID        IMAGE                COMMAND                  CREATED              STATUS                     PORTS               NAMES"    
+## [2] "3dffcd7da689        postgres-dvdrental   \"docker-entrypoint.s…\"   About a minute ago   Exited (0) 9 seconds ago                       sql-pet"
 ```
 
 Remove the `sql-pet` container if it exists (e.g., from a prior run)
@@ -192,7 +188,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "37c496b67e970528eef06e46e31a0bd0208587d3990c74cc7d4d75f9e80098b8"
+## [1] "2ba4788e8c6759a53ac536a9e3c7d128e82046414a5d503a6e669fd10d4c53d4"
 ```
 
 Peek inside the docker container and list the files in the `petdir`
@@ -235,12 +231,8 @@ sp_show_all_docker_containers()
 ```
 
 ```
-## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                   PORTS                    NAMES"                  
-## [2] "37c496b67e97        postgres:10         \"docker-entrypoint.s…\"   4 seconds ago       Up 3 seconds             0.0.0.0:5432->5432/tcp   sql-pet"              
-## [3] "424d4c3dfc89        rstats              \"/init\"                  10 days ago         Exited (0) 10 days ago                            containers_rstats_1"  
-## [4] "4c3eb1dc5043        postgis             \"docker-entrypoint.s…\"   10 days ago         Exited (0) 10 days ago                            containers_postgis_1" 
-## [5] "8da9d3a59732        dpage/pgadmin4      \"/entrypoint.sh\"         10 days ago         Exited (0) 10 days ago                            containers_pgadmin4_1"
-## [6] "7030e81489b8        2feef91d6764        \"/bin/sh -c 'su - rs…\"   10 days ago         Exited (1) 10 days ago                            laughing_johnson"
+## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES"    
+## [2] "2ba4788e8c67        postgres:10         \"docker-entrypoint.s…\"   4 seconds ago       Up 3 seconds        0.0.0.0:5432->5432/tcp   sql-pet"
 ```
 inside Docker, execute the postgress SQL command-line program to create the dvdrental database:
 
@@ -380,12 +372,8 @@ sp_show_all_docker_containers()
 ```
 
 ```
-## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES"                  
-## [2] "37c496b67e97        postgres:10         \"docker-entrypoint.s…\"   17 seconds ago      Exited (0) Less than a second ago                       sql-pet"              
-## [3] "424d4c3dfc89        rstats              \"/init\"                  10 days ago         Exited (0) 10 days ago                                  containers_rstats_1"  
-## [4] "4c3eb1dc5043        postgis             \"docker-entrypoint.s…\"   10 days ago         Exited (0) 10 days ago                                  containers_postgis_1" 
-## [5] "8da9d3a59732        dpage/pgadmin4      \"/entrypoint.sh\"         10 days ago         Exited (0) 10 days ago                                  containers_pgadmin4_1"
-## [6] "7030e81489b8        2feef91d6764        \"/bin/sh -c 'su - rs…\"   10 days ago         Exited (1) 10 days ago                                  laughing_johnson"
+## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES"    
+## [2] "2ba4788e8c67        postgres:10         \"docker-entrypoint.s…\"   19 seconds ago      Exited (0) Less than a second ago                       sql-pet"
 ```
 
 We are leaving the `sql-pet` container intact so it can be used in running the

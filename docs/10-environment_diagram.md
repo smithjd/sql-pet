@@ -51,12 +51,8 @@ Below is a high level diagram of our tutorial environment.  The single black or 
 
 
 
-```
-## Warning in dir.create(directory, recursive = TRUE): 'diagrams' already
-## exists
-```
 
-<img src="diagrams/envgraph.png" width="642" />
+![](diagrams/envgraph.png)<!-- -->
 
 ## Communicating with Docker Applications
 
