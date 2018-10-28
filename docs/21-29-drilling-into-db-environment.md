@@ -564,34 +564,27 @@ fk_edf <-
 
 
 ```r
-graph <-
+fkgraph_widget <-
   create_graph(
     nodes_df = table_nodes_ndf,
     edges_df = fk_edf,
     graph_name = 'Simple FK Graph'
-    )
+    ) %>% render_graph()
 
-# View the graph
-
-# export the widget to an SVG file
-render_graph(graph) %>% 
-  DiagrammeRsvg::export_svg() %>% 
-  cat(file = "diagrams/fkgraph.svg")
-
-# convert to PDF and PNG - LaTeX doesn't read SVGs by default
-magick::image_read("diagrams/fkgraph.svg") %>%
-  magick::image_write(
-    path = "diagrams/fkgraph.pdf", 
-    format = "pdf"
-  )
-magick::image_read_svg("diagrams/fkgraph.svg") %>%
-  magick::image_write(
-    path = "diagrams/fkgraph.png", 
-    format = "png"
-  )
+# export to image files
+fkgraph_file <- sqlpetr::sp_make_image_files(
+  fkgraph_widget,
+  "diagrams",
+  "fkgraph"
+)
 ```
 
-![](diagrams/fkgraph.png)<!-- -->
+```
+## Warning in dir.create(directory, recursive = TRUE): 'diagrams' already
+## exists
+```
+
+<img src="diagrams/fkgraph.png" width="400" />
 
 
 ```r

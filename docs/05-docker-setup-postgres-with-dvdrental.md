@@ -54,7 +54,7 @@ system2("docker",
 ```
 
 ```
-##  [1] "Sending build context to Docker daemon  28.35MB\r\r"                                                                                                                                                                                                                                                                                                                                           
+##  [1] "Sending build context to Docker daemon  30.61MB\r\r"                                                                                                                                                                                                                                                                                                                                           
 ##  [2] "Step 1/4 : FROM postgres:10"                                                                                                                                                                                                                                                                                                                                                                   
 ##  [3] " ---> fc21dac1eb4e"                                                                                                                                                                                                                                                                                                                                                                            
 ##  [4] "Step 2/4 : WORKDIR /tmp"                                                                                                                                                                                                                                                                                                                                                                       
@@ -108,7 +108,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "beb32a7067d79a3976c2072c4da2d63a495d78a12d59201035abe43543471a25"
+## [1] "7a6d01c9fdee25bc30bb8f4b4c8bd82b7ec44c9b27d658c80628a1fc414640b9"
 ```
 ## Connect to Postgres with R
 
@@ -212,11 +212,11 @@ sp_show_all_docker_containers()
 
 ```
 ## [1] "CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS               NAMES"                  
-## [2] "beb32a7067d7        postgres-dvdrental   \"docker-entrypoint.s…\"   10 seconds ago      Exited (0) Less than a second ago                       sql-pet"              
-## [3] "424d4c3dfc89        rstats               \"/init\"                  9 days ago          Exited (0) 9 days ago                                   containers_rstats_1"  
-## [4] "4c3eb1dc5043        postgis              \"docker-entrypoint.s…\"   9 days ago          Exited (0) 9 days ago                                   containers_postgis_1" 
-## [5] "8da9d3a59732        dpage/pgadmin4       \"/entrypoint.sh\"         9 days ago          Exited (0) 9 days ago                                   containers_pgadmin4_1"
-## [6] "7030e81489b8        2feef91d6764         \"/bin/sh -c 'su - rs…\"   9 days ago          Exited (1) 9 days ago                                   laughing_johnson"
+## [2] "7a6d01c9fdee        postgres-dvdrental   \"docker-entrypoint.s…\"   12 seconds ago      Exited (0) Less than a second ago                       sql-pet"              
+## [3] "424d4c3dfc89        rstats               \"/init\"                  10 days ago         Exited (0) 10 days ago                                  containers_rstats_1"  
+## [4] "4c3eb1dc5043        postgis              \"docker-entrypoint.s…\"   10 days ago         Exited (0) 10 days ago                                  containers_postgis_1" 
+## [5] "8da9d3a59732        dpage/pgadmin4       \"/entrypoint.sh\"         10 days ago         Exited (0) 10 days ago                                  containers_pgadmin4_1"
+## [6] "7030e81489b8        2feef91d6764         \"/bin/sh -c 'su - rs…\"   10 days ago         Exited (1) 10 days ago                                  laughing_johnson"
 ```
 
 Next time, you can just use this command to start the container: 

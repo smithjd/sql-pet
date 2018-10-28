@@ -25,7 +25,7 @@
 <meta name="author" content="Dipti Muni, Ian Frantz, John David Smith, Mary Anne Thygesen, M. Edward (Ed) Borasky, Scott Case, and Sophie Yang">
 
 
-<meta name="date" content="2018-10-27">
+<meta name="date" content="2018-10-28">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -361,27 +361,27 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="introduction-to-dbms-queries-11" class="section level1">
 <h1><span class="header-section-number">Chapter 8</span> Introduction to DBMS queries (11)</h1>
 <p>These packages are used in this chapter:</p>
-<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb60-1" data-line-number="1"><span class="kw">library</span>(tidyverse)</a>
-<a class="sourceLine" id="cb60-2" data-line-number="2"><span class="kw">library</span>(DBI)</a>
-<a class="sourceLine" id="cb60-3" data-line-number="3"><span class="kw">library</span>(RPostgres)</a>
-<a class="sourceLine" id="cb60-4" data-line-number="4"><span class="kw">library</span>(dbplyr)</a>
-<a class="sourceLine" id="cb60-5" data-line-number="5"><span class="kw">require</span>(knitr)</a>
-<a class="sourceLine" id="cb60-6" data-line-number="6"><span class="kw">library</span>(bookdown)</a>
-<a class="sourceLine" id="cb60-7" data-line-number="7"><span class="kw">library</span>(sqlpetr)</a></code></pre></div>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb61-1" data-line-number="1"><span class="kw">library</span>(tidyverse)</a>
+<a class="sourceLine" id="cb61-2" data-line-number="2"><span class="kw">library</span>(DBI)</a>
+<a class="sourceLine" id="cb61-3" data-line-number="3"><span class="kw">library</span>(RPostgres)</a>
+<a class="sourceLine" id="cb61-4" data-line-number="4"><span class="kw">library</span>(dbplyr)</a>
+<a class="sourceLine" id="cb61-5" data-line-number="5"><span class="kw">require</span>(knitr)</a>
+<a class="sourceLine" id="cb61-6" data-line-number="6"><span class="kw">library</span>(bookdown)</a>
+<a class="sourceLine" id="cb61-7" data-line-number="7"><span class="kw">library</span>(sqlpetr)</a></code></pre></div>
 <p>Assume that the Docker container with PostgreSQL and the dvdrental database are ready to go.</p>
-<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb61-1" data-line-number="1"><span class="kw">sp_docker_start</span>(<span class="st">&quot;sql-pet&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb62-1" data-line-number="1"><span class="kw">sp_docker_start</span>(<span class="st">&quot;sql-pet&quot;</span>)</a></code></pre></div>
 <p>Connect to the database:</p>
-<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb62-1" data-line-number="1">con &lt;-<span class="st"> </span><span class="kw">sp_get_postgres_connection</span>(<span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),</a>
-<a class="sourceLine" id="cb62-2" data-line-number="2">                         <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),</a>
-<a class="sourceLine" id="cb62-3" data-line-number="3">                         <span class="dt">dbname =</span> <span class="st">&quot;dvdrental&quot;</span>,</a>
-<a class="sourceLine" id="cb62-4" data-line-number="4">                         <span class="dt">seconds_to_test =</span> <span class="dv">10</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb63-1" data-line-number="1">con &lt;-<span class="st"> </span><span class="kw">sp_get_postgres_connection</span>(<span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),</a>
+<a class="sourceLine" id="cb63-2" data-line-number="2">                         <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),</a>
+<a class="sourceLine" id="cb63-3" data-line-number="3">                         <span class="dt">dbname =</span> <span class="st">&quot;dvdrental&quot;</span>,</a>
+<a class="sourceLine" id="cb63-4" data-line-number="4">                         <span class="dt">seconds_to_test =</span> <span class="dv">10</span>)</a></code></pre></div>
 <div id="downloading-the-data-from-the-database" class="section level2">
 <h2><span class="header-section-number">8.1</span> Downloading the data from the database</h2>
 <p>As we show later on, the database serves as a store of data and as an engine for sub-setting, joining, and doing computation. We begin with simple extraction, or “downloading” data.</p>
 <div id="finding-out-whats-there" class="section level3">
 <h3><span class="header-section-number">8.1.1</span> Finding out what’s there</h3>
 <p>We’ve already seen the simplest way of getting a list of tables in a database with <code>DBI</code> functions that list tables and fields. Here are the (public) tables in the database:</p>
-<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb63-1" data-line-number="1">DBI<span class="op">::</span><span class="kw">dbListTables</span>(con)</a></code></pre></div>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb64-1" data-line-number="1">DBI<span class="op">::</span><span class="kw">dbListTables</span>(con)</a></code></pre></div>
 <pre><code>##  [1] &quot;actor_info&quot;                 &quot;customer_list&quot;             
 ##  [3] &quot;film_list&quot;                  &quot;nicer_but_slower_film_list&quot;
 ##  [5] &quot;sales_by_film_category&quot;     &quot;staff&quot;                     
@@ -394,7 +394,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## [19] &quot;film&quot;                       &quot;address&quot;                   
 ## [21] &quot;film_actor&quot;                 &quot;customer&quot;</code></pre>
 <p>Here are the fields (or columns or variables) in one specific table:</p>
-<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb65-1" data-line-number="1">DBI<span class="op">::</span><span class="kw">dbListFields</span>(con, <span class="st">&quot;rental&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb66-1" data-line-number="1">DBI<span class="op">::</span><span class="kw">dbListFields</span>(con, <span class="st">&quot;rental&quot;</span>)</a></code></pre></div>
 <pre><code>## [1] &quot;rental_id&quot;    &quot;rental_date&quot;  &quot;inventory_id&quot; &quot;customer_id&quot; 
 ## [5] &quot;return_date&quot;  &quot;staff_id&quot;     &quot;last_update&quot;</code></pre>
 <p>Later on we’ll discuss how to get more extensive data about each table and column from the database’s own store of metadata.</p>
@@ -403,8 +403,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3><span class="header-section-number">8.1.2</span> Downloading an entire table</h3>
 <p>There are many different methods of getting data from a DBMS, and we’ll explore the different ways of controlling each one of them.</p>
 <p><code>DBI::dbReadTable</code> will download an entire table into an R <a href="https://tibble.tidyverse.org/">tibble</a>.</p>
-<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb67-1" data-line-number="1">rental_tibble &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbReadTable</span>(con, <span class="st">&quot;rental&quot;</span>) </a>
-<a class="sourceLine" id="cb67-2" data-line-number="2"><span class="kw">str</span>(rental_tibble)</a></code></pre></div>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb68-1" data-line-number="1">rental_tibble &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbReadTable</span>(con, <span class="st">&quot;rental&quot;</span>) </a>
+<a class="sourceLine" id="cb68-2" data-line-number="2"><span class="kw">str</span>(rental_tibble)</a></code></pre></div>
 <pre><code>## &#39;data.frame&#39;:    16044 obs. of  7 variables:
 ##  $ rental_id   : int  2 3 4 5 6 7 8 9 10 11 ...
 ##  $ rental_date : POSIXct, format: &quot;2005-05-24 22:54:33&quot; &quot;2005-05-24 23:03:39&quot; ...
@@ -418,9 +418,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="referencing-a-table-for-many-different-purposes" class="section level3">
 <h3><span class="header-section-number">8.1.3</span> Referencing a table for many different purposes</h3>
 <p>The <code>dplyr::tbl</code> function gives us more control over access to a table. It creates a connection object that might look like a data frame but it’s actually an list object that <code>dplyr</code> uses for constructing queries and retrieving data from the DBMS.</p>
-<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb69-1" data-line-number="1">rental_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">tbl</span>(con, <span class="st">&quot;rental&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb70-1" data-line-number="1">rental_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">tbl</span>(con, <span class="st">&quot;rental&quot;</span>)</a></code></pre></div>
 <p>Consider the structure of the connection object:</p>
-<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb70-1" data-line-number="1"><span class="kw">str</span>(rental_table)</a></code></pre></div>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb71-1" data-line-number="1"><span class="kw">str</span>(rental_table)</a></code></pre></div>
 <pre><code>## List of 2
 ##  $ src:List of 2
 ##   ..$ con  :Formal class &#39;PqConnection&#39; [package &quot;RPostgres&quot;] with 3 slots
@@ -437,12 +437,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##   ..- attr(*, &quot;class&quot;)= chr [1:3] &quot;op_base_remote&quot; &quot;op_base&quot; &quot;op&quot;
 ##  - attr(*, &quot;class&quot;)= chr [1:4] &quot;tbl_dbi&quot; &quot;tbl_sql&quot; &quot;tbl_lazy&quot; &quot;tbl&quot;</code></pre>
 <p>Notice that the first list contains the source connection information. Among other things it contains a list of variables in the table:</p>
-<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb72-1" data-line-number="1">rental_table<span class="op">$</span>ops<span class="op">$</span>vars</a></code></pre></div>
+<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb73-1" data-line-number="1">rental_table<span class="op">$</span>ops<span class="op">$</span>vars</a></code></pre></div>
 <pre><code>## [1] &quot;rental_id&quot;    &quot;rental_date&quot;  &quot;inventory_id&quot; &quot;customer_id&quot; 
 ## [5] &quot;return_date&quot;  &quot;staff_id&quot;     &quot;last_update&quot;</code></pre>
 <p>But because of lazy loading, R has not retrieved any actual data from the DBMS when you reference the <code>rental_table</code> object with <code>str</code>. Because R is lazy and smart, it retrieves data as late as possible and only retrieves a certain number of rows. This is a key paradigm shift for those new to working databases using R and <code>dplyr</code>.</p>
 <p>We can trigger data retrieval in several ways. The <code>head</code> function, for example, triggers a query and prints its results. And R <em>assumes</em> a <code>print</code> function when it finds an object’s name on the command line. By default, these two functions print a different number of rows: <code>head</code> defaults to 6 rows and an implied <code>print</code> defaults to 10.</p>
-<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb74-1" data-line-number="1">rental_table <span class="op">%&gt;%</span><span class="st"> </span>head</a></code></pre></div>
+<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb75-1" data-line-number="1">rental_table <span class="op">%&gt;%</span><span class="st"> </span>head</a></code></pre></div>
 <pre><code>## # Source:   lazy query [?? x 7]
 ## # Database: postgres [postgres@localhost:5432/dvdrental]
 ##   rental_id rental_date         inventory_id customer_id
@@ -455,7 +455,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 6         7 2005-05-24 23:11:53         3995         269
 ## # ... with 3 more variables: return_date &lt;dttm&gt;, staff_id &lt;int&gt;,
 ## #   last_update &lt;dttm&gt;</code></pre>
-<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb76-1" data-line-number="1">rental_table</a></code></pre></div>
+<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb77-1" data-line-number="1">rental_table</a></code></pre></div>
 <pre><code>## # Source:   table&lt;rental&gt; [?? x 7]
 ## # Database: postgres [postgres@localhost:5432/dvdrental]
 ##    rental_id rental_date         inventory_id customer_id
@@ -473,13 +473,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## # ... with more rows, and 3 more variables: return_date &lt;dttm&gt;,
 ## #   staff_id &lt;int&gt;, last_update &lt;dttm&gt;</code></pre>
 <p>In the code block below, we see that <code>nrows</code> is like <code>str</code> in that it does not trigger a query to the dbms: it just returns NA. See <a href="introduction-to-dbms-queries-11.html#controlling-number-of-rows-returned">Controlling number of rows returned</a> for how to tell R to quit being lazy, get to work, and return all the rows.</p>
-<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb78-1" data-line-number="1"><span class="kw">nrow</span>(rental_table)</a></code></pre></div>
+<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb79-1" data-line-number="1"><span class="kw">nrow</span>(rental_table)</a></code></pre></div>
 <pre><code>## [1] NA</code></pre>
 </div>
 <div id="sub-setting-variables" class="section level3">
 <h3><span class="header-section-number">8.1.4</span> Sub-setting variables</h3>
 <p>A table in the dbms may not only have many more rows than you want and also many more columns. The <code>select</code> command controls which columns are retrieved.</p>
-<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb80-1" data-line-number="1">rental_table <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(rental_date, return_date) <span class="op">%&gt;%</span><span class="st"> </span>head</a></code></pre></div>
+<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb81-1" data-line-number="1">rental_table <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(rental_date, return_date) <span class="op">%&gt;%</span><span class="st"> </span>head</a></code></pre></div>
 <pre><code>## # Source:   lazy query [?? x 2]
 ## # Database: postgres [postgres@localhost:5432/dvdrental]
 ##   rental_date         return_date        
@@ -496,12 +496,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>Good tutorial: <a href="https://suzan.rbind.io/tags/dplyr/">https://suzan.rbind.io/tags/dplyr/</a></li>
 </ul>
 <p>In practice we find tht, <strong>renaming variables</strong> is often quite important because the names in an SQL database might not meet your needs as an analyst. In “the wild” you will find names that are ambiguous or overly specified, with spaces in them, and other problems that will make them difficult to use in R. It is good practice to do whatever renaming you are going to do in a predictablel place like at the top of your code. The names in the <code>dvdrental</code> database are simple and clear, but if they were not, you might rename them for subsequent use in this way:</p>
-<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb82-1" data-line-number="1">renamed_rental_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">tbl</span>(con, <span class="st">&quot;rental&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb82-2" data-line-number="2"><span class="st">  </span><span class="kw">rename</span>(<span class="dt">rental_id_number =</span> rental_id, <span class="dt">inventory_id_number =</span> inventory_id)</a>
-<a class="sourceLine" id="cb82-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb82-4" data-line-number="4">renamed_rental_table <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb82-5" data-line-number="5"><span class="st">  </span><span class="kw">select</span>(rental_id_number, rental_date, inventory_id_number) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb82-6" data-line-number="6"><span class="st">  </span><span class="kw">head</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb83-1" data-line-number="1">renamed_rental_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">tbl</span>(con, <span class="st">&quot;rental&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb83-2" data-line-number="2"><span class="st">  </span><span class="kw">rename</span>(<span class="dt">rental_id_number =</span> rental_id, <span class="dt">inventory_id_number =</span> inventory_id)</a>
+<a class="sourceLine" id="cb83-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb83-4" data-line-number="4">renamed_rental_table <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb83-5" data-line-number="5"><span class="st">  </span><span class="kw">select</span>(rental_id_number, rental_date, inventory_id_number) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb83-6" data-line-number="6"><span class="st">  </span><span class="kw">head</span>()</a></code></pre></div>
 <pre><code>## # Source:   lazy query [?? x 3]
 ## # Database: postgres [postgres@localhost:5432/dvdrental]
 ##   rental_id_number rental_date         inventory_id_number
@@ -516,7 +516,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="controlling-number-of-rows-returned" class="section level3">
 <h3><span class="header-section-number">8.1.5</span> Controlling number of rows returned</h3>
 <p>The <code>collect</code> function triggers the creation of a tibble and controls the number of rows that the DBMS sends to R.</p>
-<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb84-1" data-line-number="1">rental_table <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="dv">3</span>) <span class="op">%&gt;%</span><span class="st"> </span>head</a></code></pre></div>
+<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb85-1" data-line-number="1">rental_table <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="dv">3</span>) <span class="op">%&gt;%</span><span class="st"> </span>head</a></code></pre></div>
 <pre><code>## # A tibble: 3 x 7
 ##   rental_id rental_date         inventory_id customer_id
 ##       &lt;int&gt; &lt;dttm&gt;                     &lt;int&gt;       &lt;int&gt;
@@ -526,18 +526,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## # ... with 3 more variables: return_date &lt;dttm&gt;, staff_id &lt;int&gt;,
 ## #   last_update &lt;dttm&gt;</code></pre>
 <p>In this case the <code>collect</code> function triggers the execution of a query that counts the number of records in the table by <code>staff_id</code>:</p>
-<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb86-1" data-line-number="1">rental_table <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb86-2" data-line-number="2"><span class="st">  </span><span class="kw">count</span>(staff_id) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb86-3" data-line-number="3"><span class="st">  </span><span class="kw">collect</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb87-1" data-line-number="1">rental_table <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb87-2" data-line-number="2"><span class="st">  </span><span class="kw">count</span>(staff_id) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb87-3" data-line-number="3"><span class="st">  </span><span class="kw">collect</span>()</a></code></pre></div>
 <pre><code>## # A tibble: 2 x 2
 ##   staff_id n              
 ##      &lt;int&gt; &lt;S3: integer64&gt;
 ## 1        2 8004           
 ## 2        1 8040</code></pre>
 <p>The <code>collect</code> function affects how much is downloaded, not how many rows the DBMS needs to process the query. This query processes all of the rows in the table but only displays one row of output.</p>
-<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb88-1" data-line-number="1">rental_table <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb88-2" data-line-number="2"><span class="st">  </span><span class="kw">count</span>(staff_id) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb88-3" data-line-number="3"><span class="st">  </span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="dv">1</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb89-1" data-line-number="1">rental_table <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb89-2" data-line-number="2"><span class="st">  </span><span class="kw">count</span>(staff_id) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb89-3" data-line-number="3"><span class="st">  </span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="dv">1</span>)</a></code></pre></div>
 <pre><code>## # A tibble: 1 x 2
 ##   staff_id n              
 ##      &lt;int&gt; &lt;S3: integer64&gt;
@@ -546,20 +546,39 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="random-rows-from-the-dbms" class="section level3">
 <h3><span class="header-section-number">8.1.6</span> Random rows from the dbms</h3>
 <p>When the dbms contains many rows, a sample of the data may be plenty for your purposes. Although <code>dplyr</code> has nice functions to sample a data frame that’s already in R (e.g., the <code>sample_n</code> and <code>sample_frac</code> functions), to get a sample from the dbms we have to use <code>dbGetQuery</code> to send native SQL to the database. To peak ahead, here is one example of a query that retrieves 20 rows from a 1% sample:</p>
-<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb90-1" data-line-number="1">one_percent_sample &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbGetQuery</span>(con,</a>
-<a class="sourceLine" id="cb90-2" data-line-number="2">  <span class="st">&quot;SELECT rental_id, rental_date, inventory_id, customer_id FROM rental TABLESAMPLE SYSTEM(1) LIMIT 20;</span></a>
-<a class="sourceLine" id="cb90-3" data-line-number="3"><span class="st">  &quot;</span>)</a>
-<a class="sourceLine" id="cb90-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb90-5" data-line-number="5">one_percent_sample</a></code></pre></div>
-<pre><code>## [1] rental_id    rental_date  inventory_id customer_id 
-## &lt;0 rows&gt; (or 0-length row.names)</code></pre>
+<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb91-1" data-line-number="1">one_percent_sample &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbGetQuery</span>(con,</a>
+<a class="sourceLine" id="cb91-2" data-line-number="2">  <span class="st">&quot;SELECT rental_id, rental_date, inventory_id, customer_id FROM rental TABLESAMPLE SYSTEM(1) LIMIT 20;</span></a>
+<a class="sourceLine" id="cb91-3" data-line-number="3"><span class="st">  &quot;</span>)</a>
+<a class="sourceLine" id="cb91-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb91-5" data-line-number="5">one_percent_sample</a></code></pre></div>
+<pre><code>##    rental_id         rental_date inventory_id customer_id
+## 1       6746 2005-07-12 14:33:01         3127         537
+## 2       6747 2005-07-12 14:33:21         3651         126
+## 3       6748 2005-07-12 14:39:27         3655         540
+## 4       6749 2005-07-12 14:43:05         2895         334
+## 5       6750 2005-07-12 14:49:39         3838         459
+## 6       6751 2005-07-12 14:50:34         1749         312
+## 7       6752 2005-07-12 14:53:15         3392         453
+## 8       6753 2005-07-12 14:55:42         2591         147
+## 9       6754 2005-07-12 14:59:24         1460         114
+## 10      6755 2005-07-12 15:07:49         2542         126
+## 11      6756 2005-07-12 15:08:28         1174         531
+## 12      6757 2005-07-12 15:09:48          547         558
+## 13      6758 2005-07-12 15:13:49         4098         546
+## 14      6759 2005-07-12 15:14:48         3624          49
+## 15      6760 2005-07-12 15:16:00          501         502
+## 16      6761 2005-07-12 15:17:42         3645           7
+## 17      6762 2005-07-12 15:25:33         3857         262
+## 18      6763 2005-07-12 15:26:34         3364         314
+## 19      6764 2005-07-12 15:29:27         4407         396
+## 20      6765 2005-07-12 15:30:47         2571         433</code></pre>
 </div>
 <div id="examining-dplyrs-sql-query-and-re-using-sql-code" class="section level3">
 <h3><span class="header-section-number">8.1.7</span> Examining <code>dplyr</code>’s SQL query and re-using SQL code</h3>
 <p>The <code>show_query</code> function shows how <code>dplyr</code> is translating your query to the dialect of the target dbms:</p>
-<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb92-1" data-line-number="1">rental_table <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb92-2" data-line-number="2"><span class="st">  </span><span class="kw">count</span>(staff_id) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb92-3" data-line-number="3"><span class="st">  </span><span class="kw">show_query</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb93-1" data-line-number="1">rental_table <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb93-2" data-line-number="2"><span class="st">  </span><span class="kw">count</span>(staff_id) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb93-3" data-line-number="3"><span class="st">  </span><span class="kw">show_query</span>()</a></code></pre></div>
 <pre><code>## &lt;SQL&gt;
 ## SELECT &quot;staff_id&quot;, COUNT(*) AS &quot;n&quot;
 ## FROM &quot;rental&quot;
@@ -569,22 +588,22 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="https://dbplyr.tidyverse.org/articles/sql-translation.html">https://dbplyr.tidyverse.org/articles/sql-translation.html</a></li>
 </ul>
 <p>The SQL code can submit the same query directly to the DBMS with the <code>DBI::dbGetQuery</code> function:</p>
-<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb94-1" data-line-number="1">DBI<span class="op">::</span><span class="kw">dbGetQuery</span>(con,</a>
-<a class="sourceLine" id="cb94-2" data-line-number="2">  <span class="st">&#39;SELECT &quot;staff_id&quot;, COUNT(*) AS &quot;n&quot;</span></a>
-<a class="sourceLine" id="cb94-3" data-line-number="3"><span class="st">   FROM &quot;rental&quot;</span></a>
-<a class="sourceLine" id="cb94-4" data-line-number="4"><span class="st">   GROUP BY &quot;staff_id&quot;;</span></a>
-<a class="sourceLine" id="cb94-5" data-line-number="5"><span class="st">  &#39;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb95-1" data-line-number="1">DBI<span class="op">::</span><span class="kw">dbGetQuery</span>(con,</a>
+<a class="sourceLine" id="cb95-2" data-line-number="2">  <span class="st">&#39;SELECT &quot;staff_id&quot;, COUNT(*) AS &quot;n&quot;</span></a>
+<a class="sourceLine" id="cb95-3" data-line-number="3"><span class="st">   FROM &quot;rental&quot;</span></a>
+<a class="sourceLine" id="cb95-4" data-line-number="4"><span class="st">   GROUP BY &quot;staff_id&quot;;</span></a>
+<a class="sourceLine" id="cb95-5" data-line-number="5"><span class="st">  &#39;</span>)</a></code></pre></div>
 <pre><code>##   staff_id    n
 ## 1        2 8004
 ## 2        1 8040</code></pre>
 <p>&lt;&lt;smy We haven’t investigated this, but it looks like <code>dplyr</code> collect() function triggers a call simmilar to the dbGetQuery call above. The default <code>dplyr</code> behavior looks like dbSendQuery() and dbFetch() model is used.&gt;&gt;</p>
 <p>When you create a report to run repeatedly, you might want to put that query into R markdown. That way you can also execute that SQL code in a chunk with the following header:</p>
 <p>{<code>sql, connection=con, output.var = &quot;query_results&quot;</code>}</p>
-<div class="sourceCode" id="cb96"><pre class="sourceCode sql"><code class="sourceCode sql"><a class="sourceLine" id="cb96-1" data-line-number="1"><span class="kw">SELECT</span> <span class="ot">&quot;staff_id&quot;</span>, <span class="fu">COUNT</span>(*) <span class="kw">AS</span> <span class="ot">&quot;n&quot;</span></a>
-<a class="sourceLine" id="cb96-2" data-line-number="2"><span class="kw">FROM</span> <span class="ot">&quot;rental&quot;</span></a>
-<a class="sourceLine" id="cb96-3" data-line-number="3"><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="ot">&quot;staff_id&quot;</span>;</a></code></pre></div>
+<div class="sourceCode" id="cb97"><pre class="sourceCode sql"><code class="sourceCode sql"><a class="sourceLine" id="cb97-1" data-line-number="1"><span class="kw">SELECT</span> <span class="ot">&quot;staff_id&quot;</span>, <span class="fu">COUNT</span>(*) <span class="kw">AS</span> <span class="ot">&quot;n&quot;</span></a>
+<a class="sourceLine" id="cb97-2" data-line-number="2"><span class="kw">FROM</span> <span class="ot">&quot;rental&quot;</span></a>
+<a class="sourceLine" id="cb97-3" data-line-number="3"><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="ot">&quot;staff_id&quot;</span>;</a></code></pre></div>
 <p>Rmarkdown stored that query result in a tibble:</p>
-<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb97-1" data-line-number="1">query_results</a></code></pre></div>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb98-1" data-line-number="1">query_results</a></code></pre></div>
 <pre><code>##   staff_id    n
 ## 1        2 8004
 ## 2        1 8040</code></pre>
@@ -603,7 +622,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="str---a-base-package-workhorse" class="section level3">
 <h3><span class="header-section-number">8.2.1</span> <code>str</code> - a base package workhorse</h3>
 <p><code>str</code> is a workhorse function that lists variables, their type and a sample of the first few variable values.</p>
-<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb99-1" data-line-number="1"><span class="kw">str</span>(rental_tibble)</a></code></pre></div>
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb100-1" data-line-number="1"><span class="kw">str</span>(rental_tibble)</a></code></pre></div>
 <pre><code>## &#39;data.frame&#39;:    16044 obs. of  7 variables:
 ##  $ rental_id   : int  2 3 4 5 6 7 8 9 10 11 ...
 ##  $ rental_date : POSIXct, format: &quot;2005-05-24 22:54:33&quot; &quot;2005-05-24 23:03:39&quot; ...
@@ -616,14 +635,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="always-just-look-at-your-data-with-head-view-or-kable" class="section level3">
 <h3><span class="header-section-number">8.2.2</span> Always just <strong>look</strong> at your data with <code>head</code>, <code>View</code>, or <code>kable</code></h3>
 <p>There is no substitute for looking at your data and R provides several ways to just browse it. The <code>head</code> function controls the number of rows that are displayed. Note that tail does not work against a database object. In every-day practice you would look at more than the default 6 rows, but here we wrap <code>head</code> around the data frame:</p>
-<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb101-1" data-line-number="1"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(rental_tibble))</a></code></pre></div>
-<div id="htmlwidget-cfdf92602aefac17f3c4" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-cfdf92602aefac17f3c4">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[2,3,4,5,6,7],["2005-05-25T05:54:33Z","2005-05-25T06:03:39Z","2005-05-25T06:04:41Z","2005-05-25T06:05:21Z","2005-05-25T06:08:07Z","2005-05-25T06:11:53Z"],[1525,1711,2452,2079,2792,3995],[459,408,333,222,549,269],["2005-05-29T02:40:33Z","2005-06-02T05:12:39Z","2005-06-03T08:43:41Z","2005-06-02T11:33:21Z","2005-05-27T08:32:07Z","2005-05-30T03:34:53Z"],[1,1,2,1,1,2],["2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>rental_id<\/th>\n      <th>rental_date<\/th>\n      <th>inventory_id<\/th>\n      <th>customer_id<\/th>\n      <th>return_date<\/th>\n      <th>staff_id<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb102-1" data-line-number="1"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(rental_tibble))</a></code></pre></div>
+<div id="htmlwidget-8c343fef61df20dfcbdc" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-8c343fef61df20dfcbdc">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[2,3,4,5,6,7],["2005-05-25T05:54:33Z","2005-05-25T06:03:39Z","2005-05-25T06:04:41Z","2005-05-25T06:05:21Z","2005-05-25T06:08:07Z","2005-05-25T06:11:53Z"],[1525,1711,2452,2079,2792,3995],[459,408,333,222,549,269],["2005-05-29T02:40:33Z","2005-06-02T05:12:39Z","2005-06-03T08:43:41Z","2005-06-02T11:33:21Z","2005-05-27T08:32:07Z","2005-05-30T03:34:53Z"],[1,1,2,1,1,2],["2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>rental_id<\/th>\n      <th>rental_date<\/th>\n      <th>inventory_id<\/th>\n      <th>customer_id<\/th>\n      <th>return_date<\/th>\n      <th>staff_id<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="the-summary-function-in-base" class="section level3">
 <h3><span class="header-section-number">8.2.3</span> The <code>summary</code> function in base</h3>
 <p>The basic statistics that the base package <code>summary</code> provides can serve a unique diagnostic purpose in this context. For example, the following output shows that <code>rental_id</code> is a sequential number from 1 to 16,049 with no gaps. The same is true of <code>inventory_id</code>. The number of NA’s is a good first guess as to the number of dvd’s rented out or lost on 2005-09-02 02:35:22.</p>
-<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb102-1" data-line-number="1"><span class="kw">summary</span>(rental_tibble)</a></code></pre></div>
+<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb103-1" data-line-number="1"><span class="kw">summary</span>(rental_tibble)</a></code></pre></div>
 <pre><code>##    rental_id      rental_date                   inventory_id 
 ##  Min.   :    1   Min.   :2005-05-24 22:53:30   Min.   :   1  
 ##  1st Qu.: 4014   1st Qu.:2005-07-07 00:58:40   1st Qu.:1154  
@@ -652,7 +671,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="the-glimpse-function-in-the-tibble-package" class="section level3">
 <h3><span class="header-section-number">8.2.4</span> The <code>glimpse</code> function in the <code>tibble</code> package</h3>
 <p>The <code>tibble</code> package’s <code>glimpse</code> function is a more compact version of <code>str</code>:</p>
-<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb104-1" data-line-number="1">tibble<span class="op">::</span><span class="kw">glimpse</span>(rental_tibble)</a></code></pre></div>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb105-1" data-line-number="1">tibble<span class="op">::</span><span class="kw">glimpse</span>(rental_tibble)</a></code></pre></div>
 <pre><code>## Observations: 16,044
 ## Variables: 7
 ## $ rental_id    &lt;int&gt; 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 1...
@@ -666,18 +685,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="the-skim-function-in-the-skmir-package" class="section level3">
 <h3><span class="header-section-number">8.2.5</span> The <code>skim</code> function in the <code>skmir</code> package</h3>
 <p>The <code>skimr</code> package has several functions that make it easy to examine an unknown data frame and assess what it contains. It is also extensible.</p>
-<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb106-1" data-line-number="1"><span class="kw">library</span>(skimr)</a></code></pre></div>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb107-1" data-line-number="1"><span class="kw">library</span>(skimr)</a></code></pre></div>
 <pre><code>## 
 ## Attaching package: &#39;skimr&#39;</code></pre>
 <pre><code>## The following object is masked from &#39;package:knitr&#39;:
 ## 
 ##     kable</code></pre>
-<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb109-1" data-line-number="1"><span class="kw">skim</span>(rental_tibble)</a></code></pre></div>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb110-1" data-line-number="1"><span class="kw">skim</span>(rental_tibble)</a></code></pre></div>
 <pre><code>## Skim summary statistics
 ##  n obs: 16044 
 ##  n variables: 7 
 ## 
-## ── Variable type:integer ────────────────────────────────────────────────────────────
+## ── Variable type:integer ──────────────────────────────────────────────────
 ##      variable missing complete     n    mean      sd p0     p25    p50
 ##   customer_id       0    16044 16044  297.14  172.45  1  148     296  
 ##  inventory_id       0    16044 16044 2291.84 1322.21  1 1154    2291  
@@ -689,7 +708,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##  12037.25 16049 ▇▇▇▇▇▇▇▇
 ##      2        2 ▇▁▁▁▁▁▁▇
 ## 
-## ── Variable type:POSIXct ────────────────────────────────────────────────────────────
+## ── Variable type:POSIXct ──────────────────────────────────────────────────
 ##     variable missing complete     n        min        max     median
 ##  last_update       0    16044 16044 2006-02-15 2006-02-23 2006-02-16
 ##  rental_date       0    16044 16044 2005-05-24 2006-02-14 2005-07-28
@@ -698,7 +717,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##         3
 ##     15815
 ##     15836</code></pre>
-<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb111-1" data-line-number="1">wide_rental_skim &lt;-<span class="st"> </span><span class="kw">skim_to_wide</span>(rental_tibble)</a></code></pre></div>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb112-1" data-line-number="1">wide_rental_skim &lt;-<span class="st"> </span><span class="kw">skim_to_wide</span>(rental_tibble)</a></code></pre></div>
 </div>
 </div>
 <div id="dividing-the-work-between-r-on-your-machine-and-the-dbms" class="section level2">
@@ -726,8 +745,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="dplyr-tools" class="section level3">
 <h3><span class="header-section-number">8.3.3</span> <code>dplyr</code> tools</h3>
 <p>Where you place the <code>collect</code> function matters.</p>
-<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb112-1" data-line-number="1"><span class="kw">dbDisconnect</span>(con)</a>
-<a class="sourceLine" id="cb112-2" data-line-number="2"><span class="kw">sp_docker_stop</span>(<span class="st">&quot;sql-pet&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb113-1" data-line-number="1"><span class="kw">dbDisconnect</span>(con)</a>
+<a class="sourceLine" id="cb113-2" data-line-number="2"><span class="kw">sp_docker_stop</span>(<span class="st">&quot;sql-pet&quot;</span>)</a></code></pre></div>
 <pre><code>## [1] &quot;sql-pet&quot;</code></pre>
 </div>
 </div>

@@ -25,7 +25,7 @@
 <meta name="author" content="Dipti Muni, Ian Frantz, John David Smith, Mary Anne Thygesen, M. Edward (Ed) Borasky, Scott Case, and Sophie Yang">
 
 
-<meta name="date" content="2018-10-27">
+<meta name="date" content="2018-10-28">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -364,28 +364,28 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>examining <code>dplyr</code> queries (<code>dplyr::show_query</code> on the R side v EXPLAIN on the PostgreSQL side)</li>
 </ul>
 <p>Start up the <code>docker-pet</code> container</p>
-<div class="sourceCode" id="cb276"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb276-1" data-line-number="1"><span class="kw">sp_docker_start</span>(<span class="st">&quot;sql-pet&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb279"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb279-1" data-line-number="1"><span class="kw">sp_docker_start</span>(<span class="st">&quot;sql-pet&quot;</span>)</a></code></pre></div>
 <p>now connect to the database with R</p>
-<div class="sourceCode" id="cb277"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb277-1" data-line-number="1">con &lt;-<span class="st"> </span><span class="kw">sp_get_postgres_connection</span>(<span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),</a>
-<a class="sourceLine" id="cb277-2" data-line-number="2">                         <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),</a>
-<a class="sourceLine" id="cb277-3" data-line-number="3">                         <span class="dt">dbname =</span> <span class="st">&quot;dvdrental&quot;</span>,</a>
-<a class="sourceLine" id="cb277-4" data-line-number="4">                         <span class="dt">seconds_to_test =</span> <span class="dv">10</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb280"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb280-1" data-line-number="1">con &lt;-<span class="st"> </span><span class="kw">sp_get_postgres_connection</span>(<span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),</a>
+<a class="sourceLine" id="cb280-2" data-line-number="2">                         <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),</a>
+<a class="sourceLine" id="cb280-3" data-line-number="3">                         <span class="dt">dbname =</span> <span class="st">&quot;dvdrental&quot;</span>,</a>
+<a class="sourceLine" id="cb280-4" data-line-number="4">                         <span class="dt">seconds_to_test =</span> <span class="dv">10</span>)</a></code></pre></div>
 <div id="performance-considerations" class="section level2">
 <h2><span class="header-section-number">15.1</span> Performance considerations</h2>
-<div class="sourceCode" id="cb278"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb278-1" data-line-number="1"><span class="co">## Explain a `dplyr::join`</span></a>
-<a class="sourceLine" id="cb278-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb278-3" data-line-number="3"><span class="co">## Explain the quivalent SQL join</span></a>
-<a class="sourceLine" id="cb278-4" data-line-number="4">rs1 &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbGetQuery</span>(con</a>
-<a class="sourceLine" id="cb278-5" data-line-number="5">                 ,<span class="st">&quot;SELECT c.* </span></a>
-<a class="sourceLine" id="cb278-6" data-line-number="6"><span class="st">                     FROM pg_catalog.pg_class c</span></a>
-<a class="sourceLine" id="cb278-7" data-line-number="7"><span class="st">                     JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace</span></a>
-<a class="sourceLine" id="cb278-8" data-line-number="8"><span class="st">                    WHERE  n.nspname = &#39;public&#39;</span></a>
-<a class="sourceLine" id="cb278-9" data-line-number="9"><span class="st">                      AND  c.relname = &#39;cust_movies&#39;</span></a>
-<a class="sourceLine" id="cb278-10" data-line-number="10"><span class="st">                      AND  c.relkind = &#39;r&#39;</span></a>
-<a class="sourceLine" id="cb278-11" data-line-number="11"><span class="st">                   ;</span></a>
-<a class="sourceLine" id="cb278-12" data-line-number="12"><span class="st">                 &quot;</span></a>
-<a class="sourceLine" id="cb278-13" data-line-number="13">                 )</a>
-<a class="sourceLine" id="cb278-14" data-line-number="14"><span class="kw">head</span>(rs1)</a></code></pre></div>
+<div class="sourceCode" id="cb281"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb281-1" data-line-number="1"><span class="co">## Explain a `dplyr::join`</span></a>
+<a class="sourceLine" id="cb281-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb281-3" data-line-number="3"><span class="co">## Explain the quivalent SQL join</span></a>
+<a class="sourceLine" id="cb281-4" data-line-number="4">rs1 &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbGetQuery</span>(con</a>
+<a class="sourceLine" id="cb281-5" data-line-number="5">                 ,<span class="st">&quot;SELECT c.* </span></a>
+<a class="sourceLine" id="cb281-6" data-line-number="6"><span class="st">                     FROM pg_catalog.pg_class c</span></a>
+<a class="sourceLine" id="cb281-7" data-line-number="7"><span class="st">                     JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace</span></a>
+<a class="sourceLine" id="cb281-8" data-line-number="8"><span class="st">                    WHERE  n.nspname = &#39;public&#39;</span></a>
+<a class="sourceLine" id="cb281-9" data-line-number="9"><span class="st">                      AND  c.relname = &#39;cust_movies&#39;</span></a>
+<a class="sourceLine" id="cb281-10" data-line-number="10"><span class="st">                      AND  c.relkind = &#39;r&#39;</span></a>
+<a class="sourceLine" id="cb281-11" data-line-number="11"><span class="st">                   ;</span></a>
+<a class="sourceLine" id="cb281-12" data-line-number="12"><span class="st">                 &quot;</span></a>
+<a class="sourceLine" id="cb281-13" data-line-number="13">                 )</a>
+<a class="sourceLine" id="cb281-14" data-line-number="14"><span class="kw">head</span>(rs1)</a></code></pre></div>
 <pre><code>##  [1] relname             relnamespace        reltype            
 ##  [4] reloftype           relowner            relam              
 ##  [7] relfilenode         reltablespace       relpages           
@@ -399,22 +399,22 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## [31] relacl              reloptions          relpartbound       
 ## &lt;0 rows&gt; (or 0-length row.names)</code></pre>
 <p>This came from 14-sql_pet-examples-part-b.Rmd</p>
-<div class="sourceCode" id="cb280"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb280-1" data-line-number="1">rs1 &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbGetQuery</span>(con,</a>
-<a class="sourceLine" id="cb280-2" data-line-number="2">                <span class="st">&quot;explain select r.*</span></a>
-<a class="sourceLine" id="cb280-3" data-line-number="3"><span class="st">                   from rental r </span></a>
-<a class="sourceLine" id="cb280-4" data-line-number="4"><span class="st">                 ;&quot;</span></a>
-<a class="sourceLine" id="cb280-5" data-line-number="5">                )  </a>
-<a class="sourceLine" id="cb280-6" data-line-number="6"><span class="kw">head</span>(rs1)</a></code></pre></div>
+<div class="sourceCode" id="cb283"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb283-1" data-line-number="1">rs1 &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbGetQuery</span>(con,</a>
+<a class="sourceLine" id="cb283-2" data-line-number="2">                <span class="st">&quot;explain select r.*</span></a>
+<a class="sourceLine" id="cb283-3" data-line-number="3"><span class="st">                   from rental r </span></a>
+<a class="sourceLine" id="cb283-4" data-line-number="4"><span class="st">                 ;&quot;</span></a>
+<a class="sourceLine" id="cb283-5" data-line-number="5">                )  </a>
+<a class="sourceLine" id="cb283-6" data-line-number="6"><span class="kw">head</span>(rs1)</a></code></pre></div>
 <pre><code>##                                                      QUERY PLAN
 ## 1 Seq Scan on rental r  (cost=0.00..310.44 rows=16044 width=36)</code></pre>
-<div class="sourceCode" id="cb282"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb282-1" data-line-number="1">rs2 &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbGetQuery</span>(con,</a>
-<a class="sourceLine" id="cb282-2" data-line-number="2">                <span class="st">&quot;explain select count(*) count</span></a>
-<a class="sourceLine" id="cb282-3" data-line-number="3"><span class="st">                   from rental r </span></a>
-<a class="sourceLine" id="cb282-4" data-line-number="4"><span class="st">                        left outer join payment p </span></a>
-<a class="sourceLine" id="cb282-5" data-line-number="5"><span class="st">                          on r.rental_id = p.rental_id  </span></a>
-<a class="sourceLine" id="cb282-6" data-line-number="6"><span class="st">                    where p.rental_id is null</span></a>
-<a class="sourceLine" id="cb282-7" data-line-number="7"><span class="st">                 ;&quot;</span>)</a>
-<a class="sourceLine" id="cb282-8" data-line-number="8"><span class="kw">head</span>(rs2)</a></code></pre></div>
+<div class="sourceCode" id="cb285"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb285-1" data-line-number="1">rs2 &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbGetQuery</span>(con,</a>
+<a class="sourceLine" id="cb285-2" data-line-number="2">                <span class="st">&quot;explain select count(*) count</span></a>
+<a class="sourceLine" id="cb285-3" data-line-number="3"><span class="st">                   from rental r </span></a>
+<a class="sourceLine" id="cb285-4" data-line-number="4"><span class="st">                        left outer join payment p </span></a>
+<a class="sourceLine" id="cb285-5" data-line-number="5"><span class="st">                          on r.rental_id = p.rental_id  </span></a>
+<a class="sourceLine" id="cb285-6" data-line-number="6"><span class="st">                    where p.rental_id is null</span></a>
+<a class="sourceLine" id="cb285-7" data-line-number="7"><span class="st">                 ;&quot;</span>)</a>
+<a class="sourceLine" id="cb285-8" data-line-number="8"><span class="kw">head</span>(rs2)</a></code></pre></div>
 <pre><code>##                                                                        QUERY PLAN
 ## 1                                 Aggregate  (cost=896.49..896.50 rows=1 width=8)
 ## 2                     -&gt;  Hash Anti Join  (cost=436.41..892.86 rows=1452 width=0)
@@ -422,18 +422,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 4                -&gt;  Seq Scan on rental r  (cost=0.00..310.44 rows=16044 width=4)
 ## 5                              -&gt;  Hash  (cost=253.96..253.96 rows=14596 width=4)
 ## 6               -&gt;  Seq Scan on payment p  (cost=0.00..253.96 rows=14596 width=4)</code></pre>
-<div class="sourceCode" id="cb284"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb284-1" data-line-number="1">rs3 &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbGetQuery</span>(con,</a>
-<a class="sourceLine" id="cb284-2" data-line-number="2">                <span class="st">&quot;explain select sum(f.rental_rate) open_amt,count(*) count</span></a>
-<a class="sourceLine" id="cb284-3" data-line-number="3"><span class="st">                   from rental r </span></a>
-<a class="sourceLine" id="cb284-4" data-line-number="4"><span class="st">                        left outer join payment p </span></a>
-<a class="sourceLine" id="cb284-5" data-line-number="5"><span class="st">                          on r.rental_id = p.rental_id </span></a>
-<a class="sourceLine" id="cb284-6" data-line-number="6"><span class="st">                        join inventory i</span></a>
-<a class="sourceLine" id="cb284-7" data-line-number="7"><span class="st">                          on r.inventory_id = i.inventory_id</span></a>
-<a class="sourceLine" id="cb284-8" data-line-number="8"><span class="st">                        join film f</span></a>
-<a class="sourceLine" id="cb284-9" data-line-number="9"><span class="st">                          on i.film_id = f.film_id</span></a>
-<a class="sourceLine" id="cb284-10" data-line-number="10"><span class="st">                    where p.rental_id is null</span></a>
-<a class="sourceLine" id="cb284-11" data-line-number="11"><span class="st">                 ;&quot;</span>)</a>
-<a class="sourceLine" id="cb284-12" data-line-number="12"><span class="kw">head</span>(rs3)</a></code></pre></div>
+<div class="sourceCode" id="cb287"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb287-1" data-line-number="1">rs3 &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbGetQuery</span>(con,</a>
+<a class="sourceLine" id="cb287-2" data-line-number="2">                <span class="st">&quot;explain select sum(f.rental_rate) open_amt,count(*) count</span></a>
+<a class="sourceLine" id="cb287-3" data-line-number="3"><span class="st">                   from rental r </span></a>
+<a class="sourceLine" id="cb287-4" data-line-number="4"><span class="st">                        left outer join payment p </span></a>
+<a class="sourceLine" id="cb287-5" data-line-number="5"><span class="st">                          on r.rental_id = p.rental_id </span></a>
+<a class="sourceLine" id="cb287-6" data-line-number="6"><span class="st">                        join inventory i</span></a>
+<a class="sourceLine" id="cb287-7" data-line-number="7"><span class="st">                          on r.inventory_id = i.inventory_id</span></a>
+<a class="sourceLine" id="cb287-8" data-line-number="8"><span class="st">                        join film f</span></a>
+<a class="sourceLine" id="cb287-9" data-line-number="9"><span class="st">                          on i.film_id = f.film_id</span></a>
+<a class="sourceLine" id="cb287-10" data-line-number="10"><span class="st">                    where p.rental_id is null</span></a>
+<a class="sourceLine" id="cb287-11" data-line-number="11"><span class="st">                 ;&quot;</span>)</a>
+<a class="sourceLine" id="cb287-12" data-line-number="12"><span class="kw">head</span>(rs3)</a></code></pre></div>
 <pre><code>##                                                                        QUERY PLAN
 ## 1                              Aggregate  (cost=1101.11..1101.12 rows=1 width=40)
 ## 2                         -&gt;  Hash Join  (cost=987.51..1093.84 rows=1452 width=6)
@@ -441,23 +441,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 4                         -&gt;  Hash Join  (cost=911.01..1013.52 rows=1452 width=2)
 ## 5                                    Hash Cond: (i.inventory_id = r.inventory_id)
 ## 6               -&gt;  Seq Scan on inventory i  (cost=0.00..70.81 rows=4581 width=6)</code></pre>
-<div class="sourceCode" id="cb286"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb286-1" data-line-number="1">rs4 &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbGetQuery</span>(con,</a>
-<a class="sourceLine" id="cb286-2" data-line-number="2">                <span class="st">&quot;explain select c.customer_id,c.first_name,c.last_name,sum(f.rental_rate) open_amt,count(*) count</span></a>
-<a class="sourceLine" id="cb286-3" data-line-number="3"><span class="st">                   from rental r </span></a>
-<a class="sourceLine" id="cb286-4" data-line-number="4"><span class="st">                        left outer join payment p </span></a>
-<a class="sourceLine" id="cb286-5" data-line-number="5"><span class="st">                          on r.rental_id = p.rental_id  </span></a>
-<a class="sourceLine" id="cb286-6" data-line-number="6"><span class="st">                        join inventory i</span></a>
-<a class="sourceLine" id="cb286-7" data-line-number="7"><span class="st">                          on r.inventory_id = i.inventory_id</span></a>
-<a class="sourceLine" id="cb286-8" data-line-number="8"><span class="st">                        join film f</span></a>
-<a class="sourceLine" id="cb286-9" data-line-number="9"><span class="st">                          on i.film_id = f.film_id</span></a>
-<a class="sourceLine" id="cb286-10" data-line-number="10"><span class="st">                        join customer c</span></a>
-<a class="sourceLine" id="cb286-11" data-line-number="11"><span class="st">                          on r.customer_id = c.customer_id</span></a>
-<a class="sourceLine" id="cb286-12" data-line-number="12"><span class="st">                  where p.rental_id is null</span></a>
-<a class="sourceLine" id="cb286-13" data-line-number="13"><span class="st">                  group by c.customer_id,c.first_name,c.last_name</span></a>
-<a class="sourceLine" id="cb286-14" data-line-number="14"><span class="st">                  order by open_amt desc</span></a>
-<a class="sourceLine" id="cb286-15" data-line-number="15"><span class="st">                 ;&quot;</span></a>
-<a class="sourceLine" id="cb286-16" data-line-number="16">                )  </a>
-<a class="sourceLine" id="cb286-17" data-line-number="17"><span class="kw">head</span>(rs4)</a></code></pre></div>
+<div class="sourceCode" id="cb289"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb289-1" data-line-number="1">rs4 &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbGetQuery</span>(con,</a>
+<a class="sourceLine" id="cb289-2" data-line-number="2">                <span class="st">&quot;explain select c.customer_id,c.first_name,c.last_name,sum(f.rental_rate) open_amt,count(*) count</span></a>
+<a class="sourceLine" id="cb289-3" data-line-number="3"><span class="st">                   from rental r </span></a>
+<a class="sourceLine" id="cb289-4" data-line-number="4"><span class="st">                        left outer join payment p </span></a>
+<a class="sourceLine" id="cb289-5" data-line-number="5"><span class="st">                          on r.rental_id = p.rental_id  </span></a>
+<a class="sourceLine" id="cb289-6" data-line-number="6"><span class="st">                        join inventory i</span></a>
+<a class="sourceLine" id="cb289-7" data-line-number="7"><span class="st">                          on r.inventory_id = i.inventory_id</span></a>
+<a class="sourceLine" id="cb289-8" data-line-number="8"><span class="st">                        join film f</span></a>
+<a class="sourceLine" id="cb289-9" data-line-number="9"><span class="st">                          on i.film_id = f.film_id</span></a>
+<a class="sourceLine" id="cb289-10" data-line-number="10"><span class="st">                        join customer c</span></a>
+<a class="sourceLine" id="cb289-11" data-line-number="11"><span class="st">                          on r.customer_id = c.customer_id</span></a>
+<a class="sourceLine" id="cb289-12" data-line-number="12"><span class="st">                  where p.rental_id is null</span></a>
+<a class="sourceLine" id="cb289-13" data-line-number="13"><span class="st">                  group by c.customer_id,c.first_name,c.last_name</span></a>
+<a class="sourceLine" id="cb289-14" data-line-number="14"><span class="st">                  order by open_amt desc</span></a>
+<a class="sourceLine" id="cb289-15" data-line-number="15"><span class="st">                 ;&quot;</span></a>
+<a class="sourceLine" id="cb289-16" data-line-number="16">                )  </a>
+<a class="sourceLine" id="cb289-17" data-line-number="17"><span class="kw">head</span>(rs4)</a></code></pre></div>
 <pre><code>##                                                          QUERY PLAN
 ## 1                   Sort  (cost=1166.25..1167.75 rows=600 width=57)
 ## 2                               Sort Key: (sum(f.rental_rate)) DESC
@@ -468,14 +468,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="clean-up-1" class="section level2">
 <h2><span class="header-section-number">15.2</span> Clean up</h2>
-<div class="sourceCode" id="cb288"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb288-1" data-line-number="1"><span class="co"># dbRemoveTable(con, &quot;cars&quot;)</span></a>
-<a class="sourceLine" id="cb288-2" data-line-number="2"><span class="co"># dbRemoveTable(con, &quot;mtcars&quot;)</span></a>
-<a class="sourceLine" id="cb288-3" data-line-number="3"><span class="co"># dbRemoveTable(con, &quot;cust_movies&quot;)</span></a>
-<a class="sourceLine" id="cb288-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb288-5" data-line-number="5"><span class="co"># diconnect from the db</span></a>
-<a class="sourceLine" id="cb288-6" data-line-number="6"><span class="kw">dbDisconnect</span>(con)</a>
-<a class="sourceLine" id="cb288-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb288-8" data-line-number="8"><span class="kw">sp_docker_stop</span>(<span class="st">&quot;sql-pet&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb291"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb291-1" data-line-number="1"><span class="co"># dbRemoveTable(con, &quot;cars&quot;)</span></a>
+<a class="sourceLine" id="cb291-2" data-line-number="2"><span class="co"># dbRemoveTable(con, &quot;mtcars&quot;)</span></a>
+<a class="sourceLine" id="cb291-3" data-line-number="3"><span class="co"># dbRemoveTable(con, &quot;cust_movies&quot;)</span></a>
+<a class="sourceLine" id="cb291-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb291-5" data-line-number="5"><span class="co"># diconnect from the db</span></a>
+<a class="sourceLine" id="cb291-6" data-line-number="6"><span class="kw">dbDisconnect</span>(con)</a>
+<a class="sourceLine" id="cb291-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb291-8" data-line-number="8"><span class="kw">sp_docker_stop</span>(<span class="st">&quot;sql-pet&quot;</span>)</a></code></pre></div>
 <pre><code>## [1] &quot;sql-pet&quot;</code></pre>
 
 </div>
