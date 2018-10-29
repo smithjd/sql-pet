@@ -60,7 +60,7 @@
 <style type="text/css">
 a.sourceLine { display: inline-block; line-height: 1.25; }
 a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -73,11 +73,13 @@ code.sourceCode { white-space: pre-wrap; }
 a.sourceLine { text-indent: -1em; padding-left: 1em; }
 }
 pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
 pre.numberSource a.sourceLine::before
   { content: attr(data-line-number);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -378,12 +380,12 @@ PostgreSQL database works. If you are satisfied with the method shown in
 Chapter 5, skip this and only come back if you’re interested in picking
 apart the steps.</p>
 <div class="sourceCode" id="cb321"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb321-1" data-line-number="1"><span class="kw">library</span>(tidyverse)</a></code></pre></div>
-<pre><code>## ── Attaching packages ───────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
-<pre><code>## ✔ ggplot2 3.1.0     ✔ purrr   0.2.5
+<pre><code>## ── Attaching packages ───────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
+<pre><code>## ✔ ggplot2 3.0.0     ✔ purrr   0.2.5
 ## ✔ tibble  1.4.2     ✔ dplyr   0.7.7
-## ✔ tidyr   0.8.2     ✔ stringr 1.3.1
+## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
 ## ✔ readr   1.1.1     ✔ forcats 0.3.0</code></pre>
-<pre><code>## ── Conflicts ──────────────────────────────────────── tidyverse_conflicts() ──
+<pre><code>## ── Conflicts ──────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <div class="sourceCode" id="cb325"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb325-1" data-line-number="1"><span class="kw">library</span>(DBI)</a>
@@ -404,7 +406,7 @@ apart the steps.</p>
 ##     ident, sql</code></pre>
 <div class="sourceCode" id="cb333"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb333-1" data-line-number="1"><span class="kw">library</span>(sqlpetr)</a>
 <a class="sourceLine" id="cb333-2" data-line-number="2"><span class="kw">library</span>(here)</a></code></pre></div>
-<pre><code>## here() starts at /home/znmeb/Projects/sql-pet</code></pre>
+<pre><code>## here() starts at /Users/jds/Documents/Library/R/r-system/sql-pet</code></pre>
 </div>
 <div id="download-the-dvdrental-backup-file" class="section level2">
 <h2><span class="header-section-number">20.2</span> Download the <code>dvdrental</code> backup file</h2>
@@ -423,7 +425,7 @@ apart the steps.</p>
 <pre><code>## [1] &quot;dvdrental.tar&quot; &quot;dvdrental.zip&quot;</code></pre>
 <div class="sourceCode" id="cb340"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb340-1" data-line-number="1"><span class="kw">sp_show_all_docker_containers</span>()</a></code></pre></div>
 <pre><code>## [1] &quot;CONTAINER ID        IMAGE                COMMAND                  CREATED              STATUS                     PORTS               NAMES&quot;    
-## [2] &quot;3dffcd7da689        postgres-dvdrental   \&quot;docker-entrypoint.s…\&quot;   About a minute ago   Exited (0) 9 seconds ago                       sql-pet&quot;</code></pre>
+## [2] &quot;0945aa1af958        postgres-dvdrental   \&quot;docker-entrypoint.s…\&quot;   About a minute ago   Exited (0) 5 seconds ago                       sql-pet&quot;</code></pre>
 <p>Remove the <code>sql-pet</code> container if it exists (e.g., from a prior run)</p>
 <div class="sourceCode" id="cb342"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb342-1" data-line-number="1"><span class="cf">if</span> (<span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, <span class="st">&quot;ps -a&quot;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb342-2" data-line-number="2"><span class="st">    </span><span class="kw">grepl</span>(<span class="dt">x =</span> ., <span class="dt">pattern =</span> <span class="st">&#39;sql-pet&#39;</span>) <span class="op">%&gt;%</span></a>
@@ -439,7 +441,7 @@ Docker directories that need to be shared. Expose the standard
 PostgreSQL port 5432.</p>
 <div class="sourceCode" id="cb344"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb344-1" data-line-number="1">wd &lt;-<span class="st"> </span><span class="kw">here</span>()</a>
 <a class="sourceLine" id="cb344-2" data-line-number="2">wd</a></code></pre></div>
-<pre><code>## [1] &quot;/home/znmeb/Projects/sql-pet&quot;</code></pre>
+<pre><code>## [1] &quot;/Users/jds/Documents/Library/R/r-system/sql-pet&quot;</code></pre>
 <div class="sourceCode" id="cb346"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb346-1" data-line-number="1">docker_cmd &lt;-<span class="st"> </span><span class="kw">glue</span>(</a>
 <a class="sourceLine" id="cb346-2" data-line-number="2">  <span class="st">&quot;run &quot;</span>,      <span class="co"># Run is the Docker command.  Everything that follows are `run` parameters.</span></a>
 <a class="sourceLine" id="cb346-3" data-line-number="3">  <span class="st">&quot;--detach &quot;</span>, <span class="co"># (or `-d`) tells Docker to disconnect from the terminal / program issuing the command</span></a>
@@ -451,9 +453,9 @@ PostgreSQL port 5432.</p>
 <a class="sourceLine" id="cb346-9" data-line-number="9">)</a>
 <a class="sourceLine" id="cb346-10" data-line-number="10"></a>
 <a class="sourceLine" id="cb346-11" data-line-number="11">docker_cmd</a></code></pre></div>
-<pre><code>## run --detach  --name sql-pet --publish 5432:5432 --mount type=bind,source=&quot;/home/znmeb/Projects/sql-pet&quot;,target=/petdir postgres:10</code></pre>
+<pre><code>## run --detach  --name sql-pet --publish 5432:5432 --mount type=bind,source=&quot;/Users/jds/Documents/Library/R/r-system/sql-pet&quot;,target=/petdir postgres:10</code></pre>
 <div class="sourceCode" id="cb348"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb348-1" data-line-number="1"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, docker_cmd, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
-<pre><code>## [1] &quot;2ba4788e8c6759a53ac536a9e3c7d128e82046414a5d503a6e669fd10d4c53d4&quot;</code></pre>
+<pre><code>## [1] &quot;758b98d592f2a9af1a5c78cd326657de648a12f6a7426d6f3aa0e5fc8ff91232&quot;</code></pre>
 <p>Peek inside the docker container and list the files in the <code>petdir</code>
 directory. Notice that <code>dvdrental.tar</code> is in both.</p>
 <div class="sourceCode" id="cb350"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb350-1" data-line-number="1"><span class="co"># local file system:</span></a>
@@ -472,7 +474,7 @@ command. In this case we tell Docker to execute the <code>psql</code> program
 inside the <code>sql-pet</code> container and pass it some commands as follows.</p>
 <div class="sourceCode" id="cb355"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb355-1" data-line-number="1"><span class="kw">sp_show_all_docker_containers</span>()</a></code></pre></div>
 <pre><code>## [1] &quot;CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES&quot;    
-## [2] &quot;2ba4788e8c67        postgres:10         \&quot;docker-entrypoint.s…\&quot;   4 seconds ago       Up 3 seconds        0.0.0.0:5432-&gt;5432/tcp   sql-pet&quot;</code></pre>
+## [2] &quot;758b98d592f2        postgres:10         \&quot;docker-entrypoint.s…\&quot;   4 seconds ago       Up 3 seconds        0.0.0.0:5432-&gt;5432/tcp   sql-pet&quot;</code></pre>
 <p>inside Docker, execute the postgress SQL command-line program to create the dvdrental database:</p>
 <div class="sourceCode" id="cb357"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb357-1" data-line-number="1"><span class="kw">system2</span>(<span class="st">&#39;docker&#39;</span>, <span class="st">&#39;exec sql-pet psql -U postgres -c &quot;CREATE DATABASE dvdrental;&quot;&#39;</span>,</a>
 <a class="sourceLine" id="cb357-2" data-line-number="2">        <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
@@ -545,7 +547,7 @@ started again.</p>
 <p>show that the container still exists even though it’s not running</p>
 <div class="sourceCode" id="cb373"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb373-1" data-line-number="1"><span class="kw">sp_show_all_docker_containers</span>()</a></code></pre></div>
 <pre><code>## [1] &quot;CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES&quot;    
-## [2] &quot;2ba4788e8c67        postgres:10         \&quot;docker-entrypoint.s…\&quot;   19 seconds ago      Exited (0) Less than a second ago                       sql-pet&quot;</code></pre>
+## [2] &quot;758b98d592f2        postgres:10         \&quot;docker-entrypoint.s…\&quot;   15 seconds ago      Exited (0) Less than a second ago                       sql-pet&quot;</code></pre>
 <p>We are leaving the <code>sql-pet</code> container intact so it can be used in running the
 rest of the examples and book.</p>
 <p>Clean up by removing the local files used in creating the database:</p>

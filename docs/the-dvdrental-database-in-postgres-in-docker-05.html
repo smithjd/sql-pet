@@ -60,7 +60,7 @@
 <style type="text/css">
 a.sourceLine { display: inline-block; line-height: 1.25; }
 a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -73,11 +73,13 @@ code.sourceCode { white-space: pre-wrap; }
 a.sourceLine { text-indent: -1em; padding-left: 1em; }
 }
 pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
 pre.numberSource a.sourceLine::before
   { content: attr(data-line-number);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -396,19 +398,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb30-4" data-line-number="4">          <span class="st">&quot;--file dvdrental.Dockerfile &quot;</span>, <span class="co">#(or -f) tells Docker to read `build` instructions from the dvdrental.Dockerfile</span></a>
 <a class="sourceLine" id="cb30-5" data-line-number="5">          <span class="st">&quot; . &quot;</span>),  <span class="co"># tells Docker to look for dvdrental.Dockerfile, and files it references, in the current directory</span></a>
 <a class="sourceLine" id="cb30-6" data-line-number="6">          <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
-<pre><code>##  [1] &quot;Sending build context to Docker daemon   27.5MB\r\r&quot;                                                                                                                                                                                                                                                                                                                                           
+<pre><code>##  [1] &quot;Sending build context to Docker daemon  46.25MB\r\r&quot;                                                                                                                                                                                                                                                                                                                                           
 ##  [2] &quot;Step 1/4 : FROM postgres:10&quot;                                                                                                                                                                                                                                                                                                                                                                   
-##  [3] &quot; ---&gt; 3fce051f5a48&quot;                                                                                                                                                                                                                                                                                                                                                                            
+##  [3] &quot; ---&gt; ac25c2bac3c4&quot;                                                                                                                                                                                                                                                                                                                                                                            
 ##  [4] &quot;Step 2/4 : WORKDIR /tmp&quot;                                                                                                                                                                                                                                                                                                                                                                       
 ##  [5] &quot; ---&gt; Using cache&quot;                                                                                                                                                                                                                                                                                                                                                                             
-##  [6] &quot; ---&gt; 896d4b27f761&quot;                                                                                                                                                                                                                                                                                                                                                                            
+##  [6] &quot; ---&gt; 3f00a18e0bdf&quot;                                                                                                                                                                                                                                                                                                                                                                            
 ##  [7] &quot;Step 3/4 : COPY init-dvdrental.sh /docker-entrypoint-initdb.d/&quot;                                                                                                                                                                                                                                                                                                                                
 ##  [8] &quot; ---&gt; Using cache&quot;                                                                                                                                                                                                                                                                                                                                                                             
-##  [9] &quot; ---&gt; ed71ffb6e31a&quot;                                                                                                                                                                                                                                                                                                                                                                            
+##  [9] &quot; ---&gt; 3453d61d8e3e&quot;                                                                                                                                                                                                                                                                                                                                                                            
 ## [10] &quot;Step 4/4 : RUN apt-get -qq update &amp;&amp;   apt-get install -y -qq curl zip  &gt; /dev/null 2&gt;&amp;1 &amp;&amp;   curl -Os http://www.postgresqltutorial.com/wp-content/uploads/2017/10/dvdrental.zip &amp;&amp;   unzip dvdrental.zip &amp;&amp;   rm dvdrental.zip &amp;&amp;   chmod ugo+w dvdrental.tar &amp;&amp;   chown postgres dvdrental.tar &amp;&amp;   chmod u+x /docker-entrypoint-initdb.d/init-dvdrental.sh &amp;&amp;   apt-get remove -y curl zip&quot;
 ## [11] &quot; ---&gt; Using cache&quot;                                                                                                                                                                                                                                                                                                                                                                             
-## [12] &quot; ---&gt; ad043a4728ed&quot;                                                                                                                                                                                                                                                                                                                                                                            
-## [13] &quot;Successfully built ad043a4728ed&quot;                                                                                                                                                                                                                                                                                                                                                               
+## [12] &quot; ---&gt; f5e93aa64875&quot;                                                                                                                                                                                                                                                                                                                                                                            
+## [13] &quot;Successfully built f5e93aa64875&quot;                                                                                                                                                                                                                                                                                                                                                               
 ## [14] &quot;Successfully tagged postgres-dvdrental:latest&quot;</code></pre>
 </div>
 <div id="run-the-docker-image" class="section level2">
@@ -417,7 +419,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li>The <code>source=</code> parameter points to <a href="./dvdrental.Dockerfile">dvdrental.Dockerfile</a>, which does most of the heavy lifting. It has detailed, line-by-line comments to explain what it is doing.<br />
 </li>
-<li><em>Inside</em> <a href="./dvdrental.Dockerfile">dvdrental.Dockerfile</a> the command <code>COPY init-dvdrental.sh /docker-entrypoint-initdb.d/</code> copies <a href="init-dvdrental.sh">init-dvdrental.sh</a> from the local file system into the specified location in the Docker container. When the PostgreSQL Docker container initializes, it looks for that file and executes it.</li>
+<li><em>Inside</em> <a href="./dvdrental.Dockerfile">dvdrental.Dockerfile</a> the command <code>COPY init-dvdrental.sh /docker-entrypoint-initdb.d/</code> copies <a href="init-dvdrental.sh" class="uri">init-dvdrental.sh</a> from the local file system into the specified location in the Docker container. When the PostgreSQL Docker container initializes, it looks for that file and executes it.</li>
 </ul>
 <p>Doing all of that work behind the scenes involves two layers of complexity. Depending on how you look at it, that may be more or less difficult to understand than the method shown in the next Chapter.</p>
 <div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" data-line-number="1">wd &lt;-<span class="st"> </span><span class="kw">getwd</span>()</a>
@@ -437,9 +439,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb32-15" data-line-number="15"></a>
 <a class="sourceLine" id="cb32-16" data-line-number="16"><span class="co"># if you are curious you can paste this string into a terminal window after the command &#39;docker&#39;:</span></a>
 <a class="sourceLine" id="cb32-17" data-line-number="17">docker_cmd</a></code></pre></div>
-<pre><code>## run --detach  --name sql-pet --publish 5432:5432 --mount type=bind,source=&quot;/home/znmeb/Projects/sql-pet&quot;,target=/petdir postgres-dvdrental</code></pre>
+<pre><code>## run --detach  --name sql-pet --publish 5432:5432 --mount type=bind,source=&quot;/Users/jds/Documents/Library/R/r-system/sql-pet&quot;,target=/petdir postgres-dvdrental</code></pre>
 <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" data-line-number="1"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, docker_cmd, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
-<pre><code>## [1] &quot;3dffcd7da6897f536807157b958111d40c5e4b8d341b74d4b8398a9ee0d854a7&quot;</code></pre>
+<pre><code>## [1] &quot;0945aa1af958198b3cf1c1a8b192050c9264d72d8811a24597a1a63123a9403a&quot;</code></pre>
 </div>
 <div id="connect-to-postgres-with-r" class="section level2">
 <h2><span class="header-section-number">6.6</span> Connect to Postgres with R</h2>
@@ -493,7 +495,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb50-1" data-line-number="1"><span class="co"># show that the container still exists even though it&#39;s not running</span></a>
 <a class="sourceLine" id="cb50-2" data-line-number="2"><span class="kw">sp_show_all_docker_containers</span>()</a></code></pre></div>
 <pre><code>## [1] &quot;CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS               NAMES&quot;    
-## [2] &quot;3dffcd7da689        postgres-dvdrental   \&quot;docker-entrypoint.s…\&quot;   13 seconds ago      Exited (0) Less than a second ago                       sql-pet&quot;</code></pre>
+## [2] &quot;0945aa1af958        postgres-dvdrental   \&quot;docker-entrypoint.s…\&quot;   7 seconds ago       Exited (0) Less than a second ago                       sql-pet&quot;</code></pre>
 <p>Next time, you can just use this command to start the container:</p>
 <p><code>sp_docker_start(&quot;sql-pet&quot;)</code></p>
 <p>And once stopped, the container can be removed with:</p>

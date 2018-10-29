@@ -60,7 +60,7 @@
 <style type="text/css">
 a.sourceLine { display: inline-block; line-height: 1.25; }
 a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -73,11 +73,13 @@ code.sourceCode { white-space: pre-wrap; }
 a.sourceLine { text-indent: -1em; padding-left: 1em; }
 }
 pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
 pre.numberSource a.sourceLine::before
   { content: attr(data-line-number);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -432,7 +434,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>Understand the relationships that tie the tables together correctly to ensure that data is not dropped or duplicated. Data that is dropped or duplicated can either over or understate your aggregated numeric values.</li>
 </ol>
 <div class="figure">
-<img src="ERD_Hospital_Billing_System.png" alt="hospital-billing-erd" />
+<img src="ERD_Hospital_Billing_System.PNG" alt="hospital-billing-erd" />
 <p class="caption">hospital-billing-erd</p>
 </div>
 <p><a href="https://www.smartdraw.com/entity-relationship-diagram/examples/hospital-billing-entity-relationship-diagram/" class="uri">https://www.smartdraw.com/entity-relationship-diagram/examples/hospital-billing-entity-relationship-diagram/</a></p>
@@ -750,7 +752,7 @@ Some motivations for aliasing the result set column names are
 <td align="left">2006-02-15 09:57:12</td>
 <td align="left">dvdrental</td>
 <td align="left">postgres</td>
-<td align="left">2018/10/28 23:33:05</td>
+<td align="left">2018/10/29 02:11:10</td>
 </tr>
 <tr class="even">
 <td align="left">derived column</td>
@@ -760,7 +762,7 @@ Some motivations for aliasing the result set column names are
 <td align="left">2006-02-15 09:57:12</td>
 <td align="left">dvdrental</td>
 <td align="left">postgres</td>
-<td align="left">2018/10/28 23:33:05</td>
+<td align="left">2018/10/29 02:11:10</td>
 </tr>
 </tbody>
 </table>
@@ -1374,13 +1376,11 @@ Some motivations for aliasing the result set column names are
 <td>12</td>
 <td>TOP/LIMIT</td>
 <td>Limits the number of rows in data set</td>
-<td></td>
 </tr>
 <tr class="odd">
 <td>13</td>
 <td>OFFSET/FETCH</td>
 <td>Limits the number of rows in data set</td>
-<td></td>
 </tr>
 </tbody>
 </table>
