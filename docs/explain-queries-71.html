@@ -60,7 +60,7 @@
 <style type="text/css">
 a.sourceLine { display: inline-block; line-height: 1.25; }
 a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -73,11 +73,13 @@ code.sourceCode { white-space: pre-wrap; }
 a.sourceLine { text-indent: -1em; padding-left: 1em; }
 }
 pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
 pre.numberSource a.sourceLine::before
   { content: attr(data-line-number);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -372,9 +374,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb277-4" data-line-number="4">                         <span class="dt">seconds_to_test =</span> <span class="dv">10</span>)</a></code></pre></div>
 <div id="performance-considerations" class="section level2">
 <h2><span class="header-section-number">15.1</span> Performance considerations</h2>
-<div class="sourceCode" id="cb278"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb278-1" data-line-number="1"><span class="co">## Explain a `dplyr::join`</span></a>
+<div class="sourceCode" id="cb278"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb278-1" data-line-number="1">## Explain a `dplyr::join`</a>
 <a class="sourceLine" id="cb278-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb278-3" data-line-number="3"><span class="co">## Explain the quivalent SQL join</span></a>
+<a class="sourceLine" id="cb278-3" data-line-number="3">## Explain the quivalent SQL join</a>
 <a class="sourceLine" id="cb278-4" data-line-number="4">rs1 &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbGetQuery</span>(con</a>
 <a class="sourceLine" id="cb278-5" data-line-number="5">                 ,<span class="st">&quot;SELECT c.* </span></a>
 <a class="sourceLine" id="cb278-6" data-line-number="6"><span class="st">                     FROM pg_catalog.pg_class c</span></a>
