@@ -106,7 +106,7 @@ Below is a high level diagram of our tutorial environment.  The single black or 
 
 
 ```{r Environment Graph,eval=TRUE, echo=FALSE}
-grViz("
+envgraph_widget <- grViz("
 digraph Envgraph {
 
   # graph, node, and edge definitions
@@ -171,8 +171,19 @@ digraph Envgraph {
 [6]: paste0('PostgreSQL:\\n', postgres_ver)
 [7]: cli
 ")
+
+envgraph_file <- sqlpetr::sp_make_image_files(
+  envgraph_widget,
+  "diagrams",
+  "envgraph"
+)
+
 ```
 
+```{r echo=FALSE}
+# display the PNG/PDF - this works in both HTML and PDF
+knitr::include_graphics(envgraph_file, auto_pdf = TRUE)
+```
 
 ## Communicating with Docker Applications
 
@@ -215,7 +226,7 @@ dvdrental=# select '"hello world" talking to you live from postgres session with
 dvdrental=# `\q`
 ```
 
-All SQL commands need to end with a semi-colon. To exit `psql`, use a '\q' at the command prompt.
+All SQL commands need to end with a semi-colon. To exit `psql`, use a `\q` at the command prompt.
 
 The docker bash and psql command options are optional for this tutorial, but open up a gateway to some very powerful programming techniques for future exploration.
 

@@ -377,34 +377,25 @@ fk_edf <-
 ```
 
 ```{r}
-graph <-
+fkgraph_widget <-
   create_graph(
     nodes_df = table_nodes_ndf,
     edges_df = fk_edf,
     graph_name = 'Simple FK Graph'
-  )
+    ) %>% render_graph()
 
-# export the widget to an SVG file
-render_graph(graph) %>% 
-  DiagrammeRsvg::export_svg() %>% 
-  cat(file = "diagrams/fkgraph.svg")
+# export to image files
+fkgraph_file <- sqlpetr::sp_make_image_files(
+  fkgraph_widget,
+  "diagrams",
+  "fkgraph"
+)
 
-# convert to PDF and PNG - LaTeX doesn't read SVGs by default
-magick::image_read("diagrams/fkgraph.svg") %>%
-  magick::image_write(
-    path = "diagrams/fkgraph.pdf", 
-    format = "pdf"
-  )
-magick::image_read_svg("diagrams/fkgraph.svg") %>%
-  magick::image_write(
-    path = "diagrams/fkgraph.png", 
-    format = "png"
-  )
 ```
 
 ```{r echo=FALSE}
 # display the PNG/PDF - this works in both HTML and PDF
-knitr::include_graphics("diagrams/fkgraph.png", auto_pdf = TRUE)
+knitr::include_graphics(fkgraph_file, auto_pdf = TRUE)
 ```
 
 ```{r}

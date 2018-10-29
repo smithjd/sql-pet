@@ -25,7 +25,7 @@
 <meta name="author" content="Dipti Muni, Ian Frantz, John David Smith, Mary Anne Thygesen, M. Edward (Ed) Borasky, Scott Case, and Sophie Yang">
 
 
-<meta name="date" content="2018-10-26">
+<meta name="date" content="2018-10-28">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -48,9 +48,6 @@
 
 
 <script src="libs/htmlwidgets-1.3/htmlwidgets.js"></script>
-<script src="libs/viz-0.3/viz.js"></script>
-<link href="libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
-<script src="libs/grViz-binding-1.0.0/grViz.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
 <script src="libs/datatables-binding-0.4/datatables.js"></script>
 <link href="libs/dt-core-1.10.16/css/jquery.dataTables.min.css" rel="stylesheet" />
@@ -58,18 +55,12 @@
 <script src="libs/dt-core-1.10.16/js/jquery.dataTables.min.js"></script>
 <link href="libs/crosstalk-1.0.0/css/crosstalk.css" rel="stylesheet" />
 <script src="libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
-<script src="libs/d3-3.3.8/d3.min.js"></script>
-<script src="libs/dagre-0.4.0/dagre-d3.min.js"></script>
-<link href="libs/mermaid-0.3.0/dist/mermaid.css" rel="stylesheet" />
-<script src="libs/mermaid-0.3.0/dist/mermaid.slim.min.js"></script>
-<script src="libs/chromatography-0.1/chromatography.js"></script>
-<script src="libs/DiagrammeR-binding-1.0.0/DiagrammeR.js"></script>
 
 
 <style type="text/css">
 a.sourceLine { display: inline-block; line-height: 1.25; }
 a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; position: absolute; }
+a.sourceLine:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -82,13 +73,11 @@ code.sourceCode { white-space: pre-wrap; }
 a.sourceLine { text-indent: -1em; padding-left: 1em; }
 }
 pre.numberSource a.sourceLine
-  { position: relative; }
-pre.numberSource a.sourceLine:empty
-  { position: absolute; }
+  { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
   { content: attr(data-line-number);
-    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all;
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -274,112 +263,80 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="11.4" data-path="sql-quick-start-simple-retrieval-15.html"><a href="sql-quick-start-simple-retrieval-15.html#paradigm-shift-from-r-dplyr-to-sql"><i class="fa fa-check"></i><b>11.4</b> Paradigm Shift from R-Dplyr to SQL</a><ul>
 <li class="chapter" data-level="11.4.1" data-path="sql-quick-start-simple-retrieval-15.html"><a href="sql-quick-start-simple-retrieval-15.html#big-bang-versus-piped-incremental-steps."><i class="fa fa-check"></i><b>11.4.1</b> Big bang versus piped incremental steps.</a></li>
 <li class="chapter" data-level="11.4.2" data-path="sql-quick-start-simple-retrieval-15.html"><a href="sql-quick-start-simple-retrieval-15.html#sql-execution-order"><i class="fa fa-check"></i><b>11.4.2</b> SQL Execution Order</a></li>
-<li class="chapter" data-level="11.4.3" data-path="sql-quick-start-simple-retrieval-15.html"><a href="sql-quick-start-simple-retrieval-15.html#which-server"><i class="fa fa-check"></i><b>11.4.3</b> Which Server?</a></li>
-<li class="chapter" data-level="11.4.4" data-path="sql-quick-start-simple-retrieval-15.html"><a href="sql-quick-start-simple-retrieval-15.html#which-database"><i class="fa fa-check"></i><b>11.4.4</b> Which database?</a></li>
-<li class="chapter" data-level="11.4.5" data-path="sql-quick-start-simple-retrieval-15.html"><a href="sql-quick-start-simple-retrieval-15.html#how-do-i-check-for-databases"><i class="fa fa-check"></i><b>11.4.5</b> How do I check for databases?</a></li>
-<li class="chapter" data-level="11.4.6" data-path="sql-quick-start-simple-retrieval-15.html"><a href="sql-quick-start-simple-retrieval-15.html#how-do-i-change-my-database-connections"><i class="fa fa-check"></i><b>11.4.6</b> How do I change my database connections</a></li>
-<li class="chapter" data-level="11.4.7" data-path="sql-quick-start-simple-retrieval-15.html"><a href="sql-quick-start-simple-retrieval-15.html#sql_be_stinger_01"><i class="fa fa-check"></i><b>11.4.7</b> SQL_BE_STINGER_01:</a></li>
-<li class="chapter" data-level="11.4.8" data-path="sql-quick-start-simple-retrieval-15.html"><a href="sql-quick-start-simple-retrieval-15.html#which-schema"><i class="fa fa-check"></i><b>11.4.8</b> Which Schema?</a></li>
 </ul></li>
-<li class="chapter" data-level="11.5" data-path="sql-quick-start-simple-retrieval-15.html"><a href="sql-quick-start-simple-retrieval-15.html#sql_be_02database-schemas-from-ansi-standard-information_schema.tables"><i class="fa fa-check"></i><b>11.5</b> SQL_BE_02:Database Schemas from ANSI standard INFORMATION_SCHEMA.TABLES</a><ul>
-<li class="chapter" data-level="11.5.1" data-path="sql-quick-start-simple-retrieval-15.html"><a href="sql-quick-start-simple-retrieval-15.html#exercises-1"><i class="fa fa-check"></i><b>11.5.1</b> Exercises</a></li>
 </ul></li>
-<li class="chapter" data-level="11.6" data-path="sql-quick-start-simple-retrieval-15.html"><a href="sql-quick-start-simple-retrieval-15.html#sql_be_03group-by-no-aggregation-deduplication"><i class="fa fa-check"></i><b>11.6</b> SQL_BE_03:Group By No Aggregation – Deduplication</a></li>
-<li class="chapter" data-level="11.7" data-path="sql-quick-start-simple-retrieval-15.html"><a href="sql-quick-start-simple-retrieval-15.html#sql_be_04distinct-list-take-2"><i class="fa fa-check"></i><b>11.7</b> SQL_BE_04:Distinct list take 2</a></li>
-<li class="chapter" data-level="11.8" data-path="sql-quick-start-simple-retrieval-15.html"><a href="sql-quick-start-simple-retrieval-15.html#sql_be_05---how-to-drill-down-and-aggregate-at-lower-level"><i class="fa fa-check"></i><b>11.8</b> SQL_BE_05 - How to Drill Down and Aggregate at Lower Level</a></li>
-<li class="chapter" data-level="11.9" data-path="sql-quick-start-simple-retrieval-15.html"><a href="sql-quick-start-simple-retrieval-15.html#sql_be_06---how-to-filter-groups"><i class="fa fa-check"></i><b>11.9</b> SQL_BE_06 - How to FILTER GROUPS</a></li>
-<li class="chapter" data-level="11.10" data-path="sql-quick-start-simple-retrieval-15.html"><a href="sql-quick-start-simple-retrieval-15.html#sql_be_07---how-to-order-result-set-on-a-single-column"><i class="fa fa-check"></i><b>11.10</b> SQL_BE_07 - HOW to ORDER Result Set on a Single Column</a></li>
-<li class="chapter" data-level="11.11" data-path="sql-quick-start-simple-retrieval-15.html"><a href="sql-quick-start-simple-retrieval-15.html#sql_be_08---how-to-order-result-set-on-a-multiple-columns-and-descending-order"><i class="fa fa-check"></i><b>11.11</b> SQL_BE_08 - HOW to ORDER Result Set on a Multiple Columns and Descending Order</a><ul>
-<li class="chapter" data-level="11.11.1" data-path="sql-quick-start-simple-retrieval-15.html"><a href="sql-quick-start-simple-retrieval-15.html#table-and-column-data-metadata"><i class="fa fa-check"></i><b>11.11.1</b> Table and Column Data – MetaData</a></li>
+<li class="chapter" data-level="12" data-path="drilling-into-your-db-environment-21-29.html"><a href="drilling-into-your-db-environment-21-29.html"><i class="fa fa-check"></i><b>12</b> Drilling into Your DB Environment (21-29)</a><ul>
+<li class="chapter" data-level="12.0.1" data-path="drilling-into-your-db-environment-21-29.html"><a href="drilling-into-your-db-environment-21-29.html#which-database"><i class="fa fa-check"></i><b>12.0.1</b> Which database?</a></li>
+<li class="chapter" data-level="12.0.2" data-path="drilling-into-your-db-environment-21-29.html"><a href="drilling-into-your-db-environment-21-29.html#how-many-databases-reside-in-the-docker-container"><i class="fa fa-check"></i><b>12.0.2</b> How many databases reside in the Docker Container?</a></li>
+<li class="chapter" data-level="12.0.3" data-path="drilling-into-your-db-environment-21-29.html"><a href="drilling-into-your-db-environment-21-29.html#which-schema"><i class="fa fa-check"></i><b>12.0.3</b> Which Schema?</a></li>
+<li class="chapter" data-level="12.0.4" data-path="drilling-into-your-db-environment-21-29.html"><a href="drilling-into-your-db-environment-21-29.html#exercises-1"><i class="fa fa-check"></i><b>12.0.4</b> Exercises</a></li>
 </ul></li>
-<li class="chapter" data-level="11.12" data-path="sql-quick-start-simple-retrieval-15.html"><a href="sql-quick-start-simple-retrieval-15.html#sql_be_09-looks-for-table-metadata-just-in-the-information_schema."><i class="fa fa-check"></i><b>11.12</b> SQL_BE_09 looks for table metadata just in the information_schema.</a></li>
-<li class="chapter" data-level="11.13" data-path="sql-quick-start-simple-retrieval-15.html"><a href="sql-quick-start-simple-retrieval-15.html#sql_be_10-column-metadata"><i class="fa fa-check"></i><b>11.13</b> SQL_BE_10: Column Metadata</a></li>
-<li class="chapter" data-level="11.14" data-path="sql-quick-start-simple-retrieval-15.html"><a href="sql-quick-start-simple-retrieval-15.html#sql_be_11-table-and-column-metadata"><i class="fa fa-check"></i><b>11.14</b> SQL_BE_11 Table and Column Metadata</a></li>
+<li class="chapter" data-level="13" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html"><i class="fa fa-check"></i><b>13</b> Getting metadata about and from the database (21)</a><ul>
+<li class="chapter" data-level="13.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#always-look-at-the-data"><i class="fa fa-check"></i><b>13.1</b> Always <em>look</em> at the data</a><ul>
+<li class="chapter" data-level="13.1.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#connect-with-people-who-own-generate-or-are-the-subjects-of-the-data"><i class="fa fa-check"></i><b>13.1.1</b> Connect with people who own, generate, or are the subjects of the data</a></li>
+<li class="chapter" data-level="13.1.2" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#browse-a-few-rows-of-a-table"><i class="fa fa-check"></i><b>13.1.2</b> Browse a few rows of a table</a></li>
 </ul></li>
-<li class="chapter" data-level="12" data-path="sql-be-12-and-or-logical-precedence.html"><a href="sql-be-12-and-or-logical-precedence.html"><i class="fa fa-check"></i><b>12</b> SQL_BE_12 AND OR-Logical Precedence</a></li>
-<li class="chapter" data-level="13" data-path="sql-be-13-and-or-logical-precedence.html"><a href="sql-be-13-and-or-logical-precedence.html"><i class="fa fa-check"></i><b>13</b> SQL_BE_13 AND (OR-Logical Precedence)</a><ul>
-<li class="chapter" data-level="13.0.1" data-path="sql-be-13-and-or-logical-precedence.html"><a href="sql-be-13-and-or-logical-precedence.html#which-table-or-view"><i class="fa fa-check"></i><b>13.0.1</b> Which Table or View</a></li>
-<li class="chapter" data-level="13.1" data-path="sql-be-13-and-or-logical-precedence.html"><a href="sql-be-13-and-or-logical-precedence.html#sql_be_14-union-stacked-sets"><i class="fa fa-check"></i><b>13.1</b> SQL_BE_14 UNION Stacked Sets</a><ul>
-<li class="chapter" data-level="13.1.1" data-path="sql-be-13-and-or-logical-precedence.html"><a href="sql-be-13-and-or-logical-precedence.html#sql_be_stinger_02-union-order-by-clause"><i class="fa fa-check"></i><b>13.1.1</b> SQL_BE_STINGER_02 Union Order By Clause</a></li>
+<li class="chapter" data-level="13.2" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#database-contents-and-structure"><i class="fa fa-check"></i><b>13.2</b> Database contents and structure</a><ul>
+<li class="chapter" data-level="13.2.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#database-structure"><i class="fa fa-check"></i><b>13.2.1</b> Database structure</a></li>
+<li class="chapter" data-level="13.2.2" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#contents-of-the-information_schema"><i class="fa fa-check"></i><b>13.2.2</b> Contents of the <code>information_schema</code></a></li>
+<li class="chapter" data-level="13.2.3" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#what-tables-are-in-the-database"><i class="fa fa-check"></i><b>13.2.3</b> What tables are in the database?</a></li>
+<li class="chapter" data-level="13.2.4" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#digging-into-the-information_schema"><i class="fa fa-check"></i><b>13.2.4</b> Digging into the <code>information_schema</code></a></li>
 </ul></li>
-<li class="chapter" data-level="13.2" data-path="sql-be-13-and-or-logical-precedence.html"><a href="sql-be-13-and-or-logical-precedence.html#sql_be_15-union-all"><i class="fa fa-check"></i><b>13.2</b> SQL_BE_15 UNION {ALL}</a><ul>
-<li class="chapter" data-level="13.2.1" data-path="sql-be-13-and-or-logical-precedence.html"><a href="sql-be-13-and-or-logical-precedence.html#sql_be_16-except-empty-set"><i class="fa fa-check"></i><b>13.2.1</b> SQL_BE_16 EXCEPT EMPTY set</a></li>
-<li class="chapter" data-level="13.2.2" data-path="sql-be-13-and-or-logical-precedence.html"><a href="sql-be-13-and-or-logical-precedence.html#sql_be_17-except-not-empty"><i class="fa fa-check"></i><b>13.2.2</b> SQL_BE_17 EXCEPT NOT EMPTY</a></li>
+<li class="chapter" data-level="13.3" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#what-columns-do-those-tables-contain"><i class="fa fa-check"></i><b>13.3</b> What columns do those tables contain?</a><ul>
+<li class="chapter" data-level="13.3.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#what-is-the-difference-between-a-view-and-a-base-table"><i class="fa fa-check"></i><b>13.3.1</b> What is the difference between a <code>VIEW</code> and a <code>BASE TABLE</code>?</a></li>
+<li class="chapter" data-level="13.3.2" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#what-data-types-are-found-in-the-database"><i class="fa fa-check"></i><b>13.3.2</b> What data types are found in the database?</a></li>
 </ul></li>
-<li class="chapter" data-level="13.3" data-path="sql-be-13-and-or-logical-precedence.html"><a href="sql-be-13-and-or-logical-precedence.html#stinger_be_"><i class="fa fa-check"></i><b>13.3</b> STINGER_BE_</a></li>
-<li class="chapter" data-level="13.4" data-path="sql-be-13-and-or-logical-precedence.html"><a href="sql-be-13-and-or-logical-precedence.html#sql_be_18-describe-table-script"><i class="fa fa-check"></i><b>13.4</b> SQL_BE_18 Describe Table Script</a></li>
-<li class="chapter" data-level="13.5" data-path="sql-be-13-and-or-logical-precedence.html"><a href="sql-be-13-and-or-logical-precedence.html#figure-out-view-and-clean-this-up"><i class="fa fa-check"></i><b>13.5</b> Figure out view and clean this up</a></li>
+<li class="chapter" data-level="13.4" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#characterizing-how-things-are-named"><i class="fa fa-check"></i><b>13.4</b> Characterizing how things are named</a><ul>
+<li class="chapter" data-level="13.4.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#counting-columns-and-name-reuse"><i class="fa fa-check"></i><b>13.4.1</b> Counting columns and name reuse</a></li>
 </ul></li>
-<li class="chapter" data-level="14" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html"><i class="fa fa-check"></i><b>14</b> Getting metadata about and from the database (21)</a><ul>
-<li class="chapter" data-level="14.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#always-look-at-the-data"><i class="fa fa-check"></i><b>14.1</b> Always <em>look</em> at the data</a><ul>
-<li class="chapter" data-level="14.1.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#connect-with-people-who-own-generate-or-are-the-subjects-of-the-data"><i class="fa fa-check"></i><b>14.1.1</b> Connect with people who own, generate, or are the subjects of the data</a></li>
-<li class="chapter" data-level="14.1.2" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#browse-a-few-rows-of-a-table"><i class="fa fa-check"></i><b>14.1.2</b> Browse a few rows of a table</a></li>
+<li class="chapter" data-level="13.5" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#database-keys"><i class="fa fa-check"></i><b>13.5</b> Database keys</a><ul>
+<li class="chapter" data-level="13.5.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#direct-sql"><i class="fa fa-check"></i><b>13.5.1</b> Direct SQL</a></li>
+<li class="chapter" data-level="13.5.2" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#database-keys-with-dplyr"><i class="fa fa-check"></i><b>13.5.2</b> Database keys with dplyr</a></li>
 </ul></li>
-<li class="chapter" data-level="14.2" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#database-contents-and-structure"><i class="fa fa-check"></i><b>14.2</b> Database contents and structure</a><ul>
-<li class="chapter" data-level="14.2.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#database-structure"><i class="fa fa-check"></i><b>14.2.1</b> Database structure</a></li>
-<li class="chapter" data-level="14.2.2" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#contents-of-the-information_schema"><i class="fa fa-check"></i><b>14.2.2</b> Contents of the <code>information_schema</code></a></li>
-<li class="chapter" data-level="14.2.3" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#what-tables-are-in-the-database"><i class="fa fa-check"></i><b>14.2.3</b> What tables are in the database?</a></li>
-<li class="chapter" data-level="14.2.4" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#digging-into-the-information_schema"><i class="fa fa-check"></i><b>14.2.4</b> Digging into the <code>information_schema</code></a></li>
+<li class="chapter" data-level="13.6" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#creating-your-own-data-dictionary"><i class="fa fa-check"></i><b>13.6</b> Creating your own data dictionary</a></li>
 </ul></li>
-<li class="chapter" data-level="14.3" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#what-columns-do-those-tables-contain"><i class="fa fa-check"></i><b>14.3</b> What columns do those tables contain?</a><ul>
-<li class="chapter" data-level="14.3.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#what-is-the-difference-between-a-view-and-a-base-table"><i class="fa fa-check"></i><b>14.3.1</b> What is the difference between a <code>VIEW</code> and a <code>BASE TABLE</code>?</a></li>
-<li class="chapter" data-level="14.3.2" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#what-data-types-are-found-in-the-database"><i class="fa fa-check"></i><b>14.3.2</b> What data types are found in the database?</a></li>
+<li class="chapter" data-level="14" data-path="drilling-into-your-db-environment-22.html"><a href="drilling-into-your-db-environment-22.html"><i class="fa fa-check"></i><b>14</b> Drilling into Your DB Environment (22)</a><ul>
+<li class="chapter" data-level="14.1" data-path="drilling-into-your-db-environment-22.html"><a href="drilling-into-your-db-environment-22.html#which-database-1"><i class="fa fa-check"></i><b>14.1</b> Which database?</a></li>
+<li class="chapter" data-level="14.2" data-path="drilling-into-your-db-environment-22.html"><a href="drilling-into-your-db-environment-22.html#how-many-databases-reside-in-the-docker-container-1"><i class="fa fa-check"></i><b>14.2</b> How many databases reside in the Docker Container?</a></li>
+<li class="chapter" data-level="14.3" data-path="drilling-into-your-db-environment-22.html"><a href="drilling-into-your-db-environment-22.html#which-schema-1"><i class="fa fa-check"></i><b>14.3</b> Which Schema?</a></li>
+<li class="chapter" data-level="14.4" data-path="drilling-into-your-db-environment-22.html"><a href="drilling-into-your-db-environment-22.html#exercises-2"><i class="fa fa-check"></i><b>14.4</b> Exercises</a></li>
 </ul></li>
-<li class="chapter" data-level="14.4" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#characterizing-how-things-are-named"><i class="fa fa-check"></i><b>14.4</b> Characterizing how things are named</a><ul>
-<li class="chapter" data-level="14.4.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#counting-columns-and-name-reuse"><i class="fa fa-check"></i><b>14.4.1</b> Counting columns and name reuse</a></li>
+<li class="chapter" data-level="15" data-path="explain-queries-71.html"><a href="explain-queries-71.html"><i class="fa fa-check"></i><b>15</b> Explain queries (71)</a><ul>
+<li class="chapter" data-level="15.1" data-path="explain-queries-71.html"><a href="explain-queries-71.html#performance-considerations"><i class="fa fa-check"></i><b>15.1</b> Performance considerations</a></li>
+<li class="chapter" data-level="15.2" data-path="explain-queries-71.html"><a href="explain-queries-71.html#clean-up-1"><i class="fa fa-check"></i><b>15.2</b> Clean up</a></li>
 </ul></li>
-<li class="chapter" data-level="14.5" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#database-keys"><i class="fa fa-check"></i><b>14.5</b> Database keys</a><ul>
-<li class="chapter" data-level="14.5.1" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#direct-sql"><i class="fa fa-check"></i><b>14.5.1</b> Direct SQL</a></li>
-<li class="chapter" data-level="14.5.2" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#database-keys-with-dplyr"><i class="fa fa-check"></i><b>14.5.2</b> Database keys with dplyr</a></li>
+<li class="chapter" data-level="16" data-path="sql-queries-behind-the-scenes-72.html"><a href="sql-queries-behind-the-scenes-72.html"><i class="fa fa-check"></i><b>16</b> SQL queries behind the scenes (72)</a><ul>
+<li class="chapter" data-level="16.1" data-path="sql-queries-behind-the-scenes-72.html"><a href="sql-queries-behind-the-scenes-72.html#sql-execution-steps"><i class="fa fa-check"></i><b>16.1</b> SQL Execution Steps</a></li>
+<li class="chapter" data-level="16.2" data-path="sql-queries-behind-the-scenes-72.html"><a href="sql-queries-behind-the-scenes-72.html#passing-values-to-sql-statements"><i class="fa fa-check"></i><b>16.2</b> Passing values to SQL statements</a></li>
+<li class="chapter" data-level="16.3" data-path="sql-queries-behind-the-scenes-72.html"><a href="sql-queries-behind-the-scenes-72.html#pass-multiple-sets-of-values-with-dbbind"><i class="fa fa-check"></i><b>16.3</b> Pass multiple sets of values with dbBind():</a></li>
+<li class="chapter" data-level="16.4" data-path="sql-queries-behind-the-scenes-72.html"><a href="sql-queries-behind-the-scenes-72.html#clean-up-2"><i class="fa fa-check"></i><b>16.4</b> Clean up</a></li>
 </ul></li>
-<li class="chapter" data-level="14.6" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#creating-your-own-data-dictionary"><i class="fa fa-check"></i><b>14.6</b> Creating your own data dictionary</a></li>
+<li class="chapter" data-level="17" data-path="writing-to-the-dbms-73.html"><a href="writing-to-the-dbms-73.html"><i class="fa fa-check"></i><b>17</b> Writing to the DBMS (73)</a><ul>
+<li class="chapter" data-level="17.1" data-path="writing-to-the-dbms-73.html"><a href="writing-to-the-dbms-73.html#create-a-new-table"><i class="fa fa-check"></i><b>17.1</b> Create a new table</a></li>
+<li class="chapter" data-level="17.2" data-path="writing-to-the-dbms-73.html"><a href="writing-to-the-dbms-73.html#modify-an-existing-table"><i class="fa fa-check"></i><b>17.2</b> Modify an existing table</a></li>
+<li class="chapter" data-level="17.3" data-path="writing-to-the-dbms-73.html"><a href="writing-to-the-dbms-73.html#remove-table-and-clean-up"><i class="fa fa-check"></i><b>17.3</b> Remove table and Clean up</a></li>
 </ul></li>
-<li class="chapter" data-level="15" data-path="drilling-into-your-db-environment-22.html"><a href="drilling-into-your-db-environment-22.html"><i class="fa fa-check"></i><b>15</b> Drilling into Your DB Environment (22)</a><ul>
-<li class="chapter" data-level="15.1" data-path="drilling-into-your-db-environment-22.html"><a href="drilling-into-your-db-environment-22.html#which-database-1"><i class="fa fa-check"></i><b>15.1</b> Which database?</a></li>
-<li class="chapter" data-level="15.2" data-path="drilling-into-your-db-environment-22.html"><a href="drilling-into-your-db-environment-22.html#how-many-databases-reside-in-the-docker-container"><i class="fa fa-check"></i><b>15.2</b> How many databases reside in the Docker Container?</a></li>
-<li class="chapter" data-level="15.3" data-path="drilling-into-your-db-environment-22.html"><a href="drilling-into-your-db-environment-22.html#which-schema-1"><i class="fa fa-check"></i><b>15.3</b> Which Schema?</a></li>
-<li class="chapter" data-level="15.4" data-path="drilling-into-your-db-environment-22.html"><a href="drilling-into-your-db-environment-22.html#exercises-2"><i class="fa fa-check"></i><b>15.4</b> Exercises</a></li>
+<li class="chapter" data-level="18" data-path="appendix-appendix-a-other-resources-89.html"><a href="appendix-appendix-a-other-resources-89.html"><i class="fa fa-check"></i><b>18</b> (APPENDIX) Appendix A: Other resources (89)</a><ul>
+<li class="chapter" data-level="18.1" data-path="appendix-appendix-a-other-resources-89.html"><a href="appendix-appendix-a-other-resources-89.html#editing-this-book"><i class="fa fa-check"></i><b>18.1</b> Editing this book</a></li>
+<li class="chapter" data-level="18.2" data-path="appendix-appendix-a-other-resources-89.html"><a href="appendix-appendix-a-other-resources-89.html#docker-alternatives"><i class="fa fa-check"></i><b>18.2</b> Docker alternatives</a></li>
+<li class="chapter" data-level="18.3" data-path="appendix-appendix-a-other-resources-89.html"><a href="appendix-appendix-a-other-resources-89.html#docker-and-r"><i class="fa fa-check"></i><b>18.3</b> Docker and R</a></li>
+<li class="chapter" data-level="18.4" data-path="appendix-appendix-a-other-resources-89.html"><a href="appendix-appendix-a-other-resources-89.html#documentation-for-docker-and-postgres"><i class="fa fa-check"></i><b>18.4</b> Documentation for Docker and Postgres</a></li>
+<li class="chapter" data-level="18.5" data-path="appendix-appendix-a-other-resources-89.html"><a href="appendix-appendix-a-other-resources-89.html#sql-and-dplyr"><i class="fa fa-check"></i><b>18.5</b> SQL and dplyr</a></li>
+<li class="chapter" data-level="18.6" data-path="appendix-appendix-a-other-resources-89.html"><a href="appendix-appendix-a-other-resources-89.html#more-resources"><i class="fa fa-check"></i><b>18.6</b> More Resources</a></li>
 </ul></li>
-<li class="chapter" data-level="16" data-path="explain-queries-71.html"><a href="explain-queries-71.html"><i class="fa fa-check"></i><b>16</b> Explain queries (71)</a><ul>
-<li class="chapter" data-level="16.1" data-path="explain-queries-71.html"><a href="explain-queries-71.html#performance-considerations"><i class="fa fa-check"></i><b>16.1</b> Performance considerations</a></li>
-<li class="chapter" data-level="16.2" data-path="explain-queries-71.html"><a href="explain-queries-71.html#clean-up-1"><i class="fa fa-check"></i><b>16.2</b> Clean up</a></li>
+<li class="chapter" data-level="19" data-path="appendix-b-mapping-your-local-environment-92.html"><a href="appendix-b-mapping-your-local-environment-92.html"><i class="fa fa-check"></i><b>19</b> APPENDIX B - Mapping your local environment (92)</a><ul>
+<li class="chapter" data-level="19.1" data-path="appendix-b-mapping-your-local-environment-92.html"><a href="appendix-b-mapping-your-local-environment-92.html#environment-tools-used-in-this-chapter"><i class="fa fa-check"></i><b>19.1</b> Environment Tools Used in this Chapter</a></li>
+<li class="chapter" data-level="19.2" data-path="appendix-b-mapping-your-local-environment-92.html"><a href="appendix-b-mapping-your-local-environment-92.html#communicating-with-docker-applications-1"><i class="fa fa-check"></i><b>19.2</b> Communicating with Docker Applications</a></li>
 </ul></li>
-<li class="chapter" data-level="17" data-path="sql-queries-behind-the-scenes-72.html"><a href="sql-queries-behind-the-scenes-72.html"><i class="fa fa-check"></i><b>17</b> SQL queries behind the scenes (72)</a><ul>
-<li class="chapter" data-level="17.1" data-path="sql-queries-behind-the-scenes-72.html"><a href="sql-queries-behind-the-scenes-72.html#sql-execution-steps"><i class="fa fa-check"></i><b>17.1</b> SQL Execution Steps</a></li>
-<li class="chapter" data-level="17.2" data-path="sql-queries-behind-the-scenes-72.html"><a href="sql-queries-behind-the-scenes-72.html#passing-values-to-sql-statements"><i class="fa fa-check"></i><b>17.2</b> Passing values to SQL statements</a></li>
-<li class="chapter" data-level="17.3" data-path="sql-queries-behind-the-scenes-72.html"><a href="sql-queries-behind-the-scenes-72.html#pass-multiple-sets-of-values-with-dbbind"><i class="fa fa-check"></i><b>17.3</b> Pass multiple sets of values with dbBind():</a></li>
-<li class="chapter" data-level="17.4" data-path="sql-queries-behind-the-scenes-72.html"><a href="sql-queries-behind-the-scenes-72.html#clean-up-2"><i class="fa fa-check"></i><b>17.4</b> Clean up</a></li>
+<li class="chapter" data-level="20" data-path="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html"><a href="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html"><i class="fa fa-check"></i><b>20</b> APPENDIX C - Creating the sql-pet Docker container a step at a time</a><ul>
+<li class="chapter" data-level="20.1" data-path="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html"><a href="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html#overview-1"><i class="fa fa-check"></i><b>20.1</b> Overview</a></li>
+<li class="chapter" data-level="20.2" data-path="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html"><a href="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html#download-the-dvdrental-backup-file"><i class="fa fa-check"></i><b>20.2</b> Download the <code>dvdrental</code> backup file</a></li>
+<li class="chapter" data-level="20.3" data-path="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html"><a href="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html#build-the-docker-container"><i class="fa fa-check"></i><b>20.3</b> Build the Docker Container</a></li>
+<li class="chapter" data-level="20.4" data-path="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html"><a href="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html#create-the-database-and-restore-from-the-backup"><i class="fa fa-check"></i><b>20.4</b> Create the database and restore from the backup</a></li>
+<li class="chapter" data-level="20.5" data-path="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html"><a href="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html#connect-to-the-database-with-r"><i class="fa fa-check"></i><b>20.5</b> Connect to the database with R</a></li>
+<li class="chapter" data-level="20.6" data-path="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html"><a href="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html#cleaning-up-1"><i class="fa fa-check"></i><b>20.6</b> Cleaning up</a></li>
 </ul></li>
-<li class="chapter" data-level="18" data-path="writing-to-the-dbms-73.html"><a href="writing-to-the-dbms-73.html"><i class="fa fa-check"></i><b>18</b> Writing to the DBMS (73)</a><ul>
-<li class="chapter" data-level="18.1" data-path="writing-to-the-dbms-73.html"><a href="writing-to-the-dbms-73.html#create-a-new-table"><i class="fa fa-check"></i><b>18.1</b> Create a new table</a></li>
-<li class="chapter" data-level="18.2" data-path="writing-to-the-dbms-73.html"><a href="writing-to-the-dbms-73.html#modify-an-existing-table"><i class="fa fa-check"></i><b>18.2</b> Modify an existing table</a></li>
-<li class="chapter" data-level="18.3" data-path="writing-to-the-dbms-73.html"><a href="writing-to-the-dbms-73.html#remove-table-and-clean-up"><i class="fa fa-check"></i><b>18.3</b> Remove table and Clean up</a></li>
-</ul></li>
-<li class="chapter" data-level="19" data-path="appendix-appendix-a-other-resources-89.html"><a href="appendix-appendix-a-other-resources-89.html"><i class="fa fa-check"></i><b>19</b> (APPENDIX) Appendix A: Other resources (89)</a><ul>
-<li class="chapter" data-level="19.1" data-path="appendix-appendix-a-other-resources-89.html"><a href="appendix-appendix-a-other-resources-89.html#editing-this-book"><i class="fa fa-check"></i><b>19.1</b> Editing this book</a></li>
-<li class="chapter" data-level="19.2" data-path="appendix-appendix-a-other-resources-89.html"><a href="appendix-appendix-a-other-resources-89.html#docker-alternatives"><i class="fa fa-check"></i><b>19.2</b> Docker alternatives</a></li>
-<li class="chapter" data-level="19.3" data-path="appendix-appendix-a-other-resources-89.html"><a href="appendix-appendix-a-other-resources-89.html#docker-and-r"><i class="fa fa-check"></i><b>19.3</b> Docker and R</a></li>
-<li class="chapter" data-level="19.4" data-path="appendix-appendix-a-other-resources-89.html"><a href="appendix-appendix-a-other-resources-89.html#documentation-for-docker-and-postgres"><i class="fa fa-check"></i><b>19.4</b> Documentation for Docker and Postgres</a></li>
-<li class="chapter" data-level="19.5" data-path="appendix-appendix-a-other-resources-89.html"><a href="appendix-appendix-a-other-resources-89.html#sql-and-dplyr"><i class="fa fa-check"></i><b>19.5</b> SQL and dplyr</a></li>
-<li class="chapter" data-level="19.6" data-path="appendix-appendix-a-other-resources-89.html"><a href="appendix-appendix-a-other-resources-89.html#more-resources"><i class="fa fa-check"></i><b>19.6</b> More Resources</a></li>
-</ul></li>
-<li class="chapter" data-level="20" data-path="appendix-b-mapping-your-local-environment-92.html"><a href="appendix-b-mapping-your-local-environment-92.html"><i class="fa fa-check"></i><b>20</b> APPENDIX B - Mapping your local environment (92)</a><ul>
-<li class="chapter" data-level="20.1" data-path="appendix-b-mapping-your-local-environment-92.html"><a href="appendix-b-mapping-your-local-environment-92.html#environment-tools-used-in-this-chapter"><i class="fa fa-check"></i><b>20.1</b> Environment Tools Used in this Chapter</a></li>
-<li class="chapter" data-level="20.2" data-path="appendix-b-mapping-your-local-environment-92.html"><a href="appendix-b-mapping-your-local-environment-92.html#communicating-with-docker-applications-1"><i class="fa fa-check"></i><b>20.2</b> Communicating with Docker Applications</a></li>
-</ul></li>
-<li class="chapter" data-level="21" data-path="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html"><a href="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html"><i class="fa fa-check"></i><b>21</b> APPENDIX C - Creating the sql-pet Docker container a step at a time</a><ul>
-<li class="chapter" data-level="21.1" data-path="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html"><a href="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html#overview-1"><i class="fa fa-check"></i><b>21.1</b> Overview</a></li>
-<li class="chapter" data-level="21.2" data-path="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html"><a href="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html#download-the-dvdrental-backup-file"><i class="fa fa-check"></i><b>21.2</b> Download the <code>dvdrental</code> backup file</a></li>
-<li class="chapter" data-level="21.3" data-path="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html"><a href="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html#build-the-docker-container"><i class="fa fa-check"></i><b>21.3</b> Build the Docker Container</a></li>
-<li class="chapter" data-level="21.4" data-path="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html"><a href="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html#create-the-database-and-restore-from-the-backup"><i class="fa fa-check"></i><b>21.4</b> Create the database and restore from the backup</a></li>
-<li class="chapter" data-level="21.5" data-path="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html"><a href="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html#connect-to-the-database-with-r"><i class="fa fa-check"></i><b>21.5</b> Connect to the database with R</a></li>
-<li class="chapter" data-level="21.6" data-path="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html"><a href="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html#cleaning-up-1"><i class="fa fa-check"></i><b>21.6</b> Cleaning up</a></li>
-</ul></li>
-<li class="chapter" data-level="22" data-path="appendix-d-quick-guide-to-sql-94.html"><a href="appendix-d-quick-guide-to-sql-94.html"><i class="fa fa-check"></i><b>22</b> APPENDIX D - Quick Guide to SQL (94)</a><ul>
-<li class="chapter" data-level="22.1" data-path="appendix-d-quick-guide-to-sql-94.html"><a href="appendix-d-quick-guide-to-sql-94.html#small-architecture"><i class="fa fa-check"></i><b>22.1</b> Small architecture</a></li>
-<li class="chapter" data-level="22.2" data-path="appendix-d-quick-guide-to-sql-94.html"><a href="appendix-d-quick-guide-to-sql-94.html#medium-architecture"><i class="fa fa-check"></i><b>22.2</b> Medium architecture</a></li>
-<li class="chapter" data-level="22.3" data-path="appendix-d-quick-guide-to-sql-94.html"><a href="appendix-d-quick-guide-to-sql-94.html#large-architecture-95"><i class="fa fa-check"></i><b>22.3</b> Large architecture (95)</a></li>
-</ul></li>
+<li class="chapter" data-level="21" data-path="appendix-d-quick-guide-to-sql-94.html"><a href="appendix-d-quick-guide-to-sql-94.html"><i class="fa fa-check"></i><b>21</b> APPENDIX D - Quick Guide to SQL (94)</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -402,25 +359,25 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
             <section class="normal" id="section-">
 <div id="sql-queries-behind-the-scenes-72" class="section level1">
-<h1><span class="header-section-number">Chapter 17</span> SQL queries behind the scenes (72)</h1>
+<h1><span class="header-section-number">Chapter 16</span> SQL queries behind the scenes (72)</h1>
 <p>Start up the <code>docker-pet</code> container</p>
-<div class="sourceCode" id="cb322"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb322-1" data-line-number="1"><span class="kw">sp_docker_start</span>(<span class="st">&quot;sql-pet&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb290"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb290-1" data-line-number="1"><span class="kw">sp_docker_start</span>(<span class="st">&quot;sql-pet&quot;</span>)</a></code></pre></div>
 <p>now connect to the database with R</p>
-<div class="sourceCode" id="cb323"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb323-1" data-line-number="1">con &lt;-<span class="st"> </span><span class="kw">sp_get_postgres_connection</span>(<span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),</a>
-<a class="sourceLine" id="cb323-2" data-line-number="2">                         <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),</a>
-<a class="sourceLine" id="cb323-3" data-line-number="3">                         <span class="dt">dbname =</span> <span class="st">&quot;dvdrental&quot;</span>,</a>
-<a class="sourceLine" id="cb323-4" data-line-number="4">                         <span class="dt">seconds_to_test =</span> <span class="dv">10</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb291"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb291-1" data-line-number="1">con &lt;-<span class="st"> </span><span class="kw">sp_get_postgres_connection</span>(<span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),</a>
+<a class="sourceLine" id="cb291-2" data-line-number="2">                         <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),</a>
+<a class="sourceLine" id="cb291-3" data-line-number="3">                         <span class="dt">dbname =</span> <span class="st">&quot;dvdrental&quot;</span>,</a>
+<a class="sourceLine" id="cb291-4" data-line-number="4">                         <span class="dt">seconds_to_test =</span> <span class="dv">10</span>)</a></code></pre></div>
 <div id="sql-execution-steps" class="section level2">
-<h2><span class="header-section-number">17.1</span> SQL Execution Steps</h2>
+<h2><span class="header-section-number">16.1</span> SQL Execution Steps</h2>
 <ul>
 <li>Parse the incoming SQL query</li>
 <li>Compile the SQL query</li>
 <li>Plan/optimize the data acquisition path</li>
 <li>Execute the optimized query / acquire and return data</li>
 </ul>
-<div class="sourceCode" id="cb324"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb324-1" data-line-number="1"><span class="kw">dbWriteTable</span>(con, <span class="st">&quot;mtcars&quot;</span>, mtcars, <span class="dt">overwrite =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb324-2" data-line-number="2">rs &lt;-<span class="st"> </span><span class="kw">dbSendQuery</span>(con, <span class="st">&quot;SELECT * FROM mtcars WHERE cyl = 4&quot;</span>)</a>
-<a class="sourceLine" id="cb324-3" data-line-number="3"><span class="kw">dbFetch</span>(rs)</a></code></pre></div>
+<div class="sourceCode" id="cb292"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb292-1" data-line-number="1"><span class="kw">dbWriteTable</span>(con, <span class="st">&quot;mtcars&quot;</span>, mtcars, <span class="dt">overwrite =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb292-2" data-line-number="2">rs &lt;-<span class="st"> </span><span class="kw">dbSendQuery</span>(con, <span class="st">&quot;SELECT * FROM mtcars WHERE cyl = 4&quot;</span>)</a>
+<a class="sourceLine" id="cb292-3" data-line-number="3"><span class="kw">dbFetch</span>(rs)</a></code></pre></div>
 <pre><code>##     mpg cyl  disp  hp drat    wt  qsec vs am gear carb
 ## 1  22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
 ## 2  24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2
@@ -433,13 +390,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 9  26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2
 ## 10 30.4   4  95.1 113 3.77 1.513 16.90  1  1    5    2
 ## 11 21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2</code></pre>
-<div class="sourceCode" id="cb326"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb326-1" data-line-number="1"><span class="kw">dbClearResult</span>(rs)</a></code></pre></div>
+<div class="sourceCode" id="cb294"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb294-1" data-line-number="1"><span class="kw">dbClearResult</span>(rs)</a></code></pre></div>
 </div>
 <div id="passing-values-to-sql-statements" class="section level2">
-<h2><span class="header-section-number">17.2</span> Passing values to SQL statements</h2>
-<div class="sourceCode" id="cb327"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb327-1" data-line-number="1"><span class="co">#Pass one set of values with the param argument:</span></a>
-<a class="sourceLine" id="cb327-2" data-line-number="2">rs &lt;-<span class="st"> </span><span class="kw">dbSendQuery</span>(con,<span class="st">&quot;SELECT * FROM mtcars WHERE cyl = 4&quot;</span>)</a>
-<a class="sourceLine" id="cb327-3" data-line-number="3"><span class="kw">dbFetch</span>(rs)</a></code></pre></div>
+<h2><span class="header-section-number">16.2</span> Passing values to SQL statements</h2>
+<div class="sourceCode" id="cb295"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb295-1" data-line-number="1"><span class="co">#Pass one set of values with the param argument:</span></a>
+<a class="sourceLine" id="cb295-2" data-line-number="2">rs &lt;-<span class="st"> </span><span class="kw">dbSendQuery</span>(con,<span class="st">&quot;SELECT * FROM mtcars WHERE cyl = 4&quot;</span>)</a>
+<a class="sourceLine" id="cb295-3" data-line-number="3"><span class="kw">dbFetch</span>(rs)</a></code></pre></div>
 <pre><code>##     mpg cyl  disp  hp drat    wt  qsec vs am gear carb
 ## 1  22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
 ## 2  24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2
@@ -452,13 +409,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 9  26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2
 ## 10 30.4   4  95.1 113 3.77 1.513 16.90  1  1    5    2
 ## 11 21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2</code></pre>
-<div class="sourceCode" id="cb329"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb329-1" data-line-number="1"><span class="kw">dbClearResult</span>(rs)</a></code></pre></div>
+<div class="sourceCode" id="cb297"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb297-1" data-line-number="1"><span class="kw">dbClearResult</span>(rs)</a></code></pre></div>
 </div>
 <div id="pass-multiple-sets-of-values-with-dbbind" class="section level2">
-<h2><span class="header-section-number">17.3</span> Pass multiple sets of values with dbBind():</h2>
-<div class="sourceCode" id="cb330"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb330-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbSendQuery</span>(con, <span class="st">&quot;SELECT * FROM mtcars WHERE cyl = $1&quot;</span>)</a>
-<a class="sourceLine" id="cb330-2" data-line-number="2"><span class="kw">dbBind</span>(rs, <span class="kw">list</span>(6L)) <span class="co"># cyl = 6</span></a>
-<a class="sourceLine" id="cb330-3" data-line-number="3"><span class="kw">dbFetch</span>(rs)</a></code></pre></div>
+<h2><span class="header-section-number">16.3</span> Pass multiple sets of values with dbBind():</h2>
+<div class="sourceCode" id="cb298"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb298-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbSendQuery</span>(con, <span class="st">&quot;SELECT * FROM mtcars WHERE cyl = $1&quot;</span>)</a>
+<a class="sourceLine" id="cb298-2" data-line-number="2"><span class="kw">dbBind</span>(rs, <span class="kw">list</span>(6L)) <span class="co"># cyl = 6</span></a>
+<a class="sourceLine" id="cb298-3" data-line-number="3"><span class="kw">dbFetch</span>(rs)</a></code></pre></div>
 <pre><code>##    mpg cyl  disp  hp drat    wt  qsec vs am gear carb
 ## 1 21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4
 ## 2 21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4
@@ -467,8 +424,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 5 19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4
 ## 6 17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4
 ## 7 19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6</code></pre>
-<div class="sourceCode" id="cb332"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb332-1" data-line-number="1"><span class="kw">dbBind</span>(rs, <span class="kw">list</span>(8L)) <span class="co"># cyl = 8</span></a>
-<a class="sourceLine" id="cb332-2" data-line-number="2"><span class="kw">dbFetch</span>(rs)</a></code></pre></div>
+<div class="sourceCode" id="cb300"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb300-1" data-line-number="1"><span class="kw">dbBind</span>(rs, <span class="kw">list</span>(8L)) <span class="co"># cyl = 8</span></a>
+<a class="sourceLine" id="cb300-2" data-line-number="2"><span class="kw">dbFetch</span>(rs)</a></code></pre></div>
 <pre><code>##     mpg cyl  disp  hp drat    wt  qsec vs am gear carb
 ## 1  18.7   8 360.0 175 3.15 3.440 17.02  0  0    3    2
 ## 2  14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4
@@ -484,18 +441,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 12 19.2   8 400.0 175 3.08 3.845 17.05  0  0    3    2
 ## 13 15.8   8 351.0 264 4.22 3.170 14.50  0  1    5    4
 ## 14 15.0   8 301.0 335 3.54 3.570 14.60  0  1    5    8</code></pre>
-<div class="sourceCode" id="cb334"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb334-1" data-line-number="1"><span class="kw">dbClearResult</span>(rs)</a></code></pre></div>
+<div class="sourceCode" id="cb302"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb302-1" data-line-number="1"><span class="kw">dbClearResult</span>(rs)</a></code></pre></div>
 </div>
 <div id="clean-up-2" class="section level2">
-<h2><span class="header-section-number">17.4</span> Clean up</h2>
-<div class="sourceCode" id="cb335"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb335-1" data-line-number="1"><span class="co"># dbRemoveTable(con, &quot;cars&quot;)</span></a>
-<a class="sourceLine" id="cb335-2" data-line-number="2"><span class="kw">dbRemoveTable</span>(con, <span class="st">&quot;mtcars&quot;</span>)</a>
-<a class="sourceLine" id="cb335-3" data-line-number="3"><span class="co"># dbRemoveTable(con, &quot;cust_movies&quot;)</span></a>
-<a class="sourceLine" id="cb335-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb335-5" data-line-number="5"><span class="co"># diconnect from the db</span></a>
-<a class="sourceLine" id="cb335-6" data-line-number="6"><span class="kw">dbDisconnect</span>(con)</a>
-<a class="sourceLine" id="cb335-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb335-8" data-line-number="8"><span class="kw">sp_docker_stop</span>(<span class="st">&quot;sql-pet&quot;</span>)</a></code></pre></div>
+<h2><span class="header-section-number">16.4</span> Clean up</h2>
+<div class="sourceCode" id="cb303"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb303-1" data-line-number="1"><span class="co"># dbRemoveTable(con, &quot;cars&quot;)</span></a>
+<a class="sourceLine" id="cb303-2" data-line-number="2"><span class="kw">dbRemoveTable</span>(con, <span class="st">&quot;mtcars&quot;</span>)</a>
+<a class="sourceLine" id="cb303-3" data-line-number="3"><span class="co"># dbRemoveTable(con, &quot;cust_movies&quot;)</span></a>
+<a class="sourceLine" id="cb303-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb303-5" data-line-number="5"><span class="co"># diconnect from the db</span></a>
+<a class="sourceLine" id="cb303-6" data-line-number="6"><span class="kw">dbDisconnect</span>(con)</a>
+<a class="sourceLine" id="cb303-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb303-8" data-line-number="8"><span class="kw">sp_docker_stop</span>(<span class="st">&quot;sql-pet&quot;</span>)</a></code></pre></div>
 <pre><code>## [1] &quot;sql-pet&quot;</code></pre>
 
 </div>
@@ -547,19 +504,6 @@ gitbook.start({
 });
 </script>
 
-<!-- dynamically load mathjax for compatibility with self-contained -->
-<script>
-  (function () {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    var src = "true";
-    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:" && /^https?:/.test(src))
-      src = src.replace(/^https?:/, '');
-    script.src = src;
-    document.getElementsByTagName("head")[0].appendChild(script);
-  })();
-</script>
 </body>
 
 </html>
