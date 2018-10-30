@@ -1,15 +1,22 @@
 # Introduction to DBMS queries (11)
 
-These packages are used in this chapter:
-```{r setup, echo=TRUE, message=FALSE, warning=FALSE}
+These are the "regular" packages are used in this chapter:
+```{r setup with standard packages, echo=TRUE, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(DBI)
 library(RPostgres)
 library(dbplyr)
+library(glue)
 require(knitr)
 library(bookdown)
 library(sqlpetr)
 ```
+In addition we will demonstrate these
+```{r Additional packages}
+library(skimr)
+library(janitor)
+```
+
 Assume that the Docker container with PostgreSQL and the dvdrental database are ready to go. 
 ```{r}
 sp_docker_start("sql-pet")
@@ -23,7 +30,7 @@ con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"
 
 ```
 
-## Downloading the data from the database
+## Getting data from the database
 
 As we show later on, the database serves as a store of data and as an engine for sub-setting, joining, and doing computation.  We begin with simple extraction, or "downloading" data.
 
@@ -40,7 +47,7 @@ DBI::dbListFields(con, "rental")
 
 Later on we'll discuss how to get more extensive data about each table and column from the database's own store of metadata.
 
-### Downloading an entire table
+### Getting an entire table from the database
 
 There are many different methods of getting data from a DBMS, and we'll explore the different ways of controlling each one of them.
 
@@ -52,7 +59,7 @@ str(rental_tibble)
 ```
 That's very simple, but if the table is large it may not be a good idea, since R is designed to keep the entire table in memory.
 
-### Referencing a table for many different purposes
+### Referencing a table for subsequent use
 
 The `dplyr::tbl` function gives us more control over access to a table.  It creates  a connection object that might look like a data frame but it's actually an list object that `dplyr` uses for constructing queries and retrieving data from the DBMS.  
 ```{r}
@@ -93,7 +100,7 @@ We won't discuss `dplyr` methods for sub-setting variables, deriving new ones, o
   * Comprehensive reference: [https://dplyr.tidyverse.org/](https://dplyr.tidyverse.org/)
   * Good tutorial: [https://suzan.rbind.io/tags/dplyr/](https://suzan.rbind.io/tags/dplyr/) 
 
-In practice we find tht, **renaming variables** is often quite important because the names in an SQL database might not meet your needs as an analyst.  In "the wild" you will find names that are ambiguous or overly specified, with spaces in them, and other problems that will make them difficult to use in R.  It is good practice to do whatever renaming you are going to do in a predictablel place like at the top of your code.  The names in the `dvdrental` database are simple and clear, but if they were not, you might rename them for subsequent use in this way:
+In practice we find that, **renaming columns** is often quite important because the names in an SQL database might not meet your needs as an analyst.  In "the wild" you will find names that are ambiguous or overly specified, with spaces in them, and other problems that will make them difficult to use in R.  It is good practice to do whatever renaming you are going to do in a predictablel place like at the top of your code.  The names in the `dvdrental` database are simple and clear, but if they were not, you might rename them for subsequent use in this way:
 
 ```{r}
 renamed_rental_table <- dplyr::tbl(con, "rental") %>% 
@@ -103,6 +110,14 @@ renamed_rental_table %>%
   select(rental_id_number, rental_date, inventory_id_number) %>% 
   head()
 ```
+
+In the case of the `dvdrental` database, the column names are short and very friendly.  But in the wild you will find many tables with difficult to use names.  The `janitor::clean_names` is a good first try for making column names easier to handle.
+```{r}
+
+rental_tibble %>% janitor::clean_names() %>% as_tibble()
+
+```
+
 
 ### Controlling number of rows returned
 
@@ -215,7 +230,6 @@ tibble::glimpse(rental_tibble)
 
 The `skimr` package has several functions that make it easy to examine an unknown data frame and assess what it contains. It is also extensible.
 ```{r}
-library(skimr)
 
 skim(rental_tibble)
 
@@ -232,7 +246,7 @@ They work together.
 
 ### Criteria for choosing between `dplyr` and native SQL
 
-This probably belongs later in the book.
+**This probably belongs later in the book.**
 
 * performance considerations: first get the right data, then worry about performance
 * Trade offs between leaving the data in PostgreSQL vs what's kept in R: 
@@ -241,6 +255,33 @@ This probably belongs later in the book.
   + using what you know to write efficient queries that do most of the work on the server
 
 ### `dplyr` tools
+
+already covered?
+
+### Using `glue` to construct SQL statements
+
+Here is one example:
+```{r}
+
+table <- "rental"
+vals = c(148, 526)
+
+sql <- glue_sql("
+  SELECT * 
+  FROM {`table`}",  # glue will automatically paste chunks of SQL together 
+  "WHERE customer_id IN ({vals*})
+", .con = con)
+
+sql
+
+query <- DBI::dbSendQuery(con, sql)
+df <- dbFetch(query)
+str(df)
+DBI::dbClearResult(query)
+
+```
+
+Several more examples are here: https://glue.tidyverse.org/reference/glue_sql.html 
 
 Where you place the `collect` function matters.
 ```{r}
