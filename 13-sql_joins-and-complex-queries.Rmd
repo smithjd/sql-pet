@@ -1,6 +1,6 @@
 # Joins and complex queries (13)
 
-```{r setup, echo=FALSE, message=TRUE, warning=FALSE}
+```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
 # These packages are called in almost every chapter of the book:
 library(tidyverse)
 library(DBI)
@@ -36,14 +36,6 @@ con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"
                          dbname = "dvdrental",
                          seconds_to_test = 10)
 ```
-discuss this simple example? http://www.postgresqltutorial.com/postgresql-left-join/ 
-
-* `dplyr` joins on the server side
-* Where you put `(collect(n = Inf))` really matters
-
-```{r}
-
-```
 
 ## Database constraints
 
@@ -56,11 +48,14 @@ For this tutorial, we are primarily concerned with primary and foreign key const
 ### insert yourself as a new customer
 
 ```{r}
+# Customer 600 should be the next customer.  
+# It gets deleted here just in case it was added in a different session.
 dbExecute(con,
   "delete from customer 
    where customer_id = 600;
   "
   )
+# Now add yourself as the next customer.  Replace Sophie Yang with your name.
 dbExecute(con,
   "insert into customer 
   (customer_id,store_id,first_name,last_name,email,address_id
@@ -78,7 +73,7 @@ To work around this inconvenience for the tutorial:
 1.  we drop the smy_film table if it exists from a previous session.
 
 ```{r}
-dbExecute(con,"drop table smy_film;")   
+dbExecute(con,"drop table if exists smy_film;")   
 ```
 
 2.  we create a new table smy_film from the film table and add a new row with a language_id = 10;
@@ -117,7 +112,7 @@ In section 'SQL Quick Start Simple Retrieval', there is a brief discussion of da
 
 Bill Kent famously summarized 3NF as every non-key column "must provide a fact about the key,the whole key, and nothing but the key, so help me Codd." 
 
-Normalization breaks data down and JOINs, denormalizes, the data and builds it back up.
+Normalization breaks data down and JOINs denormalizes the data and builds it back up.
 
 ![SQL_JOIN_TYPES](sql_join_types.png)
 
@@ -125,9 +120,10 @@ The above diagram can be found [here](https://way2tutorial.com/sql/sql_join_type
 
 The diagram above shows nicely the hierarchy of different types of joins.  For this tutorial, we can think of joins as either an Inner Join or an Outer Join.
 
-Instead of showing standard Venn diagrams showing the different JOINS, we use an analogy. For those interested thought, the typical Venn diagrams can be found [here](http://www.sql-join.com/sql-join-types/).
+Instead of showing standard Venn diagrams showing the different JOINS, we use an analogy. For those interested though, the typical Venn diagrams can be found [here](http://www.sql-join.com/sql-join-types/).
 
 ### Valentines Party
+
 Imagine you are at a large costume Valentine's Day dance party.  The hostess of the party, a data scientist, would like to learn more about the people attending her party.  She interrupts the music to let everyone know it is time for the judges to evaluate the winners for best costumes and associated prizes.
 
 She requests the following:
@@ -142,7 +138,9 @@ Full Outer Join -- As our data scientist looks out at the three lines, she can c
 
 As the three judges start walking down the lines, she makes one more announcement.
 
-4.  There is a special prize for the man and woman who can guess the average age of the members of the opposite sex. To give everyone a chance to come up with an average age, she asks the men to stay in line and the women to move down the mens line in order circling back around until they get back to their starting point in line, (full outer join, every man seen by every woman and vice versa)
+4.  There is a special prize for the man and woman who can guess the average age of the members of the opposite sex. To give everyone a chance to come up with an average age, she asks the men to stay in line and the women to move down the mens line in order circling back around until they get back to their starting point in line, (full outer join, every man seen by every woman and vice versa).  
+
+It is hard enough to tell someone's age when they don't have a mask, how do you get the average age when people have masks?
 
 The hostess knows that there is usually some data anomolies.  As she looks out she sees a small cluster of people who did not line up.  Being the hostess with the mostest, she wants to get to know that small cluster better.  Since they are far off and in costume, she cannot tell if they are men or women.  More importantly, she does not know if they identify as a man or a woman, both -- (kind of a stretch for a self join), neither, or something else.  Ahh, the inquisitive mind wants to know.
 
@@ -159,6 +157,7 @@ The hostess knows that there is usually some data anomolies.  As she looks out s
 |full |full_join(customer_tbl, rental_tbl, by = 'customer_id', suffix = c(".c", ".r")) |from customer c full outer join rental r on c.customer_id = r.customer_id
 |     |customer_tbl %>% full_join(rental_tbl, by = 'customer_id', suffix = c(".c", ".r"))|
 
+
 ### Join Tables
 
 The dplyr join documentation describes two different types of joins, `mutating` and `filtering` joins.  For those coming to R with a SQL background, the mutating documentation is misleading in one respect.  Here is the inner_join documentation.
@@ -169,7 +168,11 @@ The dplyr join documentation describes two different types of joins, `mutating` 
 
 The misleading part is that all the columns from *x* and *y*.  If the join column is `KEY`, SQL will return x.KEY and y.KEY.  Dplyr retuns KEY.  It appears that the KEY value comes from the key/driving table.  This difference should become clear in the outer join examples.
 
-In the next couple of examples, we will pull all the language and smy_film table data from the database into memory, because the tables are small.  In the *_join verbs, the `by` and `suffix` parameters are included because it helps document the actual join and the source of join columns.
+In the next couple of examples, we will pull all the language and smy_film table data from the database into memory because the tables are small.  In the *_join verbs, the `by` and `suffix` parameters are included because it helps document the actual join and the source of join columns.
+
+## Natural Join Time Bomb
+
+The dplyr default join is a natural join, joining tables on common column names.  One of many links why one should not use natural joins can be found [here](http://gplivna.blogspot.com/2007/10/natural-joins-are-evil-motto-if-you.html).
 
 <!-- move this example to query optimzation section 
 
@@ -205,13 +208,29 @@ rs
 
 -->
 
+## Join Templates
+
+In this section we look at two tables, `language` and `smy_film` and various joins using dplyr and SQL.  Each dplyr code block has three purposes.  
+
+1.  Show a working join example.  
+2.  The code blocks can be used as templates for beginning more complex dplyr pipes.
+3.  The code blocks show the number of joins performed.
+
+In these examples, the join condition, the `by` parameter, 
+
+    by = c('language_id','language_id')
+
+the two columns are the same.  In multi-column joins, each language_id would be replace with a vector of column names used in the join by position.  Note the column names do not need to be identical by position.
+
+The suffix parameter is a way to distinguish the same column name in the joined tables.  The suffixes are usually an single letter to represent the name of the table.
+
 
 ```{r}
 language_table <- DBI::dbReadTable(con, "language")
 film_table     <- DBI::dbReadTable(con, "smy_film")
 ```
 
-#### dplyr Inner Join
+### dplyr Inner Join Template 
 
 ```{r inner join}
 languages_ij <- language_table %>% 
@@ -235,16 +254,17 @@ rs
 
 The output tells us that there are 1000 inner joins between the language_table and the film_table.
 
-#### dplyr Left Outer Join
+### dplyr Left Outer Join Template
 
 ```{r left outer join}
 
 languages_loj <- language_table %>% 
   left_join (film_table, by=c('language_id','language_id'),suffix(c(".l",".f"))) %>% 
-  mutate(film_lang_id = if_else(is.na(film_id),film_id,language_id)) %>%
-  group_by(language_id,name,film_lang_id) %>% 
+  mutate(join_type = 'loj'
+        ,film_lang_id = if_else(is.na(film_id),film_id,language_id)) %>%
+  group_by(join_type,language_id,name,film_lang_id) %>% 
   summarize(lojs=n()) %>%
-  select (language_id,film_lang_id,name,lojs)
+  select (join_type,language_id,film_lang_id,name,lojs)
 languages_loj
 #sp_print_df(languages_loj)
 ```
@@ -325,7 +345,6 @@ languages_foj
 
 #### SQL full Outer Join
 
-
 ```{r}
 rs <- dbGetQuery(con,
 "select l.language_id,l.name,f.language_id language_id_f,count(*) fojs
@@ -346,7 +365,7 @@ One can also just look at the language_id on the left and language_id_f on the r
 
 #### dplyr anti Join
 
-The anti join is a left outer join without the inner joined rows.  It only returns the columns from the left table.
+The anti join is a left outer join without the inner joined rows.  It only returns the rows from the left table that do not have a match from the right table.
 
 ```{r dplyr anti Join}
 
@@ -444,8 +463,20 @@ customer_table <- tbl(con,"customer") #DBI::dbReadTable(con, "customer")
 rental_table   <- tbl(con,"rental")   #DBI::dbReadTable(con, "rental")
 
 # Method 1.  dplyr anti_join
-daj2 <-
+daj1 <-
     anti_join(customer_table, rental_table, by = 'customer_id', suffix = c(".c", ".r")) %>% 
+    select(c('first_name','last_name','email')) %>% 
+    explain()
+```
+
+```{r}
+customer_table <- tbl(con,"customer") #DBI::dbReadTable(con, "customer")
+rental_table   <- tbl(con,"rental")   #DBI::dbReadTable(con, "rental")
+
+# Method 2.  dplyr loj with NA
+daj2 <-
+    left_join(customer_table, rental_table, by = c('customer_id','customer_id'), suffix = c(".c", ".r")) %>% 
+  filter(is.na(rental_id)) %>% 
     select(c('first_name','last_name','email')) %>% 
     explain()
 ```
@@ -482,8 +513,8 @@ sql_aj1 <- dbGetQuery(con,
   where r.customer_id is null
   group by c.customer_id
 order by c.customer_id;")
-sp_print_df(rs)
-rs
+sp_print_df(sql_aj1)
+sql_aj1
 
 sql_aj3 <- dbGetQuery(con,
 "explain analyze 
@@ -501,9 +532,6 @@ print(glue('sql_aj1 loj-null costs=',sql_aj1[1,1]));print(glue('sql_aj3 not exis
 ### Anti joins  -- Find customers who have never rented a movie, take 2.
 
 This is a left outer join from customer to the rental table with an NA rental_id.
-
-
-
 
 #### SQL Anti-Join
 
@@ -526,9 +554,11 @@ sp_print_df(head(rs))
 
 
 
-### Union 
+### SQL Rows Per Table 
 
-This example belongs in a separate chapter on table manipulation, (union, intersection, except/minus)
+In the examples above, we looked at how many rows were involved in each of the join examples and which side of the join they came from.  It is often helpful to know how many rows are in each table as a sanity check on the joins.  
+
+Below is the SQL version to return all the row counts from each table in the DVD Rental System.
 
 ```{r}
 rs <- dbGetQuery(con,
@@ -548,30 +578,40 @@ rs <- dbGetQuery(con,
                        union select 'city' tbl_name,count(*) from city
                        union select 'country' tbl_name,count(*) from country
                        union select 'store' tbl_name,count(*) from store
+                       union select 'smy_film' tbl_name,count(*) from smy_film
                        ) counts
                   order by tbl_name
                  ;
                 "
                 )
 sp_print_df(head(rs))
+rs
 ```
 
-#### how many films and languages exist in the DVD rental application
+#### Exercise dplyr Rows Per Table 
 
-```{r }
-rs <- dbGetQuery(con,
-                "      select 'film' table_name,count(*) count from film 
-                 union select 'language' table_name,count(*) count from language 
-               ;
-                "
-                )
-sp_print_df(head(rs))
+In the code block below 
+
+1.  Get the row counts for a couple more tables
+2.  What is the structure of film_table object?
+
+
+```{r}
+film_table <- tbl(con,"film") #DBI::dbReadTable(con, "customer")
+language_table   <- tbl(con,"language")   #DBI::dbReadTable(con, "rental")
+
+film_rows <- film_table %>% mutate(name = 'film') %>% group_by(name) %>% summarize(rows=n())
+language_rows <- language_table %>% mutate(name = 'language') %>% 
+  group_by(name) %>% summarize(rows=n())
+rows_per_table <- rbind(as.data.frame(film_rows),as.data.frame(language_rows))
+rows_per_table
 ```
 
-#### what is the film distribution based on language
+#### SQL film distribution based on language
+
+The SQL below is very similar to the `SQL full Outer Join` above.  Instead of counting the joins, it counts the number films associated with each language.
+
 ```{r }
-
-
 rs <- dbGetQuery(con,
                 "select l.language_id id
                        ,l.name
@@ -585,16 +625,34 @@ rs <- dbGetQuery(con,
                 "
                 )
 sp_print_df(head(rs))
+rs
 ```
 
+#### Exercise dplyr film distribution based on language
 
+Below is the code block from the `dplyr Full Outer Join` section above.  Modify the code block to match the output from the SQL version.
+
+```{r}
+rs <- dbGetQuery(con,
+"select l.language_id,l.name,f.language_id language_id_f,count(*) fojs
+   from language l full outer join smy_film f on l.language_id = f.language_id
+  group by l.language_id,l.name,f.language_id
+order by l.language_id;")
+sp_print_df(rs)
+rs
+```
 
 ## Store analysis
 
-### which store has the largest revenue stream?
+How are the stores performing.  
+
+### SQL store revenue stream
+
+How are the stores performing?  The SQL code shows the payments made to each store in the business.
+
 ```{r}
 rs <- dbGetQuery(con,
-                "select store_id,sum(amount) amt,count(*) cnt 
+                "select store_id,sum(p.amount) amt,count(*) cnt 
                    from payment p 
                         join staff s 
                           on p.staff_id = s.staff_id  
@@ -605,19 +663,26 @@ rs <- dbGetQuery(con,
 sp_print_df(head(rs))
 ```
 
+#### Exercise dplyr store revenue stream
 
+Complete the following code block to return the payments made to each store.
 
 ```{r}
 payment_table <- tbl(con,'payment') #DBI::dbReadTable(con, "payment")
 staff_table   <- tbl(con,'staff')   #DBI::dbReadTable(con, "staff")
 
-payment_table %>%
-    inner_join (staff_table, by = 'staff_id', suffix = c(".p", ".s")) %>% 
-    group_by(store_id) %>%
-    summarize (amt=sum(amount,na.rm=TRUE),n=n()) %>%
-    arrange (desc(amt))
+store_revenue <-payment_table %>%
+    inner_join (staff_table, by = 'staff_id', suffix = c(".p", ".s")) %>% head
 
+store_revenue
 ```
+
+<!-- answer
+    # group_by(store_id) %>%
+    # summarize (amt=sum(amount,na.rm=TRUE),n=n()) %>%
+    # arrange (desc(amt))
+-->    
+
 
 ### SQL:Estimate Outstanding Balance
 
@@ -630,7 +695,7 @@ The following SQL code calculates for each store
 
 ```{r}
 rs <- dbGetQuery(con,
-"SELECT r.store_id store,sum(CASE WHEN payment_id IS NULL THEN 1 ELSE 0 END) open
+"SELECT s.store_id store,sum(CASE WHEN payment_id IS NULL THEN 1 ELSE 0 END) open
     ,sum(CASE WHEN payment_id IS NOT NULL THEN 1 ELSE 0 END) paid
     ,sum(p.amount) paid_amt
     ,count(*) rentals
@@ -648,16 +713,15 @@ rs <- dbGetQuery(con,
 FROM rental r
 LEFT JOIN payment p
     ON r.rental_id = p.rental_id
-JOIN store s
+JOIN staff s
     ON r.staff_id = s.staff_id
 group by s.store_id;
-                "
-                )
+")
 sp_print_df(head(rs))
 rs
 ```
 
-#### Dplyr Modify the following dplyr code to match the SQL output from above.
+#### Exercise Dplyr Modify the following dplyr code to match the SQL output from above.
 
 ```{r}
 payment_table <- tbl(con,'payment') #DBI::dbReadTable(con, "payment")
@@ -683,8 +747,9 @@ est_bal <-rental_table %>%
 est_bal
 ```
 
-### what is the actual outstanding balance
+### SQL actual outstanding balance
 
+In the previous exercise, we estimated the outstanding amount.  After reviewing the rental table, the actual movie rental rate is in the table.  We use that to calculate the outstanding balance below.
 
 ```{r}
 rs <- dbGetQuery(con,
@@ -714,13 +779,16 @@ act_bal <-rental_table %>%
     left_join(payment_table, by=c('rental_id','rental_id'),suffix = c(".r", ".p")) %>%
     inner_join(inventory_table, by=c('inventory_id','inventory_id'),suffix = c(".r", ".i")) %>%
     inner_join(film_table, by=c('film_id','film_id'),suffix = c(".i", ".f")) %>% head
-    # filter(is.na(customer_id.p)) %>%
-    # summarize(open_amount=sum(rental_rate,na.rm = TRUE)
-    #          ,open = n()
-    #          )
+
 act_bal
 ```
-```
+
+<!--
+    filter(is.na(customer_id.p)) %>%
+    summarize(open_amount=sum(rental_rate,na.rm = TRUE)
+             ,open = n()
+             )
+-->             
 
 ### Rank customers with highest open amounts
 
