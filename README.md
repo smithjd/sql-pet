@@ -2,32 +2,54 @@
 
 **Table of Contents**
 
-1. [Projects](#projects)
-1. [Book](#book)
-1. [More Docker and PostgreSQL tips](#more-docker-and-postgresql-tips)
+1. [Projects](#Project organization)
+1. [Book](#Book)
+1. [Book](#Book)
+1. [Book](#Book)
+
 1. [How to contribute](#how-to-contribute)
 1. [Code of Conduct](#code-of-conduct)
 1. [License](#license)
 
-## Projects
+## Project organization
 
 * Meeting agenda items go here: https://github.com/smithjd/sql-pet/projects/1
 * Kanban is here: https://github.com/smithjd/sql-pet/projects/2 
+* Slack: [self-invite is here](http://pdxdata.org/slack/)
 
 ## Book
-[R, Databases and Docker](https://smithjd.github.io/sql-pet/)
 
-* Tutorial materials go in the [Book](https://smithjd.github.io/sql-pet/).
-* Executable code is in the [/src](https://github.com/smithjd/sql-pet/tree/master/src) directory
-  + selected chunks are move to the book as described here: https://bookdown.org/yihui/bookdown/new-session.html 
-
-## More Docker and PostgreSQL tips 
-=======
-
-* Executable code is in the [/book-src](https://github.com/smithjd/sql-pet/tree/master/book-src) directory
-  + We are using a `[Knit-then-Merge](https://bookdown.org/yihui/bookdown/new-session.html)` approach so each chapter of the book can be Knitted separately.  
-  + When the book is complete, we'll put some easy to execute in a separate directory
+* Tutorial materials from this repo go in the [R, Databases and Docker](https://smithjd.github.io/sql-pet/).
+* Each chapter is written so it can be executed independently (once the Docker container is built in Chapter 5). We are using a [Knit-then-Merge](https://bookdown.org/yihui/bookdown/new-session.html) approach so each chapter of the book can be Knitted separately.  
 * The book depends on the `sqlrpetr` package.  It can be downloaded using `devtools::install_github("smithjd/sqlpetr")`
+
+## Prerequisites
+You will need:
+
+* A computer running 
+  + Windows (Windows 7 64-bit or late - Windows 10-Pro is recommended)
+  + MacOS
+  + Linux (any Linux distro that will run Docker Community Edition, R and RStudio will work)
+* Current versions of [R and RStudio](https://www.datacamp.com/community/tutorials/installing-R-windows-mac-ubuntu)
+* Docker 
+
+## Packages used in the book
+
+Here are the R packages that are used in this project and are discussed in the book:
+
+* DBI
+* DiagrammeR
+* RPostgres
+* dbplyr
+* devtools
+* downloader
+* glue
+* here
+* knitr
+* skimr
+* tidyverse
+* sqlpetr (installs with: `devtools::install_github("smithjd/sqlpetr")`)
+* bookdown
 
 ## How to contribute
 If you'd like to contribute to this project, start by searching through the [issues](https://github.com/smithjd/sql-pet/issues) and [pull requests](https://github.com/smithjd/sql-pet/pulls) to see whether someone else has already raised a similar idea or question.
@@ -52,34 +74,6 @@ If you plan to participate in the project in any way, such as a developer, revie
 ## License
 Software in this project is licensed under the [MIT License](https://github.com/smithjd/sql-pet/blob/master/LICENSE).
 
-## More Docker and PostgreSQL tips 
-
-Do these items have a place?
-
-### PostgreSQL
-* Loading the [dvdrental database into PostgreSQL](http://www.postgresqltutorial.com/load-postgresql-sample-database/)
-* To explore the PostgreSQL environment it's worth browsing around inside the Docker command with a shell.
-
-  + To run the Docker container that contains PostgreSQL, you can enter this from a command prompt:
-
-    `$ docker exec -ti pet sh`
-
-  + To exit Docker enter:
-
-    `# exit`
-
-  + Inside Docker, you can enter the PostgreSQL command-line utility psql by entering 
-
-    `# psql -U postgres`
-
-    Handy [psql commands](https://gpdb.docs.pivotal.io/gs/43/pdf/PSQLQuickRef.pdf) include:
-
-    + `postgres=# \h`          # psql help
-    + `postgres=# \dt`         # list PostgreSQL tables
-    + `postgres=# \c dbname`   # connect to databse dbname
-    + `postgres=# \l`          # list PostgreSQL databases
-    + `postgres=# \conninfo`   # display information about current connection
-    + `postgres=# \q`          # exit psql
 
 ## How to contribute
 If you'd like to contribute to this project, start by searching through the [issues](https://github.com/smithjd/sql-pet/issues) and [pull requests](https://github.com/smithjd/sql-pet/pulls) to see whether someone else has already raised a similar idea or question.
