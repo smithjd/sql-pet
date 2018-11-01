@@ -16,11 +16,12 @@ sp_docker_start("sql-pet")
 ```
 Connect to the database:
 ```{r connect to postgresql}
-con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
-                         password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
-                         dbname = "dvdrental",
-                         seconds_to_test = 10)
-
+con <- sp_get_postgres_connection(
+  user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
+  password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
+  dbname = "dvdrental",
+  seconds_to_test = 10
+)
 ```
 
 ## Getting data from the database
@@ -46,9 +47,9 @@ The first example, `DBI::dbListTables(con)` returned 22 tables and the second ex
 Use the
 ```{r combine table and column data}
 
-table_columns <- lapply(tables, dbListFields, conn = con) 
+table_columns <- lapply(tables, dbListFields, conn = con)
 
-#rename each list [[1]] ... [[22]] to meaningful table name
+# rename each list [[1]] ... [[22]] to meaningful table name
 names(table_columns) <- tables
 
 head(table_columns)
@@ -56,18 +57,24 @@ head(table_columns)
 
 Later on we'll discuss how to get more extensive data about each table and column from the database's own store of metadata using a similar technique.  As we go further the issue of scale will come up again and again: you need to be careful about how much data a call to the dbms will return, whether it's a list of tables or a table that could have millions of rows.
 
+### Connect with people who own, generate, or are the subjects of the data
+
+A good chat with people who own the data, generate it, or are the subjects can generate insights and set the context for your investigation of the database. The purpose for collecting the data or circumsances where it was collected may be burried far afield in an organization, but *usually someone knows*.  The metadata discussed in a later chapter is essential but will only take you so far.
+
+There are different ways of just **looking at the data**, which we explore below.
+
 ### Downloading an entire table
 
 There are many different methods of getting data from a DBMS, and we'll explore the different ways of controlling each one of them.
 
 `DBI::dbReadTable` will download an entire table into an R [tibble](https://tibble.tidyverse.org/).  
 ```{r}
-rental_tibble <- DBI::dbReadTable(con, "rental") 
+rental_tibble <- DBI::dbReadTable(con, "rental")
 str(rental_tibble)
 ```
 That's very simple, but if the table is large it may not be a good idea, since R is designed to keep the entire table in memory.  Note that the first line of the str() output reports the total number of observations.  
 
-### Referencing a table for many different purposes
+### A table object that can be reused
 
 The `dplyr::tbl` function gives us more control over access to a table by enabling  control over which columns and rows to download.  It creates  an object that might **look** like a data frame, but it's actually a list object that `dplyr` uses for constructing queries and retrieving data from the DBMS.  
 
@@ -89,6 +96,8 @@ rental_table$ops$vars
 ### Paradigm Shift: Lazy Execution
 
 R and `dplyr` is designed to be both lazy and smart. Lazy execution affects when a donwload happens and when processing occurs on the dbms server side.  R retrieves the full data set when explicityly told to do so via the `collect` verb, otherwise it returns only 10 rows. And `dplyr` tries to get as much work done on the server side as possible before downloading anything.  All of this is a key paradigm shift for those new to working with databases using R and `dplyr`, especially if they have been working in a straight SQL environment.
+
+**explain why this matters here**
 
 In the code blocks below, we demonstrate three ways to check if `dplyr` has performed lazy/delayed execution.
 
@@ -114,7 +123,6 @@ The the `rental_table` is smart enough to returns `NA` when passed to `nrow` so 
 ```{r Lazy Execution 3 summarise implies "collect"}
 rental_table %>% dplyr::summarise(n = n())
 rental_table %>% dplyr::summarise(n = n()) %>% show_query()
-
 ```
 The `dplyr::summarise` verb does not force R to download the whole table.  It **processes** the whole table by counting all the rows on the dbms side and then downloads one number.
 
@@ -132,23 +140,23 @@ At the top of the output, `# A tibble: 16,044 x 7` and at the bottom of the outp
 See more example of lazy execution can be found [Here](https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html).
 
 
-### Controlling number of rows returned
+### Controlling the number of rows returned
 
 The `collect` function triggers the creation of a tibble and controls the number of rows that the DBMS sends to R.  Note that in the following examples, the object dimensions are known.
 ```{r}
-rental_table %>% collect(n = 3) %>% head
+rental_table %>% collect(n = 3) %>% head()
 ```
 In this case the `collect` function triggers the execution of a query that counts the number of records in the table by `staff_id`:
 ```{r}
-rental_table %>% 
-  count(staff_id) %>% 
+rental_table %>%
+  count(staff_id) %>%
   collect()
 ```
 
 The `collect` function affects how much is downloaded, not how many rows the DBMS needs to process the query. This query processes all of the rows in the table but only displays one row of output.
 ```{r}
-rental_table %>% 
-  count(staff_id) %>% 
+rental_table %>%
+  count(staff_id) %>%
   collect(n = 1)
 ```
 
@@ -157,19 +165,20 @@ rental_table %>%
 When the dbms contains many rows, a sample of the data may be plenty for your purposes.  Although `dplyr` has nice functions to sample a data frame that's already in R (e.g., the `sample_n` and `sample_frac` functions), to get a sample from the dbms we have to use `dbGetQuery` to send native SQL to the database. To peak ahead, here is one example of a query that retrieves 20 rows from a 1% sample:
 
 ```{r}
-one_percent_sample <- DBI::dbGetQuery(con,
+one_percent_sample <- DBI::dbGetQuery(
+  con,
   "SELECT rental_id, rental_date, inventory_id, customer_id FROM rental TABLESAMPLE SYSTEM(1) LIMIT 20;
-  ")
+  "
+)
 
 one_percent_sample
-
 ```
 
 ### Sub-setting variables
 
 A table in the dbms may not only have many more rows than you want and also many more columns.  The `select` command controls which columns are retrieved.
 ```{r}
-rental_table %>% select(rental_date, return_date) %>% head
+rental_table %>% select(rental_date, return_date) %>% head()
 ```
 
 We won't discuss `dplyr` methods for sub-setting variables, deriving new ones, or sub-setting rows based on the values found in the table because they are covered well in other places, including:
@@ -180,11 +189,11 @@ We won't discuss `dplyr` methods for sub-setting variables, deriving new ones, o
 In practice we find that, **renaming variables** is often quite important because the names in an SQL database might not meet your needs as an analyst.  In "the wild" you will find names that are ambiguous or overly specified, with spaces in them, and other problems that will make them difficult to use in R.  It is good practice to do whatever renaming you are going to do in a predictable place like at the top of your code.  The names in the `dvdrental` database are simple and clear, but if they were not, you might rename them for subsequent use in this way:
 
 ```{r}
-renamed_rental_table <- dplyr::tbl(con, "rental") %>% 
+renamed_rental_table <- dplyr::tbl(con, "rental") %>%
   rename(rental_id_number = rental_id, inventory_id_number = inventory_id)
 
-renamed_rental_table %>% 
-  select(rental_id_number, rental_date, inventory_id_number) %>% 
+renamed_rental_table %>%
+  select(rental_id_number, rental_date, inventory_id_number) %>%
   head()
 ```
 
@@ -192,8 +201,8 @@ renamed_rental_table %>%
 
 The `show_query` function shows how `dplyr` is translating your query to the dialect of the target dbms:
 ```{r}
-rental_table %>% 
-  count(staff_id) %>% 
+rental_table %>%
+  count(staff_id) %>%
   show_query()
 ```
 Here is an extensive discussion of how `dplyr` code is translated into SQL:
@@ -202,12 +211,13 @@ Here is an extensive discussion of how `dplyr` code is translated into SQL:
 
 The SQL code can submit the same query directly to the DBMS with the `DBI::dbGetQuery` function:
 ```{r}
-DBI::dbGetQuery(con,
+DBI::dbGetQuery(
+  con,
   'SELECT "staff_id", COUNT(*) AS "n"
    FROM "rental"
    GROUP BY "staff_id";
-  ')
-
+  '
+)
 ```
 <<smy We haven't investigated this, but it looks like `dplyr` collect() function triggers a call simmilar to the dbGetQuery call above.  The default `dplyr` behavior looks like dbSendQuery() and dbFetch() model is used.>>
 
@@ -225,7 +235,7 @@ Rmarkdown stored that query result in a tibble:
 query_results
 ```
 
-## Investigating a single table with R
+## Examining a single table with R
 
 Dealing with a large, complex database highlights the utility of specific tools in R.  We include brief examples that we find to be handy:
 
