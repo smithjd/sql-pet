@@ -1,6 +1,6 @@
 # Introduction to DBMS queries (11)
 
-These packages are used in this chapter:
+The following packages are used in this chapter:
 
 ```r
 library(tidyverse)
@@ -25,13 +25,13 @@ con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"
                          seconds_to_test = 10)
 ```
 
-## Downloading the data from the database
+## Getting data from the database
 
-As we show later on, the database serves as a store of data and as an engine for sub-setting, joining, and doing computation.  We begin with simple extraction, or "downloading" data.
+As we show later on, the database serves as a store of data and as an engine for sub-setting, joining, and computation on the data.  We begin with getting data from the dbms, or "downloading" data.
 
 ### Finding out what's there
 
-We've already seen the simplest way of getting a list of tables in a database with `DBI` functions that  list tables and fields.  Here are the (public) tables in the database:
+We've already seen the simplest way of getting a list of tables in a database with `DBI` functions that list tables and fields.  Generate a vector listing the (public) tables in the database:
 
 ```r
 tables <- DBI::dbListTables(con)
@@ -51,7 +51,7 @@ tables
 ## [19] "film"                       "address"                   
 ## [21] "film_actor"                 "customer"
 ```
-Here are the fields (or columns or variables) in one specific table:
+Print a vector with all the fields (or columns or variables) in one specific table:
 
 ```r
 DBI::dbListFields(con, "rental")
@@ -62,19 +62,19 @@ DBI::dbListFields(con, "rental")
 ## [5] "return_date"  "staff_id"     "last_update"
 ```
 
-### Combining what's out there
+### Listing all the fields for all the tables
 
-The first example, `DBI::dbListTables(con)` returned 22 tables and the second example, `DBI::dbListFields(con, "rental")` returne 7 fields.  Here we combine the two calls to return a list of tables which has a list of all the fields in the table.  The code block just shows the first two tables.
+The first example, `DBI::dbListTables(con)` returned 22 tables and the second example, `DBI::dbListFields(con, "rental")` returns 7 fields.  Here we combine the two calls to return a list of tables which has a list of all the fields in the table.  The code block just shows the first two tables.
 
+Use the
 
 ```r
-# this call is redundant; just ensures code block stands on its own.
-tables <- DBI::dbListTables(con) 
-table_columns <- lapply(tables, dbListFields,conn=con) 
+table_columns <- lapply(tables, dbListFields, conn = con) 
+
 #rename each list [[1]] ... [[22]] to meaningful table name
 names(table_columns) <- tables
 
-head(table_columns, n=2)
+head(table_columns)
 ```
 
 ```
@@ -83,16 +83,32 @@ head(table_columns, n=2)
 ## 
 ## $customer_list
 ## [1] "id"       "name"     "address"  "zip code" "phone"    "city"    
-## [7] "country"  "notes"    "sid"
+## [7] "country"  "notes"    "sid"     
+## 
+## $film_list
+## [1] "fid"         "title"       "description" "category"    "price"      
+## [6] "length"      "rating"      "actors"     
+## 
+## $nicer_but_slower_film_list
+## [1] "fid"         "title"       "description" "category"    "price"      
+## [6] "length"      "rating"      "actors"     
+## 
+## $sales_by_film_category
+## [1] "category"    "total_sales"
+## 
+## $staff
+##  [1] "staff_id"    "first_name"  "last_name"   "address_id"  "email"      
+##  [6] "store_id"    "active"      "username"    "password"    "last_update"
+## [11] "picture"
 ```
 
-Later on we'll discuss how to get more extensive data about each table and column from the database's own store of metadata using a similar technique.
+Later on we'll discuss how to get more extensive data about each table and column from the database's own store of metadata using a similar technique.  As we go further the issue of scale will come up again and again: you need to be careful about how much data a call to the dbms will return, whether it's a list of tables or a table that could have millions of rows.
 
 ### Downloading an entire table
 
 There are many different methods of getting data from a DBMS, and we'll explore the different ways of controlling each one of them.
 
-`DBI::dbReadTable` will download an entire table into an R [tibble](https://tibble.tidyverse.org/).
+`DBI::dbReadTable` will download an entire table into an R [tibble](https://tibble.tidyverse.org/).  
 
 ```r
 rental_tibble <- DBI::dbReadTable(con, "rental") 
@@ -113,7 +129,7 @@ That's very simple, but if the table is large it may not be a good idea, since R
 
 ### Referencing a table for many different purposes
 
-The `dplyr::tbl` function gives us more control over access to a table.  It creates  an object that might look like a data frame, but it's actually a list object that `dplyr` uses for constructing queries and retrieving data from the DBMS.  
+The `dplyr::tbl` function gives us more control over access to a table by enabling  control over which columns and rows to download.  It creates  an object that might **look** like a data frame, but it's actually a list object that `dplyr` uses for constructing queries and retrieving data from the DBMS.  
 
 
 ```r
@@ -156,9 +172,9 @@ rental_table$ops$vars
 ## [5] "return_date"  "staff_id"     "last_update"
 ```
 
-### Paradigm Shift Lazy Loading
+### Paradigm Shift: Lazy Execution
 
-R and `dplyr` is designed to be both lazy and smart, it retrieves the full data set when explicityly told to do so via the `collect` verb, otherwise it returns only 10 rows.   This is a key paradigm shift for those new to working with databases using R and `dplyr`. 
+R and `dplyr` is designed to be both lazy and smart. Lazy execution affects when a donwload happens and when processing occurs on the dbms server side.  R retrieves the full data set when explicityly told to do so via the `collect` verb, otherwise it returns only 10 rows. And `dplyr` tries to get as much work done on the server side as possible before downloading anything.  All of this is a key paradigm shift for those new to working with databases using R and `dplyr`, especially if they have been working in a straight SQL environment.
 
 In the code blocks below, we demonstrate three ways to check if `dplyr` has performed lazy/delayed execution.
 
@@ -192,7 +208,7 @@ rental_table
 ```
 
 ```r
-head(rental_table,n=25)
+head(rental_table, n = 25)
 ```
 
 ```
@@ -213,8 +229,9 @@ head(rental_table,n=25)
 ## # ... with more rows, and 3 more variables: return_date <dttm>,
 ## #   staff_id <int>, last_update <dttm>
 ```
-
 At the top of the output look for the dimensions, [?? x columns] or at the bottom for '... with more rows'
+
+Notice that `head` should return 25 rows, but only shows the 10 rows it has can retrieve. 
 
 
 ```r
@@ -225,11 +242,11 @@ nrow(rental_table)
 ## [1] NA
 ```
 
-The function returns 'NA' if lazy execution has been performed.
+The the `rental_table` is smart enough to returns `NA` when passed to `nrow` so no execution is performed.
 
 
 ```r
-rental_table %>% summarise(n=n())
+rental_table %>% dplyr::summarise(n = n())
 ```
 
 ```
@@ -240,13 +257,24 @@ rental_table %>% summarise(n=n())
 ## 1 16044
 ```
 
+```r
+rental_table %>% dplyr::summarise(n = n()) %>% show_query()
+```
+
+```
+## <SQL>
+## SELECT COUNT(*) AS "n"
+## FROM "rental"
+```
+The `dplyr::summarise` verb does not force R to download the whole table.  It **processes** the whole table by counting all the rows on the dbms side and then downloads one number.
+
 Next we give an example where R gets busy and returns the full data set.
 
 
 ```r
 rental_table <- dplyr::tbl(con, "rental") # Lazy
 
-collect_rental_table <- rental_table %>%collect() # Busy
+collect_rental_table <- rental_table %>% collect() # Busy
 collect_rental_table
 ```
 
@@ -270,63 +298,8 @@ collect_rental_table
 
 At the top of the output, `# A tibble: 16,044 x 7` and at the bottom of the output, `# ... with 16,034 more rows` we see that `dplyr::tbl` returned all the rows associated with `collect_rental_table`.  See [Controlling number of rows returned] for additional R examples showing R getting to work, and return some or all the rows.
 
+See more example of lazy execution can be found [Here](https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html).
 
-
-<!--
-Additional example of lazy execution can be found [Here](https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html).
--->
-
-
-### Sub-setting variables
-
-A table in the dbms may not only have many more rows than you want and also many more columns.  The `select` command controls which columns are retrieved.
-
-```r
-rental_table %>% select(rental_date, return_date) %>% head
-```
-
-```
-## # Source:   lazy query [?? x 2]
-## # Database: postgres [postgres@localhost:5432/dvdrental]
-##   rental_date         return_date        
-##   <dttm>              <dttm>             
-## 1 2005-05-24 22:54:33 2005-05-28 19:40:33
-## 2 2005-05-24 23:03:39 2005-06-01 22:12:39
-## 3 2005-05-24 23:04:41 2005-06-03 01:43:41
-## 4 2005-05-24 23:05:21 2005-06-02 04:33:21
-## 5 2005-05-24 23:08:07 2005-05-27 01:32:07
-## 6 2005-05-24 23:11:53 2005-05-29 20:34:53
-```
-
-We won't discuss `dplyr` methods for sub-setting variables, deriving new ones, or sub-setting rows based on the values found in the table because they are covered well in other places, including:
-
-  * Comprehensive reference: [https://dplyr.tidyverse.org/](https://dplyr.tidyverse.org/)
-  * Good tutorial: [https://suzan.rbind.io/tags/dplyr/](https://suzan.rbind.io/tags/dplyr/) 
-
-In practice we find that, **renaming variables** is often quite important because the names in an SQL database might not meet your needs as an analyst.  In "the wild" you will find names that are ambiguous or overly specified, with spaces in them, and other problems that will make them difficult to use in R.  It is good practice to do whatever renaming you are going to do in a predictable place like at the top of your code.  The names in the `dvdrental` database are simple and clear, but if they were not, you might rename them for subsequent use in this way:
-
-
-```r
-renamed_rental_table <- dplyr::tbl(con, "rental") %>% 
-  rename(rental_id_number = rental_id, inventory_id_number = inventory_id)
-
-renamed_rental_table %>% 
-  select(rental_id_number, rental_date, inventory_id_number) %>% 
-  head()
-```
-
-```
-## # Source:   lazy query [?? x 3]
-## # Database: postgres [postgres@localhost:5432/dvdrental]
-##   rental_id_number rental_date         inventory_id_number
-##              <int> <dttm>                            <int>
-## 1                2 2005-05-24 22:54:33                1525
-## 2                3 2005-05-24 23:03:39                1711
-## 3                4 2005-05-24 23:04:41                2452
-## 4                5 2005-05-24 23:05:21                2079
-## 5                6 2005-05-24 23:08:07                2792
-## 6                7 2005-05-24 23:11:53                3995
-```
 
 ### Controlling number of rows returned
 
@@ -392,26 +365,77 @@ one_percent_sample
 
 ```
 ##    rental_id         rental_date inventory_id customer_id
-## 1       2465 2005-06-18 20:07:02         3783         160
-## 2       2466 2005-06-18 20:18:42         1356         427
-## 3       2467 2005-06-18 20:20:05         4387         177
-## 4       2468 2005-06-18 20:23:52         1833         382
-## 5       2469 2005-06-18 20:24:23         1993         137
-## 6       2470 2005-06-18 20:28:31         4319          40
-## 7       2471 2005-06-18 20:31:00         3399         183
-## 8       2472 2005-06-18 20:32:40         4556          70
-## 9       2473 2005-06-18 20:42:45         3876         221
-## 10      2474 2005-06-18 20:51:34         3450         151
-## 11      2475 2005-06-18 20:52:46          889         336
-## 12      2476 2005-06-18 20:57:12         3998         334
-## 13      2477 2005-06-18 20:58:46         2510         206
-## 14      2478 2005-06-18 21:01:21         2798         241
-## 15      2479 2005-06-18 21:03:08         1624         408
-## 16      2480 2005-06-18 21:04:09         4078         310
-## 17      2481 2005-06-18 21:08:30          800         322
-## 18      2482 2005-06-18 21:10:44          452         122
-## 19      2483 2005-06-18 21:22:23         4225          88
-## 20      2484 2005-06-18 21:25:23         1511         515
+## 1       5033 2005-07-09 02:42:01         2841         299
+## 2       5034 2005-07-09 02:48:15          340         148
+## 3       5035 2005-07-09 02:51:34         3699          99
+## 4       5036 2005-07-09 02:58:41           75         573
+## 5       5037 2005-07-09 02:59:10          435         524
+## 6       5038 2005-07-09 03:12:52         3086          10
+## 7       5039 2005-07-09 03:14:45         2020         268
+## 8       5040 2005-07-09 03:16:34         2479         405
+## 9       5041 2005-07-09 03:18:51         2711         305
+## 10      5042 2005-07-09 03:20:30         3609         254
+## 11      5043 2005-07-09 03:25:18         2979         369
+## 12      5044 2005-07-09 03:30:25         1625         147
+## 13      5045 2005-07-09 03:33:32         1041         230
+## 14      5046 2005-07-09 03:34:57         1639         227
+## 15      5047 2005-07-09 03:44:15          230         272
+## 16      5048 2005-07-09 03:46:33         1271         466
+## 17      5049 2005-07-09 03:54:12         3336         144
+## 18      5050 2005-07-09 03:54:38         3876         337
+## 19      5051 2005-07-09 03:57:53         4091          85
+## 20      5052 2005-07-09 03:59:43         1884         305
+```
+
+### Sub-setting variables
+
+A table in the dbms may not only have many more rows than you want and also many more columns.  The `select` command controls which columns are retrieved.
+
+```r
+rental_table %>% select(rental_date, return_date) %>% head
+```
+
+```
+## # Source:   lazy query [?? x 2]
+## # Database: postgres [postgres@localhost:5432/dvdrental]
+##   rental_date         return_date        
+##   <dttm>              <dttm>             
+## 1 2005-05-24 22:54:33 2005-05-28 19:40:33
+## 2 2005-05-24 23:03:39 2005-06-01 22:12:39
+## 3 2005-05-24 23:04:41 2005-06-03 01:43:41
+## 4 2005-05-24 23:05:21 2005-06-02 04:33:21
+## 5 2005-05-24 23:08:07 2005-05-27 01:32:07
+## 6 2005-05-24 23:11:53 2005-05-29 20:34:53
+```
+
+We won't discuss `dplyr` methods for sub-setting variables, deriving new ones, or sub-setting rows based on the values found in the table because they are covered well in other places, including:
+
+  * Comprehensive reference: [https://dplyr.tidyverse.org/](https://dplyr.tidyverse.org/)
+  * Good tutorial: [https://suzan.rbind.io/tags/dplyr/](https://suzan.rbind.io/tags/dplyr/) 
+
+In practice we find that, **renaming variables** is often quite important because the names in an SQL database might not meet your needs as an analyst.  In "the wild" you will find names that are ambiguous or overly specified, with spaces in them, and other problems that will make them difficult to use in R.  It is good practice to do whatever renaming you are going to do in a predictable place like at the top of your code.  The names in the `dvdrental` database are simple and clear, but if they were not, you might rename them for subsequent use in this way:
+
+
+```r
+renamed_rental_table <- dplyr::tbl(con, "rental") %>% 
+  rename(rental_id_number = rental_id, inventory_id_number = inventory_id)
+
+renamed_rental_table %>% 
+  select(rental_id_number, rental_date, inventory_id_number) %>% 
+  head()
+```
+
+```
+## # Source:   lazy query [?? x 3]
+## # Database: postgres [postgres@localhost:5432/dvdrental]
+##   rental_id_number rental_date         inventory_id_number
+##              <int> <dttm>                            <int>
+## 1                2 2005-05-24 22:54:33                1525
+## 2                3 2005-05-24 23:03:39                1711
+## 3                4 2005-05-24 23:04:41                2452
+## 4                5 2005-05-24 23:05:21                2079
+## 5                6 2005-05-24 23:08:07                2792
+## 6                7 2005-05-24 23:11:53                3995
 ```
 
 ### Examining `dplyr`'s SQL query and re-using SQL code
@@ -595,7 +619,7 @@ skim(rental_tibble)
 ##  n obs: 16044 
 ##  n variables: 7 
 ## 
-## ── Variable type:integer ──────────────────────────────────────────────────────────────
+## ── Variable type:integer ────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ##      variable missing complete     n    mean      sd p0     p25    p50
 ##   customer_id       0    16044 16044  297.14  172.45  1  148     296  
 ##  inventory_id       0    16044 16044 2291.84 1322.21  1 1154    2291  
@@ -607,7 +631,7 @@ skim(rental_tibble)
 ##  12037.25 16049 ▇▇▇▇▇▇▇▇
 ##      2        2 ▇▁▁▁▁▁▁▇
 ## 
-## ── Variable type:POSIXct ──────────────────────────────────────────────────────────────
+## ── Variable type:POSIXct ────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ##     variable missing complete     n        min        max     median
 ##  last_update       0    16044 16044 2006-02-15 2006-02-23 2006-02-16
 ##  rental_date       0    16044 16044 2005-05-24 2006-02-14 2005-07-28
