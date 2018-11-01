@@ -73,7 +73,7 @@ Notice that the first list contains the source connection information.  Among ot
 ```{r}
 rental_table$ops$vars
 ```
-But because of lazy loading, R has not retrieved any actual data from the DBMS when you reference the `rental_table` object with `str`.  Because R is lazy and smart, it retrieves data as late as possible and only retrieves a certain number of rows.  This is a key paradigm shift for those new to working databases using R and `dplyr`.  
+But because of lazy loading, R has not retrieved any actual data from the DBMS when you reference the `rental_table` object with `str`.  Because R is lazy and smart, it retrieves data as late as possible and only retrieves a certain number of rows.  This is a key paradigm shift for those who normally use SQL and are new to working databases using R and `dplyr`.  
 
 We can trigger data retrieval in several ways. The `head` function, for example, triggers a query and prints its results.  And R *assumes* a `print` function when it finds an object's name on the command line.  By default, these two functions print a different number of rows: `head` defaults to 6 rows and an implied `print` defaults to 10.
 ```{r}
@@ -86,37 +86,9 @@ In the code block below, we see that `nrows` is like `str` in that it does not t
 ```{r}
 nrow(rental_table)
 ```
+Section on `collect()` goes here. 
 
-
-### Sub-setting variables
-
-A table in the dbms may not only have many more rows than you want and also many more columns.  The `select` command controls which columns are retrieved.
-```{r}
-rental_table %>% select(rental_date, return_date) %>% head
-```
-
-We won't discuss `dplyr` methods for sub-setting variables, deriving new ones, or sub-setting rows based on the values found in the table because they are covered well in other places, including:
-
-  * Comprehensive reference: [https://dplyr.tidyverse.org/](https://dplyr.tidyverse.org/)
-  * Good tutorial: [https://suzan.rbind.io/tags/dplyr/](https://suzan.rbind.io/tags/dplyr/) 
-
-In practice we find that, **renaming columns** is often quite important because the names in an SQL database might not meet your needs as an analyst.  In "the wild" you will find names that are ambiguous or overly specified, with spaces in them, and other problems that will make them difficult to use in R.  It is good practice to do whatever renaming you are going to do in a predictablel place like at the top of your code.  The names in the `dvdrental` database are simple and clear, but if they were not, you might rename them for subsequent use in this way:
-
-```{r}
-renamed_rental_table <- dplyr::tbl(con, "rental") %>% 
-  rename(rental_id_number = rental_id, inventory_id_number = inventory_id)
-
-renamed_rental_table %>% 
-  select(rental_id_number, rental_date, inventory_id_number) %>% 
-  head()
-```
-
-In the case of the `dvdrental` database, the column names are short and very friendly.  But in the wild you will find many tables with difficult to use names.  The `janitor::clean_names` is a good first try for making column names easier to handle.
-```{r}
-
-rental_tibble %>% janitor::clean_names() %>% as_tibble()
-
-```
+Cautions, etc. 
 
 
 ### Controlling number of rows returned
@@ -151,6 +123,36 @@ one_percent_sample <- DBI::dbGetQuery(con,
 one_percent_sample
 
 ```
+
+### Sub-setting variables
+
+A table in the dbms may not only have many more rows than you want and also many more columns.  The `select` command controls which columns are retrieved.
+```{r}
+rental_table %>% select(rental_date, return_date) %>% head
+```
+
+We won't discuss `dplyr` methods for sub-setting variables, deriving new ones, or sub-setting rows based on the values found in the table because they are covered well in other places, including:
+
+  * Comprehensive reference: [https://dplyr.tidyverse.org/](https://dplyr.tidyverse.org/)
+  * Good tutorial: [https://suzan.rbind.io/tags/dplyr/](https://suzan.rbind.io/tags/dplyr/) 
+
+In practice we find that, **renaming columns** is often quite important because the names in an SQL database might not meet your needs as an analyst.  In "the wild" you will find names that are ambiguous or overly specified, with spaces in them, and other problems that will make them difficult to use in R.  It is good practice to do whatever renaming you are going to do in a predictablel place like at the top of your code.  The names in the `dvdrental` database are simple and clear, but if they were not, you might rename them for subsequent use in this way:
+
+```{r}
+renamed_rental_table <- dplyr::tbl(con, "rental") %>% 
+  rename(rental_id_number = rental_id, inventory_id_number = inventory_id)
+
+renamed_rental_table %>% 
+  select(rental_id_number, rental_date, inventory_id_number) %>% 
+  head()
+```
+
+In the case of the `dvdrental` database, the column names are short and very friendly.  But in the wild you will find many tables with difficult to use names.  The `janitor::clean_names` is a good first try for making column names easier to handle.
+```{r}
+
+rental_tibble %>% janitor::clean_names() %>% as_tibble()
+```
+
 
 ### Examining `dplyr`'s SQL query and re-using SQL code
 
