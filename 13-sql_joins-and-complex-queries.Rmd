@@ -36,7 +36,6 @@ con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"
                          dbname = "dvdrental",
                          seconds_to_test = 10)
 
-
 ```
 discuss this simple example? http://www.postgresqltutorial.com/postgresql-left-join/ 
 
@@ -54,19 +53,45 @@ Anti joins
 ### Union
 
 #### how many films and languages exist in the DVD rental application
+
+**JDS Note:** to me this doesn't show a useful application of `union`.  
 ```{r }
+film_table <- dplyr::tbl(con, "film")
+language_table <- dplyr::tbl(con, "language")
+
+rs_dplyr <- 
+  union(
+  film_table %>% count %>% 
+  mutate(table_name = "film"),
+  language_table %>% count %>% 
+  mutate(table_name = "language")
+  ) %>% 
+  collect(n = Inf) %>% 
+  rename(count = n) 
+
+head(rs_dplyr)
+
 rs <- dbGetQuery(con,
-                "      select 'film' table_name,count(*) count from film 
-                 union select 'language' table_name,count(*) count from language 
+                "      select 'film' table_name, count(*) count from film 
+                 union select 'language' table_name, count(*) count from language 
                ;
                 "
                 )
-sp_print_df(head(rs))
+head(rs)
 ```
 
 #### what is the film distribution based on language
+
+Sanity check on the number of rows you might be joining -- verifying joins depends on the number of underlying rows in the tables being joined.
 ```{r }
 
+rs_dplyr <- film_table %>% 
+  count(language_id) %>% 
+  right_join(language_table, by = c("language_id" = "language_id")) %>% 
+  select(language_id, name, n) %>% 
+  collect(n = Inf) 
+
+head(rs_dplyr)
 
 rs <- dbGetQuery(con,
                 "select l.language_id id
@@ -75,15 +100,16 @@ rs <- dbGetQuery(con,
                    from language l
                         full outer join film f
                              on l.language_id = f.language_id
-                  group by l.language_id,l.name 
+                  group by l.language_id, l.name 
                   order by l.name;
                  ;
                 "
                 )
-sp_print_df(head(rs))
+head(rs)
 ```
 
 ## Store analysis
+
 ### which store has had more rentals and income
 
 ```{r}
@@ -109,7 +135,7 @@ rs <- dbGetQuery(con,
                  ;
                 "
                 )
-sp_print_df(head(rs))
+head(rs)
 ```
 
 ## Store analysis
