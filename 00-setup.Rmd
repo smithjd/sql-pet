@@ -1,4 +1,4 @@
-# Setup instructions
+# Setup instructions (00)
 
 ## R, RStudio and Git
 Most of you will probably have these already, but if you don't:
@@ -27,6 +27,8 @@ You will need Docker Community Edition (Docker CE).
     * Fedora: <https://store.docker.com/editions/community/docker-ce-server-fedora>,
     * CentOS: <https://store.docker.com/editions/community/docker-ce-server-centos>,
     * Debian: <https://store.docker.com/editions/community/docker-ce-server-debian>.
+    
+***Note that on Linux, you will need to be a member of the `docker` group to use Docker.*** To do that, execute `sudo usermod -aG docker ${USER}`. Then, log out and back in again.
 
 ## Defining the PostgreSQL connection parameters
 We use a PostgreSQL database server running in a Docker container for the database functions. To connect to it, you have to define some parameters. These parameters are used in two places:
@@ -40,13 +42,13 @@ The easiest way to make this file is to copy the following R code and paste it i
 
 ```
 cat(
-  "DEFAULT_POSTGRES_USER_NAME=postgres\n",
+  "\nDEFAULT_POSTGRES_USER_NAME=postgres",
   file = "~/.Renviron",
   sep = "",
   append = TRUE
 )
 cat(
-  "DEFAULT_POSTGRES_PASSWORD=postgres\n",
+  "\nDEFAULT_POSTGRES_PASSWORD=postgres\n",
   file = "~/.Renviron",
   sep = "",
   append = TRUE
