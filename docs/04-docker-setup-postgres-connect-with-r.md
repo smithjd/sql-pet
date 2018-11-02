@@ -57,7 +57,14 @@ sp_docker_remove_container("sql-pet")
 ```
 
 ```
-## [1] "sql-pet"
+## Warning in system2("docker", docker_command, stdout = TRUE, stderr = TRUE):
+## running command ''docker' rm -f sql-pet 2>&1' had status 1
+```
+
+```
+## [1] "Error: No such container: sql-pet"
+## attr(,"status")
+## [1] 1
 ```
 
 The convention we use in this book is to put docker commands in the `sqlpetr` package so that you can ignore them if you want.  However, the functions are set up so that you can easily see how to do things with Docker and modify if you want.
@@ -83,28 +90,25 @@ sp_check_that_docker_is_up()
 ```
 ## [1] "Docker is up, running these containers:"                                                                                                       
 ## [2] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES"   
-## [3] "1e1c85cfec02        postgres:10         \"docker-entrypoint.s…\"   3 seconds ago       Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
+## [3] "68d8943f3a17        postgres:10         \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
 ```
 ## Connect, read and write to Postgres from R
 
 ### Pause for some security considerations
 
-We use the following `sp_get_postgres_connection` function, which will repeatedly try to connect to PostgreSQL.  PostgreSQL can take different amounts of time to come up and be ready to accept connections from R, depending on various factors that will be discussed later on.
+We use the following `sp_get_postgres_connection` function, which will repeatedly try to connect to PostgreSQL.  PostgreSQL can take different amounts of time to come up and be ready to accept connections from R, depending on various factors depending on your computer and its configuration.
 
-<table border = 2)
-<tr><td>
-When we call </i>sp_get_postgres_connection</i> we'll use environment variables that R obtains from reading a file named <i>.Renviron</i>.  That file is not uploaded to Github and R looks for it in your default directory.  To see whether you have already created that file, execute this in your R session:</br></br>
-<ul>
-<i><b>dir(path = "~", pattern = ".Renviron", all.files = TRUE)</b></i>
-</ul>
-That file should contain lines such as:</br></br>
-<ul>
-  <i><b>DEFAULT_POSTGRES_PASSWORD=postgres</br>
-  DEFAULT_POSTGRES_USER_NAME=postgres</b></i></br>
-</ul>
-Those are the PostreSQL default values for the username and password, so not secret.  But this approach demonstrates how they would be kept secret and not uploaded to Github or some other public location when you need to keep credentials secret.
-</td></tr>
-</table>
+> When we call `sp_get_postgres_connection` below we'll use environment variables that R obtains from reading a file named *.Renviron*.  This approach has two benefits: that file is not uploaded to Github and R looks for it in your default directory every time it loads.  To see whether you have already created that file, execute this in your R session:
+>
+> **dir(path = "~", pattern = ".Renviron", all.files = TRUE)**
+>
+> That file should contain lines that **look like** the example just below this box. Although in this example it contains the PostreSQL <b>default values</b> for the username and password, they are obvioiusly not secret.  But this approach demonstrates how they could be kept secret and not accidentally uploaded to Github or some other public location when you do need to keep credentials secret.
+
+If needed, you could copy / paste the following into your **.Renviron** file:
+```
+DEFAULT_POSTGRES_PASSWORD=postgres
+DEFAULT_POSTGRES_USER_NAME=postgres
+```
 
 This is how the `sp_get_postgres_connection` function is used:
 
@@ -128,7 +132,8 @@ dbListTables(con)
 ```
 ## character(0)
 ```
-
+<!--
+The following needs to be expanded and explained -- it doesn't stand on its own as written.
 ### Alternative: put the database password in an environment file
 
 The goal is to put the password in an untracked file that will **not** be committed in your source code repository. Your code can reference the name of the variable, but the value of that variable will not appear in open text in your source code.
@@ -142,7 +147,7 @@ In an interactive environment, you could execute a snippet of code that prompts 
 Your password is still in plain text in the file, `dev_environment.csv`, so you should protect that file from exposure. However, you do not need to worry about committing that file accidentally to your git repository, because the name of the file appears in the `.gitignore` file.
 
 For security, we use values from the `environment_variables` data.frame, rather than keeping the `username` and `password` in plain text in a source file.
-
+-->
 ### Interact with Postgres
 
 Write `mtcars` to PostgreSQL
