@@ -1,6 +1,18 @@
-# Drilling into Your DB Environment (22)
+# Drilling into your DBMS environment (22)
 
+The following packages are used in this chapter:
 
+```r
+# These packages are called in almost every chapter of the book:
+library(tidyverse)
+library(DBI)
+library(RPostgres)
+require(knitr)
+library(dbplyr)
+library(sqlpetr)
+
+display_rows <-  15 # as a default, show 15 rows
+```
 
 Start up the `docker-pet` container
 
@@ -13,9 +25,10 @@ Now connect to the `dvdrental` database with R
 ```r
 con <- sp_get_postgres_connection(
   user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
-  password =  Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
+  password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
   dbname = "dvdrental",
-  seconds_to_test = 10)
+  seconds_to_test = 10
+)
 con
 ```
 
@@ -37,8 +50,8 @@ Your laptop is a server for the Docker Postgres databases.  A database is a coll
 ```r
 rs <-
   DBI::dbGetQuery(
-  con,
-  "SELECT 'DB Names in Docker' showing
+    con,
+    "SELECT 'DB Names in Docker' showing
           ,datname DB
      FROM pg_database
     WHERE datistemplate = false;
@@ -64,9 +77,10 @@ Modify the connection call to connect to the `postgres` database.
 ```r
 con <- sp_get_postgres_connection(
   user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
-  password =  Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
+  password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
   dbname = "your code goes here",
-  seconds_to_test = 10)
+  seconds_to_test = 10
+)
 
 con
 ```
@@ -76,18 +90,20 @@ con
 ```
 
 ```r
-if (con != 'There is no connection')
-    dbDisconnect(con)
+if (con != "There is no connection") {
+  dbDisconnect(con)
+}
 
-#Answer: con <PqConnection> postgres@localhost:5432
+# Answer: con <PqConnection> postgres@localhost:5432
 
 # Reconnect to dvdrental
 
 con <- sp_get_postgres_connection(
   user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
-  password =  Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
+  password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
   dbname = "dvdrental",
-  seconds_to_test = 10)
+  seconds_to_test = 10
+)
 con
 ```
 
@@ -100,7 +116,11 @@ Note that the two Sys.getenv function calls work in this tutorial because both t
 ```
 Gotcha:
 
-   If one has data in multiple databases or multiple environments, Development, Integration, and Prodution, it is very easy to connect to the wrong database in the wrong environment.  Always double check your connection information when logging in and before performing any inserts, updates, or deletes against the database.
+If one has data in multiple databases or multiple environments, Development,
+Integration, and Prodution, it is very easy to connect to the wrong database in
+the wrong environment.  Always double check your connection information when
+logging in and before performing any inserts, updates, or deletes against the
+database.
 ```
 
 The following code block should be used to reduce propagating the above gotcha.  Current_database(), CURRENT_DATE or CURRENT_TIMESTAMP, and 'result set' are the most useful and last three not so much.  Instead of the host IP address having the actual hostname would be a nice addition.
@@ -109,8 +129,8 @@ The following code block should be used to reduce propagating the above gotcha. 
 ```r
 rs1 <-
   DBI::dbGetQuery(
-  con,
-  "SELECT current_database() DB
+    con,
+    "SELECT current_database() DB
          ,CURRENT_DATE
          ,CURRENT_TIMESTAMP
          ,'result set description' showing
@@ -119,14 +139,14 @@ rs1 <-
          ,inet_server_port() port
   "
   )
-kable(display_rows)
+kable(rs1)
 ```
 
 
 
-|  x|
-|--:|
-|  5|
+db          current_date   current_timestamp     showing                  session_user   host          port
+----------  -------------  --------------------  -----------------------  -------------  -----------  -----
+dvdrental   2018-11-02     2018-11-01 17:10:11   result set description   postgres       172.17.0.2    5432
 
 Since we will only be working in the `dvdrental` database in this tutorial and reduce the number of output columns shown, only the 'result set description' will be used. 
 
@@ -140,11 +160,11 @@ How many entries are in each schema?
 
 ```r
 ## Database Schemas
-#  
+#
 rs1 <-
   DBI::dbGetQuery(
-  con,
-  "SELECT 'DB Schemas' showing,t.table_catalog DB,t.table_schema,COUNT(*) tbl_vws
+    con,
+    "SELECT 'DB Schemas' showing,t.table_catalog DB,t.table_schema,COUNT(*) tbl_vws
      FROM information_schema.tables t
     GROUP BY t.table_catalog,t.table_schema
   "
@@ -157,7 +177,7 @@ kable(rs1)
 showing      db          table_schema          tbl_vws
 -----------  ----------  -------------------  --------
 DB Schemas   dvdrental   pg_catalog                121
-DB Schemas   dvdrental   public                     22
+DB Schemas   dvdrental   public                     23
 DB Schemas   dvdrental   information_schema         67
 
 We see that there are three schemas.  The pg_catalog is the standard PostgreSQL meta data and core schema.  Postgres uses this schema to manage the internal workings of the database.  DBA's are the primary users of pg_catalog. We used the pg_catalog schema to answer the question 'How many databases reside in the Docker Container?', but normally the data analyst is not interested in analyzing database data.
@@ -169,12 +189,11 @@ The information_schema contains ANSI standardized views used across the differen
 ```r
 #
 # Add an order by clause to order the output by the table catalog.
-rs1 <- DBI::dbGetQuery(con,"SELECT '1. ORDER BY table_catalog' showing
+rs1 <- DBI::dbGetQuery(con, "SELECT '1. ORDER BY table_catalog' showing
                                   ,t.table_catalog DB,t.table_schema,COUNT(*) tbl_vws 
                               FROM information_schema.tables t
                             GROUP BY t.table_catalog,t.table_schema
-                            "
-                      )
+                            ")
 kable(rs1)
 ```
 
@@ -183,17 +202,16 @@ kable(rs1)
 showing                     db          table_schema          tbl_vws
 --------------------------  ----------  -------------------  --------
 1. ORDER BY table_catalog   dvdrental   pg_catalog                121
-1. ORDER BY table_catalog   dvdrental   public                     22
+1. ORDER BY table_catalog   dvdrental   public                     23
 1. ORDER BY table_catalog   dvdrental   information_schema         67
 
 ```r
 # Add an order by clause to order the output by tbl_vws in descending order.
-rs2 <- DBI::dbGetQuery(con,"SELECT '2. ORDER BY tbl_vws desc' showing
+rs2 <- DBI::dbGetQuery(con, "SELECT '2. ORDER BY tbl_vws desc' showing
                                   ,t.table_catalog DB,t.table_schema,COUNT(*) tbl_vws 
                               FROM information_schema.tables t
                             GROUP BY t.table_catalog,t.table_schema
-                            "
-                      )
+                            ")
 kable(rs2)
 ```
 
@@ -202,19 +220,18 @@ kable(rs2)
 showing                    db          table_schema          tbl_vws
 -------------------------  ----------  -------------------  --------
 2. ORDER BY tbl_vws desc   dvdrental   pg_catalog                121
-2. ORDER BY tbl_vws desc   dvdrental   public                     22
+2. ORDER BY tbl_vws desc   dvdrental   public                     23
 2. ORDER BY tbl_vws desc   dvdrental   information_schema         67
 
 
 ```r
 # Complete the SQL statement to show everything about all the tables.
 
-rs3 <- DBI::dbGetQuery(con,"SELECT '3. all information_schema tables' showing
+rs3 <- DBI::dbGetQuery(con, "SELECT '3. all information_schema tables' showing
                                   ,'your code goes here' 
                               FROM information_schema.tables t
-                            "
-                      )
-kable(head (rs3,display_rows))
+                            ")
+kable(head(rs3, display_rows))
 ```
 
 
@@ -226,44 +243,72 @@ showing                            ?column?
 3. all information_schema tables   your code goes here 
 3. all information_schema tables   your code goes here 
 3. all information_schema tables   your code goes here 
+3. all information_schema tables   your code goes here 
+3. all information_schema tables   your code goes here 
+3. all information_schema tables   your code goes here 
+3. all information_schema tables   your code goes here 
+3. all information_schema tables   your code goes here 
+3. all information_schema tables   your code goes here 
+3. all information_schema tables   your code goes here 
+3. all information_schema tables   your code goes here 
+3. all information_schema tables   your code goes here 
+3. all information_schema tables   your code goes here 
 
 
 ```r
 # Use the results from above to pull interesting columns from just the information_schema
-rs4 <- DBI::dbGetQuery(con,"SELECT '4. information_schema.tables' showing
+rs4 <- DBI::dbGetQuery(con, "SELECT '4. information_schema.tables' showing
                                   ,'your code goes here' 
                               FROM information_schema.tables t
                              where 'your code goes here' = 'your code goes here'
-                            "
-                      )
-head(rs4,display_rows)
+                            ")
+head(rs4, display_rows)
 ```
 
 ```
-##                        showing            ?column?
-## 1 4. information_schema.tables your code goes here
-## 2 4. information_schema.tables your code goes here
-## 3 4. information_schema.tables your code goes here
-## 4 4. information_schema.tables your code goes here
-## 5 4. information_schema.tables your code goes here
+##                         showing            ?column?
+## 1  4. information_schema.tables your code goes here
+## 2  4. information_schema.tables your code goes here
+## 3  4. information_schema.tables your code goes here
+## 4  4. information_schema.tables your code goes here
+## 5  4. information_schema.tables your code goes here
+## 6  4. information_schema.tables your code goes here
+## 7  4. information_schema.tables your code goes here
+## 8  4. information_schema.tables your code goes here
+## 9  4. information_schema.tables your code goes here
+## 10 4. information_schema.tables your code goes here
+## 11 4. information_schema.tables your code goes here
+## 12 4. information_schema.tables your code goes here
+## 13 4. information_schema.tables your code goes here
+## 14 4. information_schema.tables your code goes here
+## 15 4. information_schema.tables your code goes here
 ```
 
 ```r
 # Modify the SQL below with your interesting column names.
 # Update the where clause to return only rows from the information schema and begin with 'tab'
-rs5 <- DBI::dbGetQuery(con,"SELECT '5. information_schema.tables' showing
+rs5 <- DBI::dbGetQuery(con, "SELECT '5. information_schema.tables' showing
                                   ,'your code goes here' 
                               FROM information_schema.tables t
                              where 'your code goes here' = 'your code goes here'
-                            "
-                      )
-kable(head(rs5,display_rows))
+                            ")
+kable(head(rs5, display_rows))
 ```
 
 
 
 showing                        ?column?            
 -----------------------------  --------------------
+5. information_schema.tables   your code goes here 
+5. information_schema.tables   your code goes here 
+5. information_schema.tables   your code goes here 
+5. information_schema.tables   your code goes here 
+5. information_schema.tables   your code goes here 
+5. information_schema.tables   your code goes here 
+5. information_schema.tables   your code goes here 
+5. information_schema.tables   your code goes here 
+5. information_schema.tables   your code goes here 
+5. information_schema.tables   your code goes here 
 5. information_schema.tables   your code goes here 
 5. information_schema.tables   your code goes here 
 5. information_schema.tables   your code goes here 
@@ -273,19 +318,28 @@ showing                        ?column?
 ```r
 # Modify the SQL below with your interesting column names.
 # Update the where clause to return only rows from the information schema and begin with 'col'
-rs6 <- DBI::dbGetQuery(con,"SELECT '6. information_schema.tables' showing
+rs6 <- DBI::dbGetQuery(con, "SELECT '6. information_schema.tables' showing
                                   ,'your code goes here' 
                               FROM information_schema.tables t
                              where 'your code goes here' = 'your code goes here'
-                            "
-                      )
-kable(head(rs6,display_rows))
+                            ")
+kable(head(rs6, display_rows))
 ```
 
 
 
 showing                        ?column?            
 -----------------------------  --------------------
+6. information_schema.tables   your code goes here 
+6. information_schema.tables   your code goes here 
+6. information_schema.tables   your code goes here 
+6. information_schema.tables   your code goes here 
+6. information_schema.tables   your code goes here 
+6. information_schema.tables   your code goes here 
+6. information_schema.tables   your code goes here 
+6. information_schema.tables   your code goes here 
+6. information_schema.tables   your code goes here 
+6. information_schema.tables   your code goes here 
 6. information_schema.tables   your code goes here 
 6. information_schema.tables   your code goes here 
 6. information_schema.tables   your code goes here 
@@ -296,15 +350,14 @@ In the next exercise we combine both the table and column output from the previo
 
 
 ```r
-rs7 <- DBI::dbGetQuery(con,"SELECT '7. information_schema.tables' showing
+rs7 <- DBI::dbGetQuery(con, "SELECT '7. information_schema.tables' showing
                                   ,table_catalog||'.'||table_schema db_info, table_name, table_type
                               FROM information_schema.tables t
                              where table_schema = 'information_schema'
                                and table_name like 'table%' OR table_name like '%col%'
                                and table_type = 'VIEW'
-                            "
-                      )
-kable(head(rs7,display_rows))
+                            ")
+kable(head(rs7, display_rows))
 ```
 
 
@@ -316,28 +369,47 @@ showing                        db_info                        table_name        
 7. information_schema.tables   dvdrental.information_schema   column_domain_usage                     VIEW       
 7. information_schema.tables   dvdrental.information_schema   column_privileges                       VIEW       
 7. information_schema.tables   dvdrental.information_schema   column_udt_usage                        VIEW       
+7. information_schema.tables   dvdrental.information_schema   columns                                 VIEW       
+7. information_schema.tables   dvdrental.information_schema   constraint_column_usage                 VIEW       
+7. information_schema.tables   dvdrental.information_schema   key_column_usage                        VIEW       
+7. information_schema.tables   dvdrental.information_schema   role_column_grants                      VIEW       
+7. information_schema.tables   dvdrental.information_schema   table_constraints                       VIEW       
+7. information_schema.tables   dvdrental.information_schema   table_privileges                        VIEW       
+7. information_schema.tables   dvdrental.information_schema   tables                                  VIEW       
+7. information_schema.tables   dvdrental.information_schema   triggered_update_columns                VIEW       
+7. information_schema.tables   dvdrental.information_schema   view_column_usage                       VIEW       
+7. information_schema.tables   dvdrental.information_schema   _pg_foreign_table_columns               VIEW       
 
 ```r
-rs8 <- DBI::dbGetQuery(con,"SELECT '8. information_schema.tables' showing
+rs8 <- DBI::dbGetQuery(con, "SELECT '8. information_schema.tables' showing
                                   ,table_catalog||'.'||table_schema db_info, table_name, table_type
                               FROM information_schema.tables t
                              where table_schema = 'information_schema'
                                and table_type = 'VIEW'
                                and table_name like 'table%' OR table_name like '%col%'
-                            "
-                      )
-kable(head(rs8,display_rows))
+                            ")
+kable(head(rs8, display_rows))
 ```
 
 
 
-showing                        db_info                        table_name                  table_type 
------------------------------  -----------------------------  --------------------------  -----------
-8. information_schema.tables   dvdrental.information_schema   column_options              VIEW       
-8. information_schema.tables   dvdrental.information_schema   _pg_foreign_table_columns   VIEW       
-8. information_schema.tables   dvdrental.information_schema   view_column_usage           VIEW       
-8. information_schema.tables   dvdrental.information_schema   triggered_update_columns    VIEW       
-8. information_schema.tables   dvdrental.information_schema   tables                      VIEW       
+showing                        db_info                        table_name                              table_type 
+-----------------------------  -----------------------------  --------------------------------------  -----------
+8. information_schema.tables   dvdrental.information_schema   column_options                          VIEW       
+8. information_schema.tables   dvdrental.information_schema   _pg_foreign_table_columns               VIEW       
+8. information_schema.tables   dvdrental.information_schema   view_column_usage                       VIEW       
+8. information_schema.tables   dvdrental.information_schema   triggered_update_columns                VIEW       
+8. information_schema.tables   dvdrental.information_schema   tables                                  VIEW       
+8. information_schema.tables   dvdrental.information_schema   table_privileges                        VIEW       
+8. information_schema.tables   dvdrental.information_schema   table_constraints                       VIEW       
+8. information_schema.tables   dvdrental.information_schema   role_column_grants                      VIEW       
+8. information_schema.tables   dvdrental.information_schema   key_column_usage                        VIEW       
+8. information_schema.tables   dvdrental.information_schema   constraint_column_usage                 VIEW       
+8. information_schema.tables   dvdrental.information_schema   columns                                 VIEW       
+8. information_schema.tables   dvdrental.information_schema   column_udt_usage                        VIEW       
+8. information_schema.tables   dvdrental.information_schema   column_privileges                       VIEW       
+8. information_schema.tables   dvdrental.information_schema   column_domain_usage                     VIEW       
+8. information_schema.tables   dvdrental.information_schema   collation_character_set_applicability   VIEW       
 
 Operator/Element |	Associativity |	Description
 -----------------|----------------|-------------
@@ -366,25 +438,25 @@ OR|	left|	logical disjunction
 
 
 ```r
-rs1 <- DBI::dbGetQuery(con,"SELECT t.table_catalog DB ,t.table_schema
+rs1 <- DBI::dbGetQuery(con, "SELECT t.table_catalog DB ,t.table_schema
                                   ,t.table_name,t.table_type
                               FROM information_schema.tables t")
 
-rs2 <- DBI::dbGetQuery(con,"SELECT t.table_catalog DB ,t.table_schema
+rs2 <- DBI::dbGetQuery(con, "SELECT t.table_catalog DB ,t.table_schema
                                   ,t.table_type,COUNT(*) tbls
                               FROM information_schema.tables t
                             group by t.table_catalog ,t.table_schema
                                   ,t.table_type
                             ")
 
-rs3 <- DBI::dbGetQuery(con,"SELECT distinct t.table_catalog DB ,t.table_schema
+rs3 <- DBI::dbGetQuery(con, "SELECT distinct t.table_catalog DB ,t.table_schema
                                   ,t.table_type tbls
                               FROM information_schema.tables t
                             ")
 
 
 
-#kable(head(rs1 %>% arrange (table_name)))
+# kable(head(rs1 %>% arrange (table_name)))
 # View(rs1)
 # View(rs2)
 # View(rs3)
@@ -413,7 +485,7 @@ db          table_schema         table_type    tbls
 dvdrental   information_schema   BASE TABLE       7
 dvdrental   information_schema   VIEW            60
 dvdrental   pg_catalog           BASE TABLE      62
-dvdrental   public               BASE TABLE      15
+dvdrental   public               BASE TABLE      16
 dvdrental   public               VIEW             7
 dvdrental   pg_catalog           VIEW            59
 
@@ -440,8 +512,9 @@ Comment on the practice of putting a comma at the beginning of a line in SQL cod
 ```r
 ## Explain a `dplyr::join
 
-tbl_pk_fk_df <- DBI::dbGetQuery(con,
-"
+tbl_pk_fk_df <- DBI::dbGetQuery(
+  con,
+  "
 SELECT --t.table_catalog,t.table_schema,
    c.table_name
 	,kcu.column_name
@@ -471,7 +544,8 @@ WHERE c.constraint_type IN ('PRIMARY KEY', 'FOREIGN KEY')
   AND c.table_catalog = 'dvdrental'
 	AND c.table_schema = 'public'
 ORDER BY c.table_name;
-")
+"
+)
 
 # View(tbl_pk_fk_df)
 
@@ -487,27 +561,30 @@ library(DiagrammeR)
 
 table_nodes_ndf <- create_node_df(
   n <- nrow(tables_df)
-  ,type  <- 'table'
-  ,label <- tables_df$table_name
-  ,shape = "rectangle"
-  ,width = 1
-  ,height = .5
-  ,fontsize = 18
+  , type <- "table"
+  , label <- tables_df$table_name
+  ,
+  shape = "rectangle"
+  , width = 1
+  , height = .5
+  , fontsize = 18
 )
 
-tbl_pk_fk_ids_df <- inner_join(tbl_pk_fk_df,table_nodes_ndf
-                ,by = c('table_name' = 'label')
-                ,suffix(c('st','s'))
-                ) %>% 
-     rename('src_tbl_id' = id) %>%
-     left_join(table_nodes_ndf
-               ,by = c('ref_table' = 'label') 
-               ,suffix(c('st','t'))
-               ) %>%
-     rename('fk_tbl_id' = id) 
+tbl_pk_fk_ids_df <- inner_join(tbl_pk_fk_df, table_nodes_ndf
+  ,
+  by = c("table_name" = "label")
+  , suffix(c("st", "s"))
+) %>%
+  rename("src_tbl_id" = id) %>%
+  left_join(table_nodes_ndf
+    ,
+    by = c("ref_table" = "label")
+    , suffix(c("st", "t"))
+  ) %>%
+  rename("fk_tbl_id" = id)
 
-tbl_fk_df <- tbl_pk_fk_ids_df %>% filter(constraint_type == 'FOREIGN KEY')     
-tbl_pk_df <- tbl_pk_fk_ids_df %>% filter(constraint_type == 'PRIMARY KEY') 
+tbl_fk_df <- tbl_pk_fk_ids_df %>% filter(constraint_type == "FOREIGN KEY")
+tbl_pk_df <- tbl_pk_fk_ids_df %>% filter(constraint_type == "PRIMARY KEY")
 # View(tbl_pk_fk_ids_df)
 # View(tbl_fk_df)
 # View(tbl_pk_df)
@@ -561,8 +638,9 @@ fkgraph_widget <-
   create_graph(
     nodes_df = table_nodes_ndf,
     edges_df = fk_edf,
-    graph_name = 'Simple FK Graph'
-    ) %>% render_graph()
+    graph_name = "Simple FK Graph"
+  ) %>%
+  render_graph()
 
 # export to image files
 fkgraph_file <- sqlpetr::sp_make_image_files(

@@ -5,7 +5,10 @@ This book is full of examples that you can replicate on your computer.
 ## Prerequisites
 You will need:
 
-* A computer running Windows, MacOS, or Linux (any Linux distro that will run Docker Community Edition, R and RStudio will work)
+* A computer running 
+  + Windows (Windows 7 64-bit or late - Windows 10-Pro is recommended)
+  + MacOS
+  + Linux (any Linux distro that will run Docker Community Edition, R and RStudio will work)
 * Current versions of [R and RStudio](https://www.datacamp.com/community/tutorials/installing-R-windows-mac-ubuntu) required.
 * Docker (instructions below)
 * Our companion package `sqlpetr` installs with: `devtools::install_github("smithjd/sqlpetr")`.

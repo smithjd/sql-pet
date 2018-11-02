@@ -23,7 +23,6 @@ sp_show_all_docker_containers()
 Start up the `docker-pet` container
 ```{r}
 sp_docker_start("sql-pet")
-
 ```
 
 
@@ -31,10 +30,12 @@ now connect to the database with R
 ```{r}
 # need to wait for Docker & Postgres to come up before connecting.
 
-con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
-                         password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
-                         dbname = "dvdrental",
-                         seconds_to_test = 10)
+con <- sp_get_postgres_connection(
+  user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
+  password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
+  dbname = "dvdrental",
+  seconds_to_test = 10
+)
 ```
 
 ## Database constraints
@@ -48,22 +49,24 @@ For this tutorial, we are primarily concerned with primary and foreign key const
 ### insert yourself as a new customer
 
 ```{r}
-# Customer 600 should be the next customer.  
+# Customer 600 should be the next customer.
 # It gets deleted here just in case it was added in a different session.
-dbExecute(con,
+dbExecute(
+  con,
   "delete from customer 
    where customer_id = 600;
   "
-  )
+)
 # Now add yourself as the next customer.  Replace Sophie Yang with your name.
-dbExecute(con,
+dbExecute(
+  con,
   "insert into customer 
   (customer_id,store_id,first_name,last_name,email,address_id
   ,activebool,create_date,last_update,active)
   values(600,2,'Sophie','Yang','email@email.com',1,TRUE,now()::date,now()::date,1)
   ;
   "
-  )
+)
 ```
 
 The `film` table has a primary key, film_id, and a foreign key column, language_id.  One cannot insert a new row into the film table with a language_id = 10 because of a constraint on the language_id column.  The language_id value must already exist in the `language` table before the database will allow the new row to be inserted into the table.  
@@ -73,19 +76,20 @@ To work around this inconvenience for the tutorial:
 1.  we drop the smy_film table if it exists from a previous session.
 
 ```{r}
-dbExecute(con,"drop table if exists smy_film;")   
+dbExecute(con, "drop table if exists smy_film;")
 ```
 
 2.  we create a new table smy_film from the film table and add a new row with a language_id = 10;
 
 ```{r}
-dbExecute(con,"create table smy_film as select * from film;")   
+dbExecute(con, "create table smy_film as select * from film;")
 ```
 
 3.  We create a film with language_id = 10;
 
 ```{r}
-dbExecute(con,
+dbExecute(
+  con,
   "insert into smy_film
   (film_id,title,description,release_year,language_id
   ,rental_duration,rental_rate,length,replacement_cost,rating
@@ -94,16 +98,17 @@ dbExecute(con,
         ,7,4.99,120,14.99,'PG'
         ,now()::date,'{Trailers}','')
   ;
-  ")
+  "
+)
 ```
 
 4.  Confirm that the new record exists.
 
 ```{r}
-dbGetQuery(con,
-"select film_id,title,description,language_id from smy_film where film_id = 1001;")
-  
-
+dbGetQuery(
+  con,
+  "select film_id,title,description,language_id from smy_film where film_id = 1001;"
+)
 ```
 
 ## Joins
@@ -182,26 +187,28 @@ Explain plans [here](https://robots.thoughtbot.com/reading-an-explain-analyze-qu
 
 # smy_film <- dplyr::tbl(con, "smy_film") # Lazy
 # x<-smy_film %>% filter(film_id == 1001)  %>% explain()
-# 
+#
 
 
-language_table <- dplyr::tbl(con, "language") 
-film_table     <- dplyr::tbl(con, "smy_film") 
+language_table <- dplyr::tbl(con, "language")
+film_table <- dplyr::tbl(con, "smy_film")
 
-languages_ij <- language_table %>% 
-  inner_join (film_table, by=c('language_id','language_id'),suffix(c(".l",".f"))) %>%
-  group_by(language_id,name) %>% 
-  summarize(inner_joins=n()) %>% explain()
+languages_ij <- language_table %>%
+  inner_join(film_table, by = c("language_id", "language_id"), suffix(c(".l", ".f"))) %>%
+  group_by(language_id, name) %>%
+  summarize(inner_joins = n()) %>%
+  explain()
 
 languages_ij
-
 ```
 
 ```{r}
-rs <- dbGetQuery(con,
-"explain analyze select l.language_id,l.name,count(*) n
+rs <- dbGetQuery(
+  con,
+  "explain analyze select l.language_id,l.name,count(*) n
    from language l join smy_film f on l.language_id = f.language_id
-  group by l.language_id,l.name;")
+  group by l.language_id,l.name;"
+)
 
 rs
 ```
@@ -227,16 +234,16 @@ The suffix parameter is a way to distinguish the same column name in the joined 
 
 ```{r}
 language_table <- DBI::dbReadTable(con, "language")
-film_table     <- DBI::dbReadTable(con, "smy_film")
+film_table <- DBI::dbReadTable(con, "smy_film")
 ```
 
 ### dplyr Inner Join Template 
 
 ```{r inner join}
-languages_ij <- language_table %>% 
-  inner_join (film_table, by=c('language_id','language_id'),suffix(c(".l",".f"))) %>%
-  group_by(language_id,name) %>% 
-  summarize(inner_joins=n()) 
+languages_ij <- language_table %>%
+  inner_join(film_table, by = c("language_id", "language_id"), suffix(c(".l", ".f"))) %>%
+  group_by(language_id, name) %>%
+  summarize(inner_joins = n())
 
 languages_ij
 ```
@@ -244,10 +251,12 @@ languages_ij
 #### SQL Inner Join
 
 ```{r}
-rs <- dbGetQuery(con,
-"select l.language_id,l.name,count(*) n
+rs <- dbGetQuery(
+  con,
+  "select l.language_id,l.name,count(*) n
    from language l join smy_film f on l.language_id = f.language_id
-  group by l.language_id,l.name;")
+  group by l.language_id,l.name;"
+)
 
 rs
 ```
@@ -258,15 +267,18 @@ The output tells us that there are 1000 inner joins between the language_table a
 
 ```{r left outer join}
 
-languages_loj <- language_table %>% 
-  left_join (film_table, by=c('language_id','language_id'),suffix(c(".l",".f"))) %>% 
-  mutate(join_type = 'loj'
-        ,film_lang_id = if_else(is.na(film_id),film_id,language_id)) %>%
-  group_by(join_type,language_id,name,film_lang_id) %>% 
-  summarize(lojs=n()) %>%
-  select (join_type,language_id,film_lang_id,name,lojs)
-languages_loj
-#sp_print_df(languages_loj)
+languages_loj <- language_table %>%
+  left_join(film_table, by = c("language_id", "language_id"), suffix(c(".l", ".f"))) %>%
+  mutate(
+    join_type = "loj"
+    , film_lang_id = if_else(is.na(film_id), film_id, language_id)
+  ) %>%
+  group_by(join_type, language_id, name, film_lang_id) %>%
+  summarize(lojs = n()) %>%
+  select(join_type, language_id, film_lang_id, name, lojs)
+print(languages_loj)
+# View(languages_loj)
+# sp_print_df(languages_loj)
 ```
 
 Compare the mutate verb in the above code block with film_lang_id in the equivalent SQL code block below.
@@ -274,16 +286,18 @@ Compare the mutate verb in the above code block with film_lang_id in the equival
 #### SQL Left Outer Join
 
 ```{r}
-rs <- dbGetQuery(con,
-"select l.language_id
+rs <- dbGetQuery(
+  con,
+  "select l.language_id
        ,f.language_id film_lang_id
        ,trim(l.name) as name
        ,count(*) lojs
    from language l left outer join smy_film f 
         on l.language_id = f.language_id
   group by l.language_id,l.name,f.language_id
-order by l.language_id;")
-#sp_print_df(rs)
+order by l.language_id;"
+)
+# sp_print_df(rs)
 rs
 ```
 
@@ -297,13 +311,15 @@ The lojs column returns the number of rows found on the keys from the left table
 
 ```{r right outer join}
 
-languages_roj <- language_table %>% 
-  right_join (film_table, by=c('language_id','language_id'),suffix(c(".l",".f")),all=film_table) %>%
-  mutate(lang_id = if_else(is.na(name),0L,language_id)  
-        ,join_type='rojs') %>% 
-  group_by(join_type,language_id,name,lang_id) %>% 
-  summarize(rojs=n()) %>%
-  select(join_type,lang_id,language_id,name,rojs)
+languages_roj <- language_table %>%
+  right_join(film_table, by = c("language_id", "language_id"), suffix(c(".l", ".f")), all = film_table) %>%
+  mutate(
+    lang_id = if_else(is.na(name), 0L, language_id)
+    , join_type = "rojs"
+  ) %>%
+  group_by(join_type, language_id, name, lang_id) %>%
+  summarize(rojs = n()) %>%
+  select(join_type, lang_id, language_id, name, rojs)
 
 sp_print_df(languages_roj)
 languages_roj
@@ -314,11 +330,13 @@ Review the mutate above with l.language_id below.
 #### SQL Right Outer Join
 
 ```{r}
-rs <- dbGetQuery(con,
-"select 'roj' join_type,l.language_id,f.language_id language_id_f,l.name,count(*) rojs
+rs <- dbGetQuery(
+  con,
+  "select 'roj' join_type,l.language_id,f.language_id language_id_f,l.name,count(*) rojs
    from language l right outer join smy_film f on l.language_id = f.language_id
   group by l.language_id,l.name,f.language_id
-order by l.language_id;")
+order by l.language_id;"
+)
 sp_print_df(rs)
 rs
 ```
@@ -333,11 +351,11 @@ The rojs column returns the number of rows found on the keys from the right tabl
 
 ```{r full outer join}
 
-languages_foj <- language_table %>% 
-  full_join (film_table, by=c('language_id','language_id'),suffix(c(".l",".f"))) %>%
-  mutate(film_lang = if_else(is.na(film_id),paste0('No ',name,' films.'),if_else(is.na(name),'Alien',name))) %>%
-  group_by(language_id,name,film_lang) %>% 
-  summarize(n=n()) 
+languages_foj <- language_table %>%
+  full_join(film_table, by = c("language_id", "language_id"), suffix(c(".l", ".f"))) %>%
+  mutate(film_lang = if_else(is.na(film_id), paste0("No ", name, " films."), if_else(is.na(name), "Alien", name))) %>%
+  group_by(language_id, name, film_lang) %>%
+  summarize(n = n())
 
 sp_print_df(languages_foj)
 languages_foj
@@ -346,11 +364,13 @@ languages_foj
 #### SQL full Outer Join
 
 ```{r}
-rs <- dbGetQuery(con,
-"select l.language_id,l.name,f.language_id language_id_f,count(*) fojs
+rs <- dbGetQuery(
+  con,
+  "select l.language_id,l.name,f.language_id language_id_f,count(*) fojs
    from language l full outer join smy_film f on l.language_id = f.language_id
   group by l.language_id,l.name,f.language_id
-order by l.language_id;")
+order by l.language_id;"
+)
 sp_print_df(rs)
 rs
 ```
@@ -370,11 +390,11 @@ The anti join is a left outer join without the inner joined rows.  It only retur
 ```{r dplyr anti Join}
 
 languages_aj <- language_table %>%
-    anti_join (film_table, by = c('language_id', 'language_id'), suffix(c(".l", ".f"))) %>%
-    mutate(type = 'anti_join') %>%
-    group_by(type, language_id, name) %>%
-    summarize(anti_joins = n()) %>%
-    select(type, language_id, name, anti_joins)
+  anti_join(film_table, by = c("language_id", "language_id"), suffix(c(".l", ".f"))) %>%
+  mutate(type = "anti_join") %>%
+  group_by(type, language_id, name) %>%
+  summarize(anti_joins = n()) %>%
+  select(type, language_id, name, anti_joins)
 sp_print_df(languages_aj)
 languages_aj
 ```
@@ -384,12 +404,14 @@ languages_aj
 SQL doesn't have an anti join key word.  Here are three different ways to achieve the same result.
 
 ```{r}
-rs <- dbGetQuery(con,
-"select l.language_id,l.name,count(*) fojs
+rs <- dbGetQuery(
+  con,
+  "select l.language_id,l.name,count(*) fojs
    from language l left outer join smy_film f on l.language_id = f.language_id
   where f.language_id is null
   group by l.language_id,l.name
-order by l.language_id;")
+order by l.language_id;"
+)
 sp_print_df(rs)
 rs
 ```
@@ -397,12 +419,14 @@ rs
 #### SQL anti Join 2, ID in driving table and NOT IN lookup table
 
 ```{r}
-rs <- dbGetQuery(con,
-"select l.language_id,l.name,count(*) fojs
+rs <- dbGetQuery(
+  con,
+  "select l.language_id,l.name,count(*) fojs
    from language l 
   where l.language_id NOT IN (select language_id from film)
   group by l.language_id,l.name
-order by l.language_id;")
+order by l.language_id;"
+)
 sp_print_df(rs)
 rs
 ```
@@ -410,12 +434,14 @@ rs
 #### SQL anti Join 3, NOT EXISTS and Correlated subquery
 
 ```{r}
-rs <- dbGetQuery(con,
-"select l.language_id,l.name,count(*) fojs
+rs <- dbGetQuery(
+  con,
+  "select l.language_id,l.name,count(*) fojs
    from language l 
   where not exists (select language_id from film f where f.language_id = l.language_id)
  group by l.language_id,l.name
-")
+"
+)
 sp_print_df(rs)
 rs
 ```
@@ -423,35 +449,40 @@ rs
 ## SQL anti join Costs
 
 ```{r}
-sql_aj1 <- dbGetQuery(con,
-"explain analyze select l.language_id,l.name,count(*) fojs
+sql_aj1 <- dbGetQuery(
+  con,
+  "explain analyze select l.language_id,l.name,count(*) fojs
    from language l left outer join smy_film f on l.language_id = f.language_id
   where f.language_id is null
   group by l.language_id,l.name
-")
+"
+)
 
-sql_aj2 <- dbGetQuery(con,
-"explain analyze select l.language_id,l.name,count(*) fojs
+sql_aj2 <- dbGetQuery(
+  con,
+  "explain analyze select l.language_id,l.name,count(*) fojs
    from language l 
   where l.language_id NOT IN (select language_id from film)
   group by l.language_id,l.name
-")
+"
+)
 
-sql_aj3 <- dbGetQuery(con,
-"explain analyze select l.language_id,l.name,count(*) fojs
+sql_aj3 <- dbGetQuery(
+  con,
+  "explain analyze select l.language_id,l.name,count(*) fojs
    from language l 
   where not exists (select language_id from film f where f.language_id = l.language_id)
  group by l.language_id,l.name
-")
-
-
-
+"
+)
 ```
 
 ##### SQL Costs
 
 ```{r}
-print(glue('sql_aj1 loj-null costs=',sql_aj1[1,1]));print(glue('sql_aj2 not in costs=',sql_aj2[1,1]));print(glue('sql_aj3 not exist costs=',sql_aj3[1,1]))
+print(glue("sql_aj1 loj-null costs=", sql_aj1[1, 1]))
+print(glue("sql_aj2 not in costs=", sql_aj2[1, 1]))
+print(glue("sql_aj3 not exist costs=", sql_aj3[1, 1]))
 ```
 
 ## dplyr Anti joins  
@@ -459,26 +490,26 @@ print(glue('sql_aj1 loj-null costs=',sql_aj1[1,1]));print(glue('sql_aj2 not in c
 In this next section we look at two methods to implemnt an anti join in dplyr.
 
 ```{r}
-customer_table <- tbl(con,"customer") #DBI::dbReadTable(con, "customer")
-rental_table   <- tbl(con,"rental")   #DBI::dbReadTable(con, "rental")
+customer_table <- tbl(con, "customer") # DBI::dbReadTable(con, "customer")
+rental_table <- tbl(con, "rental") # DBI::dbReadTable(con, "rental")
 
 # Method 1.  dplyr anti_join
 daj1 <-
-    anti_join(customer_table, rental_table, by = 'customer_id', suffix = c(".c", ".r")) %>% 
-    select(c('first_name','last_name','email')) %>% 
-    explain()
+  anti_join(customer_table, rental_table, by = "customer_id", suffix = c(".c", ".r")) %>%
+  select(c("first_name", "last_name", "email")) %>%
+  explain()
 ```
 
 ```{r}
-customer_table <- tbl(con,"customer") #DBI::dbReadTable(con, "customer")
-rental_table   <- tbl(con,"rental")   #DBI::dbReadTable(con, "rental")
+customer_table <- tbl(con, "customer") # DBI::dbReadTable(con, "customer")
+rental_table <- tbl(con, "rental") # DBI::dbReadTable(con, "rental")
 
 # Method 2.  dplyr loj with NA
 daj2 <-
-    left_join(customer_table, rental_table, by = c('customer_id','customer_id'), suffix = c(".c", ".r")) %>% 
-  filter(is.na(rental_id)) %>% 
-    select(c('first_name','last_name','email')) %>% 
-    explain()
+  left_join(customer_table, rental_table, by = c("customer_id", "customer_id"), suffix = c(".c", ".r")) %>%
+  filter(is.na(rental_id)) %>%
+  select(c("first_name", "last_name", "email")) %>%
+  explain()
 ```
 
 
@@ -507,24 +538,29 @@ In this example, the dplyr anti_join verb is *`r 529.72/375.33` to `r 510.99/22.
 
 
 ```{r}
-sql_aj1 <- dbGetQuery(con,
-"explain analyze select c.customer_id,count(*) lojs
+sql_aj1 <- dbGetQuery(
+  con,
+  "explain analyze select c.customer_id,count(*) lojs
    from customer c left outer join rental r on c.customer_id = r.customer_id
   where r.customer_id is null
   group by c.customer_id
-order by c.customer_id;")
+order by c.customer_id;"
+)
 sp_print_df(sql_aj1)
 sql_aj1
 
-sql_aj3 <- dbGetQuery(con,
-"explain analyze 
+sql_aj3 <- dbGetQuery(
+  con,
+  "explain analyze 
 select c.customer_id,count(*) lojs
    from customer c 
   where not exists (select customer_id from rental r where c.customer_id = r.customer_id)
  group by c.customer_id
-")
+"
+)
 
-print(glue('sql_aj1 loj-null costs=',sql_aj1[1,1]));print(glue('sql_aj3 not exist costs=',sql_aj3[1,1]))
+print(glue("sql_aj1 loj-null costs=", sql_aj1[1, 1]))
+print(glue("sql_aj3 not exist costs=", sql_aj3[1, 1]))
 ```
 
 ## Exercises
@@ -536,8 +572,9 @@ This is a left outer join from customer to the rental table with an NA rental_id
 #### SQL Anti-Join
 
 ```{r}
-rs <- dbGetQuery(con,
-                 "select c.first_name
+rs <- dbGetQuery(
+  con,
+  "select c.first_name
                         ,c.last_name
                         ,c.email
                     from customer c
@@ -545,9 +582,8 @@ rs <- dbGetQuery(con,
                               on c.customer_id = r.customer_id
                    where r.rental_id is null;
                  "
-                 )
+)
 sp_print_df(head(rs))
-
 ```
 
 <-- Add dplyr semi-join example -->
@@ -561,8 +597,9 @@ In the examples above, we looked at how many rows were involved in each of the j
 Below is the SQL version to return all the row counts from each table in the DVD Rental System.
 
 ```{r}
-rs <- dbGetQuery(con,
-                "select *
+rs <- dbGetQuery(
+  con,
+  "select *
                  from (      select 'actor' tbl_name,count(*) from actor 
                        union select 'category' tbl_name,count(*) from category
                        union select 'film' tbl_name,count(*) from film
@@ -583,7 +620,7 @@ rs <- dbGetQuery(con,
                   order by tbl_name
                  ;
                 "
-                )
+)
 sp_print_df(head(rs))
 rs
 ```
@@ -597,13 +634,15 @@ In the code block below
 
 
 ```{r}
-film_table <- tbl(con,"film") #DBI::dbReadTable(con, "customer")
-language_table   <- tbl(con,"language")   #DBI::dbReadTable(con, "rental")
+film_table <- tbl(con, "film") # DBI::dbReadTable(con, "customer")
+language_table <- tbl(con, "language") # DBI::dbReadTable(con, "rental")
 
-film_rows <- film_table %>% mutate(name = 'film') %>% group_by(name) %>% summarize(rows=n())
-language_rows <- language_table %>% mutate(name = 'language') %>% 
-  group_by(name) %>% summarize(rows=n())
-rows_per_table <- rbind(as.data.frame(film_rows),as.data.frame(language_rows))
+film_rows <- film_table %>% mutate(name = "film") %>% group_by(name) %>% summarize(rows = n())
+language_rows <- language_table %>%
+  mutate(name = "language") %>%
+  group_by(name) %>%
+  summarize(rows = n())
+rows_per_table <- rbind(as.data.frame(film_rows), as.data.frame(language_rows))
 rows_per_table
 ```
 
@@ -612,8 +651,9 @@ rows_per_table
 The SQL below is very similar to the `SQL full Outer Join` above.  Instead of counting the joins, it counts the number films associated with each language.
 
 ```{r }
-rs <- dbGetQuery(con,
-                "select l.language_id id
+rs <- dbGetQuery(
+  con,
+  "select l.language_id id
                        ,l.name
                        ,sum(case when f.language_id is not null then 1 else 0 end) total
                    from language l
@@ -623,7 +663,7 @@ rs <- dbGetQuery(con,
                   order by l.name;
                  ;
                 "
-                )
+)
 sp_print_df(head(rs))
 rs
 ```
@@ -633,11 +673,13 @@ rs
 Below is the code block from the `dplyr Full Outer Join` section above.  Modify the code block to match the output from the SQL version.
 
 ```{r}
-rs <- dbGetQuery(con,
-"select l.language_id,l.name,f.language_id language_id_f,count(*) fojs
+rs <- dbGetQuery(
+  con,
+  "select l.language_id,l.name,f.language_id language_id_f,count(*) fojs
    from language l full outer join smy_film f on l.language_id = f.language_id
   group by l.language_id,l.name,f.language_id
-order by l.language_id;")
+order by l.language_id;"
+)
 sp_print_df(rs)
 rs
 ```
@@ -651,15 +693,16 @@ How are the stores performing.
 How are the stores performing?  The SQL code shows the payments made to each store in the business.
 
 ```{r}
-rs <- dbGetQuery(con,
-                "select store_id,sum(p.amount) amt,count(*) cnt 
+rs <- dbGetQuery(
+  con,
+  "select store_id,sum(p.amount) amt,count(*) cnt 
                    from payment p 
                         join staff s 
                           on p.staff_id = s.staff_id  
                  group by store_id order by 2 desc
                  ;
                 "
-                )
+)
 sp_print_df(head(rs))
 ```
 
@@ -668,11 +711,12 @@ sp_print_df(head(rs))
 Complete the following code block to return the payments made to each store.
 
 ```{r}
-payment_table <- tbl(con,'payment') #DBI::dbReadTable(con, "payment")
-staff_table   <- tbl(con,'staff')   #DBI::dbReadTable(con, "staff")
+payment_table <- tbl(con, "payment") # DBI::dbReadTable(con, "payment")
+staff_table <- tbl(con, "staff") # DBI::dbReadTable(con, "staff")
 
-store_revenue <-payment_table %>%
-    inner_join (staff_table, by = 'staff_id', suffix = c(".p", ".s")) %>% head
+store_revenue <- payment_table %>%
+  inner_join(staff_table, by = "staff_id", suffix = c(".p", ".s")) %>%
+  head()
 
 store_revenue
 ```
@@ -694,8 +738,9 @@ The following SQL code calculates for each store
 4.  the estimated outstanding balance based off the open unpaid rentals * the average price per paid movie.
 
 ```{r}
-rs <- dbGetQuery(con,
-"SELECT s.store_id store,sum(CASE WHEN payment_id IS NULL THEN 1 ELSE 0 END) open
+rs <- dbGetQuery(
+  con,
+  "SELECT s.store_id store,sum(CASE WHEN payment_id IS NULL THEN 1 ELSE 0 END) open
     ,sum(CASE WHEN payment_id IS NOT NULL THEN 1 ELSE 0 END) paid
     ,sum(p.amount) paid_amt
     ,count(*) rentals
@@ -716,7 +761,8 @@ LEFT JOIN payment p
 JOIN staff s
     ON r.staff_id = s.staff_id
 group by s.store_id;
-")
+"
+)
 sp_print_df(head(rs))
 rs
 ```
@@ -724,26 +770,29 @@ rs
 #### Exercise Dplyr Modify the following dplyr code to match the SQL output from above.
 
 ```{r}
-payment_table <- tbl(con,'payment') #DBI::dbReadTable(con, "payment")
-rental_table   <- tbl(con,'rental')   #DBI::dbReadTable(con, "rental")
+payment_table <- tbl(con, "payment") # DBI::dbReadTable(con, "payment")
+rental_table <- tbl(con, "rental") # DBI::dbReadTable(con, "rental")
 
-est_bal <-rental_table %>% 
-    left_join(payment_table, by=c('rental_id','rental_id'),suffix = c(".r", ".p")) %>%
-    mutate(missing = ifelse(is.na(payment_id),1,0)
-          ,found   = ifelse(!is.na(payment_id),1,0)
-          ) %>%
-    summarize(open=sum(missing,na.rm = TRUE)
-             ,paid  =sum(found,na.rm = TRUE)
-             ,paid_amt = sum(amount,na.rm = TRUE)
-             ,rentals = n()
-             ) %>%
-    summarize(open = open
-             ,paid = paid
-             ,paid_amt = paid_amt
-             ,rentals = rentals             
-             ,avg_price = paid_amt/paid
-             ,est_balance = paid_amt/paid * open
-             )
+est_bal <- rental_table %>%
+  left_join(payment_table, by = c("rental_id", "rental_id"), suffix = c(".r", ".p")) %>%
+  mutate(
+    missing = ifelse(is.na(payment_id), 1, 0)
+    , found = ifelse(!is.na(payment_id), 1, 0)
+  ) %>%
+  summarize(
+    open = sum(missing, na.rm = TRUE)
+    , paid = sum(found, na.rm = TRUE)
+    , paid_amt = sum(amount, na.rm = TRUE)
+    , rentals = n()
+  ) %>%
+  summarize(
+    open = open
+    , paid = paid
+    , paid_amt = paid_amt
+    , rentals = rentals
+    , avg_price = paid_amt / paid
+    , est_balance = paid_amt / paid * open
+  )
 est_bal
 ```
 
@@ -752,8 +801,9 @@ est_bal
 In the previous exercise, we estimated the outstanding amount.  After reviewing the rental table, the actual movie rental rate is in the table.  We use that to calculate the outstanding balance below.
 
 ```{r}
-rs <- dbGetQuery(con,
-"SELECT sum(f.rental_rate) open_amt
+rs <- dbGetQuery(
+  con,
+  "SELECT sum(f.rental_rate) open_amt
     ,count(*) count
 FROM rental r
 LEFT JOIN payment p
@@ -764,21 +814,22 @@ INNER JOIN film f
     ON i.film_id = f.film_id
 WHERE p.rental_id IS NULL
 ;"
-                )  
+)
 sp_print_df(head(rs))
 rs
 ```
 
 ```{r}
-payment_table   <- tbl(con,'payment')   #DBI::dbReadTable(con, "payment")
-rental_table    <- tbl(con,'rental')    #DBI::dbReadTable(con, "rental")
-inventory_table <- tbl(con,'inventory') #DBI::dbReadTable(con, "inventory")
-film_table      <- tbl(con,'film')      #DBI::dbReadTable(con, "film")
+payment_table <- tbl(con, "payment") # DBI::dbReadTable(con, "payment")
+rental_table <- tbl(con, "rental") # DBI::dbReadTable(con, "rental")
+inventory_table <- tbl(con, "inventory") # DBI::dbReadTable(con, "inventory")
+film_table <- tbl(con, "film") # DBI::dbReadTable(con, "film")
 
-act_bal <-rental_table %>% 
-    left_join(payment_table, by=c('rental_id','rental_id'),suffix = c(".r", ".p")) %>%
-    inner_join(inventory_table, by=c('inventory_id','inventory_id'),suffix = c(".r", ".i")) %>%
-    inner_join(film_table, by=c('film_id','film_id'),suffix = c(".i", ".f")) %>% head
+act_bal <- rental_table %>%
+  left_join(payment_table, by = c("rental_id", "rental_id"), suffix = c(".r", ".p")) %>%
+  inner_join(inventory_table, by = c("inventory_id", "inventory_id"), suffix = c(".r", ".i")) %>%
+  inner_join(film_table, by = c("film_id", "film_id"), suffix = c(".i", ".f")) %>%
+  head()
 
 act_bal
 ```
@@ -794,8 +845,9 @@ act_bal
 
 ```{r}
 
-rs <- dbGetQuery(con,
-                "select c.customer_id,c.first_name,c.last_name,sum(f.rental_rate) open_amt,count(*) count
+rs <- dbGetQuery(
+  con,
+  "select c.customer_id,c.first_name,c.last_name,sum(f.rental_rate) open_amt,count(*) count
                    from rental r 
                         left outer join payment p 
                           on r.rental_id = p.rental_id  
@@ -810,15 +862,16 @@ rs <- dbGetQuery(con,
                   order by open_amt desc
                   limit 25
                  ;"
-                )  
+)
 sp_print_df(head(rs))
 rs
 ```
 ### what film has been rented the most
 ```{r}
 
-rs <- dbGetQuery(con,
-"SELECT i.film_id
+rs <- dbGetQuery(
+  con,
+  "SELECT i.film_id
     ,f.title
     ,rental_rate
     ,sum(rental_rate) revenue
@@ -834,7 +887,7 @@ GROUP BY i.film_id
 ORDER BY count DESC
 LIMIT 25
 ;"
-                )  
+)
 sp_print_df(head(rs))
 rs
 ```
@@ -842,8 +895,9 @@ rs
 ### what film has been generated the most revenue assuming all amounts are collected
 ```{r}
 
-rs <- dbGetQuery(con,
-                "select i.film_id,f.title,rental_rate
+rs <- dbGetQuery(
+  con,
+  "select i.film_id,f.title,rental_rate
                        ,sum(rental_rate) revenue,count(*) count  --16044
                    from rental r 
                         join inventory i
@@ -853,15 +907,16 @@ rs <- dbGetQuery(con,
                  group by i.film_id,f.title,rental_rate
                  order by revenue desc
                  ;"
-                )  
+)
 sp_print_df(head(rs))
 ```
 
 ### which films are in one store but not the other.
 ```{r}
 
-rs <- dbGetQuery(con,
-                "select coalesce(i1.film_id,i2.film_id) film_id
+rs <- dbGetQuery(
+  con,
+  "select coalesce(i1.film_id,i2.film_id) film_id
                        ,f.title,f.rental_rate,i1.store_id,i1.count,i2.store_id,i2.count
                    from     (select film_id,store_id,count(*) count 
                                from inventory where store_id = 1 
@@ -877,14 +932,15 @@ rs <- dbGetQuery(con,
                   where i1.film_id is null or i2.film_id is null 
                  order by f.title  ;
                "
-                )  
+)
 sp_print_df(head(rs))
 ```
 
 ### Compute the outstanding balance.
 ```{r}
-rs <- dbGetQuery(con,
-                "select sum(f.rental_rate) open_amt,count(*) count
+rs <- dbGetQuery(
+  con,
+  "select sum(f.rental_rate) open_amt,count(*) count
                    from rental r 
                         left outer join payment p 
                           on r.rental_id = p.rental_id  
@@ -894,7 +950,7 @@ rs <- dbGetQuery(con,
                           on i.film_id = f.film_id
                   where p.rental_id is null
                  ;"
-                )  
+)
 sp_print_df(head(rs))
 ```
 
@@ -915,11 +971,11 @@ select examples
 
 How many customers are there in the DVD Rental System
 ```{r}
-rs1 <- dbGetQuery(con, 'select * from customer;')
+rs1 <- dbGetQuery(con, "select * from customer;")
 sp_print_df(head(rs1))
 
-pco <- dbSendQuery(con, 'select * from customer;')
-rs2  <- dbFetch(pco)
+pco <- dbSendQuery(con, "select * from customer;")
+rs2 <- dbFetch(pco)
 dbClearResult(pco)
 sp_print_df(head(rs2))
 ```
@@ -931,17 +987,19 @@ sp_print_df(head(rs2))
 
 ```{r}
 customer_table <- DBI::dbReadTable(con, "customer")
-rental_table   <- DBI::dbReadTable(con, "rental")
+rental_table <- DBI::dbReadTable(con, "rental")
 
 customer_tbl <- dplyr::tbl(con, "customer")
-rental_tbl   <- dplyr::tbl(con, "rental")
+rental_tbl <- dplyr::tbl(con, "rental")
 
 dplyr_tbl_loj <-
-    left_join(customer_tbl, rental_tbl, by = 'customer_id', suffix = c(".c", ".r")) %>% 
-    filter(is.na(rental_id)) %>% select(c('first_name','last_name','email')) 
+  left_join(customer_tbl, rental_tbl, by = "customer_id", suffix = c(".c", ".r")) %>%
+  filter(is.na(rental_id)) %>%
+  select(c("first_name", "last_name", "email"))
 
-rs <- dbGetQuery(con,
-                 "select c.first_name
+rs <- dbGetQuery(
+  con,
+  "select c.first_name
                         ,c.last_name
                         ,c.email
                     from customer c
@@ -949,7 +1007,7 @@ rs <- dbGetQuery(con,
                               on c.customer_id = r.customer_id
                    where r.rental_id is null;
                  "
-                 )
+)
 sp_print_df(head(rs))
 View(dplyr_tbl_loj)
 ```
@@ -958,8 +1016,9 @@ View(dplyr_tbl_loj)
 ## www.dataquest.io/blog/postgres-internals
 ## Explain a `dplyr::join
 
-tbl_pk_fk_df <- DBI::dbGetQuery(con,
-"
+tbl_pk_fk_df <- DBI::dbGetQuery(
+  con,
+  "
 SELECT --t.table_catalog,t.table_schema,
    c.table_name
 	,kcu.column_name
@@ -989,12 +1048,13 @@ WHERE c.constraint_type IN ('PRIMARY KEY', 'FOREIGN KEY')
   AND c.table_catalog = 'dvdrental'
 	AND c.table_schema = 'public'
 ORDER BY c.table_name;
-")
+"
+)
 
- View(tbl_pk_fk_df)
+View(tbl_pk_fk_df)
 
 tables_df <- tbl_pk_fk_df %>% distinct(table_name)
- View(tables_df)
+View(tables_df)
 ```
 
 ```{r create nodes,echo = FALSE}
@@ -1002,31 +1062,33 @@ library(DiagrammeR)
 
 table_nodes_ndf <- create_node_df(
   n <- nrow(tables_df)
-  ,type  <- 'table'
-  ,label <- tables_df$table_name
-  ,shape = "rectangle"
-  ,width = 1
-  ,height = .5
-  ,fontsize = 18
+  , type <- "table"
+  , label <- tables_df$table_name
+  ,
+  shape = "rectangle"
+  , width = 1
+  , height = .5
+  , fontsize = 18
 )
 
-tbl_pk_fk_ids_df <- inner_join(tbl_pk_fk_df,table_nodes_ndf
-                ,by = c('table_name'='label')
-                ,suffix(c('st','s'))
-                ) %>% 
-     rename('src_tbl_id' = id) %>%
-     left_join(table_nodes_ndf
-               ,by = c('ref_table'='label') 
-               ,suffix(c('st','t'))
-               ) %>%
-     rename('fk_tbl_id' = id) 
+tbl_pk_fk_ids_df <- inner_join(tbl_pk_fk_df, table_nodes_ndf
+  ,
+  by = c("table_name" = "label")
+  , suffix(c("st", "s"))
+) %>%
+  rename("src_tbl_id" = id) %>%
+  left_join(table_nodes_ndf
+    ,
+    by = c("ref_table" = "label")
+    , suffix(c("st", "t"))
+  ) %>%
+  rename("fk_tbl_id" = id)
 
-tbl_fk_df <- tbl_pk_fk_ids_df %>% filter(constraint_type == 'FOREIGN KEY')     
-tbl_pk_df <- tbl_pk_fk_ids_df %>% filter(constraint_type == 'PRIMARY KEY') 
+tbl_fk_df <- tbl_pk_fk_ids_df %>% filter(constraint_type == "FOREIGN KEY")
+tbl_pk_df <- tbl_pk_fk_ids_df %>% filter(constraint_type == "PRIMARY KEY")
 # View(tbl_pk_fk_ids_df)
 View(tbl_fk_df)
 View(tbl_pk_df)
-
 ```
 
 ```{r echo = FALSE}
@@ -1037,7 +1099,7 @@ fk_edf <-
     from = tbl_fk_df$src_tbl_id,
     to = tbl_fk_df$fk_tbl_id,
     rel = "fk",
-    label=tbl_fk_df$constraint_name,
+    label = tbl_fk_df$constraint_name,
     fontsize = 15
   )
 # View(fk_edf)
@@ -1048,11 +1110,11 @@ graph <-
   create_graph(
     nodes_df = table_nodes_ndf,
     edges_df = fk_edf,
-    graph_name = 'Simple FK Graph'
-    )
+    graph_name = "Simple FK Graph"
+  )
 
 # View the graph
-render_graph(graph,height=1000)
+render_graph(graph, height = 1000)
 ```
 
 ```{r}
@@ -1060,7 +1122,6 @@ render_graph(graph,height=1000)
 dbDisconnect(con)
 
 sp_docker_stop("sql-pet")
-
 ```
 
 ```{r}
@@ -1070,4 +1131,3 @@ testit
 ```{r}
 
 ```
-

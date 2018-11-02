@@ -1,7 +1,16 @@
 # Getting metadata about and from the database (21)
+The following packages are used in this chapter:
 
-
-Note that `tidyverse`, `DBI`, `RPostgres`, `glue`, and `knitr` are loaded.  Also, we've sourced the [`db-login-batch-code.R`]('book-src/db-login-batch-code.R') file which is used to log in to PostgreSQL.
+```r
+library(tidyverse)
+library(DBI)
+library(RPostgres)
+library(glue)
+library(here)
+require(knitr)
+library(dbplyr)
+library(sqlpetr)
+```
 
 Assume that the Docker container with PostgreSQL and the dvdrental database are ready to go. 
 
@@ -11,60 +20,21 @@ sp_docker_start("sql-pet")
 Connect to the database:
 
 ```r
-con <-  sp_get_postgres_connection(
+con <- sp_get_postgres_connection(
   user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
   password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
   dbname = "dvdrental",
   seconds_to_test = 10
 )
 ```
-## Always *look* at the data
 
-### Connect with people who own, generate, or are the subjects of the data
-
-A good chat with people who own the data, generate it, or are the subjects can generate insights and set the context for your investigation of the database. The purpose for collecting the data or circumsances where it was collected may be burried far afield in an organization, but *usually someone knows*.  The metadata discussed in this chapter is essential but will only take you so far.
-
-### Browse a few rows of a table
-
-Simple tools like `head` or `glimpse` are your friend.
-
-```r
-rental <- dplyr::tbl(con, "rental")
-
-kable(head(rental))
-```
-
-
-
- rental_id  rental_date            inventory_id   customer_id  return_date            staff_id  last_update         
-----------  --------------------  -------------  ------------  --------------------  ---------  --------------------
-         2  2005-05-24 22:54:33            1525           459  2005-05-28 19:40:33           1  2006-02-16 02:30:53 
-         3  2005-05-24 23:03:39            1711           408  2005-06-01 22:12:39           1  2006-02-16 02:30:53 
-         4  2005-05-24 23:04:41            2452           333  2005-06-03 01:43:41           2  2006-02-16 02:30:53 
-         5  2005-05-24 23:05:21            2079           222  2005-06-02 04:33:21           1  2006-02-16 02:30:53 
-         6  2005-05-24 23:08:07            2792           549  2005-05-27 01:32:07           1  2006-02-16 02:30:53 
-         7  2005-05-24 23:11:53            3995           269  2005-05-29 20:34:53           2  2006-02-16 02:30:53 
-
-```r
-glimpse(rental)
-```
-
-```
-## Observations: ??
-## Variables: 7
-## $ rental_id    <int> 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 1...
-## $ rental_date  <dttm> 2005-05-24 22:54:33, 2005-05-24 23:03:39, 2005-0...
-## $ inventory_id <int> 1525, 1711, 2452, 2079, 2792, 3995, 2346, 2580, 1...
-## $ customer_id  <int> 459, 408, 333, 222, 549, 269, 239, 126, 399, 142,...
-## $ return_date  <dttm> 2005-05-28 19:40:33, 2005-06-01 22:12:39, 2005-0...
-## $ staff_id     <int> 1, 1, 2, 1, 1, 2, 2, 1, 2, 2, 2, 1, 1, 1, 2, 1, 2...
-## $ last_update  <dttm> 2006-02-16 02:30:53, 2006-02-16 02:30:53, 2006-0...
-```
 ## Database contents and structure
+
+After just looking at the data you seek, it might be worthwhile stepping back and looking at the big picture.
 
 ### Database structure
 
-For large or complex databases, however, you need to use both the available documentation for your database (e.g.,  [the dvdrental](http://www.postgresqltutorial.com/postgresql-sample-database/) database) and the other empirical tools that are available.  For example it's worth learning to interpret the symbols in an [Entity Relationship Diagram](https://en.wikipedia.org/wiki/Entity%E2%80%93relationship_model):
+For large or complex databases you need to use both the available documentation for your database (e.g.,  [the dvdrental](http://www.postgresqltutorial.com/postgresql-sample-database/) database) and the other empirical tools that are available.  For example it's worth learning to interpret the symbols in an [Entity Relationship Diagram](https://en.wikipedia.org/wiki/Entity%E2%80%93relationship_model):
 
 ![](./screenshots/ER-diagram-symbols.png)
 
@@ -77,7 +47,7 @@ For this chapter R needs the `dbplyr` package to access alternate schemas.  A [s
 The simplest way to get a list of tables is with 
 
 ```r
-table_list  <- DBI::dbListTables(con)
+table_list <- DBI::dbListTables(con)
 
 kable(table_list)
 ```
@@ -108,6 +78,7 @@ kable(table_list)
 |address                    |
 |film_actor                 |
 |customer                   |
+|smy_film                   |
 ### Digging into the `information_schema`
 
 We usually need more detail than just a list of tables. Most SQL databases have an `information_schema` that has a standard structure to describe and control the database.
@@ -117,7 +88,7 @@ The `information_schema` is in a different schema from the default, so to connec
 ```r
 table_info_schema_table <- tbl(con, dbplyr::in_schema("information_schema", "tables"))
 ```
-The `information_schema` is large and complex and contains 210 tables.  So it's easy to get lost in it.
+The `information_schema` is large and complex and contains 211 tables.  So it's easy to get lost in it.
 
 This query retrieves a list of the tables in the database that includes additional detail, not just the name of the table.
 
@@ -125,8 +96,8 @@ This query retrieves a list of the tables in the database that includes addition
 table_info <- table_info_schema_table %>%
   filter(table_schema == "public") %>%
   select(table_catalog, table_schema, table_name, table_type) %>%
-  arrange(table_type, table_name) %>% 
-  collect() 
+  arrange(table_type, table_name) %>%
+  collect()
 
 kable(table_info)
 ```
@@ -148,6 +119,7 @@ dvdrental       public         inventory                    BASE TABLE
 dvdrental       public         language                     BASE TABLE 
 dvdrental       public         payment                      BASE TABLE 
 dvdrental       public         rental                       BASE TABLE 
+dvdrental       public         smy_film                     BASE TABLE 
 dvdrental       public         staff                        BASE TABLE 
 dvdrental       public         store                        BASE TABLE 
 dvdrental       public         actor_info                   VIEW       
@@ -192,6 +164,7 @@ dvdrental       public         inventory                    BASE TABLE
 dvdrental       public         language                     BASE TABLE 
 dvdrental       public         payment                      BASE TABLE 
 dvdrental       public         rental                       BASE TABLE 
+dvdrental       public         smy_film                     BASE TABLE 
 dvdrental       public         staff                        BASE TABLE 
 dvdrental       public         store                        BASE TABLE 
 dvdrental       public         actor_info                   VIEW       
@@ -221,21 +194,21 @@ But the `information_schema` has a lot more useful information that we can use.
 columns_info_schema_table <- tbl(con, dbplyr::in_schema("information_schema", "columns"))
 ```
 
-Since the `information_schema` contains 1855 columns, we are narrowing our focus to just one table.  This query retrieves more information about the `rental` table:
+Since the `information_schema` contains 1868 columns, we are narrowing our focus to just one table.  This query retrieves more information about the `rental` table:
 
 ```r
 columns_info_schema_info <- columns_info_schema_table %>%
-  filter(table_schema == "public") %>% 
+  filter(table_schema == "public") %>%
   select(
     table_catalog, table_schema, table_name, column_name, data_type, ordinal_position,
     character_maximum_length, column_default, numeric_precision, numeric_precision_radix
   ) %>%
-  collect(n = Inf) %>% 
+  collect(n = Inf) %>%
   mutate(data_type = case_when(
-           data_type == "character varying" ~ paste0(data_type, ' (', character_maximum_length, ')'),
-           data_type == "real" ~ paste0(data_type, ' (', numeric_precision, ',', numeric_precision_radix,')'),
-           TRUE ~ data_type)
-         ) %>% 
+    data_type == "character varying" ~ paste0(data_type, " (", character_maximum_length, ")"),
+    data_type == "real" ~ paste0(data_type, " (", numeric_precision, ",", numeric_precision_radix, ")"),
+    TRUE ~ data_type
+  )) %>%
   filter(table_name == "rental") %>%
   select(-table_schema, -numeric_precision, -numeric_precision_radix)
 
@@ -276,15 +249,15 @@ The `BASE TABLE` has the underlying data in the database
 
 ```r
 table_info_schema_table %>%
-  filter(table_schema == "public" & table_type == "BASE TABLE") %>% 
-  select(table_name, table_type) %>% 
-  left_join(columns_info_schema_table, by = c("table_name" = "table_name")) %>% 
+  filter(table_schema == "public" & table_type == "BASE TABLE") %>%
+  select(table_name, table_type) %>%
+  left_join(columns_info_schema_table, by = c("table_name" = "table_name")) %>%
   select(
     table_type, table_name, column_name, data_type, ordinal_position,
     column_default
   ) %>%
-  collect(n = Inf) %>% 
-  filter(str_detect(table_name, "cust")) %>% 
+  collect(n = Inf) %>%
+  filter(str_detect(table_name, "cust")) %>%
   kable()
 ```
 
@@ -307,15 +280,15 @@ Probably should explore how the `VIEW` is made up of data from BASE TABLEs.
 
 ```r
 table_info_schema_table %>%
-  filter(table_schema == "public" & table_type == "VIEW") %>%  
-  select(table_name, table_type) %>% 
-  left_join(columns_info_schema_table, by = c("table_name" = "table_name")) %>% 
+  filter(table_schema == "public" & table_type == "VIEW") %>%
+  select(table_name, table_type) %>%
+  left_join(columns_info_schema_table, by = c("table_name" = "table_name")) %>%
   select(
     table_type, table_name, column_name, data_type, ordinal_position,
     column_default
   ) %>%
-  collect(n = Inf) %>% 
-  filter(str_detect(table_name, "cust")) %>% 
+  collect(n = Inf) %>%
+  filter(str_detect(table_name, "cust")) %>%
   kable()
 ```
 
@@ -358,10 +331,11 @@ Pull out some rough-and-ready but useful statistics about your database.  Since 
 
 ```r
 public_tables <- columns_info_schema_table %>%
-  filter(table_schema == "public") %>% 
+  filter(table_schema == "public") %>%
   collect()
 
-public_tables %>% count(table_name, sort = TRUE) %>% 
+public_tables %>%
+  count(table_name, sort = TRUE) %>% head(n = 15) %>% 
   kable()
 ```
 
@@ -370,6 +344,7 @@ public_tables %>% count(table_name, sort = TRUE) %>%
 table_name                     n
 ---------------------------  ---
 film                          13
+smy_film                      13
 staff                         11
 customer                      10
 customer_list                  9
@@ -383,14 +358,6 @@ actor                          4
 actor_info                     4
 city                           4
 inventory                      4
-store                          4
-category                       3
-country                        3
-film_actor                     3
-film_category                  3
-language                       3
-sales_by_store                 3
-sales_by_film_category         2
 
 How many *column names* are shared across tables (or duplicated)?
 
@@ -399,20 +366,20 @@ public_tables %>% count(column_name, sort = TRUE) %>% filter(n > 1)
 ```
 
 ```
-## # A tibble: 34 x 2
+## # A tibble: 40 x 2
 ##    column_name     n
 ##    <chr>       <int>
-##  1 last_update    14
-##  2 address_id      4
-##  3 film_id         4
-##  4 first_name      4
-##  5 last_name       4
-##  6 name            4
-##  7 store_id        4
-##  8 actor_id        3
-##  9 address         3
-## 10 category        3
-## # ... with 24 more rows
+##  1 last_update    15
+##  2 film_id         5
+##  3 address_id      4
+##  4 description     4
+##  5 first_name      4
+##  6 last_name       4
+##  7 length          4
+##  8 name            4
+##  9 rating          4
+## 10 store_id        4
+## # ... with 30 more rows
 ```
 
 How many column names are unique?
@@ -425,7 +392,7 @@ public_tables %>% count(column_name) %>% filter(n == 1) %>% count()
 ## # A tibble: 1 x 1
 ##      nn
 ##   <int>
-## 1    24
+## 1    18
 ```
 
 ## Database keys
@@ -450,7 +417,7 @@ glimpse(rs)
 ```
 
 ```
-## Observations: 61,215
+## Observations: 61,644
 ## Variables: 3
 ## $ table_name <chr> "dvdrental.information_schema.administrable_role_au...
 ## $ conname    <chr> "actor_pkey", "actor_pkey", "actor_pkey", "country_...
@@ -531,27 +498,28 @@ key_column_usage <- tbl(con, dbplyr::in_schema("information_schema", "key_column
 referential_constraints <- tbl(con, dbplyr::in_schema("information_schema", "referential_constraints"))
 constraint_column_usage <- tbl(con, dbplyr::in_schema("information_schema", "constraint_column_usage"))
 
-keys <- tables %>% 
+keys <- tables %>%
   left_join(table_constraints, by = c(
     "table_catalog" = "table_catalog",
-    "table_schema" =  "table_schema",
+    "table_schema" = "table_schema",
     "table_name" = "table_name"
-  )) %>% 
-  # table_constraints %>% 
-  filter(constraint_type %in% c("FOREIGN KEY", "PRIMARY KEY")) %>% 
-  left_join(key_column_usage, 
-            by = c(
-              "table_catalog" = "table_catalog",
-              "constraint_catalog" = "constraint_catalog",
-              "constraint_schema" = "constraint_schema",
-              "table_name" = "table_name",
-              "table_schema" = "table_schema",
-              "constraint_name" = "constraint_name"
-              )) %>%
+  )) %>%
+  # table_constraints %>%
+  filter(constraint_type %in% c("FOREIGN KEY", "PRIMARY KEY")) %>%
+  left_join(key_column_usage,
+    by = c(
+      "table_catalog" = "table_catalog",
+      "constraint_catalog" = "constraint_catalog",
+      "constraint_schema" = "constraint_schema",
+      "table_name" = "table_name",
+      "table_schema" = "table_schema",
+      "constraint_name" = "constraint_name"
+    )
+  ) %>%
   # left_join(constraint_column_usage) %>% # does this table add anything useful?
   select(table_name, table_type, constraint_name, constraint_type, column_name, ordinal_position) %>%
-  arrange(table_name) %>% 
-collect()
+  arrange(table_name) %>%
+  collect()
 glimpse(keys)
 ```
 
@@ -620,7 +588,7 @@ rs <- dbGetQuery(
   FROM pg_catalog.pg_constraint r
   WHERE 1=1 --r.conrelid = '16485' AND r.contype = 'f' ORDER BY 1;
   "
-  )
+)
 
 head(rs)
 ```
@@ -679,7 +647,7 @@ head(rs)
 
 ## Creating your own data dictionary
 
-If you are going to work with a database for an extended period it can be useful to create your own data dictionary.  Here is an illustration of the idea
+If you are going to work with a database for an extended period it can be useful to create your own data dictionary. This can take the form of [keeping detaild notes](https://caitlinhudon.com/2018/10/30/data-dictionaries/) as well as extracting metadata from the dbms. Here is an illustration of the idea.
 
 ```r
 some_tables <- c("rental", "city", "store")
@@ -759,9 +727,10 @@ ls()
 ##  [5] "constraint_column_usage"   "cranex"                   
 ##  [7] "key_column_usage"          "keys"                     
 ##  [9] "public_tables"             "referential_constraints"  
-## [11] "rental"                    "rs"                       
-## [13] "some_tables"               "table_constraints"        
-## [15] "table_info"                "table_info_schema_table"  
-## [17] "table_list"                "tables"
+## [11] "rs"                        "some_tables"              
+## [13] "table_constraints"         "table_info"               
+## [15] "table_info_schema_table"   "table_list"               
+## [17] "tables"
 ```
+
 

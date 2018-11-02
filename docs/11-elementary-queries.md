@@ -19,10 +19,12 @@ sp_docker_start("sql-pet")
 Connect to the database:
 
 ```r
-con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
-                         password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
-                         dbname = "dvdrental",
-                         seconds_to_test = 10)
+con <- sp_get_postgres_connection(
+  user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
+  password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
+  dbname = "dvdrental",
+  seconds_to_test = 10
+)
 ```
 
 ## Getting data from the database
@@ -69,9 +71,9 @@ The first example, `DBI::dbListTables(con)` returned 22 tables and the second ex
 Use the
 
 ```r
-table_columns <- lapply(tables, dbListFields, conn = con) 
+table_columns <- lapply(tables, dbListFields, conn = con)
 
-#rename each list [[1]] ... [[22]] to meaningful table name
+# rename each list [[1]] ... [[22]] to meaningful table name
 names(table_columns) <- tables
 
 head(table_columns)
@@ -104,6 +106,12 @@ head(table_columns)
 
 Later on we'll discuss how to get more extensive data about each table and column from the database's own store of metadata using a similar technique.  As we go further the issue of scale will come up again and again: you need to be careful about how much data a call to the dbms will return, whether it's a list of tables or a table that could have millions of rows.
 
+### Connect with people who own, generate, or are the subjects of the data
+
+A good chat with people who own the data, generate it, or are the subjects can generate insights and set the context for your investigation of the database. The purpose for collecting the data or circumsances where it was collected may be burried far afield in an organization, but *usually someone knows*.  The metadata discussed in a later chapter is essential but will only take you so far.
+
+There are different ways of just **looking at the data**, which we explore below.
+
 ### Downloading an entire table
 
 There are many different methods of getting data from a DBMS, and we'll explore the different ways of controlling each one of them.
@@ -111,7 +119,7 @@ There are many different methods of getting data from a DBMS, and we'll explore 
 `DBI::dbReadTable` will download an entire table into an R [tibble](https://tibble.tidyverse.org/).  
 
 ```r
-rental_tibble <- DBI::dbReadTable(con, "rental") 
+rental_tibble <- DBI::dbReadTable(con, "rental")
 str(rental_tibble)
 ```
 
@@ -127,7 +135,7 @@ str(rental_tibble)
 ```
 That's very simple, but if the table is large it may not be a good idea, since R is designed to keep the entire table in memory.  Note that the first line of the str() output reports the total number of observations.  
 
-### Referencing a table for many different purposes
+### A table object that can be reused
 
 The `dplyr::tbl` function gives us more control over access to a table by enabling  control over which columns and rows to download.  It creates  an object that might **look** like a data frame, but it's actually a list object that `dplyr` uses for constructing queries and retrieving data from the DBMS.  
 
@@ -175,6 +183,8 @@ rental_table$ops$vars
 ### Paradigm Shift: Lazy Execution
 
 R and `dplyr` is designed to be both lazy and smart. Lazy execution affects when a donwload happens and when processing occurs on the dbms server side.  R retrieves the full data set when explicityly told to do so via the `collect` verb, otherwise it returns only 10 rows. And `dplyr` tries to get as much work done on the server side as possible before downloading anything.  All of this is a key paradigm shift for those new to working with databases using R and `dplyr`, especially if they have been working in a straight SQL environment.
+
+**explain why this matters here**
 
 In the code blocks below, we demonstrate three ways to check if `dplyr` has performed lazy/delayed execution.
 
@@ -301,12 +311,12 @@ At the top of the output, `# A tibble: 16,044 x 7` and at the bottom of the outp
 See more example of lazy execution can be found [Here](https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html).
 
 
-### Controlling number of rows returned
+### Controlling the number of rows returned
 
 The `collect` function triggers the creation of a tibble and controls the number of rows that the DBMS sends to R.  Note that in the following examples, the object dimensions are known.
 
 ```r
-rental_table %>% collect(n = 3) %>% head
+rental_table %>% collect(n = 3) %>% head()
 ```
 
 ```
@@ -322,8 +332,8 @@ rental_table %>% collect(n = 3) %>% head
 In this case the `collect` function triggers the execution of a query that counts the number of records in the table by `staff_id`:
 
 ```r
-rental_table %>% 
-  count(staff_id) %>% 
+rental_table %>%
+  count(staff_id) %>%
   collect()
 ```
 
@@ -331,15 +341,15 @@ rental_table %>%
 ## # A tibble: 2 x 2
 ##   staff_id n              
 ##      <int> <S3: integer64>
-## 1        1 8040           
-## 2        2 8004
+## 1        2 8004           
+## 2        1 8040
 ```
 
 The `collect` function affects how much is downloaded, not how many rows the DBMS needs to process the query. This query processes all of the rows in the table but only displays one row of output.
 
 ```r
-rental_table %>% 
-  count(staff_id) %>% 
+rental_table %>%
+  count(staff_id) %>%
   collect(n = 1)
 ```
 
@@ -347,7 +357,7 @@ rental_table %>%
 ## # A tibble: 1 x 2
 ##   staff_id n              
 ##      <int> <S3: integer64>
-## 1        1 8040
+## 1        2 8004
 ```
 
 ### Random rows from the dbms
@@ -356,35 +366,37 @@ When the dbms contains many rows, a sample of the data may be plenty for your pu
 
 
 ```r
-one_percent_sample <- DBI::dbGetQuery(con,
+one_percent_sample <- DBI::dbGetQuery(
+  con,
   "SELECT rental_id, rental_date, inventory_id, customer_id FROM rental TABLESAMPLE SYSTEM(1) LIMIT 20;
-  ")
+  "
+)
 
 one_percent_sample
 ```
 
 ```
 ##    rental_id         rental_date inventory_id customer_id
-## 1       5033 2005-07-09 02:42:01         2841         299
-## 2       5034 2005-07-09 02:48:15          340         148
-## 3       5035 2005-07-09 02:51:34         3699          99
-## 4       5036 2005-07-09 02:58:41           75         573
-## 5       5037 2005-07-09 02:59:10          435         524
-## 6       5038 2005-07-09 03:12:52         3086          10
-## 7       5039 2005-07-09 03:14:45         2020         268
-## 8       5040 2005-07-09 03:16:34         2479         405
-## 9       5041 2005-07-09 03:18:51         2711         305
-## 10      5042 2005-07-09 03:20:30         3609         254
-## 11      5043 2005-07-09 03:25:18         2979         369
-## 12      5044 2005-07-09 03:30:25         1625         147
-## 13      5045 2005-07-09 03:33:32         1041         230
-## 14      5046 2005-07-09 03:34:57         1639         227
-## 15      5047 2005-07-09 03:44:15          230         272
-## 16      5048 2005-07-09 03:46:33         1271         466
-## 17      5049 2005-07-09 03:54:12         3336         144
-## 18      5050 2005-07-09 03:54:38         3876         337
-## 19      5051 2005-07-09 03:57:53         4091          85
-## 20      5052 2005-07-09 03:59:43         1884         305
+## 1          2 2005-05-24 22:54:33         1525         459
+## 2          3 2005-05-24 23:03:39         1711         408
+## 3          4 2005-05-24 23:04:41         2452         333
+## 4          5 2005-05-24 23:05:21         2079         222
+## 5          6 2005-05-24 23:08:07         2792         549
+## 6          7 2005-05-24 23:11:53         3995         269
+## 7          8 2005-05-24 23:31:46         2346         239
+## 8          9 2005-05-25 00:00:40         2580         126
+## 9         10 2005-05-25 00:02:21         1824         399
+## 10        11 2005-05-25 00:09:02         4443         142
+## 11        12 2005-05-25 00:19:27         1584         261
+## 12        13 2005-05-25 00:22:55         2294         334
+## 13        14 2005-05-25 00:31:15         2701         446
+## 14        15 2005-05-25 00:39:22         3049         319
+## 15        16 2005-05-25 00:43:11          389         316
+## 16        17 2005-05-25 01:06:36          830         575
+## 17        18 2005-05-25 01:10:47         3376          19
+## 18        19 2005-05-25 01:17:24         1941         456
+## 19        20 2005-05-25 01:48:41         3517         185
+## 20        21 2005-05-25 01:59:46          146         388
 ```
 
 ### Sub-setting variables
@@ -392,7 +404,7 @@ one_percent_sample
 A table in the dbms may not only have many more rows than you want and also many more columns.  The `select` command controls which columns are retrieved.
 
 ```r
-rental_table %>% select(rental_date, return_date) %>% head
+rental_table %>% select(rental_date, return_date) %>% head()
 ```
 
 ```
@@ -417,11 +429,11 @@ In practice we find that, **renaming variables** is often quite important becaus
 
 
 ```r
-renamed_rental_table <- dplyr::tbl(con, "rental") %>% 
+renamed_rental_table <- dplyr::tbl(con, "rental") %>%
   rename(rental_id_number = rental_id, inventory_id_number = inventory_id)
 
-renamed_rental_table %>% 
-  select(rental_id_number, rental_date, inventory_id_number) %>% 
+renamed_rental_table %>%
+  select(rental_id_number, rental_date, inventory_id_number) %>%
   head()
 ```
 
@@ -443,8 +455,8 @@ renamed_rental_table %>%
 The `show_query` function shows how `dplyr` is translating your query to the dialect of the target dbms:
 
 ```r
-rental_table %>% 
-  count(staff_id) %>% 
+rental_table %>%
+  count(staff_id) %>%
   show_query()
 ```
 
@@ -461,17 +473,19 @@ Here is an extensive discussion of how `dplyr` code is translated into SQL:
 The SQL code can submit the same query directly to the DBMS with the `DBI::dbGetQuery` function:
 
 ```r
-DBI::dbGetQuery(con,
+DBI::dbGetQuery(
+  con,
   'SELECT "staff_id", COUNT(*) AS "n"
    FROM "rental"
    GROUP BY "staff_id";
-  ')
+  '
+)
 ```
 
 ```
 ##   staff_id    n
-## 1        1 8040
-## 2        2 8004
+## 1        2 8004
+## 2        1 8040
 ```
 <<smy We haven't investigated this, but it looks like `dplyr` collect() function triggers a call simmilar to the dbGetQuery call above.  The default `dplyr` behavior looks like dbSendQuery() and dbFetch() model is used.>>
 
@@ -493,11 +507,11 @@ query_results
 
 ```
 ##   staff_id    n
-## 1        1 8040
-## 2        2 8004
+## 1        2 8004
+## 2        1 8040
 ```
 
-## Investigating a single table with R
+## Examining a single table with R
 
 Dealing with a large, complex database highlights the utility of specific tools in R.  We include brief examples that we find to be handy:
 
@@ -619,7 +633,7 @@ skim(rental_tibble)
 ##  n obs: 16044 
 ##  n variables: 7 
 ## 
-## ── Variable type:integer ────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+## ── Variable type:integer ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ##      variable missing complete     n    mean      sd p0     p25    p50
 ##   customer_id       0    16044 16044  297.14  172.45  1  148     296  
 ##  inventory_id       0    16044 16044 2291.84 1322.21  1 1154    2291  
@@ -631,7 +645,7 @@ skim(rental_tibble)
 ##  12037.25 16049 ▇▇▇▇▇▇▇▇
 ##      2        2 ▇▁▁▁▁▁▁▇
 ## 
-## ── Variable type:POSIXct ────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+## ── Variable type:POSIXct ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ##     variable missing complete     n        min        max     median
 ##  last_update       0    16044 16044 2006-02-15 2006-02-23 2006-02-16
 ##  rental_date       0    16044 16044 2005-05-24 2006-02-14 2005-07-28
