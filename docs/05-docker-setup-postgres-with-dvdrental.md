@@ -54,7 +54,7 @@ system2("docker",
 ```
 
 ```
-##  [1] "Sending build context to Docker daemon  46.25MB\r\r"                                                                                                                                                                                                                                                                                                                                           
+##  [1] "Sending build context to Docker daemon  48.85MB\r\r"                                                                                                                                                                                                                                                                                                                                           
 ##  [2] "Step 1/4 : FROM postgres:10"                                                                                                                                                                                                                                                                                                                                                                   
 ##  [3] " ---> ac25c2bac3c4"                                                                                                                                                                                                                                                                                                                                                                            
 ##  [4] "Step 2/4 : WORKDIR /tmp"                                                                                                                                                                                                                                                                                                                                                                       
@@ -108,7 +108,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "0945aa1af958198b3cf1c1a8b192050c9264d72d8811a24597a1a63123a9403a"
+## [1] "cf6978ebadd2808bfd5c9128daed66885f94229f77309d52239c5f45ca1d2ccd"
 ```
 ## Connect to Postgres with R
 
@@ -212,7 +212,7 @@ sp_show_all_docker_containers()
 
 ```
 ## [1] "CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS               NAMES"    
-## [2] "0945aa1af958        postgres-dvdrental   \"docker-entrypoint.s…\"   7 seconds ago       Exited (0) Less than a second ago                       sql-pet"
+## [2] "cf6978ebadd2        postgres-dvdrental   \"docker-entrypoint.s…\"   7 seconds ago       Exited (0) Less than a second ago                       sql-pet"
 ```
 
 Next time, you can just use this command to start the container: 
