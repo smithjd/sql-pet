@@ -57,14 +57,7 @@ sp_docker_remove_container("sql-pet")
 ```
 
 ```
-## Warning in system2("docker", docker_command, stdout = TRUE, stderr = TRUE):
-## running command ''docker' rm -f sql-pet 2>&1' had status 1
-```
-
-```
-## [1] "Error: No such container: sql-pet"
-## attr(,"status")
-## [1] 1
+## [1] "sql-pet"
 ```
 
 The convention we use in this book is to put docker commands in the `sqlpetr` package so that you can ignore them if you want.  However, the functions are set up so that you can easily see how to do things with Docker and modify if you want.
@@ -88,27 +81,28 @@ sp_check_that_docker_is_up()
 ```
 
 ```
-## [1] "Docker is up, running these containers:"                                                                                                       
-## [2] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES"   
-## [3] "68d8943f3a17        postgres:10         \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
+## [1] "Docker is up, running these containers:"                                                                                                            
+## [2] "CONTAINER ID        IMAGE               COMMAND                  CREATED                  STATUS                  PORTS                    NAMES"   
+## [3] "bf537d67090b        postgres:10         \"docker-entrypoint.s…\"   Less than a second ago   Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
 ```
 ## Connect, read and write to Postgres from R
 
 ### Pause for some security considerations
 
-We use the following `sp_get_postgres_connection` function, which will repeatedly try to connect to PostgreSQL.  PostgreSQL can take different amounts of time to come up and be ready to accept connections from R, depending on various factors depending on your computer and its configuration.
+We use the following `sp_get_postgres_connection` function to connect to PostgreSQL.  It will keep trying to connect to PostgreSQL, even if the dbms is not ready.  PostgreSQL can take different amounts of time to come up and be ready to accept connections from R, depending on various factors depending on your computer and its configuration.
 
-> When we call `sp_get_postgres_connection` below we'll use environment variables that R obtains from reading a file named *.Renviron*.  This approach has two benefits: that file is not uploaded to Github and R looks for it in your default directory every time it loads.  To see whether you have already created that file, execute this in your R session:
+> When we call `sp_get_postgres_connection` below we'll use environment variables that R obtains from reading the *.Renviron* file when R starts up.  This approach has two benefits: that file is not uploaded to Github. R looks for it in your default directory every time it loads.  To see whether you have already created that file, use the R Studio Files tab to look at your **home directory**:
 >
-> **dir(path = "~", pattern = ".Renviron", all.files = TRUE)**
+![](screenshots/locate-renviron-file.png)
 >
-> That file should contain lines that **look like** the example just below this box. Although in this example it contains the PostreSQL <b>default values</b> for the username and password, they are obvioiusly not secret.  But this approach demonstrates how they could be kept secret and not accidentally uploaded to Github or some other public location when you do need to keep credentials secret.
+> That file should contain lines that **look like** the example just below this box. Although in this example it contains the PostreSQL <b>default values</b> for the username and password, they are obvioiusly not secret.  But this approach demonstrates where you should put secrets that R needs while not risking accidental uploaded to Github or some other public location..
 
-If needed, you could copy / paste the following into your **.Renviron** file:
+You can execute [define_postgresql_params.R](define_postgresql_params.R) to create the file or you could copy / paste the following into your **.Renviron** file:
 ```
 DEFAULT_POSTGRES_PASSWORD=postgres
 DEFAULT_POSTGRES_USER_NAME=postgres
 ```
+
 
 This is how the `sp_get_postgres_connection` function is used:
 

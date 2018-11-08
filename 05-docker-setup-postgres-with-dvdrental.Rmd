@@ -82,7 +82,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 ## Connect to Postgres with R
 
-Use the DBI package to connect to PostgreSQL.  
+Use the DBI package to connect to PostgreSQL.  Remember the settings discussion about [keeping passwords hidden][Pause for some security considerations]
 
 ```{r }
 con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),

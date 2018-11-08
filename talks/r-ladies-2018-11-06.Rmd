@@ -1,0 +1,144 @@
+---
+title: "R-ladies"
+author: "Sophie Yang"
+date: "October 15, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r warning=FALSE,echo=FALSE,message=FALSE}
+library(tidyverse)
+library(DBI)
+library(RPostgres)
+library(glue)
+library(here)
+require(knitr)
+library(dbplyr)
+library(sqlpetr)
+library(DiagrammeR)
+```
+
+```{r, echo=FALSE}
+db_levels <- function(highlight) {
+  cmd <- paste(
+  "digraph DB_Environment {
+  graph [overlap = true, fontsize = 10, rankdir=LR, height= 10]
+  
+  node [shape = box,fontname = Helvetica,fontcolor=blue]"
+  ,highlight, ";
+  
+  node [shape = box,fontname = Helvetica,fontcolor='']
+  DBs; Schemas; Tables;
+  
+  edge [arrowhead = crow, arrowtail = tee]
+  Servers -> DBs -> Schemas -> Tables
+  }
+  ")
+  grViz(cmd)
+}
+```
+  
+```{r echo=FALSE}
+# need to wait for Docker & Postgres to come up before connecting.
+
+con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
+                         password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
+                         dbname = "dvdrental",
+                         seconds_to_test = 10)
+
+
+```  
+  
+## Welcome
+
+I hope everyone has voted. Before we get started, let me get the obligatory announcements out of the way.  
+
+1.  restrooms are out the door, just before the Elephant Cafe.  Are there any other announcements.
+2.  A special thanks to Pierrette and Ted from OHSU for lining up this room for tonight's meeting.
+3.  And thanks to Augustina for coordinating the R-Ladies Meetup's and her affiliation with IBM who provided tonight's munchies.
+
+4.  Open a slack channel?
+
+Welcome to tonight's R-Ladies Meetup.  Tonight's topic is R and Databases, Where do you get your data? 
+
+## Genesis and Collaboration Team
+
+Tonight's format is different than our normal format which is normally a round table discussion sharing of knowledge about the night's topic.  Tonight's is different because a group of individuals from the PDX data community have been discussing this topic for some time this year.  The genesis of tonight's presentation can be traced back to the [June 2, 2018 Cascadia R Conf](https://cascadiarconf.com/) where Aaron Makubuya gave [a presentation using Vagrant hosting](https://github.com/Cascadia-R/Using_R_With_Databases).  After that [John Smith](https://github.com/smithjd), [Ian Franz](https://github.com/ianfrantz), and [Sophie Yang](https://github.com/SophieMYang) had discussions after the monthly [Data Discussion Meetups](https://www.meetup.com/Portland-Data-Science-Group/events/fxvhbnywmbgb/) about the difficulties around setting up Vagrant, (a virtual environment), connecting to a corporate database and having realistic **public** environment to demo or practice the issues that come up behind corporate firewalls. [Scott Came's](https://github.com/scottcame) tutorial on [R and Docker](http://www.cascadia-analytics.com/2018/07/21/docker-r-p1.html) (an alternative to Vagrant) at the 2018 UseR Conference in Melbourne was provocative and it turned out he lived nearby.  We re-connected with [M. Edward (Ed) Borasky](https://github.com/znmeb) who had done extensive development for a [Hack Oregon data science containerization project](https://github.com/hackoregon/data-science-pet-containers).
+
+## Windows Warning 
+
+A warning for our Windows-10 Pro users before you install Docker:
+
+Windows-10 Pro requires that Hyper-V be turned for Docker to Work which requires a lengthy reboot to perform the Hyper-V installation.  If you have any Oracle VM's running, they will not run with Hyper-V installed.  One should be able to uninstall Hyper-V which requires another lengthy reboot and have your Oracle VM's work again.  We have not tested this process.
+
+*  How many Windows users do we have who have Docker up and running?
+*  How many Windows users do we have who don't have Docker up and running?
+
+## Genesis continued
+
+To make a long story short, our group has grown from 3.  We had our first formal meeting out in the lounge here on August 25, 2018, a Saturday morning to 7 in about yy? weeks.  Somewhere during the last couple of weeks, the project turned from a possible training session to also the creation of a book.  Members collaborating on this project raise your hands.  If this presentation were really a play, this would be well well before the final dress rehearsal.  Since we are still writing sections, you can say we are still writing the script.
+
+## Audience Demographics
+
+A quick survey.  
+
+1.  How many use R and are familiar with dplyr?  
+2.  How many routinely use R and a database?  Anyone work with Hadoop?
+3.  How many are comfortable with R and SQL?
+4.  For those who have or will be working in a database environment, what are your biggest challenges.
+5.  What would you like to get out of an R-database training session?
+6.  How many people have worked on a virtual machine?
+7.  Which ones?
+8.  How many people have installed a virtual machine?
+
+# 9.  Where do you get your data?
+
+*  For many, The GOOGLE machine
+*  The statistician might reply from a double blind test, conducted over n years, with x participants.
+*  Your SME, DBA, or developer may say that comes out of table x in the y database.
+*  It can take weeks for vendors and subject matter experts to figure out where it comes from and what it means.  NDC
+
+*  Depends on what you do, what you know, and who you know
+
+Sophie's diagram was here
+
+## The Book
+
+The team is looking for feed back on what works and what doesn't.  A warning up front.  This project has a split personality.  One is the production of a book and one is the production of training seminar.  If you are viewing the book, the output displayed may be different than if you are going through the different R Markdown files and manually executing the code blocks.  In particular, the book may be producing multiple outputs.  
+
+The book assumes that most readers will have an R background and some familiarity with dplyr.  There are many dplyr examples and exercises.  We also assume that there may be some readers with a SQL background who are learning R.  Many of the dplyr exercises use SQL code and output as the starting point for the dplyr exercises.  SQL users will find the DBI package calls are simple wrappers around your SQL code.
+
+
+
+## Play Analogy Continued
+
+Imagine a land off far far away.  A land called the United States of VM.  In the land of USVM, all the inhabitants are happy and thriving.  Their core philosophy is Very Minimalist.  In their daily lives, they aren't without, they just have what they need.  Each state is unique.  If in the rare instance one of the states needs something not currently available, a request is sent to the leader of the USVM.
+
+Since it is election night, I'll tell you a little bit about the leader.  She is a kind and loving older lady who loves supporting her inhabitants.  She is married and the couple are often referred to as the X's even though they have been and are happily married.  Her name is Lin and her husband is Une.  
+
+So Lin-X and Une-X really don't have a lot to do since everyone is a Minimalist and already has just what they need.  when someone does need something new, Lin just GIT's it.  No one really knows where she GIT's it from, but she must have an Open Source APP for that.  
+
+If Lin cannot GIT it, she has it custom built, and gives it away for others to use if they so desire.
+
+Enough politics, back to our story line.  In one of the states of the USVM lives an elephant named Hadoop.  Sorry wrong state.  That state is a real zoo!.  In one of the states lives an elephant with a massive massive brain.  It must be so massive because an elephant never ever forgets.  This elephant is named Postgres.  Postgres loves talking to his very special friend, a squirrel, named Socrates.  Socrates is a very unusual squirrel, because he loves running around squirreling nuts away and inquiring into the nature of things.  In the beginning Postgres and Socrates had a hard time communicating.  But through a lot of trial and error and a mutual love of nuts, Postgres and Socrates developed a special method and lingo of their own.  It is called the Socratic questioning method.  When they are practicing the Socratic questioning method, they communicate in the Socratic Questioning Lingo, SQL, or more formally PostgreSQL.
+
+And this is where our story begins:
+
+## Show environment RMD: 
+
+### 7.4 Tutorial Environment
+
+
+
+
+#### Exercises 1, 1a, 4c,d
+
+## Chapter 8 Introduction to DBMS queries (11)
+
+Open 11-elementary-queries.Rmd
+
+## Chapter 10 Joins and complex queries (13)
+

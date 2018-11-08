@@ -25,7 +25,7 @@
 <meta name="author" content="Dipti Muni, Ian Frantz, John David Smith, Mary Anne Thygesen, M. Edward (Ed) Borasky, Scott Came, and Sophie Yang">
 
 
-<meta name="date" content="2018-11-02">
+<meta name="date" content="2018-11-07">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -61,41 +61,69 @@
 
 
 <style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -121,6 +149,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#docker-as-a-tool-for-users"><i class="fa fa-check"></i><b>1.2</b> Docker as a tool for UseRs</a></li>
 <li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#docker-and-r-on-your-machine"><i class="fa fa-check"></i><b>1.3</b> Docker and R on your machine</a></li>
 <li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#who-are-we"><i class="fa fa-check"></i><b>1.4</b> Who are we?</a></li>
+<li class="chapter" data-level="1.5" data-path="index.html"><a href="index.html#how-did-this-project-come-about"><i class="fa fa-check"></i><b>1.5</b> How did this project come about?</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="setup-instructions-00.html"><a href="setup-instructions-00.html"><i class="fa fa-check"></i><b>2</b> Setup instructions (00)</a><ul>
 <li class="chapter" data-level="2.1" data-path="setup-instructions-00.html"><a href="setup-instructions-00.html#r-rstudio-and-git"><i class="fa fa-check"></i><b>2.1</b> R, RStudio and Git</a></li>
@@ -156,8 +185,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="6.2" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#clean-up-if-appropriate"><i class="fa fa-check"></i><b>6.2</b> Clean up if appropriate</a></li>
 <li class="chapter" data-level="6.3" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#connect-read-and-write-to-postgres-from-r"><i class="fa fa-check"></i><b>6.3</b> Connect, read and write to Postgres from R</a><ul>
 <li class="chapter" data-level="6.3.1" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#pause-for-some-security-considerations"><i class="fa fa-check"></i><b>6.3.1</b> Pause for some security considerations</a></li>
-<li class="chapter" data-level="6.3.2" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#alternative-put-the-database-password-in-an-environment-file"><i class="fa fa-check"></i><b>6.3.2</b> Alternative: put the database password in an environment file</a></li>
-<li class="chapter" data-level="6.3.3" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#interact-with-postgres"><i class="fa fa-check"></i><b>6.3.3</b> Interact with Postgres</a></li>
+<li class="chapter" data-level="6.3.2" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#interact-with-postgres"><i class="fa fa-check"></i><b>6.3.2</b> Interact with Postgres</a></li>
 </ul></li>
 <li class="chapter" data-level="6.4" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#clean-up"><i class="fa fa-check"></i><b>6.4</b> Clean up</a></li>
 </ul></li>
@@ -330,12 +358,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="20.5" data-path="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html"><a href="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html#connect-to-the-database-with-r"><i class="fa fa-check"></i><b>20.5</b> Connect to the database with R</a></li>
 <li class="chapter" data-level="20.6" data-path="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html"><a href="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html#cleaning-up-1"><i class="fa fa-check"></i><b>20.6</b> Cleaning up</a></li>
 </ul></li>
-<li class="chapter" data-level="21" data-path="appendix-d-quick-guide-to-sql-94.html"><a href="appendix-d-quick-guide-to-sql-94.html"><i class="fa fa-check"></i><b>21</b> APPENDIX D - Quick Guide to SQL (94)</a><ul>
-<li class="chapter" data-level="21.1" data-path="appendix-d-quick-guide-to-sql-94.html"><a href="appendix-d-quick-guide-to-sql-94.html#data-definition-langauge-ddl"><i class="fa fa-check"></i><b>21.1</b> Data Definition Langauge (DDL)</a></li>
-<li class="chapter" data-level="21.2" data-path="appendix-d-quick-guide-to-sql-94.html"><a href="appendix-d-quick-guide-to-sql-94.html#data-manipulation-langauge-dml"><i class="fa fa-check"></i><b>21.2</b> Data Manipulation Langauge (DML)</a></li>
-<li class="chapter" data-level="21.3" data-path="appendix-d-quick-guide-to-sql-94.html"><a href="appendix-d-quick-guide-to-sql-94.html#data-control-language-dcl"><i class="fa fa-check"></i><b>21.3</b> Data Control Language (DCL)</a></li>
-<li class="chapter" data-level="21.4" data-path="appendix-d-quick-guide-to-sql-94.html"><a href="appendix-d-quick-guide-to-sql-94.html#transaction-control-language-tcl"><i class="fa fa-check"></i><b>21.4</b> Transaction Control Language (TCL)</a></li>
-</ul></li>
+<li class="chapter" data-level="21" data-path="appendix-d-quick-guide-to-sql-94.html"><a href="appendix-d-quick-guide-to-sql-94.html"><i class="fa fa-check"></i><b>21</b> APPENDIX D - Quick Guide to SQL (94)</a></li>
 <li class="chapter" data-level="22" data-path="additional-technical-details-for-windows-users-95.html"><a href="additional-technical-details-for-windows-users-95.html"><i class="fa fa-check"></i><b>22</b> Additional technical details for Windows users (95)</a><ul>
 <li class="chapter" data-level="22.1" data-path="additional-technical-details-for-windows-users-95.html"><a href="additional-technical-details-for-windows-users-95.html#docker-for-windows-settings"><i class="fa fa-check"></i><b>22.1</b> Docker for Windows settings</a><ul>
 <li class="chapter" data-level="22.1.1" data-path="additional-technical-details-for-windows-users-95.html"><a href="additional-technical-details-for-windows-users-95.html#shared-drives"><i class="fa fa-check"></i><b>22.1.1</b> Shared drives</a></li>
@@ -367,7 +390,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="header">
 <h1 class="title">R, Databases and Docker</h1>
 <h4 class="author"><em>Dipti Muni, Ian Frantz, John David Smith, Mary Anne Thygesen, M. Edward (Ed) Borasky, Scott Came, and Sophie Yang</em></h4>
-<h4 class="date"><em>2018-11-02</em></h4>
+<h4 class="date"><em>2018-11-07</em></h4>
 </div>
 <div id="introduction" class="section level1">
 <h1><span class="header-section-number">Chapter 1</span> Introduction</h1>
@@ -384,7 +407,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li><p>Large data stores in organizations are stored in databases that have specific access constraints and structural characteristics.<br />
 * Data documentation may be incomplete, often emphasizes operational issues rather than analytic ones, and often needs to be confirmed on the fly.<br />
 * Data volumes and query performance are important design constraints.</p></li>
-<li><p>R users frequently need to make sense of complex data structures and coding schemes to address incompletely formed questions so that exploratory data analysis has to be fast. * Exploratory and diagnostic techniques for the purpose should not be reinvented and would benefit from more public instruction or discussion.</p></li>
+<li><p>R users frequently need to make sense of complex data structures and coding schemes to address incompletely formed questions so that exploratory data analysis has to be fast.
+* Exploratory and diagnostic techniques for the purpose should not be reinvented and would benefit from more public instruction or discussion.</p></li>
 <li><p>Learning to navigate the interfaces (passwords, packages, etc.) or gap between R and a database is difficult to simulate outside corporate walls.<br />
 * Resources for interface problem diagnosis behind corporate walls may or may not address all the issues that R users face, so a simulated environment is needed.</p></li>
 <li><p>Docker is a relatively easy way to simulate the relationship between an R/Rstudio session and database – all on a single machine.</p></li>
@@ -409,7 +433,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="docker-and-r-on-your-machine" class="section level2">
 <h2><span class="header-section-number">1.3</span> Docker and R on your machine</h2>
 <p>Here is how R and Docker fit on your operating system in this tutorial:</p>
-<p><img src="screenshots/r-and-docker.png" alt="R and Docker" /> (This diagram needs to be updated as our directory structure evolves.)</p>
+<p><img src="screenshots/r-and-docker.png" alt="R and Docker" />
+(This diagram needs to be updated as our directory structure evolves.)</p>
 </div>
 <div id="who-are-we" class="section level2">
 <h2><span class="header-section-number">1.4</span> Who are we?</h2>
@@ -424,6 +449,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li>Scott Came - <a href="https://github.com/scottcame">@scottcame</a></li>
 <li>Sophie Yang - <a href="https://github.com/SophieMYang">@SophieMYang</a></li>
 </ul>
+</div>
+<div id="how-did-this-project-come-about" class="section level2">
+<h2><span class="header-section-number">1.5</span> How did this project come about?</h2>
+<p>We trace this book back to the <a href="https://cascadiarconf.com/">June 2, 2018 Cascadia R Conf</a> where Aaron Makubuya gave <a href="https://github.com/Cascadia-R/Using_R_With_Databases">a presentation using Vagrant hosting</a>. After that <a href="https://github.com/smithjd">John Smith</a>, <a href="https://github.com/ianfrantz">Ian Franz</a>, and <a href="https://github.com/SophieMYang">Sophie Yang</a> had discussions after the monthly <a href="https://www.meetup.com/Portland-Data-Science-Group/events/fxvhbnywmbgb/">Data Discussion Meetups</a> about the difficulties around setting up Vagrant, (a virtual environment), connecting to a corporate database and having realistic <strong>public</strong> environment to demo or practice the issues that come up behind corporate firewalls. <a href="https://github.com/scottcame">Scott Came’s</a> tutorial on <a href="http://www.cascadia-analytics.com/2018/07/21/docker-r-p1.html">R and Docker</a> (an alternative to Vagrant) at the 2018 UseR Conference in Melbourne was provocative and it turned out he lived nearby. We re-connected with <a href="https://github.com/znmeb">M. Edward (Ed) Borasky</a> who had done extensive development for a <a href="https://github.com/hackoregon/data-science-pet-containers">Hack Oregon data science containerization project</a>.</p>
 
 </div>
 </div>
