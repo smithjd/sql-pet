@@ -25,7 +25,7 @@
 <meta name="author" content="Dipti Muni, Ian Frantz, John David Smith, Mary Anne Thygesen, M. Edward (Ed) Borasky, Scott Came, and Sophie Yang">
 
 
-<meta name="date" content="2018-11-02">
+<meta name="date" content="2018-11-07">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -61,41 +61,69 @@
 
 
 <style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -121,6 +149,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#docker-as-a-tool-for-users"><i class="fa fa-check"></i><b>1.2</b> Docker as a tool for UseRs</a></li>
 <li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#docker-and-r-on-your-machine"><i class="fa fa-check"></i><b>1.3</b> Docker and R on your machine</a></li>
 <li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#who-are-we"><i class="fa fa-check"></i><b>1.4</b> Who are we?</a></li>
+<li class="chapter" data-level="1.5" data-path="index.html"><a href="index.html#how-did-this-project-come-about"><i class="fa fa-check"></i><b>1.5</b> How did this project come about?</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="setup-instructions-00.html"><a href="setup-instructions-00.html"><i class="fa fa-check"></i><b>2</b> Setup instructions (00)</a><ul>
 <li class="chapter" data-level="2.1" data-path="setup-instructions-00.html"><a href="setup-instructions-00.html#r-rstudio-and-git"><i class="fa fa-check"></i><b>2.1</b> R, RStudio and Git</a></li>
@@ -156,8 +185,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="6.2" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#clean-up-if-appropriate"><i class="fa fa-check"></i><b>6.2</b> Clean up if appropriate</a></li>
 <li class="chapter" data-level="6.3" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#connect-read-and-write-to-postgres-from-r"><i class="fa fa-check"></i><b>6.3</b> Connect, read and write to Postgres from R</a><ul>
 <li class="chapter" data-level="6.3.1" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#pause-for-some-security-considerations"><i class="fa fa-check"></i><b>6.3.1</b> Pause for some security considerations</a></li>
-<li class="chapter" data-level="6.3.2" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#alternative-put-the-database-password-in-an-environment-file"><i class="fa fa-check"></i><b>6.3.2</b> Alternative: put the database password in an environment file</a></li>
-<li class="chapter" data-level="6.3.3" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#interact-with-postgres"><i class="fa fa-check"></i><b>6.3.3</b> Interact with Postgres</a></li>
+<li class="chapter" data-level="6.3.2" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#interact-with-postgres"><i class="fa fa-check"></i><b>6.3.2</b> Interact with Postgres</a></li>
 </ul></li>
 <li class="chapter" data-level="6.4" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#clean-up"><i class="fa fa-check"></i><b>6.4</b> Clean up</a></li>
 </ul></li>
@@ -330,12 +358,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="20.5" data-path="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html"><a href="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html#connect-to-the-database-with-r"><i class="fa fa-check"></i><b>20.5</b> Connect to the database with R</a></li>
 <li class="chapter" data-level="20.6" data-path="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html"><a href="appendix-c-creating-the-sql-pet-docker-container-a-step-at-a-time.html#cleaning-up-1"><i class="fa fa-check"></i><b>20.6</b> Cleaning up</a></li>
 </ul></li>
-<li class="chapter" data-level="21" data-path="appendix-d-quick-guide-to-sql-94.html"><a href="appendix-d-quick-guide-to-sql-94.html"><i class="fa fa-check"></i><b>21</b> APPENDIX D - Quick Guide to SQL (94)</a><ul>
-<li class="chapter" data-level="21.1" data-path="appendix-d-quick-guide-to-sql-94.html"><a href="appendix-d-quick-guide-to-sql-94.html#data-definition-langauge-ddl"><i class="fa fa-check"></i><b>21.1</b> Data Definition Langauge (DDL)</a></li>
-<li class="chapter" data-level="21.2" data-path="appendix-d-quick-guide-to-sql-94.html"><a href="appendix-d-quick-guide-to-sql-94.html#data-manipulation-langauge-dml"><i class="fa fa-check"></i><b>21.2</b> Data Manipulation Langauge (DML)</a></li>
-<li class="chapter" data-level="21.3" data-path="appendix-d-quick-guide-to-sql-94.html"><a href="appendix-d-quick-guide-to-sql-94.html#data-control-language-dcl"><i class="fa fa-check"></i><b>21.3</b> Data Control Language (DCL)</a></li>
-<li class="chapter" data-level="21.4" data-path="appendix-d-quick-guide-to-sql-94.html"><a href="appendix-d-quick-guide-to-sql-94.html#transaction-control-language-tcl"><i class="fa fa-check"></i><b>21.4</b> Transaction Control Language (TCL)</a></li>
-</ul></li>
+<li class="chapter" data-level="21" data-path="appendix-d-quick-guide-to-sql-94.html"><a href="appendix-d-quick-guide-to-sql-94.html"><i class="fa fa-check"></i><b>21</b> APPENDIX D - Quick Guide to SQL (94)</a></li>
 <li class="chapter" data-level="22" data-path="additional-technical-details-for-windows-users-95.html"><a href="additional-technical-details-for-windows-users-95.html"><i class="fa fa-check"></i><b>22</b> Additional technical details for Windows users (95)</a><ul>
 <li class="chapter" data-level="22.1" data-path="additional-technical-details-for-windows-users-95.html"><a href="additional-technical-details-for-windows-users-95.html#docker-for-windows-settings"><i class="fa fa-check"></i><b>22.1</b> Docker for Windows settings</a><ul>
 <li class="chapter" data-level="22.1.1" data-path="additional-technical-details-for-windows-users-95.html"><a href="additional-technical-details-for-windows-users-95.html#shared-drives"><i class="fa fa-check"></i><b>22.1.1</b> Shared drives</a></li>
@@ -367,30 +390,30 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="introduction-to-dbms-queries-11" class="section level1">
 <h1><span class="header-section-number">Chapter 9</span> Introduction to DBMS queries (11)</h1>
 <p>The following packages are used in this chapter:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)
-<span class="kw">library</span>(DBI)
-<span class="kw">library</span>(RPostgres)
-<span class="kw">library</span>(dbplyr)
-<span class="kw">require</span>(knitr)
-<span class="kw">library</span>(bookdown)
-<span class="kw">library</span>(sqlpetr)</code></pre></div>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb65-1" data-line-number="1"><span class="kw">library</span>(tidyverse)</a>
+<a class="sourceLine" id="cb65-2" data-line-number="2"><span class="kw">library</span>(DBI)</a>
+<a class="sourceLine" id="cb65-3" data-line-number="3"><span class="kw">library</span>(RPostgres)</a>
+<a class="sourceLine" id="cb65-4" data-line-number="4"><span class="kw">library</span>(dbplyr)</a>
+<a class="sourceLine" id="cb65-5" data-line-number="5"><span class="kw">require</span>(knitr)</a>
+<a class="sourceLine" id="cb65-6" data-line-number="6"><span class="kw">library</span>(bookdown)</a>
+<a class="sourceLine" id="cb65-7" data-line-number="7"><span class="kw">library</span>(sqlpetr)</a></code></pre></div>
 <p>Assume that the Docker container with PostgreSQL and the dvdrental database are ready to go.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_docker_start</span>(<span class="st">&quot;sql-pet&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb66-1" data-line-number="1"><span class="kw">sp_docker_start</span>(<span class="st">&quot;sql-pet&quot;</span>)</a></code></pre></div>
 <p>Connect to the database:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">con &lt;-<span class="st"> </span><span class="kw">sp_get_postgres_connection</span>(
-  <span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),
-  <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),
-  <span class="dt">dbname =</span> <span class="st">&quot;dvdrental&quot;</span>,
-  <span class="dt">seconds_to_test =</span> <span class="dv">10</span>
-)</code></pre></div>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb67-1" data-line-number="1">con &lt;-<span class="st"> </span><span class="kw">sp_get_postgres_connection</span>(</a>
+<a class="sourceLine" id="cb67-2" data-line-number="2">  <span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),</a>
+<a class="sourceLine" id="cb67-3" data-line-number="3">  <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),</a>
+<a class="sourceLine" id="cb67-4" data-line-number="4">  <span class="dt">dbname =</span> <span class="st">&quot;dvdrental&quot;</span>,</a>
+<a class="sourceLine" id="cb67-5" data-line-number="5">  <span class="dt">seconds_to_test =</span> <span class="dv">10</span></a>
+<a class="sourceLine" id="cb67-6" data-line-number="6">)</a></code></pre></div>
 <div id="getting-data-from-the-database" class="section level2">
 <h2><span class="header-section-number">9.1</span> Getting data from the database</h2>
 <p>As we show later on, the database serves as a store of data and as an engine for sub-setting, joining, and computation on the data. We begin with getting data from the dbms, or “downloading” data.</p>
 <div id="finding-out-whats-there" class="section level3">
 <h3><span class="header-section-number">9.1.1</span> Finding out what’s there</h3>
 <p>We’ve already seen the simplest way of getting a list of tables in a database with <code>DBI</code> functions that list tables and fields. Generate a vector listing the (public) tables in the database:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tables &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbListTables</span>(con)
-tables</code></pre></div>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb68-1" data-line-number="1">tables &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbListTables</span>(con)</a>
+<a class="sourceLine" id="cb68-2" data-line-number="2">tables</a></code></pre></div>
 <pre><code>##  [1] &quot;actor_info&quot;                 &quot;customer_list&quot;             
 ##  [3] &quot;film_list&quot;                  &quot;nicer_but_slower_film_list&quot;
 ##  [5] &quot;sales_by_film_category&quot;     &quot;staff&quot;                     
@@ -403,20 +426,23 @@ tables</code></pre></div>
 ## [19] &quot;film&quot;                       &quot;address&quot;                   
 ## [21] &quot;film_actor&quot;                 &quot;customer&quot;</code></pre>
 <p>Print a vector with all the fields (or columns or variables) in one specific table:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">DBI<span class="op">::</span><span class="kw">dbListFields</span>(con, <span class="st">&quot;rental&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb70-1" data-line-number="1">DBI<span class="op">::</span><span class="kw">dbListFields</span>(con, <span class="st">&quot;rental&quot;</span>)</a></code></pre></div>
 <pre><code>## [1] &quot;rental_id&quot;    &quot;rental_date&quot;  &quot;inventory_id&quot; &quot;customer_id&quot; 
 ## [5] &quot;return_date&quot;  &quot;staff_id&quot;     &quot;last_update&quot;</code></pre>
 </div>
 <div id="listing-all-the-fields-for-all-the-tables" class="section level3">
 <h3><span class="header-section-number">9.1.2</span> Listing all the fields for all the tables</h3>
 <p>The first example, <code>DBI::dbListTables(con)</code> returned 22 tables and the second example, <code>DBI::dbListFields(con, &quot;rental&quot;)</code> returns 7 fields. Here we combine the two calls to return a list of tables which has a list of all the fields in the table. The code block just shows the first two tables.</p>
-<p>Use the</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">table_columns &lt;-<span class="st"> </span><span class="kw">lapply</span>(tables, dbListFields, <span class="dt">conn =</span> con)
-
-<span class="co"># rename each list [[1]] ... [[22]] to meaningful table name</span>
-<span class="kw">names</span>(table_columns) &lt;-<span class="st"> </span>tables
-
-<span class="kw">head</span>(table_columns)</code></pre></div>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb72-1" data-line-number="1">table_columns &lt;-<span class="st"> </span><span class="kw">lapply</span>(tables, dbListFields, <span class="dt">conn =</span> con)</a>
+<a class="sourceLine" id="cb72-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb72-3" data-line-number="3"><span class="co"># or using purr:</span></a>
+<a class="sourceLine" id="cb72-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb72-5" data-line-number="5">table_columns &lt;-<span class="st"> </span><span class="kw">map</span>(tables, <span class="op">~</span><span class="st"> </span><span class="kw">dbListFields</span>(.,<span class="dt">conn =</span> con) )</a>
+<a class="sourceLine" id="cb72-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb72-7" data-line-number="7"><span class="co"># rename each list [[1]] ... [[22]] to meaningful table name</span></a>
+<a class="sourceLine" id="cb72-8" data-line-number="8"><span class="kw">names</span>(table_columns) &lt;-<span class="st"> </span>tables</a>
+<a class="sourceLine" id="cb72-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb72-10" data-line-number="10"><span class="kw">head</span>(table_columns)</a></code></pre></div>
 <pre><code>## $actor_info
 ## [1] &quot;actor_id&quot;   &quot;first_name&quot; &quot;last_name&quot;  &quot;film_info&quot; 
 ## 
@@ -450,8 +476,8 @@ tables</code></pre></div>
 <h3><span class="header-section-number">9.1.4</span> Downloading an entire table</h3>
 <p>There are many different methods of getting data from a DBMS, and we’ll explore the different ways of controlling each one of them.</p>
 <p><code>DBI::dbReadTable</code> will download an entire table into an R <a href="https://tibble.tidyverse.org/">tibble</a>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rental_tibble &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbReadTable</span>(con, <span class="st">&quot;rental&quot;</span>)
-<span class="kw">str</span>(rental_tibble)</code></pre></div>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb74-1" data-line-number="1">rental_tibble &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbReadTable</span>(con, <span class="st">&quot;rental&quot;</span>)</a>
+<a class="sourceLine" id="cb74-2" data-line-number="2"><span class="kw">str</span>(rental_tibble)</a></code></pre></div>
 <pre><code>## &#39;data.frame&#39;:    16044 obs. of  7 variables:
 ##  $ rental_id   : int  2 3 4 5 6 7 8 9 10 11 ...
 ##  $ rental_date : POSIXct, format: &quot;2005-05-24 22:54:33&quot; &quot;2005-05-24 23:03:39&quot; ...
@@ -465,9 +491,9 @@ tables</code></pre></div>
 <div id="a-table-object-that-can-be-reused" class="section level3">
 <h3><span class="header-section-number">9.1.5</span> A table object that can be reused</h3>
 <p>The <code>dplyr::tbl</code> function gives us more control over access to a table by enabling control over which columns and rows to download. It creates an object that might <strong>look</strong> like a data frame, but it’s actually a list object that <code>dplyr</code> uses for constructing queries and retrieving data from the DBMS.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rental_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">tbl</span>(con, <span class="st">&quot;rental&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb76-1" data-line-number="1">rental_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">tbl</span>(con, <span class="st">&quot;rental&quot;</span>)</a></code></pre></div>
 <p>Consider the structure of the connection object:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(rental_table)</code></pre></div>
+<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb77-1" data-line-number="1"><span class="kw">str</span>(rental_table)</a></code></pre></div>
 <pre><code>## List of 2
 ##  $ src:List of 2
 ##   ..$ con  :Formal class &#39;PqConnection&#39; [package &quot;RPostgres&quot;] with 3 slots
@@ -484,7 +510,7 @@ tables</code></pre></div>
 ##   ..- attr(*, &quot;class&quot;)= chr [1:3] &quot;op_base_remote&quot; &quot;op_base&quot; &quot;op&quot;
 ##  - attr(*, &quot;class&quot;)= chr [1:4] &quot;tbl_dbi&quot; &quot;tbl_sql&quot; &quot;tbl_lazy&quot; &quot;tbl&quot;</code></pre>
 <p>Notice that the first list contains the source connection information. Among other things it contains a list of variables/columns in the table:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rental_table<span class="op">$</span>ops<span class="op">$</span>vars</code></pre></div>
+<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb79-1" data-line-number="1">rental_table<span class="op">$</span>ops<span class="op">$</span>vars</a></code></pre></div>
 <pre><code>## [1] &quot;rental_id&quot;    &quot;rental_date&quot;  &quot;inventory_id&quot; &quot;customer_id&quot; 
 ## [5] &quot;return_date&quot;  &quot;staff_id&quot;     &quot;last_update&quot;</code></pre>
 </div>
@@ -498,8 +524,8 @@ tables</code></pre></div>
 <li>nrow(object)</li>
 <li>Check the pipe.</li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rental_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">tbl</span>(con, <span class="st">&quot;rental&quot;</span>)
-rental_table</code></pre></div>
+<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb81-1" data-line-number="1">rental_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">tbl</span>(con, <span class="st">&quot;rental&quot;</span>)</a>
+<a class="sourceLine" id="cb81-2" data-line-number="2">rental_table</a></code></pre></div>
 <pre><code>## # Source:   table&lt;rental&gt; [?? x 7]
 ## # Database: postgres [postgres@localhost:5432/dvdrental]
 ##    rental_id rental_date         inventory_id customer_id
@@ -516,7 +542,7 @@ rental_table</code></pre></div>
 ## 10        11 2005-05-25 00:09:02         4443         142
 ## # ... with more rows, and 3 more variables: return_date &lt;dttm&gt;,
 ## #   staff_id &lt;int&gt;, last_update &lt;dttm&gt;</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(rental_table, <span class="dt">n =</span> <span class="dv">25</span>)</code></pre></div>
+<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb83-1" data-line-number="1"><span class="kw">head</span>(rental_table, <span class="dt">n =</span> <span class="dv">25</span>)</a></code></pre></div>
 <pre><code>## # Source:   lazy query [?? x 7]
 ## # Database: postgres [postgres@localhost:5432/dvdrental]
 ##    rental_id rental_date         inventory_id customer_id
@@ -535,25 +561,25 @@ rental_table</code></pre></div>
 ## #   staff_id &lt;int&gt;, last_update &lt;dttm&gt;</code></pre>
 <p>At the top of the output look for the dimensions, [?? x columns] or at the bottom for ‘… with more rows’</p>
 <p>Notice that <code>head</code> should return 25 rows, but only shows the 10 rows it has can retrieve.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">nrow</span>(rental_table)</code></pre></div>
+<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb85-1" data-line-number="1"><span class="kw">nrow</span>(rental_table)</a></code></pre></div>
 <pre><code>## [1] NA</code></pre>
 <p>The the <code>rental_table</code> is smart enough to returns <code>NA</code> when passed to <code>nrow</code> so no execution is performed.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rental_table <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">summarise</span>(<span class="dt">n =</span> <span class="kw">n</span>())</code></pre></div>
+<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb87-1" data-line-number="1">rental_table <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">summarise</span>(<span class="dt">n =</span> <span class="kw">n</span>())</a></code></pre></div>
 <pre><code>## # Source:   lazy query [?? x 1]
 ## # Database: postgres [postgres@localhost:5432/dvdrental]
 ##   n              
 ##   &lt;S3: integer64&gt;
 ## 1 16044</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rental_table <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">summarise</span>(<span class="dt">n =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">show_query</span>()</code></pre></div>
+<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb89-1" data-line-number="1">rental_table <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">summarise</span>(<span class="dt">n =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">show_query</span>()</a></code></pre></div>
 <pre><code>## &lt;SQL&gt;
 ## SELECT COUNT(*) AS &quot;n&quot;
 ## FROM &quot;rental&quot;</code></pre>
 <p>The <code>dplyr::summarise</code> verb does not force R to download the whole table. It <strong>processes</strong> the whole table by counting all the rows on the dbms side and then downloads one number.</p>
 <p>Next we give an example where R gets busy and returns the full data set.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rental_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">tbl</span>(con, <span class="st">&quot;rental&quot;</span>) <span class="co"># Lazy</span>
-
-collect_rental_table &lt;-<span class="st"> </span>rental_table <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">collect</span>() <span class="co"># Busy</span>
-collect_rental_table</code></pre></div>
+<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb91-1" data-line-number="1">rental_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">tbl</span>(con, <span class="st">&quot;rental&quot;</span>) <span class="co"># Lazy</span></a>
+<a class="sourceLine" id="cb91-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb91-3" data-line-number="3">collect_rental_table &lt;-<span class="st"> </span>rental_table <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">collect</span>() <span class="co"># Busy</span></a>
+<a class="sourceLine" id="cb91-4" data-line-number="4">collect_rental_table</a></code></pre></div>
 <pre><code>## # A tibble: 16,044 x 7
 ##    rental_id rental_date         inventory_id customer_id
 ##        &lt;int&gt; &lt;dttm&gt;                     &lt;int&gt;       &lt;int&gt;
@@ -575,7 +601,7 @@ collect_rental_table</code></pre></div>
 <div id="controlling-the-number-of-rows-returned" class="section level3">
 <h3><span class="header-section-number">9.1.7</span> Controlling the number of rows returned</h3>
 <p>The <code>collect</code> function triggers the creation of a tibble and controls the number of rows that the DBMS sends to R. Note that in the following examples, the object dimensions are known.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rental_table <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="dv">3</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>()</code></pre></div>
+<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb93-1" data-line-number="1">rental_table <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="dv">3</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>()</a></code></pre></div>
 <pre><code>## # A tibble: 3 x 7
 ##   rental_id rental_date         inventory_id customer_id
 ##       &lt;int&gt; &lt;dttm&gt;                     &lt;int&gt;       &lt;int&gt;
@@ -585,18 +611,18 @@ collect_rental_table</code></pre></div>
 ## # ... with 3 more variables: return_date &lt;dttm&gt;, staff_id &lt;int&gt;,
 ## #   last_update &lt;dttm&gt;</code></pre>
 <p>In this case the <code>collect</code> function triggers the execution of a query that counts the number of records in the table by <code>staff_id</code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rental_table <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">count</span>(staff_id) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">collect</span>()</code></pre></div>
+<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb95-1" data-line-number="1">rental_table <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb95-2" data-line-number="2"><span class="st">  </span><span class="kw">count</span>(staff_id) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb95-3" data-line-number="3"><span class="st">  </span><span class="kw">collect</span>()</a></code></pre></div>
 <pre><code>## # A tibble: 2 x 2
 ##   staff_id n              
 ##      &lt;int&gt; &lt;S3: integer64&gt;
 ## 1        2 8004           
 ## 2        1 8040</code></pre>
 <p>The <code>collect</code> function affects how much is downloaded, not how many rows the DBMS needs to process the query. This query processes all of the rows in the table but only displays one row of output.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rental_table <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">count</span>(staff_id) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="dv">1</span>)</code></pre></div>
+<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb97-1" data-line-number="1">rental_table <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb97-2" data-line-number="2"><span class="st">  </span><span class="kw">count</span>(staff_id) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb97-3" data-line-number="3"><span class="st">  </span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="dv">1</span>)</a></code></pre></div>
 <pre><code>## # A tibble: 1 x 2
 ##   staff_id n              
 ##      &lt;int&gt; &lt;S3: integer64&gt;
@@ -605,20 +631,39 @@ collect_rental_table</code></pre></div>
 <div id="random-rows-from-the-dbms" class="section level3">
 <h3><span class="header-section-number">9.1.8</span> Random rows from the dbms</h3>
 <p>When the dbms contains many rows, a sample of the data may be plenty for your purposes. Although <code>dplyr</code> has nice functions to sample a data frame that’s already in R (e.g., the <code>sample_n</code> and <code>sample_frac</code> functions), to get a sample from the dbms we have to use <code>dbGetQuery</code> to send native SQL to the database. To peak ahead, here is one example of a query that retrieves 20 rows from a 1% sample:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">one_percent_sample &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbGetQuery</span>(
-  con,
-  <span class="st">&quot;SELECT rental_id, rental_date, inventory_id, customer_id FROM rental TABLESAMPLE SYSTEM(1) LIMIT 20;</span>
-<span class="st">  &quot;</span>
-)
-
-one_percent_sample</code></pre></div>
-<pre><code>## [1] rental_id    rental_date  inventory_id customer_id 
-## &lt;0 rows&gt; (or 0-length row.names)</code></pre>
+<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb99-1" data-line-number="1">one_percent_sample &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbGetQuery</span>(</a>
+<a class="sourceLine" id="cb99-2" data-line-number="2">  con,</a>
+<a class="sourceLine" id="cb99-3" data-line-number="3">  <span class="st">&quot;SELECT rental_id, rental_date, inventory_id, customer_id FROM rental TABLESAMPLE SYSTEM(1) LIMIT 20;</span></a>
+<a class="sourceLine" id="cb99-4" data-line-number="4"><span class="st">  &quot;</span></a>
+<a class="sourceLine" id="cb99-5" data-line-number="5">)</a>
+<a class="sourceLine" id="cb99-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb99-7" data-line-number="7">one_percent_sample</a></code></pre></div>
+<pre><code>##    rental_id         rental_date inventory_id customer_id
+## 1       1929 2005-06-17 06:49:30          573         327
+## 2       1930 2005-06-17 06:50:46           79         112
+## 3       1931 2005-06-17 06:51:56         1411         391
+## 4       1932 2005-06-17 06:54:41         3185         120
+## 5       1933 2005-06-17 06:54:42          980          13
+## 6       1934 2005-06-17 07:04:57         4000          16
+## 7       1935 2005-06-17 07:14:15         1962         295
+## 8       1936 2005-06-17 07:15:41         3037         213
+## 9       1937 2005-06-17 07:16:46         1266         385
+## 10      1938 2005-06-17 07:18:36          570         454
+## 11      1939 2005-06-17 07:26:45          605          11
+## 12      1940 2005-06-17 07:42:22          105         451
+## 13      1941 2005-06-17 07:42:45         1063         519
+## 14      1942 2005-06-17 07:43:39          261         143
+## 15      1943 2005-06-17 07:49:17         4327         144
+## 16      1944 2005-06-17 07:50:53          318          16
+## 17      1945 2005-06-17 07:51:26         3366         207
+## 18      1946 2005-06-17 07:58:39         2335         389
+## 19      1947 2005-06-17 08:02:20         3344         479
+## 20      1948 2005-06-17 08:06:53           46          89</code></pre>
 </div>
 <div id="sub-setting-variables" class="section level3">
 <h3><span class="header-section-number">9.1.9</span> Sub-setting variables</h3>
 <p>A table in the dbms may not only have many more rows than you want and also many more columns. The <code>select</code> command controls which columns are retrieved.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rental_table <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(rental_date, return_date) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>()</code></pre></div>
+<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb101-1" data-line-number="1">rental_table <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(rental_date, return_date) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>()</a></code></pre></div>
 <pre><code>## # Source:   lazy query [?? x 2]
 ## # Database: postgres [postgres@localhost:5432/dvdrental]
 ##   rental_date         return_date        
@@ -635,12 +680,12 @@ one_percent_sample</code></pre></div>
 <li>Good tutorial: <a href="https://suzan.rbind.io/tags/dplyr/" class="uri">https://suzan.rbind.io/tags/dplyr/</a></li>
 </ul>
 <p>In practice we find that, <strong>renaming variables</strong> is often quite important because the names in an SQL database might not meet your needs as an analyst. In “the wild” you will find names that are ambiguous or overly specified, with spaces in them, and other problems that will make them difficult to use in R. It is good practice to do whatever renaming you are going to do in a predictable place like at the top of your code. The names in the <code>dvdrental</code> database are simple and clear, but if they were not, you might rename them for subsequent use in this way:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">renamed_rental_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">tbl</span>(con, <span class="st">&quot;rental&quot;</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">rename</span>(<span class="dt">rental_id_number =</span> rental_id, <span class="dt">inventory_id_number =</span> inventory_id)
-
-renamed_rental_table <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">select</span>(rental_id_number, rental_date, inventory_id_number) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">head</span>()</code></pre></div>
+<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb103-1" data-line-number="1">renamed_rental_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">tbl</span>(con, <span class="st">&quot;rental&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb103-2" data-line-number="2"><span class="st">  </span><span class="kw">rename</span>(<span class="dt">rental_id_number =</span> rental_id, <span class="dt">inventory_id_number =</span> inventory_id)</a>
+<a class="sourceLine" id="cb103-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb103-4" data-line-number="4">renamed_rental_table <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb103-5" data-line-number="5"><span class="st">  </span><span class="kw">select</span>(rental_id_number, rental_date, inventory_id_number) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb103-6" data-line-number="6"><span class="st">  </span><span class="kw">head</span>()</a></code></pre></div>
 <pre><code>## # Source:   lazy query [?? x 3]
 ## # Database: postgres [postgres@localhost:5432/dvdrental]
 ##   rental_id_number rental_date         inventory_id_number
@@ -655,9 +700,9 @@ renamed_rental_table <span class="op">%&gt;%</span>
 <div id="examining-dplyrs-sql-query-and-re-using-sql-code" class="section level3">
 <h3><span class="header-section-number">9.1.10</span> Examining <code>dplyr</code>’s SQL query and re-using SQL code</h3>
 <p>The <code>show_query</code> function shows how <code>dplyr</code> is translating your query to the dialect of the target dbms:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rental_table <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">count</span>(staff_id) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">show_query</span>()</code></pre></div>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb105-1" data-line-number="1">rental_table <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb105-2" data-line-number="2"><span class="st">  </span><span class="kw">count</span>(staff_id) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb105-3" data-line-number="3"><span class="st">  </span><span class="kw">show_query</span>()</a></code></pre></div>
 <pre><code>## &lt;SQL&gt;
 ## SELECT &quot;staff_id&quot;, COUNT(*) AS &quot;n&quot;
 ## FROM &quot;rental&quot;
@@ -667,24 +712,24 @@ renamed_rental_table <span class="op">%&gt;%</span>
 <li><a href="https://dbplyr.tidyverse.org/articles/sql-translation.html" class="uri">https://dbplyr.tidyverse.org/articles/sql-translation.html</a></li>
 </ul>
 <p>The SQL code can submit the same query directly to the DBMS with the <code>DBI::dbGetQuery</code> function:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">DBI<span class="op">::</span><span class="kw">dbGetQuery</span>(
-  con,
-  <span class="st">&#39;SELECT &quot;staff_id&quot;, COUNT(*) AS &quot;n&quot;</span>
-<span class="st">   FROM &quot;rental&quot;</span>
-<span class="st">   GROUP BY &quot;staff_id&quot;;</span>
-<span class="st">  &#39;</span>
-)</code></pre></div>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb107-1" data-line-number="1">DBI<span class="op">::</span><span class="kw">dbGetQuery</span>(</a>
+<a class="sourceLine" id="cb107-2" data-line-number="2">  con,</a>
+<a class="sourceLine" id="cb107-3" data-line-number="3">  <span class="st">&#39;SELECT &quot;staff_id&quot;, COUNT(*) AS &quot;n&quot;</span></a>
+<a class="sourceLine" id="cb107-4" data-line-number="4"><span class="st">   FROM &quot;rental&quot;</span></a>
+<a class="sourceLine" id="cb107-5" data-line-number="5"><span class="st">   GROUP BY &quot;staff_id&quot;;</span></a>
+<a class="sourceLine" id="cb107-6" data-line-number="6"><span class="st">  &#39;</span></a>
+<a class="sourceLine" id="cb107-7" data-line-number="7">)</a></code></pre></div>
 <pre><code>##   staff_id    n
 ## 1        2 8004
 ## 2        1 8040</code></pre>
-<p>&lt;<smy We haven't investigated this, but it looks like `dplyr` collect() function triggers a call simmilar to the dbGetQuery call above.  The default `dplyr` behavior looks like dbSendQuery() and dbFetch() model is used.>&gt;</p>
+<p>&lt;&lt;smy We haven’t investigated this, but it looks like <code>dplyr</code> collect() function triggers a call simmilar to the dbGetQuery call above. The default <code>dplyr</code> behavior looks like dbSendQuery() and dbFetch() model is used.&gt;&gt;</p>
 <p>When you create a report to run repeatedly, you might want to put that query into R markdown. That way you can also execute that SQL code in a chunk with the following header:</p>
 <p>{<code>sql, connection=con, output.var = &quot;query_results&quot;</code>}</p>
-<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> <span class="ot">&quot;staff_id&quot;</span>, <span class="fu">COUNT</span>(*) <span class="kw">AS</span> <span class="ot">&quot;n&quot;</span>
-<span class="kw">FROM</span> <span class="ot">&quot;rental&quot;</span>
-<span class="kw">GROUP</span> <span class="kw">BY</span> <span class="ot">&quot;staff_id&quot;</span>;</code></pre></div>
+<div class="sourceCode" id="cb109"><pre class="sourceCode sql"><code class="sourceCode sql"><a class="sourceLine" id="cb109-1" data-line-number="1"><span class="kw">SELECT</span> <span class="ot">&quot;staff_id&quot;</span>, <span class="fu">COUNT</span>(*) <span class="kw">AS</span> <span class="ot">&quot;n&quot;</span></a>
+<a class="sourceLine" id="cb109-2" data-line-number="2"><span class="kw">FROM</span> <span class="ot">&quot;rental&quot;</span></a>
+<a class="sourceLine" id="cb109-3" data-line-number="3"><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="ot">&quot;staff_id&quot;</span>;</a></code></pre></div>
 <p>Rmarkdown stored that query result in a tibble:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">query_results</code></pre></div>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb110-1" data-line-number="1">query_results</a></code></pre></div>
 <pre><code>##   staff_id    n
 ## 1        2 8004
 ## 2        1 8040</code></pre>
@@ -703,7 +748,7 @@ renamed_rental_table <span class="op">%&gt;%</span>
 <div id="str---a-base-package-workhorse" class="section level3">
 <h3><span class="header-section-number">9.2.1</span> <code>str</code> - a base package workhorse</h3>
 <p><code>str</code> is a workhorse function that lists variables, their type and a sample of the first few variable values.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(rental_tibble)</code></pre></div>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb112-1" data-line-number="1"><span class="kw">str</span>(rental_tibble)</a></code></pre></div>
 <pre><code>## &#39;data.frame&#39;:    16044 obs. of  7 variables:
 ##  $ rental_id   : int  2 3 4 5 6 7 8 9 10 11 ...
 ##  $ rental_date : POSIXct, format: &quot;2005-05-24 22:54:33&quot; &quot;2005-05-24 23:03:39&quot; ...
@@ -716,14 +761,14 @@ renamed_rental_table <span class="op">%&gt;%</span>
 <div id="always-just-look-at-your-data-with-head-view-or-kable" class="section level3">
 <h3><span class="header-section-number">9.2.2</span> Always just <strong>look</strong> at your data with <code>head</code>, <code>View</code>, or <code>kable</code></h3>
 <p>There is no substitute for looking at your data and R provides several ways to just browse it. The <code>head</code> function controls the number of rows that are displayed. Note that tail does not work against a database object. In every-day practice you would look at more than the default 6 rows, but here we wrap <code>head</code> around the data frame:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(rental_tibble))</code></pre></div>
-<div id="htmlwidget-7c81f6751ab7fe0061a0" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-7c81f6751ab7fe0061a0">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[2,3,4,5,6,7],["2005-05-25T05:54:33Z","2005-05-25T06:03:39Z","2005-05-25T06:04:41Z","2005-05-25T06:05:21Z","2005-05-25T06:08:07Z","2005-05-25T06:11:53Z"],[1525,1711,2452,2079,2792,3995],[459,408,333,222,549,269],["2005-05-29T02:40:33Z","2005-06-02T05:12:39Z","2005-06-03T08:43:41Z","2005-06-02T11:33:21Z","2005-05-27T08:32:07Z","2005-05-30T03:34:53Z"],[1,1,2,1,1,2],["2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>rental_id<\/th>\n      <th>rental_date<\/th>\n      <th>inventory_id<\/th>\n      <th>customer_id<\/th>\n      <th>return_date<\/th>\n      <th>staff_id<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb114-1" data-line-number="1"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(rental_tibble))</a></code></pre></div>
+<div id="htmlwidget-b18b48ec4ad649442f3b" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-b18b48ec4ad649442f3b">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[2,3,4,5,6,7],["2005-05-25T05:54:33Z","2005-05-25T06:03:39Z","2005-05-25T06:04:41Z","2005-05-25T06:05:21Z","2005-05-25T06:08:07Z","2005-05-25T06:11:53Z"],[1525,1711,2452,2079,2792,3995],[459,408,333,222,549,269],["2005-05-29T02:40:33Z","2005-06-02T05:12:39Z","2005-06-03T08:43:41Z","2005-06-02T11:33:21Z","2005-05-27T08:32:07Z","2005-05-30T03:34:53Z"],[1,1,2,1,1,2],["2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>rental_id<\/th>\n      <th>rental_date<\/th>\n      <th>inventory_id<\/th>\n      <th>customer_id<\/th>\n      <th>return_date<\/th>\n      <th>staff_id<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="the-summary-function-in-base" class="section level3">
 <h3><span class="header-section-number">9.2.3</span> The <code>summary</code> function in base</h3>
 <p>The basic statistics that the base package <code>summary</code> provides can serve a unique diagnostic purpose in this context. For example, the following output shows that <code>rental_id</code> is a sequential number from 1 to 16,049 with no gaps. The same is true of <code>inventory_id</code>. The number of NA’s is a good first guess as to the number of dvd’s rented out or lost on 2005-09-02 02:35:22.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(rental_tibble)</code></pre></div>
+<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb115-1" data-line-number="1"><span class="kw">summary</span>(rental_tibble)</a></code></pre></div>
 <pre><code>##    rental_id      rental_date                   inventory_id 
 ##  Min.   :    1   Min.   :2005-05-24 22:53:30   Min.   :   1  
 ##  1st Qu.: 4014   1st Qu.:2005-07-07 00:58:40   1st Qu.:1154  
@@ -752,7 +797,7 @@ renamed_rental_table <span class="op">%&gt;%</span>
 <div id="the-glimpse-function-in-the-tibble-package" class="section level3">
 <h3><span class="header-section-number">9.2.4</span> The <code>glimpse</code> function in the <code>tibble</code> package</h3>
 <p>The <code>tibble</code> package’s <code>glimpse</code> function is a more compact version of <code>str</code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tibble<span class="op">::</span><span class="kw">glimpse</span>(rental_tibble)</code></pre></div>
+<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb117-1" data-line-number="1">tibble<span class="op">::</span><span class="kw">glimpse</span>(rental_tibble)</a></code></pre></div>
 <pre><code>## Observations: 16,044
 ## Variables: 7
 ## $ rental_id    &lt;int&gt; 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 1...
@@ -766,18 +811,18 @@ renamed_rental_table <span class="op">%&gt;%</span>
 <div id="the-skim-function-in-the-skimr-package" class="section level3">
 <h3><span class="header-section-number">9.2.5</span> The <code>skim</code> function in the <code>skimr</code> package</h3>
 <p>The <code>skimr</code> package has several functions that make it easy to examine an unknown data frame and assess what it contains. It is also extensible.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(skimr)</code></pre></div>
+<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb119-1" data-line-number="1"><span class="kw">library</span>(skimr)</a></code></pre></div>
 <pre><code>## 
 ## Attaching package: &#39;skimr&#39;</code></pre>
 <pre><code>## The following object is masked from &#39;package:knitr&#39;:
 ## 
 ##     kable</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">skim</span>(rental_tibble)</code></pre></div>
+<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb122-1" data-line-number="1"><span class="kw">skim</span>(rental_tibble)</a></code></pre></div>
 <pre><code>## Skim summary statistics
 ##  n obs: 16044 
 ##  n variables: 7 
 ## 
-## ── Variable type:integer ───────────────────────────────────────────────────
+## ── Variable type:integer ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ##      variable missing complete     n    mean      sd p0     p25    p50
 ##   customer_id       0    16044 16044  297.14  172.45  1  148     296  
 ##  inventory_id       0    16044 16044 2291.84 1322.21  1 1154    2291  
@@ -789,7 +834,7 @@ renamed_rental_table <span class="op">%&gt;%</span>
 ##  12037.25 16049 ▇▇▇▇▇▇▇▇
 ##      2        2 ▇▁▁▁▁▁▁▇
 ## 
-## ── Variable type:POSIXct ───────────────────────────────────────────────────
+## ── Variable type:POSIXct ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ##     variable missing complete     n        min        max     median
 ##  last_update       0    16044 16044 2006-02-15 2006-02-23 2006-02-16
 ##  rental_date       0    16044 16044 2005-05-24 2006-02-14 2005-07-28
@@ -798,7 +843,7 @@ renamed_rental_table <span class="op">%&gt;%</span>
 ##         3
 ##     15815
 ##     15836</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">wide_rental_skim &lt;-<span class="st"> </span><span class="kw">skim_to_wide</span>(rental_tibble)</code></pre></div>
+<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb124-1" data-line-number="1">wide_rental_skim &lt;-<span class="st"> </span><span class="kw">skim_to_wide</span>(rental_tibble)</a></code></pre></div>
 </div>
 </div>
 <div id="dividing-the-work-between-r-on-your-machine-and-the-dbms" class="section level2">
@@ -815,28 +860,30 @@ renamed_rental_table <span class="op">%&gt;%</span>
 <p>This probably belongs later in the book.</p>
 <ul>
 <li>performance considerations: first get the right data, then worry about performance</li>
-<li>Trade offs between leaving the data in PostgreSQL vs what’s kept in R:</li>
+<li>Trade offs between leaving the data in PostgreSQL vs what’s kept in R:
+<ul>
 <li>browsing the data</li>
 <li>larger samples and complete tables</li>
 <li>using what you know to write efficient queries that do most of the work on the server</li>
+</ul></li>
 </ul>
 </div>
 <div id="dplyr-tools" class="section level3">
 <h3><span class="header-section-number">9.3.3</span> <code>dplyr</code> tools</h3>
 <p>Where you place the <code>collect</code> function matters.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dbDisconnect</span>(con)
-<span class="kw">sp_docker_stop</span>(<span class="st">&quot;sql-pet&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb125-1" data-line-number="1"><span class="kw">dbDisconnect</span>(con)</a>
+<a class="sourceLine" id="cb125-2" data-line-number="2"><span class="kw">sp_docker_stop</span>(<span class="st">&quot;sql-pet&quot;</span>)</a></code></pre></div>
 <pre><code>## [1] &quot;sql-pet&quot;</code></pre>
 </div>
 </div>
 <div id="dbi-package" class="section level2">
 <h2><span class="header-section-number">9.4</span> DBI Package</h2>
 <p>In this chapter we touched on a number of functions from the DBI Package. The table below shows other functions in the package. The Chapter column references a section in the book if we have used it.</p>
-<table style="width:75%;">
+<table>
 <colgroup>
 <col width="5%" />
-<col width="12%" />
-<col width="56%" />
+<col width="15%" />
+<col width="78%" />
 </colgroup>
 <thead>
 <tr class="header">

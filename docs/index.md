@@ -2,7 +2,7 @@
 title: "R, Databases and Docker"
 author: Dipti Muni, Ian Frantz, John David Smith, Mary Anne Thygesen, M. Edward (Ed)
   Borasky,  Scott Came, and Sophie Yang
-date: "2018-11-02"
+date: "2018-11-07"
 bibliography:
 - book.bib
 - packages.bib
@@ -70,5 +70,9 @@ We have been collaborating on this book since the Summer of 2018, each of us chi
 * Maryanne Thygesen [\@maryannet](https://github.com/maryannet)
 * Scott Came - [\@scottcame](https://github.com/scottcame)
 * Sophie Yang - [\@SophieMYang](https://github.com/SophieMYang)
+
+## How did this project come about?
+
+We trace this book back to the [June 2, 2018 Cascadia R Conf](https://cascadiarconf.com/) where Aaron Makubuya gave [a presentation using Vagrant hosting](https://github.com/Cascadia-R/Using_R_With_Databases).  After that [John Smith](https://github.com/smithjd), [Ian Franz](https://github.com/ianfrantz), and [Sophie Yang](https://github.com/SophieMYang) had discussions after the monthly [Data Discussion Meetups](https://www.meetup.com/Portland-Data-Science-Group/events/fxvhbnywmbgb/) about the difficulties around setting up Vagrant, (a virtual environment), connecting to a corporate database and having realistic **public** environment to demo or practice the issues that come up behind corporate firewalls. [Scott Came's](https://github.com/scottcame) tutorial on [R and Docker](http://www.cascadia-analytics.com/2018/07/21/docker-r-p1.html) (an alternative to Vagrant) at the 2018 UseR Conference in Melbourne was provocative and it turned out he lived nearby.  We re-connected with [M. Edward (Ed) Borasky](https://github.com/znmeb) who had done extensive development for a [Hack Oregon data science containerization project](https://github.com/hackoregon/data-science-pet-containers).
 
 
