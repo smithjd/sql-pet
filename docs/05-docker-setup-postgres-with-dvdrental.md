@@ -1,18 +1,28 @@
 # The dvdrental database in Postgres in Docker (05)
 
-At the end of this chapter, you will be able to 
-
-  * Setup the `dvdrental` database
-  * Stop and start Docker container to demonstrate persistence
-  * Connect to and disconnect R from the `dvdrental` database
-  * Execute the code in subsequent chapters
+> This chapter demonstrates how to:
+>
+>  * Setup the `dvdrental` database in Docker
+>  * Stop and start Docker container to demonstrate persistence
+>  * Connect to and disconnect R from the `dvdrental` database
+>  * Set up the environment for subsequent chapters
 
 ## Overview
 
-In the last chapter we connected to PostgreSQL from R.  Now we set up a "realistic" database named `dvdrental`. There are two different approaches to doing this: this chapter sets it up in a way that doesn't delve into the Docker details.  If you are interested, you can examine the functions provided in `sqlpetr` to see how it works or look at an alternative approach in  [docker-detailed-postgres-setup-with-dvdrental.R](./book-src/docker-detailed-postgres-setup-with-dvdrental.R))
+In the last chapter we connected to PostgreSQL from R.  Now we set up a "realistic" database named `dvdrental`. There are different approaches to doing this: this chapter sets it up in a way that doesn't delve into the Docker details.  If you are interested, you can look at an alternative approach in [docker-detailed-postgres-setup-with-dvdrental.R](./book-src/docker-detailed-postgres-setup-with-dvdrental.R) that breaks the process down into smaller chunks.
 
+These packages are called in this Chapter:
 
-Note that `tidyverse`, `DBI`, `RPostgres`, and `glue` are loaded.
+```r
+library(tidyverse)
+library(DBI)
+library(RPostgres)
+library(glue)
+require(knitr)
+library(dbplyr)
+library(sqlpetr)
+library(bookdown)
+```
 
 ## Verify that Docker is up and running
 
@@ -25,58 +35,51 @@ sp_check_that_docker_is_up()
 ```
 
 ## Clean up if appropriate
-Remove the `sql-pet` container if it exists (e.g., from a prior run)
+Remove the `cattle` and `sql-pet` containers if they exist (e.g., from a prior runs):
 
 ```r
+sp_docker_remove_container("cattle")
 sp_docker_remove_container("sql-pet")
 ```
+## Build the pet-sql Docker Image
 
-```
-## Warning in system2("docker", docker_command, stdout = TRUE, stderr = TRUE):
-## running command ''docker' rm -f sql-pet 2>&1' had status 1
-```
-
-```
-## [1] "Error: No such container: sql-pet"
-## attr(,"status")
-## [1] 1
-```
-## Build the Docker Image
-Build an image that derives from postgres:10, defined in `dvdrental.Dockerfile`, that is set up to restore and load the dvdrental db on startup.  The [dvdrental.Dockerfile](./dvdrental.Dockerfile) is discussed below.  
+Build an image that derives from postgres:10.  The commands in `dvdrental.Dockerfile` creates a Docker container running PostgreSQL, and loads the `dvdrental` database.  The [dvdrental.Dockerfile](./dvdrental.Dockerfile) is discussed below.  
 
 ```r
-system2("docker", 
+docker_messages <- system2("docker", 
         glue("build ", # tells Docker to build an image that can be loaded as a container
           "--tag postgres-dvdrental ", # (or -t) tells Docker to name the image
           "--file dvdrental.Dockerfile ", #(or -f) tells Docker to read `build` instructions from the dvdrental.Dockerfile
           " . "),  # tells Docker to look for dvdrental.Dockerfile, and files it references, in the current directory
           stdout = TRUE, stderr = TRUE)
+
+cat(docker_messages, sep = "\n")
 ```
 
 ```
-##  [1] "Sending build context to Docker daemon  50.31MB\r\r"                                                                                                                                                                                                                                                                                                                                           
-##  [2] "Step 1/4 : FROM postgres:10"                                                                                                                                                                                                                                                                                                                                                                   
-##  [3] " ---> ac25c2bac3c4"                                                                                                                                                                                                                                                                                                                                                                            
-##  [4] "Step 2/4 : WORKDIR /tmp"                                                                                                                                                                                                                                                                                                                                                                       
-##  [5] " ---> Using cache"                                                                                                                                                                                                                                                                                                                                                                             
-##  [6] " ---> 3f00a18e0bdf"                                                                                                                                                                                                                                                                                                                                                                            
-##  [7] "Step 3/4 : COPY init-dvdrental.sh /docker-entrypoint-initdb.d/"                                                                                                                                                                                                                                                                                                                                
-##  [8] " ---> Using cache"                                                                                                                                                                                                                                                                                                                                                                             
-##  [9] " ---> 3453d61d8e3e"                                                                                                                                                                                                                                                                                                                                                                            
-## [10] "Step 4/4 : RUN apt-get -qq update &&   apt-get install -y -qq curl zip  > /dev/null 2>&1 &&   curl -Os http://www.postgresqltutorial.com/wp-content/uploads/2017/10/dvdrental.zip &&   unzip dvdrental.zip &&   rm dvdrental.zip &&   chmod ugo+w dvdrental.tar &&   chown postgres dvdrental.tar &&   chmod u+x /docker-entrypoint-initdb.d/init-dvdrental.sh &&   apt-get remove -y curl zip"
-## [11] " ---> Using cache"                                                                                                                                                                                                                                                                                                                                                                             
-## [12] " ---> f5e93aa64875"                                                                                                                                                                                                                                                                                                                                                                            
-## [13] "Successfully built f5e93aa64875"                                                                                                                                                                                                                                                                                                                                                               
-## [14] "Successfully tagged postgres-dvdrental:latest"
+## Sending build context to Docker daemon  51.18MB
+## Step 1/4 : FROM postgres:10
+##  ---> ac25c2bac3c4
+## Step 2/4 : WORKDIR /tmp
+##  ---> Using cache
+##  ---> 3f00a18e0bdf
+## Step 3/4 : COPY init-dvdrental.sh /docker-entrypoint-initdb.d/
+##  ---> Using cache
+##  ---> 3453d61d8e3e
+## Step 4/4 : RUN apt-get -qq update &&   apt-get install -y -qq curl zip  > /dev/null 2>&1 &&   curl -Os http://www.postgresqltutorial.com/wp-content/uploads/2017/10/dvdrental.zip &&   unzip dvdrental.zip &&   rm dvdrental.zip &&   chmod ugo+w dvdrental.tar &&   chown postgres dvdrental.tar &&   chmod u+x /docker-entrypoint-initdb.d/init-dvdrental.sh &&   apt-get remove -y curl zip
+##  ---> Using cache
+##  ---> f5e93aa64875
+## Successfully built f5e93aa64875
+## Successfully tagged postgres-dvdrental:latest
 ```
 
-## Run the Docker Image
+## Run the pet-sql Docker Image
 Run docker to bring up postgres.  The first time it runs it will take a minute to create the PostgreSQL environment.  There are two important parts to this that may not be obvious:
 
   * The `source=` parameter points to [dvdrental.Dockerfile](./dvdrental.Dockerfile), which does most of the heavy lifting.  It has detailed, line-by-line comments to explain what it is doing.  
   *  *Inside* [dvdrental.Dockerfile](./dvdrental.Dockerfile) the command `COPY init-dvdrental.sh /docker-entrypoint-initdb.d/` copies  [init-dvdrental.sh](init-dvdrental.sh) from the local file system into the specified location in the Docker container.  When the PostgreSQL Docker container initializes, it looks for that file and executes it. 
   
-Doing all of that work behind the scenes involves two layers of complexity.  Depending on how you look at it, that may be more or less difficult to understand than the method shown in the next Chapter.
+Doing all of that work behind the scenes involves two layers.  Depending on how you look at it, that may be more or less difficult to understand than [an alternative method](book-src/docker-detailed-postgres-setup-with-dvdrental.R).
 
 
 ```r
@@ -94,25 +97,20 @@ docker_cmd <- glue(
   "target=/petdir", # tells Docker to refer to the current directory as "/petdir" in its file system
   " postgres-dvdrental" # tells Docker to run the image was built in the previous step
 )
-
-# if you are curious you can paste this string into a terminal window after the command 'docker':
-docker_cmd
 ```
 
-```
-## run --detach  --name sql-pet --publish 5432:5432 --mount type=bind,source="/Users/jds/Documents/Library/R/r-system/sql-pet",target=/petdir postgres-dvdrental
-```
+If you are curious you can paste  `docker_cmd` into a terminal window after the command 'docker':
 
 ```r
 system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "45eafcfd494e5750f972c35efd4b520eca1fa66ac5cf424dfb2bfd8f71038a68"
+## [1] "ff090e0dff5048fef71c9c542f6b1cbe24ee365574b8f9a3308db114f2370374"
 ```
 ## Connect to Postgres with R
 
-Use the DBI package to connect to PostgreSQL.  Remember the settings discussion about [keeping passwords hidden][Pause for some security considerations]
+Use the DBI package to connect to the `dvdrental` database in PostgreSQL.  Remember the settings discussion about [keeping passwords hidden][Pause for some security considerations]
 
 
 ```r
@@ -122,7 +120,7 @@ con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"
                          seconds_to_test = 10)
 ```
 
-List the tables in the database and the fields in one of those tables.  Then disconnect from the database.
+List the tables in the database and the fields in one of those tables.  
 
 ```r
 dbListTables(con)
@@ -151,25 +149,26 @@ dbListFields(con, "rental")
 ## [5] "return_date"  "staff_id"     "last_update"
 ```
 
+Disconnect from the database:
+
 ```r
 dbDisconnect(con)
 ```
 ## Stop and start to demonstrate persistence
 
-Stop the container
+Stop the container:
 
 ```r
 sp_docker_stop("sql-pet")
 ```
-
-```
-## [1] "sql-pet"
-```
-Restart the container and verify that the dvdrental tables are still there
+Restart the container and verify that the dvdrental tables are still there:
 
 ```r
 sp_docker_start("sql-pet")
+```
+Connect to the `dvdrental` database in postgreSQL:
 
+```r
 con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
                          password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
                          dbname = "dvdrental",
@@ -195,36 +194,33 @@ Always have R disconnect from the database when you're done.
 dbDisconnect(con)
 ```
 
-Stop the container and show that the container is still there, so can be started again.
+Stop the `sql-pet` container:
 
 ```r
 sp_docker_stop("sql-pet")
 ```
+Show that the container still exists even though it's not running
 
-```
-## [1] "sql-pet"
-```
 
 ```r
-# show that the container still exists even though it's not running
 sp_show_all_docker_containers()
 ```
 
 ```
-## [1] "CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS               NAMES"    
-## [2] "45eafcfd494e        postgres-dvdrental   \"docker-entrypoint.s…\"   7 seconds ago       Exited (0) Less than a second ago                       sql-pet"
+## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS               NAMES
+## ff090e0dff50        postgres-dvdrental   "docker-entrypoint.s…"   8 seconds ago       Exited (0) Less than a second ago                       sql-pet
 ```
 
 Next time, you can just use this command to start the container: 
 
-`sp_docker_start("sql-pet")`
+> `sp_docker_start("sql-pet")`
 
 And once stopped, the container can be removed with:
 
-`sp_check_that_docker_is_up("sql-pet)`
+> `sp_check_that_docker_is_up("sql-pet")`
 
 ## Using the `sql-pet` container in the rest of the book
 
 After this point in the book, we assume that Docker is up and that we can always start up our *sql-pet database* with:
 
-`sp_docker_stop("sql-pet")`
+> `sp_docker_start("sql-pet")`
