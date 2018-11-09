@@ -1,5 +1,13 @@
 # Introduction to DBMS queries (11)
 
+> This chapter demonstrates how to:
+> 
+> * Get a glimpse of what tables are in the database and what fields a table contains
+> * Download all or part of a table from the dbms
+> * See how `dplyr` and `SQL` commands are equivalent
+> * Get acquainted with some useful tools for investigating a single table
+> * Begin thinking about how to divide the work between your local R session and the dbms
+
 The following packages are used in this chapter:
 
 ```r
@@ -11,7 +19,7 @@ require(knitr)
 library(bookdown)
 library(sqlpetr)
 ```
-Assume that the Docker container with PostgreSQL and the dvdrental database are ready to go. 
+Assume that the Docker container with PostgreSQL and the dvdrental database are ready to go. If not go back to [the previous Chapter][Build the pet-sql Docker Image]
 
 ```r
 sp_docker_start("sql-pet")
@@ -109,9 +117,7 @@ head(table_columns)
 
 Later on we'll discuss how to get more extensive data about each table and column from the database's own store of metadata using a similar technique.  As we go further the issue of scale will come up again and again: you need to be careful about how much data a call to the dbms will return, whether it's a list of tables or a table that could have millions of rows.
 
-### Connect with people who own, generate, or are the subjects of the data
-
-A good chat with people who own the data, generate it, or are the subjects can generate insights and set the context for your investigation of the database. The purpose for collecting the data or circumsances where it was collected may be burried far afield in an organization, but *usually someone knows*.  The metadata discussed in a later chapter is essential but will only take you so far.
+It's improtant to connect with people who own, generate, or are the subjects of the data.  A good chat with people who own the data, generate it, or are the subjects can generate insights and set the context for your investigation of the database. The purpose for collecting the data or circumsances where it was collected may be burried far afield in an organization, but *usually someone knows*.  The metadata discussed in a later chapter is essential but will only take you so far.
 
 There are different ways of just **looking at the data**, which we explore below.
 
@@ -380,26 +386,26 @@ one_percent_sample
 
 ```
 ##    rental_id         rental_date inventory_id customer_id
-## 1       1929 2005-06-17 06:49:30          573         327
-## 2       1930 2005-06-17 06:50:46           79         112
-## 3       1931 2005-06-17 06:51:56         1411         391
-## 4       1932 2005-06-17 06:54:41         3185         120
-## 5       1933 2005-06-17 06:54:42          980          13
-## 6       1934 2005-06-17 07:04:57         4000          16
-## 7       1935 2005-06-17 07:14:15         1962         295
-## 8       1936 2005-06-17 07:15:41         3037         213
-## 9       1937 2005-06-17 07:16:46         1266         385
-## 10      1938 2005-06-17 07:18:36          570         454
-## 11      1939 2005-06-17 07:26:45          605          11
-## 12      1940 2005-06-17 07:42:22          105         451
-## 13      1941 2005-06-17 07:42:45         1063         519
-## 14      1942 2005-06-17 07:43:39          261         143
-## 15      1943 2005-06-17 07:49:17         4327         144
-## 16      1944 2005-06-17 07:50:53          318          16
-## 17      1945 2005-06-17 07:51:26         3366         207
-## 18      1946 2005-06-17 07:58:39         2335         389
-## 19      1947 2005-06-17 08:02:20         3344         479
-## 20      1948 2005-06-17 08:06:53           46          89
+## 1      11670 2005-08-17 05:48:59         4437         286
+## 2      11671 2005-08-17 05:50:21         3569         338
+## 3      11672 2006-02-14 15:16:03         3947         521
+## 4      11673 2005-08-17 05:54:15          823         303
+## 5      11674 2005-08-17 05:56:27          582         306
+## 6      11675 2005-08-17 05:57:54         1322         514
+## 7      11676 2006-02-14 15:16:03         4496         216
+## 8      11677 2005-08-17 06:06:26         2206         407
+## 9      11678 2005-08-17 06:07:39         3511         176
+## 10     11679 2005-08-17 06:08:54         3337          72
+## 11     11680 2005-08-17 06:12:27         4538         221
+## 12     11681 2005-08-17 06:13:30         1260         543
+## 13     11682 2005-08-17 06:13:40         2544         387
+## 14     11683 2005-08-17 06:15:17         2603          66
+## 15     11684 2005-08-17 06:27:15         4277         517
+## 16     11685 2005-08-17 06:39:16         3552          51
+## 17     11686 2005-08-17 06:39:30         1393         392
+## 18     11687 2005-08-17 06:39:59         1977         169
+## 19     11688 2005-08-17 06:41:58         2229          82
+## 20     11689 2005-08-17 06:42:08         2390         419
 ```
 
 ### Sub-setting variables
@@ -636,7 +642,7 @@ skim(rental_tibble)
 ##  n obs: 16044 
 ##  n variables: 7 
 ## 
-## ── Variable type:integer ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+## ── Variable type:integer ────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ##      variable missing complete     n    mean      sd p0     p25    p50
 ##   customer_id       0    16044 16044  297.14  172.45  1  148     296  
 ##  inventory_id       0    16044 16044 2291.84 1322.21  1 1154    2291  
@@ -648,7 +654,7 @@ skim(rental_tibble)
 ##  12037.25 16049 ▇▇▇▇▇▇▇▇
 ##      2        2 ▇▁▁▁▁▁▁▇
 ## 
-## ── Variable type:POSIXct ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+## ── Variable type:POSIXct ────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ##     variable missing complete     n        min        max     median
 ##  last_update       0    16044 16044 2006-02-15 2006-02-23 2006-02-16
 ##  rental_date       0    16044 16044 2005-05-24 2006-02-14 2005-07-28
@@ -688,10 +694,6 @@ Where you place the `collect` function matters.
 ```r
 dbDisconnect(con)
 sp_docker_stop("sql-pet")
-```
-
-```
-## [1] "sql-pet"
 ```
 
 ## DBI Package

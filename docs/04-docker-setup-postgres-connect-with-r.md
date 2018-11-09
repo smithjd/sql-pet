@@ -1,27 +1,33 @@
 # Docker, Postgres, and R (04)
 
-At the end of this chapter, you will be able to 
+> This chapter demonstrates how to:
+>
+>  * Run, clean-up and close postgreSQL in docker containers.
+>  * Keep necessary credentials secret while being available to R when it executes.
+>  * Interact with PostgreSQL when it's running inside a Docker container.
+>  * Read and write to PostgreSQL from R.
 
-  * Run, clean-up and close Docker containers.
-  * See how to keep credentials secret in code that's visible to the world.
-  * Interact with Postgres using Rstudio inside Docker container.
-  # Read and write to postgreSQL from R.
+The following packages are used in this chapter:
 
+```r
+library(tidyverse)
+library(DBI)
+library(RPostgres)
+require(knitr)
+library(sqlpetr)
+```
 
-We always load the tidyverse and some other packages, but don't show it unless we are using packages other than `tidyverse`, `DBI`, `RPostgres`, and `glue`.
+Please install the `sqlpetr` package if not already installed:
 
-
-Devtools install of sqlpetr if not already installed
-
-
+```r
+library(devtools)
+if (!require(sqlpetr)) devtools::install_github("smithjd/sqlpetr")
+```
+Note that when you install the package the first time, it will ask you to update the packages it uses and that can take some time.
 
 ## Verify that Docker is running
 
-Docker commands can be run from a terminal (e.g., the Rstudio Terminal pane) or with a `system()` command.  In this tutorial, we use `system2()` so that all the output that is created externally is shown.  Note that `system2` calls are divided into several parts:
-
-1. The program that you are sending a command to.
-2. The parameters or commands that are being sent.
-3. `stdout = TRUE, stderr = TRUE` are two parameters that are standard in this book, so that the command's full output is shown in the book.
+Docker commands can be run from a terminal (e.g., the Rstudio Terminal pane) or with a `system()` command.  We provide the necessary functions to start, stop Docker containers and do other busy work in the `sqlpetr` package.  As time permits and curiosity dictates, feel free to look at those functions to see how they work.
 
 Check that docker is up and running:
 
@@ -39,25 +45,7 @@ Remove the `cattle` and `sql-pet` containers if they exists (e.g., from a prior 
 
 ```r
 sp_docker_remove_container("cattle")
-```
-
-```
-## Warning in system2("docker", docker_command, stdout = TRUE, stderr = TRUE):
-## running command ''docker' rm -f cattle 2>&1' had status 1
-```
-
-```
-## [1] "Error: No such container: cattle"
-## attr(,"status")
-## [1] 1
-```
-
-```r
 sp_docker_remove_container("sql-pet")
-```
-
-```
-## [1] "sql-pet"
 ```
 
 The convention we use in this book is to put docker commands in the `sqlpetr` package so that you can ignore them if you want.  However, the functions are set up so that you can easily see how to do things with Docker and modify if you want.
@@ -81,30 +69,30 @@ sp_check_that_docker_is_up()
 ```
 
 ```
-## [1] "Docker is up, running these containers:"                                                                                                            
-## [2] "CONTAINER ID        IMAGE               COMMAND                  CREATED                  STATUS                  PORTS                    NAMES"   
-## [3] "bf537d67090b        postgres:10         \"docker-entrypoint.s…\"   Less than a second ago   Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
+## [1] "Docker is up, running these containers:"                                                                                                       
+## [2] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES"   
+## [3] "107c76d33035        postgres:10         \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
 ```
 ## Connect, read and write to Postgres from R
 
 ### Pause for some security considerations
 
-We use the following `sp_get_postgres_connection` function to connect to PostgreSQL.  It will keep trying to connect to PostgreSQL, even if the dbms is not ready.  PostgreSQL can take different amounts of time to come up and be ready to accept connections from R, depending on various factors depending on your computer and its configuration.
+We use the following `sp_get_postgres_connection` function to connect to PostgreSQL.  It will keep trying to connect to PostgreSQL, even if the dbms is not ready.  PostgreSQL can take different amounts of time to come up and be ready to accept connections from R, depending on various factors depending on your computer and its configuration. ^[See details for Windows here:<br>   https://csgillespie.github.io/efficientR/3-3-r-startup.html#r-startup </br>https://csgillespie.github.io/efficientR/3-3-r-startup.html#renviron ]
 
-> When we call `sp_get_postgres_connection` below we'll use environment variables that R obtains from reading the *.Renviron* file when R starts up.  This approach has two benefits: that file is not uploaded to Github. R looks for it in your default directory every time it loads.  To see whether you have already created that file, use the R Studio Files tab to look at your **home directory**:
+> When we call `sp_get_postgres_connection` below we'll use environment variables that R obtains from reading the *.Renviron* file when R starts up.  This approach has two benefits: that file is not uploaded to GitHub. R looks for it in your default directory every time it loads.  To see whether you have already created that file, use the R Studio Files tab to look at your **home directory**:
 >
 ![](screenshots/locate-renviron-file.png)
 >
-> That file should contain lines that **look like** the example just below this box. Although in this example it contains the PostreSQL <b>default values</b> for the username and password, they are obvioiusly not secret.  But this approach demonstrates where you should put secrets that R needs while not risking accidental uploaded to Github or some other public location..
+> That file should contain lines that **look like** the example below. Although in this example it contains the PostgreSQL <b>default values</b> for the username and password, they are obviously not secret.  But this approach demonstrates where you should put secrets that R needs while not risking accidental uploaded to GitHub or some other public location..
 
 You can execute [define_postgresql_params.R](define_postgresql_params.R) to create the file or you could copy / paste the following into your **.Renviron** file:
 ```
 DEFAULT_POSTGRES_PASSWORD=postgres
 DEFAULT_POSTGRES_USER_NAME=postgres
 ```
+Once that file is created, restart R, and after that R reads it every time it comes up. 
 
-
-This is how the `sp_get_postgres_connection` function is used:
+Connect to the postgrSQL using the `sp_get_postgres_connection` function:
 
 ```r
 con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
@@ -114,7 +102,7 @@ con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"
 ```
 If you don't have an `.Rprofile` file that defines those passwords, you can just insert a string for the parameter, like:
 
-  `password = 'whatever',`
+  `user= 'whatever', password = 'whatever'`
 
 Make sure that you can connect to the PostgreSQL database that you started earlier. If you have been executing the code from this tutorial, the database will not contain any tables yet:
 
@@ -193,26 +181,21 @@ knitr::kable(head(mtcars_df))
 
 ## Clean up
 
-Afterwards, always disconnect from the DBMS, stop the docker container and (optionally) remove it.
+Afterwards, always disconnect from the dbms:
 
 ```r
 dbDisconnect(con)
+```
+Tell Docker to stop the `cattle` container:
 
-# tell Docker to stop the container:
+```r
 sp_docker_stop("cattle")
 ```
 
-```
-## [1] "cattle"
-```
+Tell Docker to remove the `cattle` container from it's library of active containers:
 
 ```r
-# Tell Docker to remove the container from it's library of active containers:
 sp_docker_remove_container("cattle")
 ```
 
-```
-## [1] "cattle"
-```
-
-If we `stop` the docker container but don't remove it (with the `rm cattle` command), the container will persist and we can start it up again later with `start cattle`.  In that case, `mtcars` would still be there and we could retrieve it from R again.  Since we have now removed the `cattle` container, the whole database has been deleted.  (There are enough copies of `mtcars` in the world, so no great loss.)
+If we just **stop** the docker container but don't remove it (as we did with the `sp_docker_remove_container("cattle")` command), the `cattle` container will persist and we can start it up again later with `sp_docker_start("cattle")`.  In that case, `mtcars` would still be there and we could retrieve it from postgreSQL again.  Since `sp_docker_remove_container("cattle")`  has removed it, the updated database has been deleted.  (There are enough copies of `mtcars` in the world, so no great loss.)

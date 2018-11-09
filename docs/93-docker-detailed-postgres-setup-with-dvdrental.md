@@ -23,7 +23,7 @@ library(tidyverse)
 ```
 
 ```
-## ── Attaching packages ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
+## ── Attaching packages ──────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
 ```
 
 ```
@@ -34,7 +34,7 @@ library(tidyverse)
 ```
 
 ```
-## ── Conflicts ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## ── Conflicts ─────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()
 ```
@@ -127,8 +127,8 @@ sp_show_all_docker_containers()
 ```
 
 ```
-## [1] "CONTAINER ID        IMAGE                COMMAND                  CREATED              STATUS                     PORTS               NAMES"    
-## [2] "45eafcfd494e        postgres-dvdrental   \"docker-entrypoint.s…\"   About a minute ago   Exited (0) 4 seconds ago                       sql-pet"
+## CONTAINER ID        IMAGE                COMMAND                  CREATED              STATUS                     PORTS               NAMES
+## ff090e0dff50        postgres-dvdrental   "docker-entrypoint.s…"   About a minute ago   Exited (0) 4 seconds ago                       sql-pet
 ```
 
 Remove the `sql-pet` container if it exists (e.g., from a prior run)
@@ -140,10 +140,6 @@ if (system2("docker", "ps -a", stdout = TRUE) %>%
     any()) {
   sp_docker_remove_container("sql-pet")
 }
-```
-
-```
-## [1] "sql-pet"
 ```
 
 ## Build the Docker Container
@@ -188,7 +184,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "6fd0efa2b947367357595cd7b29a5354d2dbd4ce1cbd062ced795a14ede5dea6"
+## [1] "c77b06328936e6b1479073e42d28c0e18f70ed422b592f4cd56377b101c8df13"
 ```
 
 Peek inside the docker container and list the files in the `petdir`
@@ -231,8 +227,8 @@ sp_show_all_docker_containers()
 ```
 
 ```
-## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES"    
-## [2] "6fd0efa2b947        postgres:10         \"docker-entrypoint.s…\"   4 seconds ago       Up 3 seconds        0.0.0.0:5432->5432/tcp   sql-pet"
+## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES
+## c77b06328936        postgres:10         "docker-entrypoint.s…"   4 seconds ago       Up 3 seconds        0.0.0.0:5432->5432/tcp   sql-pet
 ```
 inside Docker, execute the postgress SQL command-line program to create the dvdrental database:
 
@@ -311,10 +307,6 @@ Stop the container
 sp_docker_stop("sql-pet")
 ```
 
-```
-## [1] "sql-pet"
-```
-
 Restart the container and verify that the dvdrental tables are still
 there
 
@@ -360,10 +352,6 @@ started again.
 sp_docker_stop("sql-pet")
 ```
 
-```
-## [1] "sql-pet"
-```
-
 show that the container still exists even though it’s not running
 
 
@@ -372,8 +360,8 @@ sp_show_all_docker_containers()
 ```
 
 ```
-## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES"    
-## [2] "6fd0efa2b947        postgres:10         \"docker-entrypoint.s…\"   15 seconds ago      Exited (0) Less than a second ago                       sql-pet"
+## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES
+## c77b06328936        postgres:10         "docker-entrypoint.s…"   15 seconds ago      Exited (0) Less than a second ago                       sql-pet
 ```
 
 We are leaving the `sql-pet` container intact so it can be used in running the
