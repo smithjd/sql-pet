@@ -17,19 +17,19 @@ The database we use is PostgreSQL 10, but you do not need to install it - it's i
 
 In addition to the current version of R and RStudio, you will need current versions of the following packages:
 
-* DBI
-* DiagrammeR
-* RPostgres
-* dbplyr
-* devtools
-* downloader
-* glue
-* here
-* knitr
-* skimr
-* tidyverse
+* `DBI`
+* `DiagrammeR`
+* `RPostgres`
+* `dbplyr`
+* `devtools`
+* `downloader`
+* `glue`
+* `here`
+* `knitr`
+* `skimr`
+* `tidyverse`
 
-* bookdown (for compiling the book, if you want to)
+* `bookdown` (for compiling the book, if you want to)
 
 ## Installing Docker
 
