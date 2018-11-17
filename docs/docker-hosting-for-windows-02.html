@@ -25,7 +25,7 @@
 <meta name="author" content="Dipti Muni, Ian Frantz, John David Smith, Mary Anne Thygesen, M. Edward (Ed) Borasky, Scott Came, and Sophie Yang">
 
 
-<meta name="date" content="2018-11-08">
+<meta name="date" content="2018-11-16">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -49,7 +49,7 @@
 
 <script src="libs/htmlwidgets-1.3/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.4/datatables.js"></script>
+<script src="libs/datatables-binding-0.5/datatables.js"></script>
 <link href="libs/dt-core-1.10.16/css/jquery.dataTables.min.css" rel="stylesheet" />
 <link href="libs/dt-core-1.10.16/css/jquery.dataTables.extra.css" rel="stylesheet" />
 <script src="libs/dt-core-1.10.16/js/jquery.dataTables.min.js"></script>
@@ -63,7 +63,7 @@
 <style type="text/css">
 a.sourceLine { display: inline-block; line-height: 1.25; }
 a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; position: absolute; }
+a.sourceLine:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -76,13 +76,11 @@ code.sourceCode { white-space: pre-wrap; }
 a.sourceLine { text-indent: -1em; padding-left: 1em; }
 }
 pre.numberSource a.sourceLine
-  { position: relative; }
-pre.numberSource a.sourceLine:empty
-  { position: absolute; }
+  { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
   { content: attr(data-line-number);
-    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all;
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -185,7 +183,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.2" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#clean-up-if-appropriate"><i class="fa fa-check"></i><b>6.2</b> Clean up if appropriate</a></li>
 <li class="chapter" data-level="6.3" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#connect-read-and-write-to-postgres-from-r"><i class="fa fa-check"></i><b>6.3</b> Connect, read and write to Postgres from R</a><ul>
 <li class="chapter" data-level="6.3.1" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#pause-for-some-security-considerations"><i class="fa fa-check"></i><b>6.3.1</b> Pause for some security considerations</a></li>
-<li class="chapter" data-level="6.3.2" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#interact-with-postgres"><i class="fa fa-check"></i><b>6.3.2</b> Interact with Postgres</a></li>
+<li class="chapter" data-level="6.3.2" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#connect-with-postgres"><i class="fa fa-check"></i><b>6.3.2</b> Connect with Postgres</a></li>
+<li class="chapter" data-level="6.3.3" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#interact-with-postgres"><i class="fa fa-check"></i><b>6.3.3</b> Interact with Postgres</a></li>
 </ul></li>
 <li class="chapter" data-level="6.4" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#clean-up"><i class="fa fa-check"></i><b>6.4</b> Clean up</a></li>
 </ul></li>
@@ -201,48 +200,66 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.9" data-path="the-dvdrental-database-in-postgres-in-docker-05.html"><a href="the-dvdrental-database-in-postgres-in-docker-05.html#using-the-sql-pet-container-in-the-rest-of-the-book"><i class="fa fa-check"></i><b>7.9</b> Using the <code>sql-pet</code> container in the rest of the book</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html"><i class="fa fa-check"></i><b>8</b> Mapping your local environment (10)</a><ul>
-<li class="chapter" data-level="8.1" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#basics"><i class="fa fa-check"></i><b>8.1</b> Basics</a></li>
-<li class="chapter" data-level="8.2" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#ask-yourself-what-are-you-aiming-for"><i class="fa fa-check"></i><b>8.2</b> Ask yourself, what are you aiming for?</a></li>
-<li class="chapter" data-level="8.3" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#get-some-basic-information-about-your-database"><i class="fa fa-check"></i><b>8.3</b> Get some basic information about your database</a></li>
-<li class="chapter" data-level="8.4" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#tutorial-environment"><i class="fa fa-check"></i><b>8.4</b> Tutorial Environment</a></li>
-<li class="chapter" data-level="8.5" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#communicating-with-docker-applications"><i class="fa fa-check"></i><b>8.5</b> Communicating with Docker Applications</a><ul>
-<li class="chapter" data-level="8.5.1" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#dbconnect"><i class="fa fa-check"></i><b>8.5.1</b> dbConnect</a></li>
-<li class="chapter" data-level="8.5.2" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#bash"><i class="fa fa-check"></i><b>8.5.2</b> bash</a></li>
-<li class="chapter" data-level="8.5.3" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#psql"><i class="fa fa-check"></i><b>8.5.3</b> psql</a></li>
-<li class="chapter" data-level="8.5.4" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#start-stop"><i class="fa fa-check"></i><b>8.5.4</b> start-stop</a></li>
+<li class="chapter" data-level="8.1" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#command-structure"><i class="fa fa-check"></i><b>8.1</b> command structure</a></li>
+<li class="chapter" data-level="8.2" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#basics"><i class="fa fa-check"></i><b>8.2</b> Basics</a></li>
+<li class="chapter" data-level="8.3" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#ask-yourself-what-are-you-aiming-for"><i class="fa fa-check"></i><b>8.3</b> Ask yourself, what are you aiming for?</a></li>
+<li class="chapter" data-level="8.4" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#get-some-basic-information-about-your-database"><i class="fa fa-check"></i><b>8.4</b> Get some basic information about your database</a></li>
+<li class="chapter" data-level="8.5" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#tutorial-environment"><i class="fa fa-check"></i><b>8.5</b> Tutorial Environment</a></li>
+<li class="chapter" data-level="8.6" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#communicating-with-docker-applications"><i class="fa fa-check"></i><b>8.6</b> Communicating with Docker Applications</a><ul>
+<li class="chapter" data-level="8.6.1" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#dbconnect"><i class="fa fa-check"></i><b>8.6.1</b> dbConnect</a></li>
+<li class="chapter" data-level="8.6.2" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#bash"><i class="fa fa-check"></i><b>8.6.2</b> bash</a></li>
+<li class="chapter" data-level="8.6.3" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#psql"><i class="fa fa-check"></i><b>8.6.3</b> psql</a></li>
+<li class="chapter" data-level="8.6.4" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#start-stop"><i class="fa fa-check"></i><b>8.6.4</b> start-stop</a></li>
 </ul></li>
-<li class="chapter" data-level="8.6" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#exercises"><i class="fa fa-check"></i><b>8.6</b> Exercises</a><ul>
-<li class="chapter" data-level="8.6.1" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#docker-help"><i class="fa fa-check"></i><b>8.6.1</b> Docker Help</a></li>
+<li class="chapter" data-level="8.7" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#exercises"><i class="fa fa-check"></i><b>8.7</b> Exercises</a><ul>
+<li class="chapter" data-level="8.7.1" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#docker-help"><i class="fa fa-check"></i><b>8.7.1</b> Docker Help</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="9" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html"><i class="fa fa-check"></i><b>9</b> Introduction to DBMS queries (11)</a><ul>
-<li class="chapter" data-level="9.1" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#getting-data-from-the-database"><i class="fa fa-check"></i><b>9.1</b> Getting data from the database</a><ul>
-<li class="chapter" data-level="9.1.1" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#finding-out-whats-there"><i class="fa fa-check"></i><b>9.1.1</b> Finding out what’s there</a></li>
-<li class="chapter" data-level="9.1.2" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#listing-all-the-fields-for-all-the-tables"><i class="fa fa-check"></i><b>9.1.2</b> Listing all the fields for all the tables</a></li>
-<li class="chapter" data-level="9.1.3" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#downloading-an-entire-table"><i class="fa fa-check"></i><b>9.1.3</b> Downloading an entire table</a></li>
-<li class="chapter" data-level="9.1.4" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#a-table-object-that-can-be-reused"><i class="fa fa-check"></i><b>9.1.4</b> A table object that can be reused</a></li>
-<li class="chapter" data-level="9.1.5" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#paradigm-shift-lazy-execution"><i class="fa fa-check"></i><b>9.1.5</b> Paradigm Shift: Lazy Execution</a></li>
-<li class="chapter" data-level="9.1.6" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#controlling-the-number-of-rows-returned"><i class="fa fa-check"></i><b>9.1.6</b> Controlling the number of rows returned</a></li>
-<li class="chapter" data-level="9.1.7" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#random-rows-from-the-dbms"><i class="fa fa-check"></i><b>9.1.7</b> Random rows from the dbms</a></li>
-<li class="chapter" data-level="9.1.8" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#sub-setting-variables"><i class="fa fa-check"></i><b>9.1.8</b> Sub-setting variables</a></li>
-<li class="chapter" data-level="9.1.9" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#examining-dplyrs-sql-query-and-re-using-sql-code"><i class="fa fa-check"></i><b>9.1.9</b> Examining <code>dplyr</code>’s SQL query and re-using SQL code</a></li>
+<li class="chapter" data-level="9" data-path="introduction-to-dbms-queries-11a.html"><a href="introduction-to-dbms-queries-11a.html"><i class="fa fa-check"></i><b>9</b> Introduction to DBMS queries (11a)</a><ul>
+<li class="chapter" data-level="9.1" data-path="introduction-to-dbms-queries-11a.html"><a href="introduction-to-dbms-queries-11a.html#getting-data-from-the-database"><i class="fa fa-check"></i><b>9.1</b> Getting data from the database</a><ul>
+<li class="chapter" data-level="9.1.1" data-path="introduction-to-dbms-queries-11a.html"><a href="introduction-to-dbms-queries-11a.html#finding-out-whats-there"><i class="fa fa-check"></i><b>9.1.1</b> Finding out what’s there</a></li>
+<li class="chapter" data-level="9.1.2" data-path="introduction-to-dbms-queries-11a.html"><a href="introduction-to-dbms-queries-11a.html#listing-all-the-fields-for-all-the-tables"><i class="fa fa-check"></i><b>9.1.2</b> Listing all the fields for all the tables</a></li>
+<li class="chapter" data-level="9.1.3" data-path="introduction-to-dbms-queries-11a.html"><a href="introduction-to-dbms-queries-11a.html#downloading-an-entire-table"><i class="fa fa-check"></i><b>9.1.3</b> Downloading an entire table</a></li>
+<li class="chapter" data-level="9.1.4" data-path="introduction-to-dbms-queries-11a.html"><a href="introduction-to-dbms-queries-11a.html#a-table-object-that-can-be-reused"><i class="fa fa-check"></i><b>9.1.4</b> A table object that can be reused</a></li>
+<li class="chapter" data-level="9.1.5" data-path="introduction-to-dbms-queries-11a.html"><a href="introduction-to-dbms-queries-11a.html#controlling-the-number-of-rows-returned"><i class="fa fa-check"></i><b>9.1.5</b> Controlling the number of rows returned</a></li>
+<li class="chapter" data-level="9.1.6" data-path="introduction-to-dbms-queries-11a.html"><a href="introduction-to-dbms-queries-11a.html#random-rows-from-the-dbms"><i class="fa fa-check"></i><b>9.1.6</b> Random rows from the dbms</a></li>
+<li class="chapter" data-level="9.1.7" data-path="introduction-to-dbms-queries-11a.html"><a href="introduction-to-dbms-queries-11a.html#sub-setting-variables"><i class="fa fa-check"></i><b>9.1.7</b> Sub-setting variables</a></li>
+<li class="chapter" data-level="9.1.8" data-path="introduction-to-dbms-queries-11a.html"><a href="introduction-to-dbms-queries-11a.html#translating-dplyr-code-to-sql-queries"><i class="fa fa-check"></i><b>9.1.8</b> Translating <code>dplyr</code> code to <code>SQL</code> queries</a></li>
 </ul></li>
-<li class="chapter" data-level="9.2" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#examining-a-single-table-with-r"><i class="fa fa-check"></i><b>9.2</b> Examining a single table with R</a><ul>
-<li class="chapter" data-level="9.2.1" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#str---a-base-package-workhorse"><i class="fa fa-check"></i><b>9.2.1</b> <code>str</code> - a base package workhorse</a></li>
-<li class="chapter" data-level="9.2.2" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#always-just-look-at-your-data-with-head-view-or-kable"><i class="fa fa-check"></i><b>9.2.2</b> Always just <strong>look</strong> at your data with <code>head</code>, <code>View</code>, or <code>kable</code></a></li>
-<li class="chapter" data-level="9.2.3" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#the-summary-function-in-base"><i class="fa fa-check"></i><b>9.2.3</b> The <code>summary</code> function in base</a></li>
-<li class="chapter" data-level="9.2.4" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#the-glimpse-function-in-the-tibble-package"><i class="fa fa-check"></i><b>9.2.4</b> The <code>glimpse</code> function in the <code>tibble</code> package</a></li>
-<li class="chapter" data-level="9.2.5" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#the-skim-function-in-the-skimr-package"><i class="fa fa-check"></i><b>9.2.5</b> The <code>skim</code> function in the <code>skimr</code> package</a></li>
+<li class="chapter" data-level="9.2" data-path="introduction-to-dbms-queries-11a.html"><a href="introduction-to-dbms-queries-11a.html#examining-a-single-table-with-r"><i class="fa fa-check"></i><b>9.2</b> Examining a single table with R</a><ul>
+<li class="chapter" data-level="9.2.1" data-path="introduction-to-dbms-queries-11a.html"><a href="introduction-to-dbms-queries-11a.html#str---a-base-package-workhorse"><i class="fa fa-check"></i><b>9.2.1</b> <code>str</code> - a base package workhorse</a></li>
+<li class="chapter" data-level="9.2.2" data-path="introduction-to-dbms-queries-11a.html"><a href="introduction-to-dbms-queries-11a.html#always-look-at-your-data-with-head-view-or-kable"><i class="fa fa-check"></i><b>9.2.2</b> Always <strong>look</strong> at your data with <code>head</code>, <code>View</code>, or <code>kable</code></a></li>
+<li class="chapter" data-level="9.2.3" data-path="introduction-to-dbms-queries-11a.html"><a href="introduction-to-dbms-queries-11a.html#the-summary-function-in-base"><i class="fa fa-check"></i><b>9.2.3</b> The <code>summary</code> function in base</a></li>
+<li class="chapter" data-level="9.2.4" data-path="introduction-to-dbms-queries-11a.html"><a href="introduction-to-dbms-queries-11a.html#the-glimpse-function-in-the-tibble-package"><i class="fa fa-check"></i><b>9.2.4</b> The <code>glimpse</code> function in the <code>tibble</code> package</a></li>
+<li class="chapter" data-level="9.2.5" data-path="introduction-to-dbms-queries-11a.html"><a href="introduction-to-dbms-queries-11a.html#the-skim-function-in-the-skimr-package"><i class="fa fa-check"></i><b>9.2.5</b> The <code>skim</code> function in the <code>skimr</code> package</a></li>
+<li class="chapter" data-level="9.2.6" data-path="introduction-to-dbms-queries-11a.html"><a href="introduction-to-dbms-queries-11a.html#close-the-connection-and-shut-down-sql-pet"><i class="fa fa-check"></i><b>9.2.6</b> Close the connection and shut down sql-pet</a></li>
 </ul></li>
-<li class="chapter" data-level="9.3" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#dividing-the-work-between-r-on-your-machine-and-the-dbms"><i class="fa fa-check"></i><b>9.3</b> Dividing the work between R on your machine and the DBMS</a><ul>
-<li class="chapter" data-level="9.3.1" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#make-the-server-do-as-much-work-as-you-can"><i class="fa fa-check"></i><b>9.3.1</b> Make the server do as much work as you can</a></li>
-<li class="chapter" data-level="9.3.2" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#criteria-for-choosing-between-dplyr-and-native-sql"><i class="fa fa-check"></i><b>9.3.2</b> Criteria for choosing between <code>dplyr</code> and native SQL</a></li>
-<li class="chapter" data-level="9.3.3" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#dplyr-tools"><i class="fa fa-check"></i><b>9.3.3</b> <code>dplyr</code> tools</a></li>
+<li class="chapter" data-level="9.3" data-path="introduction-to-dbms-queries-11a.html"><a href="introduction-to-dbms-queries-11a.html#additional-reading"><i class="fa fa-check"></i><b>9.3</b> Additional reading</a></li>
 </ul></li>
-<li class="chapter" data-level="9.4" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#dbi-package"><i class="fa fa-check"></i><b>9.4</b> DBI Package</a></li>
-<li class="chapter" data-level="9.5" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#other-resources"><i class="fa fa-check"></i><b>9.5</b> Other resources</a></li>
+<li class="chapter" data-level="10" data-path="lazy-evaluation-and-lazy-queries-11b.html"><a href="lazy-evaluation-and-lazy-queries-11b.html"><i class="fa fa-check"></i><b>10</b> Lazy Evaluation and Lazy Queries (11b)</a><ul>
+<li class="chapter" data-level="10.1" data-path="lazy-evaluation-and-lazy-queries-11b.html"><a href="lazy-evaluation-and-lazy-queries-11b.html#this-chapter"><i class="fa fa-check"></i><b>10.1</b> This chapter:</a><ul>
+<li class="chapter" data-level="10.1.1" data-path="lazy-evaluation-and-lazy-queries-11b.html"><a href="lazy-evaluation-and-lazy-queries-11b.html#setup"><i class="fa fa-check"></i><b>10.1.1</b> Setup</a></li>
 </ul></li>
-<li class="chapter" data-level="10" data-path="explain-queries-11a.html"><a href="explain-queries-11a.html"><i class="fa fa-check"></i><b>10</b> Explain queries (11a)</a></li>
+<li class="chapter" data-level="10.2" data-path="lazy-evaluation-and-lazy-queries-11b.html"><a href="lazy-evaluation-and-lazy-queries-11b.html#r-is-lazy-and-comes-with-guardrails"><i class="fa fa-check"></i><b>10.2</b> R is lazy and comes with guardrails</a><ul>
+<li class="chapter" data-level="10.2.1" data-path="lazy-evaluation-and-lazy-queries-11b.html"><a href="lazy-evaluation-and-lazy-queries-11b.html#lazy-loading"><i class="fa fa-check"></i><b>10.2.1</b> Lazy loading</a></li>
+<li class="chapter" data-level="10.2.2" data-path="lazy-evaluation-and-lazy-queries-11b.html"><a href="lazy-evaluation-and-lazy-queries-11b.html#lazy-evaluation"><i class="fa fa-check"></i><b>10.2.2</b> Lazy evaluation</a></li>
+<li class="chapter" data-level="10.2.3" data-path="lazy-evaluation-and-lazy-queries-11b.html"><a href="lazy-evaluation-and-lazy-queries-11b.html#lazy-queries"><i class="fa fa-check"></i><b>10.2.3</b> Lazy Queries</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="lazy-evaluation-and-lazy-queries-11b.html"><a href="lazy-evaluation-and-lazy-queries-11b.html#lazy-evaluation-and-lazy-queries"><i class="fa fa-check"></i><b>10.3</b> Lazy evaluation and lazy queries</a><ul>
+<li class="chapter" data-level="10.3.1" data-path="lazy-evaluation-and-lazy-queries-11b.html"><a href="lazy-evaluation-and-lazy-queries-11b.html#dplyr-connection-objects"><i class="fa fa-check"></i><b>10.3.1</b> Dplyr connection objects</a></li>
+<li class="chapter" data-level="10.3.2" data-path="lazy-evaluation-and-lazy-queries-11b.html"><a href="lazy-evaluation-and-lazy-queries-11b.html#using-a-lazy-query"><i class="fa fa-check"></i><b>10.3.2</b> Using a lazy query</a></li>
+</ul></li>
+<li class="chapter" data-level="10.4" data-path="lazy-evaluation-and-lazy-queries-11b.html"><a href="lazy-evaluation-and-lazy-queries-11b.html#sql-in-r-markdown"><i class="fa fa-check"></i><b>10.4</b> SQL in R Markdown</a></li>
+<li class="chapter" data-level="10.5" data-path="lazy-evaluation-and-lazy-queries-11b.html"><a href="lazy-evaluation-and-lazy-queries-11b.html#dbi-package"><i class="fa fa-check"></i><b>10.5</b> DBI Package</a><ul>
+<li class="chapter" data-level="10.5.1" data-path="lazy-evaluation-and-lazy-queries-11b.html"><a href="lazy-evaluation-and-lazy-queries-11b.html#retrieve-the-whole-table"><i class="fa fa-check"></i><b>10.5.1</b> Retrieve the whole table</a></li>
+<li class="chapter" data-level="10.5.2" data-path="lazy-evaluation-and-lazy-queries-11b.html"><a href="lazy-evaluation-and-lazy-queries-11b.html#or-a-chunk-at-a-time"><i class="fa fa-check"></i><b>10.5.2</b> Or a chunk at a time</a></li>
+</ul></li>
+<li class="chapter" data-level="10.6" data-path="lazy-evaluation-and-lazy-queries-11b.html"><a href="lazy-evaluation-and-lazy-queries-11b.html#dividing-the-work-between-r-on-your-machine-and-the-dbms"><i class="fa fa-check"></i><b>10.6</b> Dividing the work between R on your machine and the DBMS</a><ul>
+<li class="chapter" data-level="10.6.1" data-path="lazy-evaluation-and-lazy-queries-11b.html"><a href="lazy-evaluation-and-lazy-queries-11b.html#make-the-server-do-as-much-work-as-you-can"><i class="fa fa-check"></i><b>10.6.1</b> Make the server do as much work as you can</a></li>
+<li class="chapter" data-level="10.6.2" data-path="lazy-evaluation-and-lazy-queries-11b.html"><a href="lazy-evaluation-and-lazy-queries-11b.html#criteria-for-choosing-between-dplyr-and-native-sql"><i class="fa fa-check"></i><b>10.6.2</b> Criteria for choosing between <code>dplyr</code> and native SQL</a></li>
+</ul></li>
+<li class="chapter" data-level="10.7" data-path="lazy-evaluation-and-lazy-queries-11b.html"><a href="lazy-evaluation-and-lazy-queries-11b.html#other-resources"><i class="fa fa-check"></i><b>10.7</b> Other resources</a></li>
+</ul></li>
 <li class="chapter" data-level="11" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html"><i class="fa fa-check"></i><b>11</b> Joins and complex queries (13)</a><ul>
 <li class="chapter" data-level="11.1" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#database-constraints"><i class="fa fa-check"></i><b>11.1</b> Database constraints</a></li>
 <li class="chapter" data-level="11.2" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#making-up-data-for-join-examples"><i class="fa fa-check"></i><b>11.2</b> Making up data for Join Examples</a><ul>
@@ -365,6 +382,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="22.2" data-path="additional-technical-details-for-windows-users-95.html"><a href="additional-technical-details-for-windows-users-95.html#git-github-and-line-endings"><i class="fa fa-check"></i><b>22.2</b> Git, GitHub and line endings</a></li>
 </ul></li>
+<li class="chapter" data-level="23" data-path="dplyr-functions-and-sql-cross-walk-96.html"><a href="dplyr-functions-and-sql-cross-walk-96.html"><i class="fa fa-check"></i><b>23</b> Dplyr functions and SQL cross-walk (96)</a></li>
+<li class="chapter" data-level="24" data-path="dbi-package-functions-coverage-96b.html"><a href="dbi-package-functions-coverage-96b.html"><i class="fa fa-check"></i><b>24</b> DBI package functions - coverage (96b)</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>

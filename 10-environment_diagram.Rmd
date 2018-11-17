@@ -13,6 +13,16 @@ library(sqlpetr)
 display_rows <- 5
 ```
 
+## command structure
+
+| Example                                                      | R            | OS           | Docker       | Alpine container | pg_restore / ls | postgreSQL    |
+| -------------------------------------------------- | ---------- | ---------- | ---------- | -------------- | ------------- | ----------- |
+| -U postgres <br />-d dvdrental  <br />petdir/dvdrental.tar               |              |              |              |                  | \|------->    | --------* |
+| ls petdir \|  <br />grep "dvdrental.tar"                           |              |              |              | \|------->     | --------*   |               |
+| exec sql-pet <br />ls petdir \|  <br />grep "dvdrental.tar               |              |              | \|-------> | ---------      | --------*   |               |
+| docker <br />exec sql-pet  <br />ls petdir \|  <br />grep "dvdrental.tar"      |              | \|-------> | ---------  | ---------      | --------*   |               |
+| system2('docker',  <br />'exec sql-pet <br />ls petdir \|  <br />grep "dvdrental.tar" ',  <br />stdout = TRUE,  <br />stderr = TRUE) | \|-------> | ---------  | ---------  | ---------      | --------*   |               |
+
 ## Basics
 
 * Keeping passwords secure.

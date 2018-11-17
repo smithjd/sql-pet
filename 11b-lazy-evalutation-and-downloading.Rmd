@@ -1,13 +1,16 @@
-# R Lazy Evaluation, remote execution, and SQL (11b)
+# Lazy Evaluation and Lazy Queries (11b)
 
-> This chapter:
+
+## This chapter:
 > 
 > * Reviews lazy evaluation and discusses its interaction with remote query execution on a dbms 
 > * Illustrates some of the differences between writing `dplyr` commands and SQL
 > * Suggests some strategies for dividing the work between your local R session and the dbms
 
+### Setup
+
 The following packages are used in this chapter:
-```{r package list, echo=TRUE, message=FALSE, warning=FALSE}
+```{r chapter package list, echo=TRUE, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(DBI)
 library(RPostgres)
@@ -29,9 +32,16 @@ con <- sp_get_postgres_connection(
   seconds_to_test = 10
 )
 ```
-## R's laziness and guardrails
 
-In [the vignette for dbplyr](https://cran.r-project.org/web/packages/dbplyr/vignettes/dbplyr.html) Hadley Wikham explains:
+## R is lazy and comes with guardrails
+
+By design, R is both a language and an interactive development environment (IDE).  As a language, R tries to be as efficient as possible.  As an IDE, R creates some guardrails to make it easy and safe to work with your data. For example `getOption("max.print")` prevents R from printing more rows of data than you can handle, with a nice default of `r getOption("max.print")`, which may or may not suit you.
+
+On the other hand SQL a *"Structured Query Language (SQL) is a standard computer language for relational database management and data manipulation."* ^[https://www.techopedia.com/definition/1245/structured-query-language-sql]. SQL has database-specific Interactive Development Environments (IDEs): for postgreSQL it's [pgAdmin](https://www.pgadmin.org/).  Roger Peng explains in [R Programming for Data Science](https://bookdown.org/rdpeng/rprogdatascience/history-and-overview-of-r.html#basic-features-of-r) that:
+
+> R has maintained the original S philosophy, which is that it provides a language that is both useful for interactive work, but contains a powerful programming language for developing new tools. 
+
+This is complicated when R interacts with SQL.  In [the vignette for dbplyr](https://cran.r-project.org/web/packages/dbplyr/vignettes/dbplyr.html) Hadley Wikham explains:
 
 > The most important difference between ordinary data frames and remote database queries is that your R code is translated into SQL and executed in the database on the remote server, not in R on your local machine. When working with databases, dplyr tries to be as lazy as possible:
 > 
@@ -40,153 +50,154 @@ In [the vignette for dbplyr](https://cran.r-project.org/web/packages/dbplyr/vign
 > * It delays doing any work until the last possible moment: it collects together everything you want to do and then sends it to > the database in one step.
 > 
 
-Why lazy.
-Why guardrails.
-How they interact
+Eventually, if you are interacting with a dbms from R you will need to understand the differences between lazy loading, lazy evaluation, and lazy queries.
 
 ### Lazy loading
 
-for packages
+"*Lazy loading is always used for code in packages but is optional (selected by the package maintainer) for datasets in packages.*"^[https://cran.r-project.org/doc/manuals/r-release/R-ints.html#Lazy-loading]  Lazy loading means that the code for a particular function doesn't actually get loaded into memory until the last minute -- when it's actually being used.
 
-### Lazy Evaluation 
+### Lazy evaluation 
 
-* https://colinfay.me/lazyeval/  - About lazy evaluation
-* https://colinfay.me/tidyeval-1/  - Down the rabbit hole with tidy eval — Part 1
+Essentially "Lazy evaluation is a programming strategy that allows a symbol to be evaluated only when needed." ^[https://colinfay.me/lazyeval/]  That means that lazy evaluation is about **symbols** such as function arguments ^[http://adv-r.had.co.nz/Functions.html#function-arguments] when they are evaluated. Tidy evaluation complicates lazy evaluation. ^[https://colinfay.me/tidyeval-1/]
 
-### Remote execution and retrieval
+### Lazy Queries
 
+"*When you create a "lazy" query, you're creating a pointer to a set of conditions on the database, but the query isn't actually run and the data isn't actually loaded until you call "next" or some similar method to actually fetch the data and load it into an object.*" ^[https://www.quora.com/What-is-a-lazy-query]  The `collect()` function retrieves data into a local tibble.^[https://dplyr.tidyverse.org/reference/compute.html]
 
-## Resources
+## Lazy evaluation and lazy queries
 
-Remember that in R:
+### Dplyr connection objects
+As introduced in the previous chapter, the `dplyr::tbl` function creates  an object that might **look** like a data frame in that when you enter it on the command line, it prints a bunch of rows from the dbms table.  But is actually a **list** object that `dplyr` uses for constructing queries and retrieving data from the DBMS.  
 
-* Everything that happens is a functions
-* Everything that exists is an object
-
-* http://adv-r.had.co.nz/Functions.html#function-arguments 
-* http://adv-r.had.co.nz/Computing-on-the-language.html#subset
-
-
-## Illustrating the interactions between lazy evaluation and remote execution
-
-As introduced in the previous chapter, the `dplyr::tbl` function creates  an object that might **look** like a data frame, but is actually a **list** object that `dplyr` uses for constructing queries and retrieving data from the DBMS.  
-
+The following code illustrates these issues.  The `dplyr::tbl` function creates the connection object that we store in an object named `rental_table`:
 ```{r}
 rental_table <- dplyr::tbl(con, "rental")
 ```
-
-
+At first glance, it kind of **looks** like a data frame although it only prints 10 of the table's 16,044 rows:
 ```{r}
-sorted_fields <- DBI::dbListFields(con, "rental") %>% sort()
-Q <- rental_table %>% select(sorted_fields)
+rental_table
 ```
-> R code | Result 
-> -------| --------------
-> `Q %>% str` | Shows the object `Q` 
-> `Q %>% show_query` | Translates the object into SQL  
-> `Q %>% nrow` | Attempts to determine the number of rows 
-> `Q %>% print` | Prints x rows; same as just entering `Q`  
-> `Q %>% head` |  Prints the first 6 rows 
-> `Q %>% collect (n = 14)` | Prints 14 rows  
-> 
-> 
-```{r}
-Q %>% str
-Q %>% show_query
-Q %>% nrow
-Q %>% print
-Q %>% head
-Q %>% collect(n = 14)
-```
-
-
-Consider the structure of the connection object:
+But consider the structure of  `rental_table`:
 ```{r}
 str(rental_table)
 ```
 
-Notice that the first list contains the source connection information.  Among other things it contains a list of variables/columns in the table:
+It has two rows.  The first row contains all the information in the `con` object, which contains information about all the tables and objects in the database:
+```{r}
+rental_table$src$con@typnames$typname[380:437]
+```
+The second row contains a list of the columns in the `rental` table, among other things:
 
 ```{r}
 rental_table$ops$vars
 ```
 
+To illustrate the different issues involved in data retrieval, we create equivalent connection objects to link to two other tables.  
+```{r}
+staff_table <- dplyr::tbl(con, "staff") 
+# the 'staff' table has 2 rows
 
-### Paradigm Shift: Lazy Execution
-
-R and `dplyr` is designed to be both lazy and smart. Lazy execution affects when a donwload happens and when processing occurs on the dbms server side.  R retrieves the full data set when explicityly told to do so via the `collect` verb, otherwise it returns only 10 rows. And `dplyr` tries to get as much work done on the server side as possible before downloading anything.  All of this is a key paradigm shift for those new to working with databases using R and `dplyr`, especially if they have been working in a straight SQL environment.
-
-**explain why this matters here**
-
-In the code blocks below, we demonstrate three ways to check if `dplyr` has performed lazy/delayed execution.
-
-1.  Display the object.
-2.  nrow(object)
-3.  Check the pipe.
-
-```{r Lazy Execution 1 View Output}
-rental_table <- dplyr::tbl(con, "rental")
-rental_table
-head(rental_table, n = 25)
-```
-At the top of the output look for the dimensions, [?? x columns] or at the bottom for '... with more rows'
-
-Notice that `head` should return 25 rows, but only shows the 10 rows it has can retrieve. 
-
-```{r Lazy Execution 2 nrow of the object}
-nrow(rental_table)
+customer_table <- dplyr::tbl(con, "customer") 
+# the 'customer' table has 599 rows
 ```
 
-The the `rental_table` is smart enough to returns `NA` when passed to `nrow` so no execution is performed.
+### Using a lazy query
 
-```{r Lazy Execution 3 summarise implies "collect"}
-rental_table %>% dplyr::summarise(n = n())
-rental_table %>% dplyr::summarise(n = n()) %>% show_query()
-```
-The `dplyr::summarise` verb does not force R to download the whole table.  It **processes** the whole table by counting all the rows on the dbms side and then downloads one number.
-
-Next we give an example where R gets busy and returns the full data set.
+Here is a typical string of dplyr verbs strung together with the magrittr `%>%` command that will be used to tease out the several different behaviors that a lazy query has when passed to different R functions.  This query joins three connection objects into a query we'll call `Q`:
 
 ```{r}
-rental_table <- dplyr::tbl(con, "rental") # Lazy
-
-collect_rental_table <- rental_table %>% collect() # Busy
-collect_rental_table
+Q <- rental_table %>%
+  select(staff_id, customer_id, rental_date) %>%
+  left_join(staff_table, by = c("staff_id" = "staff_id")) %>%
+  rename(staff_email = email) %>%
+  select(staff_id, customer_id, rental_date, staff_email) %>%
+  left_join(customer_table, by = c("customer_id" = "customer_id")) %>%
+  rename(customer_email = email) %>%
+  select(rental_date, staff_email, customer_email)
 ```
 
-At the top of the output, `# A tibble: 16,044 x 7` and at the bottom of the output, `# ... with 16,034 more rows` we see that `dplyr::tbl` returned all the rows associated with `collect_rental_table`.  See [Controlling number of rows returned] for additional R examples showing R getting to work, and return some or all the rows.
+Think of `Q` as a black box for the moment.  The following examples will show how `Q` is interpreted differently by different functions. 
+
+> R code | Result 
+> -------| --------------
+> `Q %>% print()` | Prints x rows; same as just entering `Q`  
+> `Q %>% as.tibble()` | Forces `Q` to be a tibble
+> `Q %>% head()` |  Prints the first 6 rows 
+> `Q %>% length()` |  Counts the rows in `Q`
+> `Q %>% str(max.level = 3)` | Shows the top 3 levels of the **object** `Q` 
+> `Q %>% nrow()` | **Attempts** to determine the number of rows 
+> `Q %>% tally()` | Counts all the rows -- on the dbms side
+> `Q %>% collect (n = 20)` | Prints 20 rows  
+> `Q %>% collect (n = 20) %>% head()` | Prints 6 rows  
+> `Q %>% show_query()` | **Translates** the lazy query object into SQL  
+> `Qc <- Q %>%` <br /> `count(customer_email, sort = TRUE)` <br /> `Qc` | **Extends** the lazy query object
+>
+> 
+
+(The next chapter will discuss how to build queries and how to explore intermediate steps.)
+
+Remember that `Q %>% print()` is equivalent to `print(Q)` and the same as just entering `Q` on the command line.  We use the magrittr pipe operator here because chaining functions highlights how the same object behaves differently in each use.
+```{r}
+Q %>% print()
+```
+In its role as IDE, R has provided nicely formatted output that is similar to what it prints for a tibble, with descriptive information about the dataset and each column:
+
+>
+> # Source:   lazy query [?? x 3]
+> # Database: postgres [postgres@localhost:5432/dvdrental]
+>   rental_date         staff_email                  customer_email                       
+<   <dttm>              <chr>                        <chr>
+>
+
+It has only retrieved 10 rows but doesn't know how many rows are left to retrieve as it notes `... with more rows`. 
+In contrast to `print()`, the `as.tibble()` function causes R to download the whole table, using tibble's default of displaying only the first 10 rows.
+```{r}
+Q %>% as.tibble()
+```
+
+The `head()` function is very similar to print but has a different "`max.print`" value.
+```{r}
+Q %>% head()
+```
+Because the `Q` object is relatively complex, using `str()` on it prints many lines.  You can glimpse what's going on with `length()`:
+```{r}
+Q %>% length()
+```
+Looking inside shows some of what's going on:
+```{r}
+Q %>% str(max.level = 3) 
+```
+Notice the difference between `nrow()` and `tally()`:
+```{r}
+Q %>% nrow()
+Q %>% tally()
+```
+The `nrow()` function knows that `Q` is a list.  On the other hand, the `tally()` function tells SQL to go count all the rows. Notice that `Q` results in 16,044 rows -- the same number of rows as `rental`.
+
+The `dplyr::collect()` function triggers a dbFetch() function behind the scenes, which forces R to download a specified number of rows:
+```{r}
+Q %>% collect(n = 20)
+Q %>% collect(n = 20) %>% head()
+```
+The `collect` function triggers the creation of a tibble and controls the number of rows that the DBMS sends to R.  Notice that `head` only prints 6 of the 25 rows that R has retrieved.  
+
+```{r}
+Q %>% show_query()
+
+```
+Hand-written SQL code to do the same job will probably look a lot nicer and could be more efficient, but functionally dplyr does the job.
+
+But because `Q` hasn't been executed, we can add to it.  This behavior is the basis for a useful debugging and development process where queries are built up incrementally.
+```{r}
+Qc <- Q %>% count(customer_email, sort = TRUE) 
+Qc
+```
 
 See more example of lazy execution can be found [Here](https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html).
 
-### Controlling the number of rows returned
+## SQL in R Markdown
 
-The `collect` function triggers the creation of a tibble and controls the number of rows that the DBMS sends to R.  Note that in the following examples, the object dimensions are known.
-```{r}
-rental_table %>% collect(n = 3) %>% head()
-```
-In this case the `collect` function triggers the execution of a query that counts the number of records in the table by `staff_id`:
-```{r}
-rental_table %>%
-  count(staff_id) %>%
-  collect()
-```
-
-The `collect` function affects how much is downloaded, not how many rows the DBMS needs to process the query. This query processes all of the rows in the table but only displays one row of output.
-```{r}
-rental_table %>%
-  count(staff_id) %>%
-  collect(n = 1)
-```
-<<smy We haven't investigated this, but it looks like `dplyr` collect() function triggers a call simmilar to the dbGetQuery call above.  The default `dplyr` behavior looks like dbSendQuery() and dbFetch() model is used.>>
-
-When you create a report to run repeatedly, you might want to put that query into R markdown.  That way you can also execute that SQL code in a chunk with the following header:
-
-### Interactions with R Markdown
-
-
-SQL and rmarkdown:
-* https://bookdown.org/yihui/rmarkdown/language-engines.html#sql
-
+When you create a report to run repeatedly, you might want to put that query into R markdown. See the discussion of [multiple language engines in R Markdown](https://bookdown.org/yihui/rmarkdown/language-engines.html#sql). That way you can also execute that SQL code in a chunk with the following header:
 
   {`sql, connection=con, output.var = "query_results"`}
 
@@ -198,8 +209,47 @@ GROUP BY "staff_id";
 Rmarkdown stored that query result in a tibble:
 ```{r}
 query_results
+
+```
+## DBI Package
+
+In this chapter we touched on a number of functions from the DBI Package.  The table in file 96b shows other functions in the package.  The Chapter column references a section in the book if we have used it.
+
+```{r}
+film_table <- tbl(con, "film")
 ```
 
+### Retrieve the whole table
+
+SQL code that is submitted to a database is evaluated all at once^[From R's perspective. Actually there are 4 steps behind the scenes.].  To think through an SQL query, either use dplyr to build it up step by step and then convert it to SQL code or an IDE such as [pgAdmin](https://www.pgadmin.org/). DBI returns a data.frame, so you don't have dplyr's guardrails.
+```{r}
+res <- dbSendQuery(con, 'SELECT "title", "rental_duration", "length"
+FROM "film"
+WHERE ("rental_duration" > 5.0 AND "length" > 117.0)')
+
+res_output <- dbFetch(res)
+str(res_output)
+
+dbClearResult(res)
+```
+
+### Or a chunk at a time
+
+```{r}
+res <- dbSendQuery(con, 'SELECT "title", "rental_duration", "length"
+FROM "film"
+WHERE ("rental_duration" > 5.0 AND "length" > 117.0)')
+
+chunk_num <- 0
+while(!dbHasCompleted(res)){
+  chunk_num <- chunk_num + 1
+  chunk <- dbFetch(res, n = 5)
+  print(nrow(chunk))
+  if (!chunk_num %% 7) {print(chunk)}
+}
+
+dbClearResult(res)
+```
 
 ## Dividing the work between R on your machine and the DBMS
 
@@ -219,17 +269,12 @@ This probably belongs later in the book.
   + larger samples and complete tables
   + using what you know to write efficient queries that do most of the work on the server
 
-### `dplyr` tools
-
 Where you place the `collect` function matters.
 ```{r}
 dbDisconnect(con)
 sp_docker_stop("sql-pet")
 ```
 
-## DBI Package
-
-In this chapter we touched on a number of functions from the DBI Package.  The table in file 96b shows other functions in the package.  The Chapter column references a section in the book if we have used it.
 
 ## Other resources
 

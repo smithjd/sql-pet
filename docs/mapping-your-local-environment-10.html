@@ -25,7 +25,7 @@
 <meta name="author" content="Dipti Muni, Ian Frantz, John David Smith, Mary Anne Thygesen, M. Edward (Ed) Borasky, Scott Came, and Sophie Yang">
 
 
-<meta name="date" content="2018-11-08">
+<meta name="date" content="2018-11-16">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -33,7 +33,7 @@
   
   
 <link rel="prev" href="the-dvdrental-database-in-postgres-in-docker-05.html">
-<link rel="next" href="introduction-to-dbms-queries-11.html">
+<link rel="next" href="introduction-to-dbms-queries-11a.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -49,7 +49,7 @@
 
 <script src="libs/htmlwidgets-1.3/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.4/datatables.js"></script>
+<script src="libs/datatables-binding-0.5/datatables.js"></script>
 <link href="libs/dt-core-1.10.16/css/jquery.dataTables.min.css" rel="stylesheet" />
 <link href="libs/dt-core-1.10.16/css/jquery.dataTables.extra.css" rel="stylesheet" />
 <script src="libs/dt-core-1.10.16/js/jquery.dataTables.min.js"></script>
@@ -63,7 +63,7 @@
 <style type="text/css">
 a.sourceLine { display: inline-block; line-height: 1.25; }
 a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; position: absolute; }
+a.sourceLine:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -76,13 +76,11 @@ code.sourceCode { white-space: pre-wrap; }
 a.sourceLine { text-indent: -1em; padding-left: 1em; }
 }
 pre.numberSource a.sourceLine
-  { position: relative; }
-pre.numberSource a.sourceLine:empty
-  { position: absolute; }
+  { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
   { content: attr(data-line-number);
-    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all;
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -185,7 +183,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.2" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#clean-up-if-appropriate"><i class="fa fa-check"></i><b>6.2</b> Clean up if appropriate</a></li>
 <li class="chapter" data-level="6.3" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#connect-read-and-write-to-postgres-from-r"><i class="fa fa-check"></i><b>6.3</b> Connect, read and write to Postgres from R</a><ul>
 <li class="chapter" data-level="6.3.1" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#pause-for-some-security-considerations"><i class="fa fa-check"></i><b>6.3.1</b> Pause for some security considerations</a></li>
-<li class="chapter" data-level="6.3.2" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#interact-with-postgres"><i class="fa fa-check"></i><b>6.3.2</b> Interact with Postgres</a></li>
+<li class="chapter" data-level="6.3.2" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#connect-with-postgres"><i class="fa fa-check"></i><b>6.3.2</b> Connect with Postgres</a></li>
+<li class="chapter" data-level="6.3.3" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#interact-with-postgres"><i class="fa fa-check"></i><b>6.3.3</b> Interact with Postgres</a></li>
 </ul></li>
 <li class="chapter" data-level="6.4" data-path="docker-postgres-and-r-04.html"><a href="docker-postgres-and-r-04.html#clean-up"><i class="fa fa-check"></i><b>6.4</b> Clean up</a></li>
 </ul></li>
@@ -201,48 +200,66 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.9" data-path="the-dvdrental-database-in-postgres-in-docker-05.html"><a href="the-dvdrental-database-in-postgres-in-docker-05.html#using-the-sql-pet-container-in-the-rest-of-the-book"><i class="fa fa-check"></i><b>7.9</b> Using the <code>sql-pet</code> container in the rest of the book</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html"><i class="fa fa-check"></i><b>8</b> Mapping your local environment (10)</a><ul>
-<li class="chapter" data-level="8.1" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#basics"><i class="fa fa-check"></i><b>8.1</b> Basics</a></li>
-<li class="chapter" data-level="8.2" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#ask-yourself-what-are-you-aiming-for"><i class="fa fa-check"></i><b>8.2</b> Ask yourself, what are you aiming for?</a></li>
-<li class="chapter" data-level="8.3" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#get-some-basic-information-about-your-database"><i class="fa fa-check"></i><b>8.3</b> Get some basic information about your database</a></li>
-<li class="chapter" data-level="8.4" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#tutorial-environment"><i class="fa fa-check"></i><b>8.4</b> Tutorial Environment</a></li>
-<li class="chapter" data-level="8.5" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#communicating-with-docker-applications"><i class="fa fa-check"></i><b>8.5</b> Communicating with Docker Applications</a><ul>
-<li class="chapter" data-level="8.5.1" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#dbconnect"><i class="fa fa-check"></i><b>8.5.1</b> dbConnect</a></li>
-<li class="chapter" data-level="8.5.2" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#bash"><i class="fa fa-check"></i><b>8.5.2</b> bash</a></li>
-<li class="chapter" data-level="8.5.3" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#psql"><i class="fa fa-check"></i><b>8.5.3</b> psql</a></li>
-<li class="chapter" data-level="8.5.4" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#start-stop"><i class="fa fa-check"></i><b>8.5.4</b> start-stop</a></li>
+<li class="chapter" data-level="8.1" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#command-structure"><i class="fa fa-check"></i><b>8.1</b> command structure</a></li>
+<li class="chapter" data-level="8.2" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#basics"><i class="fa fa-check"></i><b>8.2</b> Basics</a></li>
+<li class="chapter" data-level="8.3" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#ask-yourself-what-are-you-aiming-for"><i class="fa fa-check"></i><b>8.3</b> Ask yourself, what are you aiming for?</a></li>
+<li class="chapter" data-level="8.4" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#get-some-basic-information-about-your-database"><i class="fa fa-check"></i><b>8.4</b> Get some basic information about your database</a></li>
+<li class="chapter" data-level="8.5" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#tutorial-environment"><i class="fa fa-check"></i><b>8.5</b> Tutorial Environment</a></li>
+<li class="chapter" data-level="8.6" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#communicating-with-docker-applications"><i class="fa fa-check"></i><b>8.6</b> Communicating with Docker Applications</a><ul>
+<li class="chapter" data-level="8.6.1" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#dbconnect"><i class="fa fa-check"></i><b>8.6.1</b> dbConnect</a></li>
+<li class="chapter" data-level="8.6.2" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#bash"><i class="fa fa-check"></i><b>8.6.2</b> bash</a></li>
+<li class="chapter" data-level="8.6.3" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#psql"><i class="fa fa-check"></i><b>8.6.3</b> psql</a></li>
+<li class="chapter" data-level="8.6.4" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#start-stop"><i class="fa fa-check"></i><b>8.6.4</b> start-stop</a></li>
 </ul></li>
-<li class="chapter" data-level="8.6" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#exercises"><i class="fa fa-check"></i><b>8.6</b> Exercises</a><ul>
-<li class="chapter" data-level="8.6.1" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#docker-help"><i class="fa fa-check"></i><b>8.6.1</b> Docker Help</a></li>
+<li class="chapter" data-level="8.7" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#exercises"><i class="fa fa-check"></i><b>8.7</b> Exercises</a><ul>
+<li class="chapter" data-level="8.7.1" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#docker-help"><i class="fa fa-check"></i><b>8.7.1</b> Docker Help</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="9" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html"><i class="fa fa-check"></i><b>9</b> Introduction to DBMS queries (11)</a><ul>
-<li class="chapter" data-level="9.1" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#getting-data-from-the-database"><i class="fa fa-check"></i><b>9.1</b> Getting data from the database</a><ul>
-<li class="chapter" data-level="9.1.1" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#finding-out-whats-there"><i class="fa fa-check"></i><b>9.1.1</b> Finding out what’s there</a></li>
-<li class="chapter" data-level="9.1.2" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#listing-all-the-fields-for-all-the-tables"><i class="fa fa-check"></i><b>9.1.2</b> Listing all the fields for all the tables</a></li>
-<li class="chapter" data-level="9.1.3" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#downloading-an-entire-table"><i class="fa fa-check"></i><b>9.1.3</b> Downloading an entire table</a></li>
-<li class="chapter" data-level="9.1.4" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#a-table-object-that-can-be-reused"><i class="fa fa-check"></i><b>9.1.4</b> A table object that can be reused</a></li>
-<li class="chapter" data-level="9.1.5" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#paradigm-shift-lazy-execution"><i class="fa fa-check"></i><b>9.1.5</b> Paradigm Shift: Lazy Execution</a></li>
-<li class="chapter" data-level="9.1.6" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#controlling-the-number-of-rows-returned"><i class="fa fa-check"></i><b>9.1.6</b> Controlling the number of rows returned</a></li>
-<li class="chapter" data-level="9.1.7" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#random-rows-from-the-dbms"><i class="fa fa-check"></i><b>9.1.7</b> Random rows from the dbms</a></li>
-<li class="chapter" data-level="9.1.8" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#sub-setting-variables"><i class="fa fa-check"></i><b>9.1.8</b> Sub-setting variables</a></li>
-<li class="chapter" data-level="9.1.9" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#examining-dplyrs-sql-query-and-re-using-sql-code"><i class="fa fa-check"></i><b>9.1.9</b> Examining <code>dplyr</code>’s SQL query and re-using SQL code</a></li>
+<li class="chapter" data-level="9" data-path="introduction-to-dbms-queries-11a.html"><a href="introduction-to-dbms-queries-11a.html"><i class="fa fa-check"></i><b>9</b> Introduction to DBMS queries (11a)</a><ul>
+<li class="chapter" data-level="9.1" data-path="introduction-to-dbms-queries-11a.html"><a href="introduction-to-dbms-queries-11a.html#getting-data-from-the-database"><i class="fa fa-check"></i><b>9.1</b> Getting data from the database</a><ul>
+<li class="chapter" data-level="9.1.1" data-path="introduction-to-dbms-queries-11a.html"><a href="introduction-to-dbms-queries-11a.html#finding-out-whats-there"><i class="fa fa-check"></i><b>9.1.1</b> Finding out what’s there</a></li>
+<li class="chapter" data-level="9.1.2" data-path="introduction-to-dbms-queries-11a.html"><a href="introduction-to-dbms-queries-11a.html#listing-all-the-fields-for-all-the-tables"><i class="fa fa-check"></i><b>9.1.2</b> Listing all the fields for all the tables</a></li>
+<li class="chapter" data-level="9.1.3" data-path="introduction-to-dbms-queries-11a.html"><a href="introduction-to-dbms-queries-11a.html#downloading-an-entire-table"><i class="fa fa-check"></i><b>9.1.3</b> Downloading an entire table</a></li>
+<li class="chapter" data-level="9.1.4" data-path="introduction-to-dbms-queries-11a.html"><a href="introduction-to-dbms-queries-11a.html#a-table-object-that-can-be-reused"><i class="fa fa-check"></i><b>9.1.4</b> A table object that can be reused</a></li>
+<li class="chapter" data-level="9.1.5" data-path="introduction-to-dbms-queries-11a.html"><a href="introduction-to-dbms-queries-11a.html#controlling-the-number-of-rows-returned"><i class="fa fa-check"></i><b>9.1.5</b> Controlling the number of rows returned</a></li>
+<li class="chapter" data-level="9.1.6" data-path="introduction-to-dbms-queries-11a.html"><a href="introduction-to-dbms-queries-11a.html#random-rows-from-the-dbms"><i class="fa fa-check"></i><b>9.1.6</b> Random rows from the dbms</a></li>
+<li class="chapter" data-level="9.1.7" data-path="introduction-to-dbms-queries-11a.html"><a href="introduction-to-dbms-queries-11a.html#sub-setting-variables"><i class="fa fa-check"></i><b>9.1.7</b> Sub-setting variables</a></li>
+<li class="chapter" data-level="9.1.8" data-path="introduction-to-dbms-queries-11a.html"><a href="introduction-to-dbms-queries-11a.html#translating-dplyr-code-to-sql-queries"><i class="fa fa-check"></i><b>9.1.8</b> Translating <code>dplyr</code> code to <code>SQL</code> queries</a></li>
 </ul></li>
-<li class="chapter" data-level="9.2" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#examining-a-single-table-with-r"><i class="fa fa-check"></i><b>9.2</b> Examining a single table with R</a><ul>
-<li class="chapter" data-level="9.2.1" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#str---a-base-package-workhorse"><i class="fa fa-check"></i><b>9.2.1</b> <code>str</code> - a base package workhorse</a></li>
-<li class="chapter" data-level="9.2.2" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#always-just-look-at-your-data-with-head-view-or-kable"><i class="fa fa-check"></i><b>9.2.2</b> Always just <strong>look</strong> at your data with <code>head</code>, <code>View</code>, or <code>kable</code></a></li>
-<li class="chapter" data-level="9.2.3" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#the-summary-function-in-base"><i class="fa fa-check"></i><b>9.2.3</b> The <code>summary</code> function in base</a></li>
-<li class="chapter" data-level="9.2.4" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#the-glimpse-function-in-the-tibble-package"><i class="fa fa-check"></i><b>9.2.4</b> The <code>glimpse</code> function in the <code>tibble</code> package</a></li>
-<li class="chapter" data-level="9.2.5" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#the-skim-function-in-the-skimr-package"><i class="fa fa-check"></i><b>9.2.5</b> The <code>skim</code> function in the <code>skimr</code> package</a></li>
+<li class="chapter" data-level="9.2" data-path="introduction-to-dbms-queries-11a.html"><a href="introduction-to-dbms-queries-11a.html#examining-a-single-table-with-r"><i class="fa fa-check"></i><b>9.2</b> Examining a single table with R</a><ul>
+<li class="chapter" data-level="9.2.1" data-path="introduction-to-dbms-queries-11a.html"><a href="introduction-to-dbms-queries-11a.html#str---a-base-package-workhorse"><i class="fa fa-check"></i><b>9.2.1</b> <code>str</code> - a base package workhorse</a></li>
+<li class="chapter" data-level="9.2.2" data-path="introduction-to-dbms-queries-11a.html"><a href="introduction-to-dbms-queries-11a.html#always-look-at-your-data-with-head-view-or-kable"><i class="fa fa-check"></i><b>9.2.2</b> Always <strong>look</strong> at your data with <code>head</code>, <code>View</code>, or <code>kable</code></a></li>
+<li class="chapter" data-level="9.2.3" data-path="introduction-to-dbms-queries-11a.html"><a href="introduction-to-dbms-queries-11a.html#the-summary-function-in-base"><i class="fa fa-check"></i><b>9.2.3</b> The <code>summary</code> function in base</a></li>
+<li class="chapter" data-level="9.2.4" data-path="introduction-to-dbms-queries-11a.html"><a href="introduction-to-dbms-queries-11a.html#the-glimpse-function-in-the-tibble-package"><i class="fa fa-check"></i><b>9.2.4</b> The <code>glimpse</code> function in the <code>tibble</code> package</a></li>
+<li class="chapter" data-level="9.2.5" data-path="introduction-to-dbms-queries-11a.html"><a href="introduction-to-dbms-queries-11a.html#the-skim-function-in-the-skimr-package"><i class="fa fa-check"></i><b>9.2.5</b> The <code>skim</code> function in the <code>skimr</code> package</a></li>
+<li class="chapter" data-level="9.2.6" data-path="introduction-to-dbms-queries-11a.html"><a href="introduction-to-dbms-queries-11a.html#close-the-connection-and-shut-down-sql-pet"><i class="fa fa-check"></i><b>9.2.6</b> Close the connection and shut down sql-pet</a></li>
 </ul></li>
-<li class="chapter" data-level="9.3" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#dividing-the-work-between-r-on-your-machine-and-the-dbms"><i class="fa fa-check"></i><b>9.3</b> Dividing the work between R on your machine and the DBMS</a><ul>
-<li class="chapter" data-level="9.3.1" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#make-the-server-do-as-much-work-as-you-can"><i class="fa fa-check"></i><b>9.3.1</b> Make the server do as much work as you can</a></li>
-<li class="chapter" data-level="9.3.2" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#criteria-for-choosing-between-dplyr-and-native-sql"><i class="fa fa-check"></i><b>9.3.2</b> Criteria for choosing between <code>dplyr</code> and native SQL</a></li>
-<li class="chapter" data-level="9.3.3" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#dplyr-tools"><i class="fa fa-check"></i><b>9.3.3</b> <code>dplyr</code> tools</a></li>
+<li class="chapter" data-level="9.3" data-path="introduction-to-dbms-queries-11a.html"><a href="introduction-to-dbms-queries-11a.html#additional-reading"><i class="fa fa-check"></i><b>9.3</b> Additional reading</a></li>
 </ul></li>
-<li class="chapter" data-level="9.4" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#dbi-package"><i class="fa fa-check"></i><b>9.4</b> DBI Package</a></li>
-<li class="chapter" data-level="9.5" data-path="introduction-to-dbms-queries-11.html"><a href="introduction-to-dbms-queries-11.html#other-resources"><i class="fa fa-check"></i><b>9.5</b> Other resources</a></li>
+<li class="chapter" data-level="10" data-path="lazy-evaluation-and-lazy-queries-11b.html"><a href="lazy-evaluation-and-lazy-queries-11b.html"><i class="fa fa-check"></i><b>10</b> Lazy Evaluation and Lazy Queries (11b)</a><ul>
+<li class="chapter" data-level="10.1" data-path="lazy-evaluation-and-lazy-queries-11b.html"><a href="lazy-evaluation-and-lazy-queries-11b.html#this-chapter"><i class="fa fa-check"></i><b>10.1</b> This chapter:</a><ul>
+<li class="chapter" data-level="10.1.1" data-path="lazy-evaluation-and-lazy-queries-11b.html"><a href="lazy-evaluation-and-lazy-queries-11b.html#setup"><i class="fa fa-check"></i><b>10.1.1</b> Setup</a></li>
 </ul></li>
-<li class="chapter" data-level="10" data-path="explain-queries-11a.html"><a href="explain-queries-11a.html"><i class="fa fa-check"></i><b>10</b> Explain queries (11a)</a></li>
+<li class="chapter" data-level="10.2" data-path="lazy-evaluation-and-lazy-queries-11b.html"><a href="lazy-evaluation-and-lazy-queries-11b.html#r-is-lazy-and-comes-with-guardrails"><i class="fa fa-check"></i><b>10.2</b> R is lazy and comes with guardrails</a><ul>
+<li class="chapter" data-level="10.2.1" data-path="lazy-evaluation-and-lazy-queries-11b.html"><a href="lazy-evaluation-and-lazy-queries-11b.html#lazy-loading"><i class="fa fa-check"></i><b>10.2.1</b> Lazy loading</a></li>
+<li class="chapter" data-level="10.2.2" data-path="lazy-evaluation-and-lazy-queries-11b.html"><a href="lazy-evaluation-and-lazy-queries-11b.html#lazy-evaluation"><i class="fa fa-check"></i><b>10.2.2</b> Lazy evaluation</a></li>
+<li class="chapter" data-level="10.2.3" data-path="lazy-evaluation-and-lazy-queries-11b.html"><a href="lazy-evaluation-and-lazy-queries-11b.html#lazy-queries"><i class="fa fa-check"></i><b>10.2.3</b> Lazy Queries</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="lazy-evaluation-and-lazy-queries-11b.html"><a href="lazy-evaluation-and-lazy-queries-11b.html#lazy-evaluation-and-lazy-queries"><i class="fa fa-check"></i><b>10.3</b> Lazy evaluation and lazy queries</a><ul>
+<li class="chapter" data-level="10.3.1" data-path="lazy-evaluation-and-lazy-queries-11b.html"><a href="lazy-evaluation-and-lazy-queries-11b.html#dplyr-connection-objects"><i class="fa fa-check"></i><b>10.3.1</b> Dplyr connection objects</a></li>
+<li class="chapter" data-level="10.3.2" data-path="lazy-evaluation-and-lazy-queries-11b.html"><a href="lazy-evaluation-and-lazy-queries-11b.html#using-a-lazy-query"><i class="fa fa-check"></i><b>10.3.2</b> Using a lazy query</a></li>
+</ul></li>
+<li class="chapter" data-level="10.4" data-path="lazy-evaluation-and-lazy-queries-11b.html"><a href="lazy-evaluation-and-lazy-queries-11b.html#sql-in-r-markdown"><i class="fa fa-check"></i><b>10.4</b> SQL in R Markdown</a></li>
+<li class="chapter" data-level="10.5" data-path="lazy-evaluation-and-lazy-queries-11b.html"><a href="lazy-evaluation-and-lazy-queries-11b.html#dbi-package"><i class="fa fa-check"></i><b>10.5</b> DBI Package</a><ul>
+<li class="chapter" data-level="10.5.1" data-path="lazy-evaluation-and-lazy-queries-11b.html"><a href="lazy-evaluation-and-lazy-queries-11b.html#retrieve-the-whole-table"><i class="fa fa-check"></i><b>10.5.1</b> Retrieve the whole table</a></li>
+<li class="chapter" data-level="10.5.2" data-path="lazy-evaluation-and-lazy-queries-11b.html"><a href="lazy-evaluation-and-lazy-queries-11b.html#or-a-chunk-at-a-time"><i class="fa fa-check"></i><b>10.5.2</b> Or a chunk at a time</a></li>
+</ul></li>
+<li class="chapter" data-level="10.6" data-path="lazy-evaluation-and-lazy-queries-11b.html"><a href="lazy-evaluation-and-lazy-queries-11b.html#dividing-the-work-between-r-on-your-machine-and-the-dbms"><i class="fa fa-check"></i><b>10.6</b> Dividing the work between R on your machine and the DBMS</a><ul>
+<li class="chapter" data-level="10.6.1" data-path="lazy-evaluation-and-lazy-queries-11b.html"><a href="lazy-evaluation-and-lazy-queries-11b.html#make-the-server-do-as-much-work-as-you-can"><i class="fa fa-check"></i><b>10.6.1</b> Make the server do as much work as you can</a></li>
+<li class="chapter" data-level="10.6.2" data-path="lazy-evaluation-and-lazy-queries-11b.html"><a href="lazy-evaluation-and-lazy-queries-11b.html#criteria-for-choosing-between-dplyr-and-native-sql"><i class="fa fa-check"></i><b>10.6.2</b> Criteria for choosing between <code>dplyr</code> and native SQL</a></li>
+</ul></li>
+<li class="chapter" data-level="10.7" data-path="lazy-evaluation-and-lazy-queries-11b.html"><a href="lazy-evaluation-and-lazy-queries-11b.html#other-resources"><i class="fa fa-check"></i><b>10.7</b> Other resources</a></li>
+</ul></li>
 <li class="chapter" data-level="11" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html"><i class="fa fa-check"></i><b>11</b> Joins and complex queries (13)</a><ul>
 <li class="chapter" data-level="11.1" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#database-constraints"><i class="fa fa-check"></i><b>11.1</b> Database constraints</a></li>
 <li class="chapter" data-level="11.2" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#making-up-data-for-join-examples"><i class="fa fa-check"></i><b>11.2</b> Making up data for Join Examples</a><ul>
@@ -365,6 +382,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="22.2" data-path="additional-technical-details-for-windows-users-95.html"><a href="additional-technical-details-for-windows-users-95.html#git-github-and-line-endings"><i class="fa fa-check"></i><b>22.2</b> Git, GitHub and line endings</a></li>
 </ul></li>
+<li class="chapter" data-level="23" data-path="dplyr-functions-and-sql-cross-walk-96.html"><a href="dplyr-functions-and-sql-cross-walk-96.html"><i class="fa fa-check"></i><b>23</b> Dplyr functions and SQL cross-walk (96)</a></li>
+<li class="chapter" data-level="24" data-path="dbi-package-functions-coverage-96b.html"><a href="dbi-package-functions-coverage-96b.html"><i class="fa fa-check"></i><b>24</b> DBI package functions - coverage (96b)</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -388,15 +407,88 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="mapping-your-local-environment-10" class="section level1">
 <h1><span class="header-section-number">Chapter 8</span> Mapping your local environment (10)</h1>
+<div id="command-structure" class="section level2">
+<h2><span class="header-section-number">8.1</span> command structure</h2>
+<table>
+<colgroup>
+<col width="42%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="11%" />
+<col width="11%" />
+<col width="9%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Example</th>
+<th>R</th>
+<th>OS</th>
+<th>Docker</th>
+<th>Alpine container</th>
+<th>pg_restore / ls</th>
+<th>postgreSQL</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>-U postgres <br />-d dvdrental <br />petdir/dvdrental.tar</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>|——-&gt;</td>
+<td>——–*</td>
+</tr>
+<tr class="even">
+<td>ls petdir | <br />grep “dvdrental.tar”</td>
+<td></td>
+<td></td>
+<td></td>
+<td>|——-&gt;</td>
+<td>——–*</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>exec sql-pet <br />ls petdir | <br />grep &quot;dvdrental.tar</td>
+<td></td>
+<td></td>
+<td>|——-&gt;</td>
+<td>———</td>
+<td>——–*</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>docker <br />exec sql-pet <br />ls petdir | <br />grep “dvdrental.tar”</td>
+<td></td>
+<td>|——-&gt;</td>
+<td>———</td>
+<td>———</td>
+<td>——–*</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>system2(‘docker’, <br />‘exec sql-pet <br />ls petdir | <br />grep “dvdrental.tar”’, <br />stdout = TRUE, <br />stderr = TRUE)</td>
+<td>|——-&gt;</td>
+<td>———</td>
+<td>———</td>
+<td>———</td>
+<td>——–*</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
 <div id="basics" class="section level2">
-<h2><span class="header-section-number">8.1</span> Basics</h2>
+<h2><span class="header-section-number">8.2</span> Basics</h2>
 <ul>
 <li>Keeping passwords secure.</li>
-<li>Coverage in this book. There are many SQL tutorials that are available. For example, we are drawing some materials from <a href="http://www.postgresqltutorial.com/postgresql-sample-database/">a tutorial we recommend</a>. In particular, we will not replicate the lessons there, which you might want to complete. Instead, we are showing strategies that are recommended for R users. That will include some translations of queries that are discussed there.</li>
+<li><p>Coverage in this book. There are many SQL tutorials that are available. For example, we are drawing some materials from <a href="http://www.postgresqltutorial.com/postgresql-sample-database/">a tutorial we recommend</a>. In particular, we will not replicate the lessons there, which you might want to complete. Instead, we are showing strategies that are recommended for R users. That will include some translations of queries that are discussed there.</p></li>
+<li><p><a href="https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html" class="uri">https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html</a> Very good intro. How is ours different?</p></li>
 </ul>
 </div>
 <div id="ask-yourself-what-are-you-aiming-for" class="section level2">
-<h2><span class="header-section-number">8.2</span> Ask yourself, what are you aiming for?</h2>
+<h2><span class="header-section-number">8.3</span> Ask yourself, what are you aiming for?</h2>
 <ul>
 <li>Differences between production and data warehouse environments.</li>
 <li>Learning to keep your DBAs happy:
@@ -407,7 +499,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul>
 </div>
 <div id="get-some-basic-information-about-your-database" class="section level2">
-<h2><span class="header-section-number">8.3</span> Get some basic information about your database</h2>
+<h2><span class="header-section-number">8.4</span> Get some basic information about your database</h2>
 <p>Assume that the Docker container with PostgreSQL and the dvdrental database are ready to go.
 Start up the <code>docker-pet</code> container</p>
 <div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb48-1" data-line-number="1"><span class="kw">sp_docker_start</span>(<span class="st">&quot;sql-pet&quot;</span>)</a></code></pre></div>
@@ -423,20 +515,20 @@ The following code block confirms that one can connect to the Postgres database.
 <pre><code>## &lt;PqConnection&gt; dvdrental@localhost:5432</code></pre>
 </div>
 <div id="tutorial-environment" class="section level2">
-<h2><span class="header-section-number">8.4</span> Tutorial Environment</h2>
+<h2><span class="header-section-number">8.5</span> Tutorial Environment</h2>
 <p>Below is a high level diagram of our tutorial environment. The single black or blue boxed items are the apps running on your PC, (Linux, Mac, Windows), RStudio, R, Docker, and CLI, a command line interface. The red boxed items are the versions of the applications shown. The labels are to the right of the line.</p>
 <p><img src="diagrams/envgraph.png" /><!-- --></p>
 </div>
 <div id="communicating-with-docker-applications" class="section level2">
-<h2><span class="header-section-number">8.5</span> Communicating with Docker Applications</h2>
+<h2><span class="header-section-number">8.6</span> Communicating with Docker Applications</h2>
 <p>One assumption we made is that most users use <code>RStudio</code> to interface with <code>R</code>. The four take aways from the diagram above are labeled:</p>
 <div id="dbconnect" class="section level3">
-<h3><span class="header-section-number">8.5.1</span> dbConnect</h3>
+<h3><span class="header-section-number">8.6.1</span> dbConnect</h3>
 <p>R-SQL processing, the purpose of this tutorial, is performed via a database connection. This should be a simple task, but often turns out to take a lot of time to actually get it to work. We assume that your final write ups are done in some flavor of an Rmd document and others will have access to the database to confirm or further your analysis.</p>
 <p>One focus of this tutorial is SQL processing through a dbConnection and we will come back to this in a future section. The remainder of this section focuses on some specific Docker commands.</p>
 </div>
 <div id="bash" class="section level3">
-<h3><span class="header-section-number">8.5.2</span> bash</h3>
+<h3><span class="header-section-number">8.6.2</span> bash</h3>
 <p>The Docker container runs on top of a small Linux kernel foot print. Since Mac and Linux users run a version of Linux already, they may want to poke around the Docker environment. Below is the CLI command to start up a bash session, execute a version of hello world, and exit the <code>bash</code> session.</p>
 <p>(In this and subsequent example, an initial <code>$</code> represents your system prompt, which varies according to operating system and local environment.)</p>
 <p>In your computer’s command prompt:</p>
@@ -452,8 +544,8 @@ $ exit</code></pre>
 <p>Note that the user in the example is root. Root has all priviledges and can destroy the Docker environment.</p>
 </div>
 <div id="psql" class="section level3">
-<h3><span class="header-section-number">8.5.3</span> psql</h3>
-<p>For users comfortable executing SQL from a command line directly against the database, one can run the <code>psql</code> application directly. Below is the CLI command to start up <code>psql</code> session, execute a version of hello world, and quitting the <code>psql</code> version.</p>
+<h3><span class="header-section-number">8.6.3</span> psql</h3>
+<p>For users comfortable executing SQL from a command line directly against the database, can run the <code>psql</code> application directly. Below is the CLI command to start up <code>psql</code> session, execute a version of hello world, and quitting the <code>psql</code> version.</p>
 <p>In your computer’s command prompt:</p>
 <p><code>$ docker exec -ti sql-pet psql -a -p 5432 -d dvdrental -U postgres</code></p>
 <p>That executes a postreSQL program in docker called <code>psql</code>, which is a command line interface to postgreSQL. <code>psql</code> responds with:</p>
@@ -466,20 +558,40 @@ Type &quot;help&quot; for help.</code></pre>
 ------------------------------------------------------------------------
  &quot;hello world&quot; talking to you live from postgres inside Docker!
 (1 row)</code></pre>
+<ul>
+<li><p>To explore the PostgreSQL environment it’s worth browsing around inside the Docker command with a shell.</p>
+<ul>
+<li><p>To run the Docker container that contains PostgreSQL, you can enter this from a command prompt:</p>
+<p><code>$ docker exec -ti pet sh</code></p></li>
+<li><p>To exit Docker enter:</p>
+<p><code># exit</code></p></li>
+<li><p>Inside Docker, you can enter the PostgreSQL command-line utility psql by entering</p>
+<p><code># psql -U postgres</code></p>
+<p>Handy <a href="https://gpdb.docs.pivotal.io/gs/43/pdf/PSQLQuickRef.pdf">psql commands</a> include:</p>
+<ul>
+<li><code>postgres=# \h</code> # psql help</li>
+<li><code>postgres=# \dt</code> # list PostgreSQL tables</li>
+<li><code>postgres=# \c dbname</code> # connect to databse dbname</li>
+<li><code>postgres=# \l</code> # list PostgreSQL databases</li>
+<li><code>postgres=# \conninfo</code> # display information about current connection</li>
+<li><code>postgres=# \q</code> # exit psql</li>
+</ul></li>
+</ul></li>
+</ul>
 <p>To exit <code>psql</code>, enter:</p>
 <pre><code>    \q</code></pre>
 <p>The docker bash and psql command options are optional for this tutorial, but open up a gateway to some very powerful programming techniques for future exploration.</p>
 </div>
 <div id="start-stop" class="section level3">
-<h3><span class="header-section-number">8.5.4</span> start-stop</h3>
+<h3><span class="header-section-number">8.6.4</span> start-stop</h3>
 <p>Docker has about 44 commands. We are interested in only those related to Postgres status, started, stopped, and available. In this tutorial, complete docker commands are printed out before being executed via a <code>system2</code> call. In the event that a code block fails, one can copy and paste the docker command into your local CLI and see if Docker is returning additional information.</p>
 </div>
 </div>
 <div id="exercises" class="section level2">
-<h2><span class="header-section-number">8.6</span> Exercises</h2>
+<h2><span class="header-section-number">8.7</span> Exercises</h2>
 <p>Docker containers have a small foot print. In our container, we are running a limited Linux kernel and a Postgres database. To show how tiny the docker environment is, we will look at all the processes running inside Docker and the top level file structure.</p>
 <div id="docker-help" class="section level3">
-<h3><span class="header-section-number">8.6.1</span> Docker Help</h3>
+<h3><span class="header-section-number">8.7.1</span> Docker Help</h3>
 <p>Typing <code>docker</code> at the command line will print up a summary of all available <code>docker</code> commands. Below are the docker commands used in the exercises.</p>
 <pre><code>Commands:
   ps          List containers
@@ -529,6 +641,7 @@ Options:
 <td>1</td>
 <td>How many processes are running inside the Docker container?</td>
 <td>docker exec -i sql-pet ps -eF</td>
+<td></td>
 <td></td>
 </tr>
 <tr class="even">
@@ -611,493 +724,6 @@ Options:
 </tbody>
 </table>
 
-<table>
-<colgroup>
-<col width="1%" />
-<col width="24%" />
-<col width="28%" />
-<col width="20%" />
-<col width="16%" />
-<col width="8%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>In</th>
-<th>Dplyr Function</th>
-<th>description</th>
-<th>SQL Clause</th>
-<th>Notes</th>
-<th>Category</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Y</td>
-<td>arrange()</td>
-<td>Arrange rows by variables</td>
-<td>ORDER BY</td>
-<td></td>
-<td>Basic single-table verbs</td>
-</tr>
-<tr class="even">
-<td>Y?</td>
-<td>distinct()</td>
-<td>Return rows with matching conditions</td>
-<td>SELECT distinct *</td>
-<td></td>
-<td>Basic single-table verbs</td>
-</tr>
-<tr class="odd">
-<td>Y</td>
-<td>select() rename()</td>
-<td>Select/rename variables by name</td>
-<td>SELECT column_name alias_name</td>
-<td></td>
-<td>Basic single-table verbs</td>
-</tr>
-<tr class="even">
-<td>N</td>
-<td>pull()</td>
-<td>Pull out a single variable</td>
-<td>SELECT column_name;</td>
-<td></td>
-<td>Basic single-table verbs</td>
-</tr>
-<tr class="odd">
-<td>Y</td>
-<td>mutate() transmute()</td>
-<td>Add new variables</td>
-<td>SELECT computed_value computed_name</td>
-<td></td>
-<td>Basic single-table verbs</td>
-</tr>
-<tr class="even">
-<td>Y</td>
-<td>summarise() summarize()</td>
-<td>Reduces multiple values down to a single value</td>
-<td>SELECT aggregate_functions GROUP BY</td>
-<td></td>
-<td>Basic single-table verbs</td>
-</tr>
-<tr class="odd">
-<td>N</td>
-<td>group_by() ungroup()</td>
-<td>Objects exported from other packages</td>
-<td>GROUP BY no ungroup</td>
-<td></td>
-<td>Basic single-table verbs</td>
-</tr>
-<tr class="even">
-<td>N</td>
-<td>distinct()</td>
-<td>Select distinct/unique rows</td>
-<td>SELECT distinct {colname1,…colnamen}</td>
-<td></td>
-<td>Basic single-table verbs</td>
-</tr>
-<tr class="odd">
-<td>N</td>
-<td>do()</td>
-<td>Do anything</td>
-<td>NA</td>
-<td></td>
-<td>Basic single-table verbs</td>
-</tr>
-<tr class="even">
-<td>N</td>
-<td>sample_n() sample_frac()</td>
-<td>Sample n rows from a table</td>
-<td>ORDER BY RANDOM() LIMIT 10</td>
-<td></td>
-<td>Basic single-table verbs</td>
-</tr>
-<tr class="odd">
-<td>N</td>
-<td>slice()</td>
-<td>Select rows by position</td>
-<td>SELECT row_number() over (partition by expression(s) order_by exp)</td>
-<td></td>
-<td>Basic single-table verbs</td>
-</tr>
-<tr class="even">
-<td>Y</td>
-<td>tally() count() add_tally() add_count()</td>
-<td>Count/tally observations by group</td>
-<td>GROUP BY</td>
-<td></td>
-<td>Single-table helpers</td>
-</tr>
-<tr class="odd">
-<td>Y</td>
-<td>top_n()</td>
-<td>Select top (or bottom) n rows (by value)</td>
-<td>ORDER BY VALUE {DESC} LIMIT 10</td>
-<td></td>
-<td>Single-table helpers</td>
-</tr>
-<tr class="even">
-<td>N</td>
-<td>arrange_all() arrange_at() arrange_if()</td>
-<td>Arrange rows by a selection of variables</td>
-<td>ORDER BY</td>
-<td></td>
-<td>scoped-Operate on a selection of variables</td>
-</tr>
-<tr class="odd">
-<td>N</td>
-<td>filter_all() filter_if() filter_at()</td>
-<td>Filter within a selection of variables</td>
-<td></td>
-<td></td>
-<td>scoped-Operate on a selection of variables</td>
-</tr>
-<tr class="even">
-<td>N</td>
-<td>group_by_all() group_by_at() group_by_if()</td>
-<td>Group by a selection of variables</td>
-<td></td>
-<td></td>
-<td>scoped-Operate on a selection of variables</td>
-</tr>
-<tr class="odd">
-<td>N</td>
-<td>select_all() rename_all() select_if() rename_if() select_at() rename_at()</td>
-<td>Select and rename a selection of variables</td>
-<td></td>
-<td></td>
-<td>scoped-Operate on a selection of variables</td>
-</tr>
-<tr class="even">
-<td>N</td>
-<td>summarise_all() summarise_if() summarise_at() summarize_all() summarize_if() summarize_at() mutate_all() mutate_if() mutate_at() transmute_all() transmute_if() transmute_at()</td>
-<td>Summarise and mutate multiple columns.</td>
-<td></td>
-<td></td>
-<td>scoped-Operate on a selection of variables</td>
-</tr>
-<tr class="odd">
-<td>N</td>
-<td>all_vars() any_vars()</td>
-<td>Apply predicate to all variables</td>
-<td></td>
-<td></td>
-<td>scoped-Operate on a selection of variables</td>
-</tr>
-<tr class="even">
-<td>N</td>
-<td>vars()</td>
-<td>Select variables</td>
-<td></td>
-<td></td>
-<td>scoped-Operate on a selection of variables</td>
-</tr>
-<tr class="odd">
-<td>N</td>
-<td>funs()</td>
-<td>Create a list of functions calls.</td>
-<td></td>
-<td></td>
-<td>scoped-Operate on a selection of variables</td>
-</tr>
-<tr class="even">
-<td>N</td>
-<td>all_equal() all.equal(<tbl_df>)</td>
-<td>Flexible equality comparison for data frames</td>
-<td></td>
-<td></td>
-<td>Two-table verbs</td>
-</tr>
-<tr class="odd">
-<td>N</td>
-<td>bind_rows() bind_cols() combine()</td>
-<td>Efficiently bind multiple data frames by row and column</td>
-<td></td>
-<td></td>
-<td>Two-table verbs</td>
-</tr>
-<tr class="even">
-<td>N</td>
-<td>intersect() union() union_all() setdiff() setequal()</td>
-<td>Set operations</td>
-<td></td>
-<td></td>
-<td>Two-table verbs</td>
-</tr>
-<tr class="odd">
-<td>N</td>
-<td>inner_join() left_join() right_join() full_join() semi_join() anti_join()</td>
-<td>Join two tbls together</td>
-<td></td>
-<td></td>
-<td>Two-table verbs</td>
-</tr>
-<tr class="even">
-<td>N</td>
-<td>inner_join(<tbl_df>) left_join(<tbl_df>) right_join(<tbl_df>) full_join(<tbl_df>) semi_join(<tbl_df>) anti_join(<tbl_df>)</td>
-<td>Join data frame tbls</td>
-<td></td>
-<td></td>
-<td>Two-table verbs</td>
-</tr>
-<tr class="odd">
-<td>N</td>
-<td>auto_copy()</td>
-<td>Copy tables to same source, if necessary</td>
-<td></td>
-<td></td>
-<td>Remote tables</td>
-</tr>
-<tr class="even">
-<td>N</td>
-<td>compute() collect() collapse()</td>
-<td>Force computation of a database query</td>
-<td></td>
-<td></td>
-<td>Remote tables</td>
-</tr>
-<tr class="odd">
-<td>N</td>
-<td>copy_to()</td>
-<td>Copy a local data frame to a remote src</td>
-<td></td>
-<td></td>
-<td>Remote tables</td>
-</tr>
-<tr class="even">
-<td>N</td>
-<td>ident()</td>
-<td>Flag a character vector as SQL identifiers</td>
-<td></td>
-<td></td>
-<td>Remote tables</td>
-</tr>
-<tr class="odd">
-<td>N</td>
-<td>explain() show_query()</td>
-<td>Explain details of a tbl</td>
-<td></td>
-<td></td>
-<td>Remote tables</td>
-</tr>
-<tr class="even">
-<td>N</td>
-<td>tbl() is.tbl() as.tbl()</td>
-<td>Create a table from a data source</td>
-<td></td>
-<td></td>
-<td>Remote tables</td>
-</tr>
-<tr class="odd">
-<td>N</td>
-<td>src_mysql() src_postgres() src_sqlite()</td>
-<td>Source for database backends</td>
-<td></td>
-<td></td>
-<td>Remote tables</td>
-</tr>
-<tr class="even">
-<td>N</td>
-<td>sql()</td>
-<td>SQL escaping.</td>
-<td></td>
-<td></td>
-<td>Remote tables</td>
-</tr>
-<tr class="odd">
-<td>N</td>
-<td>groups() group_vars()</td>
-<td>Return grouping variables</td>
-<td></td>
-<td></td>
-<td>Metadata</td>
-</tr>
-<tr class="even">
-<td>N</td>
-<td>between()</td>
-<td>Do values in a numeric vector fall in specified range?</td>
-<td></td>
-<td></td>
-<td>Vector functions</td>
-</tr>
-<tr class="odd">
-<td>N</td>
-<td>case_when()</td>
-<td>A general vectorised if</td>
-<td></td>
-<td></td>
-<td>Vector functions</td>
-</tr>
-<tr class="even">
-<td>N</td>
-<td>coalesce()</td>
-<td>Find first non-missing element</td>
-<td></td>
-<td></td>
-<td>Vector functions</td>
-</tr>
-<tr class="odd">
-<td>N</td>
-<td>cumall() cumany() cummean()</td>
-<td>Cumulativate versions of any, all, and mean</td>
-<td></td>
-<td></td>
-<td>Vector functions</td>
-</tr>
-<tr class="even">
-<td>N</td>
-<td>desc()</td>
-<td>Descending order</td>
-<td></td>
-<td></td>
-<td>Vector functions</td>
-</tr>
-<tr class="odd">
-<td>N</td>
-<td>if_else()</td>
-<td>Vectorised if</td>
-<td></td>
-<td></td>
-<td>Vector functions</td>
-</tr>
-<tr class="even">
-<td>N</td>
-<td>lead() lag()</td>
-<td>Lead and lag.</td>
-<td></td>
-<td></td>
-<td>Vector functions</td>
-</tr>
-<tr class="odd">
-<td>N</td>
-<td>order_by()</td>
-<td>A helper function for ordering window function output</td>
-<td></td>
-<td></td>
-<td>Vector functions</td>
-</tr>
-<tr class="even">
-<td>N</td>
-<td>n()</td>
-<td>The number of observations in the current group.</td>
-<td></td>
-<td></td>
-<td>Vector functions</td>
-</tr>
-<tr class="odd">
-<td>N</td>
-<td>n_distinct()</td>
-<td>Efficiently count the number of unique values in a set of vector</td>
-<td></td>
-<td></td>
-<td>Vector functions</td>
-</tr>
-<tr class="even">
-<td>N</td>
-<td>na_if()</td>
-<td>Convert values to NA</td>
-<td></td>
-<td></td>
-<td>Vector functions</td>
-</tr>
-<tr class="odd">
-<td>N</td>
-<td>near()</td>
-<td>Compare two numeric vectors</td>
-<td></td>
-<td></td>
-<td>Vector functions</td>
-</tr>
-<tr class="even">
-<td>N</td>
-<td>nth() first() last()</td>
-<td>Extract the first, last or nth value from a vector</td>
-<td></td>
-<td></td>
-<td>Vector functions</td>
-</tr>
-<tr class="odd">
-<td>N</td>
-<td>row_number() ntile() min_rank() dense_rank() percent_rank() cume_dist()</td>
-<td>Windowed rank functions.</td>
-<td></td>
-<td></td>
-<td>Vector functions</td>
-</tr>
-<tr class="even">
-<td>N</td>
-<td>recode() recode_factor()</td>
-<td>Recode values</td>
-<td></td>
-<td></td>
-<td>Vector functions</td>
-</tr>
-<tr class="odd">
-<td>N</td>
-<td>band_members band_instruments band_instruments2</td>
-<td>Band membership</td>
-<td></td>
-<td></td>
-<td>Data</td>
-</tr>
-<tr class="even">
-<td>N</td>
-<td>nasa</td>
-<td>NASA spatio-temporal data</td>
-<td></td>
-<td></td>
-<td>Data</td>
-</tr>
-<tr class="odd">
-<td>N</td>
-<td>starwars</td>
-<td>Starwars characters</td>
-<td></td>
-<td></td>
-<td>Data</td>
-</tr>
-<tr class="even">
-<td>N</td>
-<td>storms</td>
-<td>Storm tracks data</td>
-<td></td>
-<td></td>
-<td>Data</td>
-</tr>
-<tr class="odd">
-<td>N</td>
-<td>tbl_cube()</td>
-<td>A data cube tbl</td>
-<td></td>
-<td></td>
-<td>Other backends</td>
-</tr>
-<tr class="even">
-<td>N</td>
-<td>as.table(<tbl_cube>) as.data.frame(<tbl_cube>) as_data_frame(<tbl_cube>)</td>
-<td>Coerce a tbl_cube to other data structures</td>
-<td></td>
-<td></td>
-<td>Other backends</td>
-</tr>
-<tr class="odd">
-<td>N</td>
-<td>as.tbl_cube()</td>
-<td>Coerce an existing data structure into a tbl_cube</td>
-<td></td>
-<td></td>
-<td>Other backends</td>
-</tr>
-<tr class="even">
-<td>N</td>
-<td>rowwise()</td>
-<td>Group input by rows</td>
-<td></td>
-<td></td>
-<td>Other backends</td>
-</tr>
-</tbody>
-</table>
-
 </div>
 </div>
 </div>
@@ -1107,7 +733,7 @@ Options:
         </div>
       </div>
 <a href="the-dvdrental-database-in-postgres-in-docker-05.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="introduction-to-dbms-queries-11.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="introduction-to-dbms-queries-11a.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

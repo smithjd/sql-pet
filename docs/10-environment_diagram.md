@@ -2,10 +2,22 @@
 
 
 
+## command structure
+
+| Example                                                      | R            | OS           | Docker       | Alpine container | pg_restore / ls | postgreSQL    |
+| -------------------------------------------------- | ---------- | ---------- | ---------- | -------------- | ------------- | ----------- |
+| -U postgres <br />-d dvdrental  <br />petdir/dvdrental.tar               |              |              |              |                  | \|------->    | --------* |
+| ls petdir \|  <br />grep "dvdrental.tar"                           |              |              |              | \|------->     | --------*   |               |
+| exec sql-pet <br />ls petdir \|  <br />grep "dvdrental.tar               |              |              | \|-------> | ---------      | --------*   |               |
+| docker <br />exec sql-pet  <br />ls petdir \|  <br />grep "dvdrental.tar"      |              | \|-------> | ---------  | ---------      | --------*   |               |
+| system2('docker',  <br />'exec sql-pet <br />ls petdir \|  <br />grep "dvdrental.tar" ',  <br />stdout = TRUE,  <br />stderr = TRUE) | \|-------> | ---------  | ---------  | ---------      | --------*   |               |
+
 ## Basics
 
 * Keeping passwords secure.
 * Coverage in this book.  There are many SQL tutorials that are available.  For example, we are drawing some materials from  [a tutorial we recommend](http://www.postgresqltutorial.com/postgresql-sample-database/).  In particular, we will not replicate the lessons there, which you might want to complete.  Instead, we are showing strategies that are recommended for R users.  That will include some translations of queries that are discussed there.
+
+* https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html  Very good intro.  How is ours different?
 
 ## Ask yourself, what are you aiming for?
 
@@ -90,7 +102,7 @@ Note that the user in the example is root.  Root has all priviledges and can des
 
 ### psql
 
-For users comfortable executing SQL from a command line directly against the database, one can run the `psql` application directly.  Below is the CLI command to start up `psql` session, execute a version of hello world, and quitting the `psql` version.
+For users comfortable executing SQL from a command line directly against the database, can run the `psql` application directly.  Below is the CLI command to start up `psql` session, execute a version of hello world, and quitting the `psql` version.
 
 In your computer's command prompt:
 
@@ -115,12 +127,38 @@ All SQL commands need to end with a semi-colon. `psql` responds with:
 (1 row)
 ```
 
+* To explore the PostgreSQL environment it's worth browsing around inside the Docker command with a shell.
+
+  + To run the Docker container that contains PostgreSQL, you can enter this from a command prompt:
+
+    `$ docker exec -ti pet sh`
+
+  + To exit Docker enter:
+
+    `# exit`
+
+  + Inside Docker, you can enter the PostgreSQL command-line utility psql by entering 
+
+    `# psql -U postgres`
+
+    Handy [psql commands](https://gpdb.docs.pivotal.io/gs/43/pdf/PSQLQuickRef.pdf) include:
+
+    + `postgres=# \h`          # psql help
+    + `postgres=# \dt`         # list PostgreSQL tables
+    + `postgres=# \c dbname`   # connect to databse dbname
+    + `postgres=# \l`          # list PostgreSQL databases
+    + `postgres=# \conninfo`   # display information about current connection
+    + `postgres=# \q`          # exit psql
+
+
 To exit `psql`, enter:
 ```
     \q
 ```
 
 The docker bash and psql command options are optional for this tutorial, but open up a gateway to some very powerful programming techniques for future exploration.
+
+
 
 ### start-stop
 

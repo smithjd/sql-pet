@@ -4,7 +4,7 @@
 > 
 > * Get a glimpse of what tables are in the database and what fields a table contains
 > * Download all or part of a table from the dbms
-> * See how `dplyr` and `SQL` commands are equivalent
+> * See how `dplyr` code is translated into `SQL` commands
 > * Get acquainted with some useful tools for investigating a single table
 > * Begin thinking about how to divide the work between your local R session and the dbms
 
@@ -18,7 +18,7 @@ require(knitr)
 library(bookdown)
 library(sqlpetr)
 ```
-Assume that the Docker container with PostgreSQL and the dvdrental database are ready to go. If not go back to [the previous Chapter][Build the pet-sql Docker Image]
+Assume that the Docker container with PostgreSQL and the dvdrental database are ready to go. If not go back to [Chapter 7][Build the pet-sql Docker Image]
 ```{r check on sql-pet}
 sp_docker_start("sql-pet")
 ```
@@ -120,6 +120,15 @@ A table in the dbms may not only have many more rows than you want and also many
 ```{r}
 rental_table %>% select(rental_date, return_date) %>% head()
 ```
+That's exactly equivalent to submitting the following SQL commands dirctly:
+```{r}
+DBI::dbGetQuery(
+  con,
+  'SELECT "rental_date", "return_date"
+FROM "rental"
+LIMIT 6') 
+```
+
 
 We won't discuss `dplyr` methods for sub-setting variables, deriving new ones, or sub-setting rows based on the values found in the table because they are covered well in other places, including:
 
@@ -129,17 +138,25 @@ We won't discuss `dplyr` methods for sub-setting variables, deriving new ones, o
 In practice we find that, **renaming variables** is often quite important because the names in an SQL database might not meet your needs as an analyst.  In "the wild" you will find names that are ambiguous or overly specified, with spaces in them, and other problems that will make them difficult to use in R.  It is good practice to do whatever renaming you are going to do in a predictable place like at the top of your code.  The names in the `dvdrental` database are simple and clear, but if they were not, you might rename them for subsequent use in this way:
 
 ```{r}
-renamed_rental_table <- dplyr::tbl(con, "rental") %>%
-  rename(rental_id_number = rental_id, inventory_id_number = inventory_id)
-
-renamed_rental_table %>%
+tbl(con, "rental") %>%
+  rename(rental_id_number = rental_id, inventory_id_number = inventory_id) %>% 
   select(rental_id_number, rental_date, inventory_id_number) %>%
   head()
 ```
+That's equivalent to the following SQL code:
+```{r}
+DBI::dbGetQuery(
+  con,
+  'SELECT "rental_id_number", "rental_date", "inventory_id_number"
+FROM (SELECT "rental_id" AS "rental_id_number", "rental_date", "inventory_id" AS "inventory_id_number", "customer_id", "return_date", "staff_id", "last_update"
+FROM "rental") "ihebfvnxvb"
+LIMIT 6' )
+```
+The one difference is that the `SQL` code returns a regular data frame and the `dplyr` code returns a `tibble`.  Notice that the seconds are greyed out in the `tibble` display.
 
-### Examining `dplyr`'s SQL query and re-using SQL code
+### Translating `dplyr` code to `SQL` queries
 
-The `show_query` function shows how `dplyr` is translating your query to the dialect of the target dbms:
+Where did the translations we've showon above come from?  The `show_query` function shows how `dplyr` is translating your query to the dialect of the target dbms:
 ```{r}
 rental_table %>%
   count(staff_id) %>%
@@ -170,7 +187,7 @@ SELECT "staff_id", COUNT(*) AS "n"
 FROM "rental"
 GROUP BY "staff_id";
 ```
-Rmarkdown stored that query result in a tibble:
+Rmarkdown stores that query result in a tibble which can be printed by referring to it:
 ```{r}
 query_results
 ```
@@ -192,7 +209,7 @@ Dealing with a large, complex database highlights the utility of specific tools 
 str(rental_tibble)
 ```
 
-### Always just **look** at your data with `head`, `View`, or `kable`
+### Always **look** at your data with `head`, `View`, or `kable`
 
 There is no substitute for looking at your data and R provides several ways to just browse it.  The `head` function controls the number of rows that are displayed.  Note that tail does not work against a database object.  In every-day practice you would look at more than the default 6 rows, but here we wrap `head` around the data frame: 
 ```{r}
@@ -223,25 +240,7 @@ skim(rental_tibble)
 wide_rental_skim <- skim_to_wide(rental_tibble)
 ```
 
-## Dividing the work between R on your machine and the DBMS
-
-They work together.
-
-### Make the server do as much work as you can
-
-* show_query as a first draft of SQL.  May or may not use SQL code submitted directly.
-
-### Criteria for choosing between `dplyr` and native SQL
-
-This probably belongs later in the book.
-
-* performance considerations: first get the right data, then worry about performance
-* Trade offs between leaving the data in PostgreSQL vs what's kept in R: 
-  + browsing the data
-  + larger samples and complete tables
-  + using what you know to write efficient queries that do most of the work on the server
-
-### `dplyr` tools
+### Close the connection and shut down sql-pet
 
 Where you place the `collect` function matters.
 ```{r}
@@ -249,11 +248,8 @@ dbDisconnect(con)
 sp_docker_stop("sql-pet")
 ```
 
-## DBI Package
+## Additional reading
 
-In this chapter we touched on a number of functions from the DBI Package.  The table in `96a` shows a list of functions in the package.  The Chapter column references a section in the book if we have used it.
-
-## Other resources
-
-  * Benjamin S. Baumer, A Grammar for Reproducible and Painless Extract-Transform-Load Operations on Medium Data: [https://arxiv.org/pdf/1708.07073](https://arxiv.org/pdf/1708.07073) 
+* [@greycite135683]
+* [Baumer_2018]
 

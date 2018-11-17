@@ -69,9 +69,9 @@ sp_check_that_docker_is_up()
 ```
 
 ```
-## [1] "Docker is up, running these containers:"                                                                                                       
-## [2] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES"   
-## [3] "107c76d33035        postgres:10         \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
+## [1] "Docker is up, running these containers:"                                                                                                            
+## [2] "CONTAINER ID        IMAGE               COMMAND                  CREATED                  STATUS                  PORTS                    NAMES"   
+## [3] "ef40ff315e2e        postgres:10         \"docker-entrypoint.s…\"   Less than a second ago   Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
 ```
 ## Connect, read and write to Postgres from R
 
@@ -85,12 +85,20 @@ We use the following `sp_get_postgres_connection` function to connect to Postgre
 >
 > That file should contain lines that **look like** the example below. Although in this example it contains the PostgreSQL <b>default values</b> for the username and password, they are obviously not secret.  But this approach demonstrates where you should put secrets that R needs while not risking accidental uploaded to GitHub or some other public location..
 
-You can execute [define_postgresql_params.R](define_postgresql_params.R) to create the file or you could copy / paste the following into your **.Renviron** file:
+Open your `.Renviron` file with this command:
+
+>
+> `file.edit("~/.Renviron")`
+>
+
+Or you can execute [define_postgresql_params.R](define_postgresql_params.R) to create the file or you could copy / paste the following into your **.Renviron** file:
 ```
 DEFAULT_POSTGRES_PASSWORD=postgres
 DEFAULT_POSTGRES_USER_NAME=postgres
 ```
 Once that file is created, restart R, and after that R reads it every time it comes up. 
+
+### Connect with Postgres
 
 Connect to the postgrSQL using the `sp_get_postgres_connection` function:
 

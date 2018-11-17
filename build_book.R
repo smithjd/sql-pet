@@ -8,13 +8,13 @@
 # clear the directory
 unlink("docs", recursive = TRUE)
 
-# PDF
-# bookdown::render_book(
-#   input = "index.Rmd",
-#   new_session = TRUE,
-#   output_format = "bookdown::pdf_book",
-#   output_dir = "docs"
-# )
+PDF
+bookdown::render_book(
+  input = "index.Rmd",
+  new_session = TRUE,
+  output_format = "bookdown::pdf_book",
+  output_dir = "docs"
+)
 
 # "GitBook" website
 

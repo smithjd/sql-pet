@@ -68,9 +68,10 @@ We use the following `sp_get_postgres_connection` function to connect to Postgre
 > That file should contain lines that **look like** the example below. Although in this example it contains the PostgreSQL <b>default values</b> for the username and password, they are obviously not secret.  But this approach demonstrates where you should put secrets that R needs while not risking accidental uploaded to GitHub or some other public location..
 
 Open your `.Renviron` file with this command:
-```{r}
-file.edit("~/.Renviron")
-```
+
+>
+> `file.edit("~/.Renviron")`
+>
 
 Or you can execute [define_postgresql_params.R](define_postgresql_params.R) to create the file or you could copy / paste the following into your **.Renviron** file:
 ```
