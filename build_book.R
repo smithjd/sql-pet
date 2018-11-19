@@ -8,7 +8,7 @@
 # clear the directory
 unlink("docs", recursive = TRUE)
 
-PDF
+# PDF
 bookdown::render_book(
   input = "index.Rmd",
   new_session = TRUE,
