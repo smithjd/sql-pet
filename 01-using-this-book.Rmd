@@ -1,5 +1,10 @@
 # How to use this book (01)
 
+> This chapter explains:
+> 
+> * The prerequisites for running the code in this book
+> * What R packages are used in the book
+
 This book is full of examples that you can replicate on your computer. 
 
 ## Prerequisites
