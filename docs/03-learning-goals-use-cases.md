@@ -1,5 +1,21 @@
 # Learning Goals and Use Cases (03)
 
+> This chapter sets the context for the book by:
+> 
+> * Challenging you to think about your goals and expectations
+> * Imagining the setting where our sample database would be used
+> * Posing some imaginary use cases that a data analyst might face
+> * Discussing the different elements involved in answering questions from an organization's database
+
+
+
+
+## Ask yourself, what are you aiming for?  
+
+* Differences between production and data warehouse environments.
+* Learning to keep your DBAs happy:
+  + You are your own DBA in this simulation, so you can wreak havoc and learn from it, but you can learn to be DBA-friendly here.
+  + In the end it's the subject-matter experts that understand your data, but you have to work with your DBAs first.
 
 ## Learning Goals
 
@@ -16,7 +32,7 @@ After working through this tutorial, you can expect to be able to:
 * Gain some understanding of techniques for assessing query structure and performance.
 * Understand enough about Docker to swap databases, e.g. [Sports DB](http://www.sportsdb.org/sd/samples) for the [DVD rental database](http://www.postgresqltutorial.com/postgresql-sample-database/) used in this tutorial. Or swap the database management system (DBMS), e.g. [MySQL](https://www.mysql.com/) for [PostgreSQL](https://www.postgresql.org/).
 
-## Managing a DVD rental business
+## Imagining a DVD rental business
 
 * Years ago people rented videos on DVD disks, and video stores were a big business.
 * Imagine managing a video rental store [like Movie Madness](https://en.wikipedia.org/wiki/Movie_Madness_Video) in Portland, Oregon.

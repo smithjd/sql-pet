@@ -1,6 +1,18 @@
 # SQL Quick start - simple retrieval (15)
 
+> This chapter demonstrates:
+> 
+> * Several elementary SQL statements
+> * SQL databases and 3rd normal form
 
+
+
+
+## Intro
+
+* Coverage in this book.  There are many SQL tutorials that are available.  For example, we are drawing some materials from  [a tutorial we recommend](http://www.postgresqltutorial.com/postgresql-sample-database/).  In particular, we will not replicate the lessons there, which you might want to complete.  Instead, we are showing strategies that are recommended for R users.  That will include some translations of queries that are discussed there.
+
+* https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html  Very good intro.  How is ours different?
 
 Start up the `docker-pet` container
 
@@ -289,8 +301,8 @@ Table: (\#tab:unnamed-chunk-9)Adding Meta Data Columns
 
 showing           store_id   manager_staff_id   address_id  last_update           db          user       dtts                
 ---------------  ---------  -----------------  -----------  --------------------  ----------  ---------  --------------------
-derived column           1                  1            1  2006-02-15 09:57:12   dvdrental   postgres   2018/11/16 23:58:13 
-derived column           2                  2            2  2006-02-15 09:57:12   dvdrental   postgres   2018/11/16 23:58:13 
+derived column           1                  1            1  2006-02-15 09:57:12   dvdrental   postgres   2018/11/30 19:45:57 
+derived column           2                  2            2  2006-02-15 09:57:12   dvdrental   postgres   2018/11/30 19:45:57 
  
     All the previous examples easily fit on a single line.  This one is longer.  Each column is entered on its own line, indented past the select keyword, and preceeded by a comma.  
     
