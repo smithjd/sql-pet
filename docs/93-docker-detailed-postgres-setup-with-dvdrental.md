@@ -23,7 +23,7 @@ library(tidyverse)
 ```
 
 ```
-## ── Attaching packages ─────────────────────────────────────── tidyverse 1.2.1 ──
+## ── Attaching packages ───────────────────────────────────────────────────────── tidyverse 1.2.1 ──
 ```
 
 ```
@@ -34,7 +34,7 @@ library(tidyverse)
 ```
 
 ```
-## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ── Conflicts ──────────────────────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()
 ```
@@ -128,7 +128,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE                COMMAND                  CREATED              STATUS                     PORTS               NAMES
-## 1ae17e0d02b0        postgres-dvdrental   "docker-entrypoint.s…"   About a minute ago   Exited (0) 5 seconds ago                       sql-pet
+## 8faa371ba618        postgres-dvdrental   "docker-entrypoint.s…"   About a minute ago   Exited (0) 6 seconds ago                       sql-pet
 ```
 
 Remove the `sql-pet` container if it exists (e.g., from a prior run)
@@ -184,7 +184,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "ce265d6e5361fe1e5c52237649cccf0c9b7bd0e742053ac057e0bc6c9fb1fdfd"
+## [1] "1d859392809857ec35fc42d0f1b0b5b391a880d39c362569358a1910102b55f0"
 ```
 
 Peek inside the docker container and list the files in the `petdir`
@@ -228,7 +228,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES
-## ce265d6e5361        postgres:10         "docker-entrypoint.s…"   4 seconds ago       Up 3 seconds        0.0.0.0:5432->5432/tcp   sql-pet
+## 1d8593928098        postgres:10         "docker-entrypoint.s…"   4 seconds ago       Up 3 seconds        0.0.0.0:5432->5432/tcp   sql-pet
 ```
 inside Docker, execute the postgress SQL command-line program to create the dvdrental database:
 
@@ -361,7 +361,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## ce265d6e5361        postgres:10         "docker-entrypoint.s…"   14 seconds ago      Exited (0) Less than a second ago                       sql-pet
+## 1d8593928098        postgres:10         "docker-entrypoint.s…"   15 seconds ago      Exited (0) Less than a second ago                       sql-pet
 ```
 
 We are leaving the `sql-pet` container intact so it can be used in running the

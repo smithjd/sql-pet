@@ -1,6 +1,21 @@
 # Explain queries (71)
 
+> This chapter demonstrates:
+> 
+> * How to investigate SQL query performance
 
+
+```r
+# These packages are called in almost every chapter of the book:
+library(tidyverse)
+library(DBI)
+library(RPostgres)
+library(glue)
+library(here)
+require(knitr)
+library(dbplyr)
+library(sqlpetr)
+```
 
 * examining `dplyr` queries (`dplyr::show_query` on the R side v EXPLAIN on the PostgreSQL side)
 

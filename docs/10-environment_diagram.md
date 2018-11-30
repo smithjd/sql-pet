@@ -1,35 +1,18 @@
 # Mapping your local environment (10)
 
+> This chapter explores:
+> 
+> * The different elements of your environment that are involved in running the examples in this book
+> * What the different roles that each element plays in your environment
+> * How those elements are connected and how you can send messages from one to another
+> * How each element has its own language / set of commands
 
 
-## command structure
-
-| Example                                                      | R            | OS           | Docker       | Alpine container | pg_restore / ls | postgreSQL    |
-| -------------------------------------------------- | ---------- | ---------- | ---------- | -------------- | ------------- | ----------- |
-| -U postgres <br />-d dvdrental  <br />petdir/dvdrental.tar               |              |              |              |                  | \|------->    | --------* |
-| ls petdir \|  <br />grep "dvdrental.tar"                           |              |              |              | \|------->     | --------*   |               |
-| exec sql-pet <br />ls petdir \|  <br />grep "dvdrental.tar               |              |              | \|-------> | ---------      | --------*   |               |
-| docker <br />exec sql-pet  <br />ls petdir \|  <br />grep "dvdrental.tar"      |              | \|-------> | ---------  | ---------      | --------*   |               |
-| system2('docker',  <br />'exec sql-pet <br />ls petdir \|  <br />grep "dvdrental.tar" ',  <br />stdout = TRUE,  <br />stderr = TRUE) | \|-------> | ---------  | ---------  | ---------      | --------*   |               |
-
-## Basics
-
-* Keeping passwords secure.
-* Coverage in this book.  There are many SQL tutorials that are available.  For example, we are drawing some materials from  [a tutorial we recommend](http://www.postgresqltutorial.com/postgresql-sample-database/).  In particular, we will not replicate the lessons there, which you might want to complete.  Instead, we are showing strategies that are recommended for R users.  That will include some translations of queries that are discussed there.
-
-* https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html  Very good intro.  How is ours different?
-
-## Ask yourself, what are you aiming for?
-
-* Differences between production and data warehouse environments.
-* Learning to keep your DBAs happy:
-  + You are your own DBA in this simulation, so you can wreak havoc and learn from it, but you can learn to be DBA-friendly here.
-  + In the end it's the subject-matter experts that understand your data, but you have to work with your DBAs first.
 
 ## Get some basic information about your database
 
 Assume that the Docker container with PostgreSQL and the dvdrental database are ready to go.
-Start up the `docker-pet` container
+Start up the `docker-pet` container:
 
 
 ```r
@@ -37,7 +20,6 @@ sp_docker_start("sql-pet")
 ```
 
 Now connect to the `dvdrental` database with R.  
-The following code block confirms that one can connect to the Postgres database.  The connection is needed for some of the examples/exercises used in this section.  If the connection is successful, the output is `<PostgreSQLConnection>`.
 
 
 ```r
@@ -47,11 +29,6 @@ con <- sp_get_postgres_connection(
   dbname = "dvdrental",
   seconds_to_test = 10
 )
-con
-```
-
-```
-## <PqConnection> dvdrental@localhost:5432
 ```
 
 ## Tutorial Environment
@@ -65,6 +42,7 @@ Below is a high level diagram of our tutorial environment.  The single black or 
 
 
 ![](diagrams/envgraph.png)<!-- -->
+
 
 ## Communicating with Docker Applications
 
@@ -158,12 +136,117 @@ To exit `psql`, enter:
 
 The docker bash and psql command options are optional for this tutorial, but open up a gateway to some very powerful programming techniques for future exploration.
 
-
-
 ### start-stop
 
 Docker has about 44 commands.  We are interested in only those related to Postgres status, started, stopped, and available.  In this tutorial, complete docker commands are printed out before being executed via a `system2` call.  In the event that a code block fails, one can copy and paste the docker command into your local CLI and see if Docker is returning additional information.
-                     
+
+## command structure
+
+Your OS and the OS inside docker may be looking at the same file but they are in different time zones.
+
+### Get info on a local file from R code
+
+
+```r
+file.info("README.md")
+```
+
+```
+##           size isdir mode               mtime               ctime
+## README.md 4973 FALSE  644 2018-11-01 14:23:56 2018-11-01 14:23:56
+##                         atime uid gid uname grname
+## README.md 2018-11-30 11:45:21 502  80   jds  admin
+```
+
+```r
+# Or, using the system2 command:
+
+system2("ls",  "-l README.md", stdout = TRUE, stderr = FALSE)
+```
+
+```
+## [1] "-rw-r--r--  1 jds  admin  4973 Nov  1 14:23 README.md"
+```
+
+### Get info on the same OS file inside Docker from R Code
+
+
+```r
+system2("docker", "exec sql-pet ls -l petdir/README.md", stdout = TRUE, stderr = FALSE)
+```
+
+```
+## Warning in system2("docker", "exec sql-pet ls -l petdir/README.md", stdout
+## = TRUE, : running command ''docker' exec sql-pet ls -l petdir/README.md 2>/
+## dev/null' had status 2
+```
+
+```
+## character(0)
+## attr(,"status")
+## [1] 2
+```
+
+### List postgreSQL users from Rstudio terminal
+
+Enter the operating system inside the `sql-pet` Docker container:
+
+> `jds$ docker exec -it sql-pet bash`
+
+A simple Unix command to get the date: 
+
+> `root@ce265d6e5361:/# date`
+>
+> `Fri Nov 30 00:29:04 UTC 2018`
+ 
+Execute the postgreSQL comand line program `psql`, logging on as `postgres`, and show a list of users:
+
+> `root@ce265d6e5361:/# psql -U postgres -c '\du'`
+> 
+>                                    List of roles
+>  `Role name` |                         `Attributes`                         | `Member of`
+> -----------+------------------------------------------------------------+-----------
+>  `postgres`  | `Superuser, Create role, Create DB, Replication, Bypass RLS` | `{}`
+
+Exit the Docker container: 
+
+> `root@ce265d6e5361:/# exit`
+> 
+> `exit`
+> 
+> `jds$`
+>
+Back to the R Studio terminal command.
+
+### List postgreSQL users from R code
+
+```r
+system2("docker", "exec sql-pet psql -U postgres -c '\\du' ", 
+        stdout = TRUE, stderr = FALSE)
+```
+
+```
+## [1] "                                   List of roles"                                    
+## [2] " Role name |                         Attributes                         | Member of "
+## [3] "-----------+------------------------------------------------------------+-----------"
+## [4] " postgres  | Superuser, Create role, Create DB, Replication, Bypass RLS | {}"        
+## [5] ""
+```
+
+
+| Example                                                      | R            | OS           | Docker       | Alpine container | pg_restore / ls | postgreSQL    |
+| -------------------------------------------------- | ---------- | ---------- | ---------- | -------------- | ------------- | ----------- |
+| -U postgres <br />-d dvdrental  <br />petdir/dvdrental.tar               |              |              |              |                  | ![](./screenshots/arrow-right.png)    | --------* |
+| ls petdir \|  <br />grep "dvdrental.tar"                           |              |              |              | \|------->     | --------*   |               |
+| exec sql-pet <br />ls petdir \|  <br />grep "dvdrental.tar               |              |              | \|-------> | ---------      | --------*   |               |
+| docker <br />exec sql-pet  <br />ls petdir \|  <br />grep "dvdrental.tar"      |              | \|-------> | ---------  | ---------      | --------*   |               |
+| system2('docker',  <br />'exec sql-pet <br />ls petdir \|  <br />grep "dvdrental.tar" ',  <br />stdout = TRUE,  <br />stderr = TRUE) | \|-------> | ---------  | ---------  | ---------      | --------*   |               |
+
+`docker exec sql-pet ls -l petdir/README.md`
+`docker exec -it sql-pet psql -U postgres -c '\l'`
+
+
+                   
 ## Exercises
 
 Docker containers have a small foot print.  In our container, we are running a limited Linux kernel and a Postgres database.  To show how tiny the docker environment is, we will look at all the processes running inside Docker and the top level file structure.

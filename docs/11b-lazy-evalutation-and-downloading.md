@@ -246,10 +246,10 @@ Q %>% print()
 In its role as IDE, R has provided nicely formatted output that is similar to what it prints for a tibble, with descriptive information about the dataset and each column:
 
 >
-> # Source:   lazy query [?? x 3]
-> # Database: postgres [postgres@localhost:5432/dvdrental]
->   rental_date         staff_email                  customer_email                       
-<   <dttm>              <chr>                        <chr>
+> \# Source:   lazy query [?? x 3] </br >
+> \# Database: postgres [postgres@localhost:5432/dvdrental] </br >
+>   rental_date         staff_email                  customer_email 
+>   \<dttm\>              \<chr\>                        \<chr\>
 >
 
 It has only retrieved 10 rows but doesn't know how many rows are left to retrieve as it notes `... with more rows`. 
@@ -326,11 +326,11 @@ Q %>% str(max.level = 3)
 ##   .. ..- attr(*, "class")= chr [1:3] "op_rename" "op_single" "op"
 ##   ..$ dots:List of 3
 ##   .. ..$ : language ~rental_date
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fa888ab9250> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fe056a56e58> 
 ##   .. ..$ : language ~staff_email
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fa888ab9250> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fe056a56e58> 
 ##   .. ..$ : language ~customer_email
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fa888ab9250> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fe056a56e58> 
 ##   .. ..- attr(*, "class")= chr "quosures"
 ##   ..$ args: list()
 ##   ..- attr(*, "class")= chr [1:3] "op_select" "op_single" "op"

@@ -1,5 +1,12 @@
 # Setup instructions (00)
 
+> This chapter explains:
+> 
+> * What you need to run the code in this book
+> * Where to get documentation for Docker
+> * How you can contribute to the book project
+
+
 ## R, RStudio and Git
 Most of you will probably have these already, but if you don't:
 

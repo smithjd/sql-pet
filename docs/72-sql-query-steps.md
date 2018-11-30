@@ -1,6 +1,23 @@
 # SQL queries behind the scenes (72)
 
+> This chapter explains:
+> 
+> * Some details about how SQL queries work behind the scenes
+> * SQL queries are executed behind the scenes
+> * You can pass values to SQL queries
 
+
+```r
+# These packages are called in almost every chapter of the book:
+library(tidyverse)
+library(DBI)
+library(RPostgres)
+library(glue)
+library(here)
+require(knitr)
+library(dbplyr)
+library(sqlpetr)
+```
 
 Start up the `docker-pet` container
 
