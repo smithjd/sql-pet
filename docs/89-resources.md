@@ -1,4 +1,6 @@
-# (APPENDIX) Appendix A: Other resources (89)
+# (APPENDIX) Appendix {-} 
+
+# Other resources (89)
 
 ## Editing this book
 * Here are instructions for [editing this tutorial](https://github.com/smithjd/sql-pet/blob/master/maintaining-the-bookdown-site.md)

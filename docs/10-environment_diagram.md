@@ -43,7 +43,6 @@ Below is a high level diagram of our tutorial environment.  The single black or 
 
 ![](diagrams/envgraph.png)<!-- -->
 
-
 ## Communicating with Docker Applications
 
 One assumption we made is that most users use `RStudio` to interface with `R`. The four take aways from the diagram above are labeled:
@@ -52,11 +51,11 @@ One assumption we made is that most users use `RStudio` to interface with `R`. T
 
 R-SQL processing, the purpose of this tutorial, is performed via a database connection. This should be a simple task, but often turns out to take a lot of time to actually get it to work.  We assume that your final write ups are done in some flavor of an Rmd document and others will have access to the database to confirm or further your analysis.
 
-One focus of this tutorial is SQL processing through a dbConnection and we will come back to this in a future section.  The remainder of this section focuses on some specific Docker commands.                      
+One focus of this tutorial is SQL processing through a dbConnection and we will come back to this in a future section.  The remainder of this section focuses on some specific Docker commands. 
                      
 ### bash
 
-The Docker container runs on top of a small Linux kernel foot print.  Since Mac and Linux users run a version of Linux already, they may want to poke around the Docker environment.  Below is the CLI command to start up a bash session, execute a version of hello world, and exit the `bash` session.
+The Docker container runs on top of a small Linux kernel foot print.  Since Mac and Linux users run a version of Linux already, they may want to poke around the Docker environment directly from the bash command line interface (CLI).  Below is the CLI command to start up a bash session, execute a version of hello world, and exit the `bash` session.
 
 (In this and subsequent example, an initial `$` represents your system prompt, which varies according to operating system and local environment.)
 
@@ -142,6 +141,8 @@ Docker has about 44 commands.  We are interested in only those related to Postgr
 
 ## command structure
 
+We use two trivial commands to explore the various *interfaces*.  `ls -l` is the unix command for listing information about a file and `\du` is the psql command to list the users that exist in postgreSQL.
+
 Your OS and the OS inside docker may be looking at the same file but they are in different time zones.
 
 ### Get info on a local file from R code
@@ -155,7 +156,7 @@ file.info("README.md")
 ##           size isdir mode               mtime               ctime
 ## README.md 4973 FALSE  644 2018-11-01 14:23:56 2018-11-01 14:23:56
 ##                         atime uid gid uname grname
-## README.md 2018-11-30 11:45:21 502  80   jds  admin
+## README.md 2018-12-06 15:17:43 502  80   jds  admin
 ```
 
 ```r
@@ -187,36 +188,42 @@ system2("docker", "exec sql-pet ls -l petdir/README.md", stdout = TRUE, stderr =
 ## [1] 2
 ```
 
-### List postgreSQL users from Rstudio terminal
+### List postgreSQL users from Rstudio terminal (simulated)
 
-Enter the operating system inside the `sql-pet` Docker container:
+We can't show exactly what a terminal session looks like in this R Markdown book, so we resort to representing it indirectly.
 
-> `jds$ docker exec -it sql-pet bash`
+To get a unix command line *inside the sql-pet Docker environment*, enter this command:
 
-A simple Unix command to get the date: 
+> `$ docker exec -it sql-pet bash`
+
+The `$` represents the unix command prompt in your R Studio terminal session.  The unix command prompt inside Docker in this case is `root@ce265d6e5361:/#`.  A trivial Unix command to get the date therefore is: 
 
 > `root@ce265d6e5361:/# date`
 >
 > `Fri Nov 30 00:29:04 UTC 2018`
  
-Execute the postgreSQL comand line program `psql`, logging on as `postgres`, and show a list of users:
+From that unix command prompt you can also enter the `psql` app (which has sit's own command line interface).  Execute the postgreSQL comand line program `psql`, logging on as `postgres`, and show a list of users:
 
 > `root@ce265d6e5361:/# psql -U postgres -c '\du'`
+`psql` returns:
+
 > 
 >                                    List of roles
 >  `Role name` |                         `Attributes`                         | `Member of`
 > -----------+------------------------------------------------------------+-----------
 >  `postgres`  | `Superuser, Create role, Create DB, Replication, Bypass RLS` | `{}`
 
-Exit the Docker container: 
+To exit unix inside the Docker container, enter `exit`:
 
 > `root@ce265d6e5361:/# exit`
 > 
 > `exit`
 > 
-> `jds$`
+We are then back to the R Studio terminal command:
+
+> `$`
 >
-Back to the R Studio terminal command.
+
 
 ### List postgreSQL users from R code
 
