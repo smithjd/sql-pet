@@ -57,63 +57,24 @@ sp_check_that_docker_is_up()
 ```
 ## Connect, read and write to Postgres from R
 
-### Pause for some security considerations
-
-We use the following `sp_get_postgres_connection` function to connect to PostgreSQL.  It will keep trying to connect to PostgreSQL, even if the dbms is not ready.  PostgreSQL can take different amounts of time to come up and be ready to accept connections from R, depending on various factors depending on your computer and its configuration. ^[See details for Windows here:<br>   https://csgillespie.github.io/efficientR/3-3-r-startup.html#r-startup </br>https://csgillespie.github.io/efficientR/3-3-r-startup.html#renviron ]
-
-> When we call `sp_get_postgres_connection` below we'll use environment variables that R obtains from reading the *.Renviron* file when R starts up.  This approach has two benefits: that file is not uploaded to GitHub. R looks for it in your default directory every time it loads.  To see whether you have already created that file, use the R Studio Files tab to look at your **home directory**:
->
-![](screenshots/locate-renviron-file.png)
->
-> That file should contain lines that **look like** the example below. Although in this example it contains the PostgreSQL <b>default values</b> for the username and password, they are obviously not secret.  But this approach demonstrates where you should put secrets that R needs while not risking accidental uploaded to GitHub or some other public location..
-
-Open your `.Renviron` file with this command:
-
->
-> `file.edit("~/.Renviron")`
->
-
-Or you can execute [define_postgresql_params.R](define_postgresql_params.R) to create the file or you could copy / paste the following into your **.Renviron** file:
-```
-DEFAULT_POSTGRES_PASSWORD=postgres
-DEFAULT_POSTGRES_USER_NAME=postgres
-```
-Once that file is created, restart R, and after that R reads it every time it comes up. 
 
 ### Connect with Postgres
 
 Connect to the postgrSQL using the `sp_get_postgres_connection` function:
 ```{r}
-con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
-                         password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
+con <- sp_get_postgres_connection(user = "postgres",
+                         password = "postgres",
                          dbname = "postgres",
                          seconds_to_test = 10)
 ```
-If you don't have an `.Rprofile` file that defines those passwords, you can just insert a string for the parameter, like:
-
-  `user= 'whatever', password = 'whatever'`
+Notice that we are using the postgreSQL default username and password at this point and that it's in plain text. That is bad practice because user credentials should not be shared in this way.  In a subsequent chapter we'll demonstrate how to store and use credentials to access the dbms.
 
 Make sure that you can connect to the PostgreSQL database that you started earlier. If you have been executing the code from this tutorial, the database will not contain any tables yet:
 
 ```{r}
 dbListTables(con)
 ```
-<!--
-The following needs to be expanded and explained -- it doesn't stand on its own as written.
-### Alternative: put the database password in an environment file
 
-The goal is to put the password in an untracked file that will **not** be committed in your source code repository. Your code can reference the name of the variable, but the value of that variable will not appear in open text in your source code.
-
-We have chosen to call the file `dev_environment.csv` in the current working directory where you are executing this script. That file name appears in the `.gitignore` file, so that you will not accidentally commit it. We are going to create that file now.
-
-You will be prompted for the database password. By default, a PostgreSQL database defines a database user named `postgres`, whose password is `postgres`. If you have changed the password or created a new user with a different password, then enter those new values when prompted. Otherwise, enter `postgres` and `postgres` at the two prompts.
-
-In an interactive environment, you could execute a snippet of code that prompts the user for their username and password with the following snippet (which isn't run in the book):
-
-Your password is still in plain text in the file, `dev_environment.csv`, so you should protect that file from exposure. However, you do not need to worry about committing that file accidentally to your git repository, because the name of the file appears in the `.gitignore` file.
-
-For security, we use values from the `environment_variables` data.frame, rather than keeping the `username` and `password` in plain text in a source file.
--->
 ### Interact with Postgres
 
 Write `mtcars` to PostgreSQL
