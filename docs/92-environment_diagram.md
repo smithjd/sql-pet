@@ -1,4 +1,4 @@
-# APPENDIX B - Mapping your local environment (92)
+# Mapping your local environment (92)
 
 
 
