@@ -1,4 +1,4 @@
-# The dvdrental database in Postgres in Docker (05)
+# The dvdrental database in Postgres in Docker (05a)
 
 > This chapter demonstrates how to:
 >
@@ -9,7 +9,7 @@
 
 ## Overview
 
-In the last chapter we connected to PostgreSQL from R.  Now we set up a "realistic" database named `dvdrental`. There are different approaches to doing this: this chapter sets it up in a way that doesn't delve into the Docker details.  If you are interested, you can look at an alternative approach in [Creating the sql-pet Docker container a step at a time](Creating the sql-pet Docker container a step at a time) that breaks the process down into smaller chunks.
+In the last chapter we connected to PostgreSQL from R.  Now we set up a "realistic" database named `dvdrental`. There are different approaches to doing this: this chapter sets it up in a way that doesn't delve into the Docker details.  If you are interested, you can look at an alternative approach in [Creating the sql-pet Docker container a step at a time](Creating the sql-pet Docker container one step at a time \(93\)) that breaks the process down into smaller chunks.
 
 These packages are called in this Chapter:
 
@@ -57,7 +57,7 @@ cat(docker_messages, sep = "\n")
 ```
 
 ```
-## Sending build context to Docker daemon  58.19MB
+## Sending build context to Docker daemon  60.25MB
 ## Step 1/4 : FROM postgres:10
 ##  ---> ac25c2bac3c4
 ## Step 2/4 : WORKDIR /tmp
@@ -106,7 +106,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "082b8bb3bc5353abc28c4bc3fdc691023ac6be2c0bdc5e0a49d42438f5539484"
+## [1] "f548c380caaf162de20e0e22f2836d8e53db1966cefaafe1d5fa7756c69eb2b9"
 ```
 ## Connect to Postgres with R
 
@@ -208,7 +208,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## 082b8bb3bc53        postgres-dvdrental   "docker-entrypoint.s…"   8 seconds ago       Exited (0) Less than a second ago                       sql-pet
+## f548c380caaf        postgres-dvdrental   "docker-entrypoint.s…"   9 seconds ago       Exited (0) Less than a second ago                       sql-pet
 ```
 
 Next time, you can just use this command to start the container: 
