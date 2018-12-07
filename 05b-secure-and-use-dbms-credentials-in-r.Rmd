@@ -1,4 +1,4 @@
-# Docker, Postgres, and R (04)
+# Securing and using your dbms credentials (05b)
 
 > This chapter demonstrates how to:
 >

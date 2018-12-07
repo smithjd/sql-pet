@@ -1,4 +1,4 @@
-# Docker, Postgres, and R (04)
+# Connecting Docker, Postgres, and R (04)
 
 > This chapter demonstrates how to:
 >
@@ -71,7 +71,7 @@ sp_check_that_docker_is_up()
 ```
 ## [1] "Docker is up, running these containers:"                                                                                                       
 ## [2] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES"   
-## [3] "6687a3c15461        postgres:10         \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
+## [3] "e9db15908518        postgres:10         \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
 ```
 ## Connect, read and write to Postgres from R
 

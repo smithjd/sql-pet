@@ -1,4 +1,5 @@
-# Creating the sql-pet Docker container a step at a time
+# Creating the sql-pet Docker container one step at a time (93)
+
 Step-by-step Docker container setup with dvdrental database installed
 This needs to run *outside a project* to compile correctly because of
 the complexities of how knitr sets working directories (or because we
@@ -128,7 +129,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE                COMMAND                  CREATED              STATUS                     PORTS               NAMES
-## 082b8bb3bc53        postgres-dvdrental   "docker-entrypoint.s…"   About a minute ago   Exited (0) 6 seconds ago                       sql-pet
+## f548c380caaf        postgres-dvdrental   "docker-entrypoint.s…"   About a minute ago   Exited (0) 6 seconds ago                       sql-pet
 ```
 
 Remove the `sql-pet` container if it exists (e.g., from a prior run)
@@ -184,7 +185,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "fdf9ae42482beb7b64b9cb5812155dcf43595fc008c0d16a0ba97e05e5f18c66"
+## [1] "7b30bce884a05a498542ada8d8e2ea8a81a35bd44c33741303ec35b1e99ebca3"
 ```
 
 Peek inside the docker container and list the files in the `petdir`
@@ -228,7 +229,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES
-## fdf9ae42482b        postgres:10         "docker-entrypoint.s…"   4 seconds ago       Up 3 seconds        0.0.0.0:5432->5432/tcp   sql-pet
+## 7b30bce884a0        postgres:10         "docker-entrypoint.s…"   4 seconds ago       Up 3 seconds        0.0.0.0:5432->5432/tcp   sql-pet
 ```
 inside Docker, execute the postgress SQL command-line program to create the dvdrental database:
 
@@ -361,7 +362,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## fdf9ae42482b        postgres:10         "docker-entrypoint.s…"   15 seconds ago      Exited (0) Less than a second ago                       sql-pet
+## 7b30bce884a0        postgres:10         "docker-entrypoint.s…"   15 seconds ago      Exited (0) Less than a second ago                       sql-pet
 ```
 
 We are leaving the `sql-pet` container intact so it can be used in running the
