@@ -326,11 +326,11 @@ Q %>% str(max.level = 3)
 ##   .. ..- attr(*, "class")= chr [1:3] "op_rename" "op_single" "op"
 ##   ..$ dots:List of 3
 ##   .. ..$ : language ~rental_date
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7f8d6f020e78> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fcb13a6c078> 
 ##   .. ..$ : language ~staff_email
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7f8d6f020e78> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fcb13a6c078> 
 ##   .. ..$ : language ~customer_email
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7f8d6f020e78> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fcb13a6c078> 
 ##   .. ..- attr(*, "class")= chr "quosures"
 ##   ..$ args: list()
 ##   ..- attr(*, "class")= chr [1:3] "op_select" "op_single" "op"
