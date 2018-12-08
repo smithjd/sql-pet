@@ -7,12 +7,22 @@
 > * How those elements are connected and how you can send messages from one to another
 > * How each element has its own language / set of commands
 
+These packages are used in this chapter:
 
+```r
+library(tidyverse)
+library(DBI)
+library(RPostgres)
+require(knitr)
+library(dbplyr)
+library(sqlpetr)
+library(DiagrammeR)
+display_rows <- 5
+```
 
-## Get some basic information about your database
+## Set up docker environment
 
-Assume that the Docker container with PostgreSQL and the dvdrental database are ready to go.
-Start up the `docker-pet` container:
+Assume that the Docker container with PostgreSQL and the dvdrental database are ready to go.  Start up the `docker-pet` container:
 
 
 ```r
@@ -33,29 +43,71 @@ con <- sp_get_postgres_connection(
 
 ## Tutorial Environment
 
+Here is an overview of your environment.  In this chapter we explore what these pieces are, how they are connected, what commands send a message from one environment to another, and some pass-through commands that take two hops at a time.  You can skip this chapter and come back later when you are curious about the setup that we're using in this book.
 
+<center>
+![](screenshots/your-environment-diagram.png)
+</center>
 
+### each element in turn and what elements it can communicate with
 
-Below is a high level diagram of our tutorial environment.  The single black or blue boxed items are the apps running on your PC, (Linux, Mac, Windows), RStudio, R, Docker, and CLI, a command line interface.  The red boxed items are the versions of the applications shown.  The labels are to the right of the line.
+### Rstudio
 
+You communicate with Rstudio, which can send commands to both R and to Unix (via the terminal pane or via R).  On a Unix or Mac computer, you communicate with `bash`.
 
+### Unix (command interpreter on your computer)
 
+You can type `bash` commands in a terminal window directly.  Called command prompt on Windows.  Unix can communicate with the Docker client, which can start and stop the Docker server and load containers with programs such as Unix, postgreSQL, etc.
 
-![](diagrams/envgraph.png)<!-- -->
+### R
 
-## Communicating with Docker Applications
+R processes instructions from Rstudio.  It can send instructions to Unix via the `system2` function.  R talks directly to postgreSQL through the DBI package. 
 
-One assumption we made is that most users use `RStudio` to interface with `R`. The four take aways from the diagram above are labeled:
-
-### dbConnect
-
-R-SQL processing, the purpose of this tutorial, is performed via a database connection. This should be a simple task, but often turns out to take a lot of time to actually get it to work.  We assume that your final write ups are done in some flavor of an Rmd document and others will have access to the database to confirm or further your analysis.
+Connecting to the database should be a simple task, but often turns out to take a lot of time to actually get it to work.  We assume that your final write ups are done in some flavor of an Rmd document and others will have access to the database to confirm or further your analysis.
 
 One focus of this tutorial is SQL processing through a dbConnection and we will come back to this in a future section.  The remainder of this section focuses on some specific Docker commands. 
-                     
-### bash
 
-The Docker container runs on top of a small Linux kernel foot print.  Since Mac and Linux users run a version of Linux already, they may want to poke around the Docker environment directly from the bash command line interface (CLI).  Below is the CLI command to start up a bash session, execute a version of hello world, and exit the `bash` session.
+### Docker client
+
+The docker client receives instructions from your local Unix program.  Sets up the Docker server, loads containers, and passes instructions from Unix to the programs running in the Docker server. See more about the [Docker environment](https://docs.docker.com/engine/docker-overview/#the-docker-platform).
+
+Docker has about 44 commands.  We are interested in only those related to Postgres status, started, stopped, and available.  In this tutorial, complete docker commands are printed out before being executed via a `system2` call.  In the event that a code block fails, one can copy and paste the docker command into your local CLI and see if Docker is returning additional information.
+
+Typing `docker` at the terminal command line will print up a summary of all available `docker` commands.  Below are the docker commands used in the exercises.
+
+    Commands:
+      ps          List containers
+      start       Start one or more stopped containers
+      stop        Stop one or more running containers
+
+The general format for a Docker command is 
+
+    docker [OPTIONS] COMMAND ARGUMENTS
+    
+Below is the output for the Docker exec help command which was used in the `bash` and `psql` command examples above and for an exercise below.
+
+```
+$ docker help exec
+
+Usage:  docker exec [OPTIONS] CONTAINER COMMAND [ARG...]
+
+Run a command in a running container
+
+Options:
+  -d, --detach               Detached mode: run command in the background
+      --detach-keys string   Override the key sequence for detaching a
+                             container
+  -e, --env list             Set environment variables
+  -i, --interactive          Keep STDIN open even if not attached
+      --privileged           Give extended privileges to the command
+  -t, --tty                  Allocate a pseudo-TTY
+  -u, --user string          Username or UID (format:
+                             <name|uid>[:<group|gid>])
+  -w, --workdir string       Working directory inside the container
+```                   
+### bash (inside Docker)
+
+Since Mac and Linux users run a version of Linux already, they may want to poke around the Docker environment directly from the bash command line interface (CLI).  Below is the CLI command to start up a bash session, execute a version of hello world, and exit the `bash` session.
 
 (In this and subsequent example, an initial `$` represents your system prompt, which varies according to operating system and local environment.)
 
@@ -65,19 +117,19 @@ In your computer's command prompt:
 
 Inside the `bash` (UNIX command) environment:
 ```
-
-$ echo "'hello world'" talking to you live from a bash shell session within Docker!
-
-'hello world' talking to you live from a bash shell session within Docker!
-$ exit
+$ echo "hello world!" 
 ```
-Now back at your computer command prompt with:
+The system echoes back:
+```
+Hello world!
+$
+```
+To execute the same thing in the Docker's version of Unix, send the following command from your local terminal to the Docker client, which sends it to the bash interpreter:
 
-  `$ exit`
-
-Note that the user in the example is root.  Root has all priviledges and can destroy the Docker environment.  
-
-### psql
+```
+docker exec -ti sql-pet echo "hello"
+```
+### psql (inside Docker)
 
 For users comfortable executing SQL from a command line directly against the database, can run the `psql` application directly.  Below is the CLI command to start up `psql` session, execute a version of hello world, and quitting the `psql` version.
 
@@ -91,17 +143,10 @@ That executes a postreSQL program in docker called `psql`, which is a command li
 psql (10.5 (Debian 10.5-1.pgdg90+1))
 Type "help" for help.
 ```
-You enter:
-
-    `select '"hello world" talking to you live from postgres inside Docker!' hello;`
-
-All SQL commands need to end with a semi-colon. `psql` responds with:
+To exit, you enter:
 
 ```
-                                hello
-------------------------------------------------------------------------
- "hello world" talking to you live from postgres inside Docker!
-(1 row)
+dvdrental-#\q
 ```
 
 * To explore the PostgreSQL environment it's worth browsing around inside the Docker command with a shell.
@@ -132,12 +177,11 @@ To exit `psql`, enter:
 ```
     \q
 ```
-
 The docker bash and psql command options are optional for this tutorial, but open up a gateway to some very powerful programming techniques for future exploration.
 
-### start-stop
+### postgreSQL (inside Docker)
 
-Docker has about 44 commands.  We are interested in only those related to Postgres status, started, stopped, and available.  In this tutorial, complete docker commands are printed out before being executed via a `system2` call.  In the event that a code block fails, one can copy and paste the docker command into your local CLI and see if Docker is returning additional information.
+The postreSQL database is a whole environment unto itself.  It can receive instructions from bash, psql, and it will respond to `DBI` queries from R on port 5282.
 
 ## command structure
 
@@ -156,7 +200,7 @@ file.info("README.md")
 ##           size isdir mode               mtime               ctime
 ## README.md 4973 FALSE  644 2018-11-01 14:23:56 2018-11-01 14:23:56
 ##                         atime uid gid uname grname
-## README.md 2018-12-06 15:57:06 502  80   jds  admin
+## README.md 2018-12-07 17:56:52 502  80   jds  admin
 ```
 
 ```r
@@ -224,7 +268,6 @@ We are then back to the R Studio terminal command:
 > `$`
 >
 
-
 ### List postgreSQL users from R code
 
 ```r
@@ -252,47 +295,16 @@ system2("docker", "exec sql-pet psql -U postgres -c '\\du' ",
 `docker exec sql-pet ls -l petdir/README.md`
 `docker exec -it sql-pet psql -U postgres -c '\l'`
 
-
-                   
 ## Exercises
 
 Docker containers have a small foot print.  In our container, we are running a limited Linux kernel and a Postgres database.  To show how tiny the docker environment is, we will look at all the processes running inside Docker and the top level file structure.
 
-### Docker Help
 
-Typing `docker` at the command line will print up a summary of all available `docker` commands.  Below are the docker commands used in the exercises.
-
-    Commands:
-      ps          List containers
-      start       Start one or more stopped containers
-      stop        Stop one or more running containers
-
-The general format for a Docker command is 
-
-    docker [OPTIONS] COMMAND ARGUMENTS
-    
-Below is the output for the Docker exec help command which was used in the `bash` and `psql` command examples above and for an exercise below.
-
-```
-$ docker help exec
-
-Usage:  docker exec [OPTIONS] CONTAINER COMMAND [ARG...]
-
-Run a command in a running container
-
-Options:
-  -d, --detach               Detached mode: run command in the background
-      --detach-keys string   Override the key sequence for detaching a
-                             container
-  -e, --env list             Set environment variables
-  -i, --interactive          Keep STDIN open even if not attached
-      --privileged           Give extended privileges to the command
-  -t, --tty                  Allocate a pseudo-TTY
-  -u, --user string          Username or UID (format:
-                             <name|uid>[:<group|gid>])
-  -w, --workdir string       Working directory inside the container
-```
 In the following exercies, use the `-i` option and the CONTAINER = `sql-pet`.
+
+
+## Dynamic environment graph
+Below is a high level diagram of our tutorial environment.  The single black or blue boxed items are the apps running on your PC, (Linux, Mac, Windows), RStudio, R, Docker, and CLI, a command line interface.  The red boxed items are the versions of the applications shown.  The labels are to the right of the line.
 
 Start up R/RStudio and convert the CLI command to an R/RStudio command 
     
@@ -311,3 +323,10 @@ Start up R/RStudio and convert the CLI command to an R/RStudio command
 |5 |If sql-pet status is Up, How do I stop it?|docker stop sql-pet||
 |5a|If sql-pet status is Exited, How do I start it?|docker start sql-pet||
     
+
+
+
+
+
+
+![](diagrams/envgraph.png)<!-- -->
