@@ -1,10 +1,9 @@
 # Lazy Evaluation and Lazy Queries (11b)
 
-
 ## This chapter:
 > 
 > * Reviews lazy evaluation and discusses its interaction with remote query execution on a dbms 
-> * Illustrates some of the differences between writing `dplyr` commands and SQL
+> * Demonstrates how `dplyr` queries behave in connection with several different functions
 > * Suggests some strategies for dividing the work between your local R session and the dbms
 
 ### Setup
@@ -40,7 +39,7 @@ con <- sp_get_postgres_connection(
 
 By design, R is both a language and an interactive development environment (IDE).  As a language, R tries to be as efficient as possible.  As an IDE, R creates some guardrails to make it easy and safe to work with your data. For example `getOption("max.print")` prevents R from printing more rows of data than you can handle, with a nice default of 99999, which may or may not suit you.
 
-On the other hand SQL a *"Structured Query Language (SQL) is a standard computer language for relational database management and data manipulation."* ^[https://www.techopedia.com/definition/1245/structured-query-language-sql]. SQL has database-specific Interactive Development Environments (IDEs): for postgreSQL it's [pgAdmin](https://www.pgadmin.org/).  Roger Peng explains in [R Programming for Data Science](https://bookdown.org/rdpeng/rprogdatascience/history-and-overview-of-r.html#basic-features-of-r) that:
+On the other hand SQL is a *"Structured Query Language (SQL): a standard computer language for relational database management and data manipulation."* ^[https://www.techopedia.com/definition/1245/structured-query-language-sql]. SQL has has various database-specific Interactive Development Environments (IDEs): for postgreSQL it's [pgAdmin](https://www.pgadmin.org/).  Roger Peng explains in [R Programming for Data Science](https://bookdown.org/rdpeng/rprogdatascience/history-and-overview-of-r.html#basic-features-of-r) that:
 
 > R has maintained the original S philosophy, which is that it provides a language that is both useful for interactive work, but contains a powerful programming language for developing new tools. 
 
@@ -50,8 +49,10 @@ This is complicated when R interacts with SQL.  In [the vignette for dbplyr](htt
 > 
 > * It never pulls data into R unless you explicitly ask for it.
 > 
-> * It delays doing any work until the last possible moment: it collects together everything you want to do and then sends it to > the database in one step.
+> * It delays doing any work until the last possible moment: it collects together everything you want to do and then sends it to the database in one step.
 > 
+
+Exactly when, which and how much data is returned from the dbms is the topic of this chapter.  Exactly how the data is represented in the dbms and then translated to a data frame is discussed in the [DBI specification](https://cran.r-project.org/web/packages/DBI/vignettes/spec.html#_fetch_records_from_a_previously_executed_query_).
 
 Eventually, if you are interacting with a dbms from R you will need to understand the differences between lazy loading, lazy evaluation, and lazy queries.
 
@@ -184,41 +185,43 @@ customer_table <- dplyr::tbl(con, "customer")
 # the 'customer' table has 599 rows
 ```
 
-### Using a lazy query
+## When does a lazy query trigger data retrieval?
 
+### Create a black box query for experimentation
 Here is a typical string of dplyr verbs strung together with the magrittr `%>%` command that will be used to tease out the several different behaviors that a lazy query has when passed to different R functions.  This query joins three connection objects into a query we'll call `Q`:
 
 
 ```r
 Q <- rental_table %>%
-  select(staff_id, customer_id, rental_date) %>%
   left_join(staff_table, by = c("staff_id" = "staff_id")) %>%
   rename(staff_email = email) %>%
-  select(staff_id, customer_id, rental_date, staff_email) %>%
   left_join(customer_table, by = c("customer_id" = "customer_id")) %>%
   rename(customer_email = email) %>%
   select(rental_date, staff_email, customer_email)
 ```
 
-Think of `Q` as a black box for the moment.  The following examples will show how `Q` is interpreted differently by different functions. 
+### Experiment overview
+Think of `Q` as a black box for the moment.  The following examples will show how `Q` is interpreted differently by different functions. In this table, a single green check indicates that some rows are returned, two green checks indicates that all the rows are returned, and the red X indicates that no rows have are returned.
 
 > R code | Result 
 > -------| --------------
-> `Q %>% print()` | Prints x rows; same as just entering `Q`  
-> `Q %>% as.tibble()` | Forces `Q` to be a tibble
-> `Q %>% head()` |  Prints the first 6 rows 
-> `Q %>% length()` |  Counts the rows in `Q`
-> `Q %>% str(max.level = 3)` | Shows the top 3 levels of the **object** `Q` 
-> `Q %>% nrow()` | **Attempts** to determine the number of rows 
-> `Q %>% tally()` | Counts all the rows -- on the dbms side
-> `Q %>% collect (n = 20)` | Prints 20 rows  
-> `Q %>% collect (n = 20) %>% head()` | Prints 6 rows  
-> `Q %>% show_query()` | **Translates** the lazy query object into SQL  
-> `Qc <- Q %>%` <br /> `count(customer_email, sort = TRUE)` <br /> `Qc` | **Extends** the lazy query object
+> [`Q %>% print()`](#Q %>% print\(\)) | ![](screenshots/green-check.png) Prints x rows; same as just entering `Q`  
+> [`Q %>% as.tibble()`](#Q %>% as.tibble\(\)) | ![](screenshots/green-check.png)![](screenshots/green-check.png) Forces `Q` to be a tibble
+> [`Q %>% head()`](#Q %>% head\(\)) | ![](screenshots/green-check.png) Prints the first 6 rows 
+> [`Q %>% length()`](#Q %>% length\(\)) |  ![](screenshots/red-x.png) Counts the rows in `Q`
+> [`Q %>% str()`](#Q %>% str\(x.level = 3\)) |  ![](screenshots/red-x.png)Shows the top 3 levels of the **object** `Q` 
+> [`Q %>% nrow()`](#Q %>% nrow\(\)) | ![](screenshots/red-x.png) **Attempts** to determine the number of rows 
+> [`Q %>% tally()`](#Q %>% tally\(\)) | ![](screenshots/green-check.png) ![](screenshots/green-check.png) Counts all the rows -- on the dbms side
+> [`Q %>% collect(n = 20)`](#Q %>% collect\(\)) | ![](screenshots/green-check.png) Prints 20 rows  
+> [`Q %>% collect(n = 20) %>% head()`](#Q %>% collect\(\)) | ![](screenshots/green-check.png) Prints 6 rows  
+> [`Q %>% show_query()`](#Q %>% show_query\(\)) | ![](screenshots/red-x.png) **Translates** the lazy query object into SQL  
+> [`Qc <- Q %>% count(customer_email, sort = TRUE)` <br /> `Qc`](#Qc <- Q %>%) | **Extends** the lazy query object
 >
 > 
 
 (The next chapter will discuss how to build queries and how to explore intermediate steps.)
+
+### Q %>% print()
 
 Remember that `Q %>% print()` is equivalent to `print(Q)` and the same as just entering `Q` on the command line.  We use the magrittr pipe operator here because chaining functions highlights how the same object behaves differently in each use.
 
@@ -243,7 +246,7 @@ Q %>% print()
 ## 10 2005-05-25 00:09:02 Jon.Stephens@sakilast… april.burns@sakilacustomer.…
 ## # ... with more rows
 ```
-In its role as IDE, R has provided nicely formatted output that is similar to what it prints for a tibble, with descriptive information about the dataset and each column:
+![](screenshots/green-check.png) R retrieves 10 observations and 3 colulmns.  In its role as IDE, R has provided nicely formatted output that is similar to what it prints for a tibble, with descriptive information about the dataset and each column:
 
 >
 > \# Source:   lazy query [?? x 3] </br >
@@ -252,8 +255,11 @@ In its role as IDE, R has provided nicely formatted output that is similar to wh
 >   \<dttm\>              \<chr\>                        \<chr\>
 >
 
-It has only retrieved 10 rows but doesn't know how many rows are left to retrieve as it notes `... with more rows`. 
-In contrast to `print()`, the `as.tibble()` function causes R to download the whole table, using tibble's default of displaying only the first 10 rows.
+R has not determined how many rows are left to retrieve as it notes `... with more rows`. 
+
+### Q %>% as.tibble()
+
+![](screenshots/green-check.png) ![](screenshots/green-check.png) In contrast to `print()`, the `as.tibble()` function causes R to download the whole table, using tibble's default of displaying only the first 10 rows.
 
 ```r
 Q %>% as.tibble()
@@ -276,7 +282,9 @@ Q %>% as.tibble()
 ## # ... with 16,034 more rows
 ```
 
-The `head()` function is very similar to print but has a different "`max.print`" value.
+### Q %>% head()
+
+![](screenshots/green-check.png) The `head()` function is very similar to print but has a different "`max.print`" value.
 
 ```r
 Q %>% head()
@@ -294,7 +302,10 @@ Q %>% head()
 ## 5 2005-05-24 23:08:07 Mike.Hillyer@sakilasta… nelson.christenson@sakilacu…
 ## 6 2005-05-24 23:11:53 Jon.Stephens@sakilasta… cassandra.walters@sakilacus…
 ```
-Because the `Q` object is relatively complex, using `str()` on it prints many lines.  You can glimpse what's going on with `length()`:
+
+### Q %>% length()
+
+![](screenshots/red-x.png) Because the `Q` object is relatively complex, using `str()` on it prints many lines.  You can glimpse what's going on with `length()`:
 
 ```r
 Q %>% length()
@@ -303,7 +314,10 @@ Q %>% length()
 ```
 ## [1] 2
 ```
-Looking inside shows some of what's going on:
+
+### Q %>% str()
+
+![](screenshots/red-x.png) Looking inside shows some of what's going on (three levels deep):
 
 ```r
 Q %>% str(max.level = 3) 
@@ -326,17 +340,20 @@ Q %>% str(max.level = 3)
 ##   .. ..- attr(*, "class")= chr [1:3] "op_rename" "op_single" "op"
 ##   ..$ dots:List of 3
 ##   .. ..$ : language ~rental_date
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fcb13a6c078> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fd1940672e8> 
 ##   .. ..$ : language ~staff_email
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fcb13a6c078> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fd1940672e8> 
 ##   .. ..$ : language ~customer_email
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fcb13a6c078> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fd1940672e8> 
 ##   .. ..- attr(*, "class")= chr "quosures"
 ##   ..$ args: list()
 ##   ..- attr(*, "class")= chr [1:3] "op_select" "op_single" "op"
 ##  - attr(*, "class")= chr [1:4] "tbl_dbi" "tbl_sql" "tbl_lazy" "tbl"
 ```
-Notice the difference between `nrow()` and `tally()`:
+
+### Q %>% nrow()
+
+![](screenshots/red-x.png) Notice the difference between `nrow()` and `tally()`. The `nrow` functions returns `NA` and does not execute a query:
 
 ```r
 Q %>% nrow()
@@ -345,6 +362,10 @@ Q %>% nrow()
 ```
 ## [1] NA
 ```
+
+### Q %>% tally()
+
+![](screenshots/green-check.png) The `tally` function actually counts all the rows.
 
 ```r
 Q %>% tally()
@@ -359,7 +380,9 @@ Q %>% tally()
 ```
 The `nrow()` function knows that `Q` is a list.  On the other hand, the `tally()` function tells SQL to go count all the rows. Notice that `Q` results in 16,044 rows -- the same number of rows as `rental`.
 
-The `dplyr::collect()` function triggers a dbFetch() function behind the scenes, which forces R to download a specified number of rows:
+### Q %>% collect()
+
+![](screenshots/green-check.png) The `dplyr::collect()` function triggers a dbFetch() function behind the scenes, which forces R to download a specified number of rows:
 
 ```r
 Q %>% collect(n = 20)
@@ -408,6 +431,8 @@ Q %>% collect(n = 20) %>% head()
 ```
 The `collect` function triggers the creation of a tibble and controls the number of rows that the DBMS sends to R.  Notice that `head` only prints 6 of the 25 rows that R has retrieved.  
 
+### Q %>% show_query()
+
 
 ```r
 Q %>% show_query()
@@ -416,26 +441,31 @@ Q %>% show_query()
 ```
 ## <SQL>
 ## SELECT "rental_date", "staff_email", "customer_email"
-## FROM (SELECT "staff_id", "customer_id", "rental_date", "staff_email", "store_id", "first_name", "last_name", "email" AS "customer_email", "address_id", "activebool", "create_date", "last_update", "active"
-## FROM (SELECT "TBL_LEFT"."staff_id" AS "staff_id", "TBL_LEFT"."customer_id" AS "customer_id", "TBL_LEFT"."rental_date" AS "rental_date", "TBL_LEFT"."staff_email" AS "staff_email", "TBL_RIGHT"."store_id" AS "store_id", "TBL_RIGHT"."first_name" AS "first_name", "TBL_RIGHT"."last_name" AS "last_name", "TBL_RIGHT"."email" AS "email", "TBL_RIGHT"."address_id" AS "address_id", "TBL_RIGHT"."activebool" AS "activebool", "TBL_RIGHT"."create_date" AS "create_date", "TBL_RIGHT"."last_update" AS "last_update", "TBL_RIGHT"."active" AS "active"
-##   FROM (SELECT "staff_id", "customer_id", "rental_date", "staff_email"
-## FROM (SELECT "staff_id", "customer_id", "rental_date", "first_name", "last_name", "address_id", "email" AS "staff_email", "store_id", "active", "username", "password", "last_update", "picture"
-## FROM (SELECT "TBL_LEFT"."staff_id" AS "staff_id", "TBL_LEFT"."customer_id" AS "customer_id", "TBL_LEFT"."rental_date" AS "rental_date", "TBL_RIGHT"."first_name" AS "first_name", "TBL_RIGHT"."last_name" AS "last_name", "TBL_RIGHT"."address_id" AS "address_id", "TBL_RIGHT"."email" AS "email", "TBL_RIGHT"."store_id" AS "store_id", "TBL_RIGHT"."active" AS "active", "TBL_RIGHT"."username" AS "username", "TBL_RIGHT"."password" AS "password", "TBL_RIGHT"."last_update" AS "last_update", "TBL_RIGHT"."picture" AS "picture"
-##   FROM (SELECT "staff_id", "customer_id", "rental_date"
-## FROM "rental") "TBL_LEFT"
+## FROM (SELECT "rental_id", "rental_date", "inventory_id", "customer_id", "return_date", "staff_id", "last_update.x", "first_name.x", "last_name.x", "address_id.x", "staff_email", "store_id.x", "active.x", "username", "password", "last_update.y", "picture", "store_id.y", "first_name.y", "last_name.y", "email" AS "customer_email", "address_id.y", "activebool", "create_date", "last_update", "active.y"
+## FROM (SELECT "TBL_LEFT"."rental_id" AS "rental_id", "TBL_LEFT"."rental_date" AS "rental_date", "TBL_LEFT"."inventory_id" AS "inventory_id", "TBL_LEFT"."customer_id" AS "customer_id", "TBL_LEFT"."return_date" AS "return_date", "TBL_LEFT"."staff_id" AS "staff_id", "TBL_LEFT"."last_update.x" AS "last_update.x", "TBL_LEFT"."first_name" AS "first_name.x", "TBL_LEFT"."last_name" AS "last_name.x", "TBL_LEFT"."address_id" AS "address_id.x", "TBL_LEFT"."staff_email" AS "staff_email", "TBL_LEFT"."store_id" AS "store_id.x", "TBL_LEFT"."active" AS "active.x", "TBL_LEFT"."username" AS "username", "TBL_LEFT"."password" AS "password", "TBL_LEFT"."last_update.y" AS "last_update.y", "TBL_LEFT"."picture" AS "picture", "TBL_RIGHT"."store_id" AS "store_id.y", "TBL_RIGHT"."first_name" AS "first_name.y", "TBL_RIGHT"."last_name" AS "last_name.y", "TBL_RIGHT"."email" AS "email", "TBL_RIGHT"."address_id" AS "address_id.y", "TBL_RIGHT"."activebool" AS "activebool", "TBL_RIGHT"."create_date" AS "create_date", "TBL_RIGHT"."last_update" AS "last_update", "TBL_RIGHT"."active" AS "active.y"
+##   FROM (SELECT "rental_id", "rental_date", "inventory_id", "customer_id", "return_date", "staff_id", "last_update.x", "first_name", "last_name", "address_id", "email" AS "staff_email", "store_id", "active", "username", "password", "last_update.y", "picture"
+## FROM (SELECT "TBL_LEFT"."rental_id" AS "rental_id", "TBL_LEFT"."rental_date" AS "rental_date", "TBL_LEFT"."inventory_id" AS "inventory_id", "TBL_LEFT"."customer_id" AS "customer_id", "TBL_LEFT"."return_date" AS "return_date", "TBL_LEFT"."staff_id" AS "staff_id", "TBL_LEFT"."last_update" AS "last_update.x", "TBL_RIGHT"."first_name" AS "first_name", "TBL_RIGHT"."last_name" AS "last_name", "TBL_RIGHT"."address_id" AS "address_id", "TBL_RIGHT"."email" AS "email", "TBL_RIGHT"."store_id" AS "store_id", "TBL_RIGHT"."active" AS "active", "TBL_RIGHT"."username" AS "username", "TBL_RIGHT"."password" AS "password", "TBL_RIGHT"."last_update" AS "last_update.y", "TBL_RIGHT"."picture" AS "picture"
+##   FROM "rental" AS "TBL_LEFT"
 ##   LEFT JOIN "staff" AS "TBL_RIGHT"
 ##   ON ("TBL_LEFT"."staff_id" = "TBL_RIGHT"."staff_id")
-## ) "npghbogapn") "vapgdctabt") "TBL_LEFT"
+## ) "qzdwvvvtzq") "TBL_LEFT"
 ##   LEFT JOIN "customer" AS "TBL_RIGHT"
 ##   ON ("TBL_LEFT"."customer_id" = "TBL_RIGHT"."customer_id")
-## ) "jtjuanvogi") "jlxuthlhsv"
+## ) "rnitnthkfz") "ohetoyqsmw"
 ```
 Hand-written SQL code to do the same job will probably look a lot nicer and could be more efficient, but functionally dplyr does the job.
 
-But because `Q` hasn't been executed, we can add to it.  This behavior is the basis for a useful debugging and development process where queries are built up incrementally.
+### Qc <- Q %>% count(customer_email)
+
+![](screenshots/red-x.png) Until `Q` is executed, we can add to it.  This behavior is the basis for a useful debugging and development process where queries are built up incrementally.
 
 ```r
-Qc <- Q %>% count(customer_email, sort = TRUE) 
+Qc <- Q %>% count(customer_email, sort = TRUE)
+```
+
+![](screenshots/green-check.png) When all the accumulated `dplyr` verbs are executed, they are submitted to the dbms and the number of rows that are returned follow the same rules as discussed above.
+
+```r
 Qc
 ```
 
@@ -460,176 +490,6 @@ Qc
 
 See more example of lazy execution can be found [Here](https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html).
 
-## SQL in R Markdown
-
-When you create a report to run repeatedly, you might want to put that query into R markdown. See the discussion of [multiple language engines in R Markdown](https://bookdown.org/yihui/rmarkdown/language-engines.html#sql). That way you can also execute that SQL code in a chunk with the following header:
-
-  {`sql, connection=con, output.var = "query_results"`}
-
-
-```sql
-SELECT "staff_id", COUNT(*) AS "n"
-FROM "rental"
-GROUP BY "staff_id";
-```
-Rmarkdown stored that query result in a tibble:
-
-```r
-query_results
-```
-
-```
-##   staff_id    n
-## 1        2 8004
-## 2        1 8040
-```
-## DBI Package
-
-In this chapter we touched on a number of functions from the DBI Package.  The table in file 96b shows other functions in the package.  The Chapter column references a section in the book if we have used it.
-
-
-```r
-film_table <- tbl(con, "film")
-```
-
-### Retrieve the whole table
-
-SQL code that is submitted to a database is evaluated all at once^[From R's perspective. Actually there are 4 steps behind the scenes.].  To think through an SQL query, either use dplyr to build it up step by step and then convert it to SQL code or an IDE such as [pgAdmin](https://www.pgadmin.org/). DBI returns a data.frame, so you don't have dplyr's guardrails.
-
-```r
-res <- dbSendQuery(con, 'SELECT "title", "rental_duration", "length"
-FROM "film"
-WHERE ("rental_duration" > 5.0 AND "length" > 117.0)')
-
-res_output <- dbFetch(res)
-str(res_output)
-```
-
-```
-## 'data.frame':	202 obs. of  3 variables:
-##  $ title          : chr  "African Egg" "Alamo Videotape" "Alaska Phantom" "Alley Evolution" ...
-##  $ rental_duration: int  6 6 6 6 6 7 6 7 6 6 ...
-##  $ length         : int  130 126 136 180 181 179 119 127 170 162 ...
-```
-
-```r
-dbClearResult(res)
-```
-
-### Or a chunk at a time
-
-
-```r
-res <- dbSendQuery(con, 'SELECT "title", "rental_duration", "length"
-FROM "film"
-WHERE ("rental_duration" > 5.0 AND "length" > 117.0)')
-
-chunk_num <- 0
-while(!dbHasCompleted(res)){
-  chunk_num <- chunk_num + 1
-  chunk <- dbFetch(res, n = 5)
-  print(nrow(chunk))
-  if (!chunk_num %% 7) {print(chunk)}
-}
-```
-
-```
-## [1] 5
-## [1] 5
-## [1] 5
-## [1] 5
-## [1] 5
-## [1] 5
-## [1] 5
-##                 title rental_duration length
-## 1 Christmas Moonshine               7    150
-## 2       Citizen Shrek               7    165
-## 3     Cleopatra Devil               6    150
-## 4  Clockwork Paradise               7    143
-## 5    Clones Pinocchio               6    124
-## [1] 5
-## [1] 5
-## [1] 5
-## [1] 5
-## [1] 5
-## [1] 5
-## [1] 5
-##                     title rental_duration length
-## 1 Extraordinary Conquerer               6    122
-## 2             Flight Lies               7    179
-## 3           Floats Garden               6    145
-## 4       Forever Candidate               7    131
-## 5   Frankenstein Stranger               7    159
-## [1] 5
-## [1] 5
-## [1] 5
-## [1] 5
-## [1] 5
-## [1] 5
-## [1] 5
-##              title rental_duration length
-## 1    Jungle Closer               6    134
-## 2  Killer Innocent               7    161
-## 3 Lambs Cincinatti               6    144
-## 4   Lawless Vision               6    181
-## 5    Lawrence Love               7    175
-## [1] 5
-## [1] 5
-## [1] 5
-## [1] 5
-## [1] 5
-## [1] 5
-## [1] 5
-##               title rental_duration length
-## 1   Outbreak Divine               6    169
-## 2      Outlaw Hanky               7    148
-## 3     Paris Weekend               7    121
-## 4 Philadelphia Wife               7    137
-## 5  Pianist Outfield               6    136
-## [1] 5
-## [1] 5
-## [1] 5
-## [1] 5
-## [1] 5
-## [1] 5
-## [1] 5
-##                title rental_duration length
-## 1       Spinal Rocky               7    138
-## 2 Spirit Flintstones               7    149
-## 3  Steers Armageddon               6    140
-## 4        Stock Glass               7    160
-## 5         Story Side               7    163
-## [1] 5
-## [1] 5
-## [1] 5
-## [1] 5
-## [1] 5
-## [1] 2
-```
-
-```r
-dbClearResult(res)
-```
-
-## Dividing the work between R on your machine and the DBMS
-
-They work together.
-
-### Make the server do as much work as you can
-
-* show_query as a first draft of SQL.  May or may not use SQL code submitted directly.
-
-### Criteria for choosing between `dplyr` and native SQL
-
-This probably belongs later in the book.
-
-* performance considerations: first get the right data, then worry about performance
-* Trade offs between leaving the data in PostgreSQL vs what's kept in R: 
-  + browsing the data
-  + larger samples and complete tables
-  + using what you know to write efficient queries that do most of the work on the server
-
-Where you place the `collect` function matters.
 
 ```r
 dbDisconnect(con)
