@@ -6,7 +6,7 @@
 # JDS: let's try this and see if it is too cumbersome
 
 # clear the directory
-unlink("docs", recursive = TRUE)
+bookdown::clean_book(TRUE)
 
 # PDF
 bookdown::render_book(
