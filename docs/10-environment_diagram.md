@@ -2,10 +2,10 @@
 
 > This chapter explores:
 > 
-> * The different elements of your environment that are involved in running the examples in this book
-> * What the different roles that each element plays in your environment
-> * How those elements are connected and how you can send messages from one to another
-> * How each element has its own language / set of commands
+> * The different entities of your components that are involved in running the examples in this book
+> * What the different roles that each entity plays in your components
+> * How those entities are connected and how you can send messages from one to another
+> * How each entity has its own set of commands
 
 These packages are used in this chapter:
 
@@ -49,7 +49,7 @@ Here is an overview of your environment.  In this chapter we explore what these 
 ![](screenshots/your-environment-diagram.png)
 </center>
 
-### each element in turn and what elements it can communicate with
+### each entity in turn and what entities it can communicate with
 
 ### Rstudio
 
@@ -200,7 +200,7 @@ file.info("README.md")
 ##           size isdir mode               mtime               ctime
 ## README.md 4973 FALSE  644 2018-11-01 14:23:56 2018-11-01 14:23:56
 ##                         atime uid gid uname grname
-## README.md 2018-12-07 17:56:52 502  80   jds  admin
+## README.md 2018-12-11 12:59:54 502  80   jds  admin
 ```
 
 ```r
