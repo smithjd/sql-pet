@@ -198,9 +198,9 @@ file.info("README.md")
 
 ```
 ##           size isdir mode               mtime               ctime
-## README.md 4973 FALSE  644 2018-11-01 14:23:56 2018-11-01 14:23:56
-##                         atime uid gid uname grname
-## README.md 2018-12-11 12:59:54 502  80   jds  admin
+## README.md 4973 FALSE  644 2018-12-10 14:02:01 2018-12-10 14:02:01
+##                         atime  uid  gid uname grname
+## README.md 2018-12-11 20:03:54 1000 1000 znmeb  znmeb
 ```
 
 ```r
@@ -210,7 +210,7 @@ system2("ls",  "-l README.md", stdout = TRUE, stderr = FALSE)
 ```
 
 ```
-## [1] "-rw-r--r--  1 jds  admin  4973 Nov  1 14:23 README.md"
+## [1] "-rw-r--r-- 1 znmeb znmeb 4973 Dec 10 14:02 README.md"
 ```
 
 ### Get info on the same OS file inside Docker from R Code
@@ -327,6 +327,5 @@ Start up R/RStudio and convert the CLI command to an R/RStudio command
 
 
 
-
-
-![](diagrams/envgraph.png)<!-- -->
+<!--html_preserve--><div id="htmlwidget-477278ec24d3a737df24" style="width:672px;height:480px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-477278ec24d3a737df24">{"x":{"diagram":"\ndigraph Envgraph {\n\n  # graph, node, and edge definitions\n  graph [compound = true, nodesep = .5, ranksep = .25,\n         color = pink]\n\n  node [fontname = Helvetica, fontcolor = darkslategray,\n        shape = rectangle, fixedsize = true, width = 1,\n        color = darkslategray]\n\n  edge [color = grey, arrowhead = none, arrowtail = none]\n\n  # subgraph for PC Environment information\n  subgraph cluster1 {node [fixedsize = true, width = 3] \"unix:\n4.19.8-arch1-1-ARCH\" }\n\n  # subgraph for R information\n  subgraph cluster2 {node [fixedsize = true, width = 3] \"version:\n3.5.1\" }\n\n  # subgraph for RStudio information\n  subgraph cluster3 {node [fixedsize = true, width = 3] \"RStudio version:\n1.2.1114\" }\n\n  # subgraph for Docker information\n  subgraph cluster4 {node [fixedsize = true, width = 3] \"client version:\n18.09.0-ce\" -> \"server version:\n18.09.0-ce\"}\n\n  # subgraph for Docker-Linux information\n  subgraph cluster5 {node [fixedsize = true, width = 3] \"Linux Version:\n4.19.8-arch1-1-ARCH\" }\n\n  # subgraph for Docker-Postgres information\n  subgraph cluster6 {node [fixedsize = true, width = 3] \"PostgreSQL:\nPostgreSQL 10.6 \" }\n\n  # subgraph for Docker-Postgres information\n  graph[color = \"blue\"]\n  subgraph cluster7 {node [fixedsize = true, width = 4.0, color=black, fontcolor = \"blue\"] \"docker exec -it sql-pet bash\" -> \"docker exec -ti sql-pet psql -a \n-p 5432 -d dvdrental -U postgres\" }\n\n  CLI [label=\"CLI\nR system2\",height = .75,width=3.0, color = \"blue\" ]\n  R   [color=\"blue\"]\n  Environment             [label = \"Environment\nLinux,Mac,Windows\",width = 2.5]\n\n  Environment -> RStudio -> R \n  R           -> Docker [label = \"system2 call\"]\n\n  \n  Environment -> \"unix:\n4.19.8-arch1-1-ARCH\"    [lhead = cluster1] # Environment Information\n  R           -> \"version:\n3.5.1\"  [lhead = cluster2] # R Information\n  R           -> \"PostgreSQL:\nPostgreSQL 10.6 \"    [lhead = cluster6, label=\"1. dbConnect\"] # Docker-Postgres Information\n  RStudio     -> \"RStudio version:\n1.2.1114\"    [lhead = cluster3] # RStudio Information\n  Docker      -> \"client version:\n18.09.0-ce\"    [lhead = cluster4] # Docker Information\n  Docker      -> \"Linux Version:\n4.19.8-arch1-1-ARCH\"    [lhead = cluster5] # Docker-Linux Information\n  Docker      -> \"PostgreSQL:\nPostgreSQL 10.6 \"    [lhead = cluster6, label=\"4.  start-stop\"] # Docker-Postgres Information\n  Docker      -> CLI\n\n  \"unix:\n4.19.8-arch1-1-ARCH\" -> CLI\n  CLI         -> \"docker exec -it sql-pet bash\"    [lhead = cluster7] # CLI \n  \"docker exec -it sql-pet bash\"     -> \"Linux Version:\n4.19.8-arch1-1-ARCH\"    [label = \"2.  bash\"]\n  \"docker exec -ti sql-pet psql -a \n-p 5432 -d dvdrental -U postgres\"     -> \"PostgreSQL:\nPostgreSQL 10.6 \"    [label = \"3.  psql\"]\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->

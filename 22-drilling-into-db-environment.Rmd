@@ -65,8 +65,9 @@ Which databases are available?
 Modify the connection call to connect to the `postgres` database.
 ```
 
-```{r}
+```{r eval=FALSE}
 
+# this code chunk is not evaluated because the `dbname` is not valid!
 con <- sp_get_postgres_connection(
   user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
   password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
@@ -80,7 +81,9 @@ if (con != "There is no connection") {
 }
 
 # Answer: con <PqConnection> postgres@localhost:5432
+```
 
+```{r}
 # Reconnect to dvdrental
 
 con <- sp_get_postgres_connection(
@@ -383,25 +386,12 @@ fk_edf <-
 ```
 
 ```{r}
-fkgraph_widget <-
-  create_graph(
-    nodes_df = table_nodes_ndf,
-    edges_df = fk_edf,
-    graph_name = "Simple FK Graph"
-  ) %>%
-  render_graph()
-
-# export to image files
-fkgraph_file <- sqlpetr::sp_make_image_files(
-  fkgraph_widget,
-  "diagrams",
-  "fkgraph"
-)
-```
-
-```{r echo=FALSE}
-# display the PNG/PDF - this works in both HTML and PDF
-knitr::include_graphics(fkgraph_file, auto_pdf = TRUE)
+create_graph(
+  nodes_df = table_nodes_ndf,
+  edges_df = fk_edf,
+  graph_name = "Simple FK Graph"
+) %>%
+render_graph()
 ```
 
 ```{r}

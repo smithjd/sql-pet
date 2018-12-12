@@ -337,7 +337,7 @@ postgres_ver <- DBI::dbGetQuery(con, "select version()") %>%
 
 
 ```{r Environment Graph,eval=TRUE, echo=FALSE}
-envgraph_widget <- grViz("
+grViz("
 digraph Envgraph {
 
   # graph, node, and edge definitions
@@ -402,15 +402,4 @@ digraph Envgraph {
 [6]: paste0('PostgreSQL:\\n', postgres_ver)
 [7]: cli
 ")
-
-envgraph_file <- sqlpetr::sp_make_image_files(
-  envgraph_widget,
-  "diagrams",
-  "envgraph"
-)
-```
-
-```{r echo=FALSE}
-# display the PNG/PDF - this works in both HTML and PDF
-knitr::include_graphics(envgraph_file, auto_pdf = TRUE)
 ```

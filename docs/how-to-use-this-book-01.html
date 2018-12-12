@@ -5,11 +5,11 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>R, Databases and Docker</title>
+  <title>Chapter 3 How to use this book (01) | R, Databases and Docker</title>
   <meta name="description" content="A collection of tutorials for integrating R with databases using Docker">
-  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
-  <meta property="og:title" content="R, Databases and Docker" />
+  <meta property="og:title" content="Chapter 3 How to use this book (01) | R, Databases and Docker />
   <meta property="og:type" content="book" />
   
   
@@ -17,7 +17,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="R, Databases and Docker" />
+  <meta name="twitter:title" content="Chapter 3 How to use this book (01) | R, Databases and Docker />
   
   <meta name="twitter:description" content="A collection of tutorials for integrating R with databases using Docker" />
   
@@ -25,7 +25,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
 
 
-<meta name="date" content="2018-12-11">
+<meta name="date" content="2018-12-12">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -36,6 +36,7 @@
 <link rel="next" href="docker-hosting-for-windows-02.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
@@ -48,6 +49,9 @@
 
 
 <script src="libs/htmlwidgets-1.3/htmlwidgets.js"></script>
+<script src="libs/viz-0.3/viz.js"></script>
+<link href="libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
+<script src="libs/grViz-binding-1.0.0/grViz.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
 <script src="libs/datatables-binding-0.5/datatables.js"></script>
 <link href="libs/dt-core-1.10.16/css/jquery.dataTables.min.css" rel="stylesheet" />
@@ -55,9 +59,6 @@
 <script src="libs/dt-core-1.10.16/js/jquery.dataTables.min.js"></script>
 <link href="libs/crosstalk-1.0.0/css/crosstalk.css" rel="stylesheet" />
 <script src="libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
-<script src="libs/viz-0.3/viz.js"></script>
-<link href="libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
-<script src="libs/grViz-binding-1.0.0/grViz.js"></script>
 
 
 <style type="text/css">
@@ -78,7 +79,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -462,7 +463,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li>Current versions of <a href="https://www.datacamp.com/community/tutorials/installing-R-windows-mac-ubuntu">R and RStudio</a> required.</li>
 <li>Docker (instructions below)</li>
-<li>Our companion package <code>sqlpetr</code> installs with: <code>devtools::install_github(&quot;smithjd/sqlpetr&quot;)</code>. Note that when you install the package it will ask you to update the packages it uses and that can take some time.</li>
+<li>Our companion package <code>sqlpetr</code> installs with: <code>devtools::install_github("smithjd/sqlpetr")</code>. Note that when you install the package it will ask you to update the packages it uses and that can take some time.</li>
 </ul>
 <p>The database we use is PostgreSQL 10, but you do not need to install it - it’s installed via a Docker image.</p>
 <p>In addition to the current version of R and RStudio, you will need current versions of the following packages:</p>
@@ -497,7 +498,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="read-along-experiment-as-you-go" class="section level2">
 <h2><span class="header-section-number">3.4</span> Read along, experiment as you go</h2>
 <p>We have never been sure whether we’re writing an expository book or a massive tutorial. You may use it either way.</p>
-<p>After the introductory chapters and the chapter that creates the persistent database (&quot;The dvdrental database in Postgres in Docker (05)), you can jump around and each chapter stands on its own.</p>
+<p>After the introductory chapters and the chapter that creates the persistent database ("The dvdrental database in Postgres in Docker (05)), you can jump around and each chapter stands on its own.</p>
 
 </div>
 </div>
@@ -527,7 +528,7 @@ gitbook.start({
 "google": false,
 "linkedin": false,
 "weibo": false,
-"instapper": false,
+"instapaper": false,
 "vk": false,
 "all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
 },
@@ -539,6 +540,10 @@ gitbook.start({
 "edit": {
 "link": "https://github.com/smithjd/sql-pet/edit/master/01-using-this-book.Rmd",
 "text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
 },
 "download": ["r-database-docker.pdf"],
 "toc": {

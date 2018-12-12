@@ -174,3 +174,7 @@ dbDisconnect(con)
 sp_docker_stop("sql-pet")
 ```
 
+```
+## [1] "sql-pet"
+```
+

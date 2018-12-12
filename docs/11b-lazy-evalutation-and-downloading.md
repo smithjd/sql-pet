@@ -58,7 +58,7 @@ Eventually, if you are interacting with a dbms from R you will need to understan
 
 ### Lazy loading
 
-"*Lazy loading is always used for code in packages but is optional (selected by the package maintainer) for datasets in packages.*"^[https://cran.r-project.org/doc/manuals/r-release/R-ints.html#Lazy-loading]  Lazy loading means that the code for a particular function doesn't actually get loaded into memory until the last minute -- when it's actually being used.
+*"Lazy loading is always used for code in packages but is optional (selected by the package maintainer) for datasets in packages."*^[https://cran.r-project.org/doc/manuals/r-release/R-ints.html#Lazy-loading]  Lazy loading means that the code for a particular function doesn't actually get loaded into memory until the last minute -- when it's actually being used.
 
 ### Lazy evaluation 
 
@@ -66,7 +66,7 @@ Essentially "Lazy evaluation is a programming strategy that allows a symbol to b
 
 ### Lazy Queries
 
-"*When you create a "lazy" query, you're creating a pointer to a set of conditions on the database, but the query isn't actually run and the data isn't actually loaded until you call "next" or some similar method to actually fetch the data and load it into an object.*" ^[https://www.quora.com/What-is-a-lazy-query]  The `collect()` function retrieves data into a local tibble.^[https://dplyr.tidyverse.org/reference/compute.html]
+*"When you create a 'lazy' query, you're creating a pointer to a set of conditions on the database, but the query isn't actually run and the data isn't actually loaded until you call 'next' or some similar method to actually fetch the data and load it into an object."* ^[https://www.quora.com/What-is-a-lazy-query]  The `collect()` function retrieves data into a local tibble.^[https://dplyr.tidyverse.org/reference/compute.html]
 
 ## Lazy evaluation and lazy queries
 
@@ -203,6 +203,7 @@ Q <- rental_table %>%
 ### Experiment overview
 Think of `Q` as a black box for the moment.  The following examples will show how `Q` is interpreted differently by different functions. In this table, a single green check indicates that some rows are returned, two green checks indicates that all the rows are returned, and the red X indicates that no rows have are returned.
 
+```
 > R code | Result 
 > -------| --------------
 > [`Q %>% print()`](#Q %>% print\(\)) | ![](screenshots/green-check.png) Prints x rows; same as just entering `Q`  
@@ -218,6 +219,7 @@ Think of `Q` as a black box for the moment.  The following examples will show ho
 > [`Qc <- Q %>% count(customer_email, sort = TRUE)` <br /> `Qc`](#Qc <- Q %>%) | **Extends** the lazy query object
 >
 > 
+```
 
 (The next chapter will discuss how to build queries and how to explore intermediate steps.)
 
@@ -340,11 +342,11 @@ Q %>% str(max.level = 3)
 ##   .. ..- attr(*, "class")= chr [1:3] "op_rename" "op_single" "op"
 ##   ..$ dots:List of 3
 ##   .. ..$ : language ~rental_date
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fd1940672e8> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x562a0a0e1700> 
 ##   .. ..$ : language ~staff_email
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fd1940672e8> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x562a0a0e1700> 
 ##   .. ..$ : language ~customer_email
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fd1940672e8> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x562a0a0e1700> 
 ##   .. ..- attr(*, "class")= chr "quosures"
 ##   ..$ args: list()
 ##   ..- attr(*, "class")= chr [1:3] "op_select" "op_single" "op"
@@ -448,10 +450,10 @@ Q %>% show_query()
 ##   FROM "rental" AS "TBL_LEFT"
 ##   LEFT JOIN "staff" AS "TBL_RIGHT"
 ##   ON ("TBL_LEFT"."staff_id" = "TBL_RIGHT"."staff_id")
-## ) "qzdwvvvtzq") "TBL_LEFT"
+## ) "dfxawiltwe") "TBL_LEFT"
 ##   LEFT JOIN "customer" AS "TBL_RIGHT"
 ##   ON ("TBL_LEFT"."customer_id" = "TBL_RIGHT"."customer_id")
-## ) "rnitnthkfz") "ohetoyqsmw"
+## ) "zfxnzjuala") "tbbuptwktu"
 ```
 Hand-written SQL code to do the same job will probably look a lot nicer and could be more efficient, but functionally dplyr does the job.
 
@@ -494,6 +496,10 @@ See more example of lazy execution can be found [Here](https://datacarpentry.org
 ```r
 dbDisconnect(con)
 sp_docker_stop("sql-pet")
+```
+
+```
+## [1] "sql-pet"
 ```
 
 
