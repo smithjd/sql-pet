@@ -65,8 +65,9 @@ Which databases are available?
 Modify the connection call to connect to the `postgres` database.
 ```
 
-```{r}
+```{r eval=FALSE}
 
+# this code chunk is not evaluated because the `dbname` is not valid!
 con <- sp_get_postgres_connection(
   user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
   password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
@@ -80,7 +81,9 @@ if (con != "There is no connection") {
 }
 
 # Answer: con <PqConnection> postgres@localhost:5432
+```
 
+```{r}
 # Reconnect to dvdrental
 
 con <- sp_get_postgres_connection(
