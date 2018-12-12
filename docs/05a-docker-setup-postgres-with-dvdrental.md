@@ -31,7 +31,9 @@ sp_check_that_docker_is_up()
 ```
 
 ```
-## [1] "Docker is up but running no containers"
+## [1] "Docker is up, running these containers:"                                                                                                        
+## [2] "CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS                    NAMES"             
+## [3] "81a5fdbd6042        rocker/geospatial   \"/init\"             About an hour ago   Up About an hour    0.0.0.0:8787->8787/tcp   blissful_greider"
 ```
 
 ## Clean up if appropriate
@@ -68,7 +70,7 @@ cat(docker_messages, sep = "\n")
 ```
 
 ```
-## Sending build context to Docker daemon  37.77MB
+## Sending build context to Docker daemon  39.84MB
 ## Step 1/4 : FROM postgres:10
 ##  ---> 6eb6c50a02e7
 ## Step 2/4 : WORKDIR /tmp
@@ -117,7 +119,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "4bc0a75312cd77ac9d7df4b97ccc9d860769aa70f5c835690c65e09b9299438c"
+## [1] "79eb21fc974c0388e85fb5ac8307c4cef965ba7d85d96d25bb144da0c2ee4b8a"
 ```
 ## Connect to Postgres with R
 
@@ -226,9 +228,9 @@ sp_show_all_docker_containers()
 ```
 
 ```
-## [1] "CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS               NAMES"               
-## [2] "4bc0a75312cd        postgres-dvdrental   \"docker-entrypoint.s…\"   10 seconds ago      Exited (0) Less than a second ago                       sql-pet"           
-## [3] "10a4e492df70        opencpu/rstudio      \"/bin/sh -c 'service…\"   43 hours ago        Exited (137) 39 hours ago                               mystifying_wescoff"
+## [1] "CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS                    NAMES"             
+## [2] "79eb21fc974c        postgres-dvdrental   \"docker-entrypoint.s…\"   10 seconds ago      Exited (0) Less than a second ago                            sql-pet"         
+## [3] "81a5fdbd6042        rocker/geospatial    \"/init\"                  About an hour ago   Up About an hour                    0.0.0.0:8787->8787/tcp   blissful_greider"
 ```
 
 Next time, you can just use this command to start the container: 

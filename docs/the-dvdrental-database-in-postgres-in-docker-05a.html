@@ -25,7 +25,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
 
 
-<meta name="date" content="2018-12-11">
+<meta name="date" content="2018-12-12">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -468,7 +468,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="verify-that-docker-is-up-and-running" class="section level2">
 <h2><span class="header-section-number">7.2</span> Verify that Docker is up and running</h2>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_check_that_docker_is_up</span>()</code></pre>
-<pre><code>## [1] &quot;Docker is up but running no containers&quot;</code></pre>
+<pre><code>## [1] &quot;Docker is up, running these containers:&quot;                                                                                                        
+## [2] &quot;CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS                    NAMES&quot;             
+## [3] &quot;81a5fdbd6042        rocker/geospatial   \&quot;/init\&quot;             About an hour ago   Up About an hour    0.0.0.0:8787-&gt;8787/tcp   blissful_greider&quot;</code></pre>
 </div>
 <div id="clean-up-if-appropriate-1" class="section level2">
 <h2><span class="header-section-number">7.3</span> Clean up if appropriate</h2>
@@ -489,7 +491,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)
 
 <span class="kw">cat</span>(docker_messages, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</code></pre>
-<pre><code>## Sending build context to Docker daemon  37.77MB
+<pre><code>## Sending build context to Docker daemon  39.84MB
 
 
 ## Step 1/4 : FROM postgres:10
@@ -531,7 +533,7 @@ docker_cmd &lt;-<span class="st"> </span><span class="kw">glue</span>(
 )</code></pre>
 <p>If you are curious you can paste <code>docker_cmd</code> into a terminal window after the command ‘docker’:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, docker_cmd, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</code></pre>
-<pre><code>## [1] &quot;4bc0a75312cd77ac9d7df4b97ccc9d860769aa70f5c835690c65e09b9299438c&quot;</code></pre>
+<pre><code>## [1] &quot;79eb21fc974c0388e85fb5ac8307c4cef965ba7d85d96d25bb144da0c2ee4b8a&quot;</code></pre>
 </div>
 <div id="connect-to-postgres-with-r" class="section level2">
 <h2><span class="header-section-number">7.6</span> Connect to Postgres with R</h2>
@@ -585,9 +587,9 @@ docker_cmd &lt;-<span class="st"> </span><span class="kw">glue</span>(
 <pre><code>## [1] &quot;sql-pet&quot;</code></pre>
 <p>Show that the container still exists even though it’s not running</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_show_all_docker_containers</span>()</code></pre>
-<pre><code>## [1] &quot;CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS               NAMES&quot;               
-## [2] &quot;4bc0a75312cd        postgres-dvdrental   \&quot;docker-entrypoint.s…\&quot;   10 seconds ago      Exited (0) Less than a second ago                       sql-pet&quot;           
-## [3] &quot;10a4e492df70        opencpu/rstudio      \&quot;/bin/sh -c &#39;service…\&quot;   43 hours ago        Exited (137) 39 hours ago                               mystifying_wescoff&quot;</code></pre>
+<pre><code>## [1] &quot;CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS                    NAMES&quot;             
+## [2] &quot;79eb21fc974c        postgres-dvdrental   \&quot;docker-entrypoint.s…\&quot;   10 seconds ago      Exited (0) Less than a second ago                            sql-pet&quot;         
+## [3] &quot;81a5fdbd6042        rocker/geospatial    \&quot;/init\&quot;                  About an hour ago   Up About an hour                    0.0.0.0:8787-&gt;8787/tcp   blissful_greider&quot;</code></pre>
 <p>Next time, you can just use this command to start the container:</p>
 <blockquote>
 <p><code>sp_docker_start("sql-pet")</code></p>

@@ -30,7 +30,9 @@ sp_check_that_docker_is_up()
 ```
 
 ```
-## [1] "Docker is up but running no containers"
+## [1] "Docker is up, running these containers:"                                                                                                        
+## [2] "CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS                    NAMES"             
+## [3] "81a5fdbd6042        rocker/geospatial   \"/init\"             About an hour ago   Up About an hour    0.0.0.0:8787->8787/tcp   blissful_greider"
 ```
 ### Start the docker container:
 

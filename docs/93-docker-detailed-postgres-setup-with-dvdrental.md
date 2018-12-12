@@ -128,9 +128,9 @@ sp_show_all_docker_containers()
 ```
 
 ```
-## [1] "CONTAINER ID        IMAGE                COMMAND                  CREATED              STATUS                      PORTS               NAMES"               
-## [2] "4bc0a75312cd        postgres-dvdrental   \"docker-entrypoint.s…\"   About a minute ago   Exited (0) 5 seconds ago                        sql-pet"           
-## [3] "10a4e492df70        opencpu/rstudio      \"/bin/sh -c 'service…\"   43 hours ago         Exited (137) 39 hours ago                       mystifying_wescoff"
+## [1] "CONTAINER ID        IMAGE                COMMAND                  CREATED              STATUS                     PORTS                    NAMES"             
+## [2] "79eb21fc974c        postgres-dvdrental   \"docker-entrypoint.s…\"   About a minute ago   Exited (0) 5 seconds ago                            sql-pet"         
+## [3] "81a5fdbd6042        rocker/geospatial    \"/init\"                  About an hour ago    Up About an hour           0.0.0.0:8787->8787/tcp   blissful_greider"
 ```
 
 Remove the `sql-pet` container if it exists (e.g., from a prior run)
@@ -190,7 +190,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "74a02b707f0c53d80c9754365d69b30a7e57cccef64cd74a8c0bd17f79f757ed"
+## [1] "a6865f4bce3b6851a3fbdf59f07c54d315a19c3adbd4a0b64d1637c450ca5fcb"
 ```
 
 Peek inside the docker container and list the files in the `petdir`
@@ -233,9 +233,9 @@ sp_show_all_docker_containers()
 ```
 
 ```
-## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                      PORTS                    NAMES"               
-## [2] "74a02b707f0c        postgres:10         \"docker-entrypoint.s…\"   4 seconds ago       Up 3 seconds                0.0.0.0:5432->5432/tcp   sql-pet"           
-## [3] "10a4e492df70        opencpu/rstudio     \"/bin/sh -c 'service…\"   43 hours ago        Exited (137) 39 hours ago                            mystifying_wescoff"
+## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES"             
+## [2] "a6865f4bce3b        postgres:10         \"docker-entrypoint.s…\"   4 seconds ago       Up 3 seconds        0.0.0.0:5432->5432/tcp   sql-pet"         
+## [3] "81a5fdbd6042        rocker/geospatial   \"/init\"                  About an hour ago   Up About an hour    0.0.0.0:8787->8787/tcp   blissful_greider"
 ```
 inside Docker, execute the postgress SQL command-line program to create the dvdrental database:
 
@@ -375,9 +375,9 @@ sp_show_all_docker_containers()
 ```
 
 ```
-## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES"               
-## [2] "74a02b707f0c        postgres:10         \"docker-entrypoint.s…\"   16 seconds ago      Exited (0) Less than a second ago                       sql-pet"           
-## [3] "10a4e492df70        opencpu/rstudio     \"/bin/sh -c 'service…\"   43 hours ago        Exited (137) 39 hours ago                               mystifying_wescoff"
+## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS                    NAMES"             
+## [2] "a6865f4bce3b        postgres:10         \"docker-entrypoint.s…\"   16 seconds ago      Exited (0) Less than a second ago                            sql-pet"         
+## [3] "81a5fdbd6042        rocker/geospatial   \"/init\"                  About an hour ago   Up About an hour                    0.0.0.0:8787->8787/tcp   blissful_greider"
 ```
 
 We are leaving the `sql-pet` container intact so it can be used in running the

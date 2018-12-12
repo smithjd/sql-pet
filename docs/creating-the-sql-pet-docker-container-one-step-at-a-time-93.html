@@ -25,7 +25,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
 
 
-<meta name="date" content="2018-12-11">
+<meta name="date" content="2018-12-12">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -505,9 +505,9 @@ apart the steps.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dir</span>(<span class="dt">path =</span> <span class="kw">here</span>(), <span class="dt">pattern =</span> <span class="st">&quot;^dvdrental(.tar|.zip)&quot;</span>)</code></pre>
 <pre><code>## [1] &quot;dvdrental.tar&quot; &quot;dvdrental.zip&quot;</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_show_all_docker_containers</span>()</code></pre>
-<pre><code>## [1] &quot;CONTAINER ID        IMAGE                COMMAND                  CREATED              STATUS                      PORTS               NAMES&quot;               
-## [2] &quot;4bc0a75312cd        postgres-dvdrental   \&quot;docker-entrypoint.s…\&quot;   About a minute ago   Exited (0) 5 seconds ago                        sql-pet&quot;           
-## [3] &quot;10a4e492df70        opencpu/rstudio      \&quot;/bin/sh -c &#39;service…\&quot;   43 hours ago         Exited (137) 39 hours ago                       mystifying_wescoff&quot;</code></pre>
+<pre><code>## [1] &quot;CONTAINER ID        IMAGE                COMMAND                  CREATED              STATUS                     PORTS                    NAMES&quot;             
+## [2] &quot;79eb21fc974c        postgres-dvdrental   \&quot;docker-entrypoint.s…\&quot;   About a minute ago   Exited (0) 5 seconds ago                            sql-pet&quot;         
+## [3] &quot;81a5fdbd6042        rocker/geospatial    \&quot;/init\&quot;                  About an hour ago    Up About an hour           0.0.0.0:8787-&gt;8787/tcp   blissful_greider&quot;</code></pre>
 <p>Remove the <code>sql-pet</code> container if it exists (e.g., from a prior run)</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span> (<span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, <span class="st">&quot;ps -a&quot;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span>
 <span class="st">    </span><span class="kw">grepl</span>(<span class="dt">x =</span> ., <span class="dt">pattern =</span> <span class="st">&#39;sql-pet&#39;</span>) <span class="op">%&gt;%</span>
@@ -537,7 +537,7 @@ wd</code></pre>
 docker_cmd</code></pre>
 <pre><code>## run --detach  --name sql-pet --publish 5432:5432 --mount type=bind,source=&quot;/home/znmeb/Projects/sql-pet&quot;,target=/petdir postgres:10</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, docker_cmd, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</code></pre>
-<pre><code>## [1] &quot;74a02b707f0c53d80c9754365d69b30a7e57cccef64cd74a8c0bd17f79f757ed&quot;</code></pre>
+<pre><code>## [1] &quot;a6865f4bce3b6851a3fbdf59f07c54d315a19c3adbd4a0b64d1637c450ca5fcb&quot;</code></pre>
 <p>Peek inside the docker container and list the files in the <code>petdir</code>
 directory. Notice that <code>dvdrental.tar</code> is in both.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="co"># local file system:</span>
@@ -555,9 +555,9 @@ directory. Notice that <code>dvdrental.tar</code> is in both.</p>
 command. In this case we tell Docker to execute the <code>psql</code> program
 inside the <code>sql-pet</code> container and pass it some commands as follows.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_show_all_docker_containers</span>()</code></pre>
-<pre><code>## [1] &quot;CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                      PORTS                    NAMES&quot;               
-## [2] &quot;74a02b707f0c        postgres:10         \&quot;docker-entrypoint.s…\&quot;   4 seconds ago       Up 3 seconds                0.0.0.0:5432-&gt;5432/tcp   sql-pet&quot;           
-## [3] &quot;10a4e492df70        opencpu/rstudio     \&quot;/bin/sh -c &#39;service…\&quot;   43 hours ago        Exited (137) 39 hours ago                            mystifying_wescoff&quot;</code></pre>
+<pre><code>## [1] &quot;CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES&quot;             
+## [2] &quot;a6865f4bce3b        postgres:10         \&quot;docker-entrypoint.s…\&quot;   4 seconds ago       Up 3 seconds        0.0.0.0:5432-&gt;5432/tcp   sql-pet&quot;         
+## [3] &quot;81a5fdbd6042        rocker/geospatial   \&quot;/init\&quot;                  About an hour ago   Up About an hour    0.0.0.0:8787-&gt;8787/tcp   blissful_greider&quot;</code></pre>
 <p>inside Docker, execute the postgress SQL command-line program to create the dvdrental database:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system2</span>(<span class="st">&#39;docker&#39;</span>, <span class="st">&#39;exec sql-pet psql -U postgres -c &quot;CREATE DATABASE dvdrental;&quot;&#39;</span>,
         <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</code></pre>
@@ -629,9 +629,9 @@ started again.</p>
 <pre><code>## [1] &quot;sql-pet&quot;</code></pre>
 <p>show that the container still exists even though it’s not running</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_show_all_docker_containers</span>()</code></pre>
-<pre><code>## [1] &quot;CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES&quot;               
-## [2] &quot;74a02b707f0c        postgres:10         \&quot;docker-entrypoint.s…\&quot;   16 seconds ago      Exited (0) Less than a second ago                       sql-pet&quot;           
-## [3] &quot;10a4e492df70        opencpu/rstudio     \&quot;/bin/sh -c &#39;service…\&quot;   43 hours ago        Exited (137) 39 hours ago                               mystifying_wescoff&quot;</code></pre>
+<pre><code>## [1] &quot;CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS                    NAMES&quot;             
+## [2] &quot;a6865f4bce3b        postgres:10         \&quot;docker-entrypoint.s…\&quot;   16 seconds ago      Exited (0) Less than a second ago                            sql-pet&quot;         
+## [3] &quot;81a5fdbd6042        rocker/geospatial   \&quot;/init\&quot;                  About an hour ago   Up About an hour                    0.0.0.0:8787-&gt;8787/tcp   blissful_greider&quot;</code></pre>
 <p>We are leaving the <code>sql-pet</code> container intact so it can be used in running the
 rest of the examples and book.</p>
 <p>Clean up by removing the local files used in creating the database:</p>
