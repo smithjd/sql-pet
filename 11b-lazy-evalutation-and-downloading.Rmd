@@ -55,7 +55,7 @@ Eventually, if you are interacting with a dbms from R you will need to understan
 
 ### Lazy loading
 
-"*Lazy loading is always used for code in packages but is optional (selected by the package maintainer) for datasets in packages.*"^[https://cran.r-project.org/doc/manuals/r-release/R-ints.html#Lazy-loading]  Lazy loading means that the code for a particular function doesn't actually get loaded into memory until the last minute -- when it's actually being used.
+*"Lazy loading is always used for code in packages but is optional (selected by the package maintainer) for datasets in packages."*^[https://cran.r-project.org/doc/manuals/r-release/R-ints.html#Lazy-loading]  Lazy loading means that the code for a particular function doesn't actually get loaded into memory until the last minute -- when it's actually being used.
 
 ### Lazy evaluation 
 
@@ -63,7 +63,7 @@ Essentially "Lazy evaluation is a programming strategy that allows a symbol to b
 
 ### Lazy Queries
 
-"*When you create a "lazy" query, you're creating a pointer to a set of conditions on the database, but the query isn't actually run and the data isn't actually loaded until you call "next" or some similar method to actually fetch the data and load it into an object.*" ^[https://www.quora.com/What-is-a-lazy-query]  The `collect()` function retrieves data into a local tibble.^[https://dplyr.tidyverse.org/reference/compute.html]
+*"When you create a 'lazy' query, you're creating a pointer to a set of conditions on the database, but the query isn't actually run and the data isn't actually loaded until you call 'next' or some similar method to actually fetch the data and load it into an object."* ^[https://www.quora.com/What-is-a-lazy-query]  The `collect()` function retrieves data into a local tibble.^[https://dplyr.tidyverse.org/reference/compute.html]
 
 ## Lazy evaluation and lazy queries
 
@@ -120,6 +120,7 @@ Q <- rental_table %>%
 ### Experiment overview
 Think of `Q` as a black box for the moment.  The following examples will show how `Q` is interpreted differently by different functions. In this table, a single green check indicates that some rows are returned, two green checks indicates that all the rows are returned, and the red X indicates that no rows have are returned.
 
+```
 > R code | Result 
 > -------| --------------
 > [`Q %>% print()`](#Q %>% print\(\)) | ![](screenshots/green-check.png) Prints x rows; same as just entering `Q`  
@@ -135,6 +136,7 @@ Think of `Q` as a black box for the moment.  The following examples will show ho
 > [`Qc <- Q %>% count(customer_email, sort = TRUE)` <br /> `Qc`](#Qc <- Q %>%) | **Extends** the lazy query object
 >
 > 
+```
 
 (The next chapter will discuss how to build queries and how to explore intermediate steps.)
 
