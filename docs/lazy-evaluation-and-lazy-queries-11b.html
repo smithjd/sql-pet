@@ -5,11 +5,11 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>R, Databases and Docker</title>
+  <title>Chapter 11 Lazy Evaluation and Lazy Queries (11b) | R, Databases and Docker</title>
   <meta name="description" content="A collection of tutorials for integrating R with databases using Docker">
-  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
-  <meta property="og:title" content="R, Databases and Docker" />
+  <meta property="og:title" content="Chapter 11 Lazy Evaluation and Lazy Queries (11b) | R, Databases and Docker />
   <meta property="og:type" content="book" />
   
   
@@ -17,7 +17,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="R, Databases and Docker" />
+  <meta name="twitter:title" content="Chapter 11 Lazy Evaluation and Lazy Queries (11b) | R, Databases and Docker />
   
   <meta name="twitter:description" content="A collection of tutorials for integrating R with databases using Docker" />
   
@@ -36,6 +36,7 @@
 <link rel="next" href="dbi-and-sql-11c.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
@@ -48,6 +49,9 @@
 
 
 <script src="libs/htmlwidgets-1.3/htmlwidgets.js"></script>
+<script src="libs/viz-0.3/viz.js"></script>
+<link href="libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
+<script src="libs/grViz-binding-1.0.0/grViz.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
 <script src="libs/datatables-binding-0.5/datatables.js"></script>
 <link href="libs/dt-core-1.10.16/css/jquery.dataTables.min.css" rel="stylesheet" />
@@ -55,9 +59,6 @@
 <script src="libs/dt-core-1.10.16/js/jquery.dataTables.min.js"></script>
 <link href="libs/crosstalk-1.0.0/css/crosstalk.css" rel="stylesheet" />
 <script src="libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
-<script src="libs/viz-0.3/viz.js"></script>
-<link href="libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
-<script src="libs/grViz-binding-1.0.0/grViz.js"></script>
 
 
 <style type="text/css">
@@ -78,7 +79,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -454,27 +455,27 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="setup" class="section level3">
 <h3><span class="header-section-number">11.1.1</span> Setup</h3>
 <p>The following packages are used in this chapter:</p>
-<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb126-1" data-line-number="1"><span class="kw">library</span>(tidyverse)</a>
-<a class="sourceLine" id="cb126-2" data-line-number="2"><span class="kw">library</span>(DBI)</a>
-<a class="sourceLine" id="cb126-3" data-line-number="3"><span class="kw">library</span>(RPostgres)</a>
-<a class="sourceLine" id="cb126-4" data-line-number="4"><span class="kw">library</span>(dbplyr)</a>
-<a class="sourceLine" id="cb126-5" data-line-number="5"><span class="kw">require</span>(knitr)</a>
-<a class="sourceLine" id="cb126-6" data-line-number="6"><span class="kw">library</span>(bookdown)</a>
-<a class="sourceLine" id="cb126-7" data-line-number="7"><span class="kw">library</span>(sqlpetr)</a></code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)
+<span class="kw">library</span>(DBI)
+<span class="kw">library</span>(RPostgres)
+<span class="kw">library</span>(dbplyr)
+<span class="kw">require</span>(knitr)
+<span class="kw">library</span>(bookdown)
+<span class="kw">library</span>(sqlpetr)</code></pre>
 <p>Assume that the Docker container with PostgreSQL and the dvdrental database are ready to go. If not go back to <a href="the-dvdrental-database-in-postgres-in-docker-05a.html#build-the-pet-sql-docker-image">the previous Chapter</a></p>
-<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb127-1" data-line-number="1"><span class="kw">sp_docker_start</span>(<span class="st">&quot;sql-pet&quot;</span>)</a></code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_docker_start</span>(<span class="st">&quot;sql-pet&quot;</span>)</code></pre>
 <p>Connect to the database:</p>
-<div class="sourceCode" id="cb128"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb128-1" data-line-number="1">con &lt;-<span class="st"> </span><span class="kw">sp_get_postgres_connection</span>(</a>
-<a class="sourceLine" id="cb128-2" data-line-number="2">  <span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),</a>
-<a class="sourceLine" id="cb128-3" data-line-number="3">  <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),</a>
-<a class="sourceLine" id="cb128-4" data-line-number="4">  <span class="dt">dbname =</span> <span class="st">&quot;dvdrental&quot;</span>,</a>
-<a class="sourceLine" id="cb128-5" data-line-number="5">  <span class="dt">seconds_to_test =</span> <span class="dv">10</span></a>
-<a class="sourceLine" id="cb128-6" data-line-number="6">)</a></code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">con &lt;-<span class="st"> </span><span class="kw">sp_get_postgres_connection</span>(
+  <span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),
+  <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),
+  <span class="dt">dbname =</span> <span class="st">&quot;dvdrental&quot;</span>,
+  <span class="dt">seconds_to_test =</span> <span class="dv">10</span>
+)</code></pre>
 </div>
 </div>
 <div id="r-is-lazy-and-comes-with-guardrails" class="section level2">
 <h2><span class="header-section-number">11.2</span> R is lazy and comes with guardrails</h2>
-<p>By design, R is both a language and an interactive development environment (IDE). As a language, R tries to be as efficient as possible. As an IDE, R creates some guardrails to make it easy and safe to work with your data. For example <code>getOption(&quot;max.print&quot;)</code> prevents R from printing more rows of data than you can handle, with a nice default of 99999, which may or may not suit you.</p>
+<p>By design, R is both a language and an interactive development environment (IDE). As a language, R tries to be as efficient as possible. As an IDE, R creates some guardrails to make it easy and safe to work with your data. For example <code>getOption("max.print")</code> prevents R from printing more rows of data than you can handle, with a nice default of 99999, which may or may not suit you.</p>
 <p>On the other hand SQL is a <em>“Structured Query Language (SQL): a standard computer language for relational database management and data manipulation.”</em>.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> SQL has has various database-specific Interactive Development Environments (IDEs): for postgreSQL it’s <a href="https://www.pgadmin.org/">pgAdmin</a>. Roger Peng explains in <a href="https://bookdown.org/rdpeng/rprogdatascience/history-and-overview-of-r.html#basic-features-of-r">R Programming for Data Science</a> that:</p>
 <blockquote>
 <p>R has maintained the original S philosophy, which is that it provides a language that is both useful for interactive work, but contains a powerful programming language for developing new tools.</p>
@@ -491,7 +492,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Eventually, if you are interacting with a dbms from R you will need to understand the differences between lazy loading, lazy evaluation, and lazy queries.</p>
 <div id="lazy-loading" class="section level3">
 <h3><span class="header-section-number">11.2.1</span> Lazy loading</h3>
-<p>“<em>Lazy loading is always used for code in packages but is optional (selected by the package maintainer) for datasets in packages.</em>”<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> Lazy loading means that the code for a particular function doesn’t actually get loaded into memory until the last minute – when it’s actually being used.</p>
+<p><em>“Lazy loading is always used for code in packages but is optional (selected by the package maintainer) for datasets in packages.”</em><a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> Lazy loading means that the code for a particular function doesn’t actually get loaded into memory until the last minute – when it’s actually being used.</p>
 </div>
 <div id="lazy-evaluation" class="section level3">
 <h3><span class="header-section-number">11.2.2</span> Lazy evaluation</h3>
@@ -499,7 +500,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="lazy-queries" class="section level3">
 <h3><span class="header-section-number">11.2.3</span> Lazy Queries</h3>
-<p>“<em>When you create a &quot;lazy&quot; query, you’re creating a pointer to a set of conditions on the database, but the query isn’t actually run and the data isn’t actually loaded until you call &quot;next&quot; or some similar method to actually fetch the data and load it into an object.</em>”<a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a> The <code>collect()</code> function retrieves data into a local tibble.<a href="#fn7" class="footnote-ref" id="fnref7"><sup>7</sup></a></p>
+<p><em>“When you create a ‘lazy’ query, you’re creating a pointer to a set of conditions on the database, but the query isn’t actually run and the data isn’t actually loaded until you call ‘next’ or some similar method to actually fetch the data and load it into an object.”</em><a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a> The <code>collect()</code> function retrieves data into a local tibble.<a href="#fn7" class="footnote-ref" id="fnref7"><sup>7</sup></a></p>
 </div>
 </div>
 <div id="lazy-evaluation-and-lazy-queries" class="section level2">
@@ -508,9 +509,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3><span class="header-section-number">11.3.1</span> Dplyr connection objects</h3>
 <p>As introduced in the previous chapter, the <code>dplyr::tbl</code> function creates an object that might <strong>look</strong> like a data frame in that when you enter it on the command line, it prints a bunch of rows from the dbms table. But is actually a <strong>list</strong> object that <code>dplyr</code> uses for constructing queries and retrieving data from the DBMS.</p>
 <p>The following code illustrates these issues. The <code>dplyr::tbl</code> function creates the connection object that we store in an object named <code>rental_table</code>:</p>
-<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb129-1" data-line-number="1">rental_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">tbl</span>(con, <span class="st">&quot;rental&quot;</span>)</a></code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">rental_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">tbl</span>(con, <span class="st">&quot;rental&quot;</span>)</code></pre>
 <p>At first glance, it kind of <strong>looks</strong> like a data frame although it only prints 10 of the table’s 16,044 rows:</p>
-<div class="sourceCode" id="cb130"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb130-1" data-line-number="1">rental_table</a></code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">rental_table</code></pre>
 <pre><code>## # Source:   table&lt;rental&gt; [?? x 7]
 ## # Database: postgres [postgres@localhost:5432/dvdrental]
 ##    rental_id rental_date         inventory_id customer_id
@@ -528,7 +529,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## # ... with more rows, and 3 more variables: return_date &lt;dttm&gt;,
 ## #   staff_id &lt;int&gt;, last_update &lt;dttm&gt;</code></pre>
 <p>But consider the structure of <code>rental_table</code>:</p>
-<div class="sourceCode" id="cb132"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb132-1" data-line-number="1"><span class="kw">str</span>(rental_table)</a></code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(rental_table)</code></pre>
 <pre><code>## List of 2
 ##  $ src:List of 2
 ##   ..$ con  :Formal class &#39;PqConnection&#39; [package &quot;RPostgres&quot;] with 3 slots
@@ -545,7 +546,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##   ..- attr(*, &quot;class&quot;)= chr [1:3] &quot;op_base_remote&quot; &quot;op_base&quot; &quot;op&quot;
 ##  - attr(*, &quot;class&quot;)= chr [1:4] &quot;tbl_dbi&quot; &quot;tbl_sql&quot; &quot;tbl_lazy&quot; &quot;tbl&quot;</code></pre>
 <p>It has two rows. The first row contains all the information in the <code>con</code> object, which contains information about all the tables and objects in the database:</p>
-<div class="sourceCode" id="cb134"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb134-1" data-line-number="1">rental_table<span class="op">$</span>src<span class="op">$</span>con<span class="op">@</span>typnames<span class="op">$</span>typname[<span class="dv">380</span><span class="op">:</span><span class="dv">437</span>]</a></code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">rental_table<span class="op">$</span>src<span class="op">$</span>con<span class="op">@</span>typnames<span class="op">$</span>typname[<span class="dv">380</span><span class="op">:</span><span class="dv">437</span>]</code></pre>
 <pre><code>##  [1] &quot;customer&quot;                    &quot;_customer&quot;                  
 ##  [3] &quot;actor_actor_id_seq&quot;          &quot;actor&quot;                      
 ##  [5] &quot;_actor&quot;                      &quot;category_category_id_seq&quot;   
@@ -576,15 +577,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## [55] &quot;sales_by_store&quot;              &quot;_sales_by_store&quot;            
 ## [57] &quot;staff_list&quot;                  &quot;_staff_list&quot;</code></pre>
 <p>The second row contains a list of the columns in the <code>rental</code> table, among other things:</p>
-<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb136-1" data-line-number="1">rental_table<span class="op">$</span>ops<span class="op">$</span>vars</a></code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">rental_table<span class="op">$</span>ops<span class="op">$</span>vars</code></pre>
 <pre><code>## [1] &quot;rental_id&quot;    &quot;rental_date&quot;  &quot;inventory_id&quot; &quot;customer_id&quot; 
 ## [5] &quot;return_date&quot;  &quot;staff_id&quot;     &quot;last_update&quot;</code></pre>
 <p>To illustrate the different issues involved in data retrieval, we create equivalent connection objects to link to two other tables.</p>
-<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb138-1" data-line-number="1">staff_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">tbl</span>(con, <span class="st">&quot;staff&quot;</span>) </a>
-<a class="sourceLine" id="cb138-2" data-line-number="2"><span class="co"># the &#39;staff&#39; table has 2 rows</span></a>
-<a class="sourceLine" id="cb138-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb138-4" data-line-number="4">customer_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">tbl</span>(con, <span class="st">&quot;customer&quot;</span>) </a>
-<a class="sourceLine" id="cb138-5" data-line-number="5"><span class="co"># the &#39;customer&#39; table has 599 rows</span></a></code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">staff_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">tbl</span>(con, <span class="st">&quot;staff&quot;</span>) 
+<span class="co"># the &#39;staff&#39; table has 2 rows</span>
+
+customer_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">tbl</span>(con, <span class="st">&quot;customer&quot;</span>) 
+<span class="co"># the &#39;customer&#39; table has 599 rows</span></code></pre>
 </div>
 </div>
 <div id="when-does-a-lazy-query-trigger-data-retrieval" class="section level2">
@@ -592,82 +593,37 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="create-a-black-box-query-for-experimentation" class="section level3">
 <h3><span class="header-section-number">11.4.1</span> Create a black box query for experimentation</h3>
 <p>Here is a typical string of dplyr verbs strung together with the magrittr <code>%&gt;%</code> command that will be used to tease out the several different behaviors that a lazy query has when passed to different R functions. This query joins three connection objects into a query we’ll call <code>Q</code>:</p>
-<div class="sourceCode" id="cb139"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb139-1" data-line-number="1">Q &lt;-<span class="st"> </span>rental_table <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb139-2" data-line-number="2"><span class="st">  </span><span class="kw">left_join</span>(staff_table, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;staff_id&quot;</span> =<span class="st"> &quot;staff_id&quot;</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb139-3" data-line-number="3"><span class="st">  </span><span class="kw">rename</span>(<span class="dt">staff_email =</span> email) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb139-4" data-line-number="4"><span class="st">  </span><span class="kw">left_join</span>(customer_table, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;customer_id&quot;</span> =<span class="st"> &quot;customer_id&quot;</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb139-5" data-line-number="5"><span class="st">  </span><span class="kw">rename</span>(<span class="dt">customer_email =</span> email) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb139-6" data-line-number="6"><span class="st">  </span><span class="kw">select</span>(rental_date, staff_email, customer_email)</a></code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">Q &lt;-<span class="st"> </span>rental_table <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">left_join</span>(staff_table, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;staff_id&quot;</span> =<span class="st"> &quot;staff_id&quot;</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">rename</span>(<span class="dt">staff_email =</span> email) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">left_join</span>(customer_table, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;customer_id&quot;</span> =<span class="st"> &quot;customer_id&quot;</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">rename</span>(<span class="dt">customer_email =</span> email) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(rental_date, staff_email, customer_email)</code></pre>
 </div>
 <div id="experiment-overview" class="section level3">
 <h3><span class="header-section-number">11.4.2</span> Experiment overview</h3>
 <p>Think of <code>Q</code> as a black box for the moment. The following examples will show how <code>Q</code> is interpreted differently by different functions. In this table, a single green check indicates that some rows are returned, two green checks indicates that all the rows are returned, and the red X indicates that no rows have are returned.</p>
-<blockquote>
-<table>
-<colgroup>
-<col width="33%" />
-<col width="66%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>R code</th>
-<th>Result</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><a href="#Q%20%%3E%%20print()"><code>Q %&gt;% print()</code></a></td>
-<td><img src="screenshots/green-check.png" /> Prints x rows; same as just entering <code>Q</code></td>
-</tr>
-<tr class="even">
-<td><a href="#Q%20%%3E%%20as.tibble()"><code>Q %&gt;% as.tibble()</code></a></td>
-<td><img src="screenshots/green-check.png" /><img src="screenshots/green-check.png" /> Forces <code>Q</code> to be a tibble</td>
-</tr>
-<tr class="odd">
-<td><a href="#Q%20%%3E%%20head()"><code>Q %&gt;% head()</code></a></td>
-<td><img src="screenshots/green-check.png" /> Prints the first 6 rows</td>
-</tr>
-<tr class="even">
-<td><a href="#Q%20%%3E%%20length()"><code>Q %&gt;% length()</code></a></td>
-<td><img src="screenshots/red-x.png" /> Counts the rows in <code>Q</code></td>
-</tr>
-<tr class="odd">
-<td><a href="#Q%20%%3E%%20str(x.level%20=%203)"><code>Q %&gt;% str()</code></a></td>
-<td><img src="screenshots/red-x.png" />Shows the top 3 levels of the <strong>object</strong> <code>Q</code></td>
-</tr>
-<tr class="even">
-<td><a href="#Q%20%%3E%%20nrow()"><code>Q %&gt;% nrow()</code></a></td>
-<td><img src="screenshots/red-x.png" /> <strong>Attempts</strong> to determine the number of rows</td>
-</tr>
-<tr class="odd">
-<td><a href="#Q%20%%3E%%20tally()"><code>Q %&gt;% tally()</code></a></td>
-<td><img src="screenshots/green-check.png" /> <img src="screenshots/green-check.png" /> Counts all the rows – on the dbms side</td>
-</tr>
-<tr class="even">
-<td><a href="#Q%20%%3E%%20collect()"><code>Q %&gt;% collect(n = 20)</code></a></td>
-<td><img src="screenshots/green-check.png" /> Prints 20 rows</td>
-</tr>
-<tr class="odd">
-<td><a href="#Q%20%%3E%%20collect()"><code>Q %&gt;% collect(n = 20) %&gt;% head()</code></a></td>
-<td><img src="screenshots/green-check.png" /> Prints 6 rows</td>
-</tr>
-<tr class="even">
-<td><a href="#Q%20%%3E%%20show_query()"><code>Q %&gt;% show_query()</code></a></td>
-<td><img src="screenshots/red-x.png" /> <strong>Translates</strong> the lazy query object into SQL</td>
-</tr>
-<tr class="odd">
-<td><a href="#Qc%20%3C-%20Q%20%%3E%"><code>Qc &lt;- Q %&gt;% count(customer_email, sort = TRUE)</code> <br /> <code>Qc</code></a></td>
-<td><strong>Extends</strong> the lazy query object</td>
-</tr>
-</tbody>
-</table>
-</blockquote>
+<pre><code>&gt; R code | Result 
+&gt; -------| --------------
+&gt; [`Q %&gt;% print()`](#Q %&gt;% print\(\)) | ![](screenshots/green-check.png) Prints x rows; same as just entering `Q`  
+&gt; [`Q %&gt;% as.tibble()`](#Q %&gt;% as.tibble\(\)) | ![](screenshots/green-check.png)![](screenshots/green-check.png) Forces `Q` to be a tibble
+&gt; [`Q %&gt;% head()`](#Q %&gt;% head\(\)) | ![](screenshots/green-check.png) Prints the first 6 rows 
+&gt; [`Q %&gt;% length()`](#Q %&gt;% length\(\)) |  ![](screenshots/red-x.png) Counts the rows in `Q`
+&gt; [`Q %&gt;% str()`](#Q %&gt;% str\(x.level = 3\)) |  ![](screenshots/red-x.png)Shows the top 3 levels of the **object** `Q` 
+&gt; [`Q %&gt;% nrow()`](#Q %&gt;% nrow\(\)) | ![](screenshots/red-x.png) **Attempts** to determine the number of rows 
+&gt; [`Q %&gt;% tally()`](#Q %&gt;% tally\(\)) | ![](screenshots/green-check.png) ![](screenshots/green-check.png) Counts all the rows -- on the dbms side
+&gt; [`Q %&gt;% collect(n = 20)`](#Q %&gt;% collect\(\)) | ![](screenshots/green-check.png) Prints 20 rows  
+&gt; [`Q %&gt;% collect(n = 20) %&gt;% head()`](#Q %&gt;% collect\(\)) | ![](screenshots/green-check.png) Prints 6 rows  
+&gt; [`Q %&gt;% show_query()`](#Q %&gt;% show_query\(\)) | ![](screenshots/red-x.png) **Translates** the lazy query object into SQL  
+&gt; [`Qc &lt;- Q %&gt;% count(customer_email, sort = TRUE)` &lt;br /&gt; `Qc`](#Qc &lt;- Q %&gt;%) | **Extends** the lazy query object
+&gt;
+&gt; </code></pre>
 <p>(The next chapter will discuss how to build queries and how to explore intermediate steps.)</p>
 </div>
 <div id="q-print" class="section level3">
 <h3><span class="header-section-number">11.4.3</span> Q %&gt;% print()</h3>
 <p>Remember that <code>Q %&gt;% print()</code> is equivalent to <code>print(Q)</code> and the same as just entering <code>Q</code> on the command line. We use the magrittr pipe operator here because chaining functions highlights how the same object behaves differently in each use.</p>
-<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb140-1" data-line-number="1">Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">print</span>()</a></code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">print</span>()</code></pre>
 <pre><code>## # Source:   lazy query [?? x 3]
 ## # Database: postgres [postgres@localhost:5432/dvdrental]
 ##    rental_date         staff_email            customer_email              
@@ -695,7 +651,7 @@ rental_date staff_email customer_email
 <div id="q-as.tibble" class="section level3">
 <h3><span class="header-section-number">11.4.4</span> Q %&gt;% as.tibble()</h3>
 <p><img src="screenshots/green-check.png" /> <img src="screenshots/green-check.png" /> In contrast to <code>print()</code>, the <code>as.tibble()</code> function causes R to download the whole table, using tibble’s default of displaying only the first 10 rows.</p>
-<div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb142-1" data-line-number="1">Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.tibble</span>()</a></code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.tibble</span>()</code></pre>
 <pre><code>## # A tibble: 16,044 x 3
 ##    rental_date         staff_email            customer_email              
 ##    &lt;dttm&gt;              &lt;chr&gt;                  &lt;chr&gt;                       
@@ -714,7 +670,7 @@ rental_date staff_email customer_email
 <div id="q-head" class="section level3">
 <h3><span class="header-section-number">11.4.5</span> Q %&gt;% head()</h3>
 <p><img src="screenshots/green-check.png" /> The <code>head()</code> function is very similar to print but has a different “<code>max.print</code>” value.</p>
-<div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb144-1" data-line-number="1">Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>()</a></code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>()</code></pre>
 <pre><code>## # Source:   lazy query [?? x 3]
 ## # Database: postgres [postgres@localhost:5432/dvdrental]
 ##   rental_date         staff_email             customer_email              
@@ -729,13 +685,13 @@ rental_date staff_email customer_email
 <div id="q-length" class="section level3">
 <h3><span class="header-section-number">11.4.6</span> Q %&gt;% length()</h3>
 <p><img src="screenshots/red-x.png" /> Because the <code>Q</code> object is relatively complex, using <code>str()</code> on it prints many lines. You can glimpse what’s going on with <code>length()</code>:</p>
-<div class="sourceCode" id="cb146"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb146-1" data-line-number="1">Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">length</span>()</a></code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">length</span>()</code></pre>
 <pre><code>## [1] 2</code></pre>
 </div>
 <div id="q-str" class="section level3">
 <h3><span class="header-section-number">11.4.7</span> Q %&gt;% str()</h3>
 <p><img src="screenshots/red-x.png" /> Looking inside shows some of what’s going on (three levels deep):</p>
-<div class="sourceCode" id="cb148"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb148-1" data-line-number="1">Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">str</span>(<span class="dt">max.level =</span> <span class="dv">3</span>) </a></code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">str</span>(<span class="dt">max.level =</span> <span class="dv">3</span>) </code></pre>
 <pre><code>## List of 2
 ##  $ src:List of 2
 ##   ..$ con  :Formal class &#39;PqConnection&#39; [package &quot;RPostgres&quot;] with 3 slots
@@ -752,11 +708,11 @@ rental_date staff_email customer_email
 ##   .. ..- attr(*, &quot;class&quot;)= chr [1:3] &quot;op_rename&quot; &quot;op_single&quot; &quot;op&quot;
 ##   ..$ dots:List of 3
 ##   .. ..$ : language ~rental_date
-##   .. .. ..- attr(*, &quot;.Environment&quot;)=&lt;environment: 0x7fd1940672e8&gt; 
+##   .. .. ..- attr(*, &quot;.Environment&quot;)=&lt;environment: 0x5628d8fcd298&gt; 
 ##   .. ..$ : language ~staff_email
-##   .. .. ..- attr(*, &quot;.Environment&quot;)=&lt;environment: 0x7fd1940672e8&gt; 
+##   .. .. ..- attr(*, &quot;.Environment&quot;)=&lt;environment: 0x5628d8fcd298&gt; 
 ##   .. ..$ : language ~customer_email
-##   .. .. ..- attr(*, &quot;.Environment&quot;)=&lt;environment: 0x7fd1940672e8&gt; 
+##   .. .. ..- attr(*, &quot;.Environment&quot;)=&lt;environment: 0x5628d8fcd298&gt; 
 ##   .. ..- attr(*, &quot;class&quot;)= chr &quot;quosures&quot;
 ##   ..$ args: list()
 ##   ..- attr(*, &quot;class&quot;)= chr [1:3] &quot;op_select&quot; &quot;op_single&quot; &quot;op&quot;
@@ -765,13 +721,13 @@ rental_date staff_email customer_email
 <div id="q-nrow" class="section level3">
 <h3><span class="header-section-number">11.4.8</span> Q %&gt;% nrow()</h3>
 <p><img src="screenshots/red-x.png" /> Notice the difference between <code>nrow()</code> and <code>tally()</code>. The <code>nrow</code> functions returns <code>NA</code> and does not execute a query:</p>
-<div class="sourceCode" id="cb150"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb150-1" data-line-number="1">Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">nrow</span>()</a></code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">nrow</span>()</code></pre>
 <pre><code>## [1] NA</code></pre>
 </div>
 <div id="q-tally" class="section level3">
 <h3><span class="header-section-number">11.4.9</span> Q %&gt;% tally()</h3>
 <p><img src="screenshots/green-check.png" /> The <code>tally</code> function actually counts all the rows.</p>
-<div class="sourceCode" id="cb152"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb152-1" data-line-number="1">Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">tally</span>()</a></code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">tally</span>()</code></pre>
 <pre><code>## # Source:   lazy query [?? x 1]
 ## # Database: postgres [postgres@localhost:5432/dvdrental]
 ##   n              
@@ -782,7 +738,7 @@ rental_date staff_email customer_email
 <div id="q-collect" class="section level3">
 <h3><span class="header-section-number">11.4.10</span> Q %&gt;% collect()</h3>
 <p><img src="screenshots/green-check.png" /> The <code>dplyr::collect()</code> function triggers a dbFetch() function behind the scenes, which forces R to download a specified number of rows:</p>
-<div class="sourceCode" id="cb154"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb154-1" data-line-number="1">Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="dv">20</span>)</a></code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="dv">20</span>)</code></pre>
 <pre><code>## # A tibble: 20 x 3
 ##    rental_date         staff_email            customer_email              
 ##    &lt;dttm&gt;              &lt;chr&gt;                  &lt;chr&gt;                       
@@ -806,7 +762,7 @@ rental_date staff_email customer_email
 ## 18 2005-05-25 01:17:24 Mike.Hillyer@sakilast… ronnie.ricketts@sakilacusto…
 ## 19 2005-05-25 01:48:41 Jon.Stephens@sakilast… roberta.harper@sakilacustom…
 ## 20 2005-05-25 01:59:46 Jon.Stephens@sakilast… craig.morrell@sakilacustome…</code></pre>
-<div class="sourceCode" id="cb156"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb156-1" data-line-number="1">Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="dv">20</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>()</a></code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="dv">20</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>()</code></pre>
 <pre><code>## # A tibble: 6 x 3
 ##   rental_date         staff_email             customer_email              
 ##   &lt;dttm&gt;              &lt;chr&gt;                   &lt;chr&gt;                       
@@ -820,7 +776,7 @@ rental_date staff_email customer_email
 </div>
 <div id="q-show_query" class="section level3">
 <h3><span class="header-section-number">11.4.11</span> Q %&gt;% show_query()</h3>
-<div class="sourceCode" id="cb158"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb158-1" data-line-number="1">Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">show_query</span>()</a></code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">show_query</span>()</code></pre>
 <pre><code>## &lt;SQL&gt;
 ## SELECT &quot;rental_date&quot;, &quot;staff_email&quot;, &quot;customer_email&quot;
 ## FROM (SELECT &quot;rental_id&quot;, &quot;rental_date&quot;, &quot;inventory_id&quot;, &quot;customer_id&quot;, &quot;return_date&quot;, &quot;staff_id&quot;, &quot;last_update.x&quot;, &quot;first_name.x&quot;, &quot;last_name.x&quot;, &quot;address_id.x&quot;, &quot;staff_email&quot;, &quot;store_id.x&quot;, &quot;active.x&quot;, &quot;username&quot;, &quot;password&quot;, &quot;last_update.y&quot;, &quot;picture&quot;, &quot;store_id.y&quot;, &quot;first_name.y&quot;, &quot;last_name.y&quot;, &quot;email&quot; AS &quot;customer_email&quot;, &quot;address_id.y&quot;, &quot;activebool&quot;, &quot;create_date&quot;, &quot;last_update&quot;, &quot;active.y&quot;
@@ -830,18 +786,18 @@ rental_date staff_email customer_email
 ##   FROM &quot;rental&quot; AS &quot;TBL_LEFT&quot;
 ##   LEFT JOIN &quot;staff&quot; AS &quot;TBL_RIGHT&quot;
 ##   ON (&quot;TBL_LEFT&quot;.&quot;staff_id&quot; = &quot;TBL_RIGHT&quot;.&quot;staff_id&quot;)
-## ) &quot;qzdwvvvtzq&quot;) &quot;TBL_LEFT&quot;
+## ) &quot;zzifqwtnzj&quot;) &quot;TBL_LEFT&quot;
 ##   LEFT JOIN &quot;customer&quot; AS &quot;TBL_RIGHT&quot;
 ##   ON (&quot;TBL_LEFT&quot;.&quot;customer_id&quot; = &quot;TBL_RIGHT&quot;.&quot;customer_id&quot;)
-## ) &quot;rnitnthkfz&quot;) &quot;ohetoyqsmw&quot;</code></pre>
+## ) &quot;tglfvkglcc&quot;) &quot;yrctjjvaeb&quot;</code></pre>
 <p>Hand-written SQL code to do the same job will probably look a lot nicer and could be more efficient, but functionally dplyr does the job.</p>
 </div>
 <div id="qc---q-countcustomer_email" class="section level3">
 <h3><span class="header-section-number">11.4.12</span> Qc &lt;- Q %&gt;% count(customer_email)</h3>
 <p><img src="screenshots/red-x.png" /> Until <code>Q</code> is executed, we can add to it. This behavior is the basis for a useful debugging and development process where queries are built up incrementally.</p>
-<div class="sourceCode" id="cb160"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb160-1" data-line-number="1">Qc &lt;-<span class="st"> </span>Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(customer_email, <span class="dt">sort =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">Qc &lt;-<span class="st"> </span>Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(customer_email, <span class="dt">sort =</span> <span class="ot">TRUE</span>)</code></pre>
 <p><img src="screenshots/green-check.png" /> When all the accumulated <code>dplyr</code> verbs are executed, they are submitted to the dbms and the number of rows that are returned follow the same rules as discussed above.</p>
-<div class="sourceCode" id="cb161"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb161-1" data-line-number="1">Qc</a></code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r">Qc</code></pre>
 <pre><code>## # Source:     lazy query [?? x 2]
 ## # Database:   postgres [postgres@localhost:5432/dvdrental]
 ## # Ordered by: desc(n)
@@ -859,8 +815,9 @@ rental_date staff_email customer_email
 ## 10 marion.snyder@sakilacustomer.org  39             
 ## # ... with more rows</code></pre>
 <p>See more example of lazy execution can be found <a href="https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html">Here</a>.</p>
-<div class="sourceCode" id="cb163"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb163-1" data-line-number="1"><span class="kw">dbDisconnect</span>(con)</a>
-<a class="sourceLine" id="cb163-2" data-line-number="2"><span class="kw">sp_docker_stop</span>(<span class="st">&quot;sql-pet&quot;</span>)</a></code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dbDisconnect</span>(con)
+<span class="kw">sp_docker_stop</span>(<span class="st">&quot;sql-pet&quot;</span>)</code></pre>
+<pre><code>## [1] &quot;sql-pet&quot;</code></pre>
 </div>
 </div>
 <div id="other-resources" class="section level2">
@@ -909,7 +866,7 @@ gitbook.start({
 "google": false,
 "linkedin": false,
 "weibo": false,
-"instapper": false,
+"instapaper": false,
 "vk": false,
 "all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
 },
@@ -921,6 +878,10 @@ gitbook.start({
 "edit": {
 "link": "https://github.com/smithjd/sql-pet/edit/master/11b-lazy-evalutation-and-downloading.Rmd",
 "text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
 },
 "download": ["r-database-docker.pdf"],
 "toc": {

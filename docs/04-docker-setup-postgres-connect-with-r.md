@@ -45,7 +45,18 @@ Remove the `cattle` and `sql-pet` containers if they exists (e.g., from a prior 
 
 ```r
 sp_docker_remove_container("cattle")
+```
+
+```
+## [1] 0
+```
+
+```r
 sp_docker_remove_container("sql-pet")
+```
+
+```
+## [1] 0
 ```
 
 The convention we use in this book is to put docker commands in the `sqlpetr` package so that you can ignore them if you want.  However, the functions are set up so that you can easily see how to do things with Docker and modify if you want.
@@ -54,10 +65,6 @@ We name containers `cattle` for "throw-aways" and `pet` for ones we treasure and
 
 ```r
 sp_make_simple_pg("cattle")
-```
-
-```
-## [1] 0
 ```
 
 Docker returns a long string of numbers.  If you are running this command for the first time, Docker downloads the PostgreSQL image, which takes a bit of time.
@@ -71,7 +78,7 @@ sp_check_that_docker_is_up()
 ```
 ## [1] "Docker is up, running these containers:"                                                                                                       
 ## [2] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES"   
-## [3] "b4c0afdcf74e        postgres:10         \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
+## [3] "d5d93315b640        postgres:10         \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
 ```
 ## Connect, read and write to Postgres from R
 
@@ -161,10 +168,18 @@ Tell Docker to stop the `cattle` container:
 sp_docker_stop("cattle")
 ```
 
+```
+## [1] "cattle"
+```
+
 Tell Docker to remove the `cattle` container from it's library of active containers:
 
 ```r
 sp_docker_remove_container("cattle")
+```
+
+```
+## [1] 0
 ```
 
 If we just **stop** the docker container but don't remove it (as we did with the `sp_docker_remove_container("cattle")` command), the `cattle` container will persist and we can start it up again later with `sp_docker_start("cattle")`.  In that case, `mtcars` would still be there and we could retrieve it from postgreSQL again.  Since `sp_docker_remove_container("cattle")`  has removed it, the updated database has been deleted.  (There are enough copies of `mtcars` in the world, so no great loss.)

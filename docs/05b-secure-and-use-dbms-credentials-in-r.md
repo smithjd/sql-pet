@@ -123,3 +123,7 @@ Tell Docker to stop the `cattle` container:
 ```r
 sp_docker_stop("sql-pet")
 ```
+
+```
+## [1] "sql-pet"
+```

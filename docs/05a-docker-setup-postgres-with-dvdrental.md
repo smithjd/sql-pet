@@ -39,7 +39,18 @@ Remove the `cattle` and `sql-pet` containers if they exist (e.g., from a prior r
 
 ```r
 sp_docker_remove_container("cattle")
+```
+
+```
+## [1] 0
+```
+
+```r
 sp_docker_remove_container("sql-pet")
+```
+
+```
+## [1] 0
 ```
 ## Build the pet-sql Docker Image
 
@@ -57,19 +68,19 @@ cat(docker_messages, sep = "\n")
 ```
 
 ```
-## Sending build context to Docker daemon  64.22MB
+## Sending build context to Docker daemon  37.77MB
 ## Step 1/4 : FROM postgres:10
-##  ---> ac25c2bac3c4
+##  ---> 6eb6c50a02e7
 ## Step 2/4 : WORKDIR /tmp
 ##  ---> Using cache
-##  ---> 3f00a18e0bdf
+##  ---> 851566b61822
 ## Step 3/4 : COPY init-dvdrental.sh /docker-entrypoint-initdb.d/
 ##  ---> Using cache
-##  ---> 3453d61d8e3e
+##  ---> a41ee6860211
 ## Step 4/4 : RUN apt-get -qq update &&   apt-get install -y -qq curl zip  > /dev/null 2>&1 &&   curl -Os http://www.postgresqltutorial.com/wp-content/uploads/2017/10/dvdrental.zip &&   unzip dvdrental.zip &&   rm dvdrental.zip &&   chmod ugo+w dvdrental.tar &&   chown postgres dvdrental.tar &&   chmod u+x /docker-entrypoint-initdb.d/init-dvdrental.sh &&   apt-get remove -y curl zip
 ##  ---> Using cache
-##  ---> f5e93aa64875
-## Successfully built f5e93aa64875
+##  ---> 9b1114a185a1
+## Successfully built 9b1114a185a1
 ## Successfully tagged postgres-dvdrental:latest
 ```
 
@@ -106,7 +117,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "b14aaf2269ac157b15d3301ac119685dcbc214eee4035d826df31d67729e79df"
+## [1] "4bc0a75312cd77ac9d7df4b97ccc9d860769aa70f5c835690c65e09b9299438c"
 ```
 ## Connect to Postgres with R
 
@@ -117,7 +128,7 @@ Use the DBI package to connect to the `dvdrental` database in PostgreSQL.  Remem
 con <- sp_get_postgres_connection(password = "postgres",
                          user = "postgres",
                          dbname = "dvdrental",
-                         seconds_to_test = 10)
+                         seconds_to_test = 30)
 ```
 
 List the tables in the database and the fields in one of those tables.  
@@ -161,6 +172,10 @@ Stop the container:
 ```r
 sp_docker_stop("sql-pet")
 ```
+
+```
+## [1] "sql-pet"
+```
 Restart the container and verify that the dvdrental tables are still there:
 
 ```r
@@ -172,7 +187,7 @@ Connect to the `dvdrental` database in postgreSQL:
 con <- sp_get_postgres_connection(user = "postgres",
                          password = "postgres",
                          dbname = "dvdrental",
-                         seconds_to_test = 10)
+                         seconds_to_test = 30)
 ```
 
 Check that you can still see the fields in the `rental` table:
@@ -199,6 +214,10 @@ Stop the `sql-pet` container:
 ```r
 sp_docker_stop("sql-pet")
 ```
+
+```
+## [1] "sql-pet"
+```
 Show that the container still exists even though it's not running
 
 
@@ -207,8 +226,9 @@ sp_show_all_docker_containers()
 ```
 
 ```
-## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## b14aaf2269ac        postgres-dvdrental   "docker-entrypoint.s…"   8 seconds ago       Exited (0) Less than a second ago                       sql-pet
+## [1] "CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS               NAMES"               
+## [2] "4bc0a75312cd        postgres-dvdrental   \"docker-entrypoint.s…\"   10 seconds ago      Exited (0) Less than a second ago                       sql-pet"           
+## [3] "10a4e492df70        opencpu/rstudio      \"/bin/sh -c 'service…\"   43 hours ago        Exited (137) 39 hours ago                               mystifying_wescoff"
 ```
 
 Next time, you can just use this command to start the container: 
