@@ -24,7 +24,7 @@ library(tidyverse)
 ```
 
 ```
-## ── Attaching packages ───────────────────────────── tidyverse 1.2.1 ──
+## ── Attaching packages ─────────────────────────────────────────── tidyverse 1.2.1 ──
 ```
 
 ```
@@ -35,7 +35,7 @@ library(tidyverse)
 ```
 
 ```
-## ── Conflicts ──────────────────────────────── tidyverse_conflicts() ──
+## ── Conflicts ────────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()
 ```
@@ -129,7 +129,7 @@ sp_show_all_docker_containers()
 
 ```
 ## [1] "CONTAINER ID        IMAGE                COMMAND                  CREATED              STATUS                     PORTS               NAMES"             
-## [2] "e7870ba7d449        postgres-dvdrental   \"docker-entrypoint.s…\"   About a minute ago   Exited (0) 5 seconds ago                       sql-pet"         
+## [2] "a9c59f073d8c        postgres-dvdrental   \"docker-entrypoint.s…\"   About a minute ago   Exited (0) 5 seconds ago                       sql-pet"         
 ## [3] "81a5fdbd6042        rocker/geospatial    \"/init\"                  44 hours ago         Exited (0) 42 hours ago                        blissful_greider"
 ```
 
@@ -190,7 +190,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "e81db5bbeb8380b578d7f296403f206d5e8e86ce020aca91a74bd9ebe4b8f341"
+## [1] "4a49ed23c7c2a4f6cd1c5e6c6c2a8de06ea91455092d9a4b4d1e5c8d00bcb8e1"
 ```
 
 Peek inside the docker container and list the files in the `petdir`
@@ -234,7 +234,7 @@ sp_show_all_docker_containers()
 
 ```
 ## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                    PORTS                    NAMES"             
-## [2] "e81db5bbeb83        postgres:10         \"docker-entrypoint.s…\"   4 seconds ago       Up 3 seconds              0.0.0.0:5432->5432/tcp   sql-pet"         
+## [2] "4a49ed23c7c2        postgres:10         \"docker-entrypoint.s…\"   4 seconds ago       Up 3 seconds              0.0.0.0:5432->5432/tcp   sql-pet"         
 ## [3] "81a5fdbd6042        rocker/geospatial   \"/init\"                  44 hours ago        Exited (0) 42 hours ago                            blissful_greider"
 ```
 inside Docker, execute the postgress SQL command-line program to create the dvdrental database:
@@ -376,7 +376,7 @@ sp_show_all_docker_containers()
 
 ```
 ## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES"             
-## [2] "e81db5bbeb83        postgres:10         \"docker-entrypoint.s…\"   17 seconds ago      Exited (0) Less than a second ago                       sql-pet"         
+## [2] "4a49ed23c7c2        postgres:10         \"docker-entrypoint.s…\"   17 seconds ago      Exited (0) Less than a second ago                       sql-pet"         
 ## [3] "81a5fdbd6042        rocker/geospatial   \"/init\"                  44 hours ago        Exited (0) 42 hours ago                                 blissful_greider"
 ```
 
