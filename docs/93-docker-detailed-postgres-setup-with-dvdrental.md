@@ -24,7 +24,7 @@ library(tidyverse)
 ```
 
 ```
-## ── Attaching packages ─────────────────────────────────────────── tidyverse 1.2.1 ──
+## ── Attaching packages ───────────────────────────── tidyverse 1.2.1 ──
 ```
 
 ```
@@ -35,7 +35,7 @@ library(tidyverse)
 ```
 
 ```
-## ── Conflicts ────────────────────────────────────────────── tidyverse_conflicts() ──
+## ── Conflicts ──────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()
 ```
@@ -128,9 +128,9 @@ sp_show_all_docker_containers()
 ```
 
 ```
-## [1] "CONTAINER ID        IMAGE                COMMAND                  CREATED              STATUS                     PORTS                    NAMES"             
-## [2] "79eb21fc974c        postgres-dvdrental   \"docker-entrypoint.s…\"   About a minute ago   Exited (0) 5 seconds ago                            sql-pet"         
-## [3] "81a5fdbd6042        rocker/geospatial    \"/init\"                  About an hour ago    Up About an hour           0.0.0.0:8787->8787/tcp   blissful_greider"
+## [1] "CONTAINER ID        IMAGE                COMMAND                  CREATED              STATUS                     PORTS               NAMES"             
+## [2] "e7870ba7d449        postgres-dvdrental   \"docker-entrypoint.s…\"   About a minute ago   Exited (0) 5 seconds ago                       sql-pet"         
+## [3] "81a5fdbd6042        rocker/geospatial    \"/init\"                  44 hours ago         Exited (0) 42 hours ago                        blissful_greider"
 ```
 
 Remove the `sql-pet` container if it exists (e.g., from a prior run)
@@ -190,7 +190,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "a6865f4bce3b6851a3fbdf59f07c54d315a19c3adbd4a0b64d1637c450ca5fcb"
+## [1] "e81db5bbeb8380b578d7f296403f206d5e8e86ce020aca91a74bd9ebe4b8f341"
 ```
 
 Peek inside the docker container and list the files in the `petdir`
@@ -233,9 +233,9 @@ sp_show_all_docker_containers()
 ```
 
 ```
-## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES"             
-## [2] "a6865f4bce3b        postgres:10         \"docker-entrypoint.s…\"   4 seconds ago       Up 3 seconds        0.0.0.0:5432->5432/tcp   sql-pet"         
-## [3] "81a5fdbd6042        rocker/geospatial   \"/init\"                  About an hour ago   Up About an hour    0.0.0.0:8787->8787/tcp   blissful_greider"
+## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                    PORTS                    NAMES"             
+## [2] "e81db5bbeb83        postgres:10         \"docker-entrypoint.s…\"   4 seconds ago       Up 3 seconds              0.0.0.0:5432->5432/tcp   sql-pet"         
+## [3] "81a5fdbd6042        rocker/geospatial   \"/init\"                  44 hours ago        Exited (0) 42 hours ago                            blissful_greider"
 ```
 inside Docker, execute the postgress SQL command-line program to create the dvdrental database:
 
@@ -375,9 +375,9 @@ sp_show_all_docker_containers()
 ```
 
 ```
-## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS                    NAMES"             
-## [2] "a6865f4bce3b        postgres:10         \"docker-entrypoint.s…\"   16 seconds ago      Exited (0) Less than a second ago                            sql-pet"         
-## [3] "81a5fdbd6042        rocker/geospatial   \"/init\"                  About an hour ago   Up About an hour                    0.0.0.0:8787->8787/tcp   blissful_greider"
+## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES"             
+## [2] "e81db5bbeb83        postgres:10         \"docker-entrypoint.s…\"   17 seconds ago      Exited (0) Less than a second ago                       sql-pet"         
+## [3] "81a5fdbd6042        rocker/geospatial   \"/init\"                  44 hours ago        Exited (0) 42 hours ago                                 blissful_greider"
 ```
 
 We are leaving the `sql-pet` container intact so it can be used in running the

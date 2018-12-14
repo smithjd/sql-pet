@@ -25,7 +25,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
 
 
-<meta name="date" content="2018-12-12">
+<meta name="date" content="2018-12-13">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -467,9 +467,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Docker commands can be run from a terminal (e.g., the Rstudio Terminal pane) or with a <code>system()</code> command. We provide the necessary functions to start, stop Docker containers and do other busy work in the <code>sqlpetr</code> package. As time permits and curiosity dictates, feel free to look at those functions to see how they work.</p>
 <p>Check that docker is up and running:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_check_that_docker_is_up</span>()</code></pre>
-<pre><code>## [1] &quot;Docker is up, running these containers:&quot;                                                                                                        
-## [2] &quot;CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS                    NAMES&quot;             
-## [3] &quot;81a5fdbd6042        rocker/geospatial   \&quot;/init\&quot;             About an hour ago   Up About an hour    0.0.0.0:8787-&gt;8787/tcp   blissful_greider&quot;</code></pre>
+<pre><code>## [1] &quot;Docker is up but running no containers&quot;</code></pre>
 </div>
 <div id="clean-up-if-appropriate" class="section level2">
 <h2><span class="header-section-number">6.2</span> Clean up if appropriate</h2>
@@ -484,10 +482,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Docker returns a long string of numbers. If you are running this command for the first time, Docker downloads the PostgreSQL image, which takes a bit of time.</p>
 <p>The following command shows that a container named <code>cattle</code> is running <code>postgres:10</code>. <code>postgres</code> is waiting for a connection:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_check_that_docker_is_up</span>()</code></pre>
-<pre><code>## [1] &quot;Docker is up, running these containers:&quot;                                                                                                                      
-## [2] &quot;CONTAINER ID        IMAGE               COMMAND                  CREATED                  STATUS                  PORTS                    NAMES&quot;             
-## [3] &quot;dd72337068e2        postgres:10         \&quot;docker-entrypoint.s…\&quot;   Less than a second ago   Up Less than a second   0.0.0.0:5432-&gt;5432/tcp   cattle&quot;          
-## [4] &quot;81a5fdbd6042        rocker/geospatial   \&quot;/init\&quot;                  About an hour ago        Up About an hour        0.0.0.0:8787-&gt;8787/tcp   blissful_greider&quot;</code></pre>
+<pre><code>## [1] &quot;Docker is up, running these containers:&quot;                                                                                                       
+## [2] &quot;CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES&quot;   
+## [3] &quot;4ec77359f20b        postgres:10         \&quot;docker-entrypoint.s…\&quot;   1 second ago        Up Less than a second   0.0.0.0:5432-&gt;5432/tcp   cattle&quot;</code></pre>
 </div>
 <div id="connect-read-and-write-to-postgres-from-r" class="section level2">
 <h2><span class="header-section-number">6.3</span> Connect, read and write to Postgres from R</h2>
