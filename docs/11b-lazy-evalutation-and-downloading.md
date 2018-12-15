@@ -4,7 +4,7 @@
 > 
 > * Reviews lazy evaluation and discusses its interaction with remote query execution on a dbms 
 > * Demonstrates how `dplyr` queries behave in connection with several different functions
-> * Suggests some strategies for dividing the work between your local R session and the dbms
+> * Offers some further resources on lazy loading, evaluation, execution, etc.
 
 ### Setup
 
@@ -58,7 +58,7 @@ Eventually, if you are interacting with a dbms from R you will need to understan
 
 ### Lazy loading
 
-*"Lazy loading is always used for code in packages but is optional (selected by the package maintainer) for datasets in packages."*^[https://cran.r-project.org/doc/manuals/r-release/R-ints.html#Lazy-loading]  Lazy loading means that the code for a particular function doesn't actually get loaded into memory until the last minute -- when it's actually being used.
+"*Lazy loading is always used for code in packages but is optional (selected by the package maintainer) for datasets in packages.*"^[https://cran.r-project.org/doc/manuals/r-release/R-ints.html#Lazy-loading]  Lazy loading means that the code for a particular function doesn't actually get loaded into memory until the last minute -- when it's actually being used.
 
 ### Lazy evaluation 
 
@@ -66,7 +66,7 @@ Essentially "Lazy evaluation is a programming strategy that allows a symbol to b
 
 ### Lazy Queries
 
-*"When you create a 'lazy' query, you're creating a pointer to a set of conditions on the database, but the query isn't actually run and the data isn't actually loaded until you call 'next' or some similar method to actually fetch the data and load it into an object."* ^[https://www.quora.com/What-is-a-lazy-query]  The `collect()` function retrieves data into a local tibble.^[https://dplyr.tidyverse.org/reference/compute.html]
+"*When you create a "lazy" query, you're creating a pointer to a set of conditions on the database, but the query isn't actually run and the data isn't actually loaded until you call "next" or some similar method to actually fetch the data and load it into an object.*" ^[https://www.quora.com/What-is-a-lazy-query]  The `collect()` function retrieves data into a local tibble.^[https://dplyr.tidyverse.org/reference/compute.html]
 
 ## Lazy evaluation and lazy queries
 
@@ -203,27 +203,25 @@ Q <- rental_table %>%
 ### Experiment overview
 Think of `Q` as a black box for the moment.  The following examples will show how `Q` is interpreted differently by different functions. In this table, a single green check indicates that some rows are returned, two green checks indicates that all the rows are returned, and the red X indicates that no rows have are returned.
 
-```
 > R code | Result 
 > -------| --------------
-> [`Q %>% print()`](#Q %>% print\(\)) | ![](screenshots/green-check.png) Prints x rows; same as just entering `Q`  
-> [`Q %>% as.tibble()`](#Q %>% as.tibble\(\)) | ![](screenshots/green-check.png)![](screenshots/green-check.png) Forces `Q` to be a tibble
-> [`Q %>% head()`](#Q %>% head\(\)) | ![](screenshots/green-check.png) Prints the first 6 rows 
-> [`Q %>% length()`](#Q %>% length\(\)) |  ![](screenshots/red-x.png) Counts the rows in `Q`
-> [`Q %>% str()`](#Q %>% str\(x.level = 3\)) |  ![](screenshots/red-x.png)Shows the top 3 levels of the **object** `Q` 
-> [`Q %>% nrow()`](#Q %>% nrow\(\)) | ![](screenshots/red-x.png) **Attempts** to determine the number of rows 
-> [`Q %>% tally()`](#Q %>% tally\(\)) | ![](screenshots/green-check.png) ![](screenshots/green-check.png) Counts all the rows -- on the dbms side
-> [`Q %>% collect(n = 20)`](#Q %>% collect\(\)) | ![](screenshots/green-check.png) Prints 20 rows  
-> [`Q %>% collect(n = 20) %>% head()`](#Q %>% collect\(\)) | ![](screenshots/green-check.png) Prints 6 rows  
-> [`Q %>% show_query()`](#Q %>% show_query\(\)) | ![](screenshots/red-x.png) **Translates** the lazy query object into SQL  
-> [`Qc <- Q %>% count(customer_email, sort = TRUE)` <br /> `Qc`](#Qc <- Q %>%) | **Extends** the lazy query object
+> [`Q %>% print()`](#lazy_q_print) | ![](screenshots/green-check.png) Prints x rows; same as just entering `Q`  
+> [`Q %>% as.tibble()`](#Q-as-tibble) | ![](screenshots/green-check.png)![](screenshots/green-check.png) Forces `Q` to be a tibble
+> [`Q %>% head()`](#lazy_q_head) | ![](screenshots/green-check.png) Prints the first 6 rows 
+> [`Q %>% length()`](#lazy_q_length) |  ![](screenshots/red-x.png) Counts the rows in `Q`
+> [`Q %>% str()`](#lazy_q_str) |  ![](screenshots/red-x.png)Shows the top 3 levels of the **object** `Q` 
+> [`Q %>% nrow()`](#lazy_q_nrow) | ![](screenshots/red-x.png) **Attempts** to determine the number of rows 
+> [`Q %>% tally()`](#lazy_q_tally) | ![](screenshots/green-check.png) ![](screenshots/green-check.png) Counts all the rows -- on the dbms side
+> [`Q %>% collect(n = 20)`](#lazy_q_collect) | ![](screenshots/green-check.png) Prints 20 rows  
+> [`Q %>% collect(n = 20) %>% head()`](#lazy_q_collect) | ![](screenshots/green-check.png) Prints 6 rows  
+> [`Q %>% show_query()`](#lazy-q-show-query) | ![](screenshots/red-x.png) **Translates** the lazy query object into SQL  
+> [`Qc <- Q %>% count(customer_email, sort = TRUE)` <br /> `Qc`](#lazy_q_build) | ![](screenshots/red-x.png) **Extends** the lazy query object
 >
 > 
-```
 
 (The next chapter will discuss how to build queries and how to explore intermediate steps.)
 
-### Q %>% print()
+### Q %>% print(){#lazy_q_print}
 
 Remember that `Q %>% print()` is equivalent to `print(Q)` and the same as just entering `Q` on the command line.  We use the magrittr pipe operator here because chaining functions highlights how the same object behaves differently in each use.
 
@@ -248,7 +246,7 @@ Q %>% print()
 ## 10 2005-05-25 00:09:02 Jon.Stephens@sakilast… april.burns@sakilacustomer.…
 ## # ... with more rows
 ```
-![](screenshots/green-check.png) R retrieves 10 observations and 3 colulmns.  In its role as IDE, R has provided nicely formatted output that is similar to what it prints for a tibble, with descriptive information about the dataset and each column:
+![](screenshots/green-check.png) R retrieves 10 observations and 3 columns.  In its role as IDE, R has provided nicely formatted output that is similar to what it prints for a tibble, with descriptive information about the dataset and each column:
 
 >
 > \# Source:   lazy query [?? x 3] </br >
@@ -259,7 +257,7 @@ Q %>% print()
 
 R has not determined how many rows are left to retrieve as it notes `... with more rows`. 
 
-### Q %>% as.tibble()
+### Q %>% as.tibble() {#lazy_q_as-tibble}
 
 ![](screenshots/green-check.png) ![](screenshots/green-check.png) In contrast to `print()`, the `as.tibble()` function causes R to download the whole table, using tibble's default of displaying only the first 10 rows.
 
@@ -284,7 +282,7 @@ Q %>% as.tibble()
 ## # ... with 16,034 more rows
 ```
 
-### Q %>% head()
+### Q %>% head() {#lazy_q_head}
 
 ![](screenshots/green-check.png) The `head()` function is very similar to print but has a different "`max.print`" value.
 
@@ -305,7 +303,7 @@ Q %>% head()
 ## 6 2005-05-24 23:11:53 Jon.Stephens@sakilasta… cassandra.walters@sakilacus…
 ```
 
-### Q %>% length()
+### Q %>% length() {#lazy_q_length}
 
 ![](screenshots/red-x.png) Because the `Q` object is relatively complex, using `str()` on it prints many lines.  You can glimpse what's going on with `length()`:
 
@@ -317,7 +315,7 @@ Q %>% length()
 ## [1] 2
 ```
 
-### Q %>% str()
+### Q %>% str() {#lazy_q_str}
 
 ![](screenshots/red-x.png) Looking inside shows some of what's going on (three levels deep):
 
@@ -342,18 +340,18 @@ Q %>% str(max.level = 3)
 ##   .. ..- attr(*, "class")= chr [1:3] "op_rename" "op_single" "op"
 ##   ..$ dots:List of 3
 ##   .. ..$ : language ~rental_date
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x561718e86750> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x7f9d68f94458> 
 ##   .. ..$ : language ~staff_email
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x561718e86750> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x7f9d68f94458> 
 ##   .. ..$ : language ~customer_email
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x561718e86750> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x7f9d68f94458> 
 ##   .. ..- attr(*, "class")= chr "quosures"
 ##   ..$ args: list()
 ##   ..- attr(*, "class")= chr [1:3] "op_select" "op_single" "op"
 ##  - attr(*, "class")= chr [1:4] "tbl_dbi" "tbl_sql" "tbl_lazy" "tbl"
 ```
 
-### Q %>% nrow()
+### Q %>% nrow() {#lazy_q_nrow}
 
 ![](screenshots/red-x.png) Notice the difference between `nrow()` and `tally()`. The `nrow` functions returns `NA` and does not execute a query:
 
@@ -365,7 +363,7 @@ Q %>% nrow()
 ## [1] NA
 ```
 
-### Q %>% tally()
+### Q %>% tally() {#lazy_q_tally}
 
 ![](screenshots/green-check.png) The `tally` function actually counts all the rows.
 
@@ -382,7 +380,7 @@ Q %>% tally()
 ```
 The `nrow()` function knows that `Q` is a list.  On the other hand, the `tally()` function tells SQL to go count all the rows. Notice that `Q` results in 16,044 rows -- the same number of rows as `rental`.
 
-### Q %>% collect()
+### Q %>% collect(){#lazy_q_collect}
 
 ![](screenshots/green-check.png) The `dplyr::collect()` function triggers a dbFetch() function behind the scenes, which forces R to download a specified number of rows:
 
@@ -433,7 +431,7 @@ Q %>% collect(n = 20) %>% head()
 ```
 The `collect` function triggers the creation of a tibble and controls the number of rows that the DBMS sends to R.  Notice that `head` only prints 6 of the 25 rows that R has retrieved.  
 
-### Q %>% show_query()
+### Q %>% show_query() {#lazy_q_show-query}
 
 
 ```r
@@ -450,14 +448,14 @@ Q %>% show_query()
 ##   FROM "rental" AS "TBL_LEFT"
 ##   LEFT JOIN "staff" AS "TBL_RIGHT"
 ##   ON ("TBL_LEFT"."staff_id" = "TBL_RIGHT"."staff_id")
-## ) "dpwdouwsqa") "TBL_LEFT"
+## ) "qzdwvvvtzq") "TBL_LEFT"
 ##   LEFT JOIN "customer" AS "TBL_RIGHT"
 ##   ON ("TBL_LEFT"."customer_id" = "TBL_RIGHT"."customer_id")
-## ) "jcoxxchnig") "oyihltvqpi"
+## ) "rnitnthkfz") "ohetoyqsmw"
 ```
 Hand-written SQL code to do the same job will probably look a lot nicer and could be more efficient, but functionally dplyr does the job.
 
-### Qc <- Q %>% count(customer_email)
+### Qc <- Q %>% count(customer_email) {#lazy_q_build}
 
 ![](screenshots/red-x.png) Until `Q` is executed, we can add to it.  This behavior is the basis for a useful debugging and development process where queries are built up incrementally.
 
@@ -496,10 +494,6 @@ See more example of lazy execution can be found [Here](https://datacarpentry.org
 ```r
 dbDisconnect(con)
 sp_docker_stop("sql-pet")
-```
-
-```
-## [1] "sql-pet"
 ```
 
 

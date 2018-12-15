@@ -39,18 +39,7 @@ Remove the `cattle` and `sql-pet` containers if they exist (e.g., from a prior r
 
 ```r
 sp_docker_remove_container("cattle")
-```
-
-```
-## [1] 0
-```
-
-```r
 sp_docker_remove_container("sql-pet")
-```
-
-```
-## [1] 0
 ```
 ## Build the pet-sql Docker Image
 
@@ -68,19 +57,19 @@ cat(docker_messages, sep = "\n")
 ```
 
 ```
-## Sending build context to Docker daemon  43.73MB
+## Sending build context to Docker daemon  74.08MB
 ## Step 1/4 : FROM postgres:10
-##  ---> 6eb6c50a02e7
+##  ---> ac25c2bac3c4
 ## Step 2/4 : WORKDIR /tmp
 ##  ---> Using cache
-##  ---> 851566b61822
+##  ---> 3f00a18e0bdf
 ## Step 3/4 : COPY init-dvdrental.sh /docker-entrypoint-initdb.d/
 ##  ---> Using cache
-##  ---> a41ee6860211
+##  ---> 3453d61d8e3e
 ## Step 4/4 : RUN apt-get -qq update &&   apt-get install -y -qq curl zip  > /dev/null 2>&1 &&   curl -Os http://www.postgresqltutorial.com/wp-content/uploads/2017/10/dvdrental.zip &&   unzip dvdrental.zip &&   rm dvdrental.zip &&   chmod ugo+w dvdrental.tar &&   chown postgres dvdrental.tar &&   chmod u+x /docker-entrypoint-initdb.d/init-dvdrental.sh &&   apt-get remove -y curl zip
 ##  ---> Using cache
-##  ---> 9b1114a185a1
-## Successfully built 9b1114a185a1
+##  ---> f5e93aa64875
+## Successfully built f5e93aa64875
 ## Successfully tagged postgres-dvdrental:latest
 ```
 
@@ -117,7 +106,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "a9c59f073d8c189da39899ab6e28f7991526cf7d2310ae9b743097374d6d4b41"
+## [1] "531cb34c298eae9f6f179398f77e0f5e0ad0853cb0aad97ede94bc26964aff3d"
 ```
 ## Connect to Postgres with R
 
@@ -172,10 +161,6 @@ Stop the container:
 ```r
 sp_docker_stop("sql-pet")
 ```
-
-```
-## [1] "sql-pet"
-```
 Restart the container and verify that the dvdrental tables are still there:
 
 ```r
@@ -214,10 +199,6 @@ Stop the `sql-pet` container:
 ```r
 sp_docker_stop("sql-pet")
 ```
-
-```
-## [1] "sql-pet"
-```
 Show that the container still exists even though it's not running
 
 
@@ -226,9 +207,8 @@ sp_show_all_docker_containers()
 ```
 
 ```
-## [1] "CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS               NAMES"             
-## [2] "a9c59f073d8c        postgres-dvdrental   \"docker-entrypoint.s…\"   10 seconds ago      Exited (0) Less than a second ago                       sql-pet"         
-## [3] "81a5fdbd6042        rocker/geospatial    \"/init\"                  44 hours ago        Exited (0) 42 hours ago                                 blissful_greider"
+## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS               NAMES
+## 531cb34c298e        postgres-dvdrental   "docker-entrypoint.s…"   8 seconds ago       Exited (0) Less than a second ago                       sql-pet
 ```
 
 Next time, you can just use this command to start the container: 
