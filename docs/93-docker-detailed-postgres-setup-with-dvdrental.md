@@ -24,7 +24,7 @@ library(tidyverse)
 ```
 
 ```
-## ── Attaching packages ─────────────────────────────────────────── tidyverse 1.2.1 ──
+## ── Attaching packages ──────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
 ```
 
 ```
@@ -35,7 +35,7 @@ library(tidyverse)
 ```
 
 ```
-## ── Conflicts ────────────────────────────────────────────── tidyverse_conflicts() ──
+## ── Conflicts ─────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()
 ```
@@ -86,7 +86,7 @@ library(here)
 ```
 
 ```
-## here() starts at /home/znmeb/Projects/sql-pet
+## here() starts at /Users/jds/Documents/Library/R/r-system/sql-pet
 ```
 
 ## Download the `dvdrental` backup file
@@ -128,9 +128,8 @@ sp_show_all_docker_containers()
 ```
 
 ```
-## [1] "CONTAINER ID        IMAGE                COMMAND                  CREATED              STATUS                     PORTS               NAMES"             
-## [2] "a9c59f073d8c        postgres-dvdrental   \"docker-entrypoint.s…\"   About a minute ago   Exited (0) 5 seconds ago                       sql-pet"         
-## [3] "81a5fdbd6042        rocker/geospatial    \"/init\"                  44 hours ago         Exited (0) 42 hours ago                        blissful_greider"
+## CONTAINER ID        IMAGE                COMMAND                  CREATED              STATUS                     PORTS               NAMES
+## 531cb34c298e        postgres-dvdrental   "docker-entrypoint.s…"   About a minute ago   Exited (0) 5 seconds ago                       sql-pet
 ```
 
 Remove the `sql-pet` container if it exists (e.g., from a prior run)
@@ -142,10 +141,6 @@ if (system2("docker", "ps -a", stdout = TRUE) %>%
     any()) {
   sp_docker_remove_container("sql-pet")
 }
-```
-
-```
-## [1] 0
 ```
 
 ## Build the Docker Container
@@ -161,7 +156,7 @@ wd
 ```
 
 ```
-## [1] "/home/znmeb/Projects/sql-pet"
+## [1] "/Users/jds/Documents/Library/R/r-system/sql-pet"
 ```
 
 ```r
@@ -179,7 +174,7 @@ docker_cmd
 ```
 
 ```
-## run --detach  --name sql-pet --publish 5432:5432 --mount type=bind,source="/home/znmeb/Projects/sql-pet",target=/petdir postgres:10
+## run --detach  --name sql-pet --publish 5432:5432 --mount type=bind,source="/Users/jds/Documents/Library/R/r-system/sql-pet",target=/petdir postgres:10
 ```
 
 
@@ -190,7 +185,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "4a49ed23c7c2a4f6cd1c5e6c6c2a8de06ea91455092d9a4b4d1e5c8d00bcb8e1"
+## [1] "933f5ff292182fb360e2791c6ea973dbab7d7922b3c7e79753e03f61c7173d0e"
 ```
 
 Peek inside the docker container and list the files in the `petdir`
@@ -233,9 +228,8 @@ sp_show_all_docker_containers()
 ```
 
 ```
-## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                    PORTS                    NAMES"             
-## [2] "4a49ed23c7c2        postgres:10         \"docker-entrypoint.s…\"   4 seconds ago       Up 3 seconds              0.0.0.0:5432->5432/tcp   sql-pet"         
-## [3] "81a5fdbd6042        rocker/geospatial   \"/init\"                  44 hours ago        Exited (0) 42 hours ago                            blissful_greider"
+## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES
+## 933f5ff29218        postgres:10         "docker-entrypoint.s…"   4 seconds ago       Up 3 seconds        0.0.0.0:5432->5432/tcp   sql-pet
 ```
 inside Docker, execute the postgress SQL command-line program to create the dvdrental database:
 
@@ -314,10 +308,6 @@ Stop the container
 sp_docker_stop("sql-pet")
 ```
 
-```
-## [1] "sql-pet"
-```
-
 Restart the container and verify that the dvdrental tables are still
 there
 
@@ -363,10 +353,6 @@ started again.
 sp_docker_stop("sql-pet")
 ```
 
-```
-## [1] "sql-pet"
-```
-
 show that the container still exists even though it’s not running
 
 
@@ -375,9 +361,8 @@ sp_show_all_docker_containers()
 ```
 
 ```
-## [1] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES"             
-## [2] "4a49ed23c7c2        postgres:10         \"docker-entrypoint.s…\"   17 seconds ago      Exited (0) Less than a second ago                       sql-pet"         
-## [3] "81a5fdbd6042        rocker/geospatial   \"/init\"                  44 hours ago        Exited (0) 42 hours ago                                 blissful_greider"
+## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES
+## 933f5ff29218        postgres:10         "docker-entrypoint.s…"   15 seconds ago      Exited (0) Less than a second ago                       sql-pet
 ```
 
 We are leaving the `sql-pet` container intact so it can be used in running the
