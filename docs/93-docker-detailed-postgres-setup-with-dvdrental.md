@@ -1,4 +1,4 @@
-# Creating the sql-pet Docker container one step at a time (93)
+# Creating the sql-pet Docker container one step at a time (93){#step-at-a-time-docker}
 
 Step-by-step Docker container setup with dvdrental database installed
 This needs to run *outside a project* to compile correctly because of
@@ -24,7 +24,7 @@ library(tidyverse)
 ```
 
 ```
-## ── Attaching packages ──────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
+## ── Attaching packages ─────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
 ```
 
 ```
@@ -35,7 +35,7 @@ library(tidyverse)
 ```
 
 ```
-## ── Conflicts ─────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## ── Conflicts ────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()
 ```
@@ -129,7 +129,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE                COMMAND                  CREATED              STATUS                     PORTS               NAMES
-## 531cb34c298e        postgres-dvdrental   "docker-entrypoint.s…"   About a minute ago   Exited (0) 5 seconds ago                       sql-pet
+## a5a1745d6333        postgres-dvdrental   "docker-entrypoint.s…"   About a minute ago   Exited (0) 5 seconds ago                       sql-pet
 ```
 
 Remove the `sql-pet` container if it exists (e.g., from a prior run)
@@ -141,6 +141,10 @@ if (system2("docker", "ps -a", stdout = TRUE) %>%
     any()) {
   sp_docker_remove_container("sql-pet")
 }
+```
+
+```
+## [1] 0
 ```
 
 ## Build the Docker Container
@@ -185,7 +189,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "933f5ff292182fb360e2791c6ea973dbab7d7922b3c7e79753e03f61c7173d0e"
+## [1] "1bf18213873c9426e69c3c7485efdb22f4fedd4192d8123a10792ee9dccfa0f3"
 ```
 
 Peek inside the docker container and list the files in the `petdir`
@@ -229,7 +233,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES
-## 933f5ff29218        postgres:10         "docker-entrypoint.s…"   4 seconds ago       Up 3 seconds        0.0.0.0:5432->5432/tcp   sql-pet
+## 1bf18213873c        postgres:10         "docker-entrypoint.s…"   3 seconds ago       Up 3 seconds        0.0.0.0:5432->5432/tcp   sql-pet
 ```
 inside Docker, execute the postgress SQL command-line program to create the dvdrental database:
 
@@ -251,7 +255,7 @@ The `psql` program repeats back to us what it has done, e.g., to create
 a database named `dvdrental`. Next we execute a different program in the
 Docker container, `pg_restore`, and tell it where the restore file is
 located. If successful, the `pg_restore` just responds with a very
-laconic `character(0)`. restore the database from the .tar file
+laconic `character(0)`. 
 
 
 ```r
@@ -362,7 +366,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## 933f5ff29218        postgres:10         "docker-entrypoint.s…"   15 seconds ago      Exited (0) Less than a second ago                       sql-pet
+## 1bf18213873c        postgres:10         "docker-entrypoint.s…"   14 seconds ago      Exited (0) Less than a second ago                       sql-pet
 ```
 
 We are leaving the `sql-pet` container intact so it can be used in running the
