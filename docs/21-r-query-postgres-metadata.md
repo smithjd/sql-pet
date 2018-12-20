@@ -730,13 +730,12 @@ ls()
 ```
 ##  [1] "all_meta"                  "columns_info_schema_info" 
 ##  [3] "columns_info_schema_table" "con"                      
-##  [5] "constraint_column_usage"   "cranex"                   
-##  [7] "key_column_usage"          "keys"                     
-##  [9] "public_tables"             "referential_constraints"  
-## [11] "rs"                        "some_tables"              
-## [13] "table_constraints"         "table_info"               
-## [15] "table_info_schema_table"   "table_list"               
-## [17] "tables"
+##  [5] "constraint_column_usage"   "key_column_usage"         
+##  [7] "keys"                      "public_tables"            
+##  [9] "referential_constraints"   "rs"                       
+## [11] "some_tables"               "table_constraints"        
+## [13] "table_info"                "table_info_schema_table"  
+## [15] "table_list"                "tables"
 ```
 
 

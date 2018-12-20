@@ -82,7 +82,7 @@ sp_check_that_docker_is_up()
 ```
 ## [1] "Docker is up, running these containers:"                                                                                                       
 ## [2] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES"   
-## [3] "2d1ad9249b42        postgres:10         \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
+## [3] "55be64674c78        postgres:10         \"docker-entrypoint.s…\"   2 seconds ago       Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
 ```
 ## Connect, read and write to Postgres from R
 
@@ -95,7 +95,7 @@ Connect to the postgrSQL using the `sp_get_postgres_connection` function:
 con <- sp_get_postgres_connection(user = "postgres",
                          password = "postgres",
                          dbname = "postgres",
-                         seconds_to_test = 10)
+                         seconds_to_test = 30)
 ```
 Notice that we are using the postgreSQL default username and password at this point and that it's in plain text. That is bad practice because user credentials should not be shared in this way.  In a subsequent chapter we'll demonstrate how to store and use credentials to access the dbms.
 

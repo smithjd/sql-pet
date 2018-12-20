@@ -68,19 +68,19 @@ cat(docker_messages, sep = "\n")
 ```
 
 ```
-## Sending build context to Docker daemon  76.09MB
+## Sending build context to Docker daemon  42.63MB
 ## Step 1/4 : FROM postgres:10
-##  ---> ac25c2bac3c4
+##  ---> 6eb6c50a02e7
 ## Step 2/4 : WORKDIR /tmp
 ##  ---> Using cache
-##  ---> 3f00a18e0bdf
+##  ---> 1b3363132e51
 ## Step 3/4 : COPY init-dvdrental.sh /docker-entrypoint-initdb.d/
 ##  ---> Using cache
-##  ---> 3453d61d8e3e
+##  ---> ba58c5f88bef
 ## Step 4/4 : RUN apt-get -qq update &&   apt-get install -y -qq curl zip  > /dev/null 2>&1 &&   curl -Os http://www.postgresqltutorial.com/wp-content/uploads/2017/10/dvdrental.zip &&   unzip dvdrental.zip &&   rm dvdrental.zip &&   chmod ugo+w dvdrental.tar &&   chown postgres dvdrental.tar &&   chmod u+x /docker-entrypoint-initdb.d/init-dvdrental.sh &&   apt-get remove -y curl zip
 ##  ---> Using cache
-##  ---> f5e93aa64875
-## Successfully built f5e93aa64875
+##  ---> 22026d9cd960
+## Successfully built 22026d9cd960
 ## Successfully tagged postgres-dvdrental:latest
 ```
 
@@ -117,7 +117,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "a5a1745d633342a3a8b02220c4d4fe44cc4c130d6de8240017c43ca4feae7380"
+## [1] "01e22bf95af162bf756e0ded9f37c9a8fdd2403d09b8ba3e87d443357aeea649"
 ```
 ## Connect to Postgres with R
 
@@ -218,8 +218,8 @@ sp_show_all_docker_containers()
 ```
 
 ```
-## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## a5a1745d6333        postgres-dvdrental   "docker-entrypoint.s…"   7 seconds ago       Exited (0) Less than a second ago                       sql-pet
+## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                    PORTS               NAMES
+## 01e22bf95af1        postgres-dvdrental   "docker-entrypoint.s…"   14 seconds ago      Exited (0) 1 second ago                       sql-pet
 ```
 
 Next time, you can just use this command to start the container: 
