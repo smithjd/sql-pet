@@ -451,16 +451,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>Read and write to PostgreSQL from R.</li>
 </ul>
 </blockquote>
+<p>Please install the <code>sqlpetr</code> package if not already installed:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(devtools)
+<span class="cf">if</span> (<span class="op">!</span><span class="kw">require</span>(sqlpetr)) devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;smithjd/sqlpetr&quot;</span>)</code></pre>
+<p>Note that when you install the package the first time, it will ask you to update the packages it uses and that can take some time.</p>
 <p>The following packages are used in this chapter:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)
 <span class="kw">library</span>(DBI)
 <span class="kw">library</span>(RPostgres)
 <span class="kw">require</span>(knitr)
 <span class="kw">library</span>(sqlpetr)</code></pre>
-<p>Please install the <code>sqlpetr</code> package if not already installed:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(devtools)
-<span class="cf">if</span> (<span class="op">!</span><span class="kw">require</span>(sqlpetr)) devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;smithjd/sqlpetr&quot;</span>)</code></pre>
-<p>Note that when you install the package the first time, it will ask you to update the packages it uses and that can take some time.</p>
 <div id="verify-that-docker-is-running" class="section level2">
 <h2><span class="header-section-number">6.1</span> Verify that Docker is running</h2>
 <p>Docker commands can be run from a terminal (e.g., the Rstudio Terminal pane) or with a <code>system()</code> command. We provide the necessary functions to start, stop Docker containers and do other busy work in the <code>sqlpetr</code> package. As time permits and curiosity dictates, feel free to look at those functions to see how they work.</p>
@@ -484,7 +484,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_check_that_docker_is_up</span>()</code></pre>
 <pre><code>## [1] &quot;Docker is up, running these containers:&quot;                                                                                                       
 ## [2] &quot;CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES&quot;   
-## [3] &quot;55be64674c78        postgres:10         \&quot;docker-entrypoint.s…\&quot;   2 seconds ago       Up Less than a second   0.0.0.0:5432-&gt;5432/tcp   cattle&quot;</code></pre>
+## [3] &quot;95ceb6c80cba        postgres:10         \&quot;docker-entrypoint.s…\&quot;   2 seconds ago       Up Less than a second   0.0.0.0:5432-&gt;5432/tcp   cattle&quot;</code></pre>
 </div>
 <div id="connect-read-and-write-to-postgres-from-r" class="section level2">
 <h2><span class="header-section-number">6.3</span> Connect, read and write to Postgres from R</h2>

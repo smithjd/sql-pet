@@ -7,6 +7,14 @@
 >  * Interact with PostgreSQL when it's running inside a Docker container.
 >  * Read and write to PostgreSQL from R.
 
+Please install the `sqlpetr` package if not already installed:
+
+```r
+library(devtools)
+if (!require(sqlpetr)) devtools::install_github("smithjd/sqlpetr")
+```
+Note that when you install the package the first time, it will ask you to update the packages it uses and that can take some time.
+
 The following packages are used in this chapter:
 
 ```r
@@ -16,14 +24,6 @@ library(RPostgres)
 require(knitr)
 library(sqlpetr)
 ```
-
-Please install the `sqlpetr` package if not already installed:
-
-```r
-library(devtools)
-if (!require(sqlpetr)) devtools::install_github("smithjd/sqlpetr")
-```
-Note that when you install the package the first time, it will ask you to update the packages it uses and that can take some time.
 
 ## Verify that Docker is running
 
@@ -82,7 +82,7 @@ sp_check_that_docker_is_up()
 ```
 ## [1] "Docker is up, running these containers:"                                                                                                       
 ## [2] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES"   
-## [3] "55be64674c78        postgres:10         \"docker-entrypoint.s…\"   2 seconds ago       Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
+## [3] "95ceb6c80cba        postgres:10         \"docker-entrypoint.s…\"   2 seconds ago       Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
 ```
 ## Connect, read and write to Postgres from R
 

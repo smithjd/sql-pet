@@ -68,7 +68,7 @@ cat(docker_messages, sep = "\n")
 ```
 
 ```
-## Sending build context to Docker daemon  42.63MB
+## Sending build context to Docker daemon  44.75MB
 ## Step 1/4 : FROM postgres:10
 ##  ---> 6eb6c50a02e7
 ## Step 2/4 : WORKDIR /tmp
@@ -117,7 +117,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "01e22bf95af162bf756e0ded9f37c9a8fdd2403d09b8ba3e87d443357aeea649"
+## [1] "04d5b486059bbd81a612262e21ae7a78eb994bd7be311ccab5c9bcf6b01f8730"
 ```
 ## Connect to Postgres with R
 
@@ -219,7 +219,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                    PORTS               NAMES
-## 01e22bf95af1        postgres-dvdrental   "docker-entrypoint.s…"   14 seconds ago      Exited (0) 1 second ago                       sql-pet
+## 04d5b486059b        postgres-dvdrental   "docker-entrypoint.s…"   15 seconds ago      Exited (0) 1 second ago                       sql-pet
 ```
 
 Next time, you can just use this command to start the container: 

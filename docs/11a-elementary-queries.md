@@ -190,8 +190,27 @@ one_percent_sample
 ```
 
 ```
-## [1] rental_id    rental_date  inventory_id customer_id 
-## <0 rows> (or 0-length row.names)
+##    rental_id         rental_date inventory_id customer_id
+## 1       4498 2005-07-08 02:07:50         4299          43
+## 2       4499 2005-07-08 02:08:48          851         199
+## 3       4500 2005-07-08 02:10:01          398         462
+## 4       4501 2005-07-08 02:12:00         1412         262
+## 5       4502 2005-07-08 02:12:04          225         470
+## 6       4503 2005-07-08 02:17:12         1503           8
+## 7       4504 2005-07-08 02:19:27          361         422
+## 8       4505 2005-07-08 02:20:04         1864         481
+## 9       4506 2005-07-08 02:22:18         1484         133
+## 10      4507 2005-07-08 02:22:45          819         505
+## 11      4508 2005-07-08 02:28:41         3996          97
+## 12      4509 2005-07-08 02:32:38         1760         230
+## 13      4510 2005-07-08 02:34:51         1085          27
+## 14      4511 2005-07-08 02:36:21         4438          75
+## 15      4512 2005-07-08 02:38:56         1569         424
+## 16      4513 2005-07-08 02:39:59         3704         182
+## 17      4514 2005-07-08 02:41:25         1938         576
+## 18      4515 2005-07-08 02:42:03         1998         229
+## 19      4516 2005-07-08 02:43:41         2314         497
+## 20      4517 2005-07-08 02:45:19          453          16
 ```
 
 ### Sub-setting variables
@@ -382,8 +401,8 @@ There is no substitute for looking at your data and R provides several ways to j
 sp_print_df(head(rental_tibble))
 ```
 
-<!--html_preserve--><div id="htmlwidget-9313f16b98173e6c542b" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-9313f16b98173e6c542b">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[2,3,4,5,6,7],["2005-05-25T05:54:33Z","2005-05-25T06:03:39Z","2005-05-25T06:04:41Z","2005-05-25T06:05:21Z","2005-05-25T06:08:07Z","2005-05-25T06:11:53Z"],[1525,1711,2452,2079,2792,3995],[459,408,333,222,549,269],["2005-05-29T02:40:33Z","2005-06-02T05:12:39Z","2005-06-03T08:43:41Z","2005-06-02T11:33:21Z","2005-05-27T08:32:07Z","2005-05-30T03:34:53Z"],[1,1,2,1,1,2],["2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>rental_id<\/th>\n      <th>rental_date<\/th>\n      <th>inventory_id<\/th>\n      <th>customer_id<\/th>\n      <th>return_date<\/th>\n      <th>staff_id<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-ce9e91bb7325d8bb9450" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-ce9e91bb7325d8bb9450">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[2,3,4,5,6,7],["2005-05-25T05:54:33Z","2005-05-25T06:03:39Z","2005-05-25T06:04:41Z","2005-05-25T06:05:21Z","2005-05-25T06:08:07Z","2005-05-25T06:11:53Z"],[1525,1711,2452,2079,2792,3995],[459,408,333,222,549,269],["2005-05-29T02:40:33Z","2005-06-02T05:12:39Z","2005-06-03T08:43:41Z","2005-06-02T11:33:21Z","2005-05-27T08:32:07Z","2005-05-30T03:34:53Z"],[1,1,2,1,1,2],["2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>rental_id<\/th>\n      <th>rental_date<\/th>\n      <th>inventory_id<\/th>\n      <th>customer_id<\/th>\n      <th>return_date<\/th>\n      <th>staff_id<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ### The `summary` function in base
 

@@ -129,7 +129,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE                COMMAND                  CREATED              STATUS                     PORTS               NAMES
-## 01e22bf95af1        postgres-dvdrental   "docker-entrypoint.s…"   About a minute ago   Exited (0) 4 seconds ago                       sql-pet
+## 04d5b486059b        postgres-dvdrental   "docker-entrypoint.s…"   About a minute ago   Exited (0) 5 seconds ago                       sql-pet
 ```
 
 Remove the `sql-pet` container if it exists (e.g., from a prior run)
@@ -189,7 +189,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "8eaf032f97a4d4b0379c19d1379c88f904ef41c1db5f3b3af9ba1a608ba7595f"
+## [1] "1b6520733bb994040787da50496bb93f042921fd84b618271f2b389956dda7d4"
 ```
 
 Peek inside the docker container and list the files in the `petdir`
@@ -233,7 +233,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES
-## 8eaf032f97a4        postgres:10         "docker-entrypoint.s…"   4 seconds ago       Up 3 seconds        0.0.0.0:5432->5432/tcp   sql-pet
+## 1b6520733bb9        postgres:10         "docker-entrypoint.s…"   4 seconds ago       Up 3 seconds        0.0.0.0:5432->5432/tcp   sql-pet
 ```
 inside Docker, execute the postgress SQL command-line program to create the dvdrental database:
 
@@ -366,7 +366,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                    PORTS               NAMES
-## 8eaf032f97a4        postgres:10         "docker-entrypoint.s…"   22 seconds ago      Exited (0) 1 second ago                       sql-pet
+## 1b6520733bb9        postgres:10         "docker-entrypoint.s…"   22 seconds ago      Exited (0) 1 second ago                       sql-pet
 ```
 
 We are leaving the `sql-pet` container intact so it can be used in running the
