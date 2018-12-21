@@ -505,7 +505,7 @@ apart the steps.</p>
 <pre><code>## [1] &quot;dvdrental.tar&quot; &quot;dvdrental.zip&quot;</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_show_all_docker_containers</span>()</code></pre>
 <pre><code>## CONTAINER ID        IMAGE                COMMAND                  CREATED              STATUS                     PORTS               NAMES
-## 7b8294e8eb88        postgres-dvdrental   &quot;docker-entrypoint.s…&quot;   About a minute ago   Exited (0) 5 seconds ago                       sql-pet
+## 3a6ba45f6355        postgres-dvdrental   &quot;docker-entrypoint.s…&quot;   About a minute ago   Exited (0) 4 seconds ago                       sql-pet
 ## 4d1200a07f20        fedora:29            &quot;/bin/bash&quot;              5 days ago           Exited (0) 5 days ago                          f29
 ## 81a5fdbd6042        rocker/geospatial    &quot;/init&quot;                  8 days ago           Exited (0) 8 days ago                          blissful_greider</code></pre>
 <p>Remove the <code>sql-pet</code> container if it exists (e.g., from a prior run)</p>
@@ -537,7 +537,7 @@ wd</code></pre>
 docker_cmd</code></pre>
 <pre><code>## run --detach  --name sql-pet --publish 5432:5432 --mount type=bind,source=&quot;/home/znmeb/Projects/sql-pet&quot;,target=/petdir postgres:10</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, docker_cmd, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</code></pre>
-<pre><code>## [1] &quot;f4a669fba2e745d079c33659bb1ffd8060091bfa860023737556d4977778a5d8&quot;</code></pre>
+<pre><code>## [1] &quot;43eb246e744df40765f8402918455c9196b16f0cd3efb53a4a6848fa6d603f04&quot;</code></pre>
 <p>Peek inside the docker container and list the files in the <code>petdir</code>
 directory. Notice that <code>dvdrental.tar</code> is in both.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="co"># local file system:</span>
@@ -556,7 +556,7 @@ command. In this case we tell Docker to execute the <code>psql</code> program
 inside the <code>sql-pet</code> container and pass it some commands as follows.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_show_all_docker_containers</span>()</code></pre>
 <pre><code>## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES
-## f4a669fba2e7        postgres:10         &quot;docker-entrypoint.s…&quot;   4 seconds ago       Up 3 seconds            0.0.0.0:5432-&gt;5432/tcp   sql-pet
+## 43eb246e744d        postgres:10         &quot;docker-entrypoint.s…&quot;   4 seconds ago       Up 3 seconds            0.0.0.0:5432-&gt;5432/tcp   sql-pet
 ## 4d1200a07f20        fedora:29           &quot;/bin/bash&quot;              5 days ago          Exited (0) 5 days ago                            f29
 ## 81a5fdbd6042        rocker/geospatial   &quot;/init&quot;                  8 days ago          Exited (0) 8 days ago                            blissful_greider</code></pre>
 <p>inside Docker, execute the postgress SQL command-line program to create the dvdrental database:</p>
@@ -629,7 +629,7 @@ started again.</p>
 <p>show that the container still exists even though it’s not running</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_show_all_docker_containers</span>()</code></pre>
 <pre><code>## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## f4a669fba2e7        postgres:10         &quot;docker-entrypoint.s…&quot;   18 seconds ago      Exited (0) Less than a second ago                       sql-pet
+## 43eb246e744d        postgres:10         &quot;docker-entrypoint.s…&quot;   16 seconds ago      Exited (0) Less than a second ago                       sql-pet
 ## 4d1200a07f20        fedora:29           &quot;/bin/bash&quot;              5 days ago          Exited (0) 5 days ago                                   f29
 ## 81a5fdbd6042        rocker/geospatial   &quot;/init&quot;                  8 days ago          Exited (0) 8 days ago                                   blissful_greider</code></pre>
 <p>We are leaving the <code>sql-pet</code> container intact so it can be used in running the

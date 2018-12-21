@@ -11,10 +11,10 @@ This book is full of examples that you can replicate on your computer.
 You will need:
 
 * A computer running 
-  + Windows (Windows 7 64-bit or late - Windows 10-Pro is recommended)
-  + MacOS
+  + Windows (Windows 7 64-bit or later - Windows 10-Pro is recommended),
+  + MacOS, or
   + Linux (any Linux distro that will run Docker Community Edition, R and RStudio will work)
-* Current versions of [R and RStudio](https://www.datacamp.com/community/tutorials/installing-R-windows-mac-ubuntu) required.
+* Current versions of [R and RStudio](https://www.datacamp.com/community/tutorials/installing-R-windows-mac-ubuntu) [@Vargas2018) required.
 * Docker (instructions below)
 * Our companion package `sqlpetr` [@Muni2018] 
 
@@ -22,26 +22,26 @@ The database we use is PostgreSQL 10, but you do not need to install it - it's i
 
 In addition to the current version of R and RStudio, you will need current versions of the following packages:
 
-* `DBI`
-* `DiagrammeR`
-* `RPostgres`
-* `dbplyr`
-* `devtools`
-* `downloader`
-* `glue`
-* `here`
-* `knitr`
-* `skimr`
-* `tidyverse`
+* `DBI` [@R-DBI]
+* `DiagrammeR` [@R-DiagrammeR]
+* `RPostgres` [@R-RPostgres]
+* `dbplyr` [@R-dbplyr]
+* `devtools` [@R-devtools]
+* `downloader` [@R-downloader]
+* `glue` [@R-glue]
+* `here` [@R-here]
+* `knitr` [@R-knitr]
+* `skimr` [@R-skimr]
+* `tidyverse` [@R-tidyverse]
 
-* `bookdown` (for compiling the book, if you want to)
+* `bookdown` [@R-bookdown] (for compiling the book, if you want to)
 
 ## Installing Docker
 
 Install Docker.  Installation depends on your operating system:
 
-  + [On a Mac](https://docs.docker.com/docker-for-mac/install/)
-  + [On UNIX flavors](https://docs.docker.com/install/#supported-platforms)
+  + [On a Mac](https://docs.docker.com/docker-for-mac/install/) [@Docker2018c]
+  + [On UNIX flavors](https://docs.docker.com/install/#supported-platforms) [@Docker2018b]
   + For Windows, [consider these issues and follow these instructions](https://smithjd.github.io/sql-pet/docker-hosting-for-windows.html).
 
 ## Download the repo
