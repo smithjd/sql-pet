@@ -31,7 +31,7 @@ con <- sp_get_postgres_connection(
   user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
   password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
   dbname = "dvdrental",
-  seconds_to_test = 10
+  seconds_to_test = 30
 )
 ```
 
@@ -191,26 +191,26 @@ one_percent_sample
 
 ```
 ##    rental_id         rental_date inventory_id customer_id
-## 1       1715 2005-06-16 14:37:12         1594         203
-## 2       1716 2005-06-16 14:39:31           20          24
-## 3       1717 2005-06-16 14:47:16         3007         277
-## 4       1718 2005-06-16 14:52:02          288         516
-## 5       1719 2005-06-16 14:55:53         2699         582
-## 6       1720 2005-06-16 15:00:14         3500         543
-## 7       1721 2005-06-16 15:01:36         3521         485
-## 8       1722 2005-06-16 15:12:52         2142         364
-## 9       1723 2005-06-16 15:14:18         2417         259
-## 10      1724 2005-06-16 15:15:43           61         146
-## 11      1725 2005-06-16 15:18:57          726           1
-## 12      1726 2005-06-16 15:19:10          116           3
-## 13      1727 2005-06-16 15:21:47         2951         457
-## 14      1728 2005-06-16 15:29:29         1366          59
-## 15      1729 2005-06-16 15:29:47         3364         523
-## 16      1730 2005-06-16 15:30:01         1372         390
-## 17      1731 2005-06-16 15:32:12         3698         344
-## 18      1732 2005-06-16 15:34:41         2287         129
-## 19      1733 2005-06-16 15:37:07          542         480
-## 20      1734 2005-06-16 15:49:30         1113          94
+## 1       7816 2005-07-28 08:14:12         1422         283
+## 2       7817 2005-07-28 08:20:55          600         259
+## 3       7818 2005-07-28 08:25:00         1672         301
+## 4       7819 2005-07-28 08:27:14         3182         100
+## 5       7820 2005-07-28 08:28:51         4475         459
+## 6       7821 2005-07-28 08:31:23         1184         433
+## 7       7822 2005-07-28 08:31:45         1428         156
+## 8       7823 2005-07-28 08:32:53           84         428
+## 9       7824 2005-07-28 08:34:47         2241         153
+## 10      7825 2005-07-28 08:34:57         4340         348
+## 11      7826 2005-07-28 08:35:51         1473         214
+## 12      7827 2005-07-28 08:37:22          659         422
+## 13      7828 2005-07-28 08:40:46         1710         212
+## 14      7829 2005-07-28 08:43:39          111           5
+## 15      7830 2005-07-28 08:43:49         4492         144
+## 16      7831 2005-07-28 08:44:21         4436         499
+## 17      7832 2005-07-28 08:46:11          284          92
+## 18      7833 2005-07-28 08:46:14         1166         263
+## 19      7834 2005-07-28 08:46:43         4124         278
+## 20      7835 2005-07-28 08:49:39           43         547
 ```
 
 ### Sub-setting variables
@@ -401,8 +401,8 @@ There is no substitute for looking at your data and R provides several ways to j
 sp_print_df(head(rental_tibble))
 ```
 
-<!--html_preserve--><div id="htmlwidget-efd2395bf9e96a68d512" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-efd2395bf9e96a68d512">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[2,3,4,5,6,7],["2005-05-25T05:54:33Z","2005-05-25T06:03:39Z","2005-05-25T06:04:41Z","2005-05-25T06:05:21Z","2005-05-25T06:08:07Z","2005-05-25T06:11:53Z"],[1525,1711,2452,2079,2792,3995],[459,408,333,222,549,269],["2005-05-29T02:40:33Z","2005-06-02T05:12:39Z","2005-06-03T08:43:41Z","2005-06-02T11:33:21Z","2005-05-27T08:32:07Z","2005-05-30T03:34:53Z"],[1,1,2,1,1,2],["2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>rental_id<\/th>\n      <th>rental_date<\/th>\n      <th>inventory_id<\/th>\n      <th>customer_id<\/th>\n      <th>return_date<\/th>\n      <th>staff_id<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-7e23701df4d307869280" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-7e23701df4d307869280">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[2,3,4,5,6,7],["2005-05-25T05:54:33Z","2005-05-25T06:03:39Z","2005-05-25T06:04:41Z","2005-05-25T06:05:21Z","2005-05-25T06:08:07Z","2005-05-25T06:11:53Z"],[1525,1711,2452,2079,2792,3995],[459,408,333,222,549,269],["2005-05-29T02:40:33Z","2005-06-02T05:12:39Z","2005-06-03T08:43:41Z","2005-06-02T11:33:21Z","2005-05-27T08:32:07Z","2005-05-30T03:34:53Z"],[1,1,2,1,1,2],["2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>rental_id<\/th>\n      <th>rental_date<\/th>\n      <th>inventory_id<\/th>\n      <th>customer_id<\/th>\n      <th>return_date<\/th>\n      <th>staff_id<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ### The `summary` function in base
 
@@ -486,7 +486,7 @@ skim(rental_tibble)
 ##  n obs: 16044 
 ##  n variables: 7 
 ## 
-## ── Variable type:integer ───────────────────────────────────────────────────────────
+## ── Variable type:integer ─────────────────────────────────────────────
 ##      variable missing complete     n    mean      sd p0     p25    p50
 ##   customer_id       0    16044 16044  297.14  172.45  1  148     296  
 ##  inventory_id       0    16044 16044 2291.84 1322.21  1 1154    2291  
@@ -498,7 +498,7 @@ skim(rental_tibble)
 ##  12037.25 16049 ▇▇▇▇▇▇▇▇
 ##      2        2 ▇▁▁▁▁▁▁▇
 ## 
-## ── Variable type:POSIXct ───────────────────────────────────────────────────────────
+## ── Variable type:POSIXct ─────────────────────────────────────────────
 ##     variable missing complete     n        min        max     median
 ##  last_update       0    16044 16044 2006-02-15 2006-02-23 2006-02-16
 ##  rental_date       0    16044 16044 2005-05-24 2006-02-14 2005-07-28

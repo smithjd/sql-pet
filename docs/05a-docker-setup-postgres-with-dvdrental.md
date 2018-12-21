@@ -68,19 +68,19 @@ cat(docker_messages, sep = "\n")
 ```
 
 ```
-## Sending build context to Docker daemon  53.63MB
+## Sending build context to Docker daemon  50.41MB
 ## Step 1/4 : FROM postgres:10
 ##  ---> 6eb6c50a02e7
 ## Step 2/4 : WORKDIR /tmp
 ##  ---> Using cache
-##  ---> 851566b61822
+##  ---> 1b3363132e51
 ## Step 3/4 : COPY init-dvdrental.sh /docker-entrypoint-initdb.d/
 ##  ---> Using cache
-##  ---> a41ee6860211
+##  ---> ba58c5f88bef
 ## Step 4/4 : RUN apt-get -qq update &&   apt-get install -y -qq curl zip  > /dev/null 2>&1 &&   curl -Os http://www.postgresqltutorial.com/wp-content/uploads/2017/10/dvdrental.zip &&   unzip dvdrental.zip &&   rm dvdrental.zip &&   chmod ugo+w dvdrental.tar &&   chown postgres dvdrental.tar &&   chmod u+x /docker-entrypoint-initdb.d/init-dvdrental.sh &&   apt-get remove -y curl zip
 ##  ---> Using cache
-##  ---> 9b1114a185a1
-## Successfully built 9b1114a185a1
+##  ---> 22026d9cd960
+## Successfully built 22026d9cd960
 ## Successfully tagged postgres-dvdrental:latest
 ```
 
@@ -117,7 +117,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "3a6ba45f635594439236be173caa81efcdc5ef1f313437f98af22b4b29e73bec"
+## [1] "3003a5c95f4ea65d30f2c6c7fb206a9272c5aca17a0ae9a879fb8b14f3caae70"
 ```
 ## Connect to Postgres with R
 
@@ -219,9 +219,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## 3a6ba45f6355        postgres-dvdrental   "docker-entrypoint.s…"   10 seconds ago      Exited (0) Less than a second ago                       sql-pet
-## 4d1200a07f20        fedora:29            "/bin/bash"              5 days ago          Exited (0) 5 days ago                                   f29
-## 81a5fdbd6042        rocker/geospatial    "/init"                  8 days ago          Exited (0) 8 days ago                                   blissful_greider
+## 3003a5c95f4e        postgres-dvdrental   "docker-entrypoint.s…"   14 seconds ago      Exited (0) Less than a second ago                       sql-pet
 ```
 
 Next time, you can just use this command to start the container: 
