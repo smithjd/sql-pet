@@ -42,7 +42,7 @@ con <- sp_get_postgres_connection(
   user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
   password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
   dbname = "dvdrental",
-  seconds_to_test = 10
+  seconds_to_test = 30
 )
 ```
 
@@ -77,7 +77,7 @@ dbExecute(
 )
 ```
 
-The `film` table has a primary key, film_id, and a foreign key column, language_id.  One cannot insert a new row into the film table with a language_id = 10 because of a constraint on the language_id column.  The language_id value must already exist in the `language` table before the database will allow the new row to be inserted into the table.  
+The `film` table has a primary key, film_id, and a foreign key column, language_id.  One cannot insert a new row into the film table with a language_id = 30 because of a constraint on the language_id column.  The language_id value must already exist in the `language` table before the database will allow the new row to be inserted into the table.  
 
 To work around this inconvenience for the tutorial:
 
@@ -87,13 +87,13 @@ To work around this inconvenience for the tutorial:
 dbExecute(con, "drop table if exists smy_film;")
 ```
 
-2.  we create a new table smy_film from the film table and add a new row with a language_id = 10;
+2.  we create a new table smy_film from the film table and add a new row with a language_id = 30;
 
 ```{r}
 dbExecute(con, "create table smy_film as select * from film;")
 ```
 
-3.  We create a film with language_id = 10;
+3.  We create a film with language_id = 30;
 
 ```{r}
 dbExecute(
@@ -115,7 +115,7 @@ dbExecute(
 ```{r}
 dbGetQuery(
   con,
-  "select film_id,title,description,language_id from smy_film where film_id = 1001;"
+  "select film_id,title,description,language_id from smy_film where film_id = 3001;"
 )
 ```
 
@@ -194,7 +194,7 @@ Explain plans [here](https://robots.thoughtbot.com/reading-an-explain-analyze-qu
 ```{r}
 
 # smy_film <- dplyr::tbl(con, "smy_film") # Lazy
-# x<-smy_film %>% filter(film_id == 1001)  %>% explain()
+# x<-smy_film %>% filter(film_id == 3001)  %>% explain()
 #
 
 
@@ -349,7 +349,7 @@ sp_print_df(rs)
 rs
 ```
 
-The rojs column returns the number of rows found on the keys from the right table, film, and the left table, the language table.  For the "English" row, the language_id and film_lang_id match and a 1000 inner joins were performed.  For language_id = 10 from the right table, there was only 1 join to a non-existant row in the language table on the left.  
+The rojs column returns the number of rows found on the keys from the right table, film, and the left table, the language table.  For the "English" row, the language_id and film_lang_id match and a 1000 inner joins were performed.  For language_id = 30 from the right table, there was only 1 join to a non-existant row in the language table on the left.  
 
 1.  The right outer join always returns all rows from the right table, the driving/key table, if not reduced via a filter()/where clause.  
 2.  All rows that inner join returns all the columns/derived columns specified in the select clause from both the left and right tables.  
@@ -387,7 +387,7 @@ Looking at the SQL output, the full outer join is the combination of the left an
 
 1.  Language_id = 1 is the inner join.
 2.  Language_id = 2 - 6 is the left outer join
-3.  Language_id = 10 is the right outer join.
+3.  Language_id = 30 is the right outer join.
 
 One can also just look at the language_id on the left and language_id_f on the right for a non NA value to see which side  is outer side/driving side of the join.
 
@@ -1122,7 +1122,7 @@ graph <-
   )
 
 # View the graph
-render_graph(graph, height = 1000)
+render_graph(graph, height = 3000)
 ```
 
 ```{r}
