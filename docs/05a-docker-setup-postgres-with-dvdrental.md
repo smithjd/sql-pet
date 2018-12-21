@@ -68,19 +68,19 @@ cat(docker_messages, sep = "\n")
 ```
 
 ```
-## Sending build context to Docker daemon  44.75MB
+## Sending build context to Docker daemon  51.68MB
 ## Step 1/4 : FROM postgres:10
 ##  ---> 6eb6c50a02e7
 ## Step 2/4 : WORKDIR /tmp
 ##  ---> Using cache
-##  ---> 1b3363132e51
+##  ---> 851566b61822
 ## Step 3/4 : COPY init-dvdrental.sh /docker-entrypoint-initdb.d/
 ##  ---> Using cache
-##  ---> ba58c5f88bef
+##  ---> a41ee6860211
 ## Step 4/4 : RUN apt-get -qq update &&   apt-get install -y -qq curl zip  > /dev/null 2>&1 &&   curl -Os http://www.postgresqltutorial.com/wp-content/uploads/2017/10/dvdrental.zip &&   unzip dvdrental.zip &&   rm dvdrental.zip &&   chmod ugo+w dvdrental.tar &&   chown postgres dvdrental.tar &&   chmod u+x /docker-entrypoint-initdb.d/init-dvdrental.sh &&   apt-get remove -y curl zip
 ##  ---> Using cache
-##  ---> 22026d9cd960
-## Successfully built 22026d9cd960
+##  ---> 9b1114a185a1
+## Successfully built 9b1114a185a1
 ## Successfully tagged postgres-dvdrental:latest
 ```
 
@@ -117,7 +117,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "04d5b486059bbd81a612262e21ae7a78eb994bd7be311ccab5c9bcf6b01f8730"
+## [1] "7b8294e8eb88e8f84a804149cb9f6491b60a7818641ed1392f985f660b16537b"
 ```
 ## Connect to Postgres with R
 
@@ -218,8 +218,10 @@ sp_show_all_docker_containers()
 ```
 
 ```
-## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                    PORTS               NAMES
-## 04d5b486059b        postgres-dvdrental   "docker-entrypoint.s…"   15 seconds ago      Exited (0) 1 second ago                       sql-pet
+## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS               NAMES
+## 7b8294e8eb88        postgres-dvdrental   "docker-entrypoint.s…"   10 seconds ago      Exited (0) Less than a second ago                       sql-pet
+## 4d1200a07f20        fedora:29            "/bin/bash"              5 days ago          Exited (0) 5 days ago                                   f29
+## 81a5fdbd6042        rocker/geospatial    "/init"                  8 days ago          Exited (0) 8 days ago                                   blissful_greider
 ```
 
 Next time, you can just use this command to start the container: 

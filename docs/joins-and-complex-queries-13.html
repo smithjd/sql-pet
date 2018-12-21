@@ -458,7 +458,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>verify pet DB is available, it may be stopped.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_show_all_docker_containers</span>()</code></pre>
 <pre><code>## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                     PORTS               NAMES
-## 04d5b486059b        postgres-dvdrental   &quot;docker-entrypoint.s…&quot;   41 seconds ago      Exited (0) 2 seconds ago                       sql-pet</code></pre>
+## 7b8294e8eb88        postgres-dvdrental   &quot;docker-entrypoint.s…&quot;   36 seconds ago      Exited (0) 2 seconds ago                       sql-pet
+## 4d1200a07f20        fedora:29            &quot;/bin/bash&quot;              5 days ago          Exited (0) 5 days ago                          f29
+## 81a5fdbd6042        rocker/geospatial    &quot;/init&quot;                  8 days ago          Exited (0) 8 days ago                          blissful_greider</code></pre>
 <p>Start up the <code>docker-pet</code> container</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_docker_start</span>(<span class="st">&quot;sql-pet&quot;</span>)</code></pre>
 <p>now connect to the database with R</p>
@@ -667,7 +669,7 @@ languages_ij <- language_table %>%
 ##   FROM "language" AS "TBL_LEFT"
 ##   INNER JOIN "smy_film" AS "TBL_RIGHT"
 ##   ON ("TBL_LEFT"."language_id" = "TBL_RIGHT"."language_id")
-## ) "yqtqyysgby"
+## ) "joeopamxsi"
 ## GROUP BY "language_id", "name"
 ```
 
@@ -715,19 +717,19 @@ rs
 
 ```
 ##                                                                                                                     QUERY PLAN
-## 1                                GroupAggregate  (cost=63.04..63.24 rows=6 width=96) (actual time=0.771..0.771 rows=1 loops=1)
+## 1                                GroupAggregate  (cost=63.04..63.24 rows=6 width=96) (actual time=1.093..1.093 rows=1 loops=1)
 ## 2                                                                                                     Group Key: l.language_id
-## 3                                  ->  Sort  (cost=63.04..63.09 rows=18 width=88) (actual time=0.636..0.683 rows=1000 loops=1)
+## 3                                  ->  Sort  (cost=63.04..63.09 rows=18 width=88) (actual time=0.881..0.953 rows=1000 loops=1)
 ## 4                                                                                                      Sort Key: l.language_id
 ## 5                                                                                        Sort Method: quicksort  Memory: 103kB
-## 6                              ->  Hash Join  (cost=1.14..62.67 rows=18 width=88) (actual time=0.019..0.467 rows=1000 loops=1)
+## 6                              ->  Hash Join  (cost=1.14..62.67 rows=18 width=88) (actual time=0.031..0.660 rows=1000 loops=1)
 ## 7                                                                                   Hash Cond: (f.language_id = l.language_id)
-## 8                 ->  Seq Scan on smy_film f  (cost=0.00..59.94 rows=594 width=2) (actual time=0.004..0.133 rows=1001 loops=1)
-## 9                                        ->  Hash  (cost=1.06..1.06 rows=6 width=88) (actual time=0.006..0.006 rows=6 loops=1)
+## 8                 ->  Seq Scan on smy_film f  (cost=0.00..59.94 rows=594 width=2) (actual time=0.006..0.213 rows=1001 loops=1)
+## 9                                        ->  Hash  (cost=1.06..1.06 rows=6 width=88) (actual time=0.011..0.011 rows=6 loops=1)
 ## 10                                                                                Buckets: 1024  Batches: 1  Memory Usage: 9kB
-## 11                     ->  Seq Scan on language l  (cost=0.00..1.06 rows=6 width=88) (actual time=0.002..0.003 rows=6 loops=1)
-## 12                                                                                                     Planning time: 0.095 ms
-## 13                                                                                                    Execution time: 0.794 ms
+## 11                     ->  Seq Scan on language l  (cost=0.00..1.06 rows=6 width=88) (actual time=0.004..0.005 rows=6 loops=1)
+## 12                                                                                                     Planning time: 0.154 ms
+## 13                                                                                                    Execution time: 1.128 ms
 ```
 
 -->
@@ -844,8 +846,8 @@ rs</code></pre>
 <span class="st">  </span><span class="kw">select</span>(join_type, lang_id, language_id, name, rojs)
 
 <span class="kw">sp_print_df</span>(languages_roj)</code></pre>
-<div id="htmlwidget-7624019d6f0f070d76e6" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-7624019d6f0f070d76e6">{"x":{"filter":"none","data":[["1","2"],["rojs","rojs"],[1,0],[1,10],["English             ",null],[1000,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>join_type<\/th>\n      <th>lang_id<\/th>\n      <th>language_id<\/th>\n      <th>name<\/th>\n      <th>rojs<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-98c093fd6ed7835bf1e6" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-98c093fd6ed7835bf1e6">{"x":{"filter":"none","data":[["1","2"],["rojs","rojs"],[1,0],[1,10],["English             ",null],[1000,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>join_type<\/th>\n      <th>lang_id<\/th>\n      <th>language_id<\/th>\n      <th>name<\/th>\n      <th>rojs<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <pre class="sourceCode r"><code class="sourceCode r">languages_roj</code></pre>
 <pre><code>## # A tibble: 2 x 5
 ## # Groups:   join_type, language_id, name [2]
@@ -865,8 +867,8 @@ rs</code></pre>
 <span class="st">order by l.language_id;&quot;</span>
 )
 <span class="kw">sp_print_df</span>(rs)</code></pre>
-<div id="htmlwidget-6f73006006272a457a09" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-6f73006006272a457a09">{"x":{"filter":"none","data":[["1","2"],["roj","roj"],[1,null],[1,10],["English             ",null],[1000,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>join_type<\/th>\n      <th>language_id<\/th>\n      <th>language_id_f<\/th>\n      <th>name<\/th>\n      <th>rojs<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-d9beeccb0e96f59b08be" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-d9beeccb0e96f59b08be">{"x":{"filter":"none","data":[["1","2"],["roj","roj"],[1,null],[1,10],["English             ",null],[1000,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>join_type<\/th>\n      <th>language_id<\/th>\n      <th>language_id_f<\/th>\n      <th>name<\/th>\n      <th>rojs<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <pre class="sourceCode r"><code class="sourceCode r">rs</code></pre>
 <pre><code>##   join_type language_id language_id_f                 name rojs
 ## 1       roj           1             1 English              1000
@@ -889,8 +891,8 @@ rs</code></pre>
 <span class="st">  </span><span class="kw">summarize</span>(<span class="dt">n =</span> <span class="kw">n</span>())
 
 <span class="kw">sp_print_df</span>(languages_foj)</code></pre>
-<div id="htmlwidget-ee66940ca02093084f8c" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-ee66940ca02093084f8c">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7"],[1,2,3,4,5,6,10],["English             ","Italian             ","Japanese            ","Mandarin            ","French              ","German              ",null],["English             ","No Italian              films.","No Japanese             films.","No Mandarin             films.","No French               films.","No German               films.","Alien"],[1000,1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>language_id<\/th>\n      <th>name<\/th>\n      <th>film_lang<\/th>\n      <th>n<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-b8a862f94af4f7400d80" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-b8a862f94af4f7400d80">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7"],[1,2,3,4,5,6,10],["English             ","Italian             ","Japanese            ","Mandarin            ","French              ","German              ",null],["English             ","No Italian              films.","No Japanese             films.","No Mandarin             films.","No French               films.","No German               films.","Alien"],[1000,1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>language_id<\/th>\n      <th>name<\/th>\n      <th>film_lang<\/th>\n      <th>n<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <pre class="sourceCode r"><code class="sourceCode r">languages_foj</code></pre>
 <pre><code>## # A tibble: 7 x 4
 ## # Groups:   language_id, name [?]
@@ -914,8 +916,8 @@ rs</code></pre>
 <span class="st">order by l.language_id;&quot;</span>
 )
 <span class="kw">sp_print_df</span>(rs)</code></pre>
-<div id="htmlwidget-9f6c00f4f782dc9b400b" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-9f6c00f4f782dc9b400b">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7"],[1,2,3,4,5,6,null],["English             ","Italian             ","Japanese            ","Mandarin            ","French              ","German              ",null],[1,null,null,null,null,null,10],[1000,1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>language_id<\/th>\n      <th>name<\/th>\n      <th>language_id_f<\/th>\n      <th>fojs<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-997394317340a02411dd" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-997394317340a02411dd">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7"],[1,2,3,4,5,6,null],["English             ","Italian             ","Japanese            ","Mandarin            ","French              ","German              ",null],[1,null,null,null,null,null,10],[1000,1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>language_id<\/th>\n      <th>name<\/th>\n      <th>language_id_f<\/th>\n      <th>fojs<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <pre class="sourceCode r"><code class="sourceCode r">rs</code></pre>
 <pre><code>##   language_id                 name language_id_f fojs
 ## 1           1 English                          1 1000
@@ -943,8 +945,8 @@ rs</code></pre>
 <span class="st">  </span><span class="kw">summarize</span>(<span class="dt">anti_joins =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">select</span>(type, language_id, name, anti_joins)
 <span class="kw">sp_print_df</span>(languages_aj)</code></pre>
-<div id="htmlwidget-6aab901740f9957b66d6" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-6aab901740f9957b66d6">{"x":{"filter":"none","data":[["1","2","3","4","5"],["anti_join","anti_join","anti_join","anti_join","anti_join"],[2,3,4,5,6],["Italian             ","Japanese            ","Mandarin            ","French              ","German              "],[1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>type<\/th>\n      <th>language_id<\/th>\n      <th>name<\/th>\n      <th>anti_joins<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-f15031db9419dba71ccc" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-f15031db9419dba71ccc">{"x":{"filter":"none","data":[["1","2","3","4","5"],["anti_join","anti_join","anti_join","anti_join","anti_join"],[2,3,4,5,6],["Italian             ","Japanese            ","Mandarin            ","French              ","German              "],[1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>type<\/th>\n      <th>language_id<\/th>\n      <th>name<\/th>\n      <th>anti_joins<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <pre class="sourceCode r"><code class="sourceCode r">languages_aj</code></pre>
 <pre><code>## # A tibble: 5 x 4
 ## # Groups:   type, language_id [5]
@@ -968,8 +970,8 @@ rs</code></pre>
 <span class="st">order by l.language_id;&quot;</span>
 )
 <span class="kw">sp_print_df</span>(rs)</code></pre>
-<div id="htmlwidget-af6a8d4ad53ac7e3af7c" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-af6a8d4ad53ac7e3af7c">{"x":{"filter":"none","data":[["1","2","3","4","5"],[2,3,4,5,6],["Italian             ","Japanese            ","Mandarin            ","French              ","German              "],[1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>language_id<\/th>\n      <th>name<\/th>\n      <th>fojs<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-9bb9c053bba52c45fb9d" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-9bb9c053bba52c45fb9d">{"x":{"filter":"none","data":[["1","2","3","4","5"],[2,3,4,5,6],["Italian             ","Japanese            ","Mandarin            ","French              ","German              "],[1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>language_id<\/th>\n      <th>name<\/th>\n      <th>fojs<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <pre class="sourceCode r"><code class="sourceCode r">rs</code></pre>
 <pre><code>##   language_id                 name fojs
 ## 1           2 Italian                 1
@@ -989,8 +991,8 @@ rs</code></pre>
 <span class="st">order by l.language_id;&quot;</span>
 )
 <span class="kw">sp_print_df</span>(rs)</code></pre>
-<div id="htmlwidget-006b968011f6df0a3f9c" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-006b968011f6df0a3f9c">{"x":{"filter":"none","data":[["1","2","3","4","5"],[2,3,4,5,6],["Italian             ","Japanese            ","Mandarin            ","French              ","German              "],[1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>language_id<\/th>\n      <th>name<\/th>\n      <th>fojs<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-fddbc9f3c720c43ca3cc" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-fddbc9f3c720c43ca3cc">{"x":{"filter":"none","data":[["1","2","3","4","5"],[2,3,4,5,6],["Italian             ","Japanese            ","Mandarin            ","French              ","German              "],[1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>language_id<\/th>\n      <th>name<\/th>\n      <th>fojs<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <pre class="sourceCode r"><code class="sourceCode r">rs</code></pre>
 <pre><code>##   language_id                 name fojs
 ## 1           2 Italian                 1
@@ -1010,8 +1012,8 @@ rs</code></pre>
 <span class="st">&quot;</span>
 )
 <span class="kw">sp_print_df</span>(rs)</code></pre>
-<div id="htmlwidget-7e045ce1470e43112edd" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-7e045ce1470e43112edd">{"x":{"filter":"none","data":[["1","2","3","4","5"],[2,3,4,5,6],["Italian             ","Japanese            ","Mandarin            ","French              ","German              "],[1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>language_id<\/th>\n      <th>name<\/th>\n      <th>fojs<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-fe6a65bdc0771434c459" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-fe6a65bdc0771434c459">{"x":{"filter":"none","data":[["1","2","3","4","5"],[2,3,4,5,6],["Italian             ","Japanese            ","Mandarin            ","French              ","German              "],[1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>language_id<\/th>\n      <th>name<\/th>\n      <th>fojs<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <pre class="sourceCode r"><code class="sourceCode r">rs</code></pre>
 <pre><code>##   language_id                 name fojs
 ## 1           2 Italian                 1
@@ -1053,11 +1055,11 @@ sql_aj3 &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(
 <div id="sql-costs" class="section level5">
 <h5><span class="header-section-number">13.6.0.0.1</span> SQL Costs</h5>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">glue</span>(<span class="st">&quot;sql_aj1 loj-null costs=&quot;</span>, sql_aj1[<span class="dv">1</span>, <span class="dv">1</span>]))</code></pre>
-<pre><code>## sql_aj1 loj-null costs=GroupAggregate  (cost=68.56..68.61 rows=3 width=96) (actual time=0.636..0.639 rows=5 loops=1)</code></pre>
+<pre><code>## sql_aj1 loj-null costs=GroupAggregate  (cost=68.56..68.61 rows=3 width=96) (actual time=0.707..0.710 rows=5 loops=1)</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">glue</span>(<span class="st">&quot;sql_aj2 not in costs=&quot;</span>, sql_aj2[<span class="dv">1</span>, <span class="dv">1</span>]))</code></pre>
-<pre><code>## sql_aj2 not in costs=GroupAggregate  (cost=67.60..67.65 rows=3 width=96) (actual time=0.362..0.364 rows=5 loops=1)</code></pre>
+<pre><code>## sql_aj2 not in costs=GroupAggregate  (cost=67.60..67.65 rows=3 width=96) (actual time=0.574..0.577 rows=5 loops=1)</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">glue</span>(<span class="st">&quot;sql_aj3 not exist costs=&quot;</span>, sql_aj3[<span class="dv">1</span>, <span class="dv">1</span>]))</code></pre>
-<pre><code>## sql_aj3 not exist costs=GroupAggregate  (cost=24.24..24.30 rows=3 width=96) (actual time=0.076..0.078 rows=5 loops=1)</code></pre>
+<pre><code>## sql_aj3 not exist costs=GroupAggregate  (cost=24.24..24.30 rows=3 width=96) (actual time=0.057..0.059 rows=5 loops=1)</code></pre>
 </div>
 </div>
 <div id="dplyr-anti-joins" class="section level2">
@@ -1078,7 +1080,7 @@ daj1 &lt;-
 ## WHERE NOT EXISTS (
 ##   SELECT 1 FROM &quot;rental&quot; AS &quot;TBL_RIGHT&quot;
 ##   WHERE (&quot;TBL_LEFT&quot;.&quot;customer_id&quot; = &quot;TBL_RIGHT&quot;.&quot;customer_id&quot;)
-## )) &quot;mdaqlbabmx&quot;</code></pre>
+## )) &quot;ptpzlvnjyx&quot;</code></pre>
 <pre><code>## </code></pre>
 <pre><code>## &lt;PLAN&gt;
 ## Hash Anti Join  (cost=510.99..552.63 rows=300 width=334)
@@ -1101,7 +1103,7 @@ daj2 &lt;-
 ##   FROM &quot;customer&quot; AS &quot;TBL_LEFT&quot;
 ##   LEFT JOIN &quot;rental&quot; AS &quot;TBL_RIGHT&quot;
 ##   ON (&quot;TBL_LEFT&quot;.&quot;customer_id&quot; = &quot;TBL_RIGHT&quot;.&quot;customer_id&quot;)
-## ) &quot;ykpbqdpaio&quot;
+## ) &quot;srjzhyzgbn&quot;
 ## WHERE (((&quot;rental_id&quot;) IS NULL))</code></pre>
 <pre><code>## </code></pre>
 <pre><code>## &lt;PLAN&gt;
@@ -1136,23 +1138,23 @@ Hash Right Join  (cost=22.48..375.33 rows=1 width=45)
 <span class="st">order by c.customer_id;&quot;</span>
 )
 <span class="kw">sp_print_df</span>(sql_aj1)</code></pre>
-<div id="htmlwidget-0e6e7dcc9774135bef9d" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-0e6e7dcc9774135bef9d">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13"],["GroupAggregate  (cost=564.97..570.22 rows=300 width=12) (actual time=4.871..4.871 rows=1 loops=1)","  Group Key: c.customer_id","  -&gt;  Sort  (cost=564.97..565.72 rows=300 width=4) (actual time=4.868..4.869 rows=1 loops=1)","        Sort Key: c.customer_id","        Sort Method: quicksort  Memory: 25kB","        -&gt;  Hash Anti Join  (cost=510.99..552.63 rows=300 width=4) (actual time=4.860..4.861 rows=1 loops=1)","              Hash Cond: (c.customer_id = r.customer_id)","              -&gt;  Seq Scan on customer c  (cost=0.00..14.99 rows=599 width=4) (actual time=0.020..0.094 rows=600 loops=1)","              -&gt;  Hash  (cost=310.44..310.44 rows=16044 width=2) (actual time=4.630..4.630 rows=16044 loops=1)","                    Buckets: 16384  Batches: 1  Memory Usage: 661kB","                    -&gt;  Seq Scan on rental r  (cost=0.00..310.44 rows=16044 width=2) (actual time=0.015..2.372 rows=16044 loops=1)","Planning time: 0.096 ms","Execution time: 4.925 ms"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>QUERY PLAN<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-b4ba0d16d446115b3182" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-b4ba0d16d446115b3182">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13"],["GroupAggregate  (cost=564.97..570.22 rows=300 width=12) (actual time=8.940..8.940 rows=1 loops=1)","  Group Key: c.customer_id","  -&gt;  Sort  (cost=564.97..565.72 rows=300 width=4) (actual time=8.936..8.936 rows=1 loops=1)","        Sort Key: c.customer_id","        Sort Method: quicksort  Memory: 25kB","        -&gt;  Hash Anti Join  (cost=510.99..552.63 rows=300 width=4) (actual time=8.925..8.926 rows=1 loops=1)","              Hash Cond: (c.customer_id = r.customer_id)","              -&gt;  Seq Scan on customer c  (cost=0.00..14.99 rows=599 width=4) (actual time=0.037..0.169 rows=600 loops=1)","              -&gt;  Hash  (cost=310.44..310.44 rows=16044 width=2) (actual time=8.535..8.535 rows=16044 loops=1)","                    Buckets: 16384  Batches: 1  Memory Usage: 661kB","                    -&gt;  Seq Scan on rental r  (cost=0.00..310.44 rows=16044 width=2) (actual time=0.020..4.935 rows=16044 loops=1)","Planning time: 0.178 ms","Execution time: 8.981 ms"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>QUERY PLAN<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script>
 <pre class="sourceCode r"><code class="sourceCode r">sql_aj1</code></pre>
 <pre><code>##                                                                                                                            QUERY PLAN
-## 1                                   GroupAggregate  (cost=564.97..570.22 rows=300 width=12) (actual time=4.871..4.871 rows=1 loops=1)
+## 1                                   GroupAggregate  (cost=564.97..570.22 rows=300 width=12) (actual time=8.940..8.940 rows=1 loops=1)
 ## 2                                                                                                            Group Key: c.customer_id
-## 3                                          -&gt;  Sort  (cost=564.97..565.72 rows=300 width=4) (actual time=4.868..4.869 rows=1 loops=1)
+## 3                                          -&gt;  Sort  (cost=564.97..565.72 rows=300 width=4) (actual time=8.936..8.936 rows=1 loops=1)
 ## 4                                                                                                             Sort Key: c.customer_id
 ## 5                                                                                                Sort Method: quicksort  Memory: 25kB
-## 6                                -&gt;  Hash Anti Join  (cost=510.99..552.63 rows=300 width=4) (actual time=4.860..4.861 rows=1 loops=1)
+## 6                                -&gt;  Hash Anti Join  (cost=510.99..552.63 rows=300 width=4) (actual time=8.925..8.926 rows=1 loops=1)
 ## 7                                                                                          Hash Cond: (c.customer_id = r.customer_id)
-## 8                         -&gt;  Seq Scan on customer c  (cost=0.00..14.99 rows=599 width=4) (actual time=0.020..0.094 rows=600 loops=1)
-## 9                                    -&gt;  Hash  (cost=310.44..310.44 rows=16044 width=2) (actual time=4.630..4.630 rows=16044 loops=1)
+## 8                         -&gt;  Seq Scan on customer c  (cost=0.00..14.99 rows=599 width=4) (actual time=0.037..0.169 rows=600 loops=1)
+## 9                                    -&gt;  Hash  (cost=310.44..310.44 rows=16044 width=2) (actual time=8.535..8.535 rows=16044 loops=1)
 ## 10                                                                                    Buckets: 16384  Batches: 1  Memory Usage: 661kB
-## 11                     -&gt;  Seq Scan on rental r  (cost=0.00..310.44 rows=16044 width=2) (actual time=0.015..2.372 rows=16044 loops=1)
-## 12                                                                                                            Planning time: 0.096 ms
-## 13                                                                                                           Execution time: 4.925 ms</code></pre>
+## 11                     -&gt;  Seq Scan on rental r  (cost=0.00..310.44 rows=16044 width=2) (actual time=0.020..4.935 rows=16044 loops=1)
+## 12                                                                                                            Planning time: 0.178 ms
+## 13                                                                                                           Execution time: 8.981 ms</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r">sql_aj3 &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(
   con,
   <span class="st">&quot;explain analyze </span>
@@ -1164,9 +1166,9 @@ Hash Right Join  (cost=22.48..375.33 rows=1 width=45)
 )
 
 <span class="kw">print</span>(<span class="kw">glue</span>(<span class="st">&quot;sql_aj1 loj-null costs=&quot;</span>, sql_aj1[<span class="dv">1</span>, <span class="dv">1</span>]))</code></pre>
-<pre><code>## sql_aj1 loj-null costs=GroupAggregate  (cost=564.97..570.22 rows=300 width=12) (actual time=4.871..4.871 rows=1 loops=1)</code></pre>
+<pre><code>## sql_aj1 loj-null costs=GroupAggregate  (cost=564.97..570.22 rows=300 width=12) (actual time=8.940..8.940 rows=1 loops=1)</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">glue</span>(<span class="st">&quot;sql_aj3 not exist costs=&quot;</span>, sql_aj3[<span class="dv">1</span>, <span class="dv">1</span>]))</code></pre>
-<pre><code>## sql_aj3 not exist costs=HashAggregate  (cost=554.13..557.13 rows=300 width=12) (actual time=4.185..4.187 rows=1 loops=1)</code></pre>
+<pre><code>## sql_aj3 not exist costs=HashAggregate  (cost=554.13..557.13 rows=300 width=12) (actual time=5.709..5.711 rows=1 loops=1)</code></pre>
 </div>
 </div>
 <div id="exercises-1" class="section level2">
@@ -1188,8 +1190,8 @@ Hash Right Join  (cost=22.48..375.33 rows=1 width=45)
 <span class="st">                 &quot;</span>
 )
 <span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs))</code></pre>
-<div id="htmlwidget-bc27cb55173083312d56" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-bc27cb55173083312d56">{"x":{"filter":"none","data":[["1"],["Sophie"],["Yang"],["email@email.com"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-106f0d519fa2a880497c" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-106f0d519fa2a880497c">{"x":{"filter":"none","data":[["1"],["Sophie"],["Yang"],["email@email.com"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script>
 <p>&lt;– Add dplyr semi-join example –&gt;</p>
 </div>
 </div>
@@ -1222,8 +1224,8 @@ Hash Right Join  (cost=22.48..375.33 rows=1 width=45)
 <span class="st">                &quot;</span>
 )
 <span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs))</code></pre>
-<div id="htmlwidget-094dc778ad69c2478652" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-094dc778ad69c2478652">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["actor","address","category","city","country","customer"],[200,603,16,600,109,600]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>tbl_name<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":2},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-e41ad5d83ff9af913db3" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-e41ad5d83ff9af913db3">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["actor","address","category","city","country","customer"],[200,603,16,600,109,600]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>tbl_name<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":2},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <pre class="sourceCode r"><code class="sourceCode r">rs</code></pre>
 <pre><code>##         tbl_name count
 ## 1          actor   200
@@ -1280,8 +1282,8 @@ rows_per_table</code></pre>
 <span class="st">                &quot;</span>
 )
 <span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs))</code></pre>
-<div id="htmlwidget-db6b2dd6fca8b445f64c" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-db6b2dd6fca8b445f64c">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[1,5,6,2,3,4],["English             ","French              ","German              ","Italian             ","Japanese            ","Mandarin            "],[1000,0,0,0,0,0]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>id<\/th>\n      <th>name<\/th>\n      <th>total<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-6fe8a1ce9ce4a2efef67" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-6fe8a1ce9ce4a2efef67">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[1,5,6,2,3,4],["English             ","French              ","German              ","Italian             ","Japanese            ","Mandarin            "],[1000,0,0,0,0,0]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>id<\/th>\n      <th>name<\/th>\n      <th>total<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <pre class="sourceCode r"><code class="sourceCode r">rs</code></pre>
 <pre><code>##   id                 name total
 ## 1  1 English               1000
@@ -1302,8 +1304,8 @@ rows_per_table</code></pre>
 <span class="st">order by l.language_id;&quot;</span>
 )
 <span class="kw">sp_print_df</span>(rs)</code></pre>
-<div id="htmlwidget-23460a38c046441591db" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-23460a38c046441591db">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7"],[1,2,3,4,5,6,null],["English             ","Italian             ","Japanese            ","Mandarin            ","French              ","German              ",null],[1,null,null,null,null,null,10],[1000,1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>language_id<\/th>\n      <th>name<\/th>\n      <th>language_id_f<\/th>\n      <th>fojs<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-70bfb738d3cb7010673b" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-70bfb738d3cb7010673b">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7"],[1,2,3,4,5,6,null],["English             ","Italian             ","Japanese            ","Mandarin            ","French              ","German              ",null],[1,null,null,null,null,null,10],[1000,1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>language_id<\/th>\n      <th>name<\/th>\n      <th>language_id_f<\/th>\n      <th>fojs<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <pre class="sourceCode r"><code class="sourceCode r">rs</code></pre>
 <pre><code>##   language_id                 name language_id_f fojs
 ## 1           1 English                          1 1000
@@ -1333,8 +1335,8 @@ rows_per_table</code></pre>
 <span class="st">                &quot;</span>
 )
 <span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs))</code></pre>
-<div id="htmlwidget-3f79c65bc8df4502cbec" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-3f79c65bc8df4502cbec">{"x":{"filter":"none","data":[["1","2"],[2,1],[31059.92,30252.12],[7304,7292]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>store_id<\/th>\n      <th>amt<\/th>\n      <th>cnt<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-4e73109cff431979cf56" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-4e73109cff431979cf56">{"x":{"filter":"none","data":[["1","2"],[2,1],[31059.92,30252.12],[7304,7292]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>store_id<\/th>\n      <th>amt<\/th>\n      <th>cnt<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <div id="exercise-dplyr-store-revenue-stream" class="section level4">
 <h4><span class="header-section-number">13.9.1.1</span> Exercise dplyr store revenue stream</h4>
 <p>Complete the following code block to return the payments made to each store.</p>
@@ -1401,8 +1403,8 @@ store_revenue</code></pre>
 <span class="st">&quot;</span>
 )
 <span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs))</code></pre>
-<div id="htmlwidget-c3bd37493b8dfd311140" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-c3bd37493b8dfd311140">{"x":{"filter":"none","data":[["1","2"],[1,2],[713,739],[7331,7265],[30498.71,30813.33],[8044,8004],[4.16,4.24],[2966.08,3133.36]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>store<\/th>\n      <th>open<\/th>\n      <th>paid<\/th>\n      <th>paid_amt<\/th>\n      <th>rentals<\/th>\n      <th>avg_price<\/th>\n      <th>est_balance<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-b9fd76df429613c72aed" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-b9fd76df429613c72aed">{"x":{"filter":"none","data":[["1","2"],[1,2],[713,739],[7331,7265],[30498.71,30813.33],[8044,8004],[4.16,4.24],[2966.08,3133.36]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>store<\/th>\n      <th>open<\/th>\n      <th>paid<\/th>\n      <th>paid_amt<\/th>\n      <th>rentals<\/th>\n      <th>avg_price<\/th>\n      <th>est_balance<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <pre class="sourceCode r"><code class="sourceCode r">rs</code></pre>
 <pre><code>##   store open paid paid_amt rentals avg_price est_balance
 ## 1     1  713 7331 30498.71    8044      4.16     2966.08
@@ -1458,8 +1460,8 @@ est_bal</code></pre>
 <span class="st">;&quot;</span>
 )
 <span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs))</code></pre>
-<div id="htmlwidget-7d0fdc789003d2a2c892" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-7d0fdc789003d2a2c892">{"x":{"filter":"none","data":[["1"],[4297.48],[1452]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>open_amt<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-e33dfd6a9419fb82964d" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-e33dfd6a9419fb82964d">{"x":{"filter":"none","data":[["1"],[4297.48],[1452]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>open_amt<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <pre class="sourceCode r"><code class="sourceCode r">rs</code></pre>
 <pre><code>##   open_amt count
 ## 1  4297.48  1452</code></pre>
@@ -1521,8 +1523,8 @@ act_bal</code></pre>
 <span class="st">                 ;&quot;</span>
 )
 <span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs))</code></pre>
-<div id="htmlwidget-da794e7025e1c0cad5aa" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-da794e7025e1c0cad5aa">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[293,307,316,299,274,326],["Mae","Joseph","Steven","James","Naomi","Jose"],["Fletcher","Joy","Curley","Gannon","Jennings","Andrew"],[35.9,31.9,31.9,30.91,29.92,28.93],[10,10,10,9,8,7]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>open_amt<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,4,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-01b7adfd82b9d646cf4a" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-01b7adfd82b9d646cf4a">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[293,307,316,299,274,326],["Mae","Joseph","Steven","James","Naomi","Jose"],["Fletcher","Joy","Curley","Gannon","Jennings","Andrew"],[35.9,31.9,31.9,30.91,29.92,28.93],[10,10,10,9,8,7]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>open_amt<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,4,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <pre class="sourceCode r"><code class="sourceCode r">rs</code></pre>
 <pre><code>##    customer_id first_name   last_name open_amt count
 ## 1          293        Mae    Fletcher    35.90    10
@@ -1573,8 +1575,8 @@ act_bal</code></pre>
 <span class="st">;&quot;</span>
 )
 <span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs))</code></pre>
-<div id="htmlwidget-a58ff1d08fd29efe7655" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-a58ff1d08fd29efe7655">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[103,738,489,730,767,331],["Bucket Brotherhood","Rocketeer Mother","Juggler Hardly","Ridgemont Submarine","Scalawag Duck","Forward Temple"],[4.99,0.99,0.99,0.99,4.99,2.99],[169.66,32.67,31.68,31.68,159.68,95.68],[34,33,32,32,32,32]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>film_id<\/th>\n      <th>title<\/th>\n      <th>rental_rate<\/th>\n      <th>revenue<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-4ec64b9a6e1ed50bbfa7" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-4ec64b9a6e1ed50bbfa7">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[103,738,489,730,767,331],["Bucket Brotherhood","Rocketeer Mother","Juggler Hardly","Ridgemont Submarine","Scalawag Duck","Forward Temple"],[4.99,0.99,0.99,0.99,4.99,2.99],[169.66,32.67,31.68,31.68,159.68,95.68],[34,33,32,32,32,32]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>film_id<\/th>\n      <th>title<\/th>\n      <th>rental_rate<\/th>\n      <th>revenue<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <pre class="sourceCode r"><code class="sourceCode r">rs</code></pre>
 <pre><code>##    film_id               title rental_rate revenue count
 ## 1      103  Bucket Brotherhood        4.99  169.66    34
@@ -1619,8 +1621,8 @@ act_bal</code></pre>
 <span class="st">                 ;&quot;</span>
 )
 <span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs))</code></pre>
-<div id="htmlwidget-9f97dd712a6b797dabcd" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-9f97dd712a6b797dabcd">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[103,767,973,31,369,1000],["Bucket Brotherhood","Scalawag Duck","Wife Turn","Apache Divine","Goodfellas Salute","Zorro Ark"],[4.99,4.99,4.99,4.99,4.99,4.99],[169.66,159.68,154.69,154.69,154.69,154.69],[34,32,31,31,31,31]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>film_id<\/th>\n      <th>title<\/th>\n      <th>rental_rate<\/th>\n      <th>revenue<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-114c7a952659468f5dce" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-114c7a952659468f5dce">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[103,767,973,31,369,1000],["Bucket Brotherhood","Scalawag Duck","Wife Turn","Apache Divine","Goodfellas Salute","Zorro Ark"],[4.99,4.99,4.99,4.99,4.99,4.99],[169.66,159.68,154.69,154.69,154.69,154.69],[34,32,31,31,31,31]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>film_id<\/th>\n      <th>title<\/th>\n      <th>rental_rate<\/th>\n      <th>revenue<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="which-films-are-in-one-store-but-not-the-other." class="section level3">
 <h3><span class="header-section-number">13.9.7</span> which films are in one store but not the other.</h3>
@@ -1644,8 +1646,8 @@ act_bal</code></pre>
 <span class="st">               &quot;</span>
 )
 <span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs))</code></pre>
-<div id="htmlwidget-4cd997c8fd551a492d0a" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-4cd997c8fd551a492d0a">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[2,3,5,8,13,20],["Ace Goldfinger","Adaptation Holes","African Egg","Airport Pollock","Ali Forever","Amelie Hellfighters"],[4.99,2.99,2.99,4.99,4.99,4.99],[null,null,null,null,null,1],[null,null,null,null,null,3],[2,2,2,2,2,null],[3,4,3,4,4,null]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>film_id<\/th>\n      <th>title<\/th>\n      <th>rental_rate<\/th>\n      <th>store_id<\/th>\n      <th>count<\/th>\n      <th>store_id..6<\/th>\n      <th>count..7<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4,5,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-2a8a97c0e151a2394e42" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2a8a97c0e151a2394e42">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[2,3,5,8,13,20],["Ace Goldfinger","Adaptation Holes","African Egg","Airport Pollock","Ali Forever","Amelie Hellfighters"],[4.99,2.99,2.99,4.99,4.99,4.99],[null,null,null,null,null,1],[null,null,null,null,null,3],[2,2,2,2,2,null],[3,4,3,4,4,null]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>film_id<\/th>\n      <th>title<\/th>\n      <th>rental_rate<\/th>\n      <th>store_id<\/th>\n      <th>count<\/th>\n      <th>store_id..6<\/th>\n      <th>count..7<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4,5,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="compute-the-outstanding-balance." class="section level3">
 <h3><span class="header-section-number">13.9.8</span> Compute the outstanding balance.</h3>
@@ -1663,8 +1665,8 @@ act_bal</code></pre>
 <span class="st">                 ;&quot;</span>
 )
 <span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs))</code></pre>
-<div id="htmlwidget-0816a7ee5e682c081a92" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-0816a7ee5e682c081a92">{"x":{"filter":"none","data":[["1"],[4297.48],[1452]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>open_amt<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-babfaab7100e26407953" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-babfaab7100e26407953">{"x":{"filter":"none","data":[["1"],[4297.48],[1452]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>open_amt<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <div id="different-strategies-for-interacting-with-the-database" class="section level2">
@@ -1681,14 +1683,14 @@ dbClearResult: remove pending query results from the database to your R environm
 <p>How many customers are there in the DVD Rental System</p>
 <pre class="sourceCode r"><code class="sourceCode r">rs1 &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con, <span class="st">&quot;select * from customer;&quot;</span>)
 <span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs1))</code></pre>
-<div id="htmlwidget-85ce7e73d3108770f135" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-85ce7e73d3108770f135">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[524,1,2,3,4,5],[1,1,1,1,2,1],["Jared","Mary","Patricia","Linda","Barbara","Elizabeth"],["Ely","Smith","Johnson","Williams","Jones","Brown"],["jared.ely@sakilacustomer.org","mary.smith@sakilacustomer.org","patricia.johnson@sakilacustomer.org","linda.williams@sakilacustomer.org","barbara.jones@sakilacustomer.org","elizabeth.brown@sakilacustomer.org"],[530,5,6,7,8,9],[true,true,true,true,true,true],["2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14"],["2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z"],[1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>address_id<\/th>\n      <th>activebool<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n      <th>active<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,6,10]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-65151c3094249a3e2f52" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-65151c3094249a3e2f52">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[524,1,2,3,4,5],[1,1,1,1,2,1],["Jared","Mary","Patricia","Linda","Barbara","Elizabeth"],["Ely","Smith","Johnson","Williams","Jones","Brown"],["jared.ely@sakilacustomer.org","mary.smith@sakilacustomer.org","patricia.johnson@sakilacustomer.org","linda.williams@sakilacustomer.org","barbara.jones@sakilacustomer.org","elizabeth.brown@sakilacustomer.org"],[530,5,6,7,8,9],[true,true,true,true,true,true],["2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14"],["2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z"],[1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>address_id<\/th>\n      <th>activebool<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n      <th>active<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,6,10]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <pre class="sourceCode r"><code class="sourceCode r">pco &lt;-<span class="st"> </span><span class="kw">dbSendQuery</span>(con, <span class="st">&quot;select * from customer;&quot;</span>)
 rs2 &lt;-<span class="st"> </span><span class="kw">dbFetch</span>(pco)
 <span class="kw">dbClearResult</span>(pco)
 <span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs2))</code></pre>
-<div id="htmlwidget-5f56bfa4f68ce2b2b969" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-5f56bfa4f68ce2b2b969">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[524,1,2,3,4,5],[1,1,1,1,2,1],["Jared","Mary","Patricia","Linda","Barbara","Elizabeth"],["Ely","Smith","Johnson","Williams","Jones","Brown"],["jared.ely@sakilacustomer.org","mary.smith@sakilacustomer.org","patricia.johnson@sakilacustomer.org","linda.williams@sakilacustomer.org","barbara.jones@sakilacustomer.org","elizabeth.brown@sakilacustomer.org"],[530,5,6,7,8,9],[true,true,true,true,true,true],["2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14"],["2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z"],[1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>address_id<\/th>\n      <th>activebool<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n      <th>active<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,6,10]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-5f8b466bf138a03c12f9" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-5f8b466bf138a03c12f9">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[524,1,2,3,4,5],[1,1,1,1,2,1],["Jared","Mary","Patricia","Linda","Barbara","Elizabeth"],["Ely","Smith","Johnson","Williams","Jones","Brown"],["jared.ely@sakilacustomer.org","mary.smith@sakilacustomer.org","patricia.johnson@sakilacustomer.org","linda.williams@sakilacustomer.org","barbara.jones@sakilacustomer.org","elizabeth.brown@sakilacustomer.org"],[530,5,6,7,8,9],[true,true,true,true,true,true],["2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14"],["2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z"],[1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>address_id<\/th>\n      <th>activebool<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n      <th>active<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,6,10]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="use-dbexecute" class="section level3">
 <h3><span class="header-section-number">13.10.2</span> Use dbExecute</h3>
@@ -1718,11 +1720,11 @@ rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(
 <span class="st">                 &quot;</span>
 )
 <span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs))</code></pre>
-<div id="htmlwidget-1b030c8c450f4c7e8427" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-1b030c8c450f4c7e8427">{"x":{"filter":"none","data":[["1"],["Sophie"],["Yang"],["email@email.com"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-f1e144ae1cbe8a4f58ce" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-f1e144ae1cbe8a4f58ce">{"x":{"filter":"none","data":[["1"],["Sophie"],["Yang"],["email@email.com"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">View</span>(dplyr_tbl_loj)</code></pre>
-<div id="htmlwidget-9a1f3579fb2e49ddc7dd" style="width:672px;height:1000px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-9a1f3579fb2e49ddc7dd">{"x":{"diagram":"digraph {\n\ngraph [layout = \"neato\",\n       outputorder = \"edgesfirst\",\n       bgcolor = \"white\"]\n\nnode [fontname = \"Helvetica\",\n      fontsize = \"10\",\n      shape = \"circle\",\n      fixedsize = \"true\",\n      width = \"0.5\",\n      style = \"filled\",\n      fillcolor = \"aliceblue\",\n      color = \"gray70\",\n      fontcolor = \"gray50\"]\n\nedge [fontname = \"Helvetica\",\n     fontsize = \"8\",\n     len = \"1.5\",\n     color = \"gray80\",\n     arrowsize = \"0.5\"]\n\n  \"1\" [label = \"actor\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"2\" [label = \"address\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"3\" [label = \"category\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"4\" [label = \"city\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"5\" [label = \"country\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"6\" [label = \"customer\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"7\" [label = \"film\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"8\" [label = \"film_actor\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"9\" [label = \"film_category\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"10\" [label = \"inventory\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"11\" [label = \"language\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"12\" [label = \"payment\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"13\" [label = \"rental\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"14\" [label = \"staff\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"15\" [label = \"store\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n\"2\"->\"4\" [label = \"fk_address_city\", fontsize = \"15\"] \n\"4\"->\"5\" [label = \"fk_city\", fontsize = \"15\"] \n\"6\"->\"2\" [label = \"customer_address_id_fkey\", fontsize = \"15\"] \n\"7\"->\"11\" [label = \"film_language_id_fkey\", fontsize = \"15\"] \n\"8\"->\"1\" [label = \"film_actor_actor_id_fkey\", fontsize = \"15\"] \n\"8\"->\"7\" [label = \"film_actor_film_id_fkey\", fontsize = \"15\"] \n\"9\"->\"3\" [label = \"film_category_category_id_fkey\", fontsize = \"15\"] \n\"9\"->\"7\" [label = \"film_category_film_id_fkey\", fontsize = \"15\"] \n\"10\"->\"7\" [label = \"inventory_film_id_fkey\", fontsize = \"15\"] \n\"12\"->\"14\" [label = \"payment_staff_id_fkey\", fontsize = \"15\"] \n\"12\"->\"6\" [label = \"payment_customer_id_fkey\", fontsize = \"15\"] \n\"12\"->\"13\" [label = \"payment_rental_id_fkey\", fontsize = \"15\"] \n\"13\"->\"6\" [label = \"rental_customer_id_fkey\", fontsize = \"15\"] \n\"13\"->\"14\" [label = \"rental_staff_id_key\", fontsize = \"15\"] \n\"13\"->\"10\" [label = \"rental_inventory_id_fkey\", fontsize = \"15\"] \n\"14\"->\"2\" [label = \"staff_address_id_fkey\", fontsize = \"15\"] \n\"15\"->\"2\" [label = \"store_address_id_fkey\", fontsize = \"15\"] \n\"15\"->\"14\" [label = \"store_manager_staff_id_fkey\", fontsize = \"15\"] \n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-dc405877717e905955f7" style="width:672px;height:1000px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-dc405877717e905955f7">{"x":{"diagram":"digraph {\n\ngraph [layout = \"neato\",\n       outputorder = \"edgesfirst\",\n       bgcolor = \"white\"]\n\nnode [fontname = \"Helvetica\",\n      fontsize = \"10\",\n      shape = \"circle\",\n      fixedsize = \"true\",\n      width = \"0.5\",\n      style = \"filled\",\n      fillcolor = \"aliceblue\",\n      color = \"gray70\",\n      fontcolor = \"gray50\"]\n\nedge [fontname = \"Helvetica\",\n     fontsize = \"8\",\n     len = \"1.5\",\n     color = \"gray80\",\n     arrowsize = \"0.5\"]\n\n  \"1\" [label = \"actor\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"2\" [label = \"address\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"3\" [label = \"category\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"4\" [label = \"city\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"5\" [label = \"country\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"6\" [label = \"customer\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"7\" [label = \"film\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"8\" [label = \"film_actor\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"9\" [label = \"film_category\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"10\" [label = \"inventory\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"11\" [label = \"language\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"12\" [label = \"payment\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"13\" [label = \"rental\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"14\" [label = \"staff\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"15\" [label = \"store\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n\"2\"->\"4\" [label = \"fk_address_city\", fontsize = \"15\"] \n\"4\"->\"5\" [label = \"fk_city\", fontsize = \"15\"] \n\"6\"->\"2\" [label = \"customer_address_id_fkey\", fontsize = \"15\"] \n\"7\"->\"11\" [label = \"film_language_id_fkey\", fontsize = \"15\"] \n\"8\"->\"1\" [label = \"film_actor_actor_id_fkey\", fontsize = \"15\"] \n\"8\"->\"7\" [label = \"film_actor_film_id_fkey\", fontsize = \"15\"] \n\"9\"->\"3\" [label = \"film_category_category_id_fkey\", fontsize = \"15\"] \n\"9\"->\"7\" [label = \"film_category_film_id_fkey\", fontsize = \"15\"] \n\"10\"->\"7\" [label = \"inventory_film_id_fkey\", fontsize = \"15\"] \n\"12\"->\"14\" [label = \"payment_staff_id_fkey\", fontsize = \"15\"] \n\"12\"->\"6\" [label = \"payment_customer_id_fkey\", fontsize = \"15\"] \n\"12\"->\"13\" [label = \"payment_rental_id_fkey\", fontsize = \"15\"] \n\"13\"->\"6\" [label = \"rental_customer_id_fkey\", fontsize = \"15\"] \n\"13\"->\"14\" [label = \"rental_staff_id_key\", fontsize = \"15\"] \n\"13\"->\"10\" [label = \"rental_inventory_id_fkey\", fontsize = \"15\"] \n\"14\"->\"2\" [label = \"staff_address_id_fkey\", fontsize = \"15\"] \n\"15\"->\"2\" [label = \"store_address_id_fkey\", fontsize = \"15\"] \n\"15\"->\"14\" [label = \"store_manager_staff_id_fkey\", fontsize = \"15\"] \n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="co"># diconnect from the db</span>
 <span class="kw">dbDisconnect</span>(con)
 
