@@ -37,7 +37,7 @@ con <- sp_get_postgres_connection(
   user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
   password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
   dbname = "dvdrental",
-  seconds_to_test = 10
+  seconds_to_test = 30
 )
 ```
 
@@ -173,9 +173,9 @@ file.info("README.md")
 
 ```
 ##           size isdir mode               mtime               ctime
-## README.md 4973 FALSE  644 2018-11-01 14:23:56 2018-11-01 14:23:56
-##                         atime uid gid uname grname
-## README.md 2018-12-18 12:41:19 502  80   jds  admin
+## README.md 4973 FALSE  644 2018-12-11 17:36:16 2018-12-11 17:36:16
+##                         atime  uid  gid uname grname
+## README.md 2018-12-21 15:20:27 1000 1000 znmeb  znmeb
 ```
 The equivalent information from executing a command on the CLI or terminal would be
 
@@ -185,7 +185,7 @@ system2("ls",  "-l README.md", stdout = TRUE, stderr = FALSE)
 ```
 
 ```
-## [1] "-rw-r--r--  1 jds  admin  4973 Nov  1 14:23 README.md"
+## [1] "-rw-r--r-- 1 znmeb znmeb 4973 Dec 11 17:36 README.md"
 ```
 ### Get info on the same OS file inside Docker from R Code
 

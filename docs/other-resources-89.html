@@ -25,7 +25,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
 
 
-<meta name="date" content="2018-12-18">
+<meta name="date" content="2018-12-21">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -79,7 +79,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -419,6 +419,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="F" data-path="dplyr-functions-and-sql-cross-walk-96.html"><a href="dplyr-functions-and-sql-cross-walk-96.html"><i class="fa fa-check"></i><b>F</b> Dplyr functions and SQL cross-walk (96)</a></li>
 <li class="chapter" data-level="G" data-path="dbi-package-functions-coverage-96b.html"><a href="dbi-package-functions-coverage-96b.html"><i class="fa fa-check"></i><b>G</b> DBI package functions - coverage (96b)</a></li>
+<li class="chapter" data-level="H" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html"><i class="fa fa-check"></i><b>H</b> PostgreSQL Authentication</a><ul>
+<li class="chapter" data-level="H.1" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html#introduction-1"><i class="fa fa-check"></i><b>H.1</b> Introduction</a></li>
+<li class="chapter" data-level="H.2" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html#password-authentication-on-the-postgresql-docker-image"><i class="fa fa-check"></i><b>H.2</b> Password authentication on the PostgreSQL Docker image</a></li>
+<li class="chapter" data-level="H.3" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html#adding-roles"><i class="fa fa-check"></i><b>H.3</b> Adding roles</a><ul>
+<li class="chapter" data-level="H.3.1" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html#setting-up-docker"><i class="fa fa-check"></i><b>H.3.1</b> Setting up Docker</a></li>
+<li class="chapter" data-level="H.3.2" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html#creating-a-new-container"><i class="fa fa-check"></i><b>H.3.2</b> Creating a new container</a></li>
+<li class="chapter" data-level="H.3.3" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html#adding-a-role"><i class="fa fa-check"></i><b>H.3.3</b> Adding a role</a></li>
+<li class="chapter" data-level="H.3.4" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html#did-it-work"><i class="fa fa-check"></i><b>H.3.4</b> Did it work?</a></li>
+<li class="chapter" data-level="H.3.5" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html#remove-the-container"><i class="fa fa-check"></i><b>H.3.5</b> Remove the container</a></li>
+</ul></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -445,51 +456,93 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="editing-this-book" class="section level2">
 <h2><span class="header-section-number">A.1</span> Editing this book</h2>
 <ul>
-<li>Here are instructions for <a href="https://github.com/smithjd/sql-pet/blob/master/maintaining-the-bookdown-site.md">editing this tutorial</a></li>
+<li>Here are instructions for <a href="https://github.com/smithjd/sql-pet/blob/master/maintaining-the-bookdown-site.md">editing this tutorial</a> WARNING-BROKEN LINK!</li>
 </ul>
 </div>
 <div id="docker-alternatives" class="section level2">
 <h2><span class="header-section-number">A.2</span> Docker alternatives</h2>
 <ul>
-<li>Choosing <a href="https://medium.com/@Mahmoud_Zalt/vagrant-vs-docker-679c9ce4231b">between Docker and Vagrant</a></li>
+<li>Choosing <a href="https://medium.com/@Mahmoud_Zalt/vagrant-vs-docker-679c9ce4231b">between Docker and Vagrant</a> <span class="citation">(Zait <a href="#ref-Zait2017">2017</a>)</span></li>
 </ul>
 </div>
 <div id="docker-and-r" class="section level2">
 <h2><span class="header-section-number">A.3</span> Docker and R</h2>
 <ul>
-<li>Noam Ross’ <a href="https://www.youtube.com/watch?v=803oZI5dvAU&amp;t=1">talk on Docker for the UseR</a> and his <a href="https://github.com/noamross/nyhackr-docker-talk">Slides</a> give a lot of context and tips.</li>
+<li>Noam Ross’ <a href="https://www.youtube.com/watch?v=803oZI5dvAU&amp;t=1">talk on Docker for the UseR</a> <span class="citation">(Ross <a href="#ref-Ross2018">2018</a><a href="#ref-Ross2018">b</a>)</span> and his <a href="https://github.com/noamross/nyhackr-docker-talk">Slides</a> <span class="citation">(Ross <a href="#ref-Ross2018a">2018</a><a href="#ref-Ross2018a">a</a>)</span> give a lot of context and tips.</li>
 <li>Good Docker tutorials
 <ul>
-<li><a href="https://docker-curriculum.com/">An introductory Docker tutorial</a></li>
-<li><a href="https://katacoda.com/courses/docker">A Docker curriculum</a></li>
+<li><a href="https://docker-curriculum.com/">An introductory Docker tutorial</a> <span class="citation">(Srivastav <a href="#ref-Srivastav2018">2018</a>)</span></li>
+<li><a href="https://katacoda.com/courses/docker">A Docker curriculum</a> <span class="citation">(Hall <a href="#ref-Hall2018">2018</a>)</span></li>
 </ul></li>
-<li>Scott Came’s materials about Docker and R <a href="http://www.cascadia-analytics.com/2018/07/21/docker-r-p1.html">on his website</a> and at the 2018 UseR Conference focus on <strong>R inside Docker</strong>.</li>
-<li>It’s worth studying the <a href="https://ropenscilabs.github.io/r-docker-tutorial/">ROpensci Docker tutorial</a></li>
+<li>Scott Came’s materials about Docker and R <a href="http://www.cascadia-analytics.com/2018/07/21/docker-r-p1.html">on his website</a> <span class="citation">(Came <a href="#ref-Came2018">2018</a>)</span> and at the 2018 UseR Conference focus on <strong>R inside Docker</strong>.</li>
+<li>It’s worth studying the <a href="https://ropenscilabs.github.io/r-docker-tutorial/">ROpensci Docker tutorial</a> <span class="citation">(ROpenSciLabs <a href="#ref-ROpenSciLabs2018">2018</a>)</span></li>
 </ul>
 </div>
 <div id="documentation-for-docker-and-postgres" class="section level2">
 <h2><span class="header-section-number">A.4</span> Documentation for Docker and Postgres</h2>
 <ul>
-<li><a href="https://docs.docker.com/samples/library/postgres/">The Postgres image documentation</a></li>
-<li><a href="https://docs.docker.com/engine/examples/postgresql_service/">Dockerize PostgreSQL</a></li>
-<li>Postgres &amp; Docker <a href="https://docs.docker.com/samples/library/postgres/#postgres_db">documentation</a></li>
-<li>Usage examples of <a href="https://amattn.com/p/tutorial_postgresql_usage_examples_with_docker.html">Postgres with Docker</a></li>
+<li><a href="https://docs.docker.com/samples/library/postgres/">The Postgres image documentation</a> <span class="citation">(Docker <a href="#ref-Docker2018">2018</a><a href="#ref-Docker2018">d</a>)</span></li>
+<li>Postgres &amp; Docker <a href="https://docs.docker.com/samples/library/postgres/#postgres_db">documentation</a> <span class="citation">(Docker <a href="#ref-Docker2018">2018</a><a href="#ref-Docker2018">d</a>)</span></li>
+<li><a href="https://docs.docker.com/engine/examples/postgresql_service/">Dockerize PostgreSQL</a> <span class="citation">(Docker <a href="#ref-Docker2018a">2018</a><a href="#ref-Docker2018a">b</a>)</span></li>
+<li>Usage examples of <a href="https://amattn.com/p/tutorial_postgresql_usage_examples_with_docker.html">Postgres with Docker</a> WARNING-EXPIRED CERTIFICATE 2018-12-20</li>
 </ul>
 </div>
 <div id="sql-and-dplyr" class="section level2">
 <h2><span class="header-section-number">A.5</span> SQL and dplyr</h2>
 <ul>
-<li><a href="https://blog.exploratory.io/why-sql-is-not-for-analysis-but-dplyr-is-5e180fef6aa7">Why SQL is not for analysis but dplyr is</a></li>
-<li><a href="https://www.listendata.com/2016/08/dplyr-tutorial.html">Data Manipulation with dplyr (With 50 Examples)</a></li>
+<li><a href="https://blog.exploratory.io/why-sql-is-not-for-analysis-but-dplyr-is-5e180fef6aa7">Why SQL is not for analysis but dplyr is</a> <span class="citation">(Nishida <a href="#ref-Nishida2016">2016</a>)</span></li>
+<li><a href="https://www.listendata.com/2016/08/dplyr-tutorial.html">Data Manipulation with dplyr (With 50 Examples)</a> <span class="citation">(ListenData.com <a href="#ref-ListenData.com2016">2016</a>)</span></li>
 </ul>
 </div>
 <div id="more-resources" class="section level2">
 <h2><span class="header-section-number">A.6</span> More Resources</h2>
 <ul>
-<li>David Severski describes some <a href="https://github.com/davidski/database_connections">key elements of connecting to databases with R</a> for MacOS users</li>
-<li>This tutorial picks up ideas and tips from Ed Borasky’s <a href="https://github.com/hackoregon/data-science-pet-containers">Data Science pet containers</a>, which creates a framework based on that Hack Oregon example and explains why this repo is named pet-sql.</li>
+<li>David Severski describes some <a href="https://github.com/davidski/database_connections">key elements of connecting to databases with R</a> for MacOS users <span class="citation">(Severski <a href="#ref-Severski2018">2018</a>)</span></li>
+<li>This tutorial picks up ideas and tips from Ed Borasky’s <a href="https://github.com/znmeb/data-science-pet-containers">Data Science pet containers</a> <span class="citation">(Borasky <a href="#ref-Borasky2018">2018</a>)</span>, which creates a framework based on that <a href="https://github.com/hackoregon/data-science-pet-containers">Hack Oregon example</a> and explains why this repo is named pet-sql.</li>
 </ul>
 
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-Zait2017">
+<p>Zait, Mahmoud. 2017. “Vagrant Vs Docker.” July 29, 2017. <a href="https://medium.com/@Mahmoud_Zalt/vagrant-vs-docker-679c9ce4231b">https://medium.com/@Mahmoud_Zalt/vagrant-vs-docker-679c9ce4231b</a>.</p>
+</div>
+<div id="ref-Ross2018">
+<p>Ross, Noam. 2018b. “Docker for the UseR - Video.” July 10, 2018. <a href="https://www.youtube.com/watch?v=803oZI5dvAU">https://www.youtube.com/watch?v=803oZI5dvAU</a>.</p>
+</div>
+<div id="ref-Ross2018a">
+<p>Ross, Noam. 2018a. “Docker for the UseR - Slides.” July 10, 2018. <a href="https://github.com/noamross/nyhackr-docker-talk/blob/master/Noam_Ross_DockerForTheUseR_nyhackr_2018-07-10.pdf">https://github.com/noamross/nyhackr-docker-talk/blob/master/Noam_Ross_DockerForTheUseR_nyhackr_2018-07-10.pdf</a>.</p>
+</div>
+<div id="ref-Srivastav2018">
+<p>Srivastav, Prakhar. 2018. “A Docker Tutorial for Beginners.” 2018. <a href="https://docker-curriculum.com/">https://docker-curriculum.com/</a>.</p>
+</div>
+<div id="ref-Hall2018">
+<p>Hall, Ben. 2018. “Learn Docker &amp; Containers Using Interactive Browser-Based Scenarios.” 2018. <a href="https://katacoda.com/courses/docker">https://katacoda.com/courses/docker</a>.</p>
+</div>
+<div id="ref-Came2018">
+<p>Came, Scott. 2018. “Running R in Docker - Part 1 - Getting Started.” July 21, 2018. <a href="http://www.cascadia-analytics.com/2018/07/21/docker-r-p1.html">http://www.cascadia-analytics.com/2018/07/21/docker-r-p1.html</a>.</p>
+</div>
+<div id="ref-ROpenSciLabs2018">
+<p>ROpenSciLabs. 2018. “R Docker Tutorial.” September 13, 2018. <a href="http://ropenscilabs.github.io/r-docker-tutorial/">http://ropenscilabs.github.io/r-docker-tutorial/</a>.</p>
+</div>
+<div id="ref-Docker2018">
+<p>Docker. 2018d. “Postgres | Docker Documentation.” 2018. <a href="https://docs.docker.com/samples/library/postgres/">https://docs.docker.com/samples/library/postgres/</a>.</p>
+</div>
+<div id="ref-Docker2018a">
+<p>Docker. 2018b. “Dockerize Postgresql | Docker Documentation.” 2018. <a href="https://docs.docker.com/engine/examples/postgresql_service/">https://docs.docker.com/engine/examples/postgresql_service/</a>.</p>
+</div>
+<div id="ref-Nishida2016">
+<p>Nishida, Kan. 2016. “Why Sql Is Not for Analysis, but Dplyr Is.” August 5, 2016. <a href="https://blog.exploratory.io/why-sql-is-not-for-analysis-but-dplyr-is-5e180fef6aa7">https://blog.exploratory.io/why-sql-is-not-for-analysis-but-dplyr-is-5e180fef6aa7</a>.</p>
+</div>
+<div id="ref-ListenData.com2016">
+<p>ListenData.com. 2016. “Data Manipulation with Dplyr (with 50 Examples).” 2016. <a href="https://www.listendata.com/2016/08/dplyr-tutorial.html">https://www.listendata.com/2016/08/dplyr-tutorial.html</a>.</p>
+</div>
+<div id="ref-Severski2018">
+<p>Severski, David. 2018. “Database Connections.” 2018. <a href="https://github.com/davidski/database_connections">https://github.com/davidski/database_connections</a>.</p>
+</div>
+<div id="ref-Borasky2018">
+<p>Borasky, M. Edward (Ed). 2018. “Data Science Pet Containers.” 2018. <a href="https://github.com/znmeb/data-science-pet-containers">https://github.com/znmeb/data-science-pet-containers</a>.</p>
 </div>
 </div>
             </section>

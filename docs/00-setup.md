@@ -11,7 +11,7 @@
 Most of you will probably have these already, but if you don't:
 
 1. If you do not have R:
-    * Go to <https://cran.rstudio.com/>.
+    * Go to <https://cran.rstudio.com/> [@RCT2018].
     * Select the download link for your system. For Linux, choose your distro. We recommend Ubuntu 18.04 LTS "Bionic Beaver". It's much easier to find support answers on the web for Ubuntu than other distros.
     * Follow the instructions.
     * Note: if you already have R, make sure it's upgraded to R 3.5.1. We don't test on older versions!
@@ -70,7 +70,7 @@ If you just want to read the book and copy / paste code into your working enviro
 ### Diving in
 If you want to experiment with the code in the book, run it in RStudio and interact with it, you'll need to do two more things:
 
-1. Install the `sqlpetr` R package. See <https://smithjd.github.io/sqlpetr> for the package documentation. This will take some time; it is installing a number of packages.
+1. Install the `sqlpetr` R package [@Muni2018]. See <https://smithjd.github.io/sqlpetr> for the package documentation. This will take some time; it is installing a number of packages.
 2. Clone the Git repository <https://github.com/smithjd/sql-pet.git> and open the project file `sql-pet.Rproj` in RStudio.
 
 Onward!

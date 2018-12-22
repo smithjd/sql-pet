@@ -25,7 +25,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
 
 
-<meta name="date" content="2018-12-18">
+<meta name="date" content="2018-12-21">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -79,7 +79,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -419,6 +419,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="F" data-path="dplyr-functions-and-sql-cross-walk-96.html"><a href="dplyr-functions-and-sql-cross-walk-96.html"><i class="fa fa-check"></i><b>F</b> Dplyr functions and SQL cross-walk (96)</a></li>
 <li class="chapter" data-level="G" data-path="dbi-package-functions-coverage-96b.html"><a href="dbi-package-functions-coverage-96b.html"><i class="fa fa-check"></i><b>G</b> DBI package functions - coverage (96b)</a></li>
+<li class="chapter" data-level="H" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html"><i class="fa fa-check"></i><b>H</b> PostgreSQL Authentication</a><ul>
+<li class="chapter" data-level="H.1" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html#introduction-1"><i class="fa fa-check"></i><b>H.1</b> Introduction</a></li>
+<li class="chapter" data-level="H.2" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html#password-authentication-on-the-postgresql-docker-image"><i class="fa fa-check"></i><b>H.2</b> Password authentication on the PostgreSQL Docker image</a></li>
+<li class="chapter" data-level="H.3" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html#adding-roles"><i class="fa fa-check"></i><b>H.3</b> Adding roles</a><ul>
+<li class="chapter" data-level="H.3.1" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html#setting-up-docker"><i class="fa fa-check"></i><b>H.3.1</b> Setting up Docker</a></li>
+<li class="chapter" data-level="H.3.2" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html#creating-a-new-container"><i class="fa fa-check"></i><b>H.3.2</b> Creating a new container</a></li>
+<li class="chapter" data-level="H.3.3" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html#adding-a-role"><i class="fa fa-check"></i><b>H.3.3</b> Adding a role</a></li>
+<li class="chapter" data-level="H.3.4" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html#did-it-work"><i class="fa fa-check"></i><b>H.3.4</b> Did it work?</a></li>
+<li class="chapter" data-level="H.3.5" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html#remove-the-container"><i class="fa fa-check"></i><b>H.3.5</b> Remove the container</a></li>
+</ul></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -468,15 +479,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),
   <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),
   <span class="dt">dbname =</span> <span class="st">&quot;dvdrental&quot;</span>,
-  <span class="dt">seconds_to_test =</span> <span class="dv">10</span>
+  <span class="dt">seconds_to_test =</span> <span class="dv">30</span>
 )</code></pre>
 </div>
 </div>
 <div id="sql-in-r-markdown" class="section level2">
 <h2><span class="header-section-number">12.2</span> SQL in R Markdown</h2>
 <p>When you create a report to run repeatedly, you might want to put that query into R markdown. See the discussion of <a href="https://bookdown.org/yihui/rmarkdown/language-engines.html#sql">multiple language engines in R Markdown</a>. That way you can also execute that SQL code in a chunk with the following header:</p>
-<p>{<code>sql, connection=con, output.var = &quot;query_results&quot;</code>}</p>
-<pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> <span class="ot">&quot;staff_id&quot;</span>, <span class="fu">COUNT</span>(*) <span class="kw">AS</span> <span class="ot">&quot;n&quot;</span>
+<p>{<code>sql, connection=con, output.var = "query_results"</code>}</p>
+<pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> <span class="ot">&quot;staff_id&quot;</span>, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> <span class="ot">&quot;n&quot;</span>
 <span class="kw">FROM</span> <span class="ot">&quot;rental&quot;</span>
 <span class="kw">GROUP</span> <span class="kw">BY</span> <span class="ot">&quot;staff_id&quot;</span>;</code></pre>
 <p>Rmarkdown stored that query result in a tibble:</p>

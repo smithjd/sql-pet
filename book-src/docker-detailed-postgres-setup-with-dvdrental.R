@@ -107,7 +107,7 @@ system2("docker", "exec sql-pet pg_restore -U postgres -d dvdrental petdir/dvdre
 con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
                                   password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
                                   dbname = "dvdrental",
-                                  seconds_to_test = 20)
+                                  seconds_to_test = 30)
 
 dbListTables(con)
 
@@ -126,7 +126,7 @@ sp_docker_start("sql-pet")
 con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
                                   password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
                                   dbname = "dvdrental",
-                                  seconds_to_test = 10)
+                                  seconds_to_test = 30)
 
 #' ## Cleaning up
 #'

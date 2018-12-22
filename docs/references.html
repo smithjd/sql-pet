@@ -25,14 +25,14 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
 
 
-<meta name="date" content="2018-12-18">
+<meta name="date" content="2018-12-21">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="dbi-package-functions-coverage-96b.html">
+<link rel="prev" href="postgresql-authentication.html">
 
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -79,7 +79,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -419,6 +419,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="F" data-path="dplyr-functions-and-sql-cross-walk-96.html"><a href="dplyr-functions-and-sql-cross-walk-96.html"><i class="fa fa-check"></i><b>F</b> Dplyr functions and SQL cross-walk (96)</a></li>
 <li class="chapter" data-level="G" data-path="dbi-package-functions-coverage-96b.html"><a href="dbi-package-functions-coverage-96b.html"><i class="fa fa-check"></i><b>G</b> DBI package functions - coverage (96b)</a></li>
+<li class="chapter" data-level="H" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html"><i class="fa fa-check"></i><b>H</b> PostgreSQL Authentication</a><ul>
+<li class="chapter" data-level="H.1" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html#introduction-1"><i class="fa fa-check"></i><b>H.1</b> Introduction</a></li>
+<li class="chapter" data-level="H.2" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html#password-authentication-on-the-postgresql-docker-image"><i class="fa fa-check"></i><b>H.2</b> Password authentication on the PostgreSQL Docker image</a></li>
+<li class="chapter" data-level="H.3" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html#adding-roles"><i class="fa fa-check"></i><b>H.3</b> Adding roles</a><ul>
+<li class="chapter" data-level="H.3.1" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html#setting-up-docker"><i class="fa fa-check"></i><b>H.3.1</b> Setting up Docker</a></li>
+<li class="chapter" data-level="H.3.2" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html#creating-a-new-container"><i class="fa fa-check"></i><b>H.3.2</b> Creating a new container</a></li>
+<li class="chapter" data-level="H.3.3" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html#adding-a-role"><i class="fa fa-check"></i><b>H.3.3</b> Adding a role</a></li>
+<li class="chapter" data-level="H.3.4" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html#did-it-work"><i class="fa fa-check"></i><b>H.3.4</b> Did it work?</a></li>
+<li class="chapter" data-level="H.3.5" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html#remove-the-container"><i class="fa fa-check"></i><b>H.3.5</b> Remove the container</a></li>
+</ul></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -445,10 +456,112 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <div id="refs" class="references">
 <div>
-<p>Baumer, Benjamin S. 2018. “A Grammar for Reproducible and Painless Extract-Transform-Load Operations on Medium Data.” <em>Journal of Computational and Graphical Statistics</em>, August. Informa UK Limited, 1–9. <a href="https://doi.org/10.1080/10618600.2018.1512867">https://doi.org/10.1080/10618600.2018.1512867</a>.</p>
+<p>Baumer, Benjamin S. 2018. “A Grammar for Reproducible and Painless Extract-Transform-Load Operations on Medium Data.” <em>Journal of Computational and Graphical Statistics</em>, August, 1–9. <a href="https://doi.org/10.1080/10618600.2018.1512867">https://doi.org/10.1080/10618600.2018.1512867</a>.</p>
 </div>
 <div>
-<p>Wickham, Hadley. 2018. “A Grammar of Data Manipulation • Dplyr.” <a href=""></a>. <a href="https://dplyr.tidyverse.org/">https://dplyr.tidyverse.org/</a>.</p>
+<p>Borasky, M. Edward (Ed). 2018. “Data Science Pet Containers.” 2018. <a href="https://github.com/znmeb/data-science-pet-containers">https://github.com/znmeb/data-science-pet-containers</a>.</p>
+</div>
+<div>
+<p>Came, Scott. 2018. “Running R in Docker - Part 1 - Getting Started.” July 21, 2018. <a href="http://www.cascadia-analytics.com/2018/07/21/docker-r-p1.html">http://www.cascadia-analytics.com/2018/07/21/docker-r-p1.html</a>.</p>
+</div>
+<div>
+<p>Chang, Winston. 2015. <em>Downloader: Download Files over Http and Https</em>. <a href="https://CRAN.R-project.org/package=downloader">https://CRAN.R-project.org/package=downloader</a>.</p>
+</div>
+<div>
+<p>Docker. 2018a. “Docker Ce Supported Platforms.” 2018. <a href="https://docs.docker.com/install/#supported-platforms">https://docs.docker.com/install/#supported-platforms</a>.</p>
+</div>
+<div>
+<p>———. 2018b. “Dockerize Postgresql | Docker Documentation.” 2018. <a href="https://docs.docker.com/engine/examples/postgresql_service/">https://docs.docker.com/engine/examples/postgresql_service/</a>.</p>
+</div>
+<div>
+<p>———. 2018c. “Install Docker for Mac.” 2018. <a href="https://docs.docker.com/docker-for-mac/install/">https://docs.docker.com/docker-for-mac/install/</a>.</p>
+</div>
+<div>
+<p>———. 2018d. “Postgres | Docker Documentation.” 2018. <a href="https://docs.docker.com/samples/library/postgres/">https://docs.docker.com/samples/library/postgres/</a>.</p>
+</div>
+<div>
+<p>Hall, Ben. 2018. “Learn Docker &amp; Containers Using Interactive Browser-Based Scenarios.” 2018. <a href="https://katacoda.com/courses/docker">https://katacoda.com/courses/docker</a>.</p>
+</div>
+<div>
+<p>Hester, Jim. 2018. <em>Glue: Interpreted String Literals</em>. <a href="https://CRAN.R-project.org/package=glue">https://CRAN.R-project.org/package=glue</a>.</p>
+</div>
+<div>
+<p>Iannone, Richard. 2018. <em>DiagrammeR: Graph/Network Visualization</em>. <a href="https://CRAN.R-project.org/package=DiagrammeR">https://CRAN.R-project.org/package=DiagrammeR</a>.</p>
+</div>
+<div>
+<p>ListenData.com. 2016. “Data Manipulation with Dplyr (with 50 Examples).” 2016. <a href="https://www.listendata.com/2016/08/dplyr-tutorial.html">https://www.listendata.com/2016/08/dplyr-tutorial.html</a>.</p>
+</div>
+<div>
+<p>Makubuya, Aaron. 2018. “Using R with Databases.” 2018. <a href="https://github.com/Cascadia-R/Using_R_With_Databases">https://github.com/Cascadia-R/Using_R_With_Databases</a>.</p>
+</div>
+<div>
+<p>McNamara, Amelia, Eduardo Arino de la Rubia, Hao Zhu, Shannon Ellis, and Michael Quinn. 2018. <em>Skimr: Compact and Flexible Summaries of Data</em>. <a href="https://CRAN.R-project.org/package=skimr">https://CRAN.R-project.org/package=skimr</a>.</p>
+</div>
+<div>
+<p>Muni, Dipti, Mary Anne Thygesen, Sophie Yang, Jim Tyhurst, Ian Frantz, Scott Came, John David Smith, and M. Edward (Ed) Borasky. 2018. <em>Sqlpetr: Companion Package for R-Docker-Databases Book</em>. <a href="https://github.com/smithjd/sqlpetr">https://github.com/smithjd/sqlpetr</a>.</p>
+</div>
+<div>
+<p>Müller, Kirill. 2017. <em>Here: A Simpler Way to Find Your Files</em>. <a href="https://CRAN.R-project.org/package=here">https://CRAN.R-project.org/package=here</a>.</p>
+</div>
+<div>
+<p>Nishida, Kan. 2016. “Why Sql Is Not for Analysis, but Dplyr Is.” August 5, 2016. <a href="https://blog.exploratory.io/why-sql-is-not-for-analysis-but-dplyr-is-5e180fef6aa7">https://blog.exploratory.io/why-sql-is-not-for-analysis-but-dplyr-is-5e180fef6aa7</a>.</p>
+</div>
+<div>
+<p>PostgreSQL Global Development Group. 2018a. “Chapter 20. Client Authentication.” 2018. <a href="https://www.postgresql.org/docs/10/client-authentication.html">https://www.postgresql.org/docs/10/client-authentication.html</a>.</p>
+</div>
+<div>
+<p>———. 2018b. “Chapter 21. Database Roles.” 2018. <a href="https://www.postgresql.org/docs/10/user-manag.html">https://www.postgresql.org/docs/10/user-manag.html</a>.</p>
+</div>
+<div>
+<p>———. 2018c. “Password Authentication.” 2018. <a href="https://www.postgresql.org/docs/10/auth-methods.html#AUTH-PASSWORD">https://www.postgresql.org/docs/10/auth-methods.html#AUTH-PASSWORD</a>.</p>
+</div>
+<div>
+<p>R Core Team. 2018. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org/">https://www.R-project.org/</a>.</p>
+</div>
+<div>
+<p>ROpenSciLabs. 2018. “R Docker Tutorial.” September 13, 2018. <a href="http://ropenscilabs.github.io/r-docker-tutorial/">http://ropenscilabs.github.io/r-docker-tutorial/</a>.</p>
+</div>
+<div>
+<p>Ross, Noam. 2018a. “Docker for the UseR - Slides.” July 10, 2018. <a href="https://github.com/noamross/nyhackr-docker-talk/blob/master/Noam_Ross_DockerForTheUseR_nyhackr_2018-07-10.pdf">https://github.com/noamross/nyhackr-docker-talk/blob/master/Noam_Ross_DockerForTheUseR_nyhackr_2018-07-10.pdf</a>.</p>
+</div>
+<div>
+<p>———. 2018b. “Docker for the UseR - Video.” July 10, 2018. <a href="https://www.youtube.com/watch?v=803oZI5dvAU">https://www.youtube.com/watch?v=803oZI5dvAU</a>.</p>
+</div>
+<div>
+<p>R Special Interest Group on Databases (R-SIG-DB), Hadley Wickham, and Kirill Müller. 2018. <em>DBI: R Database Interface</em>. <a href="https://CRAN.R-project.org/package=DBI">https://CRAN.R-project.org/package=DBI</a>.</p>
+</div>
+<div>
+<p>Severski, David. 2018. “Database Connections.” 2018. <a href="https://github.com/davidski/database_connections">https://github.com/davidski/database_connections</a>.</p>
+</div>
+<div>
+<p>Srivastav, Prakhar. 2018. “A Docker Tutorial for Beginners.” 2018. <a href="https://docker-curriculum.com/">https://docker-curriculum.com/</a>.</p>
+</div>
+<div>
+<p>Vargas, Mauricio. 2018. “How to Install R on Windows, Mac Os X and Ubuntu.” May 17, 2018. <a href="https://www.datacamp.com/community/tutorials/installing-R-windows-mac-ubuntu">https://www.datacamp.com/community/tutorials/installing-R-windows-mac-ubuntu</a>.</p>
+</div>
+<div>
+<p>Wickham, Hadley. 2017. <em>Tidyverse: Easily Install and Load the ’Tidyverse’</em>. <a href="https://CRAN.R-project.org/package=tidyverse">https://CRAN.R-project.org/package=tidyverse</a>.</p>
+</div>
+<div>
+<p>———. 2018. “A Grammar of Data Manipulation • Dplyr.” <a href=""></a>. <a href="https://dplyr.tidyverse.org/">https://dplyr.tidyverse.org/</a>.</p>
+</div>
+<div>
+<p>Wickham, Hadley, Jim Hester, and Winston Chang. 2018. <em>Devtools: Tools to Make Developing R Packages Easier</em>. <a href="https://CRAN.R-project.org/package=devtools">https://CRAN.R-project.org/package=devtools</a>.</p>
+</div>
+<div>
+<p>Wickham, Hadley, Jeroen Ooms, and Kirill Müller. 2018. <em>RPostgres: ’Rcpp’ Interface to ’Postgresql’</em>. <a href="https://CRAN.R-project.org/package=RPostgres">https://CRAN.R-project.org/package=RPostgres</a>.</p>
+</div>
+<div>
+<p>Wickham, Hadley, and Edgar Ruiz. 2018. <em>Dbplyr: A ’Dplyr’ Back End for Databases</em>. <a href="https://CRAN.R-project.org/package=dbplyr">https://CRAN.R-project.org/package=dbplyr</a>.</p>
+</div>
+<div>
+<p>Xie, Yihui. 2018a. <em>Bookdown: Authoring Books and Technical Documents with R Markdown</em>. <a href="https://CRAN.R-project.org/package=bookdown">https://CRAN.R-project.org/package=bookdown</a>.</p>
+</div>
+<div>
+<p>———. 2018b. <em>Knitr: A General-Purpose Package for Dynamic Report Generation in R</em>. <a href="https://CRAN.R-project.org/package=knitr">https://CRAN.R-project.org/package=knitr</a>.</p>
+</div>
+<div>
+<p>Zait, Mahmoud. 2017. “Vagrant Vs Docker.” July 29, 2017. <a href="https://medium.com/@Mahmoud_Zalt/vagrant-vs-docker-679c9ce4231b">https://medium.com/@Mahmoud_Zalt/vagrant-vs-docker-679c9ce4231b</a>.</p>
 </div>
 </div>
 </div>
@@ -470,7 +583,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="dbi-package-functions-coverage-96b.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="postgresql-authentication.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 
     </div>
   </div>

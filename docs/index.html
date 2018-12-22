@@ -25,7 +25,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
 
 
-<meta name="date" content="2018-12-18">
+<meta name="date" content="2018-12-21">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -79,7 +79,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -419,6 +419,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="F" data-path="dplyr-functions-and-sql-cross-walk-96.html"><a href="dplyr-functions-and-sql-cross-walk-96.html"><i class="fa fa-check"></i><b>F</b> Dplyr functions and SQL cross-walk (96)</a></li>
 <li class="chapter" data-level="G" data-path="dbi-package-functions-coverage-96b.html"><a href="dbi-package-functions-coverage-96b.html"><i class="fa fa-check"></i><b>G</b> DBI package functions - coverage (96b)</a></li>
+<li class="chapter" data-level="H" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html"><i class="fa fa-check"></i><b>H</b> PostgreSQL Authentication</a><ul>
+<li class="chapter" data-level="H.1" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html#introduction-1"><i class="fa fa-check"></i><b>H.1</b> Introduction</a></li>
+<li class="chapter" data-level="H.2" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html#password-authentication-on-the-postgresql-docker-image"><i class="fa fa-check"></i><b>H.2</b> Password authentication on the PostgreSQL Docker image</a></li>
+<li class="chapter" data-level="H.3" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html#adding-roles"><i class="fa fa-check"></i><b>H.3</b> Adding roles</a><ul>
+<li class="chapter" data-level="H.3.1" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html#setting-up-docker"><i class="fa fa-check"></i><b>H.3.1</b> Setting up Docker</a></li>
+<li class="chapter" data-level="H.3.2" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html#creating-a-new-container"><i class="fa fa-check"></i><b>H.3.2</b> Creating a new container</a></li>
+<li class="chapter" data-level="H.3.3" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html#adding-a-role"><i class="fa fa-check"></i><b>H.3.3</b> Adding a role</a></li>
+<li class="chapter" data-level="H.3.4" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html#did-it-work"><i class="fa fa-check"></i><b>H.3.4</b> Did it work?</a></li>
+<li class="chapter" data-level="H.3.5" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html#remove-the-container"><i class="fa fa-check"></i><b>H.3.5</b> Remove the container</a></li>
+</ul></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -443,7 +454,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">R, Databases and Docker</h1>
 <p class="author"><em>John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni</em></p>
-<p class="date"><em>2018-12-18</em></p>
+<p class="date"><em>2018-12-21</em></p>
 </div>
 <div id="introduction" class="section level1">
 <h1><span class="header-section-number">Chapter 1</span> Introduction</h1>
@@ -470,7 +481,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="docker-as-a-tool-for-users" class="section level2">
 <h2><span class="header-section-number">1.2</span> Docker as a tool for UseRs</h2>
-<p>Noam Ross’s “<a href="https://nyhackr.blob.core.windows.net/presentations/Docker-for-the-UseR_Noam-Ross.pdf">Docker for the UseR</a>” suggests that there are four distinct Docker use-cases for useRs.</p>
+<p>Noam Ross’s “<a href="https://nyhackr.blob.core.windows.net/presentations/Docker-for-the-UseR_Noam-Ross.pdf">Docker for the UseR</a>” <span class="citation">(Ross <a href="#ref-Ross2018a">2018</a><a href="#ref-Ross2018a">a</a>)</span> suggests that there are four distinct Docker use-cases for useRs.</p>
 <ol style="list-style-type: decimal">
 <li>Make a fixed working environment for reproducible analysis</li>
 <li>Access a service outside of R <strong>(e.g., Postgres)</strong></li>
@@ -505,8 +516,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="how-did-this-project-come-about" class="section level2">
 <h2><span class="header-section-number">1.5</span> How did this project come about?</h2>
-<p>We trace this book back to the <a href="https://cascadiarconf.com/">June 2, 2018 Cascadia R Conf</a> where Aaron Makubuya gave <a href="https://github.com/Cascadia-R/Using_R_With_Databases">a presentation using Vagrant hosting</a>. After that <a href="https://github.com/smithjd">John Smith</a>, <a href="https://github.com/ianfrantz">Ian Franz</a>, and <a href="https://github.com/SophieMYang">Sophie Yang</a> had discussions after the monthly <a href="https://www.meetup.com/Portland-Data-Science-Group/events/fxvhbnywmbgb/">Data Discussion Meetups</a> about the difficulties around setting up Vagrant, (a virtual environment), connecting to a corporate database and having realistic <strong>public</strong> environment to demo or practice the issues that come up behind corporate firewalls. <a href="https://github.com/scottcame">Scott Came’s</a> tutorial on <a href="http://www.cascadia-analytics.com/2018/07/21/docker-r-p1.html">R and Docker</a> (an alternative to Vagrant) at the 2018 UseR Conference in Melbourne was provocative and it turned out he lived nearby. We re-connected with <a href="https://github.com/znmeb">M. Edward (Ed) Borasky</a> who had done extensive development for a <a href="https://github.com/hackoregon/data-science-pet-containers">Hack Oregon data science containerization project</a>.</p>
+<p>We trace this book back to the <a href="https://cascadiarconf.com/">June 2, 2018 Cascadia R Conf</a> where Aaron Makubuya gave <a href="https://github.com/Cascadia-R/Using_R_With_Databases">a presentation using Vagrant hosting</a> <span class="citation">(Makubuya <a href="#ref-Makubuya2018">2018</a>)</span>. After that <a href="https://github.com/smithjd">John Smith</a>, <a href="https://github.com/ianfrantz">Ian Franz</a>, and <a href="https://github.com/SophieMYang">Sophie Yang</a> had discussions after the monthly <a href="https://www.meetup.com/Portland-Data-Science-Group/events/fxvhbnywmbgb/">Data Discussion Meetups</a> about the difficulties around setting up Vagrant, (a virtual environment), connecting to a corporate database and having realistic <strong>public</strong> environment to demo or practice the issues that come up behind corporate firewalls. <a href="https://github.com/scottcame">Scott Came’s</a> tutorial on <a href="http://www.cascadia-analytics.com/2018/07/21/docker-r-p1.html">R and Docker</a> <span class="citation">(Came <a href="#ref-Came2018">2018</a>)</span> (an alternative to Vagrant) at the 2018 UseR Conference in Melbourne was provocative and it turned out he lived nearby. We re-connected with <a href="https://github.com/znmeb">M. Edward (Ed) Borasky</a> who had done extensive development for a <a href="https://github.com/hackoregon/data-science-pet-containers">Hack Oregon data science containerization project</a> <span class="citation">(Borasky <a href="#ref-Borasky2018">2018</a>)</span>.</p>
 
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-Ross2018a">
+<p>Ross, Noam. 2018a. “Docker for the UseR - Slides.” July 10, 2018. <a href="https://github.com/noamross/nyhackr-docker-talk/blob/master/Noam_Ross_DockerForTheUseR_nyhackr_2018-07-10.pdf">https://github.com/noamross/nyhackr-docker-talk/blob/master/Noam_Ross_DockerForTheUseR_nyhackr_2018-07-10.pdf</a>.</p>
+</div>
+<div id="ref-Makubuya2018">
+<p>Makubuya, Aaron. 2018. “Using R with Databases.” 2018. <a href="https://github.com/Cascadia-R/Using_R_With_Databases">https://github.com/Cascadia-R/Using_R_With_Databases</a>.</p>
+</div>
+<div id="ref-Came2018">
+<p>Came, Scott. 2018. “Running R in Docker - Part 1 - Getting Started.” July 21, 2018. <a href="http://www.cascadia-analytics.com/2018/07/21/docker-r-p1.html">http://www.cascadia-analytics.com/2018/07/21/docker-r-p1.html</a>.</p>
+</div>
+<div id="ref-Borasky2018">
+<p>Borasky, M. Edward (Ed). 2018. “Data Science Pet Containers.” 2018. <a href="https://github.com/znmeb/data-science-pet-containers">https://github.com/znmeb/data-science-pet-containers</a>.</p>
 </div>
 </div>
             </section>

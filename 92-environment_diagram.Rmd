@@ -64,7 +64,7 @@ linux_ver <- system2('docker', 'exec -i sql-pet /bin/uname -r', stdout = TRUE)
 con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
                          password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
                          dbname = "dvdrental",
-                         seconds_to_test = 10)
+                         seconds_to_test = 30)
 
 postgres_ver <- dbGetQuery(con,"select version()") %>%
   gsub(x = ., pattern = '\\(.*$', replacement = '')

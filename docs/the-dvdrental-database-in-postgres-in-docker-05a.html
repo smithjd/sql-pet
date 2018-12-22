@@ -25,7 +25,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
 
 
-<meta name="date" content="2018-12-18">
+<meta name="date" content="2018-12-21">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -79,7 +79,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -419,6 +419,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="F" data-path="dplyr-functions-and-sql-cross-walk-96.html"><a href="dplyr-functions-and-sql-cross-walk-96.html"><i class="fa fa-check"></i><b>F</b> Dplyr functions and SQL cross-walk (96)</a></li>
 <li class="chapter" data-level="G" data-path="dbi-package-functions-coverage-96b.html"><a href="dbi-package-functions-coverage-96b.html"><i class="fa fa-check"></i><b>G</b> DBI package functions - coverage (96b)</a></li>
+<li class="chapter" data-level="H" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html"><i class="fa fa-check"></i><b>H</b> PostgreSQL Authentication</a><ul>
+<li class="chapter" data-level="H.1" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html#introduction-1"><i class="fa fa-check"></i><b>H.1</b> Introduction</a></li>
+<li class="chapter" data-level="H.2" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html#password-authentication-on-the-postgresql-docker-image"><i class="fa fa-check"></i><b>H.2</b> Password authentication on the PostgreSQL Docker image</a></li>
+<li class="chapter" data-level="H.3" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html#adding-roles"><i class="fa fa-check"></i><b>H.3</b> Adding roles</a><ul>
+<li class="chapter" data-level="H.3.1" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html#setting-up-docker"><i class="fa fa-check"></i><b>H.3.1</b> Setting up Docker</a></li>
+<li class="chapter" data-level="H.3.2" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html#creating-a-new-container"><i class="fa fa-check"></i><b>H.3.2</b> Creating a new container</a></li>
+<li class="chapter" data-level="H.3.3" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html#adding-a-role"><i class="fa fa-check"></i><b>H.3.3</b> Adding a role</a></li>
+<li class="chapter" data-level="H.3.4" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html#did-it-work"><i class="fa fa-check"></i><b>H.3.4</b> Did it work?</a></li>
+<li class="chapter" data-level="H.3.5" data-path="postgresql-authentication.html"><a href="postgresql-authentication.html#remove-the-container"><i class="fa fa-check"></i><b>H.3.5</b> Remove the container</a></li>
+</ul></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -488,21 +499,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)
 
 <span class="kw">cat</span>(docker_messages, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</code></pre>
-<pre><code>## Sending build context to Docker daemon  76.09MB
+<pre><code>## Sending build context to Docker daemon  54.44MB
 
 
 ## Step 1/4 : FROM postgres:10
-##  ---&gt; ac25c2bac3c4
+##  ---&gt; 6eb6c50a02e7
 ## Step 2/4 : WORKDIR /tmp
 ##  ---&gt; Using cache
-##  ---&gt; 3f00a18e0bdf
+##  ---&gt; 23ed134b86f5
 ## Step 3/4 : COPY init-dvdrental.sh /docker-entrypoint-initdb.d/
 ##  ---&gt; Using cache
-##  ---&gt; 3453d61d8e3e
+##  ---&gt; b6bde886337e
 ## Step 4/4 : RUN apt-get -qq update &amp;&amp;   apt-get install -y -qq curl zip  &gt; /dev/null 2&gt;&amp;1 &amp;&amp;   curl -Os http://www.postgresqltutorial.com/wp-content/uploads/2017/10/dvdrental.zip &amp;&amp;   unzip dvdrental.zip &amp;&amp;   rm dvdrental.zip &amp;&amp;   chmod ugo+w dvdrental.tar &amp;&amp;   chown postgres dvdrental.tar &amp;&amp;   chmod u+x /docker-entrypoint-initdb.d/init-dvdrental.sh &amp;&amp;   apt-get remove -y curl zip
 ##  ---&gt; Using cache
-##  ---&gt; f5e93aa64875
-## Successfully built f5e93aa64875
+##  ---&gt; 8b31b0a84c46
+## Successfully built 8b31b0a84c46
 ## Successfully tagged postgres-dvdrental:latest</code></pre>
 </div>
 <div id="run-the-pet-sql-docker-image" class="section level2">
@@ -530,7 +541,7 @@ docker_cmd &lt;-<span class="st"> </span><span class="kw">glue</span>(
 )</code></pre>
 <p>If you are curious you can paste <code>docker_cmd</code> into a terminal window after the command ‘docker’:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, docker_cmd, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</code></pre>
-<pre><code>## [1] &quot;a5a1745d633342a3a8b02220c4d4fe44cc4c130d6de8240017c43ca4feae7380&quot;</code></pre>
+<pre><code>## [1] &quot;ebc94c5574d8cd2fb3a9486b936eb98f4e5c40232f76e4f6f9baaed00b27854f&quot;</code></pre>
 </div>
 <div id="connect-to-postgres-with-r" class="section level2">
 <h2><span class="header-section-number">7.6</span> Connect to Postgres with R</h2>
@@ -582,22 +593,22 @@ docker_cmd &lt;-<span class="st"> </span><span class="kw">glue</span>(
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_docker_stop</span>(<span class="st">&quot;sql-pet&quot;</span>)</code></pre>
 <p>Show that the container still exists even though it’s not running</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_show_all_docker_containers</span>()</code></pre>
-<pre><code>## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## a5a1745d6333        postgres-dvdrental   &quot;docker-entrypoint.s…&quot;   7 seconds ago       Exited (0) Less than a second ago                       sql-pet</code></pre>
+<pre><code>## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                    PORTS               NAMES
+## ebc94c5574d8        postgres-dvdrental   &quot;docker-entrypoint.s…&quot;   14 seconds ago      Exited (0) 1 second ago                       sql-pet</code></pre>
 <p>Next time, you can just use this command to start the container:</p>
 <blockquote>
-<p><code>sp_docker_start(&quot;sql-pet&quot;)</code></p>
+<p><code>sp_docker_start("sql-pet")</code></p>
 </blockquote>
 <p>And once stopped, the container can be removed with:</p>
 <blockquote>
-<p><code>sp_check_that_docker_is_up(&quot;sql-pet&quot;)</code></p>
+<p><code>sp_check_that_docker_is_up("sql-pet")</code></p>
 </blockquote>
 </div>
 <div id="using-the-sql-pet-container-in-the-rest-of-the-book" class="section level2">
 <h2><span class="header-section-number">7.9</span> Using the <code>sql-pet</code> container in the rest of the book</h2>
 <p>After this point in the book, we assume that Docker is up and that we can always start up our <em>sql-pet database</em> with:</p>
 <blockquote>
-<p><code>sp_docker_start(&quot;sql-pet&quot;)</code></p>
+<p><code>sp_docker_start("sql-pet")</code></p>
 </blockquote>
 
 </div>
