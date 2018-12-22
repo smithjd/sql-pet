@@ -1,7 +1,7 @@
 # PostgreSQL Authentication
 
 ## Introduction
-PostgreSQL has a very robust and flexible set of authentication methods [@PostgreSQL2018a]. In most production environments, these will be managed by the database administrator (DBA) on a need-to-access basis. People and programs will be granted access only to a minimum set of capabilities required to function, and nothing more.
+PostgreSQL has a very robust and flexible set of authentication methods [@PGDG2018a]. In most production environments, these will be managed by the database administrator (DBA) on a need-to-access basis. People and programs will be granted access only to a minimum set of capabilities required to function, and nothing more.
 
 In this book, we are using a PostgreSQL Docker image [@Docker2018]. When we create a container from that image, we use its native mechanism to create the `postgres` database superuser with a password specified in an R environment file `~/.Renviron`. See [Defining the PostgreSQL connection parameters] for how we do this.
 
@@ -10,7 +10,7 @@ What that means is that you are the DBA - the database superuser - for the Postg
 You don't have to do that to use this book. But if you want to experiment with it, feel free!
 
 ## Password authentication on the PostgreSQL Docker image
-Of the many PostgreSQL authentication mechanisms, the simplest that's universallly available is `password authentication` [@PostgreSQL2018b]. That's what we use for the `postgres` database superuser, and what we recommend for any roles you may create.
+Of the many PostgreSQL authentication mechanisms, the simplest that's universallly available is `password authentication` [@PGDG2018b]. That's what we use for the `postgres` database superuser, and what we recommend for any roles you may create.
 
 Once a role has been created, you need five items to open a connection to the PostgreSQL database cluster:
 
@@ -21,7 +21,7 @@ Once a role has been created, you need five items to open a connection to the Po
 5. The `password`. This is set by the DBA for the user. In this book we use the password defined in [Defining the PostgreSQL connection parameters].
 
 ## Adding roles
-As noted above, PostgreSQL has a very flexible fine-grained access permissions system. We can't cover all of it; see @PostgreSQL2018c for the full details. But we can give an example.
+As noted above, PostgreSQL has a very flexible fine-grained access permissions system. We can't cover all of it; see @PGDG2018c for the full details. But we can give an example.
 
 ### Setting up Docker
 First, we need to make sure we don't have any other databases listening on the default port `5432`.
