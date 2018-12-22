@@ -129,7 +129,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE                COMMAND                  CREATED              STATUS                     PORTS               NAMES
-## 3003a5c95f4e        postgres-dvdrental   "docker-entrypoint.s…"   About a minute ago   Exited (0) 4 seconds ago                       sql-pet
+## 57bf89ee2a75        postgres-dvdrental   "docker-entrypoint.s…"   About a minute ago   Exited (0) 9 seconds ago                       sql-pet
 ```
 
 Remove the `sql-pet` container if it exists (e.g., from a prior run)
@@ -189,7 +189,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "46db1d0b60418ef2458d1be6e4c95a9965bf453faf01bc48d2dd6f88d4b7ca68"
+## [1] "f3f6b89b6fecb57e8514d8bf5d98de27112a5e8570d160521cd3ddc524633d4c"
 ```
 
 Peek inside the docker container and list the files in the `petdir`
@@ -233,7 +233,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES
-## 46db1d0b6041        postgres:10         "docker-entrypoint.s…"   5 seconds ago       Up 3 seconds        0.0.0.0:5432->5432/tcp   sql-pet
+## f3f6b89b6fec        postgres:10         "docker-entrypoint.s…"   5 seconds ago       Up 3 seconds        0.0.0.0:5432->5432/tcp   sql-pet
 ```
 inside Docker, execute the postgress SQL command-line program to create the dvdrental database:
 
@@ -365,8 +365,8 @@ sp_show_all_docker_containers()
 ```
 
 ```
-## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## 46db1d0b6041        postgres:10         "docker-entrypoint.s…"   20 seconds ago      Exited (0) Less than a second ago                       sql-pet
+## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                    PORTS               NAMES
+## f3f6b89b6fec        postgres:10         "docker-entrypoint.s…"   21 seconds ago      Exited (0) 1 second ago                       sql-pet
 ```
 
 We are leaving the `sql-pet` container intact so it can be used in running the
