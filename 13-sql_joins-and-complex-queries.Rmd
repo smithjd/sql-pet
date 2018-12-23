@@ -704,16 +704,34 @@ How are the stores performing?  The SQL code shows the payments made to each sto
 rs <- dbGetQuery(
   con,
   "select store_id,sum(p.amount) amt,count(*) cnt 
-                   from payment p 
-                        join staff s 
-                          on p.staff_id = s.staff_id  
-                 group by store_id order by 2 desc
-                 ;
-                "
+   from payment p 
+   join staff s 
+   on p.staff_id = s.staff_id  
+   group by store_id order by 2 desc;"
 )
 sp_print_df(head(rs))
 ```
 
+Who are the active employees?
+
+
+```{r}
+rs <- dbGetQuery(
+  con, 
+  "select store_id,sum(p.amount) amt,count(*) cnt 
+  into results_of_analysis
+  from payment p
+  join staff s 
+  on p.staff_id = s.staff_id  
+  where s.active = 'true'
+  group by store_id order by 2 desc;"
+  )
+```
+
+Write results to table name: results_of_analysis
+```{r}
+dbExecute(con, "create table results_of_analysis1 as select * from results_of_analysis;")
+```
 #### Exercise dplyr store revenue stream
 
 Complete the following code block to return the payments made to each store.
