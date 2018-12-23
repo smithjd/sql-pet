@@ -190,8 +190,27 @@ one_percent_sample
 ```
 
 ```
-## [1] rental_id    rental_date  inventory_id customer_id 
-## <0 rows> (or 0-length row.names)
+##    rental_id         rental_date inventory_id customer_id
+## 1      11455 2005-08-02 21:07:06         2000         498
+## 2      11456 2005-08-02 21:14:04         3638         322
+## 3      11457 2005-08-02 21:14:16         1642         379
+## 4      11458 2005-08-02 21:24:02         3514         575
+## 5      11459 2005-08-02 21:25:25         3730         392
+## 6      11460 2005-08-02 21:28:03         4113         403
+## 7      11461 2005-08-02 21:35:00         4343          65
+## 8      11462 2005-08-02 21:36:46          167         268
+## 9      11463 2005-08-02 21:37:36         1944         138
+## 10     11464 2005-08-02 21:42:07          538         577
+## 11     11465 2005-08-02 21:43:52         2190         447
+## 12     11466 2005-08-02 21:46:46         3363         556
+## 13     11467 2005-08-02 21:47:07          246         117
+## 14     11468 2005-08-02 21:47:26         3168         413
+## 15     11469 2005-08-02 21:48:09          230          77
+## 16     11470 2005-08-02 21:48:28         2379         346
+## 17     11471 2005-08-02 21:49:03         3378         355
+## 18     11472 2005-08-02 21:49:06         1829         410
+## 19     11473 2005-08-02 21:52:03          620         536
+## 20     11474 2005-08-02 21:53:08          574         214
 ```
 
 ### Sub-setting variables
@@ -382,8 +401,8 @@ There is no substitute for looking at your data and R provides several ways to j
 sp_print_df(head(rental_tibble))
 ```
 
-<!--html_preserve--><div id="htmlwidget-24982291da357a5d8e10" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-24982291da357a5d8e10">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[2,3,4,5,6,7],["2005-05-25T05:54:33Z","2005-05-25T06:03:39Z","2005-05-25T06:04:41Z","2005-05-25T06:05:21Z","2005-05-25T06:08:07Z","2005-05-25T06:11:53Z"],[1525,1711,2452,2079,2792,3995],[459,408,333,222,549,269],["2005-05-29T02:40:33Z","2005-06-02T05:12:39Z","2005-06-03T08:43:41Z","2005-06-02T11:33:21Z","2005-05-27T08:32:07Z","2005-05-30T03:34:53Z"],[1,1,2,1,1,2],["2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>rental_id<\/th>\n      <th>rental_date<\/th>\n      <th>inventory_id<\/th>\n      <th>customer_id<\/th>\n      <th>return_date<\/th>\n      <th>staff_id<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-7e3af1f71679d59b8b22" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-7e3af1f71679d59b8b22">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[2,3,4,5,6,7],["2005-05-25T05:54:33Z","2005-05-25T06:03:39Z","2005-05-25T06:04:41Z","2005-05-25T06:05:21Z","2005-05-25T06:08:07Z","2005-05-25T06:11:53Z"],[1525,1711,2452,2079,2792,3995],[459,408,333,222,549,269],["2005-05-29T02:40:33Z","2005-06-02T05:12:39Z","2005-06-03T08:43:41Z","2005-06-02T11:33:21Z","2005-05-27T08:32:07Z","2005-05-30T03:34:53Z"],[1,1,2,1,1,2],["2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>rental_id<\/th>\n      <th>rental_date<\/th>\n      <th>inventory_id<\/th>\n      <th>customer_id<\/th>\n      <th>return_date<\/th>\n      <th>staff_id<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ### The `summary` function in base
 
@@ -467,7 +486,7 @@ skim(rental_tibble)
 ##  n obs: 16044 
 ##  n variables: 7 
 ## 
-## ── Variable type:integer ─────────────────────────────────────────────
+## ── Variable type:integer ───────────────────────────────────────────────────────────
 ##      variable missing complete     n    mean      sd p0     p25    p50
 ##   customer_id       0    16044 16044  297.14  172.45  1  148     296  
 ##  inventory_id       0    16044 16044 2291.84 1322.21  1 1154    2291  
@@ -479,7 +498,7 @@ skim(rental_tibble)
 ##  12037.25 16049 ▇▇▇▇▇▇▇▇
 ##      2        2 ▇▁▁▁▁▁▁▇
 ## 
-## ── Variable type:POSIXct ─────────────────────────────────────────────
+## ── Variable type:POSIXct ───────────────────────────────────────────────────────────
 ##     variable missing complete     n        min        max     median
 ##  last_update       0    16044 16044 2006-02-15 2006-02-23 2006-02-16
 ##  rental_date       0    16044 16044 2005-05-24 2006-02-14 2005-07-28

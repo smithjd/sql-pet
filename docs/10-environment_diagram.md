@@ -173,9 +173,9 @@ file.info("README.md")
 
 ```
 ##           size isdir mode               mtime               ctime
-## README.md 4973 FALSE  644 2018-12-11 17:36:16 2018-12-11 17:36:16
+## README.md 4973 FALSE  644 2018-12-22 17:44:37 2018-12-22 17:44:37
 ##                         atime  uid  gid uname grname
-## README.md 2018-12-21 15:20:27 1000 1000 znmeb  znmeb
+## README.md 2018-12-22 18:12:31 1000 1000 znmeb  znmeb
 ```
 The equivalent information from executing a command on the CLI or terminal would be
 
@@ -185,7 +185,7 @@ system2("ls",  "-l README.md", stdout = TRUE, stderr = FALSE)
 ```
 
 ```
-## [1] "-rw-r--r-- 1 znmeb znmeb 4973 Dec 11 17:36 README.md"
+## [1] "-rw-r--r-- 1 znmeb znmeb 4973 Dec 22 17:44 README.md"
 ```
 ### Get info on the same OS file inside Docker from R Code
 

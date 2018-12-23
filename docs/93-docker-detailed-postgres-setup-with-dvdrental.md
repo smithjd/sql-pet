@@ -24,18 +24,18 @@ library(tidyverse)
 ```
 
 ```
-## ── Attaching packages ───────────────────────────── tidyverse 1.2.1 ──
+## ── Attaching packages ─────────────────────────────────────────── tidyverse 1.2.1 ──
 ```
 
 ```
 ## ✔ ggplot2 3.1.0     ✔ purrr   0.2.5
 ## ✔ tibble  1.4.2     ✔ dplyr   0.7.8
 ## ✔ tidyr   0.8.2     ✔ stringr 1.3.1
-## ✔ readr   1.3.0     ✔ forcats 0.3.0
+## ✔ readr   1.3.1     ✔ forcats 0.3.0
 ```
 
 ```
-## ── Conflicts ──────────────────────────────── tidyverse_conflicts() ──
+## ── Conflicts ────────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()
 ```
@@ -128,8 +128,10 @@ sp_show_all_docker_containers()
 ```
 
 ```
-## CONTAINER ID        IMAGE                COMMAND                  CREATED              STATUS                      PORTS               NAMES
-## ebc94c5574d8        postgres-dvdrental   "docker-entrypoint.s…"   About a minute ago   Exited (0) 10 seconds ago                       sql-pet
+## CONTAINER ID        IMAGE                COMMAND                  CREATED              STATUS                     PORTS               NAMES
+## 5a35bd1cd118        postgres-dvdrental   "docker-entrypoint.s…"   About a minute ago   Exited (0) 4 seconds ago                       sql-pet
+## 4d1200a07f20        fedora:29            "/bin/bash"              7 days ago           Exited (0) 6 days ago                          f29
+## 81a5fdbd6042        rocker/geospatial    "/init"                  10 days ago          Exited (0) 10 days ago                         blissful_greider
 ```
 
 Remove the `sql-pet` container if it exists (e.g., from a prior run)
@@ -189,7 +191,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "1f8ce4043213fee4009a36843c02d94148e13102d100d2342397642d537f35cd"
+## [1] "f62a5209faff208bba781c83029dcf0a650e55f9049d3f17a21434bf2ba2488e"
 ```
 
 Peek inside the docker container and list the files in the `petdir`
@@ -232,8 +234,10 @@ sp_show_all_docker_containers()
 ```
 
 ```
-## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES
-## 1f8ce4043213        postgres:10         "docker-entrypoint.s…"   4 seconds ago       Up 3 seconds        0.0.0.0:5432->5432/tcp   sql-pet
+## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                   PORTS                    NAMES
+## f62a5209faff        postgres:10         "docker-entrypoint.s…"   4 seconds ago       Up 3 seconds             0.0.0.0:5432->5432/tcp   sql-pet
+## 4d1200a07f20        fedora:29           "/bin/bash"              7 days ago          Exited (0) 6 days ago                             f29
+## 81a5fdbd6042        rocker/geospatial   "/init"                  10 days ago         Exited (0) 10 days ago                            blissful_greider
 ```
 inside Docker, execute the postgress SQL command-line program to create the dvdrental database:
 
@@ -365,8 +369,10 @@ sp_show_all_docker_containers()
 ```
 
 ```
-## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                    PORTS               NAMES
-## 1f8ce4043213        postgres:10         "docker-entrypoint.s…"   20 seconds ago      Exited (0) 1 second ago                       sql-pet
+## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES
+## f62a5209faff        postgres:10         "docker-entrypoint.s…"   16 seconds ago      Exited (0) Less than a second ago                       sql-pet
+## 4d1200a07f20        fedora:29           "/bin/bash"              7 days ago          Exited (0) 6 days ago                                   f29
+## 81a5fdbd6042        rocker/geospatial   "/init"                  10 days ago         Exited (0) 10 days ago                                  blissful_greider
 ```
 
 We are leaving the `sql-pet` container intact so it can be used in running the
