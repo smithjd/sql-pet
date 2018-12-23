@@ -2,8 +2,8 @@
 
 > This chapter demonstrates how to:
 > 
-> * Use prinmary and foreign keys to retrieve specific rows of a table
-> * do different kinds of queries
+> * Use primary and foreign keys to retrieve specific rows of a table
+> * do different kinds of join queries
 > * Exercises
 > * Query the database to get basic information about each dvdrental story
 > * How to interact with the database using different strategies
@@ -24,17 +24,21 @@ Verify Docker is up and running:
 ```{r}
 sp_check_that_docker_is_up()
 ```
-verify pet DB is available, it may be stopped.
+
+Verify pet DB is available, it may be stopped.
+
 ```{r}
 sp_show_all_docker_containers()
 ```
+
 Start up the `docker-pet` container
+
 ```{r}
 sp_docker_start("sql-pet")
 ```
 
+Now connect to the database with R
 
-now connect to the database with R
 ```{r}
 # need to wait for Docker & Postgres to come up before connecting.
 
@@ -46,48 +50,300 @@ con <- sp_get_postgres_connection(
 )
 ```
 
+## Database Privileges
+
+In the DVD rental database, you have all database privileges to perform any CRUD operaion, create, read, update, and delete on any database object.  As a data analyst, you typically only get select privilege which allows you to read only a subset of the tables in a database.  Occasionally, a proof of concept project may have a sandbox spun up where users are granted additional priviledges.
+
 ## Database constraints
 
-As a data analyst, you really do not have to worry about database constraints since you are primarily writing dplyr/SQL queries to pull data out of the database.  Constraints can be enforced at multiple levels, column, table, multiple tables, or at the schema itself.  
+As a data analyst, you really do not need to worry about database constraints since you are primarily writing dplyr/SQL queries to pull data out of the database. Constraints can be enforced at multiple levels: column, table, multiple tables, or at the schema itself.  The common database constraints are a column is `NOT NULL`, a column is `UNIQUE`, a column is a `PRIMARY KEY`, both `NOT NULL` and `UNIQUE`, or a column is a `FOREIGN KEY`, the `PRIMARY KEY` on another table.  Constraints restrict column values to a set of defined values and help enforce referential integrity between tables.
 
-For this tutorial, we are primarily concerned with primary and foreign key constraints.  If one looks at all the tables in the DVD Rental ERD, the first column is the name of the table followed by "id".  This is the primary key on the table.  In some of the tables, there are other columns that begin with the name of a different table, the foreign table, and end in "_id".  These are foreign keys and the foreign key value is the primary key value on the foreign table.  The DBA will index the primary and foreign key columns to speed up query performanace.  
+### DVD Rental Primary Foreign Key Constraints
+
+For this tutorial, we are primarily concerned with primary and foreign key relationships between tables in order to correctly join the data between tables.  If one looks at all the tables in the DVD Rental ERD, add link here, the first column is the name of the table followed by "_id".  This is the primary key on the table.  In some of the tables, there are other columns that begin with the name of a different table, the foreign table, and end in "_id".  These are foreign keys and the foreign key value is the primary key value on the foreign table.  The DBA will index the primary and foreign key columns to speed up query performanace.
+
+In the table below, all the primary foreign key relationships are shown because the DVD rental system is small.  Real world databases typically have hundreds or thousands of primary foreign key relationships.  In the search box, enter 'PRIMARY' or 'FOREIGN' to see the table primary key or the table's foreign key relationships.
+
+```{r echo=FALSE}
+tbl_pk_fk_df <- DBI::dbGetQuery(
+  con,
+  "
+SELECT --t.table_catalog,t.table_schema,
+   c.table_name
+	,kcu.column_name
+	,c.constraint_name
+	,c.constraint_type
+	,coalesce(c2.table_name, '') ref_table
+	,coalesce(kcu2.column_name, '') ref_table_col
+FROM information_schema.tables t
+LEFT JOIN information_schema.table_constraints c
+  ON t.table_catalog = c.table_catalog
+    AND t.table_schema = c.table_schema
+    AND t.table_name = c.table_name
+LEFT JOIN information_schema.key_column_usage kcu
+	ON c.constraint_schema = kcu.constraint_schema
+		AND c.constraint_name = kcu.constraint_name
+LEFT JOIN information_schema.referential_constraints rc
+	ON c.constraint_schema = rc.constraint_schema
+		AND c.constraint_name = rc.constraint_name
+LEFT JOIN information_schema.table_constraints c2
+	ON rc.unique_constraint_schema = c2.constraint_schema
+		AND rc.unique_constraint_name = c2.constraint_name
+LEFT JOIN information_schema.key_column_usage kcu2
+	ON c2.constraint_schema = kcu2.constraint_schema
+		AND c2.constraint_name = kcu2.constraint_name
+		AND kcu.ordinal_position = kcu2.ordinal_position
+WHERE c.constraint_type IN ('PRIMARY KEY', 'FOREIGN KEY')
+  AND c.table_catalog = 'dvdrental'
+	AND c.table_schema = 'public'
+ORDER BY c.table_name;
+"
+)
+
+sp_print_df(tbl_pk_fk_df %>% select(table_name,column_name,constraint_type,ref_table, ref_table_col))
+```
+
+Searching for 'FOREIGN' in the table above, one sees that the `column_name` matches the `ref_table_col`. This is pretty typical, but not always the case.  This can occur because of an inconsistent naming convention in the application design or a table contains multiple references to the same table foreign table and each reference indicates a different role.  A non-DVD rental example of the latter is a patient transaction record that has a referring doctor and and performing doctor. The two columns will have different names, but may refer to the same or different doctors in the doctor table.  In this case you may hear one say that the doctor table is performing two different roles.  
+
 
 ## Making up data for Join Examples
 
-### insert yourself as a new customer
+Each chapter in the book stands on its own.  If you have worked through the code blocks in this chapter in a previous session, you created some new customer records and cloned the film table as smy_film in order to work through material in the rest of the chapter. In the next couple of code blocks, we delete the new data and recreate the smy_film table for the join examples below.
+
+### SQL Delete Data Syntax
+
+```
+    DELETE FROM <source> WHERE <where_clause>;
+```
+
+### Delete New Practice Customers from the Customer table.
+
+In the next code block we delete out the new customers that were added when the book was compliled or added working through the exercises.  Out of the box, the DVD rental database's highest customer_id = 599.
+
+```
+dbExecute() always returns a scalar numeric that specifies the number of rows affected by the statement. 
+```
 
 ```{r}
-# Customer 600 should be the next customer.
-# It gets deleted here just in case it was added in a different session.
 dbExecute(
   con,
   "delete from customer 
-   where customer_id = 600;
-  "
-)
-# Now add yourself as the next customer.  Replace Sophie Yang with your name.
-dbExecute(
-  con,
-  "insert into customer 
-  (customer_id,store_id,first_name,last_name,email,address_id
-  ,activebool,create_date,last_update,active)
-  values(600,2,'Sophie','Yang','email@email.com',1,TRUE,now()::date,now()::date,1)
-  ;
+   where customer_id >= 600;
   "
 )
 ```
 
-The `film` table has a primary key, film_id, and a foreign key column, language_id.  One cannot insert a new row into the film table with a language_id = 10 because of a constraint on the language_id column.  The language_id value must already exist in the `language` table before the database will allow the new row to be inserted into the table.  
+The number above tells us how many rows were actually deleted from the customer table.
+
+### SQL Single Row Insert Data Syntax
+
+```
+    INSERT INTO <target> <column_list> VALUES <values list>;
+    <target> : target table/view
+    <column list> : csv list of columns
+    <values list> : values assoicated with the column list.
+```
+
+The `column list` is the list of column names on the table and the corresponding list of values have to have the correct data type.  The following code block returns the `CUSTOMER` column names and data types.
+
+```{r}
+customer_cols <- dbGetQuery(con,
+       "select table_name, column_name, ordinal_position, data_type 
+          from information_schema.columns 
+         where table_catalog = 'dvdrental' 
+           and table_name = 'customer'
+       ;")
+
+sp_print_df(customer_cols)
+```
+
+In the next code block, we insert Sophie as a new customer into the customer table via a SQL insert statement.  The columns list clause has three id columns, customer_id, store_id, and address_id.  The customer_id is a primary key column and the other two look like foreign key columns.
+
+For now we are interested in getting some new customers into the customer table.  We look at the relations between the customer table and the store and address tables later in this chapter.
+
+
+```{r}
+dbExecute(
+  con,
+  "insert into customer 
+  (customer_id,store_id,first_name,last_name,email,address_id,activebool
+  ,create_date,last_update,active)
+  values(600,3,'Sophie','Yang','sophie.yang@sakilacustomer.org',1,TRUE,now(),now()::date,1)
+  ") 
+
+new_customers <- dbGetQuery(con,'select * from customer where customer_id >= 600;')
+sp_print_df(new_customers)
+
+```
+
+### Primary and Foreign Key Constraint Error Messages
+
+For the new customers, we are concerned with not violating the PK and FK constraints.
+
+If the customer_id = 600 value is changed to 599, the database throws the following error message.
+
+```
+Error in result_create(conn@ptr, statement) : Failed to fetch row: ERROR: duplicate key value violates unique constraint "customer_pkey" DETAIL: Key (customer_id)=(599) already exists.
+```
+
+If the address_id value = 1 is changed to 611, the database throws the following error message:
+
+```
+Error in result_create(conn@ptr, statement) : Failed to fetch row: ERROR: insert or update on table "customer" violates foreign key constraint "customer_address_id_fkey" DETAIL: Key (address_id)=(611) is not present in table "address".
+```
+
+### R Exercise: Inserting a Single Row via a Dataframe
+
+In the following code block replace Sophie Yang with your name where appropriate.  
+Note:
+
+1.  The last data frame parameter sets the stringsAsFactors is `FALSE`.  Databases do not have a native `FACTOR` type.
+2.  The dataframe column names must match the table column names. 
+3.  The dbWriteTable function needs `append` = true to actually insert the new row.
+
+```{r}
+
+df <- data.frame(customer_id=601
+                ,store_id=2
+                ,first_name='Sophie'
+                ,last_name='Yang'
+                ,email='sophie.yang@sakilacustomer.org'
+                ,address_id=1
+                ,activebool=TRUE
+                ,create_date=Sys.Date()
+                ,last_update=Sys.time(),active=1
+                ,stringsAsFactors = FALSE)
+dbWriteTable(con, "customer", value = df, append = TRUE, row.names = FALSE)
+
+new_customers <- dbGetQuery(con,'select * from customer where customer_id >= 600;')
+sp_print_df(new_customers)
+```
+
+## SQL Multi-Row Insert Data Syntax
+
+```
+    INSERT INTO <target> <column_list> VALUES <values list1>, ... <values listn>;
+    <target> : target table/view
+    <column list> : csv list of columns
+    <values list> : values assoicated with the column list.
+```
+
+Postgres and some other flavors of SQL allow multiple rows to be inserted at a time.  The syntax is identical to the Single Row syntax, but includes multiple `<values list>` clauses separated by commas.  The following code block illustrates the SQL multi-row insert.  Note that the customer_id column takes on sequential values to satisfy the PK constraint.
+
+
+## SQL Multi-Row Insert Data Example
+
+```{r}
+#
+dbExecute(
+  con,
+  "insert into customer 
+  (customer_id,store_id,first_name,last_name,email,address_id,activebool
+  ,create_date,last_update,active)
+   values(602,1,'John','Smith','john.smith@sakilacustomer.org',2,TRUE
+         ,now()::date,now()::date,1)
+         ,(603,1,'Ian','Frantz','ian.frantz@sakilacustomer.org',3,TRUE
+         ,now()::date,now()::date,1)
+         ,(604,1,'Ed','Borasky','ed.borasky@sakilacustomer.org',4,TRUE
+         ,now()::date,now()::date,1)
+         ;")
+```
+
+The Postgres R multi-row insert is similar to the single row insert.  The single column values are converted to a vector of values.
+
+### R Exercise: Inserting Multiple Rows via a Dataframe
+
+Replace the two first_name, last_name, and email column values with your own made up values.
+
+```{r}
+
+customer_id <- c(605,606)
+store_id    <- c(3,4)
+first_name  <- c('John','Ian')
+last_name   <- c('Smith','Frantz')
+email       <- c('john.smith@sakilacustomer.org'
+                ,'ian.frantz@sakilacustomer.org')
+address_id  <- c(3,4)
+activebool  <- c(TRUE,TRUE)
+create_date <- c(Sys.Date(),Sys.Date())
+last_update <- c(Sys.time(),Sys.time())
+active      <- c(1,1)
+
+df2 <- data.frame(customer_id,store_id,first_name,last_name,email,address_id
+            ,activebool,create_date,last_update,active,stringsAsFactors = FALSE)
+
+
+dbWriteTable(con, "customer", 
+             value = df2, append = TRUE, row.names = FALSE)
+
+new_customers <- dbGetQuery(con,'select * from customer where customer_id >= 600;')
+sp_print_df(new_customers)
+```
+
+The `film` table has a primary key, film_id, and a foreign key column, language_id.  In the next code bloock we see five sample rows from the film table.
+
+```{r}
+films <- dbGetQuery(con,
+       "select film_id,title, language_id
+          from film 
+        order by film_id
+        limit 5
+       ;")
+
+sp_print_df(films)
+```
+
+The next code block all the rows in the  language table.
+
+```{r}
+languages <- dbGetQuery(con,
+       "select language_id, name, last_update from language
+       ;")
+
+sp_print_df(languages)
+```
+
+One cannot insert/update a new row into the film table with a language_id = 10 because of a constraint on the language_id column.  The language_id value must already exist in the `language` table before the database will allow the new row to be inserted into the table. 
+```{r}
+
+dbExecute(con,"update film set language_id = 1 where film_id = 1;")
+
+dbExecute(con,"
+do $$
+DECLARE v_id INTEGER;
+begin
+    v_id = 3;
+    update film set language_id = v_id where film_id = 1;
+exception
+when foreign_key_violation then
+    raise notice 'SQLERRM = %, language_id = %', SQLERRM, v_id;
+when others then
+    raise notice 'SQLERRM = % SQLSTATE =%', SQLERRM, SQLSTATE;
+end;
+$$ language 'plpgsql';")
+
+dbGetQuery(con,'select * from film where film_id = 1;')
+```
+
+```{r}
+#
+dbExecute(con,'ALTER TABLE film DISABLE TRIGGER ALL;')
+
+
+
+count <- dbExecute(con,"update film set language_id = 10 where film_id = 1;")
+dbExecute(con,'ALTER TABLE film ENABLE TRIGGER ALL;')
+```
 
 To work around this inconvenience for the tutorial:
 
-1.  we drop the smy_film table if it exists from a previous session.
+1.  We drop the smy_film table if it exists from a previous session.
 
 ```{r}
 dbExecute(con, "drop table if exists smy_film;")
 ```
 
-2.  we create a new table smy_film from the film table and add a new row with a language_id = 10;
+2.  We create a new table smy_film with the same structure as the film table 
 
 ```{r}
 dbExecute(con, "create table smy_film as select * from film;")
@@ -121,11 +377,15 @@ dbGetQuery(
 
 ## Joins
 
-In section 'SQL Quick Start Simple Retrieval', there is a brief discussion of databases and 3NF.  The goal of normalization is to push the data into separate tables at a very granular level.  
+In section 'SQL Quick Start Simple Retrieval', there is a brief discussion of databases and 3NF.  One of the goals of normalization is to eliminate redundant data being kept in multiple tables and having each table contain a very granular level of detail.  If a record then needs to be updated, it is updated in one table instead of multiple tables improving overall system performance.  This also helps simplify and maintain referential integerity between tables.
 
 Bill Kent famously summarized 3NF as every non-key column "must provide a fact about the key,the whole key, and nothing but the key, so help me Codd." 
 
-Normalization breaks data down and JOINs denormalizes the data and builds it back up.
+Normalization breaks data down and JOINs denormalizes the data and builds it back up.  The tables are typically related via a primary key - foreign key relationship. The Postgres database enforces the primary and foreign key constraints in the DVD rental database.  
+
+
+
+### Join Types
 
 ![SQL_JOIN_TYPES](sql_join_types.png)
 
@@ -137,27 +397,33 @@ Instead of showing standard Venn diagrams showing the different JOINS, we use an
 
 ### Valentines Party
 
-Imagine you are at a large costume Valentine's Day dance party.  The hostess of the party, a data scientist, would like to learn more about the people attending her party.  She interrupts the music to let everyone know it is time for the judges to evaluate the winners for best costumes and associated prizes.
+Imagine you are at a large costume Valentine's Day dance party.  The hostess of the party, a data scientist, would like to learn more about the people attending her party.  When the band takes a break, she lets everyone know it is time for the judges to evaluate the winners for best costumes and associated prizes.
+
+![ValentinesDay](ValentinesDay.png)
+
+
 
 She requests the following:
 
-1.  All the couples at the party to line up in front of her with the men on the left and the women on the right, (inner join)
+1.  All the couples at the party line up in front of her with the men on her left and the women on her right, (inner join)
 
-2.  All the remaining men to form a second line two feet behind the married men,(left outer join)
+2.  All the remaining men to form a second line two feet behind the married men, (left outer join, all couples + unattached men)
 
-3.  Right Outer Join: All the remaining women to form a third line two feet in front of the married women, (right outer join, all couples + unattached women)
+3.  All the remaining women to form a third line two feet in front of the married women, (right outer join, all couples + unattached women)
 
-Full Outer Join -- As our data scientist looks out at the three lines, she can clearly see the three distinct lines, her full outer join.  
+As our data scientist looks out, she can clearly see the three distinct lines, the single men, the man woman couples, and the single women, a full outer join.  
 
 As the three judges start walking down the lines, she makes one more announcement.
 
-4.  There is a special prize for the man and woman who can guess the average age of the members of the opposite sex. To give everyone a chance to come up with an average age, she asks the men to stay in line and the women to move down the mens line in order circling back around until they get back to their starting point in line, (full outer join, every man seen by every woman and vice versa).  
+4.  There is a special prize for the man and woman who can guess the average age of the members of the opposite sex. To give everyone a chance to come up with an average age, she asks the men to stay in line and the women to move down the mens line in order circling back around until they get back to their starting point in line, (cartesian join, every man seen by every woman and vice versa).  
 
 It is hard enough to tell someone's age when they don't have a mask, how do you get the average age when people have masks?
 
 The hostess knows that there is usually some data anomolies.  As she looks out she sees a small cluster of people who did not line up.  Being the hostess with the mostest, she wants to get to know that small cluster better.  Since they are far off and in costume, she cannot tell if they are men or women.  More importantly, she does not know if they identify as a man or a woman, both -- (kind of a stretch for a self join), neither, or something else.  Ahh, the inquisitive mind wants to know.
 
 ### Join Syntax
+
+The table below shows the two R join function call formats, standalone function call and pipe function call and the corresponding SQL join format.
 
 |Join|dplyr                                                                            |sql
 |-----|--------------------------------------------------------------------------------|------------------------------------------------------
@@ -175,17 +441,23 @@ The hostess knows that there is usually some data anomolies.  As she looks out s
 
 The dplyr join documentation describes two different types of joins, `mutating` and `filtering` joins.  For those coming to R with a SQL background, the mutating documentation is misleading in one respect.  Here is the inner_join documentation.
 
+```
     inner_join()
     
     return all rows from x where there are matching values in y, and all columns from x and y. If there are multiple matches between x and y, all combination of the matches are returned.
+```
 
-The misleading part is that all the columns from *x* and *y*.  If the join column is `KEY`, SQL will return x.KEY and y.KEY.  Dplyr retuns KEY.  It appears that the KEY value comes from the key/driving table.  This difference should become clear in the outer join examples.
+The misleading part is that all the columns from *x* and *y*.  If the join column is `KEY`, SQL will return x.KEY and y.KEY.  Dplyr retuns KEY.  It appears that the KEY value comes from the driving table.  This difference should become clear in the outer join examples.
 
 In the next couple of examples, we will pull all the language and smy_film table data from the database into memory because the tables are small.  In the *_join verbs, the `by` and `suffix` parameters are included because it helps document the actual join and the source of join columns.
 
-## Natural Join Time Bomb
+## Natural Join Delayed Time Bomb
 
-The dplyr default join is a natural join, joining tables on common column names.  One of many links why one should not use natural joins can be found [here](http://gplivna.blogspot.com/2007/10/natural-joins-are-evil-motto-if-you.html).
+The dplyr default join is a natural join, joining tables on common column names.  One of many links why one should not use natural joins can be found [here](http://gplivna.blogspot.com/2007/10/natural-joins-are-evil-motto-if-you.html).  If two tables are joined via a natural join on column `C1` the join continues to work as long as no additional common columns are added to either table.  If a new new column `C2` is added to one of the tables and `C2` already exists in the other table, BOOM, the delayed time bomb goes off.  The natural join still executes, doesn't throw any errors, but the returned result set may be smaller, much smaller, than before the new `C2` column was added.  
+
+For example, assume that one has a product table with columns `product_id`, `product_name`, and `aka`.  
+
+
 
 <!-- move this example to query optimzation section 
 
@@ -218,7 +490,7 @@ rs <- dbGetQuery(
   group by l.language_id,l.name;"
 )
 
-rs
+sp_print_df(rs)
 ```
 
 -->
@@ -253,7 +525,7 @@ languages_ij <- language_table %>%
   group_by(language_id, name) %>%
   summarize(inner_joins = n())
 
-languages_ij
+sp_print_df(languages_ij)
 ```
 
 #### SQL Inner Join
@@ -266,7 +538,7 @@ rs <- dbGetQuery(
   group by l.language_id,l.name;"
 )
 
-rs
+sp_print_df(rs)
 ```
 
 The output tells us that there are 1000 inner joins between the language_table and the film_table.
@@ -286,7 +558,7 @@ languages_loj <- language_table %>%
   select(join_type, language_id, film_lang_id, name, lojs)
 print(languages_loj)
 # View(languages_loj)
-# sp_print_df(languages_loj)
+sp_print_df(languages_loj)
 ```
 
 Compare the mutate verb in the above code block with film_lang_id in the equivalent SQL code block below.
@@ -305,8 +577,8 @@ rs <- dbGetQuery(
   group by l.language_id,l.name,f.language_id
 order by l.language_id;"
 )
-# sp_print_df(rs)
-rs
+sp_print_df(rs)
+#rs
 ```
 
 The lojs column returns the number of rows found on the keys from the left table, language, and the right table, the film table.  For the "English" row, the language_id and film_lang_id match and a 1000 inner joins were performed.  For all the other languages, there was only 1 join and they all came from the left outer table, the language table, language_id's 2 - 6.  The right table, the film table returned NA, because no match was found.
@@ -1003,7 +1275,8 @@ rental_tbl <- dplyr::tbl(con, "rental")
 dplyr_tbl_loj <-
   left_join(customer_tbl, rental_tbl, by = "customer_id", suffix = c(".c", ".r")) %>%
   filter(is.na(rental_id)) %>%
-  select(c("first_name", "last_name", "email"))
+  select(c("first_name", "last_name", "email")) %>% 
+  collect()
 
 rs <- dbGetQuery(
   con,
@@ -1017,7 +1290,7 @@ rs <- dbGetQuery(
                  "
 )
 sp_print_df(head(rs))
-View(dplyr_tbl_loj)
+sp_print_df(dplyr_tbl_loj)
 ```
 
 ```{r echo = FALSE}
@@ -1059,10 +1332,10 @@ ORDER BY c.table_name;
 "
 )
 
-View(tbl_pk_fk_df)
+sp_print_df(tbl_pk_fk_df)
 
 tables_df <- tbl_pk_fk_df %>% distinct(table_name)
-View(tables_df)
+sp_print_df(tables_df)
 ```
 
 ```{r create nodes,echo = FALSE}
@@ -1095,8 +1368,8 @@ tbl_pk_fk_ids_df <- inner_join(tbl_pk_fk_df, table_nodes_ndf
 tbl_fk_df <- tbl_pk_fk_ids_df %>% filter(constraint_type == "FOREIGN KEY")
 tbl_pk_df <- tbl_pk_fk_ids_df %>% filter(constraint_type == "PRIMARY KEY")
 # View(tbl_pk_fk_ids_df)
-View(tbl_fk_df)
-View(tbl_pk_df)
+sp_print_df(tbl_fk_df)
+sp_print_df(tbl_pk_df)
 ```
 
 ```{r echo = FALSE}
@@ -1110,7 +1383,7 @@ fk_edf <-
     label = tbl_fk_df$constraint_name,
     fontsize = 15
   )
-# View(fk_edf)
+sp_print_df(fk_edf)
 ```
 
 ```{r echo = FALSE}
@@ -1136,6 +1409,22 @@ sp_docker_stop("sql-pet")
 knitr::knit_exit()
 ```
 testit
-```{r}
+```{r testit}
+# dbExecute(con, "create table smy_customer as select * from customer;")
 
+df <- data.frame(customer_id=601
+                ,store_id=2
+                ,first_name='Sophie'
+                ,last_name='Yang'
+                ,email='sophie.yang@sakilacustomer.org'
+                ,address_id=1
+                ,activebool=TRUE
+                ,create_date=Sys.Date()
+                ,last_update=Sys.time(),active=1
+                ,stringsAsFactors = FALSE)
+dbWriteTable(con, "smy_customer", value = df, append = TRUE, row.names = FALSE)
+```
+
+```{r}
+dbListFields(con,'smy_customer')
 ```
