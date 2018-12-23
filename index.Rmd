@@ -8,7 +8,6 @@ description: A collection of tutorials for integrating R with databases using Do
 documentclass: book
 link-citations: yes
 site: bookdown::bookdown_site
-biblio-style: apalike
 ---
 
 # Introduction
