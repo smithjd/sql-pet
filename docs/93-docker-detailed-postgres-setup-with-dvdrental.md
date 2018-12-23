@@ -129,8 +129,8 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE                COMMAND                  CREATED              STATUS                     PORTS               NAMES
-## 5a35bd1cd118        postgres-dvdrental   "docker-entrypoint.s…"   About a minute ago   Exited (0) 4 seconds ago                       sql-pet
-## 4d1200a07f20        fedora:29            "/bin/bash"              7 days ago           Exited (0) 6 days ago                          f29
+## fb1657cb4bd1        postgres-dvdrental   "docker-entrypoint.s…"   About a minute ago   Exited (0) 4 seconds ago                       sql-pet
+## 4d1200a07f20        fedora:29            "/bin/bash"              7 days ago           Exited (0) 7 days ago                          f29
 ## 81a5fdbd6042        rocker/geospatial    "/init"                  10 days ago          Exited (0) 10 days ago                         blissful_greider
 ```
 
@@ -191,7 +191,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "f62a5209faff208bba781c83029dcf0a650e55f9049d3f17a21434bf2ba2488e"
+## [1] "a93b5e7fba9175248c5cf982b411813b92c6e0d0f2cffe97d4e475237396b7c3"
 ```
 
 Peek inside the docker container and list the files in the `petdir`
@@ -235,8 +235,8 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                   PORTS                    NAMES
-## f62a5209faff        postgres:10         "docker-entrypoint.s…"   4 seconds ago       Up 3 seconds             0.0.0.0:5432->5432/tcp   sql-pet
-## 4d1200a07f20        fedora:29           "/bin/bash"              7 days ago          Exited (0) 6 days ago                             f29
+## a93b5e7fba91        postgres:10         "docker-entrypoint.s…"   4 seconds ago       Up 3 seconds             0.0.0.0:5432->5432/tcp   sql-pet
+## 4d1200a07f20        fedora:29           "/bin/bash"              7 days ago          Exited (0) 7 days ago                             f29
 ## 81a5fdbd6042        rocker/geospatial   "/init"                  10 days ago         Exited (0) 10 days ago                            blissful_greider
 ```
 inside Docker, execute the postgress SQL command-line program to create the dvdrental database:
@@ -370,8 +370,8 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## f62a5209faff        postgres:10         "docker-entrypoint.s…"   16 seconds ago      Exited (0) Less than a second ago                       sql-pet
-## 4d1200a07f20        fedora:29           "/bin/bash"              7 days ago          Exited (0) 6 days ago                                   f29
+## a93b5e7fba91        postgres:10         "docker-entrypoint.s…"   16 seconds ago      Exited (0) Less than a second ago                       sql-pet
+## 4d1200a07f20        fedora:29           "/bin/bash"              7 days ago          Exited (0) 7 days ago                                   f29
 ## 81a5fdbd6042        rocker/geospatial   "/init"                  10 days ago         Exited (0) 10 days ago                                  blissful_greider
 ```
 
