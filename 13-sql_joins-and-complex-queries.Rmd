@@ -100,7 +100,7 @@ ORDER BY c.table_name;
 "
 )
 
-sp_print_df(tbl_pk_fk_df %>% select(table_name,column_name,constraint_type,ref_table, ref_table_col))
+sp_print_df(tbl_pk_fk_df %>% select(table_name, column_name, constraint_type, ref_table, ref_table_col))
 ```
 
 Searching for 'FOREIGN' in the table above, one sees that the `column_name` matches the `ref_table_col`. This is pretty typical, but not always the case.  This can occur because of an inconsistent naming convention in the application design or a table contains multiple references to the same table foreign table and each reference indicates a different role.  A non-DVD rental example of the latter is a patient transaction record that has a referring doctor and and performing doctor. The two columns will have different names, but may refer to the same or different doctors in the doctor table.  In this case you may hear one say that the doctor table is performing two different roles.  
@@ -147,12 +147,14 @@ The number above tells us how many rows were actually deleted from the customer 
 The `column list` is the list of column names on the table and the corresponding list of values have to have the correct data type.  The following code block returns the `CUSTOMER` column names and data types.
 
 ```{r}
-customer_cols <- dbGetQuery(con,
-       "select table_name, column_name, ordinal_position, data_type 
+customer_cols <- dbGetQuery(
+  con,
+  "select table_name, column_name, ordinal_position, data_type 
           from information_schema.columns 
          where table_catalog = 'dvdrental' 
            and table_name = 'customer'
-       ;")
+       ;"
+)
 
 sp_print_df(customer_cols)
 ```
@@ -169,11 +171,11 @@ dbExecute(
   (customer_id,store_id,first_name,last_name,email,address_id,activebool
   ,create_date,last_update,active)
   values(600,3,'Sophie','Yang','sophie.yang@sakilacustomer.org',1,TRUE,now(),now()::date,1)
-  ") 
+  "
+)
 
-new_customers <- dbGetQuery(con,'select * from customer where customer_id >= 600;')
+new_customers <- dbGetQuery(con, "select * from customer where customer_id >= 600;")
 sp_print_df(new_customers)
-
 ```
 
 <<<<<<< HEAD
@@ -206,19 +208,21 @@ Note:
 
 ```{r}
 
-df <- data.frame(customer_id=601
-                ,store_id=2
-                ,first_name='Sophie'
-                ,last_name='Yang'
-                ,email='sophie.yang@sakilacustomer.org'
-                ,address_id=1
-                ,activebool=TRUE
-                ,create_date=Sys.Date()
-                ,last_update=Sys.time(),active=1
-                ,stringsAsFactors = FALSE)
+df <- data.frame(
+  customer_id =
+    601, store_id =
+    2, first_name =
+    "Sophie", last_name =
+    "Yang", email =
+    "sophie.yang@sakilacustomer.org", address_id =
+    1, activebool =
+    TRUE, create_date =
+    Sys.Date(), last_update = Sys.time(), active =
+    1, stringsAsFactors = FALSE
+)
 dbWriteTable(con, "customer", value = df, append = TRUE, row.names = FALSE)
 
-new_customers <- dbGetQuery(con,'select * from customer where customer_id >= 600;')
+new_customers <- dbGetQuery(con, "select * from customer where customer_id >= 600;")
 sp_print_df(new_customers)
 ```
 
@@ -249,7 +253,8 @@ dbExecute(
          ,now()::date,now()::date,1)
          ,(604,1,'Ed','Borasky','ed.borasky@sakilacustomer.org',4,TRUE
          ,now()::date,now()::date,1)
-         ;")
+         ;"
+)
 ```
 
 The Postgres R multi-row insert is similar to the single row insert.  The single column values are converted to a vector of values.
@@ -260,38 +265,44 @@ Replace the two first_name, last_name, and email column values with your own mad
 
 ```{r}
 
-customer_id <- c(605,606)
-store_id    <- c(3,4)
-first_name  <- c('John','Ian')
-last_name   <- c('Smith','Frantz')
-email       <- c('john.smith@sakilacustomer.org'
-                ,'ian.frantz@sakilacustomer.org')
-address_id  <- c(3,4)
-activebool  <- c(TRUE,TRUE)
-create_date <- c(Sys.Date(),Sys.Date())
-last_update <- c(Sys.time(),Sys.time())
-active      <- c(1,1)
+customer_id <- c(605, 606)
+store_id <- c(3, 4)
+first_name <- c("John", "Ian")
+last_name <- c("Smith", "Frantz")
+email <- c(
+  "john.smith@sakilacustomer.org", "ian.frantz@sakilacustomer.org"
+)
+address_id <- c(3, 4)
+activebool <- c(TRUE, TRUE)
+create_date <- c(Sys.Date(), Sys.Date())
+last_update <- c(Sys.time(), Sys.time())
+active <- c(1, 1)
 
-df2 <- data.frame(customer_id,store_id,first_name,last_name,email,address_id
-            ,activebool,create_date,last_update,active,stringsAsFactors = FALSE)
+df2 <- data.frame(customer_id, store_id, first_name, last_name, email,
+  address_id, activebool, create_date, last_update, active,
+  stringsAsFactors = FALSE
+)
 
 
-dbWriteTable(con, "customer", 
-             value = df2, append = TRUE, row.names = FALSE)
+dbWriteTable(con, "customer",
+  value = df2, append = TRUE, row.names = FALSE
+)
 
-new_customers <- dbGetQuery(con,'select * from customer where customer_id >= 600;')
+new_customers <- dbGetQuery(con, "select * from customer where customer_id >= 600;")
 sp_print_df(new_customers)
 ```
 
 The `film` table has a primary key, film_id, and a foreign key column, language_id.  In the next code bloock we see five sample rows from the film table.
 
 ```{r}
-films <- dbGetQuery(con,
-       "select film_id,title, language_id
+films <- dbGetQuery(
+  con,
+  "select film_id,title, language_id
           from film 
         order by film_id
         limit 5
-       ;")
+       ;"
+)
 
 sp_print_df(films)
 ```
@@ -299,9 +310,11 @@ sp_print_df(films)
 The next code block all the rows in the  language table.
 
 ```{r}
-languages <- dbGetQuery(con,
-       "select language_id, name, last_update from language
-       ;")
+languages <- dbGetQuery(
+  con,
+  "select language_id, name, last_update from language
+       ;"
+)
 
 sp_print_df(languages)
 ```
@@ -309,9 +322,9 @@ sp_print_df(languages)
 One cannot insert/update a new row into the film table with a language_id = 10 because of a constraint on the language_id column.  The language_id value must already exist in the `language` table before the database will allow the new row to be inserted into the table. 
 ```{r}
 
-dbExecute(con,"update film set language_id = 1 where film_id = 1;")
+dbExecute(con, "update film set language_id = 1 where film_id = 1;")
 
-dbExecute(con,"
+dbExecute(con, "
 do $$
 DECLARE v_id INTEGER;
 begin
@@ -325,17 +338,17 @@ when others then
 end;
 $$ language 'plpgsql';")
 
-dbGetQuery(con,'select * from film where film_id = 1;')
+dbGetQuery(con, "select * from film where film_id = 1;")
 ```
 
 ```{r}
 #
-dbExecute(con,'ALTER TABLE film DISABLE TRIGGER ALL;')
+dbExecute(con, "ALTER TABLE film DISABLE TRIGGER ALL;")
 
 
 
-count <- dbExecute(con,"update film set language_id = 10 where film_id = 1;")
-dbExecute(con,'ALTER TABLE film ENABLE TRIGGER ALL;')
+count <- dbExecute(con, "update film set language_id = 10 where film_id = 1;")
+dbExecute(con, "ALTER TABLE film ENABLE TRIGGER ALL;")
 ```
 >>>>>>> jds-edits-3
 
@@ -558,8 +571,8 @@ The output tells us that there are 1000 inner joins between the language_table a
 languages_loj <- language_table %>%
   left_join(film_table, by = c("language_id", "language_id"), suffix(c(".l", ".f"))) %>%
   mutate(
-    join_type = "loj"
-    , film_lang_id = if_else(is.na(film_id), film_id, language_id)
+    join_type =
+      "loj", film_lang_id = if_else(is.na(film_id), film_id, language_id)
   ) %>%
   group_by(join_type, language_id, name, film_lang_id) %>%
   summarize(lojs = n()) %>%
@@ -586,7 +599,7 @@ rs <- dbGetQuery(
 order by l.language_id;"
 )
 sp_print_df(rs)
-#rs
+# rs
 ```
 
 The lojs column returns the number of rows found on the keys from the left table, language, and the right table, the film table.  For the "English" row, the language_id and film_lang_id match and a 1000 inner joins were performed.  For all the other languages, there was only 1 join and they all came from the left outer table, the language table, language_id's 2 - 6.  The right table, the film table returned NA, because no match was found.
@@ -602,8 +615,8 @@ The lojs column returns the number of rows found on the keys from the left table
 languages_roj <- language_table %>%
   right_join(film_table, by = c("language_id", "language_id"), suffix(c(".l", ".f")), all = film_table) %>%
   mutate(
-    lang_id = if_else(is.na(name), 0L, language_id)
-    , join_type = "rojs"
+    lang_id =
+      if_else(is.na(name), 0L, language_id), join_type = "rojs"
   ) %>%
   group_by(join_type, language_id, name, lang_id) %>%
   summarize(rojs = n()) %>%
@@ -1064,22 +1077,22 @@ rental_table <- tbl(con, "rental") # DBI::dbReadTable(con, "rental")
 est_bal <- rental_table %>%
   left_join(payment_table, by = c("rental_id", "rental_id"), suffix = c(".r", ".p")) %>%
   mutate(
-    missing = ifelse(is.na(payment_id), 1, 0)
-    , found = ifelse(!is.na(payment_id), 1, 0)
+    missing =
+      ifelse(is.na(payment_id), 1, 0), found = ifelse(!is.na(payment_id), 1, 0)
   ) %>%
   summarize(
-    open = sum(missing, na.rm = TRUE)
-    , paid = sum(found, na.rm = TRUE)
-    , paid_amt = sum(amount, na.rm = TRUE)
-    , rentals = n()
+    open =
+      sum(missing, na.rm = TRUE), paid =
+      sum(found, na.rm = TRUE), paid_amt =
+      sum(amount, na.rm = TRUE), rentals = n()
   ) %>%
   summarize(
-    open = open
-    , paid = paid
-    , paid_amt = paid_amt
-    , rentals = rentals
-    , avg_price = paid_amt / paid
-    , est_balance = paid_amt / paid * open
+    open =
+      open, paid =
+      paid, paid_amt =
+      paid_amt, rentals =
+      rentals, avg_price =
+      paid_amt / paid, est_balance = paid_amt / paid * open
   )
 est_bal
 ```
@@ -1283,7 +1296,7 @@ rental_tbl <- dplyr::tbl(con, "rental")
 dplyr_tbl_loj <-
   left_join(customer_tbl, rental_tbl, by = "customer_id", suffix = c(".c", ".r")) %>%
   filter(is.na(rental_id)) %>%
-  select(c("first_name", "last_name", "email")) %>% 
+  select(c("first_name", "last_name", "email")) %>%
   collect()
 
 rs <- dbGetQuery(
@@ -1350,26 +1363,25 @@ sp_print_df(tables_df)
 library(DiagrammeR)
 
 table_nodes_ndf <- create_node_df(
-  n <- nrow(tables_df)
-  , type <- "table"
-  , label <- tables_df$table_name
-  ,
-  shape = "rectangle"
-  , width = 1
-  , height = .5
-  , fontsize = 18
+  n <- nrow(tables_df),
+  type <- "table",
+  label <- tables_df$table_name,
+  shape =
+    "rectangle", width =
+    1, height =
+    .5, fontsize = 18
 )
 
-tbl_pk_fk_ids_df <- inner_join(tbl_pk_fk_df, table_nodes_ndf
-  ,
-  by = c("table_name" = "label")
-  , suffix(c("st", "s"))
+tbl_pk_fk_ids_df <- inner_join(tbl_pk_fk_df,
+  table_nodes_ndf,
+  by =
+    c("table_name" = "label"), suffix(c("st", "s"))
 ) %>%
   rename("src_tbl_id" = id) %>%
-  left_join(table_nodes_ndf
-    ,
-    by = c("ref_table" = "label")
-    , suffix(c("st", "t"))
+  left_join(
+    table_nodes_ndf,
+    by =
+      c("ref_table" = "label"), suffix(c("st", "t"))
   ) %>%
   rename("fk_tbl_id" = id)
 
@@ -1420,19 +1432,21 @@ testit
 ```{r testit}
 # dbExecute(con, "create table smy_customer as select * from customer;")
 
-df <- data.frame(customer_id=601
-                ,store_id=2
-                ,first_name='Sophie'
-                ,last_name='Yang'
-                ,email='sophie.yang@sakilacustomer.org'
-                ,address_id=1
-                ,activebool=TRUE
-                ,create_date=Sys.Date()
-                ,last_update=Sys.time(),active=1
-                ,stringsAsFactors = FALSE)
+df <- data.frame(
+  customer_id =
+    601, store_id =
+    2, first_name =
+    "Sophie", last_name =
+    "Yang", email =
+    "sophie.yang@sakilacustomer.org", address_id =
+    1, activebool =
+    TRUE, create_date =
+    Sys.Date(), last_update = Sys.time(), active =
+    1, stringsAsFactors = FALSE
+)
 dbWriteTable(con, "smy_customer", value = df, append = TRUE, row.names = FALSE)
 ```
 
 ```{r}
-dbListFields(con,'smy_customer')
+dbListFields(con, "smy_customer")
 ```
