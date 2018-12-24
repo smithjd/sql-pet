@@ -24,18 +24,18 @@ library(tidyverse)
 ```
 
 ```
-## ── Attaching packages ─────────────────────────────────────────── tidyverse 1.2.1 ──
+## ── Attaching packages ─────────────────────────── tidyverse 1.2.1 ──
 ```
 
 ```
 ## ✔ ggplot2 3.1.0     ✔ purrr   0.2.5
 ## ✔ tibble  1.4.2     ✔ dplyr   0.7.8
 ## ✔ tidyr   0.8.2     ✔ stringr 1.3.1
-## ✔ readr   1.3.1     ✔ forcats 0.3.0
+## ✔ readr   1.3.0     ✔ forcats 0.3.0
 ```
 
 ```
-## ── Conflicts ────────────────────────────────────────────── tidyverse_conflicts() ──
+## ── Conflicts ────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()
 ```
@@ -86,7 +86,7 @@ library(here)
 ```
 
 ```
-## here() starts at /home/znmeb/Projects/sql-pet
+## here() starts at /Users/jds/Documents/Library/R/r-system/sql-pet
 ```
 
 ## Download the `dvdrental` backup file
@@ -129,9 +129,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE                COMMAND                  CREATED              STATUS                     PORTS               NAMES
-## fb1657cb4bd1        postgres-dvdrental   "docker-entrypoint.s…"   About a minute ago   Exited (0) 4 seconds ago                       sql-pet
-## 4d1200a07f20        fedora:29            "/bin/bash"              7 days ago           Exited (0) 7 days ago                          f29
-## 81a5fdbd6042        rocker/geospatial    "/init"                  10 days ago          Exited (0) 10 days ago                         blissful_greider
+## 0743abfb6d3e        postgres-dvdrental   "docker-entrypoint.s…"   About a minute ago   Exited (0) 5 seconds ago                       sql-pet
 ```
 
 Remove the `sql-pet` container if it exists (e.g., from a prior run)
@@ -162,7 +160,7 @@ wd
 ```
 
 ```
-## [1] "/home/znmeb/Projects/sql-pet"
+## [1] "/Users/jds/Documents/Library/R/r-system/sql-pet"
 ```
 
 ```r
@@ -180,7 +178,7 @@ docker_cmd
 ```
 
 ```
-## run --detach  --name sql-pet --publish 5432:5432 --mount type=bind,source="/home/znmeb/Projects/sql-pet",target=/petdir postgres:10
+## run --detach  --name sql-pet --publish 5432:5432 --mount type=bind,source="/Users/jds/Documents/Library/R/r-system/sql-pet",target=/petdir postgres:10
 ```
 
 
@@ -191,7 +189,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "a93b5e7fba9175248c5cf982b411813b92c6e0d0f2cffe97d4e475237396b7c3"
+## [1] "9c5c19a169cc03b776cabfdc86c94a59a3777b1a61ca982a2fb71319023e0583"
 ```
 
 Peek inside the docker container and list the files in the `petdir`
@@ -234,10 +232,8 @@ sp_show_all_docker_containers()
 ```
 
 ```
-## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                   PORTS                    NAMES
-## a93b5e7fba91        postgres:10         "docker-entrypoint.s…"   4 seconds ago       Up 3 seconds             0.0.0.0:5432->5432/tcp   sql-pet
-## 4d1200a07f20        fedora:29           "/bin/bash"              7 days ago          Exited (0) 7 days ago                             f29
-## 81a5fdbd6042        rocker/geospatial   "/init"                  10 days ago         Exited (0) 10 days ago                            blissful_greider
+## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES
+## 9c5c19a169cc        postgres:10         "docker-entrypoint.s…"   4 seconds ago       Up 3 seconds        0.0.0.0:5432->5432/tcp   sql-pet
 ```
 inside Docker, execute the postgress SQL command-line program to create the dvdrental database:
 
@@ -370,9 +366,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## a93b5e7fba91        postgres:10         "docker-entrypoint.s…"   16 seconds ago      Exited (0) Less than a second ago                       sql-pet
-## 4d1200a07f20        fedora:29           "/bin/bash"              7 days ago          Exited (0) 7 days ago                                   f29
-## 81a5fdbd6042        rocker/geospatial   "/init"                  10 days ago         Exited (0) 10 days ago                                  blissful_greider
+## 9c5c19a169cc        postgres:10         "docker-entrypoint.s…"   15 seconds ago      Exited (0) Less than a second ago                       sql-pet
 ```
 
 We are leaving the `sql-pet` container intact so it can be used in running the

@@ -68,19 +68,19 @@ cat(docker_messages, sep = "\n")
 ```
 
 ```
-## Sending build context to Docker daemon   42.7MB
+## Sending build context to Docker daemon  44.47MB
 ## Step 1/4 : FROM postgres:10
-##  ---> 6eb6c50a02e7
+##  ---> ac25c2bac3c4
 ## Step 2/4 : WORKDIR /tmp
 ##  ---> Using cache
-##  ---> 851566b61822
+##  ---> 3f00a18e0bdf
 ## Step 3/4 : COPY init-dvdrental.sh /docker-entrypoint-initdb.d/
 ##  ---> Using cache
-##  ---> a41ee6860211
+##  ---> 3453d61d8e3e
 ## Step 4/4 : RUN apt-get -qq update &&   apt-get install -y -qq curl zip  > /dev/null 2>&1 &&   curl -Os http://www.postgresqltutorial.com/wp-content/uploads/2017/10/dvdrental.zip &&   unzip dvdrental.zip &&   rm dvdrental.zip &&   chmod ugo+w dvdrental.tar &&   chown postgres dvdrental.tar &&   chmod u+x /docker-entrypoint-initdb.d/init-dvdrental.sh &&   apt-get remove -y curl zip
 ##  ---> Using cache
-##  ---> 9b1114a185a1
-## Successfully built 9b1114a185a1
+##  ---> f5e93aa64875
+## Successfully built f5e93aa64875
 ## Successfully tagged postgres-dvdrental:latest
 ```
 
@@ -117,7 +117,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "fb1657cb4bd1df2d71df6d527be84619a7db9a7e6c8ff36556bba298957c7ad2"
+## [1] "0743abfb6d3e7a403e0f6d05fac896eec2c44368007e6067ae0525549ce6e545"
 ```
 ## Connect to Postgres with R
 
@@ -219,9 +219,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## fb1657cb4bd1        postgres-dvdrental   "docker-entrypoint.s…"   10 seconds ago      Exited (0) Less than a second ago                       sql-pet
-## 4d1200a07f20        fedora:29            "/bin/bash"              7 days ago          Exited (0) 7 days ago                                   f29
-## 81a5fdbd6042        rocker/geospatial    "/init"                  10 days ago         Exited (0) 10 days ago                                  blissful_greider
+## 0743abfb6d3e        postgres-dvdrental   "docker-entrypoint.s…"   7 seconds ago       Exited (0) Less than a second ago                       sql-pet
 ```
 
 Next time, you can just use this command to start the container: 
