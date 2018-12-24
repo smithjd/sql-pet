@@ -2,8 +2,8 @@
 
 > This chapter demonstrates how to:
 > 
-> * Use prinmary and foreign keys to retrieve specific rows of a table
-> * do different kinds of queries
+> * Use primary and foreign keys to retrieve specific rows of a table
+> * do different kinds of join queries
 > * Exercises
 > * Query the database to get basic information about each dvdrental story
 > * How to interact with the database using different strategies
@@ -19,7 +19,9 @@ sp_check_that_docker_is_up()
 ```
 ## [1] "Docker is up but running no containers"
 ```
-verify pet DB is available, it may be stopped.
+
+Verify pet DB is available, it may be stopped.
+
 
 ```r
 sp_show_all_docker_containers()
@@ -27,18 +29,18 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                     PORTS               NAMES
-## fb1657cb4bd1        postgres-dvdrental   "docker-entrypoint.s…"   34 seconds ago      Exited (0) 2 seconds ago                       sql-pet
-## 4d1200a07f20        fedora:29            "/bin/bash"              7 days ago          Exited (0) 7 days ago                          f29
-## 81a5fdbd6042        rocker/geospatial    "/init"                  10 days ago         Exited (0) 10 days ago                         blissful_greider
+## 0743abfb6d3e        postgres-dvdrental   "docker-entrypoint.s…"   31 seconds ago      Exited (0) 2 seconds ago                       sql-pet
 ```
+
 Start up the `docker-pet` container
+
 
 ```r
 sp_docker_start("sql-pet")
 ```
 
+Now connect to the database with R
 
-now connect to the database with R
 
 ```r
 # need to wait for Docker & Postgres to come up before connecting.
@@ -51,24 +53,50 @@ con <- sp_get_postgres_connection(
 )
 ```
 
+## Database Privileges
+
+In the DVD rental database, you have all database privileges to perform any CRUD operaion, create, read, update, and delete on any database object.  As a data analyst, you typically only get select privilege which allows you to read only a subset of the tables in a database.  Occasionally, a proof of concept project may have a sandbox spun up where users are granted additional priviledges.
+
 ## Database constraints
 
-As a data analyst, you really do not have to worry about database constraints since you are primarily writing dplyr/SQL queries to pull data out of the database.  Constraints can be enforced at multiple levels, column, table, multiple tables, or at the schema itself.  
+As a data analyst, you really do not need to worry about database constraints since you are primarily writing dplyr/SQL queries to pull data out of the database. Constraints can be enforced at multiple levels: column, table, multiple tables, or at the schema itself.  The common database constraints are a column is `NOT NULL`, a column is `UNIQUE`, a column is a `PRIMARY KEY`, both `NOT NULL` and `UNIQUE`, or a column is a `FOREIGN KEY`, the `PRIMARY KEY` on another table.  Constraints restrict column values to a set of defined values and help enforce referential integrity between tables.
 
-For this tutorial, we are primarily concerned with primary and foreign key constraints.  If one looks at all the tables in the DVD Rental ERD, the first column is the name of the table followed by "id".  This is the primary key on the table.  In some of the tables, there are other columns that begin with the name of a different table, the foreign table, and end in "_id".  These are foreign keys and the foreign key value is the primary key value on the foreign table.  The DBA will index the primary and foreign key columns to speed up query performanace.  
+### DVD Rental Primary Foreign Key Constraints
+
+For this tutorial, we are primarily concerned with primary and foreign key relationships between tables in order to correctly join the data between tables.  If one looks at all the tables in the DVD Rental ERD, add link here, the first column is the name of the table followed by "_id".  This is the primary key on the table.  In some of the tables, there are other columns that begin with the name of a different table, the foreign table, and end in "_id".  These are foreign keys and the foreign key value is the primary key value on the foreign table.  The DBA will index the primary and foreign key columns to speed up query performanace.
+
+In the table below, all the primary foreign key relationships are shown because the DVD rental system is small.  Real world databases typically have hundreds or thousands of primary foreign key relationships.  In the search box, enter 'PRIMARY' or 'FOREIGN' to see the table primary key or the table's foreign key relationships.
+
+<!--html_preserve--><div id="htmlwidget-1d9f9b9fdca3023baa83" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1d9f9b9fdca3023baa83">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35"],["actor","address","address","category","city","city","country","customer","customer","film","film","film_actor","film_actor","film_actor","film_actor","film_category","film_category","film_category","film_category","inventory","inventory","language","payment","payment","payment","payment","rental","rental","rental","rental","staff","staff","store","store","store"],["actor_id","address_id","city_id","category_id","city_id","country_id","country_id","customer_id","address_id","film_id","language_id","actor_id","actor_id","film_id","film_id","category_id","film_id","category_id","film_id","film_id","inventory_id","language_id","staff_id","customer_id","rental_id","payment_id","customer_id","rental_id","staff_id","inventory_id","staff_id","address_id","store_id","address_id","manager_staff_id"],["PRIMARY KEY","PRIMARY KEY","FOREIGN KEY","PRIMARY KEY","PRIMARY KEY","FOREIGN KEY","PRIMARY KEY","PRIMARY KEY","FOREIGN KEY","PRIMARY KEY","FOREIGN KEY","FOREIGN KEY","PRIMARY KEY","PRIMARY KEY","FOREIGN KEY","FOREIGN KEY","PRIMARY KEY","PRIMARY KEY","FOREIGN KEY","FOREIGN KEY","PRIMARY KEY","PRIMARY KEY","FOREIGN KEY","FOREIGN KEY","FOREIGN KEY","PRIMARY KEY","FOREIGN KEY","PRIMARY KEY","FOREIGN KEY","FOREIGN KEY","PRIMARY KEY","FOREIGN KEY","PRIMARY KEY","FOREIGN KEY","FOREIGN KEY"],["","","city","","","country","","","address","","language","actor","","","film","category","","","film","film","","","staff","customer","rental","","customer","","staff","inventory","","address","","address","staff"],["","","city_id","","","country_id","","","address_id","","language_id","actor_id","","","film_id","category_id","","","film_id","film_id","","","staff_id","customer_id","rental_id","","customer_id","","staff_id","inventory_id","","address_id","","address_id","staff_id"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_name<\/th>\n      <th>column_name<\/th>\n      <th>constraint_type<\/th>\n      <th>ref_table<\/th>\n      <th>ref_table_col<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
+Searching for 'FOREIGN' in the table above, one sees that the `column_name` matches the `ref_table_col`. This is pretty typical, but not always the case.  This can occur because of an inconsistent naming convention in the application design or a table contains multiple references to the same table foreign table and each reference indicates a different role.  A non-DVD rental example of the latter is a patient transaction record that has a referring doctor and and performing doctor. The two columns will have different names, but may refer to the same or different doctors in the doctor table.  In this case you may hear one say that the doctor table is performing two different roles.  
+
 
 ## Making up data for Join Examples
 
-### insert yourself as a new customer
+Each chapter in the book stands on its own.  If you have worked through the code blocks in this chapter in a previous session, you created some new customer records and cloned the film table as smy_film in order to work through material in the rest of the chapter. In the next couple of code blocks, we delete the new data and recreate the smy_film table for the join examples below.
+
+### SQL Delete Data Syntax
+
+```
+    DELETE FROM <source> WHERE <where_clause>;
+```
+
+### Delete New Practice Customers from the Customer table.
+
+In the next code block we delete out the new customers that were added when the book was compliled or added working through the exercises.  Out of the box, the DVD rental database's highest customer_id = 599.
+
+```
+dbExecute() always returns a scalar numeric that specifies the number of rows affected by the statement. 
+```
 
 
 ```r
-# Customer 600 should be the next customer.
-# It gets deleted here just in case it was added in a different session.
 dbExecute(
   con,
   "delete from customer 
-   where customer_id = 600;
+   where customer_id >= 600;
   "
 )
 ```
@@ -77,15 +105,49 @@ dbExecute(
 ## [1] 0
 ```
 
+The number above tells us how many rows were actually deleted from the customer table.
+
+### SQL Single Row Insert Data Syntax
+
+```
+    INSERT INTO <target> <column_list> VALUES <values list>;
+    <target> : target table/view
+    <column list> : csv list of columns
+    <values list> : values assoicated with the column list.
+```
+
+The `column list` is the list of column names on the table and the corresponding list of values have to have the correct data type.  The following code block returns the `CUSTOMER` column names and data types.
+
+
 ```r
-# Now add yourself as the next customer.  Replace Sophie Yang with your name.
+customer_cols <- dbGetQuery(
+  con,
+  "select table_name, column_name, ordinal_position, data_type 
+          from information_schema.columns 
+         where table_catalog = 'dvdrental' 
+           and table_name = 'customer'
+       ;"
+)
+
+sp_print_df(customer_cols)
+```
+
+<!--html_preserve--><div id="htmlwidget-b18b48ec4ad649442f3b" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-b18b48ec4ad649442f3b">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10"],["customer","customer","customer","customer","customer","customer","customer","customer","customer","customer"],["customer_id","store_id","first_name","last_name","email","address_id","activebool","create_date","last_update","active"],[1,2,3,4,5,6,7,8,9,10],["integer","smallint","character varying","character varying","character varying","smallint","boolean","date","timestamp without time zone","integer"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_name<\/th>\n      <th>column_name<\/th>\n      <th>ordinal_position<\/th>\n      <th>data_type<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":3},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
+In the next code block, we insert Sophie as a new customer into the customer table via a SQL insert statement.  The columns list clause has three id columns, customer_id, store_id, and address_id.  The customer_id is a primary key column and the other two look like foreign key columns.
+
+For now we are interested in getting some new customers into the customer table.  We look at the relations between the customer table and the store and address tables later in this chapter.
+
+
+
+```r
 dbExecute(
   con,
   "insert into customer 
-  (customer_id,store_id,first_name,last_name,email,address_id
-  ,activebool,create_date,last_update,active)
-  values(600,2,'Sophie','Yang','email@email.com',1,TRUE,now()::date,now()::date,1)
-  ;
+  (customer_id,store_id,first_name,last_name,email,address_id,activebool
+  ,create_date,last_update,active)
+  values(600,3,'Sophie','Yang','sophie.yang@sakilacustomer.org',1,TRUE,now(),now()::date,1)
   "
 )
 ```
@@ -94,11 +156,246 @@ dbExecute(
 ## [1] 1
 ```
 
+```r
+new_customers <- dbGetQuery(con, "select * from customer where customer_id >= 600;")
+sp_print_df(new_customers)
+```
+
+<!--html_preserve--><div id="htmlwidget-514d280a38cf86ead40b" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-514d280a38cf86ead40b">{"x":{"filter":"none","data":[["1"],[600],[3],["Sophie"],["Yang"],["sophie.yang@sakilacustomer.org"],[1],[true],["2018-12-24"],["2018-12-24T08:00:00Z"],[1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>address_id<\/th>\n      <th>activebool<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n      <th>active<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,6,10]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
+<<<<<<< HEAD
 The `film` table has a primary key, film_id, and a foreign key column, language_id.  One cannot insert a new row into the film table with a language_id = 30 because of a constraint on the language_id column.  The language_id value must already exist in the `language` table before the database will allow the new row to be inserted into the table.  
+=======
+### Primary and Foreign Key Constraint Error Messages
+
+For the new customers, we are concerned with not violating the PK and FK constraints.
+
+If the customer_id = 600 value is changed to 599, the database throws the following error message.
+
+```
+Error in result_create(conn@ptr, statement) : Failed to fetch row: ERROR: duplicate key value violates unique constraint "customer_pkey" DETAIL: Key (customer_id)=(599) already exists.
+```
+
+If the address_id value = 1 is changed to 611, the database throws the following error message:
+
+```
+Error in result_create(conn@ptr, statement) : Failed to fetch row: ERROR: insert or update on table "customer" violates foreign key constraint "customer_address_id_fkey" DETAIL: Key (address_id)=(611) is not present in table "address".
+```
+
+### R Exercise: Inserting a Single Row via a Dataframe
+
+In the following code block replace Sophie Yang with your name where appropriate.  
+Note:
+
+1.  The last data frame parameter sets the stringsAsFactors is `FALSE`.  Databases do not have a native `FACTOR` type.
+2.  The dataframe column names must match the table column names. 
+3.  The dbWriteTable function needs `append` = true to actually insert the new row.
+
+
+```r
+df <- data.frame(
+  customer_id =
+    601, store_id =
+    2, first_name =
+    "Sophie", last_name =
+    "Yang", email =
+    "sophie.yang@sakilacustomer.org", address_id =
+    1, activebool =
+    TRUE, create_date =
+    Sys.Date(), last_update = Sys.time(), active =
+    1, stringsAsFactors = FALSE
+)
+dbWriteTable(con, "customer", value = df, append = TRUE, row.names = FALSE)
+
+new_customers <- dbGetQuery(con, "select * from customer where customer_id >= 600;")
+sp_print_df(new_customers)
+```
+
+<!--html_preserve--><div id="htmlwidget-74434d812ec23342fdce" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-74434d812ec23342fdce">{"x":{"filter":"none","data":[["1","2"],[600,601],[3,2],["Sophie","Sophie"],["Yang","Yang"],["sophie.yang@sakilacustomer.org","sophie.yang@sakilacustomer.org"],[1,1],[true,true],["2018-12-24","2018-12-24"],["2018-12-24T08:00:00Z","2018-12-24T23:22:03Z"],[1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>address_id<\/th>\n      <th>activebool<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n      <th>active<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,6,10]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
+## SQL Multi-Row Insert Data Syntax
+
+```
+    INSERT INTO <target> <column_list> VALUES <values list1>, ... <values listn>;
+    <target> : target table/view
+    <column list> : csv list of columns
+    <values list> : values assoicated with the column list.
+```
+
+Postgres and some other flavors of SQL allow multiple rows to be inserted at a time.  The syntax is identical to the Single Row syntax, but includes multiple `<values list>` clauses separated by commas.  The following code block illustrates the SQL multi-row insert.  Note that the customer_id column takes on sequential values to satisfy the PK constraint.
+
+
+## SQL Multi-Row Insert Data Example
+
+
+```r
+#
+dbExecute(
+  con,
+  "insert into customer 
+  (customer_id,store_id,first_name,last_name,email,address_id,activebool
+  ,create_date,last_update,active)
+   values(602,1,'John','Smith','john.smith@sakilacustomer.org',2,TRUE
+         ,now()::date,now()::date,1)
+         ,(603,1,'Ian','Frantz','ian.frantz@sakilacustomer.org',3,TRUE
+         ,now()::date,now()::date,1)
+         ,(604,1,'Ed','Borasky','ed.borasky@sakilacustomer.org',4,TRUE
+         ,now()::date,now()::date,1)
+         ;"
+)
+```
+
+```
+## [1] 3
+```
+
+The Postgres R multi-row insert is similar to the single row insert.  The single column values are converted to a vector of values.
+
+### R Exercise: Inserting Multiple Rows via a Dataframe
+
+Replace the two first_name, last_name, and email column values with your own made up values.
+
+
+```r
+customer_id <- c(605, 606)
+store_id <- c(3, 4)
+first_name <- c("John", "Ian")
+last_name <- c("Smith", "Frantz")
+email <- c(
+  "john.smith@sakilacustomer.org", "ian.frantz@sakilacustomer.org"
+)
+address_id <- c(3, 4)
+activebool <- c(TRUE, TRUE)
+create_date <- c(Sys.Date(), Sys.Date())
+last_update <- c(Sys.time(), Sys.time())
+active <- c(1, 1)
+
+df2 <- data.frame(customer_id, store_id, first_name, last_name, email,
+  address_id, activebool, create_date, last_update, active,
+  stringsAsFactors = FALSE
+)
+
+
+dbWriteTable(con, "customer",
+  value = df2, append = TRUE, row.names = FALSE
+)
+
+new_customers <- dbGetQuery(con, "select * from customer where customer_id >= 600;")
+sp_print_df(new_customers)
+```
+
+<!--html_preserve--><div id="htmlwidget-8da54f9f5480ad7c3ec3" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-8da54f9f5480ad7c3ec3">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7"],[600,601,602,603,604,605,606],[3,2,1,1,1,3,4],["Sophie","Sophie","John","Ian","Ed","John","Ian"],["Yang","Yang","Smith","Frantz","Borasky","Smith","Frantz"],["sophie.yang@sakilacustomer.org","sophie.yang@sakilacustomer.org","john.smith@sakilacustomer.org","ian.frantz@sakilacustomer.org","ed.borasky@sakilacustomer.org","john.smith@sakilacustomer.org","ian.frantz@sakilacustomer.org"],[1,1,2,3,4,3,4],[true,true,true,true,true,true,true],["2018-12-24","2018-12-24","2018-12-24","2018-12-24","2018-12-24","2018-12-24","2018-12-24"],["2018-12-24T08:00:00Z","2018-12-24T23:22:03Z","2018-12-24T08:00:00Z","2018-12-24T08:00:00Z","2018-12-24T08:00:00Z","2018-12-24T23:22:03Z","2018-12-24T23:22:03Z"],[1,1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>address_id<\/th>\n      <th>activebool<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n      <th>active<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,6,10]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
+The `film` table has a primary key, film_id, and a foreign key column, language_id.  In the next code bloock we see five sample rows from the film table.
+
+
+```r
+films <- dbGetQuery(
+  con,
+  "select film_id,title, language_id
+          from film 
+        order by film_id
+        limit 5
+       ;"
+)
+
+sp_print_df(films)
+```
+
+<!--html_preserve--><div id="htmlwidget-124fb78127817ec02cd9" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-124fb78127817ec02cd9">{"x":{"filter":"none","data":[["1","2","3","4","5"],[1,2,3,4,5],["Academy Dinosaur","Ace Goldfinger","Adaptation Holes","Affair Prejudice","African Egg"],[1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>film_id<\/th>\n      <th>title<\/th>\n      <th>language_id<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
+The next code block all the rows in the  language table.
+
+
+```r
+languages <- dbGetQuery(
+  con,
+  "select language_id, name, last_update from language
+       ;"
+)
+
+sp_print_df(languages)
+```
+
+<!--html_preserve--><div id="htmlwidget-dd0a51033db44e820d90" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-dd0a51033db44e820d90">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[1,2,3,4,5,6],["English             ","Italian             ","Japanese            ","Mandarin            ","French              ","German              "],["2006-02-15T18:02:19Z","2006-02-15T18:02:19Z","2006-02-15T18:02:19Z","2006-02-15T18:02:19Z","2006-02-15T18:02:19Z","2006-02-15T18:02:19Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>language_id<\/th>\n      <th>name<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":1},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
+One cannot insert/update a new row into the film table with a language_id = 10 because of a constraint on the language_id column.  The language_id value must already exist in the `language` table before the database will allow the new row to be inserted into the table. 
+
+```r
+dbExecute(con, "update film set language_id = 1 where film_id = 1;")
+```
+
+```
+## [1] 1
+```
+
+```r
+dbExecute(con, "
+do $$
+DECLARE v_id INTEGER;
+begin
+    v_id = 3;
+    update film set language_id = v_id where film_id = 1;
+exception
+when foreign_key_violation then
+    raise notice 'SQLERRM = %, language_id = %', SQLERRM, v_id;
+when others then
+    raise notice 'SQLERRM = % SQLSTATE =%', SQLERRM, SQLSTATE;
+end;
+$$ language 'plpgsql';")
+```
+
+```
+## [1] 0
+```
+
+```r
+dbGetQuery(con, "select * from film where film_id = 1;")
+```
+
+```
+##   film_id            title
+## 1       1 Academy Dinosaur
+##                                                                                        description
+## 1 A Epic Drama of a Feminist And a Mad Scientist who must Battle a Teacher in The Canadian Rockies
+##   release_year language_id rental_duration rental_rate length
+## 1         2006           3               6        0.99     86
+##   replacement_cost rating         last_update
+## 1            20.99     PG 2018-12-24 23:22:03
+##                         special_features
+## 1 {"Deleted Scenes","Behind the Scenes"}
+##                                                                                                                                      fulltext
+## 1 'academi':1 'battl':15 'canadian':20 'dinosaur':2 'drama':5 'epic':4 'feminist':8 'mad':11 'must':14 'rocki':21 'scientist':12 'teacher':17
+```
+
+
+```r
+#
+dbExecute(con, "ALTER TABLE film DISABLE TRIGGER ALL;")
+```
+
+```
+## [1] 0
+```
+
+```r
+count <- dbExecute(con, "update film set language_id = 10 where film_id = 1;")
+dbExecute(con, "ALTER TABLE film ENABLE TRIGGER ALL;")
+```
+
+```
+## [1] 0
+```
+>>>>>>> jds-edits-3
 
 To work around this inconvenience for the tutorial:
 
-1.  we drop the smy_film table if it exists from a previous session.
+1.  We drop the smy_film table if it exists from a previous session.
 
 
 ```r
@@ -109,7 +406,11 @@ dbExecute(con, "drop table if exists smy_film;")
 ## [1] 0
 ```
 
+<<<<<<< HEAD
 2.  we create a new table smy_film from the film table and add a new row with a language_id = 30;
+=======
+2.  We create a new table smy_film with the same structure as the film table 
+>>>>>>> jds-edits-3
 
 
 ```r
@@ -159,11 +460,15 @@ dbGetQuery(
 
 ## Joins
 
-In section 'SQL Quick Start Simple Retrieval', there is a brief discussion of databases and 3NF.  The goal of normalization is to push the data into separate tables at a very granular level.  
+In section 'SQL Quick Start Simple Retrieval', there is a brief discussion of databases and 3NF.  One of the goals of normalization is to eliminate redundant data being kept in multiple tables and having each table contain a very granular level of detail.  If a record then needs to be updated, it is updated in one table instead of multiple tables improving overall system performance.  This also helps simplify and maintain referential integerity between tables.
 
 Bill Kent famously summarized 3NF as every non-key column "must provide a fact about the key,the whole key, and nothing but the key, so help me Codd." 
 
-Normalization breaks data down and JOINs denormalizes the data and builds it back up.
+Normalization breaks data down and JOINs denormalizes the data and builds it back up.  The tables are typically related via a primary key - foreign key relationship. The Postgres database enforces the primary and foreign key constraints in the DVD rental database.  
+
+
+
+### Join Types
 
 ![SQL_JOIN_TYPES](sql_join_types.png)
 
@@ -175,27 +480,33 @@ Instead of showing standard Venn diagrams showing the different JOINS, we use an
 
 ### Valentines Party
 
-Imagine you are at a large costume Valentine's Day dance party.  The hostess of the party, a data scientist, would like to learn more about the people attending her party.  She interrupts the music to let everyone know it is time for the judges to evaluate the winners for best costumes and associated prizes.
+Imagine you are at a large costume Valentine's Day dance party.  The hostess of the party, a data scientist, would like to learn more about the people attending her party.  When the band takes a break, she lets everyone know it is time for the judges to evaluate the winners for best costumes and associated prizes.
+
+![ValentinesDay](ValentinesDay.png)
+
+
 
 She requests the following:
 
-1.  All the couples at the party to line up in front of her with the men on the left and the women on the right, (inner join)
+1.  All the couples at the party line up in front of her with the men on her left and the women on her right, (inner join)
 
-2.  All the remaining men to form a second line two feet behind the married men,(left outer join)
+2.  All the remaining men to form a second line two feet behind the married men, (left outer join, all couples + unattached men)
 
-3.  Right Outer Join: All the remaining women to form a third line two feet in front of the married women, (right outer join, all couples + unattached women)
+3.  All the remaining women to form a third line two feet in front of the married women, (right outer join, all couples + unattached women)
 
-Full Outer Join -- As our data scientist looks out at the three lines, she can clearly see the three distinct lines, her full outer join.  
+As our data scientist looks out, she can clearly see the three distinct lines, the single men, the man woman couples, and the single women, a full outer join.  
 
 As the three judges start walking down the lines, she makes one more announcement.
 
-4.  There is a special prize for the man and woman who can guess the average age of the members of the opposite sex. To give everyone a chance to come up with an average age, she asks the men to stay in line and the women to move down the mens line in order circling back around until they get back to their starting point in line, (full outer join, every man seen by every woman and vice versa).  
+4.  There is a special prize for the man and woman who can guess the average age of the members of the opposite sex. To give everyone a chance to come up with an average age, she asks the men to stay in line and the women to move down the mens line in order circling back around until they get back to their starting point in line, (cartesian join, every man seen by every woman and vice versa).  
 
 It is hard enough to tell someone's age when they don't have a mask, how do you get the average age when people have masks?
 
 The hostess knows that there is usually some data anomolies.  As she looks out she sees a small cluster of people who did not line up.  Being the hostess with the mostest, she wants to get to know that small cluster better.  Since they are far off and in costume, she cannot tell if they are men or women.  More importantly, she does not know if they identify as a man or a woman, both -- (kind of a stretch for a self join), neither, or something else.  Ahh, the inquisitive mind wants to know.
 
 ### Join Syntax
+
+The table below shows the two R join function call formats, standalone function call and pipe function call and the corresponding SQL join format.
 
 |Join|dplyr                                                                            |sql
 |-----|--------------------------------------------------------------------------------|------------------------------------------------------
@@ -213,17 +524,23 @@ The hostess knows that there is usually some data anomolies.  As she looks out s
 
 The dplyr join documentation describes two different types of joins, `mutating` and `filtering` joins.  For those coming to R with a SQL background, the mutating documentation is misleading in one respect.  Here is the inner_join documentation.
 
+```
     inner_join()
     
     return all rows from x where there are matching values in y, and all columns from x and y. If there are multiple matches between x and y, all combination of the matches are returned.
+```
 
-The misleading part is that all the columns from *x* and *y*.  If the join column is `KEY`, SQL will return x.KEY and y.KEY.  Dplyr retuns KEY.  It appears that the KEY value comes from the key/driving table.  This difference should become clear in the outer join examples.
+The misleading part is that all the columns from *x* and *y*.  If the join column is `KEY`, SQL will return x.KEY and y.KEY.  Dplyr retuns KEY.  It appears that the KEY value comes from the driving table.  This difference should become clear in the outer join examples.
 
 In the next couple of examples, we will pull all the language and smy_film table data from the database into memory because the tables are small.  In the *_join verbs, the `by` and `suffix` parameters are included because it helps document the actual join and the source of join columns.
 
-## Natural Join Time Bomb
+## Natural Join Delayed Time Bomb
 
-The dplyr default join is a natural join, joining tables on common column names.  One of many links why one should not use natural joins can be found [here](http://gplivna.blogspot.com/2007/10/natural-joins-are-evil-motto-if-you.html).
+The dplyr default join is a natural join, joining tables on common column names.  One of many links why one should not use natural joins can be found [here](http://gplivna.blogspot.com/2007/10/natural-joins-are-evil-motto-if-you.html).  If two tables are joined via a natural join on column `C1` the join continues to work as long as no additional common columns are added to either table.  If a new new column `C2` is added to one of the tables and `C2` already exists in the other table, BOOM, the delayed time bomb goes off.  The natural join still executes, doesn't throw any errors, but the returned result set may be smaller, much smaller, than before the new `C2` column was added.  
+
+For example, assume that one has a product table with columns `product_id`, `product_name`, and `aka`.  
+
+
 
 <!-- move this example to query optimzation section 
 
@@ -253,7 +570,7 @@ languages_ij <- language_table %>%
 ##   FROM "language" AS "TBL_LEFT"
 ##   INNER JOIN "smy_film" AS "TBL_RIGHT"
 ##   ON ("TBL_LEFT"."language_id" = "TBL_RIGHT"."language_id")
-## ) "oikcpgvcig"
+## ) "cqpqwqagrn"
 ## GROUP BY "language_id", "name"
 ```
 
@@ -284,7 +601,7 @@ languages_ij
 ## # Groups:   language_id
 ##   language_id name                   inner_joins    
 ##         <int> <chr>                  <S3: integer64>
-## 1           1 "English             " 1000
+## 1           1 "English             " 999
 ```
 
 
@@ -296,25 +613,11 @@ rs <- dbGetQuery(
   group by l.language_id,l.name;"
 )
 
-rs
+sp_print_df(rs)
 ```
 
-```
-##                                                                                                                     QUERY PLAN
-## 1                                GroupAggregate  (cost=63.04..63.24 rows=6 width=96) (actual time=1.023..1.023 rows=1 loops=1)
-## 2                                                                                                     Group Key: l.language_id
-## 3                                  ->  Sort  (cost=63.04..63.09 rows=18 width=88) (actual time=0.818..0.889 rows=1000 loops=1)
-## 4                                                                                                      Sort Key: l.language_id
-## 5                                                                                        Sort Method: quicksort  Memory: 103kB
-## 6                              ->  Hash Join  (cost=1.14..62.67 rows=18 width=88) (actual time=0.028..0.609 rows=1000 loops=1)
-## 7                                                                                   Hash Cond: (f.language_id = l.language_id)
-## 8                 ->  Seq Scan on smy_film f  (cost=0.00..59.94 rows=594 width=2) (actual time=0.006..0.213 rows=1001 loops=1)
-## 9                                        ->  Hash  (cost=1.06..1.06 rows=6 width=88) (actual time=0.010..0.010 rows=6 loops=1)
-## 10                                                                                Buckets: 1024  Batches: 1  Memory Usage: 9kB
-## 11                     ->  Seq Scan on language l  (cost=0.00..1.06 rows=6 width=88) (actual time=0.004..0.005 rows=6 loops=1)
-## 12                                                                                                     Planning time: 0.136 ms
-## 13                                                                                                    Execution time: 1.055 ms
-```
+<!--html_preserve--><div id="htmlwidget-1fe403c81784621152ab" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1fe403c81784621152ab">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13"],["GroupAggregate  (cost=63.04..63.24 rows=6 width=96) (actual time=47.840..47.856 rows=1 loops=1)","  Group Key: l.language_id","  -&gt;  Sort  (cost=63.04..63.09 rows=18 width=88) (actual time=32.320..39.969 rows=999 loops=1)","        Sort Key: l.language_id","        Sort Method: quicksort  Memory: 103kB","        -&gt;  Hash Join  (cost=1.14..62.67 rows=18 width=88) (actual time=0.236..24.186 rows=999 loops=1)","              Hash Cond: (f.language_id = l.language_id)","              -&gt;  Seq Scan on smy_film f  (cost=0.00..59.94 rows=594 width=2) (actual time=0.019..8.016 rows=1001 loops=1)","              -&gt;  Hash  (cost=1.06..1.06 rows=6 width=88) (actual time=0.182..0.189 rows=6 loops=1)","                    Buckets: 1024  Batches: 1  Memory Usage: 9kB","                    -&gt;  Seq Scan on language l  (cost=0.00..1.06 rows=6 width=88) (actual time=0.013..0.088 rows=6 loops=1)","Planning time: 0.148 ms","Execution time: 48.027 ms"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>QUERY PLAN<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 -->
 
@@ -350,16 +653,11 @@ languages_ij <- language_table %>%
   group_by(language_id, name) %>%
   summarize(inner_joins = n())
 
-languages_ij
+sp_print_df(languages_ij)
 ```
 
-```
-## # A tibble: 1 x 3
-## # Groups:   language_id [?]
-##   language_id name                   inner_joins
-##         <int> <chr>                        <int>
-## 1           1 "English             "        1000
-```
+<!--html_preserve--><div id="htmlwidget-ed78248b32e6634f28e5" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-ed78248b32e6634f28e5">{"x":{"filter":"none","data":[["1"],[1],["English             "],[999]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>language_id<\/th>\n      <th>name<\/th>\n      <th>inner_joins<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 #### SQL Inner Join
 
@@ -372,13 +670,11 @@ rs <- dbGetQuery(
   group by l.language_id,l.name;"
 )
 
-rs
+sp_print_df(rs)
 ```
 
-```
-##   language_id                 name    n
-## 1           1 English              1000
-```
+<!--html_preserve--><div id="htmlwidget-2ae622211a824c064fbd" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2ae622211a824c064fbd">{"x":{"filter":"none","data":[["1"],[1],["English             "],[999]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>language_id<\/th>\n      <th>name<\/th>\n      <th>n<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 The output tells us that there are 1000 inner joins between the language_table and the film_table.
 
@@ -389,8 +685,8 @@ The output tells us that there are 1000 inner joins between the language_table a
 languages_loj <- language_table %>%
   left_join(film_table, by = c("language_id", "language_id"), suffix(c(".l", ".f"))) %>%
   mutate(
-    join_type = "loj"
-    , film_lang_id = if_else(is.na(film_id), film_id, language_id)
+    join_type =
+      "loj", film_lang_id = if_else(is.na(film_id), film_id, language_id)
   ) %>%
   group_by(join_type, language_id, name, film_lang_id) %>%
   summarize(lojs = n()) %>%
@@ -403,7 +699,7 @@ print(languages_loj)
 ## # Groups:   join_type, language_id, name [6]
 ##   join_type language_id film_lang_id name                    lojs
 ##   <chr>           <int>        <int> <chr>                  <int>
-## 1 loj                 1            1 "English             "  1000
+## 1 loj                 1            1 "English             "   999
 ## 2 loj                 2           NA "Italian             "     1
 ## 3 loj                 3           NA "Japanese            "     1
 ## 4 loj                 4           NA "Mandarin            "     1
@@ -413,8 +709,11 @@ print(languages_loj)
 
 ```r
 # View(languages_loj)
-# sp_print_df(languages_loj)
+sp_print_df(languages_loj)
 ```
+
+<!--html_preserve--><div id="htmlwidget-09904734225327216f09" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-09904734225327216f09">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["loj","loj","loj","loj","loj","loj"],[1,2,3,4,5,6],[1,null,null,null,null,null],["English             ","Italian             ","Japanese            ","Mandarin            ","French              ","German              "],[999,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>join_type<\/th>\n      <th>language_id<\/th>\n      <th>film_lang_id<\/th>\n      <th>name<\/th>\n      <th>lojs<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 Compare the mutate verb in the above code block with film_lang_id in the equivalent SQL code block below.
 
@@ -433,18 +732,14 @@ rs <- dbGetQuery(
   group by l.language_id,l.name,f.language_id
 order by l.language_id;"
 )
-# sp_print_df(rs)
-rs
+sp_print_df(rs)
 ```
 
-```
-##   language_id film_lang_id     name lojs
-## 1           1            1  English 1000
-## 2           2           NA  Italian    1
-## 3           3           NA Japanese    1
-## 4           4           NA Mandarin    1
-## 5           5           NA   French    1
-## 6           6           NA   German    1
+<!--html_preserve--><div id="htmlwidget-b619f31f38e9f2471fcc" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-b619f31f38e9f2471fcc">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[1,2,3,4,5,6],[1,null,null,null,null,null],["English","Italian","Japanese","Mandarin","French","German"],[999,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>language_id<\/th>\n      <th>film_lang_id<\/th>\n      <th>name<\/th>\n      <th>lojs<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
+```r
+# rs
 ```
 
 The lojs column returns the number of rows found on the keys from the left table, language, and the right table, the film table.  For the "English" row, the language_id and film_lang_id match and a 1000 inner joins were performed.  For all the other languages, there was only 1 join and they all came from the left outer table, the language table, language_id's 2 - 6.  The right table, the film table returned NA, because no match was found.
@@ -460,8 +755,8 @@ The lojs column returns the number of rows found on the keys from the left table
 languages_roj <- language_table %>%
   right_join(film_table, by = c("language_id", "language_id"), suffix(c(".l", ".f")), all = film_table) %>%
   mutate(
-    lang_id = if_else(is.na(name), 0L, language_id)
-    , join_type = "rojs"
+    lang_id =
+      if_else(is.na(name), 0L, language_id), join_type = "rojs"
   ) %>%
   group_by(join_type, language_id, name, lang_id) %>%
   summarize(rojs = n()) %>%
@@ -470,8 +765,8 @@ languages_roj <- language_table %>%
 sp_print_df(languages_roj)
 ```
 
-<!--html_preserve--><div id="htmlwidget-f2f723971c867df16606" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-f2f723971c867df16606">{"x":{"filter":"none","data":[["1","2"],["rojs","rojs"],[1,0],[1,10],["English             ",null],[1000,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>join_type<\/th>\n      <th>lang_id<\/th>\n      <th>language_id<\/th>\n      <th>name<\/th>\n      <th>rojs<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-beeafef17c4840807f51" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-beeafef17c4840807f51">{"x":{"filter":"none","data":[["1","2"],["rojs","rojs"],[1,0],[1,10],["English             ",null],[999,2]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>join_type<\/th>\n      <th>lang_id<\/th>\n      <th>language_id<\/th>\n      <th>name<\/th>\n      <th>rojs<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ```r
 languages_roj
@@ -482,8 +777,8 @@ languages_roj
 ## # Groups:   join_type, language_id, name [2]
 ##   join_type lang_id language_id name                    rojs
 ##   <chr>       <int>       <int> <chr>                  <int>
-## 1 rojs            1           1 "English             "  1000
-## 2 rojs            0          10 <NA>                       1
+## 1 rojs            1           1 "English             "   999
+## 2 rojs            0          10 <NA>                       2
 ```
 
 Review the mutate above with l.language_id below.
@@ -502,8 +797,8 @@ order by l.language_id;"
 sp_print_df(rs)
 ```
 
-<!--html_preserve--><div id="htmlwidget-bbdef321e435ecc143a7" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-bbdef321e435ecc143a7">{"x":{"filter":"none","data":[["1","2"],["roj","roj"],[1,null],[1,10],["English             ",null],[1000,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>join_type<\/th>\n      <th>language_id<\/th>\n      <th>language_id_f<\/th>\n      <th>name<\/th>\n      <th>rojs<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-f6a2206cea77e899a1de" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-f6a2206cea77e899a1de">{"x":{"filter":"none","data":[["1","2"],["roj","roj"],[1,null],[1,10],["English             ",null],[999,2]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>join_type<\/th>\n      <th>language_id<\/th>\n      <th>language_id_f<\/th>\n      <th>name<\/th>\n      <th>rojs<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ```r
 rs
@@ -511,8 +806,8 @@ rs
 
 ```
 ##   join_type language_id language_id_f                 name rojs
-## 1       roj           1             1 English              1000
-## 2       roj          NA            10                 <NA>    1
+## 1       roj           1             1 English               999
+## 2       roj          NA            10                 <NA>    2
 ```
 
 The rojs column returns the number of rows found on the keys from the right table, film, and the left table, the language table.  For the "English" row, the language_id and film_lang_id match and a 1000 inner joins were performed.  For language_id = 30 from the right table, there was only 1 join to a non-existant row in the language table on the left.  
@@ -534,8 +829,8 @@ languages_foj <- language_table %>%
 sp_print_df(languages_foj)
 ```
 
-<!--html_preserve--><div id="htmlwidget-e9a81a5298daf1103815" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-e9a81a5298daf1103815">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7"],[1,2,3,4,5,6,10],["English             ","Italian             ","Japanese            ","Mandarin            ","French              ","German              ",null],["English             ","No Italian              films.","No Japanese             films.","No Mandarin             films.","No French               films.","No German               films.","Alien"],[1000,1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>language_id<\/th>\n      <th>name<\/th>\n      <th>film_lang<\/th>\n      <th>n<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-80fb537b5ba0bd90fb93" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-80fb537b5ba0bd90fb93">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7"],[1,2,3,4,5,6,10],["English             ","Italian             ","Japanese            ","Mandarin            ","French              ","German              ",null],["English             ","No Italian              films.","No Japanese             films.","No Mandarin             films.","No French               films.","No German               films.","Alien"],[999,1,1,1,1,1,2]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>language_id<\/th>\n      <th>name<\/th>\n      <th>film_lang<\/th>\n      <th>n<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ```r
 languages_foj
@@ -546,13 +841,13 @@ languages_foj
 ## # Groups:   language_id, name [?]
 ##   language_id name                   film_lang                          n
 ##         <int> <chr>                  <chr>                          <int>
-## 1           1 "English             " "English             "          1000
+## 1           1 "English             " "English             "           999
 ## 2           2 "Italian             " No Italian              films.     1
 ## 3           3 "Japanese            " No Japanese             films.     1
 ## 4           4 "Mandarin            " No Mandarin             films.     1
 ## 5           5 "French              " No French               films.     1
 ## 6           6 "German              " No German               films.     1
-## 7          10 <NA>                   Alien                              1
+## 7          10 <NA>                   Alien                              2
 ```
 
 #### SQL full Outer Join
@@ -569,8 +864,8 @@ order by l.language_id;"
 sp_print_df(rs)
 ```
 
-<!--html_preserve--><div id="htmlwidget-9438cc0a84fc82d85bf4" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-9438cc0a84fc82d85bf4">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7"],[1,2,3,4,5,6,null],["English             ","Italian             ","Japanese            ","Mandarin            ","French              ","German              ",null],[1,null,null,null,null,null,10],[1000,1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>language_id<\/th>\n      <th>name<\/th>\n      <th>language_id_f<\/th>\n      <th>fojs<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-703a15d93cfc9aff608e" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-703a15d93cfc9aff608e">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7"],[1,2,3,4,5,6,null],["English             ","Italian             ","Japanese            ","Mandarin            ","French              ","German              ",null],[1,null,null,null,null,null,10],[999,1,1,1,1,1,2]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>language_id<\/th>\n      <th>name<\/th>\n      <th>language_id_f<\/th>\n      <th>fojs<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ```r
 rs
@@ -578,13 +873,13 @@ rs
 
 ```
 ##   language_id                 name language_id_f fojs
-## 1           1 English                          1 1000
+## 1           1 English                          1  999
 ## 2           2 Italian                         NA    1
 ## 3           3 Japanese                        NA    1
 ## 4           4 Mandarin                        NA    1
 ## 5           5 French                          NA    1
 ## 6           6 German                          NA    1
-## 7          NA                 <NA>            10    1
+## 7          NA                 <NA>            10    2
 ```
 
 Looking at the SQL output, the full outer join is the combination of the left and right outer joins.  
@@ -610,8 +905,8 @@ languages_aj <- language_table %>%
 sp_print_df(languages_aj)
 ```
 
-<!--html_preserve--><div id="htmlwidget-723cb3b8b5edd3b6b88f" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-723cb3b8b5edd3b6b88f">{"x":{"filter":"none","data":[["1","2","3","4","5"],["anti_join","anti_join","anti_join","anti_join","anti_join"],[2,3,4,5,6],["Italian             ","Japanese            ","Mandarin            ","French              ","German              "],[1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>type<\/th>\n      <th>language_id<\/th>\n      <th>name<\/th>\n      <th>anti_joins<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-6d936e3915a36e12cd53" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-6d936e3915a36e12cd53">{"x":{"filter":"none","data":[["1","2","3","4","5"],["anti_join","anti_join","anti_join","anti_join","anti_join"],[2,3,4,5,6],["Italian             ","Japanese            ","Mandarin            ","French              ","German              "],[1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>type<\/th>\n      <th>language_id<\/th>\n      <th>name<\/th>\n      <th>anti_joins<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ```r
 languages_aj
@@ -646,8 +941,8 @@ order by l.language_id;"
 sp_print_df(rs)
 ```
 
-<!--html_preserve--><div id="htmlwidget-ea3318c9786806e7eb5b" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-ea3318c9786806e7eb5b">{"x":{"filter":"none","data":[["1","2","3","4","5"],[2,3,4,5,6],["Italian             ","Japanese            ","Mandarin            ","French              ","German              "],[1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>language_id<\/th>\n      <th>name<\/th>\n      <th>fojs<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-c195b56d57c26c8f1d4d" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-c195b56d57c26c8f1d4d">{"x":{"filter":"none","data":[["1","2","3","4","5"],[2,3,4,5,6],["Italian             ","Japanese            ","Mandarin            ","French              ","German              "],[1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>language_id<\/th>\n      <th>name<\/th>\n      <th>fojs<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ```r
 rs
@@ -677,8 +972,8 @@ order by l.language_id;"
 sp_print_df(rs)
 ```
 
-<!--html_preserve--><div id="htmlwidget-b97be598cdfef1f63235" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-b97be598cdfef1f63235">{"x":{"filter":"none","data":[["1","2","3","4","5"],[2,3,4,5,6],["Italian             ","Japanese            ","Mandarin            ","French              ","German              "],[1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>language_id<\/th>\n      <th>name<\/th>\n      <th>fojs<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-7a589913f405d7a14fbe" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-7a589913f405d7a14fbe">{"x":{"filter":"none","data":[["1","2","3","4","5"],[2,3,4,5,6],["Italian             ","Japanese            ","Mandarin            ","French              ","German              "],[1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>language_id<\/th>\n      <th>name<\/th>\n      <th>fojs<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ```r
 rs
@@ -708,8 +1003,8 @@ rs <- dbGetQuery(
 sp_print_df(rs)
 ```
 
-<!--html_preserve--><div id="htmlwidget-2e6911f35de9bc8ba41e" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-2e6911f35de9bc8ba41e">{"x":{"filter":"none","data":[["1","2","3","4","5"],[2,3,4,5,6],["Italian             ","Japanese            ","Mandarin            ","French              ","German              "],[1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>language_id<\/th>\n      <th>name<\/th>\n      <th>fojs<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-a3fe20e2cfd2d5bbfba3" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-a3fe20e2cfd2d5bbfba3">{"x":{"filter":"none","data":[["1","2","3","4","5"],[2,3,4,5,6],["Italian             ","Japanese            ","Mandarin            ","French              ","German              "],[1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>language_id<\/th>\n      <th>name<\/th>\n      <th>fojs<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ```r
 rs
@@ -764,7 +1059,7 @@ print(glue("sql_aj1 loj-null costs=", sql_aj1[1, 1]))
 ```
 
 ```
-## sql_aj1 loj-null costs=GroupAggregate  (cost=68.56..68.61 rows=3 width=96) (actual time=0.588..0.590 rows=5 loops=1)
+## sql_aj1 loj-null costs=GroupAggregate  (cost=68.56..68.61 rows=3 width=96) (actual time=18.718..18.849 rows=5 loops=1)
 ```
 
 ```r
@@ -772,7 +1067,7 @@ print(glue("sql_aj2 not in costs=", sql_aj2[1, 1]))
 ```
 
 ```
-## sql_aj2 not in costs=GroupAggregate  (cost=67.60..67.65 rows=3 width=96) (actual time=0.560..0.563 rows=5 loops=1)
+## sql_aj2 not in costs=GroupAggregate  (cost=67.60..67.65 rows=3 width=96) (actual time=18.938..19.124 rows=5 loops=1)
 ```
 
 ```r
@@ -780,7 +1075,7 @@ print(glue("sql_aj3 not exist costs=", sql_aj3[1, 1]))
 ```
 
 ```
-## sql_aj3 not exist costs=GroupAggregate  (cost=24.24..24.30 rows=3 width=96) (actual time=0.062..0.064 rows=5 loops=1)
+## sql_aj3 not exist costs=GroupAggregate  (cost=24.24..24.30 rows=3 width=96) (actual time=0.375..0.486 rows=5 loops=1)
 ```
 
 ## dplyr Anti joins  
@@ -807,7 +1102,7 @@ daj1 <-
 ## WHERE NOT EXISTS (
 ##   SELECT 1 FROM "rental" AS "TBL_RIGHT"
 ##   WHERE ("TBL_LEFT"."customer_id" = "TBL_RIGHT"."customer_id")
-## )) "yzdpcnmyka"
+## )) "lghnetfgzu"
 ```
 
 ```
@@ -843,7 +1138,7 @@ daj2 <-
 ##   FROM "customer" AS "TBL_LEFT"
 ##   LEFT JOIN "rental" AS "TBL_RIGHT"
 ##   ON ("TBL_LEFT"."customer_id" = "TBL_RIGHT"."customer_id")
-## ) "xrcipwybfc"
+## ) "bisndnmtew"
 ## WHERE ((("rental_id") IS NULL))
 ```
 
@@ -899,28 +1194,28 @@ order by c.customer_id;"
 sp_print_df(sql_aj1)
 ```
 
-<!--html_preserve--><div id="htmlwidget-7587aceaaa6206fdb6b2" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-7587aceaaa6206fdb6b2">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13"],["GroupAggregate  (cost=564.97..570.22 rows=300 width=12) (actual time=6.991..6.991 rows=1 loops=1)","  Group Key: c.customer_id","  -&gt;  Sort  (cost=564.97..565.72 rows=300 width=4) (actual time=6.986..6.986 rows=1 loops=1)","        Sort Key: c.customer_id","        Sort Method: quicksort  Memory: 25kB","        -&gt;  Hash Anti Join  (cost=510.99..552.63 rows=300 width=4) (actual time=6.977..6.977 rows=1 loops=1)","              Hash Cond: (c.customer_id = r.customer_id)","              -&gt;  Seq Scan on customer c  (cost=0.00..14.99 rows=599 width=4) (actual time=0.038..0.159 rows=600 loops=1)","              -&gt;  Hash  (cost=310.44..310.44 rows=16044 width=2) (actual time=6.626..6.626 rows=16044 loops=1)","                    Buckets: 16384  Batches: 1  Memory Usage: 661kB","                    -&gt;  Seq Scan on rental r  (cost=0.00..310.44 rows=16044 width=2) (actual time=0.015..3.903 rows=16044 loops=1)","Planning time: 0.148 ms","Execution time: 7.057 ms"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>QUERY PLAN<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-a98751c486bb4e6734fc" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-a98751c486bb4e6734fc">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13"],["GroupAggregate  (cost=564.97..570.22 rows=300 width=12) (actual time=282.784..282.942 rows=7 loops=1)","  Group Key: c.customer_id","  -&gt;  Sort  (cost=564.97..565.72 rows=300 width=4) (actual time=282.745..282.811 rows=7 loops=1)","        Sort Key: c.customer_id","        Sort Method: quicksort  Memory: 25kB","        -&gt;  Hash Anti Join  (cost=510.99..552.63 rows=300 width=4) (actual time=282.500..282.670 rows=7 loops=1)","              Hash Cond: (c.customer_id = r.customer_id)","              -&gt;  Seq Scan on customer c  (cost=0.00..14.99 rows=599 width=4) (actual time=0.020..4.908 rows=606 loops=1)","              -&gt;  Hash  (cost=310.44..310.44 rows=16044 width=2) (actual time=272.573..272.580 rows=16044 loops=1)","                    Buckets: 16384  Batches: 1  Memory Usage: 661kB","                    -&gt;  Seq Scan on rental r  (cost=0.00..310.44 rows=16044 width=2) (actual time=0.077..136.097 rows=16044 loops=1)","Planning time: 0.273 ms","Execution time: 283.150 ms"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>QUERY PLAN<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ```r
 sql_aj1
 ```
 
 ```
-##                                                                                                                            QUERY PLAN
-## 1                                   GroupAggregate  (cost=564.97..570.22 rows=300 width=12) (actual time=6.991..6.991 rows=1 loops=1)
-## 2                                                                                                            Group Key: c.customer_id
-## 3                                          ->  Sort  (cost=564.97..565.72 rows=300 width=4) (actual time=6.986..6.986 rows=1 loops=1)
-## 4                                                                                                             Sort Key: c.customer_id
-## 5                                                                                                Sort Method: quicksort  Memory: 25kB
-## 6                                ->  Hash Anti Join  (cost=510.99..552.63 rows=300 width=4) (actual time=6.977..6.977 rows=1 loops=1)
-## 7                                                                                          Hash Cond: (c.customer_id = r.customer_id)
-## 8                         ->  Seq Scan on customer c  (cost=0.00..14.99 rows=599 width=4) (actual time=0.038..0.159 rows=600 loops=1)
-## 9                                    ->  Hash  (cost=310.44..310.44 rows=16044 width=2) (actual time=6.626..6.626 rows=16044 loops=1)
-## 10                                                                                    Buckets: 16384  Batches: 1  Memory Usage: 661kB
-## 11                     ->  Seq Scan on rental r  (cost=0.00..310.44 rows=16044 width=2) (actual time=0.015..3.903 rows=16044 loops=1)
-## 12                                                                                                            Planning time: 0.148 ms
-## 13                                                                                                           Execution time: 7.057 ms
+##                                                                                                                              QUERY PLAN
+## 1                                 GroupAggregate  (cost=564.97..570.22 rows=300 width=12) (actual time=282.784..282.942 rows=7 loops=1)
+## 2                                                                                                              Group Key: c.customer_id
+## 3                                        ->  Sort  (cost=564.97..565.72 rows=300 width=4) (actual time=282.745..282.811 rows=7 loops=1)
+## 4                                                                                                               Sort Key: c.customer_id
+## 5                                                                                                  Sort Method: quicksort  Memory: 25kB
+## 6                              ->  Hash Anti Join  (cost=510.99..552.63 rows=300 width=4) (actual time=282.500..282.670 rows=7 loops=1)
+## 7                                                                                            Hash Cond: (c.customer_id = r.customer_id)
+## 8                           ->  Seq Scan on customer c  (cost=0.00..14.99 rows=599 width=4) (actual time=0.020..4.908 rows=606 loops=1)
+## 9                                  ->  Hash  (cost=310.44..310.44 rows=16044 width=2) (actual time=272.573..272.580 rows=16044 loops=1)
+## 10                                                                                      Buckets: 16384  Batches: 1  Memory Usage: 661kB
+## 11                     ->  Seq Scan on rental r  (cost=0.00..310.44 rows=16044 width=2) (actual time=0.077..136.097 rows=16044 loops=1)
+## 12                                                                                                              Planning time: 0.273 ms
+## 13                                                                                                           Execution time: 283.150 ms
 ```
 
 ```r
@@ -938,7 +1233,7 @@ print(glue("sql_aj1 loj-null costs=", sql_aj1[1, 1]))
 ```
 
 ```
-## sql_aj1 loj-null costs=GroupAggregate  (cost=564.97..570.22 rows=300 width=12) (actual time=6.991..6.991 rows=1 loops=1)
+## sql_aj1 loj-null costs=GroupAggregate  (cost=564.97..570.22 rows=300 width=12) (actual time=282.784..282.942 rows=7 loops=1)
 ```
 
 ```r
@@ -946,7 +1241,7 @@ print(glue("sql_aj3 not exist costs=", sql_aj3[1, 1]))
 ```
 
 ```
-## sql_aj3 not exist costs=HashAggregate  (cost=554.13..557.13 rows=300 width=12) (actual time=5.656..5.657 rows=1 loops=1)
+## sql_aj3 not exist costs=HashAggregate  (cost=554.13..557.13 rows=300 width=12) (actual time=250.631..250.690 rows=7 loops=1)
 ```
 
 ## Exercises
@@ -973,8 +1268,8 @@ rs <- dbGetQuery(
 sp_print_df(head(rs))
 ```
 
-<!--html_preserve--><div id="htmlwidget-1aaf192297b9cf573f4a" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-1aaf192297b9cf573f4a">{"x":{"filter":"none","data":[["1"],["Sophie"],["Yang"],["email@email.com"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-90472fc291eea3b37ad9" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-90472fc291eea3b37ad9">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["Sophie","Ian","Sophie","Ian","John","Ed"],["Yang","Frantz","Yang","Frantz","Smith","Borasky"],["sophie.yang@sakilacustomer.org","ian.frantz@sakilacustomer.org","sophie.yang@sakilacustomer.org","ian.frantz@sakilacustomer.org","john.smith@sakilacustomer.org","ed.borasky@sakilacustomer.org"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 <-- Add dplyr semi-join example -->
 
@@ -1015,8 +1310,8 @@ rs <- dbGetQuery(
 sp_print_df(head(rs))
 ```
 
-<!--html_preserve--><div id="htmlwidget-094c66afde7609279602" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-094c66afde7609279602">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["actor","address","category","city","country","customer"],[200,603,16,600,109,600]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>tbl_name<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":2},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-6c084255227fcd56827e" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-6c084255227fcd56827e">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["actor","address","category","city","country","customer"],[200,603,16,600,109,606]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>tbl_name<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":2},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ```r
 rs
@@ -1029,7 +1324,7 @@ rs
 ## 3       category    16
 ## 4           city   600
 ## 5        country   109
-## 6       customer   600
+## 6       customer   606
 ## 7           film  1000
 ## 8     film_actor  5462
 ## 9  film_category  1000
@@ -1092,8 +1387,8 @@ rs <- dbGetQuery(
 sp_print_df(head(rs))
 ```
 
-<!--html_preserve--><div id="htmlwidget-3b2956ae7e20cdac8cd7" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-3b2956ae7e20cdac8cd7">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[1,5,6,2,3,4],["English             ","French              ","German              ","Italian             ","Japanese            ","Mandarin            "],[1000,0,0,0,0,0]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>id<\/th>\n      <th>name<\/th>\n      <th>total<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-cc911bce9136bf4e7dfd" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-cc911bce9136bf4e7dfd">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[1,5,6,2,3,4],["English             ","French              ","German              ","Italian             ","Japanese            ","Mandarin            "],[999,0,0,0,0,0]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>id<\/th>\n      <th>name<\/th>\n      <th>total<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ```r
 rs
@@ -1101,12 +1396,13 @@ rs
 
 ```
 ##   id                 name total
-## 1  1 English               1000
+## 1  1 English                999
 ## 2  5 French                   0
 ## 3  6 German                   0
 ## 4  2 Italian                  0
 ## 5  3 Japanese                 0
 ## 6  4 Mandarin                 0
+## 7 NA                 <NA>     1
 ```
 
 #### Exercise dplyr film distribution based on language
@@ -1125,8 +1421,8 @@ order by l.language_id;"
 sp_print_df(rs)
 ```
 
-<!--html_preserve--><div id="htmlwidget-3af640d58ea88d0a370c" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-3af640d58ea88d0a370c">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7"],[1,2,3,4,5,6,null],["English             ","Italian             ","Japanese            ","Mandarin            ","French              ","German              ",null],[1,null,null,null,null,null,10],[1000,1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>language_id<\/th>\n      <th>name<\/th>\n      <th>language_id_f<\/th>\n      <th>fojs<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-6c3e37b0fa7ac693f7cc" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-6c3e37b0fa7ac693f7cc">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7"],[1,2,3,4,5,6,null],["English             ","Italian             ","Japanese            ","Mandarin            ","French              ","German              ",null],[1,null,null,null,null,null,10],[999,1,1,1,1,1,2]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>language_id<\/th>\n      <th>name<\/th>\n      <th>language_id_f<\/th>\n      <th>fojs<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ```r
 rs
@@ -1134,13 +1430,13 @@ rs
 
 ```
 ##   language_id                 name language_id_f fojs
-## 1           1 English                          1 1000
+## 1           1 English                          1  999
 ## 2           2 Italian                         NA    1
 ## 3           3 Japanese                        NA    1
 ## 4           4 Mandarin                        NA    1
 ## 5           5 French                          NA    1
 ## 6           6 German                          NA    1
-## 7          NA                 <NA>            10    1
+## 7          NA                 <NA>            10    2
 ```
 
 ## Store analysis
@@ -1166,8 +1462,8 @@ rs <- dbGetQuery(
 sp_print_df(head(rs))
 ```
 
-<!--html_preserve--><div id="htmlwidget-976dd45bec4447b81dc5" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-976dd45bec4447b81dc5">{"x":{"filter":"none","data":[["1","2"],[2,1],[31059.92,30252.12],[7304,7292]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>store_id<\/th>\n      <th>amt<\/th>\n      <th>cnt<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-88984347109043009685" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-88984347109043009685">{"x":{"filter":"none","data":[["1","2"],[2,1],[31059.92,30252.12],[7304,7292]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>store_id<\/th>\n      <th>amt<\/th>\n      <th>cnt<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 #### Exercise dplyr store revenue stream
 
@@ -1247,8 +1543,8 @@ group by s.store_id;
 sp_print_df(head(rs))
 ```
 
-<!--html_preserve--><div id="htmlwidget-d15d7e4d6d261abde2f1" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-d15d7e4d6d261abde2f1">{"x":{"filter":"none","data":[["1","2"],[1,2],[713,739],[7331,7265],[30498.71,30813.33],[8044,8004],[4.16,4.24],[2966.08,3133.36]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>store<\/th>\n      <th>open<\/th>\n      <th>paid<\/th>\n      <th>paid_amt<\/th>\n      <th>rentals<\/th>\n      <th>avg_price<\/th>\n      <th>est_balance<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-d80799441e19bf040cbf" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-d80799441e19bf040cbf">{"x":{"filter":"none","data":[["1","2"],[1,2],[713,739],[7331,7265],[30498.71,30813.33],[8044,8004],[4.16,4.24],[2966.08,3133.36]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>store<\/th>\n      <th>open<\/th>\n      <th>paid<\/th>\n      <th>paid_amt<\/th>\n      <th>rentals<\/th>\n      <th>avg_price<\/th>\n      <th>est_balance<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ```r
 rs
@@ -1270,22 +1566,22 @@ rental_table <- tbl(con, "rental") # DBI::dbReadTable(con, "rental")
 est_bal <- rental_table %>%
   left_join(payment_table, by = c("rental_id", "rental_id"), suffix = c(".r", ".p")) %>%
   mutate(
-    missing = ifelse(is.na(payment_id), 1, 0)
-    , found = ifelse(!is.na(payment_id), 1, 0)
+    missing =
+      ifelse(is.na(payment_id), 1, 0), found = ifelse(!is.na(payment_id), 1, 0)
   ) %>%
   summarize(
-    open = sum(missing, na.rm = TRUE)
-    , paid = sum(found, na.rm = TRUE)
-    , paid_amt = sum(amount, na.rm = TRUE)
-    , rentals = n()
+    open =
+      sum(missing, na.rm = TRUE), paid =
+      sum(found, na.rm = TRUE), paid_amt =
+      sum(amount, na.rm = TRUE), rentals = n()
   ) %>%
   summarize(
-    open = open
-    , paid = paid
-    , paid_amt = paid_amt
-    , rentals = rentals
-    , avg_price = paid_amt / paid
-    , est_balance = paid_amt / paid * open
+    open =
+      open, paid =
+      paid, paid_amt =
+      paid_amt, rentals =
+      rentals, avg_price =
+      paid_amt / paid, est_balance = paid_amt / paid * open
   )
 est_bal
 ```
@@ -1321,8 +1617,8 @@ WHERE p.rental_id IS NULL
 sp_print_df(head(rs))
 ```
 
-<!--html_preserve--><div id="htmlwidget-27e84edf7148e5f20209" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-27e84edf7148e5f20209">{"x":{"filter":"none","data":[["1"],[4297.48],[1452]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>open_amt<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-5bc260cc0681d28b4458" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-5bc260cc0681d28b4458">{"x":{"filter":"none","data":[["1"],[4297.48],[1452]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>open_amt<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ```r
 rs
@@ -1402,8 +1698,8 @@ rs <- dbGetQuery(
 sp_print_df(head(rs))
 ```
 
-<!--html_preserve--><div id="htmlwidget-6225f72995c2d7e3fe62" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-6225f72995c2d7e3fe62">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[293,307,316,299,274,326],["Mae","Joseph","Steven","James","Naomi","Jose"],["Fletcher","Joy","Curley","Gannon","Jennings","Andrew"],[35.9,31.9,31.9,30.91,29.92,28.93],[10,10,10,9,8,7]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>open_amt<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,4,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-5e6debc8bc477449b2d2" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-5e6debc8bc477449b2d2">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[293,307,316,299,274,326],["Mae","Joseph","Steven","James","Naomi","Jose"],["Fletcher","Joy","Curley","Gannon","Jennings","Andrew"],[35.9,31.9,31.9,30.91,29.92,28.93],[10,10,10,9,8,7]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>open_amt<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,4,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ```r
 rs
@@ -1462,8 +1758,8 @@ LIMIT 25
 sp_print_df(head(rs))
 ```
 
-<!--html_preserve--><div id="htmlwidget-77cc679550714ee40f49" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-77cc679550714ee40f49">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[103,738,489,730,767,331],["Bucket Brotherhood","Rocketeer Mother","Juggler Hardly","Ridgemont Submarine","Scalawag Duck","Forward Temple"],[4.99,0.99,0.99,0.99,4.99,2.99],[169.66,32.67,31.68,31.68,159.68,95.68],[34,33,32,32,32,32]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>film_id<\/th>\n      <th>title<\/th>\n      <th>rental_rate<\/th>\n      <th>revenue<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-a769f33e9bc2b11da24f" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-a769f33e9bc2b11da24f">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[103,738,489,730,767,331],["Bucket Brotherhood","Rocketeer Mother","Juggler Hardly","Ridgemont Submarine","Scalawag Duck","Forward Temple"],[4.99,0.99,0.99,0.99,4.99,2.99],[169.66,32.67,31.68,31.68,159.68,95.68],[34,33,32,32,32,32]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>film_id<\/th>\n      <th>title<\/th>\n      <th>rental_rate<\/th>\n      <th>revenue<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ```r
 rs
@@ -1517,8 +1813,8 @@ rs <- dbGetQuery(
 sp_print_df(head(rs))
 ```
 
-<!--html_preserve--><div id="htmlwidget-82abc2f89f48ef1b103e" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-82abc2f89f48ef1b103e">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[103,767,973,31,369,1000],["Bucket Brotherhood","Scalawag Duck","Wife Turn","Apache Divine","Goodfellas Salute","Zorro Ark"],[4.99,4.99,4.99,4.99,4.99,4.99],[169.66,159.68,154.69,154.69,154.69,154.69],[34,32,31,31,31,31]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>film_id<\/th>\n      <th>title<\/th>\n      <th>rental_rate<\/th>\n      <th>revenue<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-5afb8971f37330fd8cc4" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-5afb8971f37330fd8cc4">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[103,767,973,31,369,1000],["Bucket Brotherhood","Scalawag Duck","Wife Turn","Apache Divine","Goodfellas Salute","Zorro Ark"],[4.99,4.99,4.99,4.99,4.99,4.99],[169.66,159.68,154.69,154.69,154.69,154.69],[34,32,31,31,31,31]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>film_id<\/th>\n      <th>title<\/th>\n      <th>rental_rate<\/th>\n      <th>revenue<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ### which films are in one store but not the other.
 
@@ -1545,8 +1841,8 @@ rs <- dbGetQuery(
 sp_print_df(head(rs))
 ```
 
-<!--html_preserve--><div id="htmlwidget-0401e57dadc1ffc6b38f" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-0401e57dadc1ffc6b38f">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[2,3,5,8,13,20],["Ace Goldfinger","Adaptation Holes","African Egg","Airport Pollock","Ali Forever","Amelie Hellfighters"],[4.99,2.99,2.99,4.99,4.99,4.99],[null,null,null,null,null,1],[null,null,null,null,null,3],[2,2,2,2,2,null],[3,4,3,4,4,null]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>film_id<\/th>\n      <th>title<\/th>\n      <th>rental_rate<\/th>\n      <th>store_id<\/th>\n      <th>count<\/th>\n      <th>store_id..6<\/th>\n      <th>count..7<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4,5,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-e9ae68682532316859d5" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-e9ae68682532316859d5">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[2,3,5,8,13,20],["Ace Goldfinger","Adaptation Holes","African Egg","Airport Pollock","Ali Forever","Amelie Hellfighters"],[4.99,2.99,2.99,4.99,4.99,4.99],[null,null,null,null,null,1],[null,null,null,null,null,3],[2,2,2,2,2,null],[3,4,3,4,4,null]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>film_id<\/th>\n      <th>title<\/th>\n      <th>rental_rate<\/th>\n      <th>store_id<\/th>\n      <th>count<\/th>\n      <th>store_id..6<\/th>\n      <th>count..7<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4,5,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ### Compute the outstanding balance.
 
@@ -1567,8 +1863,8 @@ rs <- dbGetQuery(
 sp_print_df(head(rs))
 ```
 
-<!--html_preserve--><div id="htmlwidget-b3faee177530bdbf1abd" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-b3faee177530bdbf1abd">{"x":{"filter":"none","data":[["1"],[4297.48],[1452]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>open_amt<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-32dc6527565d6d2fa8eb" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-32dc6527565d6d2fa8eb">{"x":{"filter":"none","data":[["1"],[4297.48],[1452]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>open_amt<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 
 ## Different strategies for interacting with the database
@@ -1592,8 +1888,8 @@ rs1 <- dbGetQuery(con, "select * from customer;")
 sp_print_df(head(rs1))
 ```
 
-<!--html_preserve--><div id="htmlwidget-3cf614f4c937cf9ea1f7" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-3cf614f4c937cf9ea1f7">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[524,1,2,3,4,5],[1,1,1,1,2,1],["Jared","Mary","Patricia","Linda","Barbara","Elizabeth"],["Ely","Smith","Johnson","Williams","Jones","Brown"],["jared.ely@sakilacustomer.org","mary.smith@sakilacustomer.org","patricia.johnson@sakilacustomer.org","linda.williams@sakilacustomer.org","barbara.jones@sakilacustomer.org","elizabeth.brown@sakilacustomer.org"],[530,5,6,7,8,9],[true,true,true,true,true,true],["2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14"],["2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z"],[1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>address_id<\/th>\n      <th>activebool<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n      <th>active<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,6,10]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-bbe1f43178625f07ed69" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-bbe1f43178625f07ed69">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[524,1,2,3,4,5],[1,1,1,1,2,1],["Jared","Mary","Patricia","Linda","Barbara","Elizabeth"],["Ely","Smith","Johnson","Williams","Jones","Brown"],["jared.ely@sakilacustomer.org","mary.smith@sakilacustomer.org","patricia.johnson@sakilacustomer.org","linda.williams@sakilacustomer.org","barbara.jones@sakilacustomer.org","elizabeth.brown@sakilacustomer.org"],[530,5,6,7,8,9],[true,true,true,true,true,true],["2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14"],["2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z"],[1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>address_id<\/th>\n      <th>activebool<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n      <th>active<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,6,10]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ```r
 pco <- dbSendQuery(con, "select * from customer;")
@@ -1602,8 +1898,8 @@ dbClearResult(pco)
 sp_print_df(head(rs2))
 ```
 
-<!--html_preserve--><div id="htmlwidget-39c707032a275c746237" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-39c707032a275c746237">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[524,1,2,3,4,5],[1,1,1,1,2,1],["Jared","Mary","Patricia","Linda","Barbara","Elizabeth"],["Ely","Smith","Johnson","Williams","Jones","Brown"],["jared.ely@sakilacustomer.org","mary.smith@sakilacustomer.org","patricia.johnson@sakilacustomer.org","linda.williams@sakilacustomer.org","barbara.jones@sakilacustomer.org","elizabeth.brown@sakilacustomer.org"],[530,5,6,7,8,9],[true,true,true,true,true,true],["2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14"],["2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z"],[1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>address_id<\/th>\n      <th>activebool<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n      <th>active<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,6,10]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-f44584fa5e4f08aaeb0b" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-f44584fa5e4f08aaeb0b">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[524,1,2,3,4,5],[1,1,1,1,2,1],["Jared","Mary","Patricia","Linda","Barbara","Elizabeth"],["Ely","Smith","Johnson","Williams","Jones","Brown"],["jared.ely@sakilacustomer.org","mary.smith@sakilacustomer.org","patricia.johnson@sakilacustomer.org","linda.williams@sakilacustomer.org","barbara.jones@sakilacustomer.org","elizabeth.brown@sakilacustomer.org"],[530,5,6,7,8,9],[true,true,true,true,true,true],["2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14"],["2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z"],[1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>address_id<\/th>\n      <th>activebool<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n      <th>active<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,6,10]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ### Use dbExecute
 
@@ -1621,7 +1917,8 @@ rental_tbl <- dplyr::tbl(con, "rental")
 dplyr_tbl_loj <-
   left_join(customer_tbl, rental_tbl, by = "customer_id", suffix = c(".c", ".r")) %>%
   filter(is.na(rental_id)) %>%
-  select(c("first_name", "last_name", "email"))
+  select(c("first_name", "last_name", "email")) %>%
+  collect()
 
 rs <- dbGetQuery(
   con,
@@ -1637,21 +1934,29 @@ rs <- dbGetQuery(
 sp_print_df(head(rs))
 ```
 
-<!--html_preserve--><div id="htmlwidget-4d094f48d238e6053c0e" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-4d094f48d238e6053c0e">{"x":{"filter":"none","data":[["1"],["Sophie"],["Yang"],["email@email.com"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-33be21b5fff197bb7cc4" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-33be21b5fff197bb7cc4">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["Sophie","Ian","Sophie","Ian","John","Ed"],["Yang","Frantz","Yang","Frantz","Smith","Borasky"],["sophie.yang@sakilacustomer.org","ian.frantz@sakilacustomer.org","sophie.yang@sakilacustomer.org","ian.frantz@sakilacustomer.org","john.smith@sakilacustomer.org","ed.borasky@sakilacustomer.org"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ```r
-View(dplyr_tbl_loj)
+sp_print_df(dplyr_tbl_loj)
 ```
 
+<!--html_preserve--><div id="htmlwidget-008e7554d5faa93bd1b9" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-008e7554d5faa93bd1b9">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7"],["Sophie","Ian","Sophie","Ian","John","Ed","John"],["Yang","Frantz","Yang","Frantz","Smith","Borasky","Smith"],["sophie.yang@sakilacustomer.org","ian.frantz@sakilacustomer.org","sophie.yang@sakilacustomer.org","ian.frantz@sakilacustomer.org","john.smith@sakilacustomer.org","ed.borasky@sakilacustomer.org","john.smith@sakilacustomer.org"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
+<!--html_preserve--><div id="htmlwidget-f943e07c4e65c2196ba8" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-f943e07c4e65c2196ba8">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35"],["actor","address","address","category","city","city","country","customer","customer","film","film","film_actor","film_actor","film_actor","film_actor","film_category","film_category","film_category","film_category","inventory","inventory","language","payment","payment","payment","payment","rental","rental","rental","rental","staff","staff","store","store","store"],["actor_id","address_id","city_id","category_id","city_id","country_id","country_id","customer_id","address_id","film_id","language_id","actor_id","actor_id","film_id","film_id","category_id","film_id","category_id","film_id","film_id","inventory_id","language_id","staff_id","customer_id","rental_id","payment_id","customer_id","rental_id","staff_id","inventory_id","staff_id","address_id","store_id","address_id","manager_staff_id"],["actor_pkey","address_pkey","fk_address_city","category_pkey","city_pkey","fk_city","country_pkey","customer_pkey","customer_address_id_fkey","film_pkey","film_language_id_fkey","film_actor_actor_id_fkey","film_actor_pkey","film_actor_pkey","film_actor_film_id_fkey","film_category_category_id_fkey","film_category_pkey","film_category_pkey","film_category_film_id_fkey","inventory_film_id_fkey","inventory_pkey","language_pkey","payment_staff_id_fkey","payment_customer_id_fkey","payment_rental_id_fkey","payment_pkey","rental_customer_id_fkey","rental_pkey","rental_staff_id_key","rental_inventory_id_fkey","staff_pkey","staff_address_id_fkey","store_pkey","store_address_id_fkey","store_manager_staff_id_fkey"],["PRIMARY KEY","PRIMARY KEY","FOREIGN KEY","PRIMARY KEY","PRIMARY KEY","FOREIGN KEY","PRIMARY KEY","PRIMARY KEY","FOREIGN KEY","PRIMARY KEY","FOREIGN KEY","FOREIGN KEY","PRIMARY KEY","PRIMARY KEY","FOREIGN KEY","FOREIGN KEY","PRIMARY KEY","PRIMARY KEY","FOREIGN KEY","FOREIGN KEY","PRIMARY KEY","PRIMARY KEY","FOREIGN KEY","FOREIGN KEY","FOREIGN KEY","PRIMARY KEY","FOREIGN KEY","PRIMARY KEY","FOREIGN KEY","FOREIGN KEY","PRIMARY KEY","FOREIGN KEY","PRIMARY KEY","FOREIGN KEY","FOREIGN KEY"],["","","city","","","country","","","address","","language","actor","","","film","category","","","film","film","","","staff","customer","rental","","customer","","staff","inventory","","address","","address","staff"],["","","city_id","","","country_id","","","address_id","","language_id","actor_id","","","film_id","category_id","","","film_id","film_id","","","staff_id","customer_id","rental_id","","customer_id","","staff_id","inventory_id","","address_id","","address_id","staff_id"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_name<\/th>\n      <th>column_name<\/th>\n      <th>constraint_name<\/th>\n      <th>constraint_type<\/th>\n      <th>ref_table<\/th>\n      <th>ref_table_col<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve--><!--html_preserve--><div id="htmlwidget-4b34001b371daf31fcf2" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-4b34001b371daf31fcf2">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"],["actor","address","category","city","country","customer","film","film_actor","film_category","inventory","language","payment","rental","staff","store"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_name<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
+<!--html_preserve--><div id="htmlwidget-b1bdbba72aec9089045d" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-b1bdbba72aec9089045d">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18"],["address","city","customer","film","film_actor","film_actor","film_category","film_category","inventory","payment","payment","payment","rental","rental","rental","staff","store","store"],["city_id","country_id","address_id","language_id","actor_id","film_id","category_id","film_id","film_id","staff_id","customer_id","rental_id","customer_id","staff_id","inventory_id","address_id","address_id","manager_staff_id"],["fk_address_city","fk_city","customer_address_id_fkey","film_language_id_fkey","film_actor_actor_id_fkey","film_actor_film_id_fkey","film_category_category_id_fkey","film_category_film_id_fkey","inventory_film_id_fkey","payment_staff_id_fkey","payment_customer_id_fkey","payment_rental_id_fkey","rental_customer_id_fkey","rental_staff_id_key","rental_inventory_id_fkey","staff_address_id_fkey","store_address_id_fkey","store_manager_staff_id_fkey"],["FOREIGN KEY","FOREIGN KEY","FOREIGN KEY","FOREIGN KEY","FOREIGN KEY","FOREIGN KEY","FOREIGN KEY","FOREIGN KEY","FOREIGN KEY","FOREIGN KEY","FOREIGN KEY","FOREIGN KEY","FOREIGN KEY","FOREIGN KEY","FOREIGN KEY","FOREIGN KEY","FOREIGN KEY","FOREIGN KEY"],["city","country","address","language","actor","film","category","film","film","staff","customer","rental","customer","staff","inventory","address","address","staff"],["city_id","country_id","address_id","language_id","actor_id","film_id","category_id","film_id","film_id","staff_id","customer_id","rental_id","customer_id","staff_id","inventory_id","address_id","address_id","staff_id"],[2,4,6,7,8,8,9,9,10,12,12,12,13,13,13,14,15,15],["table","table","table","table","table","table","table","table","table","table","table","table","table","table","table","table","table","table"],["rectangle","rectangle","rectangle","rectangle","rectangle","rectangle","rectangle","rectangle","rectangle","rectangle","rectangle","rectangle","rectangle","rectangle","rectangle","rectangle","rectangle","rectangle"],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],[0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5],[18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18],[4,5,2,11,1,7,3,7,7,14,6,13,6,14,10,2,2,14],["table","table","table","table","table","table","table","table","table","table","table","table","table","table","table","table","table","table"],["rectangle","rectangle","rectangle","rectangle","rectangle","rectangle","rectangle","rectangle","rectangle","rectangle","rectangle","rectangle","rectangle","rectangle","rectangle","rectangle","rectangle","rectangle"],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],[0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5],[18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_name<\/th>\n      <th>column_name<\/th>\n      <th>constraint_name<\/th>\n      <th>constraint_type<\/th>\n      <th>ref_table<\/th>\n      <th>ref_table_col<\/th>\n      <th>src_tbl_id<\/th>\n      <th>type.x<\/th>\n      <th>shape.x<\/th>\n      <th>width.x<\/th>\n      <th>height.x<\/th>\n      <th>fontsize.x<\/th>\n      <th>fk_tbl_id<\/th>\n      <th>type.y<\/th>\n      <th>shape.y<\/th>\n      <th>width.y<\/th>\n      <th>height.y<\/th>\n      <th>fontsize.y<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[7,10,11,12,13,16,17,18]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve--><!--html_preserve--><div id="htmlwidget-af6ac1c69230c2179f6a" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-af6ac1c69230c2179f6a">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17"],["actor","address","category","city","country","customer","film","film_actor","film_actor","film_category","film_category","inventory","language","payment","rental","staff","store"],["actor_id","address_id","category_id","city_id","country_id","customer_id","film_id","actor_id","film_id","film_id","category_id","inventory_id","language_id","payment_id","rental_id","staff_id","store_id"],["actor_pkey","address_pkey","category_pkey","city_pkey","country_pkey","customer_pkey","film_pkey","film_actor_pkey","film_actor_pkey","film_category_pkey","film_category_pkey","inventory_pkey","language_pkey","payment_pkey","rental_pkey","staff_pkey","store_pkey"],["PRIMARY KEY","PRIMARY KEY","PRIMARY KEY","PRIMARY KEY","PRIMARY KEY","PRIMARY KEY","PRIMARY KEY","PRIMARY KEY","PRIMARY KEY","PRIMARY KEY","PRIMARY KEY","PRIMARY KEY","PRIMARY KEY","PRIMARY KEY","PRIMARY KEY","PRIMARY KEY","PRIMARY KEY"],["","","","","","","","","","","","","","","","",""],["","","","","","","","","","","","","","","","",""],[1,2,3,4,5,6,7,8,8,9,9,10,11,12,13,14,15],["table","table","table","table","table","table","table","table","table","table","table","table","table","table","table","table","table"],["rectangle","rectangle","rectangle","rectangle","rectangle","rectangle","rectangle","rectangle","rectangle","rectangle","rectangle","rectangle","rectangle","rectangle","rectangle","rectangle","rectangle"],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],[0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5],[18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_name<\/th>\n      <th>column_name<\/th>\n      <th>constraint_name<\/th>\n      <th>constraint_type<\/th>\n      <th>ref_table<\/th>\n      <th>ref_table_col<\/th>\n      <th>src_tbl_id<\/th>\n      <th>type.x<\/th>\n      <th>shape.x<\/th>\n      <th>width.x<\/th>\n      <th>height.x<\/th>\n      <th>fontsize.x<\/th>\n      <th>fk_tbl_id<\/th>\n      <th>type.y<\/th>\n      <th>shape.y<\/th>\n      <th>width.y<\/th>\n      <th>height.y<\/th>\n      <th>fontsize.y<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[7,10,11,12,13,16,17,18]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
+<!--html_preserve--><div id="htmlwidget-c6cef737dd6a83c62169" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-c6cef737dd6a83c62169">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18"],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],[2,4,6,7,8,8,9,9,10,12,12,12,13,13,13,14,15,15],[4,5,2,11,1,7,3,7,7,14,6,13,6,14,10,2,2,14],["fk","fk","fk","fk","fk","fk","fk","fk","fk","fk","fk","fk","fk","fk","fk","fk","fk","fk"],["fk_address_city","fk_city","customer_address_id_fkey","film_language_id_fkey","film_actor_actor_id_fkey","film_actor_film_id_fkey","film_category_category_id_fkey","film_category_film_id_fkey","inventory_film_id_fkey","payment_staff_id_fkey","payment_customer_id_fkey","payment_rental_id_fkey","rental_customer_id_fkey","rental_staff_id_key","rental_inventory_id_fkey","staff_address_id_fkey","store_address_id_fkey","store_manager_staff_id_fkey"],[15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>id<\/th>\n      <th>from<\/th>\n      <th>to<\/th>\n      <th>rel<\/th>\n      <th>label<\/th>\n      <th>fontsize<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
-
-
-<!--html_preserve--><div id="htmlwidget-7b5cb6645f21343de7d8" style="width:672px;height:3000px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-7b5cb6645f21343de7d8">{"x":{"diagram":"digraph {\n\ngraph [layout = \"neato\",\n       outputorder = \"edgesfirst\",\n       bgcolor = \"white\"]\n\nnode [fontname = \"Helvetica\",\n      fontsize = \"10\",\n      shape = \"circle\",\n      fixedsize = \"true\",\n      width = \"0.5\",\n      style = \"filled\",\n      fillcolor = \"aliceblue\",\n      color = \"gray70\",\n      fontcolor = \"gray50\"]\n\nedge [fontname = \"Helvetica\",\n     fontsize = \"8\",\n     len = \"1.5\",\n     color = \"gray80\",\n     arrowsize = \"0.5\"]\n\n  \"1\" [label = \"actor\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"2\" [label = \"address\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"3\" [label = \"category\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"4\" [label = \"city\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"5\" [label = \"country\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"6\" [label = \"customer\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"7\" [label = \"film\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"8\" [label = \"film_actor\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"9\" [label = \"film_category\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"10\" [label = \"inventory\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"11\" [label = \"language\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"12\" [label = \"payment\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"13\" [label = \"rental\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"14\" [label = \"staff\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"15\" [label = \"store\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n\"2\"->\"4\" [label = \"fk_address_city\", fontsize = \"15\"] \n\"4\"->\"5\" [label = \"fk_city\", fontsize = \"15\"] \n\"6\"->\"2\" [label = \"customer_address_id_fkey\", fontsize = \"15\"] \n\"7\"->\"11\" [label = \"film_language_id_fkey\", fontsize = \"15\"] \n\"8\"->\"1\" [label = \"film_actor_actor_id_fkey\", fontsize = \"15\"] \n\"8\"->\"7\" [label = \"film_actor_film_id_fkey\", fontsize = \"15\"] \n\"9\"->\"3\" [label = \"film_category_category_id_fkey\", fontsize = \"15\"] \n\"9\"->\"7\" [label = \"film_category_film_id_fkey\", fontsize = \"15\"] \n\"10\"->\"7\" [label = \"inventory_film_id_fkey\", fontsize = \"15\"] \n\"12\"->\"14\" [label = \"payment_staff_id_fkey\", fontsize = \"15\"] \n\"12\"->\"6\" [label = \"payment_customer_id_fkey\", fontsize = \"15\"] \n\"12\"->\"13\" [label = \"payment_rental_id_fkey\", fontsize = \"15\"] \n\"13\"->\"6\" [label = \"rental_customer_id_fkey\", fontsize = \"15\"] \n\"13\"->\"14\" [label = \"rental_staff_id_key\", fontsize = \"15\"] \n\"13\"->\"10\" [label = \"rental_inventory_id_fkey\", fontsize = \"15\"] \n\"14\"->\"2\" [label = \"staff_address_id_fkey\", fontsize = \"15\"] \n\"15\"->\"2\" [label = \"store_address_id_fkey\", fontsize = \"15\"] \n\"15\"->\"14\" [label = \"store_manager_staff_id_fkey\", fontsize = \"15\"] \n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-a9e8581aee330d6d5646" style="width:672px;height:3000px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-a9e8581aee330d6d5646">{"x":{"diagram":"digraph {\n\ngraph [layout = \"neato\",\n       outputorder = \"edgesfirst\",\n       bgcolor = \"white\"]\n\nnode [fontname = \"Helvetica\",\n      fontsize = \"10\",\n      shape = \"circle\",\n      fixedsize = \"true\",\n      width = \"0.5\",\n      style = \"filled\",\n      fillcolor = \"aliceblue\",\n      color = \"gray70\",\n      fontcolor = \"gray50\"]\n\nedge [fontname = \"Helvetica\",\n     fontsize = \"8\",\n     len = \"1.5\",\n     color = \"gray80\",\n     arrowsize = \"0.5\"]\n\n  \"1\" [label = \"actor\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"2\" [label = \"address\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"3\" [label = \"category\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"4\" [label = \"city\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"5\" [label = \"country\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"6\" [label = \"customer\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"7\" [label = \"film\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"8\" [label = \"film_actor\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"9\" [label = \"film_category\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"10\" [label = \"inventory\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"11\" [label = \"language\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"12\" [label = \"payment\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"13\" [label = \"rental\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"14\" [label = \"staff\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n  \"15\" [label = \"store\", shape = \"rectangle\", width = \"1\", height = \"0.5\", fontsize = \"18\", fillcolor = \"#F0F8FF\", fontcolor = \"#000000\"] \n\"2\"->\"4\" [label = \"fk_address_city\", fontsize = \"15\"] \n\"4\"->\"5\" [label = \"fk_city\", fontsize = \"15\"] \n\"6\"->\"2\" [label = \"customer_address_id_fkey\", fontsize = \"15\"] \n\"7\"->\"11\" [label = \"film_language_id_fkey\", fontsize = \"15\"] \n\"8\"->\"1\" [label = \"film_actor_actor_id_fkey\", fontsize = \"15\"] \n\"8\"->\"7\" [label = \"film_actor_film_id_fkey\", fontsize = \"15\"] \n\"9\"->\"3\" [label = \"film_category_category_id_fkey\", fontsize = \"15\"] \n\"9\"->\"7\" [label = \"film_category_film_id_fkey\", fontsize = \"15\"] \n\"10\"->\"7\" [label = \"inventory_film_id_fkey\", fontsize = \"15\"] \n\"12\"->\"14\" [label = \"payment_staff_id_fkey\", fontsize = \"15\"] \n\"12\"->\"6\" [label = \"payment_customer_id_fkey\", fontsize = \"15\"] \n\"12\"->\"13\" [label = \"payment_rental_id_fkey\", fontsize = \"15\"] \n\"13\"->\"6\" [label = \"rental_customer_id_fkey\", fontsize = \"15\"] \n\"13\"->\"14\" [label = \"rental_staff_id_key\", fontsize = \"15\"] \n\"13\"->\"10\" [label = \"rental_inventory_id_fkey\", fontsize = \"15\"] \n\"14\"->\"2\" [label = \"staff_address_id_fkey\", fontsize = \"15\"] \n\"15\"->\"2\" [label = \"store_address_id_fkey\", fontsize = \"15\"] \n\"15\"->\"14\" [label = \"store_manager_staff_id_fkey\", fontsize = \"15\"] \n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 
 ```r
@@ -1665,5 +1970,7 @@ sp_docker_stop("sql-pet")
 ```r
 knitr::knit_exit()
 ```
+
+
 
 
