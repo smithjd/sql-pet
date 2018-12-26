@@ -41,7 +41,7 @@ con <- sp_get_postgres_connection(
 )
 ```
 
-## Sandbox Environment
+## Sandbox Environment {#sandbox-environment}
 
 Here is an overview of our sandbox environment.  In this chapter we explore each of the entities in the sandbox, how they are connected and how they communicate with each other.  You can skip this chapter and come back later when you are curious about the setup that we're using in this book.
 
@@ -56,6 +56,7 @@ Here is an overview of our sandbox environment.  In this chapter we explore each
 You communicate with Rstudio, which can send commands to both R and to Unix.  Commands to your OS can be entered directly in the terminal pane or via an R function like `exec2()`.  On a Unix or Mac computer, you typically communicate with `bash`, while you have several choices on a Windows computer.
 
 ![Mac choices](screenshots/rstudio-shell-choices-on-mac.png)
+
 ![Windows choices](screenshots/rstudio-shell-choices-on-windows.png)
 
 To check on the RStudio version you are using, enter this R command:
@@ -195,15 +196,7 @@ system2("docker", "exec sql-pet ls -l petdir/README.md", stdout = TRUE, stderr =
 ```
 
 ```
-## Warning in system2("docker", "exec sql-pet ls -l petdir/README.md", stdout
-## = TRUE, : running command ''docker' exec sql-pet ls -l petdir/README.md 2>/
-## dev/null' had status 2
-```
-
-```
-## character(0)
-## attr(,"status")
-## [1] 2
+## [1] "-rw-r--r-- 1 root root 4973 Dec 23 01:12 petdir/README.md"
 ```
 
 ### Docker and psql together from R or your CLI
