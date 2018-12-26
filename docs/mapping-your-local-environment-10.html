@@ -207,6 +207,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="8.2" data-path="securing-and-using-your-dbms-credentials-05b.html"><a href="securing-and-using-your-dbms-credentials-05b.html#storing-your-dbms-credentials"><i class="fa fa-check"></i><b>8.2</b> Storing your dbms credentials</a><ul>
 <li class="chapter" data-level="8.2.1" data-path="securing-and-using-your-dbms-credentials-05b.html"><a href="securing-and-using-your-dbms-credentials-05b.html#connect-with-postgres-using-the-sys.getenv-function"><i class="fa fa-check"></i><b>8.2.1</b> Connect with Postgres using the Sys.getenv function</a></li>
+<li class="chapter" data-level="8.2.2" data-path="securing-and-using-your-dbms-credentials-05b.html"><a href="securing-and-using-your-dbms-credentials-05b.html#alternative-put-the-database-password-in-an-environment-file"><i class="fa fa-check"></i><b>8.2.2</b> Alternative: put the database password in an environment file</a></li>
 </ul></li>
 <li class="chapter" data-level="8.3" data-path="securing-and-using-your-dbms-credentials-05b.html"><a href="securing-and-using-your-dbms-credentials-05b.html#clean-up-1"><i class="fa fa-check"></i><b>8.3</b> Clean up</a></li>
 </ul></li>
@@ -302,7 +303,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="13.3.1" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#sql-delete-data-syntax"><i class="fa fa-check"></i><b>13.3.1</b> SQL Delete Data Syntax</a></li>
 <li class="chapter" data-level="13.3.2" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#delete-new-practice-customers-from-the-customer-table."><i class="fa fa-check"></i><b>13.3.2</b> Delete New Practice Customers from the Customer table.</a></li>
 <li class="chapter" data-level="13.3.3" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#sql-single-row-insert-data-syntax"><i class="fa fa-check"></i><b>13.3.3</b> SQL Single Row Insert Data Syntax</a></li>
-<li class="chapter" data-level="13.3.4" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#r-exercise-inserting-a-single-row-via-a-dataframe"><i class="fa fa-check"></i><b>13.3.4</b> R Exercise: Inserting a Single Row via a Dataframe</a></li>
+<li class="chapter" data-level="13.3.4" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#primary-and-foreign-key-constraint-error-messages"><i class="fa fa-check"></i><b>13.3.4</b> Primary and Foreign Key Constraint Error Messages</a></li>
+<li class="chapter" data-level="13.3.5" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#r-exercise-inserting-a-single-row-via-a-dataframe"><i class="fa fa-check"></i><b>13.3.5</b> R Exercise: Inserting a Single Row via a Dataframe</a></li>
 </ul></li>
 <li class="chapter" data-level="13.4" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#sql-multi-row-insert-data-syntax"><i class="fa fa-check"></i><b>13.4</b> SQL Multi-Row Insert Data Syntax</a></li>
 <li class="chapter" data-level="13.5" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#sql-multi-row-insert-data-example"><i class="fa fa-check"></i><b>13.5</b> SQL Multi-Row Insert Data Example</a><ul>
@@ -377,6 +379,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="15.4.2" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#database-keys-with-dplyr"><i class="fa fa-check"></i><b>15.4.2</b> Database keys with dplyr</a></li>
 </ul></li>
 <li class="chapter" data-level="15.5" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#creating-your-own-data-dictionary"><i class="fa fa-check"></i><b>15.5</b> Creating your own data dictionary</a></li>
+<li class="chapter" data-level="15.6" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#save-your-work"><i class="fa fa-check"></i><b>15.6</b> Save your work!</a></li>
 </ul></li>
 <li class="chapter" data-level="16" data-path="drilling-into-your-dbms-environment-22.html"><a href="drilling-into-your-dbms-environment-22.html"><i class="fa fa-check"></i><b>16</b> Drilling into your DBMS environment (22)</a><ul>
 <li class="chapter" data-level="16.1" data-path="drilling-into-your-dbms-environment-22.html"><a href="drilling-into-your-dbms-environment-22.html#which-database"><i class="fa fa-check"></i><b>16.1</b> Which database?</a></li>
@@ -399,14 +402,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="19.2" data-path="writing-to-the-dbms-73.html"><a href="writing-to-the-dbms-73.html#modify-an-existing-table"><i class="fa fa-check"></i><b>19.2</b> Modify an existing table</a></li>
 <li class="chapter" data-level="19.3" data-path="writing-to-the-dbms-73.html"><a href="writing-to-the-dbms-73.html#remove-table-and-clean-up"><i class="fa fa-check"></i><b>19.3</b> Remove table and Clean up</a></li>
 </ul></li>
-<li class="appendix"><span><b>Appendix</b></span></li>
-<li class="chapter" data-level="A" data-path="other-resources-89.html"><a href="other-resources-89.html"><i class="fa fa-check"></i><b>A</b> Other resources (89)</a><ul>
-<li class="chapter" data-level="A.1" data-path="other-resources-89.html"><a href="other-resources-89.html#editing-this-book"><i class="fa fa-check"></i><b>A.1</b> Editing this book</a></li>
-<li class="chapter" data-level="A.2" data-path="other-resources-89.html"><a href="other-resources-89.html#docker-alternatives"><i class="fa fa-check"></i><b>A.2</b> Docker alternatives</a></li>
-<li class="chapter" data-level="A.3" data-path="other-resources-89.html"><a href="other-resources-89.html#docker-and-r"><i class="fa fa-check"></i><b>A.3</b> Docker and R</a></li>
-<li class="chapter" data-level="A.4" data-path="other-resources-89.html"><a href="other-resources-89.html#documentation-for-docker-and-postgres"><i class="fa fa-check"></i><b>A.4</b> Documentation for Docker and Postgres</a></li>
-<li class="chapter" data-level="A.5" data-path="other-resources-89.html"><a href="other-resources-89.html#sql-and-dplyr"><i class="fa fa-check"></i><b>A.5</b> SQL and dplyr</a></li>
-<li class="chapter" data-level="A.6" data-path="other-resources-89.html"><a href="other-resources-89.html#more-resources"><i class="fa fa-check"></i><b>A.6</b> More Resources</a></li>
+<li class="appendix"><span><b>Appendix</b></span><ul>
+<li class="chapter" data-level="A.4" data-path="writing-to-the-dbms-73.html"><a href="writing-to-the-dbms-73.html#editing-this-book"><i class="fa fa-check"></i><b>A.4</b> Editing this book</a></li>
+<li class="chapter" data-level="A.5" data-path="writing-to-the-dbms-73.html"><a href="writing-to-the-dbms-73.html#docker-alternatives"><i class="fa fa-check"></i><b>A.5</b> Docker alternatives</a></li>
+<li class="chapter" data-level="A.6" data-path="writing-to-the-dbms-73.html"><a href="writing-to-the-dbms-73.html#docker-and-r"><i class="fa fa-check"></i><b>A.6</b> Docker and R</a></li>
+<li class="chapter" data-level="A.7" data-path="writing-to-the-dbms-73.html"><a href="writing-to-the-dbms-73.html#documentation-for-docker-and-postgres"><i class="fa fa-check"></i><b>A.7</b> Documentation for Docker and Postgres</a></li>
+<li class="chapter" data-level="A.8" data-path="writing-to-the-dbms-73.html"><a href="writing-to-the-dbms-73.html#sql-and-dplyr"><i class="fa fa-check"></i><b>A.8</b> SQL and dplyr</a></li>
+<li class="chapter" data-level="A.9" data-path="writing-to-the-dbms-73.html"><a href="writing-to-the-dbms-73.html#more-resources"><i class="fa fa-check"></i><b>A.9</b> More Resources</a></li>
 </ul></li>
 <li class="chapter" data-level="B" data-path="mapping-your-local-environment-92.html"><a href="mapping-your-local-environment-92.html"><i class="fa fa-check"></i><b>B</b> Mapping your local environment (92)</a><ul>
 <li class="chapter" data-level="B.1" data-path="mapping-your-local-environment-92.html"><a href="mapping-your-local-environment-92.html#environment-tools-used-in-this-chapter"><i class="fa fa-check"></i><b>B.1</b> Environment Tools Used in this Chapter</a></li>
@@ -506,8 +508,14 @@ display_rows &lt;-<span class="st"> </span><span class="dv">5</span></code></pre
 <div id="rstudio" class="section level3">
 <h3><span class="header-section-number">9.2.2</span> RStudio</h3>
 <p>You communicate with Rstudio, which can send commands to both R and to Unix. Commands to your OS can be entered directly in the terminal pane or via an R function like <code>exec2()</code>. On a Unix or Mac computer, you typically communicate with <code>bash</code>, while you have several choices on a Windows computer.</p>
-<p><img src="screenshots/rstudio-shell-choices-on-mac.png" alt="Mac choices" />
-<img src="screenshots/rstudio-shell-choices-on-windows.png" alt="Windows choices" /></p>
+<div class="figure">
+<img src="screenshots/rstudio-shell-choices-on-mac.png" alt="Mac choices" />
+<p class="caption">Mac choices</p>
+</div>
+<div class="figure">
+<img src="screenshots/rstudio-shell-choices-on-windows.png" alt="Windows choices" />
+<p class="caption">Windows choices</p>
+</div>
 <p>To check on the RStudio version you are using, enter this R command:</p>
 <blockquote>
 <p><code>require(rstudioapi)</code> <br>
@@ -617,12 +625,7 @@ display_rows &lt;-<span class="st"> </span><span class="dv">5</span></code></pre
 <div id="get-info-on-the-same-os-file-inside-docker-from-r-code" class="section level3">
 <h3><span class="header-section-number">9.3.2</span> Get info on the same OS file inside Docker from R Code</h3>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, <span class="st">&quot;exec sql-pet ls -l petdir/README.md&quot;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">FALSE</span>)</code></pre>
-<pre><code>## Warning in system2(&quot;docker&quot;, &quot;exec sql-pet ls -l petdir/README.md&quot;, stdout
-## = TRUE, : running command &#39;&#39;docker&#39; exec sql-pet ls -l petdir/README.md 2&gt;/
-## dev/null&#39; had status 2</code></pre>
-<pre><code>## character(0)
-## attr(,&quot;status&quot;)
-## [1] 2</code></pre>
+<pre><code>## [1] &quot;-rw-r--r-- 1 root root 4973 Dec 23 01:12 petdir/README.md&quot;</code></pre>
 </div>
 <div id="docker-and-psql-together-from-r-or-your-cli" class="section level3">
 <h3><span class="header-section-number">9.3.3</span> Docker and psql together from R or your CLI</h3>
