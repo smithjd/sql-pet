@@ -43,7 +43,7 @@ We use a PostgreSQL database server running in a Docker container for the databa
 1. When the Docker container is created, they're used to initialize the database, and
 2. Whenever we connect to the database, we need to specify them to authenticate.
 
-We define the parameters in an environment file that R reads when starting up. The file is called `.Renviron`, and is located in your home directory.
+We define the parameters in an environment file that R reads when starting up. The file is called `.Renviron`, and is located in your home directory.  See the more extensive discussion of [securing and using dbms credentials](#dbms-login).
 
 The easiest way to make this file is to copy the following R code and paste it into the R console:
 

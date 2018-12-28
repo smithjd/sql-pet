@@ -6,26 +6,26 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Chapter 7 The dvdrental database in Postgres in Docker (05a) | R, Databases and Docker</title>
-  <meta name="description" content="A collection of tutorials for integrating R with databases using Docker">
+  <meta name="description" content="An introduction to Docker and postgreSQL for R users to simulate use cases behind corporate walls.">
   <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
   <meta property="og:title" content="Chapter 7 The dvdrental database in Postgres in Docker (05a) | R, Databases and Docker />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="A collection of tutorials for integrating R with databases using Docker" />
+  <meta property="og:description" content="An introduction to Docker and postgreSQL for R users to simulate use cases behind corporate walls." />
   
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Chapter 7 The dvdrental database in Postgres in Docker (05a) | R, Databases and Docker />
   
-  <meta name="twitter:description" content="A collection of tutorials for integrating R with databases using Docker" />
+  <meta name="twitter:description" content="An introduction to Docker and postgreSQL for R users to simulate use cases behind corporate walls." />
   
 
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
 
 
-<meta name="date" content="2018-12-24">
+<meta name="date" content="2018-12-28">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -33,7 +33,7 @@
   
   
 <link rel="prev" href="connecting-docker-postgres-and-r-04.html">
-<link rel="next" href="securing-and-using-your-dbms-credentials-05b.html">
+<link rel="next" href="dbms-login.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -142,9 +142,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
-<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#using-r-to-query-a-dbms-in-your-organization"><i class="fa fa-check"></i><b>1.1</b> Using R to query a DBMS in your organization</a><ul>
-<li class="chapter" data-level="1.1.1" data-path="index.html"><a href="index.html#why-write-a-book-about-dbms-access-from-r-using-docker"><i class="fa fa-check"></i><b>1.1.1</b> Why write a book about DBMS access from R using Docker?</a></li>
-</ul></li>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#using-r-to-query-a-dbms-in-your-organization"><i class="fa fa-check"></i><b>1.1</b> Using R to query a DBMS in your organization</a></li>
 <li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#docker-as-a-tool-for-users"><i class="fa fa-check"></i><b>1.2</b> Docker as a tool for UseRs</a></li>
 <li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#docker-and-r-on-your-machine"><i class="fa fa-check"></i><b>1.3</b> Docker and R on your machine</a></li>
 <li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#who-are-we"><i class="fa fa-check"></i><b>1.4</b> Who are we?</a></li>
@@ -200,15 +198,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.8" data-path="the-dvdrental-database-in-postgres-in-docker-05a.html"><a href="the-dvdrental-database-in-postgres-in-docker-05a.html#cleaning-up"><i class="fa fa-check"></i><b>7.8</b> Cleaning up</a></li>
 <li class="chapter" data-level="7.9" data-path="the-dvdrental-database-in-postgres-in-docker-05a.html"><a href="the-dvdrental-database-in-postgres-in-docker-05a.html#using-the-sql-pet-container-in-the-rest-of-the-book"><i class="fa fa-check"></i><b>7.9</b> Using the <code>sql-pet</code> container in the rest of the book</a></li>
 </ul></li>
-<li class="chapter" data-level="8" data-path="securing-and-using-your-dbms-credentials-05b.html"><a href="securing-and-using-your-dbms-credentials-05b.html"><i class="fa fa-check"></i><b>8</b> Securing and using your dbms credentials (05b)</a><ul>
-<li class="chapter" data-level="8.1" data-path="securing-and-using-your-dbms-credentials-05b.html"><a href="securing-and-using-your-dbms-credentials-05b.html#set-up-the-sql-pet-docker-container"><i class="fa fa-check"></i><b>8.1</b> Set up the sql-pet docker container</a><ul>
-<li class="chapter" data-level="8.1.1" data-path="securing-and-using-your-dbms-credentials-05b.html"><a href="securing-and-using-your-dbms-credentials-05b.html#verify-that-docker-is-running-1"><i class="fa fa-check"></i><b>8.1.1</b> Verify that Docker is running</a></li>
-<li class="chapter" data-level="8.1.2" data-path="securing-and-using-your-dbms-credentials-05b.html"><a href="securing-and-using-your-dbms-credentials-05b.html#start-the-docker-container"><i class="fa fa-check"></i><b>8.1.2</b> Start the docker container:</a></li>
+<li class="chapter" data-level="8" data-path="dbms-login.html"><a href="dbms-login.html"><i class="fa fa-check"></i><b>8</b> Securing and using your dbms log-in credentials (05b)</a><ul>
+<li class="chapter" data-level="8.1" data-path="dbms-login.html"><a href="dbms-login.html#set-up-the-sql-pet-docker-container"><i class="fa fa-check"></i><b>8.1</b> Set up the sql-pet docker container</a><ul>
+<li class="chapter" data-level="8.1.1" data-path="dbms-login.html"><a href="dbms-login.html#verify-that-docker-is-running-1"><i class="fa fa-check"></i><b>8.1.1</b> Verify that Docker is running</a></li>
+<li class="chapter" data-level="8.1.2" data-path="dbms-login.html"><a href="dbms-login.html#start-the-docker-container"><i class="fa fa-check"></i><b>8.1.2</b> Start the docker container:</a></li>
 </ul></li>
-<li class="chapter" data-level="8.2" data-path="securing-and-using-your-dbms-credentials-05b.html"><a href="securing-and-using-your-dbms-credentials-05b.html#storing-your-dbms-credentials"><i class="fa fa-check"></i><b>8.2</b> Storing your dbms credentials</a><ul>
-<li class="chapter" data-level="8.2.1" data-path="securing-and-using-your-dbms-credentials-05b.html"><a href="securing-and-using-your-dbms-credentials-05b.html#connect-with-postgres-using-the-sys.getenv-function"><i class="fa fa-check"></i><b>8.2.1</b> Connect with Postgres using the Sys.getenv function</a></li>
+<li class="chapter" data-level="8.2" data-path="dbms-login.html"><a href="dbms-login.html#storing-your-dbms-credentials"><i class="fa fa-check"></i><b>8.2</b> Storing your dbms credentials</a><ul>
+<li class="chapter" data-level="8.2.1" data-path="dbms-login.html"><a href="dbms-login.html#connect-with-postgres-using-the-sys.getenv-function"><i class="fa fa-check"></i><b>8.2.1</b> Connect with Postgres using the Sys.getenv function</a></li>
 </ul></li>
-<li class="chapter" data-level="8.3" data-path="securing-and-using-your-dbms-credentials-05b.html"><a href="securing-and-using-your-dbms-credentials-05b.html#clean-up-1"><i class="fa fa-check"></i><b>8.3</b> Clean up</a></li>
+<li class="chapter" data-level="8.3" data-path="dbms-login.html"><a href="dbms-login.html#clean-up-1"><i class="fa fa-check"></i><b>8.3</b> Clean up</a></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html"><i class="fa fa-check"></i><b>9</b> Mapping your local environment (10)</a><ul>
 <li class="chapter" data-level="9.1" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#set-up-our-standard-pet-sql-environment"><i class="fa fa-check"></i><b>9.1</b> Set up our standard pet-sql environment</a></li>
@@ -302,7 +300,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="13.3.1" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#sql-delete-data-syntax"><i class="fa fa-check"></i><b>13.3.1</b> SQL Delete Data Syntax</a></li>
 <li class="chapter" data-level="13.3.2" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#delete-new-practice-customers-from-the-customer-table."><i class="fa fa-check"></i><b>13.3.2</b> Delete New Practice Customers from the Customer table.</a></li>
 <li class="chapter" data-level="13.3.3" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#sql-single-row-insert-data-syntax"><i class="fa fa-check"></i><b>13.3.3</b> SQL Single Row Insert Data Syntax</a></li>
-<li class="chapter" data-level="13.3.4" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#r-exercise-inserting-a-single-row-via-a-dataframe"><i class="fa fa-check"></i><b>13.3.4</b> R Exercise: Inserting a Single Row via a Dataframe</a></li>
+<li class="chapter" data-level="13.3.4" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#primary-and-foreign-key-constraint-error-messages"><i class="fa fa-check"></i><b>13.3.4</b> Primary and Foreign Key Constraint Error Messages</a></li>
+<li class="chapter" data-level="13.3.5" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#r-exercise-inserting-a-single-row-via-a-dataframe"><i class="fa fa-check"></i><b>13.3.5</b> R Exercise: Inserting a Single Row via a Dataframe</a></li>
 </ul></li>
 <li class="chapter" data-level="13.4" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#sql-multi-row-insert-data-syntax"><i class="fa fa-check"></i><b>13.4</b> SQL Multi-Row Insert Data Syntax</a></li>
 <li class="chapter" data-level="13.5" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#sql-multi-row-insert-data-example"><i class="fa fa-check"></i><b>13.5</b> SQL Multi-Row Insert Data Example</a><ul>
@@ -510,7 +509,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)
 
 <span class="kw">cat</span>(docker_messages, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</code></pre>
-<pre><code>## Sending build context to Docker daemon  44.47MB
+<pre><code>## Sending build context to Docker daemon  46.27MB
 
 
 ## Step 1/4 : FROM postgres:10
@@ -552,7 +551,7 @@ docker_cmd &lt;-<span class="st"> </span><span class="kw">glue</span>(
 )</code></pre>
 <p>If you are curious you can paste <code>docker_cmd</code> into a terminal window after the command ‘docker’:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, docker_cmd, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</code></pre>
-<pre><code>## [1] &quot;0743abfb6d3e7a403e0f6d05fac896eec2c44368007e6067ae0525549ce6e545&quot;</code></pre>
+<pre><code>## [1] &quot;2a509fec55ba34d98a6da942e28523e7ec9deca5dbd80b351719cf35ab7f39ec&quot;</code></pre>
 </div>
 <div id="connect-to-postgres-with-r" class="section level2">
 <h2><span class="header-section-number">7.6</span> Connect to Postgres with R</h2>
@@ -605,7 +604,7 @@ docker_cmd &lt;-<span class="st"> </span><span class="kw">glue</span>(
 <p>Show that the container still exists even though it’s not running</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_show_all_docker_containers</span>()</code></pre>
 <pre><code>## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## 0743abfb6d3e        postgres-dvdrental   &quot;docker-entrypoint.s…&quot;   7 seconds ago       Exited (0) Less than a second ago                       sql-pet</code></pre>
+## 2a509fec55ba        postgres-dvdrental   &quot;docker-entrypoint.s…&quot;   8 seconds ago       Exited (0) Less than a second ago                       sql-pet</code></pre>
 <p>Next time, you can just use this command to start the container:</p>
 <blockquote>
 <p><code>sp_docker_start(&quot;sql-pet&quot;)</code></p>
@@ -630,7 +629,7 @@ docker_cmd &lt;-<span class="st"> </span><span class="kw">glue</span>(
         </div>
       </div>
 <a href="connecting-docker-postgres-and-r-04.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="securing-and-using-your-dbms-credentials-05b.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="dbms-login.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

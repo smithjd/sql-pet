@@ -178,9 +178,6 @@ new_customers <- dbGetQuery(con, "select * from customer where customer_id >= 60
 sp_print_df(new_customers)
 ```
 
-<<<<<<< HEAD
-The `film` table has a primary key, film_id, and a foreign key column, language_id.  One cannot insert a new row into the film table with a language_id = 30 because of a constraint on the language_id column.  The language_id value must already exist in the `language` table before the database will allow the new row to be inserted into the table.  
-=======
 ### Primary and Foreign Key Constraint Error Messages
 
 For the new customers, we are concerned with not violating the PK and FK constraints.
@@ -360,11 +357,7 @@ To work around this inconvenience for the tutorial:
 dbExecute(con, "drop table if exists smy_film;")
 ```
 
-<<<<<<< HEAD
-2.  we create a new table smy_film from the film table and add a new row with a language_id = 30;
-=======
 2.  We create a new table smy_film with the same structure as the film table 
->>>>>>> jds-edits-3
 
 ```{r}
 dbExecute(con, "create table smy_film as select * from film;")

@@ -1,4 +1,4 @@
-# Securing and using your dbms credentials (05b)
+# Securing and using your dbms log-in credentials (05b){#dbms-login}
 
 > This chapter demonstrates how to:
 >
@@ -8,6 +8,8 @@
 Connecting to a dbms can be very frustrating at first.  In many organizations, simply **getting** access credentials takes time and may involve jumping through multiple hoops.  
 
 In addition, a dbms is terse or deliberately inscrutable when your credetials are incorrect.  That's a security strategy, not a limitation of your understanding or your software.  When R can't log you on to a dbms, you will have no information as to what went wrong.
+
+There are many different strategies for managing credentials 
 
 The following packages are used in this chapter:
 

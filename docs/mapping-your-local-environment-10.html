@@ -6,33 +6,33 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Chapter 9 Mapping your local environment (10) | R, Databases and Docker</title>
-  <meta name="description" content="A collection of tutorials for integrating R with databases using Docker">
+  <meta name="description" content="An introduction to Docker and postgreSQL for R users to simulate use cases behind corporate walls.">
   <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
   <meta property="og:title" content="Chapter 9 Mapping your local environment (10) | R, Databases and Docker />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="A collection of tutorials for integrating R with databases using Docker" />
+  <meta property="og:description" content="An introduction to Docker and postgreSQL for R users to simulate use cases behind corporate walls." />
   
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Chapter 9 Mapping your local environment (10) | R, Databases and Docker />
   
-  <meta name="twitter:description" content="A collection of tutorials for integrating R with databases using Docker" />
+  <meta name="twitter:description" content="An introduction to Docker and postgreSQL for R users to simulate use cases behind corporate walls." />
   
 
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
 
 
-<meta name="date" content="2018-12-24">
+<meta name="date" content="2018-12-28">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="securing-and-using-your-dbms-credentials-05b.html">
+<link rel="prev" href="dbms-login.html">
 <link rel="next" href="introduction-to-dbms-queries-11a.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -142,9 +142,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
-<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#using-r-to-query-a-dbms-in-your-organization"><i class="fa fa-check"></i><b>1.1</b> Using R to query a DBMS in your organization</a><ul>
-<li class="chapter" data-level="1.1.1" data-path="index.html"><a href="index.html#why-write-a-book-about-dbms-access-from-r-using-docker"><i class="fa fa-check"></i><b>1.1.1</b> Why write a book about DBMS access from R using Docker?</a></li>
-</ul></li>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#using-r-to-query-a-dbms-in-your-organization"><i class="fa fa-check"></i><b>1.1</b> Using R to query a DBMS in your organization</a></li>
 <li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#docker-as-a-tool-for-users"><i class="fa fa-check"></i><b>1.2</b> Docker as a tool for UseRs</a></li>
 <li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#docker-and-r-on-your-machine"><i class="fa fa-check"></i><b>1.3</b> Docker and R on your machine</a></li>
 <li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#who-are-we"><i class="fa fa-check"></i><b>1.4</b> Who are we?</a></li>
@@ -200,16 +198,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.8" data-path="the-dvdrental-database-in-postgres-in-docker-05a.html"><a href="the-dvdrental-database-in-postgres-in-docker-05a.html#cleaning-up"><i class="fa fa-check"></i><b>7.8</b> Cleaning up</a></li>
 <li class="chapter" data-level="7.9" data-path="the-dvdrental-database-in-postgres-in-docker-05a.html"><a href="the-dvdrental-database-in-postgres-in-docker-05a.html#using-the-sql-pet-container-in-the-rest-of-the-book"><i class="fa fa-check"></i><b>7.9</b> Using the <code>sql-pet</code> container in the rest of the book</a></li>
 </ul></li>
-<li class="chapter" data-level="8" data-path="securing-and-using-your-dbms-credentials-05b.html"><a href="securing-and-using-your-dbms-credentials-05b.html"><i class="fa fa-check"></i><b>8</b> Securing and using your dbms credentials (05b)</a><ul>
-<li class="chapter" data-level="8.1" data-path="securing-and-using-your-dbms-credentials-05b.html"><a href="securing-and-using-your-dbms-credentials-05b.html#set-up-the-sql-pet-docker-container"><i class="fa fa-check"></i><b>8.1</b> Set up the sql-pet docker container</a><ul>
-<li class="chapter" data-level="8.1.1" data-path="securing-and-using-your-dbms-credentials-05b.html"><a href="securing-and-using-your-dbms-credentials-05b.html#verify-that-docker-is-running-1"><i class="fa fa-check"></i><b>8.1.1</b> Verify that Docker is running</a></li>
-<li class="chapter" data-level="8.1.2" data-path="securing-and-using-your-dbms-credentials-05b.html"><a href="securing-and-using-your-dbms-credentials-05b.html#start-the-docker-container"><i class="fa fa-check"></i><b>8.1.2</b> Start the docker container:</a></li>
+<li class="chapter" data-level="8" data-path="dbms-login.html"><a href="dbms-login.html"><i class="fa fa-check"></i><b>8</b> Securing and using your dbms log-in credentials (05b)</a><ul>
+<li class="chapter" data-level="8.1" data-path="dbms-login.html"><a href="dbms-login.html#set-up-the-sql-pet-docker-container"><i class="fa fa-check"></i><b>8.1</b> Set up the sql-pet docker container</a><ul>
+<li class="chapter" data-level="8.1.1" data-path="dbms-login.html"><a href="dbms-login.html#verify-that-docker-is-running-1"><i class="fa fa-check"></i><b>8.1.1</b> Verify that Docker is running</a></li>
+<li class="chapter" data-level="8.1.2" data-path="dbms-login.html"><a href="dbms-login.html#start-the-docker-container"><i class="fa fa-check"></i><b>8.1.2</b> Start the docker container:</a></li>
 </ul></li>
-<li class="chapter" data-level="8.2" data-path="securing-and-using-your-dbms-credentials-05b.html"><a href="securing-and-using-your-dbms-credentials-05b.html#storing-your-dbms-credentials"><i class="fa fa-check"></i><b>8.2</b> Storing your dbms credentials</a><ul>
-<li class="chapter" data-level="8.2.1" data-path="securing-and-using-your-dbms-credentials-05b.html"><a href="securing-and-using-your-dbms-credentials-05b.html#connect-with-postgres-using-the-sys.getenv-function"><i class="fa fa-check"></i><b>8.2.1</b> Connect with Postgres using the Sys.getenv function</a></li>
-<li class="chapter" data-level="8.2.2" data-path="securing-and-using-your-dbms-credentials-05b.html"><a href="securing-and-using-your-dbms-credentials-05b.html#alternative-put-the-database-password-in-an-environment-file"><i class="fa fa-check"></i><b>8.2.2</b> Alternative: put the database password in an environment file</a></li>
+<li class="chapter" data-level="8.2" data-path="dbms-login.html"><a href="dbms-login.html#storing-your-dbms-credentials"><i class="fa fa-check"></i><b>8.2</b> Storing your dbms credentials</a><ul>
+<li class="chapter" data-level="8.2.1" data-path="dbms-login.html"><a href="dbms-login.html#connect-with-postgres-using-the-sys.getenv-function"><i class="fa fa-check"></i><b>8.2.1</b> Connect with Postgres using the Sys.getenv function</a></li>
 </ul></li>
-<li class="chapter" data-level="8.3" data-path="securing-and-using-your-dbms-credentials-05b.html"><a href="securing-and-using-your-dbms-credentials-05b.html#clean-up-1"><i class="fa fa-check"></i><b>8.3</b> Clean up</a></li>
+<li class="chapter" data-level="8.3" data-path="dbms-login.html"><a href="dbms-login.html#clean-up-1"><i class="fa fa-check"></i><b>8.3</b> Clean up</a></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html"><i class="fa fa-check"></i><b>9</b> Mapping your local environment (10)</a><ul>
 <li class="chapter" data-level="9.1" data-path="mapping-your-local-environment-10.html"><a href="mapping-your-local-environment-10.html#set-up-our-standard-pet-sql-environment"><i class="fa fa-check"></i><b>9.1</b> Set up our standard pet-sql environment</a></li>
@@ -379,7 +376,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="15.4.2" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#database-keys-with-dplyr"><i class="fa fa-check"></i><b>15.4.2</b> Database keys with dplyr</a></li>
 </ul></li>
 <li class="chapter" data-level="15.5" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#creating-your-own-data-dictionary"><i class="fa fa-check"></i><b>15.5</b> Creating your own data dictionary</a></li>
-<li class="chapter" data-level="15.6" data-path="getting-metadata-about-and-from-the-database-21.html"><a href="getting-metadata-about-and-from-the-database-21.html#save-your-work"><i class="fa fa-check"></i><b>15.6</b> Save your work!</a></li>
 </ul></li>
 <li class="chapter" data-level="16" data-path="drilling-into-your-dbms-environment-22.html"><a href="drilling-into-your-dbms-environment-22.html"><i class="fa fa-check"></i><b>16</b> Drilling into your DBMS environment (22)</a><ul>
 <li class="chapter" data-level="16.1" data-path="drilling-into-your-dbms-environment-22.html"><a href="drilling-into-your-dbms-environment-22.html#which-database"><i class="fa fa-check"></i><b>16.1</b> Which database?</a></li>
@@ -402,13 +398,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="19.2" data-path="writing-to-the-dbms-73.html"><a href="writing-to-the-dbms-73.html#modify-an-existing-table"><i class="fa fa-check"></i><b>19.2</b> Modify an existing table</a></li>
 <li class="chapter" data-level="19.3" data-path="writing-to-the-dbms-73.html"><a href="writing-to-the-dbms-73.html#remove-table-and-clean-up"><i class="fa fa-check"></i><b>19.3</b> Remove table and Clean up</a></li>
 </ul></li>
-<li class="appendix"><span><b>Appendix</b></span><ul>
-<li class="chapter" data-level="A.4" data-path="writing-to-the-dbms-73.html"><a href="writing-to-the-dbms-73.html#editing-this-book"><i class="fa fa-check"></i><b>A.4</b> Editing this book</a></li>
-<li class="chapter" data-level="A.5" data-path="writing-to-the-dbms-73.html"><a href="writing-to-the-dbms-73.html#docker-alternatives"><i class="fa fa-check"></i><b>A.5</b> Docker alternatives</a></li>
-<li class="chapter" data-level="A.6" data-path="writing-to-the-dbms-73.html"><a href="writing-to-the-dbms-73.html#docker-and-r"><i class="fa fa-check"></i><b>A.6</b> Docker and R</a></li>
-<li class="chapter" data-level="A.7" data-path="writing-to-the-dbms-73.html"><a href="writing-to-the-dbms-73.html#documentation-for-docker-and-postgres"><i class="fa fa-check"></i><b>A.7</b> Documentation for Docker and Postgres</a></li>
-<li class="chapter" data-level="A.8" data-path="writing-to-the-dbms-73.html"><a href="writing-to-the-dbms-73.html#sql-and-dplyr"><i class="fa fa-check"></i><b>A.8</b> SQL and dplyr</a></li>
-<li class="chapter" data-level="A.9" data-path="writing-to-the-dbms-73.html"><a href="writing-to-the-dbms-73.html#more-resources"><i class="fa fa-check"></i><b>A.9</b> More Resources</a></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="other-resources-89.html"><a href="other-resources-89.html"><i class="fa fa-check"></i><b>A</b> Other resources (89)</a><ul>
+<li class="chapter" data-level="A.1" data-path="other-resources-89.html"><a href="other-resources-89.html#editing-this-book"><i class="fa fa-check"></i><b>A.1</b> Editing this book</a></li>
+<li class="chapter" data-level="A.2" data-path="other-resources-89.html"><a href="other-resources-89.html#docker-alternatives"><i class="fa fa-check"></i><b>A.2</b> Docker alternatives</a></li>
+<li class="chapter" data-level="A.3" data-path="other-resources-89.html"><a href="other-resources-89.html#docker-and-r"><i class="fa fa-check"></i><b>A.3</b> Docker and R</a></li>
+<li class="chapter" data-level="A.4" data-path="other-resources-89.html"><a href="other-resources-89.html#documentation-for-docker-and-postgres"><i class="fa fa-check"></i><b>A.4</b> Documentation for Docker and Postgres</a></li>
+<li class="chapter" data-level="A.5" data-path="other-resources-89.html"><a href="other-resources-89.html#sql-and-dplyr"><i class="fa fa-check"></i><b>A.5</b> SQL and dplyr</a></li>
+<li class="chapter" data-level="A.6" data-path="other-resources-89.html"><a href="other-resources-89.html#more-resources"><i class="fa fa-check"></i><b>A.6</b> More Resources</a></li>
 </ul></li>
 <li class="chapter" data-level="B" data-path="mapping-your-local-environment-92.html"><a href="mapping-your-local-environment-92.html"><i class="fa fa-check"></i><b>B</b> Mapping your local environment (92)</a><ul>
 <li class="chapter" data-level="B.1" data-path="mapping-your-local-environment-92.html"><a href="mapping-your-local-environment-92.html#environment-tools-used-in-this-chapter"><i class="fa fa-check"></i><b>B.1</b> Environment Tools Used in this Chapter</a></li>
@@ -558,7 +555,11 @@ display_rows &lt;-<span class="st"> </span><span class="dv">5</span></code></pre
 <blockquote>
 <p><code>docker version</code></p>
 </blockquote>
-<p>There are many Docker command line cheat sheets; <a href="https://dockercheatsheet.painlessdocker.com/">this one</a> is recommended.</p>
+<p>To see what images (if any) are stored locally and available for running in Docker, enter this on your RStudio terminal or local CLI:</p>
+<blockquote>
+<p><code>docker image ls</code></p>
+</blockquote>
+<p>There are many Docker command-line cheat sheets; <a href="https://dockercheatsheet.painlessdocker.com/">this one</a> is recommended.</p>
 </div>
 <div id="in-docker-linux" class="section level3">
 <h3><span class="header-section-number">9.2.6</span> In Docker: Linux</h3>
@@ -617,7 +618,7 @@ display_rows &lt;-<span class="st"> </span><span class="dv">5</span></code></pre
 <pre><code>##           size isdir mode               mtime               ctime
 ## README.md 4973 FALSE  644 2018-12-22 17:12:51 2018-12-22 17:12:51
 ##                         atime uid gid uname grname
-## README.md 2018-12-24 15:21:37 502  80   jds  admin</code></pre>
+## README.md 2018-12-28 09:16:45 502  80   jds  admin</code></pre>
 <p>The equivalent information from executing a command on the CLI or terminal would be</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system2</span>(<span class="st">&quot;ls&quot;</span>,  <span class="st">&quot;-l README.md&quot;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">FALSE</span>)</code></pre>
 <pre><code>## [1] &quot;-rw-r--r--  1 jds  admin  4973 Dec 22 17:12 README.md&quot;</code></pre>
@@ -625,7 +626,12 @@ display_rows &lt;-<span class="st"> </span><span class="dv">5</span></code></pre
 <div id="get-info-on-the-same-os-file-inside-docker-from-r-code" class="section level3">
 <h3><span class="header-section-number">9.3.2</span> Get info on the same OS file inside Docker from R Code</h3>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, <span class="st">&quot;exec sql-pet ls -l petdir/README.md&quot;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">FALSE</span>)</code></pre>
-<pre><code>## [1] &quot;-rw-r--r-- 1 root root 4973 Dec 23 01:12 petdir/README.md&quot;</code></pre>
+<pre><code>## Warning in system2(&quot;docker&quot;, &quot;exec sql-pet ls -l petdir/README.md&quot;, stdout
+## = TRUE, : running command &#39;&#39;docker&#39; exec sql-pet ls -l petdir/README.md 2&gt;/
+## dev/null&#39; had status 2</code></pre>
+<pre><code>## character(0)
+## attr(,&quot;status&quot;)
+## [1] 2</code></pre>
 </div>
 <div id="docker-and-psql-together-from-r-or-your-cli" class="section level3">
 <h3><span class="header-section-number">9.3.3</span> Docker and psql together from R or your CLI</h3>
@@ -813,7 +819,7 @@ display_rows &lt;-<span class="st"> </span><span class="dv">5</span></code></pre
           </div>
         </div>
       </div>
-<a href="securing-and-using-your-dbms-credentials-05b.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="dbms-login.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="introduction-to-dbms-queries-11a.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
