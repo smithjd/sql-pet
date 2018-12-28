@@ -109,7 +109,11 @@ To check on the Docker version you are using, enter this on your RStudio termina
 
 > `docker version`
 
-There are many Docker command line cheat sheets; [this one](https://dockercheatsheet.painlessdocker.com/) is recommended.
+To see what images (if any) are stored locally and available for running in Docker, enter this on your RStudio terminal or local CLI:
+
+> `docker image ls`
+
+There are many Docker command-line cheat sheets; [this one](https://dockercheatsheet.painlessdocker.com/) is recommended.
 
 ### In Docker: Linux
 
@@ -176,7 +180,7 @@ file.info("README.md")
 ##           size isdir mode               mtime               ctime
 ## README.md 4973 FALSE  644 2018-12-22 17:12:51 2018-12-22 17:12:51
 ##                         atime uid gid uname grname
-## README.md 2018-12-24 15:21:37 502  80   jds  admin
+## README.md 2018-12-28 09:16:45 502  80   jds  admin
 ```
 The equivalent information from executing a command on the CLI or terminal would be
 
@@ -196,7 +200,15 @@ system2("docker", "exec sql-pet ls -l petdir/README.md", stdout = TRUE, stderr =
 ```
 
 ```
-## [1] "-rw-r--r-- 1 root root 4973 Dec 23 01:12 petdir/README.md"
+## Warning in system2("docker", "exec sql-pet ls -l petdir/README.md", stdout
+## = TRUE, : running command ''docker' exec sql-pet ls -l petdir/README.md 2>/
+## dev/null' had status 2
+```
+
+```
+## character(0)
+## attr(,"status")
+## [1] 2
 ```
 
 ### Docker and psql together from R or your CLI

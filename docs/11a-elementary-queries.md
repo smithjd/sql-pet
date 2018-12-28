@@ -467,7 +467,7 @@ skim(rental_tibble)
 ##  n obs: 16044 
 ##  n variables: 7 
 ## 
-## ── Variable type:integer ───────────────────────────────────────────
+## ── Variable type:integer ────────────────────────────────────────────────────
 ##      variable missing complete     n    mean      sd p0     p25    p50
 ##   customer_id       0    16044 16044  297.14  172.45  1  148     296  
 ##  inventory_id       0    16044 16044 2291.84 1322.21  1 1154    2291  
@@ -479,7 +479,7 @@ skim(rental_tibble)
 ##  12037.25 16049 ▇▇▇▇▇▇▇▇
 ##      2        2 ▇▁▁▁▁▁▁▇
 ## 
-## ── Variable type:POSIXct ───────────────────────────────────────────
+## ── Variable type:POSIXct ────────────────────────────────────────────────────
 ##     variable missing complete     n        min        max     median
 ##  last_update       0    16044 16044 2006-02-15 2006-02-23 2006-02-16
 ##  rental_date       0    16044 16044 2005-05-24 2006-02-14 2005-07-28
