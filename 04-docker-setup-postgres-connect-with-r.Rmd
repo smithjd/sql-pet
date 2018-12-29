@@ -2,7 +2,7 @@
 
 > This chapter demonstrates how to:
 >
->  * Run, clean-up and close postgreSQL in docker containers.
+>  * Run, clean-up and close postgreSQL in Docker containers.
 >  * Keep necessary credentials secret while being available to R when it executes.
 >  * Interact with PostgreSQL when it's running inside a Docker container.
 >  * Read and write to PostgreSQL from R.
@@ -25,22 +25,20 @@ library(sqlpetr)
 
 ## Verify that Docker is running
 
-Docker commands can be run from a terminal (e.g., the Rstudio Terminal pane) or with a `system()` command.  We provide the necessary functions to start, stop Docker containers and do other busy work in the `sqlpetr` package.  As time permits and curiosity dictates, feel free to look at those functions to see how they work.
+Docker commands can be run from a terminal (e.g., the Rstudio Terminal pane) or with a `system2()` command.  (We discuss the diffeent ways of interacting with Docker and other elements in your environment in a [separate chapter](#your-local-environment).)  The necessary functions to start, stop Docker containers and do other busy work are provided in the `sqlpetr` package.  As time permits and curiosity dictates, feel free to look at those functions to see how they work.
 
-Check that docker is up and running:
+Check that Docker is up and running:
 
 ```{r}
 sp_check_that_docker_is_up()
 ```
 
 ## Clean up if appropriate
-Remove the `cattle` and `sql-pet` containers if they exists (e.g., from a prior experiments).  
+Remove the `cattle` and `sql-pet` containers if they exist (e.g., from prior experiments).  
 ```{r docker cleanup}
 sp_docker_remove_container("cattle")
 sp_docker_remove_container("sql-pet")
 ```
-
-The convention we use in this book is to put docker commands in the `sqlpetr` package so that you can ignore them if you want.  However, the functions are set up so that you can easily see how to do things with Docker and modify if you want.
 
 We name containers `cattle` for "throw-aways" and `pet` for ones we treasure and keep around.  :-)
 ```{r setup cattle Docker container, eval=TRUE, echo=TRUE}
@@ -67,52 +65,57 @@ con <- sp_get_postgres_connection(user = "postgres",
                          dbname = "postgres",
                          seconds_to_test = 30)
 ```
-Notice that we are using the postgreSQL default username and password at this point and that it's in plain text. That is bad practice because user credentials should not be shared in this way.  A [subsequent chapter](#dbms-login) demonstrates how to store and use credentials to access the dbms so that they are kept private.
+Notice that we are using the postgreSQL default username and password at this point and that it's in plain text. That is bad practice because user credentials should not be shared in open code like that.  A [subsequent chapter](#dbms-login) demonstrates how to store and use credentials to access the dbms so that they are kept private.
 
-Make sure that you can connect to the PostgreSQL database that you started earlier. If you have been executing the code from this tutorial, the database will not contain any tables yet:
+Make sure that you can connect to the PostgreSQL database that you have just started. If you have been executing the code from this tutorial, the database will not contain any tables yet:
 
 ```{r}
-dbListTables(con)
+DBI::dbListTables(con)
 ```
 
 ### Interact with Postgres
 
 Write `mtcars` to PostgreSQL
 ```{r}
-dbWriteTable(con, "mtcars", mtcars, overwrite = TRUE)
+DBI::dbWriteTable(con, "mtcars", mtcars, overwrite = TRUE)
 ```
 
 List the tables in the PostgreSQL database to show that `mtcars` is now there:
 
 ```{r}
-dbListTables(con)
+DBI::dbListTables(con)
+```
 
-# list the fields in mtcars:
-dbListFields(con, "mtcars")
+List the fields in mtcars:
+```{r}
+DBI::dbListFields(con, "mtcars")
 ```
 
 Download the table from the DBMS to a local data frame:
 ```{r}
-mtcars_df <- tbl(con, "mtcars")
+mtcars_df <- DBI::dbReadTable(con, "mtcars")
+```
 
-# Show a few rows:
-knitr::kable(head(mtcars_df))
+Show a few rows:
+```{r}
+sp_print_df(head(mtcars_df))
+
 ```
 
 ## Clean up
 
 Afterwards, always disconnect from the dbms:
 ```{r}
-dbDisconnect(con)
+DBI::dbDisconnect(con)
 ```
 Tell Docker to stop the `cattle` container:
 ```{r}
 sp_docker_stop("cattle")
 ```
 
-Tell Docker to remove the `cattle` container from it's library of active containers:
+Tell Docker to *remove* the `cattle` container from it's library of active containers:
 ```{r}
 sp_docker_remove_container("cattle")
 ```
 
-If we just **stop** the docker container but don't remove it (as we did with the `sp_docker_remove_container("cattle")` command), the `cattle` container will persist and we can start it up again later with `sp_docker_start("cattle")`.  In that case, `mtcars` would still be there and we could retrieve it from postgreSQL again.  Since `sp_docker_remove_container("cattle")`  has removed it, the updated database has been deleted.  (There are enough copies of `mtcars` in the world, so no great loss.)
+If we just **stop** the Docker container but don't remove it (as we did with the `sp_docker_remove_container("cattle")` command), the `cattle` container will persist and we can start it up again later with `sp_docker_start("cattle")`.  In that case, `mtcars` would still be there and we could retrieve it from postgreSQL again.  Since `sp_docker_remove_container("cattle")`  has removed it, the updated database has been deleted.  (There are enough copies of `mtcars` in the world, so no great loss.)

@@ -3,11 +3,12 @@
 > This chapter explains:
 > 
 > * What you need to run the code in this book
-> * Where to get documentation for Docker
+> * Where to get documentation for Docker and its installation
+> * Minimal details for storing postgreSQL login credentials
 > * How you can contribute to the book project
 
-
 ## R, RStudio and Git
+
 Most of you will probably have these already, but if you don't:
 
 1. If you do not have R:
@@ -62,7 +63,7 @@ cat(
 )
 ```
 
-## Next steps
+## Participating
 
 ### Browsing the book
 If you just want to read the book and copy / paste code into your working environment, simply browse to <https://smithjd.github.io/sql-pet>. If you get stuck, or find things aren't working, open an issue at <https://github.com/smithjd/sql-pet/issues/new/>.
@@ -70,7 +71,7 @@ If you just want to read the book and copy / paste code into your working enviro
 ### Diving in
 If you want to experiment with the code in the book, run it in RStudio and interact with it, you'll need to do two more things:
 
-1. Install the `sqlpetr` R package [@Muni2018]. See <https://smithjd.github.io/sqlpetr> for the package documentation. This will take some time; it is installing a number of packages.
+1. Install the `sqlpetr` R package [@Borasky2018a]. See <https://smithjd.github.io/sqlpetr> for the package documentation. This will take some time; it is installing a number of packages.
 2. Clone the Git repository <https://github.com/smithjd/sql-pet.git> and open the project file `sql-pet.Rproj` in RStudio.
 
 Onward!
