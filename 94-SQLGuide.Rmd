@@ -2,7 +2,7 @@
 
 SQL stands for Structured Query Language. It is a database language where we can perform certain operations on the existing database and we can use it create a new database. There are four main categories where the SQL commands fall into: DDL, DML, DCL, and TCL.
 
-##Data Definition Langauge (DDL)
+## Data Definition Langauge (DDL)
 
 It consists of the SQL commands that can be used to define database schema. The DDL commands include:
 
@@ -13,7 +13,7 @@ It consists of the SQL commands that can be used to define database schema. The 
     5. RENAME
     6. DROP
     
-##Data Manipulation Langauge (DML)
+## Data Manipulation Langauge (DML)
 
 These four SQL commands deals with the manipulation of data in the database.
 
@@ -22,14 +22,14 @@ These four SQL commands deals with the manipulation of data in the database.
     3. UPDATE
     4. DELETE
     
-##Data Control Language (DCL)
+## Data Control Language (DCL)
 
 The DCL commands deals with user's rights, permissions and other controls in database management system.
 
     1. GRANT
     2. REVOKE
     
-##Transaction Control Language (TCL)
+## Transaction Control Language (TCL)
 
 These commands deals with the control over transaction within the database. Transaction combines a set of tasks into single execution. 
 
