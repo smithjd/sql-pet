@@ -9,7 +9,7 @@
 
 ## Overview
 
-In the last chapter we connected to PostgreSQL from R.  Now we set up a "realistic" database named `dvdrental`. There are different approaches to doing this: this chapter sets it up in a way that doesn't delve into the Docker details.  If you are interested, you can look at an alternative approach in [Creating the sql-pet Docker container a step at a time](Creating the sql-pet Docker container one step at a time \(93\)) that breaks the process down into smaller chunks.
+In the last chapter we connected to PostgreSQL from R.  Now we set up a "realistic" database named `dvdrental`. There are different approaches to doing this: this chapter sets it up in a way that doesn't show all the Docker details.  If you are interested, you can look at an alternative approach in an appendix: [Creating the sql-pet Docker container a step at a time](#step-at-a-time-docker).  It breaks the process down into smaller chunks.
 
 These packages are called in this Chapter:
 
@@ -68,7 +68,7 @@ cat(docker_messages, sep = "\n")
 ```
 
 ```
-## Sending build context to Docker daemon  46.27MB
+## Sending build context to Docker daemon  46.75MB
 ## Step 1/4 : FROM postgres:10
 ##  ---> ac25c2bac3c4
 ## Step 2/4 : WORKDIR /tmp
@@ -85,12 +85,12 @@ cat(docker_messages, sep = "\n")
 ```
 
 ## Run the pet-sql Docker Image
-Run docker to bring up postgres.  The first time it runs it will take a minute to create the PostgreSQL environment.  There are two important parts to this that may not be obvious:
+Run Docker to bring up PostgreSQL.  The first time it runs it will take a minute to create the PostgreSQL environment.  There are two important parts to this that may not be obvious:
 
   * The `source=` parameter points to [dvdrental.Dockerfile](./dvdrental.Dockerfile), which does most of the heavy lifting.  It has detailed, line-by-line comments to explain what it is doing.  
   *  *Inside* [dvdrental.Dockerfile](./dvdrental.Dockerfile) the command `COPY init-dvdrental.sh /docker-entrypoint-initdb.d/` copies  [init-dvdrental.sh](init-dvdrental.sh) from the local file system into the specified location in the Docker container.  When the PostgreSQL Docker container initializes, it looks for that file and executes it. 
   
-Doing all of that work behind the scenes involves two layers.  Depending on how you look at it, that may be more or less difficult to understand than [an alternative method](book-src/docker-detailed-postgres-setup-with-dvdrental.R).
+Doing all of that work behind the scenes involves two layers.  Depending on how you look at it, that may be more or less difficult to understand than [an alternative method]((#step-at-a-time-docker)).
 
 
 ```r
@@ -117,7 +117,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "2a509fec55ba34d98a6da942e28523e7ec9deca5dbd80b351719cf35ab7f39ec"
+## [1] "ad7e5f46377b09e7f35b6ac5af7302424791cbf63979055472d09ae8a006d5ea"
 ```
 ## Connect to Postgres with R
 
@@ -177,7 +177,7 @@ Restart the container and verify that the dvdrental tables are still there:
 ```r
 sp_docker_start("sql-pet")
 ```
-Connect to the `dvdrental` database in postgreSQL:
+Connect to the `dvdrental` database in PostgreSQL:
 
 ```r
 con <- sp_get_postgres_connection(user = "postgres",
@@ -219,7 +219,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## 2a509fec55ba        postgres-dvdrental   "docker-entrypoint.s…"   8 seconds ago       Exited (0) Less than a second ago                       sql-pet
+## ad7e5f46377b        postgres-dvdrental   "docker-entrypoint.s…"   7 seconds ago       Exited (0) Less than a second ago                       sql-pet
 ```
 
 Next time, you can just use this command to start the container: 
