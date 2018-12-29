@@ -113,6 +113,32 @@ one_percent_sample <- DBI::dbGetQuery(
 
 one_percent_sample
 ```
+Exact sample of 100 records.  This technique depends on knowing the range of a record index, such as the `rental_id` in the `rental` table of out `dvdrental` database.
+
+Start by finding the min and max values.
+```{r}
+DBI::dbListFields(con, "rental")
+rental_df <- dbReadTable(con, "rental")
+
+max(rental_df$rental_id)
+min(rental_df$rental_id)
+```
+
+Set the random number seed and draw the sample.
+```{r}
+set.seed(123)
+sample_rows <- sample(1:16049, 100)
+rental_table <- tbl(con, "rental")
+```
+
+Run query with the filter verb listing the randomly sampled rows to be retrieved:
+```{r}
+rental_sample <- rental_table %>% filter(rental_id %in% sample_rows) %>% collect()
+
+str(rental_sample)
+
+```
+
 
 ### Sub-setting variables
 

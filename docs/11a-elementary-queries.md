@@ -190,9 +190,86 @@ one_percent_sample
 ```
 
 ```
-## [1] rental_id    rental_date  inventory_id customer_id 
-## <0 rows> (or 0-length row.names)
+##    rental_id         rental_date inventory_id customer_id
+## 1        324 2005-05-27 01:00:04         3364         292
+## 2        325 2005-05-27 01:09:55         2510         449
+## 3        326 2005-05-27 01:10:11         3979         432
+## 4        327 2005-05-27 01:18:57         2678         105
+## 5        328 2005-05-27 01:29:31         2524         451
+## 6        329 2005-05-27 01:57:14         2659         231
+## 7        330 2005-05-27 02:15:30         1536         248
+## 8        331 2005-05-27 02:22:26         1872          67
+## 9        332 2005-05-27 02:27:10         1529         299
+## 10       333 2005-05-27 02:52:21         4001         412
+## 11       334 2005-05-27 03:03:07         3973         194
+## 12       335 2005-05-27 03:07:10         1411          16
+## 13       336 2005-05-27 03:15:23         1811         275
+## 14       337 2005-05-27 03:22:30          751          19
+## 15       338 2005-05-27 03:42:52         2596         165
+## 16       339 2005-05-27 03:47:18         2410         516
+## 17       340 2005-05-27 03:55:25          946         209
+## 18       341 2005-05-27 04:01:42         4168          56
+## 19       342 2005-05-27 04:11:04         4019         539
+## 20       343 2005-05-27 04:13:41         3301         455
 ```
+Exact sample of 100 records.  This technique depends on knowing the range of a record index, such as the `rental_id` in the `rental` table of out `dvdrental` database.
+
+Start by finding the min and max values.
+
+```r
+DBI::dbListFields(con, "rental")
+```
+
+```
+## [1] "rental_id"    "rental_date"  "inventory_id" "customer_id" 
+## [5] "return_date"  "staff_id"     "last_update"
+```
+
+```r
+rental_df <- dbReadTable(con, "rental")
+
+max(rental_df$rental_id)
+```
+
+```
+## [1] 16049
+```
+
+```r
+min(rental_df$rental_id)
+```
+
+```
+## [1] 1
+```
+
+Set the random number seed and draw the sample.
+
+```r
+set.seed(123)
+sample_rows <- sample(1:16049, 100)
+rental_table <- tbl(con, "rental")
+```
+
+Run query with the filter verb listing the randomly sampled rows to be retrieved:
+
+```r
+rental_sample <- rental_table %>% filter(rental_id %in% sample_rows) %>% collect()
+
+str(rental_sample)
+```
+
+```
+## Classes 'tbl_df', 'tbl' and 'data.frame':	100 obs. of  7 variables:
+##  $ rental_id   : int  10 395 675 731 734 1494 1517 1643 1651 1775 ...
+##  $ rental_date : POSIXct, format: "2005-05-25 00:02:21" "2005-05-27 11:45:49" ...
+##  $ inventory_id: int  1824 752 1273 4124 3084 244 3728 1352 4444 1922 ...
+##  $ customer_id : int  399 575 338 5 538 575 148 484 524 123 ...
+##  $ return_date : POSIXct, format: "2005-05-31 22:44:21" "2005-05-31 13:42:49" ...
+##  $ staff_id    : int  2 1 2 1 2 1 1 2 2 2 ...
+##  $ last_update : POSIXct, format: "2006-02-16 02:30:53" "2006-02-16 02:30:53" ...
+```
+
 
 ### Sub-setting variables
 
@@ -382,8 +459,8 @@ There is no substitute for looking at your data and R provides several ways to j
 sp_print_df(head(rental_tibble))
 ```
 
-<!--html_preserve--><div id="htmlwidget-b18b48ec4ad649442f3b" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-b18b48ec4ad649442f3b">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[2,3,4,5,6,7],["2005-05-25T05:54:33Z","2005-05-25T06:03:39Z","2005-05-25T06:04:41Z","2005-05-25T06:05:21Z","2005-05-25T06:08:07Z","2005-05-25T06:11:53Z"],[1525,1711,2452,2079,2792,3995],[459,408,333,222,549,269],["2005-05-29T02:40:33Z","2005-06-02T05:12:39Z","2005-06-03T08:43:41Z","2005-06-02T11:33:21Z","2005-05-27T08:32:07Z","2005-05-30T03:34:53Z"],[1,1,2,1,1,2],["2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>rental_id<\/th>\n      <th>rental_date<\/th>\n      <th>inventory_id<\/th>\n      <th>customer_id<\/th>\n      <th>return_date<\/th>\n      <th>staff_id<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-ef4d0ff2b8248cf49567" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-ef4d0ff2b8248cf49567">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[2,3,4,5,6,7],["2005-05-25T05:54:33Z","2005-05-25T06:03:39Z","2005-05-25T06:04:41Z","2005-05-25T06:05:21Z","2005-05-25T06:08:07Z","2005-05-25T06:11:53Z"],[1525,1711,2452,2079,2792,3995],[459,408,333,222,549,269],["2005-05-29T02:40:33Z","2005-06-02T05:12:39Z","2005-06-03T08:43:41Z","2005-06-02T11:33:21Z","2005-05-27T08:32:07Z","2005-05-30T03:34:53Z"],[1,1,2,1,1,2],["2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>rental_id<\/th>\n      <th>rental_date<\/th>\n      <th>inventory_id<\/th>\n      <th>customer_id<\/th>\n      <th>return_date<\/th>\n      <th>staff_id<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ### The `summary` function in base
 
@@ -467,7 +544,7 @@ skim(rental_tibble)
 ##  n obs: 16044 
 ##  n variables: 7 
 ## 
-## ── Variable type:integer ────────────────────────────────────────────────────
+## ── Variable type:integer ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ##      variable missing complete     n    mean      sd p0     p25    p50
 ##   customer_id       0    16044 16044  297.14  172.45  1  148     296  
 ##  inventory_id       0    16044 16044 2291.84 1322.21  1 1154    2291  
@@ -479,7 +556,7 @@ skim(rental_tibble)
 ##  12037.25 16049 ▇▇▇▇▇▇▇▇
 ##      2        2 ▇▁▁▁▁▁▁▇
 ## 
-## ── Variable type:POSIXct ────────────────────────────────────────────────────
+## ── Variable type:POSIXct ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ##     variable missing complete     n        min        max     median
 ##  last_update       0    16044 16044 2006-02-15 2006-02-23 2006-02-16
 ##  rental_date       0    16044 16044 2005-05-24 2006-02-14 2005-07-28

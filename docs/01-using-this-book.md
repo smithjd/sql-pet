@@ -16,7 +16,7 @@ You will need:
   + Linux (any Linux distro that will run Docker Community Edition, R and RStudio will work)
 * Current versions of [R and RStudio](https://www.datacamp.com/community/tutorials/installing-R-windows-mac-ubuntu) [@Vargas2018) required.
 * Docker (instructions below)
-* Our companion package `sqlpetr` [@Muni2018] 
+* Our companion package `sqlpetr` [@Borasky2018a] 
 
 The database we use is PostgreSQL 10, but you do not need to install it - it's installed via a Docker image. 
 
