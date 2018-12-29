@@ -108,7 +108,7 @@ Searching for 'FOREIGN' in the table above, one sees that the `column_name` matc
 
 ## Making up data for Join Examples
 
-Each chapter in the book stands on its own.  If you have worked through the code blocks in this chapter in a previous session, you created some new customer records and cloned the film table as smy_film in order to work through material in the rest of the chapter. In the next couple of code blocks, we delete the new data and recreate the smy_film table for the join examples below.
+Each chapter in the book stands on its own.  If you have worked through the code blocks in this chapter in a previous session, you created some new customer records in order to work through material in the rest of the chapter. In the next couple of code blocks, we delete the new data and then recreate the data for the join examples in the next chapter.
 
 ### SQL Delete Data Syntax
 
@@ -135,6 +135,19 @@ dbExecute(
 
 The number above tells us how many rows were actually deleted from the customer table.
 
+### Delete New Practice Films from the Film table.
+
+In the next code block we delete out the new films that were added when the book was compliled or added working through the exercises.  Out of the box, the DVD film database's highest film_id = 1000.
+
+```{r}
+dbExecute(
+  con,
+  "delete from film
+   where film_id > 1000;
+  "
+)
+```
+
 ### SQL Single Row Insert Data Syntax
 
 ```
@@ -159,9 +172,9 @@ customer_cols <- dbGetQuery(
 sp_print_df(customer_cols)
 ```
 
-In the next code block, we insert Sophie as a new customer into the customer table via a SQL insert statement.  The columns list clause has three id columns, customer_id, store_id, and address_id.  The customer_id is a primary key column and the other two look like foreign key columns.
+In the next code block, we insert Sophie as a new customer into the customer table via a SQL insert statement.  The columns list clause has three id columns, customer_id, store_id, and address_id.  The customer_id is a primary key column and the other two 'look like' foreign key columns.
 
-For now we are interested in getting some new customers into the customer table.  We look at the relations between the customer table and the store and address tables later in this chapter.
+For now, we are interested in getting some new customers into the customer table.  We look at the relations between the customer table and the store and address tables later in this chapter.
 
 
 ```{r}
@@ -202,20 +215,22 @@ Note:
 1.  The last data frame parameter sets the stringsAsFactors is `FALSE`.  Databases do not have a native `FACTOR` type.
 2.  The dataframe column names must match the table column names. 
 3.  The dbWriteTable function needs `append` = true to actually insert the new row.
+4.  The dbWriteTable function has an option 'overwrite'.  It is set to FALSE  by default.  If it is set to TRUE, the table is first truncated.
+5.  No write occurs if both overwrite and append = FALSE.
 
 ```{r}
-
 df <- data.frame(
-  customer_id =
-    601, store_id =
-    2, first_name =
-    "Sophie", last_name =
-    "Yang", email =
-    "sophie.yang@sakilacustomer.org", address_id =
-    1, activebool =
-    TRUE, create_date =
-    Sys.Date(), last_update = Sys.time(), active =
-    1, stringsAsFactors = FALSE
+  customer_id = 601
+  , store_id = 2
+  , first_name = "Sophie"
+  , last_name = "Yang"
+  , email = "sophie.yang@sakilacustomer.org"
+  , address_id = 1
+  , activebool = TRUE
+  , create_date = Sys.Date()
+  , last_update = Sys.time()
+  , active = 1
+  , stringsAsFactors = FALSE
 )
 dbWriteTable(con, "customer", value = df, append = TRUE, row.names = FALSE)
 
@@ -304,7 +319,7 @@ films <- dbGetQuery(
 sp_print_df(films)
 ```
 
-The next code block all the rows in the  language table.
+The next code block shows all the rows in the  language table.
 
 ```{r}
 languages <- dbGetQuery(
@@ -316,16 +331,28 @@ languages <- dbGetQuery(
 sp_print_df(languages)
 ```
 
-One cannot insert/update a new row into the film table with a language_id = 10 because of a constraint on the language_id column.  The language_id value must already exist in the `language` table before the database will allow the new row to be inserted into the table. 
-```{r}
+One cannot insert/update a row into the `film` table with a language_id = 10 because of a constraint on the language_id column.  The language_id value must already exist in the `language` table, values 1 - 6, before the database will allow the new row to be inserted into the table.
+
+## Messy Data
+
+The data in the DVD rental system is too clean to show some of the issues one comes across in the real world.  In the following `xxxx` code blocks, we look at one row in the film table where the film_id = 1.  We first reinitialize language_id to 1 and display the row.  
+
+```{r Messy data 1}
 
 dbExecute(con, "update film set language_id = 1 where film_id = 1;")
+dbGetQuery(con, "select '1. Update language_id = 1 successful' step
+                        ,film_id, language_id
+                   from film where film_id = 1;")
+```
 
+The following code block is an example of a SQL anonymous code block that gracefully handles the exception error when we try and update the row with language_id = 10.  Note that the language_id is still 1.  
+
+```{r Messy data 2}
 dbExecute(con, "
 do $$
 DECLARE v_id INTEGER;
 begin
-    v_id = 3;
+    v_id = 10;
     update film set language_id = v_id where film_id = 1;
 exception
 when foreign_key_violation then
@@ -335,40 +362,31 @@ when others then
 end;
 $$ language 'plpgsql';")
 
-dbGetQuery(con, "select * from film where film_id = 1;")
+dbGetQuery(con, "select '2. Update language_id = 10 failed' step
+                        ,film_id, language_id
+                   from film where film_id = 1;")
 ```
 
-```{r}
+### Messing up the row
+
+The following code block 
+
+1.  disables all the database constraints on the `film` table
+2.  Updates the row with language_id = 10.
+3.  Re-enabes the database constraints on the film table
+
+```{r Messy data 3}
 #
 dbExecute(con, "ALTER TABLE film DISABLE TRIGGER ALL;")
-
-
-
 count <- dbExecute(con, "update film set language_id = 10 where film_id = 1;")
-dbExecute(con, "ALTER TABLE film ENABLE TRIGGER ALL;")
-```
->>>>>>> jds-edits-3
-
-To work around this inconvenience for the tutorial:
-
-1.  We drop the smy_film table if it exists from a previous session.
-
-```{r}
-dbExecute(con, "drop table if exists smy_film;")
 ```
 
-2.  We create a new table smy_film with the same structure as the film table 
+While the `film` table constraints are disabled, we will insert a new film with a language_id = 10. 
 
-```{r}
-dbExecute(con, "create table smy_film as select * from film;")
-```
-
-3.  We create a film with language_id = 30;
-
-```{r}
+```{r Messy data 4}
 dbExecute(
   con,
-  "insert into smy_film
+  "insert into film
   (film_id,title,description,release_year,language_id
   ,rental_duration,rental_rate,length,replacement_cost,rating
    ,last_update,special_features,fulltext)
@@ -380,12 +398,13 @@ dbExecute(
 )
 ```
 
-4.  Confirm that the new record exists.
-
+In the following code block we re-enable the `film` table constraints and confirm that the new record exists.
 ```{r}
+dbExecute(con, "ALTER TABLE film ENABLE TRIGGER ALL;")
+
 dbGetQuery(
   con,
-  "select film_id,title,description,language_id from smy_film where film_id = 3001;"
+  "select film_id,title,description,language_id from film where film_id = 1001;"
 )
 ```
 
@@ -419,7 +438,7 @@ Imagine you are at a large costume Valentine's Day dance party.  The hostess of 
 
 She requests the following:
 
-1.  All the couples at the party line up in front of her with the men on her left and the women on her right, (inner join)
+1.  All the couples at the party line up in front of her in a single line with the men on her left and the women on her right, (inner join)
 
 2.  All the remaining men to form a second line two feet behind the married men, (left outer join, all couples + unattached men)
 
@@ -463,55 +482,60 @@ The dplyr join documentation describes two different types of joins, `mutating` 
 
 The misleading part is that all the columns from *x* and *y*.  If the join column is `KEY`, SQL will return x.KEY and y.KEY.  Dplyr retuns KEY.  It appears that the KEY value comes from the driving table.  This difference should become clear in the outer join examples.
 
-In the next couple of examples, we will pull all the language and smy_film table data from the database into memory because the tables are small.  In the *_join verbs, the `by` and `suffix` parameters are included because it helps document the actual join and the source of join columns.
+In the next couple of examples, we will pull all the language and `film` table data from the database into memory because the tables are small.  In the *_join verbs, the `by` and `suffix` parameters are included because it helps document the actual join and the source of join columns.
 
 ## Natural Join Delayed Time Bomb
 
 The dplyr default join is a natural join, joining tables on common column names.  One of many links why one should not use natural joins can be found [here](http://gplivna.blogspot.com/2007/10/natural-joins-are-evil-motto-if-you.html).  If two tables are joined via a natural join on column `C1` the join continues to work as long as no additional common columns are added to either table.  If a new new column `C2` is added to one of the tables and `C2` already exists in the other table, BOOM, the delayed time bomb goes off.  The natural join still executes, doesn't throw any errors, but the returned result set may be smaller, much smaller, than before the new `C2` column was added.  
+### SQL Language_id Distribution
 
-For example, assume that one has a product table with columns `product_id`, `product_name`, and `aka`.  
-
-
-
-<!-- move this example to query optimzation section 
-
-Explain plans [here](https://robots.thoughtbot.com/reading-an-explain-analyze-query-plan)
+The next code block calculates the `language_id` distribution in the `film` and `language` tables.  The results will be used in following sections to validate different join result sets.
 
 ```{r}
-
-# smy_film <- dplyr::tbl(con, "smy_film") # Lazy
-# x<-smy_film %>% filter(film_id == 3001)  %>% explain()
-#
-
-
-language_table <- dplyr::tbl(con, "language")
-film_table <- dplyr::tbl(con, "smy_film")
-
-languages_ij <- language_table %>%
-  inner_join(film_table, by = c("language_id", "language_id"), suffix(c(".l", ".f"))) %>%
-  group_by(language_id, name) %>%
-  summarize(inner_joins = n()) %>%
-  explain()
-
-languages_ij
+lang_distribution_sql <- dbGetQuery(con
+          ,"select 'film' tbl,language_id,count(*) count 
+              from film group by language_id
+            union
+            select 'language' tbl,language_id,count(*) count 
+              from language group by language_id
+            order by tbl,language_id;"
+          )
+sp_print_df(lang_distribution_sql)
 ```
+
+ 
+
+### dplyr language distribution Exercise
+
+Execute and Review the output from the code block below.  Union and arrange the output to match the SQL output in the previous code block.  
 
 ```{r}
-rs <- dbGetQuery(
-  con,
-  "explain analyze select l.language_id,l.name,count(*) n
-   from language l join smy_film f on l.language_id = f.language_id
-  group by l.language_id,l.name;"
-)
+language_table <- DBI::dbReadTable(con, "language")
+film_table <- DBI::dbReadTable(con, "film")
 
-sp_print_df(rs)
+language_summary <- language_table %>% 
+  group_by(language_id) %>% 
+  summarize(count=n()) %>% 
+  mutate(table='language') %>% 
+  select(table,language_id,count)
+
+film_summary <- film_table %>% 
+  group_by(language_id) %>% 
+  summarize(count=n()) %>% 
+  mutate(table='film') %>% 
+  select(table,language_id,count)
+
+sp_print_df(language_summary)
+sp_print_df(film_summary)
+
+## UNION the two summary tables and ARRANGE the output to match the SQL output from the previouse code block
+
+
 ```
-
--->
 
 ## Join Templates
 
-In this section we look at two tables, `language` and `smy_film` and various joins using dplyr and SQL.  Each dplyr code block has three purposes.  
+In this section we perform various joins using dplyr and SQL.  Each dplyr code block has three purposes.  
 
 1.  Show a working join example.  
 2.  The code blocks can be used as templates for beginning more complex dplyr pipes.
@@ -521,21 +545,22 @@ In these examples, the join condition, the `by` parameter,
 
     by = c('language_id','language_id')
 
-the two columns are the same.  In multi-column joins, each language_id would be replace with a vector of column names used in the join by position.  Note the column names do not need to be identical by position.
+the two columns are the same.  
 
-The suffix parameter is a way to distinguish the same column name in the joined tables.  The suffixes are usually an single letter to represent the name of the table.
-
-
-```{r}
-language_table <- DBI::dbReadTable(con, "language")
-film_table <- DBI::dbReadTable(con, "smy_film")
 ```
+In multi-column joins, each language_id would be replaced with a vector of column names used in the join by position.  Note the column names do not need to be identical by position.
+```
+
+The suffix parameter is a way to distinguish the same column name in the joined tables.  The suffixes are usually an single letter to represent the name of the table.  
+
 
 ### dplyr Inner Join Template 
 
+For an inner join between two tables, it doesn't matter which table is on the left, the first table, and which is on the right, the second table, because join conditions on both tables must be satisfied.
+
 ```{r inner join}
 languages_ij <- language_table %>%
-  inner_join(film_table, by = c("language_id", "language_id"), suffix(c(".l", ".f"))) %>%
+  inner_join(film_table, by = c("language_id" = "language_id"), suffix(c(".l", ".f"))) %>%
   group_by(language_id, name) %>%
   summarize(inner_joins = n())
 
@@ -544,20 +569,24 @@ sp_print_df(languages_ij)
 
 #### SQL Inner Join
 
+The `dplyr` suffix is similar to the SQL table.  In the previous code block, `.l` and `.f` were used in the `inner_join` suffix parameter.  `l.` and `f.` are used as aliases in the SQL version below.  The role of the dplyr suffix and the SQL alias is to disambiguate duplicate table and column names referenced.  
+
 ```{r}
 rs <- dbGetQuery(
   con,
   "select l.language_id,l.name,count(*) n
-   from language l join smy_film f on l.language_id = f.language_id
+   from language l join film f on l.language_id = f.language_id
   group by l.language_id,l.name;"
 )
 
 sp_print_df(rs)
 ```
 
-The output tells us that there are 1000 inner joins between the language_table and the film_table.
+The output tells us that there are `r rs$n` inner joins occurred between the language_table and the film_table.
 
 ### dplyr Left Outer Join Template
+
+For a left outer join between two tables, it does matter which table is on the left, the first table, and which is on the right, the second table, because every row in the left table that satsifies the filter/where conditions are returned.  The second table returns rows if the join condition is met or returns a row of all null column values.
 
 ```{r left outer join}
 
@@ -571,7 +600,7 @@ languages_loj <- language_table %>%
   summarize(lojs = n()) %>%
   select(join_type, language_id, film_lang_id, name, lojs)
 print(languages_loj)
-# View(languages_loj)
+View(languages_loj)
 sp_print_df(languages_loj)
 ```
 
@@ -586,7 +615,7 @@ rs <- dbGetQuery(
        ,f.language_id film_lang_id
        ,trim(l.name) as name
        ,count(*) lojs
-   from language l left outer join smy_film f 
+   from language l left outer join film f 
         on l.language_id = f.language_id
   group by l.language_id,l.name,f.language_id
 order by l.language_id;"
@@ -595,7 +624,7 @@ sp_print_df(rs)
 # rs
 ```
 
-The lojs column returns the number of rows found on the keys from the left table, language, and the right table, the film table.  For the "English" row, the language_id and film_lang_id match and a 1000 inner joins were performed.  For all the other languages, there was only 1 join and they all came from the left outer table, the language table, language_id's 2 - 6.  The right table, the film table returned NA, because no match was found.
+The lojs column returns the number of rows found on the keys from the left table, language, and the right table, the film table.  For the "English" row, the language_id and film_lang_id match and `r rs$lojs[1]` inner joins were performed.  For all the other languages, there was only 1 join and they all came from the left outer table, the language table, language_id's 2 - 6.  The right table, the film table returned NA, because no match was found.
 
 1.  The left outer join always returns all rows from the left table, the driving/key table, if not reduced via a filter()/where clause.  
 2.  All rows that inner join returns all the columns/derived columns specified in the select clause from both the left and right tables.  
@@ -627,7 +656,7 @@ Review the mutate above with l.language_id below.
 rs <- dbGetQuery(
   con,
   "select 'roj' join_type,l.language_id,f.language_id language_id_f,l.name,count(*) rojs
-   from language l right outer join smy_film f on l.language_id = f.language_id
+   from language l right outer join film f on l.language_id = f.language_id
   group by l.language_id,l.name,f.language_id
 order by l.language_id;"
 )
@@ -661,7 +690,7 @@ languages_foj
 rs <- dbGetQuery(
   con,
   "select l.language_id,l.name,f.language_id language_id_f,count(*) fojs
-   from language l full outer join smy_film f on l.language_id = f.language_id
+   from language l full outer join film f on l.language_id = f.language_id
   group by l.language_id,l.name,f.language_id
 order by l.language_id;"
 )
@@ -701,7 +730,7 @@ SQL doesn't have an anti join key word.  Here are three different ways to achiev
 rs <- dbGetQuery(
   con,
   "select l.language_id,l.name,count(*) fojs
-   from language l left outer join smy_film f on l.language_id = f.language_id
+   from language l left outer join film f on l.language_id = f.language_id
   where f.language_id is null
   group by l.language_id,l.name
 order by l.language_id;"
@@ -746,7 +775,7 @@ rs
 sql_aj1 <- dbGetQuery(
   con,
   "explain analyze select l.language_id,l.name,count(*) fojs
-   from language l left outer join smy_film f on l.language_id = f.language_id
+   from language l left outer join film f on l.language_id = f.language_id
   where f.language_id is null
   group by l.language_id,l.name
 "
@@ -909,7 +938,6 @@ rs <- dbGetQuery(
                        union select 'city' tbl_name,count(*) from city
                        union select 'country' tbl_name,count(*) from country
                        union select 'store' tbl_name,count(*) from store
-                       union select 'smy_film' tbl_name,count(*) from smy_film
                        ) counts
                   order by tbl_name
                  ;
@@ -970,7 +998,7 @@ Below is the code block from the `dplyr Full Outer Join` section above.  Modify 
 rs <- dbGetQuery(
   con,
   "select l.language_id,l.name,f.language_id language_id_f,count(*) fojs
-   from language l full outer join smy_film f on l.language_id = f.language_id
+   from language l full outer join film f on l.language_id = f.language_id
   group by l.language_id,l.name,f.language_id
 order by l.language_id;"
 )
@@ -990,53 +1018,14 @@ How are the stores performing?  The SQL code shows the payments made to each sto
 rs <- dbGetQuery(
   con,
   "select store_id,sum(p.amount) amt,count(*) cnt 
-   from payment p 
-   join staff s 
-   on p.staff_id = s.staff_id  
-   group by store_id order by 2 desc;"
+                   from payment p 
+                        join staff s 
+                          on p.staff_id = s.staff_id  
+                 group by store_id order by 2 desc
+                 ;
+                "
 )
 sp_print_df(head(rs))
-```
-
-Who are the active employees?
-
-
-```{r}
-rs <- dbGetQuery(
-  con, 
-  "select store_id,sum(p.amount) amt,count(*) cnt 
-  into results_of_query
-  from payment p
-  join staff s 
-  on p.staff_id = s.staff_id  
-  where s.active = 'true'
-  group by store_id order by 2 desc;"
-  )
-```
-
-
-Write results to table name: results_of_analysis
-```{r}
-dbExecute(con, "create table results_of_analysis as select * from results_of_query;")
-```
-
-Perform an R analysis on results_of_query
-```{r}
-rs <- dbGetQuery(
-  con, 
-  "select *
-  from results_of_query"
-  )
-head(rs)
-dbSendQuery(con,
-            glue_sql("INSERT INTO results_of_analysis (store_id, amt, cnt)
-                     VALUES (
-                     0,
-                     {sum(rs$amt)*},
-                     0
-                     )"
-                     )
-)
 ```
 
 #### Exercise dplyr store revenue stream
@@ -1286,7 +1275,27 @@ rs <- dbGetQuery(
 )
 sp_print_df(head(rs))
 ```
+### Which Stores Have Movies That Have Never Rented?
 
+```{r}
+not_rented <- dbGetQuery(con,
+          "select i.store_id,f.film_id,f.title,f.description,i.last_update
+             from inventory i left outer join rental r 
+                      on i.inventory_id = r.inventory_id
+                  join film f
+                      on i.film_id = f.film_id
+            where r.inventory_id is null 
+          ")
+
+sp_print_df(not_rented)
+
+View(dbGetQuery(con,"select min(last_update) mn, max(last_update) mx from inventory;"))
+
+View(dbGetQuery(con,"select rental_date,count(*) 
+                       from rental
+                     group by rental_date
+                     order by rental_date;"))
+```
 
 ## Different strategies for interacting with the database
 
@@ -1462,23 +1471,46 @@ knitr::knit_exit()
 ```
 testit
 ```{r testit}
-# dbExecute(con, "create table smy_customer as select * from customer;")
 
-df <- data.frame(
-  customer_id =
-    601, store_id =
-    2, first_name =
-    "Sophie", last_name =
-    "Yang", email =
-    "sophie.yang@sakilacustomer.org", address_id =
-    1, activebool =
-    TRUE, create_date =
-    Sys.Date(), last_update = Sys.time(), active =
-    1, stringsAsFactors = FALSE
-)
-dbWriteTable(con, "smy_customer", value = df, append = TRUE, row.names = FALSE)
 ```
 
 ```{r}
-dbListFields(con, "smy_customer")
+# dbExecute(con, "drop table if exists film;")
 ```
+
+
+<!-- move this example to query optimzation section 
+
+Explain plans [here](https://robots.thoughtbot.com/reading-an-explain-analyze-query-plan)
+
+```{r}
+
+# film <- dplyr::tbl(con, "film") # Lazy
+# x<-film %>% filter(film_id == 1001)  %>% explain()
+#
+
+
+language_table <- dplyr::tbl(con, "language")
+film_table <- dplyr::tbl(con, "film")
+
+languages_ij <- language_table %>%
+  inner_join(film_table, by = c("language_id", "language_id"), suffix(c(".l", ".f"))) %>%
+  group_by(language_id, name) %>%
+  summarize(inner_joins = n()) %>%
+  explain()
+
+languages_ij
+```
+
+```{r}
+rs <- dbGetQuery(
+  con,
+  "explain analyze select l.language_id,l.name,count(*) n
+   from language l join film f on l.language_id = f.language_id
+  group by l.language_id,l.name;"
+)
+
+sp_print_df(rs)
+```
+
+-->
