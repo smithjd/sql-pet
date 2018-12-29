@@ -444,6 +444,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="I.1" data-path="docker-concepts-96d.html"><a href="docker-concepts-96d.html#introduction-2"><i class="fa fa-check"></i><b>I.1</b> Introduction</a></li>
 <li class="chapter" data-level="I.2" data-path="docker-concepts-96d.html"><a href="docker-concepts-96d.html#virtual-machines-and-hypervisors"><i class="fa fa-check"></i><b>I.2</b> Virtual machines and hypervisors</a></li>
 <li class="chapter" data-level="I.3" data-path="docker-concepts-96d.html"><a href="docker-concepts-96d.html#containers"><i class="fa fa-check"></i><b>I.3</b> Containers</a></li>
+<li class="chapter" data-level="I.4" data-path="docker-concepts-96d.html"><a href="docker-concepts-96d.html#docker-1"><i class="fa fa-check"></i><b>I.4</b> Docker</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -509,7 +510,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_check_that_docker_is_up</span>()</code></pre>
 <pre><code>## [1] &quot;Docker is up, running these containers:&quot;                                                                                                       
 ## [2] &quot;CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES&quot;   
-## [3] &quot;1b427918bc08        postgres:10         \&quot;docker-entrypoint.s…\&quot;   1 second ago        Up Less than a second   0.0.0.0:5432-&gt;5432/tcp   cattle&quot;</code></pre>
+## [3] &quot;37b438585f80        postgres:10         \&quot;docker-entrypoint.s…\&quot;   1 second ago        Up Less than a second   0.0.0.0:5432-&gt;5432/tcp   cattle&quot;</code></pre>
 </div>
 <div id="connect-read-and-write-to-postgres-from-r" class="section level2">
 <h2><span class="header-section-number">6.3</span> Connect, read and write to Postgres from R</h2>
@@ -540,8 +541,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre class="sourceCode r"><code class="sourceCode r">mtcars_df &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbReadTable</span>(con, <span class="st">&quot;mtcars&quot;</span>)</code></pre>
 <p>Show a few rows:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(mtcars_df))</code></pre>
-<div id="htmlwidget-aace47e9ddbad0c43eff" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-aace47e9ddbad0c43eff">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[21,21,22.8,21.4,18.7,18.1],[6,6,4,6,8,6],[160,160,108,258,360,225],[110,110,93,110,175,105],[3.9,3.9,3.85,3.08,3.15,2.76],[2.62,2.875,2.32,3.215,3.44,3.46],[16.46,17.02,18.61,19.44,17.02,20.22],[0,0,1,1,0,1],[1,1,1,0,0,0],[4,4,4,3,3,3],[4,4,1,1,2,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>mpg<\/th>\n      <th>cyl<\/th>\n      <th>disp<\/th>\n      <th>hp<\/th>\n      <th>drat<\/th>\n      <th>wt<\/th>\n      <th>qsec<\/th>\n      <th>vs<\/th>\n      <th>am<\/th>\n      <th>gear<\/th>\n      <th>carb<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6,7,8,9,10,11]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-663b9b6f6bb92e796d97" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-663b9b6f6bb92e796d97">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[21,21,22.8,21.4,18.7,18.1],[6,6,4,6,8,6],[160,160,108,258,360,225],[110,110,93,110,175,105],[3.9,3.9,3.85,3.08,3.15,2.76],[2.62,2.875,2.32,3.215,3.44,3.46],[16.46,17.02,18.61,19.44,17.02,20.22],[0,0,1,1,0,1],[1,1,1,0,0,0],[4,4,4,3,3,3],[4,4,1,1,2,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>mpg<\/th>\n      <th>cyl<\/th>\n      <th>disp<\/th>\n      <th>hp<\/th>\n      <th>drat<\/th>\n      <th>wt<\/th>\n      <th>qsec<\/th>\n      <th>vs<\/th>\n      <th>am<\/th>\n      <th>gear<\/th>\n      <th>carb<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6,7,8,9,10,11]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <div id="clean-up" class="section level2">

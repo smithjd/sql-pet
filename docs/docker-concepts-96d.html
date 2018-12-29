@@ -444,6 +444,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="I.1" data-path="docker-concepts-96d.html"><a href="docker-concepts-96d.html#introduction-2"><i class="fa fa-check"></i><b>I.1</b> Introduction</a></li>
 <li class="chapter" data-level="I.2" data-path="docker-concepts-96d.html"><a href="docker-concepts-96d.html#virtual-machines-and-hypervisors"><i class="fa fa-check"></i><b>I.2</b> Virtual machines and hypervisors</a></li>
 <li class="chapter" data-level="I.3" data-path="docker-concepts-96d.html"><a href="docker-concepts-96d.html#containers"><i class="fa fa-check"></i><b>I.3</b> Containers</a></li>
+<li class="chapter" data-level="I.4" data-path="docker-concepts-96d.html"><a href="docker-concepts-96d.html#docker-1"><i class="fa fa-check"></i><b>I.4</b> Docker</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -474,17 +475,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="virtual-machines-and-hypervisors" class="section level2">
 <h2><span class="header-section-number">I.2</span> Virtual machines and hypervisors</h2>
-<p>Linux is primarily a server hosting operating system. While many people run Linux on desktops and laptops, that isn’t a large majority of either Linux installations or of desktops / laptops.</p>
 <p>A <em>virtual machine</em> is a machine that is running purely as software hosted by another real machine. To the outside user, a virtual machine looks just like a real one. But it has no processors, memory or I/O devices - all of those are supplied and managed by the host.</p>
 <p>A virtual machine can run any operating system that will run on the host’s hardware. A Linux host can run a Windows virtual machine and vice versa.</p>
 <p>A <em>hypervisor</em> is the component of the host system software that manages virtual machines, usually called <em>guests</em>. Linux systems have a native hypervisor called <em>Kernel Virtual Machine (kvm)</em>. And laptop, desktop and server processors from Intel and Advanced Micro Devices (AMD) have hardware that makes this hypervisor more efficient.</p>
-<p>Windows servers and Windows 10 Pro have a hypervisor called <em>Hyper-V</em>. Like kvm, it can take advantage of the hardware in Intel and AMD processors. On Macintosh, there is a <em>Hypervisor Framework</em> (<a href="https://developer.apple.com/documentation/hypervisor" class="uri">https://developer.apple.com/documentation/hypervisor</a>) and other tools build on that.</p>
+<p>Windows servers and Windows 10 Pro have a hypervisor called <em>Hyper-V</em>. Like kvm, Hyper-V can take advantage of the hardware in Intel and AMD processors. On Macintosh, there is a <em>Hypervisor Framework</em> (<a href="https://developer.apple.com/documentation/hypervisor" class="uri">https://developer.apple.com/documentation/hypervisor</a>) and other tools build on that.</p>
 </div>
 <div id="containers" class="section level2">
 <h2><span class="header-section-number">I.3</span> Containers</h2>
 <p>A <em>container</em> is a set of processes running in an operating system. The host operating system is usually Linux, but other operating systems also can host containers.</p>
-<p>Unlike a virtual machine, the container has no operating system of its own. If the host is running Linux, so is the container.</p>
-<p>A container <em>does</em> have its own filesystem. From inside the container, this filesystem looks like a Linux filesystem, but it can use any Linux distro. For example, you can have an Ubuntu 18.04 LTS host running Ubuntu 14.04 LTS or Fedora 28 or CentOS 7 containers.</p>
+<p>Unlike a virtual machine, the container has no operating system of its own. If the host is running Linux, so is the container. And since the container OS is the same as the host OS, there’s no need for a hypervisor or hardware to support the hypervisor. So a container is more efficient than a virtual machine.</p>
+<p>A container <strong>does</strong> have its own filesystem. From inside the container, this filesystem looks like a Linux filesystem, but it can use any Linux distro. For example, you can have an Ubuntu 18.04 LTS host running Ubuntu 14.04 LTS or Fedora 28 or CentOS 7 containers.</p>
+</div>
+<div id="docker-1" class="section level2">
+<h2><span class="header-section-number">I.4</span> Docker</h2>
+<p>While there are both older (<em>lxc</em>) and newer container tools, the one that has caught on in terms of widespread use is <em>Docker</em>.</p>
 
 </div>
 </div>

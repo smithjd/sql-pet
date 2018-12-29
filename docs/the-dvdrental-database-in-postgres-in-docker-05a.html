@@ -444,6 +444,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="I.1" data-path="docker-concepts-96d.html"><a href="docker-concepts-96d.html#introduction-2"><i class="fa fa-check"></i><b>I.1</b> Introduction</a></li>
 <li class="chapter" data-level="I.2" data-path="docker-concepts-96d.html"><a href="docker-concepts-96d.html#virtual-machines-and-hypervisors"><i class="fa fa-check"></i><b>I.2</b> Virtual machines and hypervisors</a></li>
 <li class="chapter" data-level="I.3" data-path="docker-concepts-96d.html"><a href="docker-concepts-96d.html#containers"><i class="fa fa-check"></i><b>I.3</b> Containers</a></li>
+<li class="chapter" data-level="I.4" data-path="docker-concepts-96d.html"><a href="docker-concepts-96d.html#docker-1"><i class="fa fa-check"></i><b>I.4</b> Docker</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -514,7 +515,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)
 
 <span class="kw">cat</span>(docker_messages, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</code></pre>
-<pre><code>## Sending build context to Docker daemon  46.09MB
+<pre><code>## Sending build context to Docker daemon  46.89MB
 
 
 ## Step 1/4 : FROM postgres:10
@@ -556,7 +557,7 @@ docker_cmd &lt;-<span class="st"> </span><span class="kw">glue</span>(
 )</code></pre>
 <p>If you are curious you can paste <code>docker_cmd</code> into a terminal window after the command ‘docker’:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, docker_cmd, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</code></pre>
-<pre><code>## [1] &quot;8a331ee9e822db6f6b4e9d0145aae1403b78649690d3880fcbafce43fa29b0f8&quot;</code></pre>
+<pre><code>## [1] &quot;b9a394d3e8f652df4b7348d1d8b1d4595c4d35edf1bf7ba7587abfd40d18dd13&quot;</code></pre>
 </div>
 <div id="connect-to-postgres-with-r" class="section level2">
 <h2><span class="header-section-number">7.6</span> Connect to Postgres with R</h2>
@@ -609,7 +610,7 @@ docker_cmd &lt;-<span class="st"> </span><span class="kw">glue</span>(
 <p>Show that the container still exists even though it’s not running</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_show_all_docker_containers</span>()</code></pre>
 <pre><code>## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## 8a331ee9e822        postgres-dvdrental   &quot;docker-entrypoint.s…&quot;   9 seconds ago       Exited (0) Less than a second ago                       sql-pet
+## b9a394d3e8f6        postgres-dvdrental   &quot;docker-entrypoint.s…&quot;   10 seconds ago      Exited (0) Less than a second ago                       sql-pet
 ## 4d1200a07f20        fedora:29            &quot;/bin/bash&quot;              13 days ago         Exited (0) 13 days ago                                  f29
 ## 81a5fdbd6042        rocker/geospatial    &quot;/init&quot;                  2 weeks ago         Exited (0) 2 weeks ago                                  blissful_greider</code></pre>
 <p>Next time, you can just use this command to start the container:</p>

@@ -68,7 +68,7 @@ cat(docker_messages, sep = "\n")
 ```
 
 ```
-## Sending build context to Docker daemon  46.09MB
+## Sending build context to Docker daemon  46.89MB
 ## Step 1/4 : FROM postgres:10
 ##  ---> 6eb6c50a02e7
 ## Step 2/4 : WORKDIR /tmp
@@ -117,7 +117,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "8a331ee9e822db6f6b4e9d0145aae1403b78649690d3880fcbafce43fa29b0f8"
+## [1] "b9a394d3e8f652df4b7348d1d8b1d4595c4d35edf1bf7ba7587abfd40d18dd13"
 ```
 ## Connect to Postgres with R
 
@@ -219,7 +219,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## 8a331ee9e822        postgres-dvdrental   "docker-entrypoint.s…"   9 seconds ago       Exited (0) Less than a second ago                       sql-pet
+## b9a394d3e8f6        postgres-dvdrental   "docker-entrypoint.s…"   10 seconds ago      Exited (0) Less than a second ago                       sql-pet
 ## 4d1200a07f20        fedora:29            "/bin/bash"              13 days ago         Exited (0) 13 days ago                                  f29
 ## 81a5fdbd6042        rocker/geospatial    "/init"                  2 weeks ago         Exited (0) 2 weeks ago                                  blissful_greider
 ```

@@ -129,7 +129,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE                COMMAND                  CREATED              STATUS                     PORTS               NAMES
-## 8a331ee9e822        postgres-dvdrental   "docker-entrypoint.s…"   About a minute ago   Exited (0) 4 seconds ago                       sql-pet
+## b9a394d3e8f6        postgres-dvdrental   "docker-entrypoint.s…"   About a minute ago   Exited (0) 4 seconds ago                       sql-pet
 ## 4d1200a07f20        fedora:29            "/bin/bash"              13 days ago          Exited (0) 13 days ago                         f29
 ## 81a5fdbd6042        rocker/geospatial    "/init"                  2 weeks ago          Exited (0) 2 weeks ago                         blissful_greider
 ```
@@ -191,7 +191,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "f49bb27fb4df4d77d274dd58291c15355bb0118892a91f1ca8b4597d659f1ec6"
+## [1] "c1d9cdf5d4db74ec5f5764cea3d66621711dc86880df476c3617be23024a2787"
 ```
 
 Peek inside the docker container and list the files in the `petdir`
@@ -235,7 +235,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                   PORTS                    NAMES
-## f49bb27fb4df        postgres:10         "docker-entrypoint.s…"   4 seconds ago       Up 3 seconds             0.0.0.0:5432->5432/tcp   sql-pet
+## c1d9cdf5d4db        postgres:10         "docker-entrypoint.s…"   4 seconds ago       Up 3 seconds             0.0.0.0:5432->5432/tcp   sql-pet
 ## 4d1200a07f20        fedora:29           "/bin/bash"              13 days ago         Exited (0) 13 days ago                            f29
 ## 81a5fdbd6042        rocker/geospatial   "/init"                  2 weeks ago         Exited (0) 2 weeks ago                            blissful_greider
 ```
@@ -370,7 +370,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## f49bb27fb4df        postgres:10         "docker-entrypoint.s…"   16 seconds ago      Exited (0) Less than a second ago                       sql-pet
+## c1d9cdf5d4db        postgres:10         "docker-entrypoint.s…"   16 seconds ago      Exited (0) Less than a second ago                       sql-pet
 ## 4d1200a07f20        fedora:29           "/bin/bash"              13 days ago         Exited (0) 13 days ago                                  f29
 ## 81a5fdbd6042        rocker/geospatial   "/init"                  2 weeks ago         Exited (0) 2 weeks ago                                  blissful_greider
 ```
