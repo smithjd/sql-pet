@@ -9,7 +9,7 @@
   <meta name="description" content="An introduction to Docker and postgreSQL for R users to simulate use cases behind corporate walls.">
   <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
-  <meta property="og:title" content="Chapter 6 Connecting Docker, Postgres, and R (04) | R, Databases and Docker />
+  <meta property="og:title" content="Chapter 6 Connecting Docker, Postgres, and R (04) | R, Databases and Docker" />
   <meta property="og:type" content="book" />
   
   
@@ -17,7 +17,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 6 Connecting Docker, Postgres, and R (04) | R, Databases and Docker />
+  <meta name="twitter:title" content="Chapter 6 Connecting Docker, Postgres, and R (04) | R, Databases and Docker" />
   
   <meta name="twitter:description" content="An introduction to Docker and postgreSQL for R users to simulate use cases behind corporate walls." />
   
@@ -79,7 +79,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -440,6 +440,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="H.3.5" data-path="postgresql-authentication-96c.html"><a href="postgresql-authentication-96c.html#remove-the-container"><i class="fa fa-check"></i><b>H.3.5</b> Remove the container</a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="I" data-path="docker-concepts-96d.html"><a href="docker-concepts-96d.html"><i class="fa fa-check"></i><b>I</b> Docker Concepts (96d)</a><ul>
+<li class="chapter" data-level="I.1" data-path="docker-concepts-96d.html"><a href="docker-concepts-96d.html#introduction-2"><i class="fa fa-check"></i><b>I.1</b> Introduction</a></li>
+<li class="chapter" data-level="I.2" data-path="docker-concepts-96d.html"><a href="docker-concepts-96d.html#virtual-machines-and-hypervisors"><i class="fa fa-check"></i><b>I.2</b> Virtual machines and hypervisors</a></li>
+<li class="chapter" data-level="I.3" data-path="docker-concepts-96d.html"><a href="docker-concepts-96d.html#containers"><i class="fa fa-check"></i><b>I.3</b> Containers</a></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -504,7 +509,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_check_that_docker_is_up</span>()</code></pre>
 <pre><code>## [1] &quot;Docker is up, running these containers:&quot;                                                                                                       
 ## [2] &quot;CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES&quot;   
-## [3] &quot;133971c8f4ac        postgres:10         \&quot;docker-entrypoint.s…\&quot;   1 second ago        Up Less than a second   0.0.0.0:5432-&gt;5432/tcp   cattle&quot;</code></pre>
+## [3] &quot;1b427918bc08        postgres:10         \&quot;docker-entrypoint.s…\&quot;   1 second ago        Up Less than a second   0.0.0.0:5432-&gt;5432/tcp   cattle&quot;</code></pre>
 </div>
 <div id="connect-read-and-write-to-postgres-from-r" class="section level2">
 <h2><span class="header-section-number">6.3</span> Connect, read and write to Postgres from R</h2>
@@ -535,8 +540,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre class="sourceCode r"><code class="sourceCode r">mtcars_df &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbReadTable</span>(con, <span class="st">&quot;mtcars&quot;</span>)</code></pre>
 <p>Show a few rows:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(mtcars_df))</code></pre>
-<div id="htmlwidget-1d9f9b9fdca3023baa83" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-1d9f9b9fdca3023baa83">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[21,21,22.8,21.4,18.7,18.1],[6,6,4,6,8,6],[160,160,108,258,360,225],[110,110,93,110,175,105],[3.9,3.9,3.85,3.08,3.15,2.76],[2.62,2.875,2.32,3.215,3.44,3.46],[16.46,17.02,18.61,19.44,17.02,20.22],[0,0,1,1,0,1],[1,1,1,0,0,0],[4,4,4,3,3,3],[4,4,1,1,2,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>mpg<\/th>\n      <th>cyl<\/th>\n      <th>disp<\/th>\n      <th>hp<\/th>\n      <th>drat<\/th>\n      <th>wt<\/th>\n      <th>qsec<\/th>\n      <th>vs<\/th>\n      <th>am<\/th>\n      <th>gear<\/th>\n      <th>carb<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6,7,8,9,10,11]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-aace47e9ddbad0c43eff" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-aace47e9ddbad0c43eff">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[21,21,22.8,21.4,18.7,18.1],[6,6,4,6,8,6],[160,160,108,258,360,225],[110,110,93,110,175,105],[3.9,3.9,3.85,3.08,3.15,2.76],[2.62,2.875,2.32,3.215,3.44,3.46],[16.46,17.02,18.61,19.44,17.02,20.22],[0,0,1,1,0,1],[1,1,1,0,0,0],[4,4,4,3,3,3],[4,4,1,1,2,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>mpg<\/th>\n      <th>cyl<\/th>\n      <th>disp<\/th>\n      <th>hp<\/th>\n      <th>drat<\/th>\n      <th>wt<\/th>\n      <th>qsec<\/th>\n      <th>vs<\/th>\n      <th>am<\/th>\n      <th>gear<\/th>\n      <th>carb<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6,7,8,9,10,11]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <div id="clean-up" class="section level2">
@@ -548,7 +553,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Tell Docker to <em>remove</em> the <code>cattle</code> container from it’s library of active containers:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_docker_remove_container</span>(<span class="st">&quot;cattle&quot;</span>)</code></pre>
 <pre><code>## [1] 0</code></pre>
-<p>If we just <strong>stop</strong> the Docker container but don’t remove it (as we did with the <code>sp_docker_remove_container(&quot;cattle&quot;)</code> command), the <code>cattle</code> container will persist and we can start it up again later with <code>sp_docker_start(&quot;cattle&quot;)</code>. In that case, <code>mtcars</code> would still be there and we could retrieve it from postgreSQL again. Since <code>sp_docker_remove_container(&quot;cattle&quot;)</code> has removed it, the updated database has been deleted. (There are enough copies of <code>mtcars</code> in the world, so no great loss.)</p>
+<p>If we just <strong>stop</strong> the Docker container but don’t remove it (as we did with the <code>sp_docker_remove_container("cattle")</code> command), the <code>cattle</code> container will persist and we can start it up again later with <code>sp_docker_start("cattle")</code>. In that case, <code>mtcars</code> would still be there and we could retrieve it from postgreSQL again. Since <code>sp_docker_remove_container("cattle")</code> has removed it, the updated database has been deleted. (There are enough copies of <code>mtcars</code> in the world, so no great loss.)</p>
 
 </div>
 </div>

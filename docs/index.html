@@ -79,7 +79,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -440,6 +440,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="H.3.5" data-path="postgresql-authentication-96c.html"><a href="postgresql-authentication-96c.html#remove-the-container"><i class="fa fa-check"></i><b>H.3.5</b> Remove the container</a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="I" data-path="docker-concepts-96d.html"><a href="docker-concepts-96d.html"><i class="fa fa-check"></i><b>I</b> Docker Concepts (96d)</a><ul>
+<li class="chapter" data-level="I.1" data-path="docker-concepts-96d.html"><a href="docker-concepts-96d.html#introduction-2"><i class="fa fa-check"></i><b>I.1</b> Introduction</a></li>
+<li class="chapter" data-level="I.2" data-path="docker-concepts-96d.html"><a href="docker-concepts-96d.html#virtual-machines-and-hypervisors"><i class="fa fa-check"></i><b>I.2</b> Virtual machines and hypervisors</a></li>
+<li class="chapter" data-level="I.3" data-path="docker-concepts-96d.html"><a href="docker-concepts-96d.html#containers"><i class="fa fa-check"></i><b>I.3</b> Containers</a></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -482,21 +487,22 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li><em>Data characteristics</em>
 <ul>
-<li>Large data stores in organizations kept in databases have specific access constraints and structural characteristics that can be challenging to an R user (<em>useR</em> in the jargon).</li>
+<li>Large data stores in organizations that are kept in SQL databases have specific access constraints and structural characteristics that can be challenging to an R user (<em>useR</em> in the jargon).</li>
 </ul></li>
 <li><em>Technology hurdles</em>
 <ul>
-<li>Handling large volumes of data and considering performance issues in a dbms environment require an understanding of what’s happening in “the back end.”</li>
-<li>The interfaces (passwords, packages, etc.) and gaps between R and a back end database are intentionally hidden from public view.</li>
-<li>Resources for diagnosing interface problem behind corporate walls may or may not address all the issues that R users face, so a <strong>simulated</strong> environment such as we offer her is very helpful.</li>
+<li>Handling large volumes of data and considering performance issues in a dbms environment require an understanding of what’s happening in “the back end” (which is often out of view).</li>
+<li>The interfaces (passwords, packages, etc.) and gaps between R and a back end database are hidden from public view as a matter of security.</li>
+<li>Resources for diagnosing interface problem behind corporate walls may or may not address all the issues that R users face, so a <strong>simulated</strong> environment such as we offer here is can be an important learning resources.</li>
 </ul></li>
 <li><em>Use cases</em>
 <ul>
-<li>R users frequently need to make sense of complex data structures and coding schemes to address incompletely formed questions so that exploratory data analysis has to be fast.</li>
-<li>Exploratory and diagnostic techniques for the purpose should not be reinvented and can benefit from more public instruction or discussion.</li>
+<li>R users frequently need to make sense of complex data structures and coding schemes to address incompletely formed questions: therefore informal exploratory data analysis has to be intuitive and fast. The technology details should not get in the way.</li>
+<li>Sharing and discussing exploratory and diagnostic techniques of exploration and retrieval is best in public but is constrained by organizational requirements.</li>
 <li>Data documentation is often incomplete and emphasizes operational characteristics rather than analytic ones. A careful useR often needs to confirm the documentation on the fly and de-normalize data carefully.</li>
 </ul></li>
 </ul>
+<p>We have found that postgreSQL in a Docker container solves many of the foregoing problems.</p>
 </div>
 <div id="docker-as-a-tool-for-users" class="section level2">
 <h2><span class="header-section-number">1.2</span> Docker as a tool for UseRs</h2>
@@ -510,10 +516,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>This book explores #2 because it allows us to work on the database access issues described above and to practice on an industrial-scale DBMS.</p>
 <ul>
 <li>Docker is a comparatively easy way to simulate the relationship between an R/RStudio session and a database – all on on your machine (provided you have Docker installed and running).</li>
-<li>Running PostgreSQL on a Docker container avoids OS or system dependencies or conflicts that might come up.</li>
+<li>Running PostgreSQL on a Docker container avoids OS or system dependencies or conflicts that cause confusion and limit reproducibility.</li>
 <li>A Docker environment consumes relatively few resources. Our sandbox does much less but only includes postgreSQL and sample data, so it takes up about 5% of the space taken up by the Vagrant environment that inspired this project. <span class="citation">(Makubuya <a href="#ref-Makubuya2018">2018</a>)</span></li>
-<li>A simple Docker container such as the one used in our sandbox is easy to use.</li>
-<li>Docker is a widely used technology for deploying applications in the cloud, so worth for many useRs it’s worth mastering.</li>
+<li>A simple Docker container such as the one used in our sandbox is easy to use and could be extended for other uses.</li>
+<li>Docker is a widely used technology for deploying applications in the cloud, so for many useRs it’s worth mastering.</li>
 </ul>
 </div>
 <div id="docker-and-r-on-your-machine" class="section level2">
@@ -523,7 +529,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <img src="screenshots/environment_overview.png" alt="R and Docker" />
 <p class="caption">R and Docker</p>
 </div>
-<p>(There is more details about the sandbox environment in the chapter on <a href="your-local-environment.html#sandbox-environment">mapping your environment</a>.</p>
+<p>You run R from RStudio to set up Docker, run postgreSQL inside it and then send queries directly to postgreSQL from R. (We provide more details about our sandbox environment in the chapter on <a href="your-local-environment.html#sandbox-environment">mapping your environment</a>.</p>
 </div>
 <div id="who-are-we" class="section level2">
 <h2><span class="header-section-number">1.4</span> Who are we?</h2>

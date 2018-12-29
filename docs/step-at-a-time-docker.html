@@ -9,7 +9,7 @@
   <meta name="description" content="An introduction to Docker and postgreSQL for R users to simulate use cases behind corporate walls.">
   <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
-  <meta property="og:title" content="C Creating the sql-pet Docker container one step at a time (93) | R, Databases and Docker />
+  <meta property="og:title" content="C Creating the sql-pet Docker container one step at a time (93) | R, Databases and Docker" />
   <meta property="og:type" content="book" />
   
   
@@ -17,7 +17,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="C Creating the sql-pet Docker container one step at a time (93) | R, Databases and Docker />
+  <meta name="twitter:title" content="C Creating the sql-pet Docker container one step at a time (93) | R, Databases and Docker" />
   
   <meta name="twitter:description" content="An introduction to Docker and postgreSQL for R users to simulate use cases behind corporate walls." />
   
@@ -79,7 +79,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -440,6 +440,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="H.3.5" data-path="postgresql-authentication-96c.html"><a href="postgresql-authentication-96c.html#remove-the-container"><i class="fa fa-check"></i><b>H.3.5</b> Remove the container</a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="I" data-path="docker-concepts-96d.html"><a href="docker-concepts-96d.html"><i class="fa fa-check"></i><b>I</b> Docker Concepts (96d)</a><ul>
+<li class="chapter" data-level="I.1" data-path="docker-concepts-96d.html"><a href="docker-concepts-96d.html#introduction-2"><i class="fa fa-check"></i><b>I.1</b> Introduction</a></li>
+<li class="chapter" data-level="I.2" data-path="docker-concepts-96d.html"><a href="docker-concepts-96d.html#virtual-machines-and-hypervisors"><i class="fa fa-check"></i><b>I.2</b> Virtual machines and hypervisors</a></li>
+<li class="chapter" data-level="I.3" data-path="docker-concepts-96d.html"><a href="docker-concepts-96d.html#containers"><i class="fa fa-check"></i><b>I.3</b> Containers</a></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -481,12 +486,12 @@ PostgreSQL database works. If you are satisfied with the method shown in
 Chapter 5, skip this and only come back if you’re interested in picking
 apart the steps.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)</code></pre>
-<pre><code>## ── Attaching packages ─────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
+<pre><code>## ── Attaching packages ───────────────────────────── tidyverse 1.2.1 ──</code></pre>
 <pre><code>## ✔ ggplot2 3.1.0     ✔ purrr   0.2.5
 ## ✔ tibble  1.4.2     ✔ dplyr   0.7.8
 ## ✔ tidyr   0.8.2     ✔ stringr 1.3.1
-## ✔ readr   1.3.0     ✔ forcats 0.3.0</code></pre>
-<pre><code>## ── Conflicts ────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## ✔ readr   1.3.1     ✔ forcats 0.3.0</code></pre>
+<pre><code>## ── Conflicts ──────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(DBI)
@@ -507,7 +512,7 @@ apart the steps.</p>
 ##     ident, sql</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(sqlpetr)
 <span class="kw">library</span>(here)</code></pre>
-<pre><code>## here() starts at /Users/jds/Documents/Library/R/r-system/sql-pet</code></pre>
+<pre><code>## here() starts at /home/znmeb/Projects/sql-pet</code></pre>
 </div>
 <div id="download-the-dvdrental-backup-file" class="section level2">
 <h2><span class="header-section-number">C.2</span> Download the <code>dvdrental</code> backup file</h2>
@@ -525,8 +530,10 @@ apart the steps.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dir</span>(<span class="dt">path =</span> <span class="kw">here</span>(), <span class="dt">pattern =</span> <span class="st">&quot;^dvdrental(.tar|.zip)&quot;</span>)</code></pre>
 <pre><code>## [1] &quot;dvdrental.tar&quot; &quot;dvdrental.zip&quot;</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_show_all_docker_containers</span>()</code></pre>
-<pre><code>## CONTAINER ID        IMAGE                COMMAND                  CREATED              STATUS                      PORTS               NAMES
-## ad7e5f46377b        postgres-dvdrental   &quot;docker-entrypoint.s…&quot;   About a minute ago   Exited (0) 12 seconds ago                       sql-pet</code></pre>
+<pre><code>## CONTAINER ID        IMAGE                COMMAND                  CREATED              STATUS                     PORTS               NAMES
+## 8a331ee9e822        postgres-dvdrental   &quot;docker-entrypoint.s…&quot;   About a minute ago   Exited (0) 4 seconds ago                       sql-pet
+## 4d1200a07f20        fedora:29            &quot;/bin/bash&quot;              13 days ago          Exited (0) 13 days ago                         f29
+## 81a5fdbd6042        rocker/geospatial    &quot;/init&quot;                  2 weeks ago          Exited (0) 2 weeks ago                         blissful_greider</code></pre>
 <p>Remove the <code>sql-pet</code> container if it exists (e.g., from a prior run)</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span> (<span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, <span class="st">&quot;ps -a&quot;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span>
 <span class="st">    </span><span class="kw">grepl</span>(<span class="dt">x =</span> ., <span class="dt">pattern =</span> <span class="st">&#39;sql-pet&#39;</span>) <span class="op">%&gt;%</span>
@@ -542,7 +549,7 @@ Docker directories that need to be shared. Expose the standard
 PostgreSQL port 5432.</p>
 <pre class="sourceCode r"><code class="sourceCode r">wd &lt;-<span class="st"> </span><span class="kw">here</span>()
 wd</code></pre>
-<pre><code>## [1] &quot;/Users/jds/Documents/Library/R/r-system/sql-pet&quot;</code></pre>
+<pre><code>## [1] &quot;/home/znmeb/Projects/sql-pet&quot;</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r">docker_cmd &lt;-<span class="st"> </span><span class="kw">glue</span>(
   <span class="st">&quot;run &quot;</span>,      <span class="co"># Run is the Docker command.  Everything that follows are `run` parameters.</span>
   <span class="st">&quot;--detach &quot;</span>, <span class="co"># (or `-d`) tells Docker to disconnect from the terminal / program issuing the command</span>
@@ -554,9 +561,9 @@ wd</code></pre>
 )
 
 docker_cmd</code></pre>
-<pre><code>## run --detach  --name sql-pet --publish 5432:5432 --mount type=bind,source=&quot;/Users/jds/Documents/Library/R/r-system/sql-pet&quot;,target=/petdir postgres:10</code></pre>
+<pre><code>## run --detach  --name sql-pet --publish 5432:5432 --mount type=bind,source=&quot;/home/znmeb/Projects/sql-pet&quot;,target=/petdir postgres:10</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, docker_cmd, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</code></pre>
-<pre><code>## [1] &quot;42878f70ed269de2168102d8227efc93dd349bfac008bccca162c0bfa105b4e8&quot;</code></pre>
+<pre><code>## [1] &quot;f49bb27fb4df4d77d274dd58291c15355bb0118892a91f1ca8b4597d659f1ec6&quot;</code></pre>
 <p>Peek inside the docker container and list the files in the <code>petdir</code>
 directory. Notice that <code>dvdrental.tar</code> is in both.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="co"># local file system:</span>
@@ -574,8 +581,10 @@ directory. Notice that <code>dvdrental.tar</code> is in both.</p>
 command. In this case we tell Docker to execute the <code>psql</code> program
 inside the <code>sql-pet</code> container and pass it some commands as follows.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_show_all_docker_containers</span>()</code></pre>
-<pre><code>## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES
-## 42878f70ed26        postgres:10         &quot;docker-entrypoint.s…&quot;   4 seconds ago       Up 3 seconds        0.0.0.0:5432-&gt;5432/tcp   sql-pet</code></pre>
+<pre><code>## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                   PORTS                    NAMES
+## f49bb27fb4df        postgres:10         &quot;docker-entrypoint.s…&quot;   4 seconds ago       Up 3 seconds             0.0.0.0:5432-&gt;5432/tcp   sql-pet
+## 4d1200a07f20        fedora:29           &quot;/bin/bash&quot;              13 days ago         Exited (0) 13 days ago                            f29
+## 81a5fdbd6042        rocker/geospatial   &quot;/init&quot;                  2 weeks ago         Exited (0) 2 weeks ago                            blissful_greider</code></pre>
 <p>inside Docker, execute the postgress SQL command-line program to create the dvdrental database:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system2</span>(<span class="st">&#39;docker&#39;</span>, <span class="st">&#39;exec sql-pet psql -U postgres -c &quot;CREATE DATABASE dvdrental;&quot;&#39;</span>,
         <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</code></pre>
@@ -646,7 +655,9 @@ started again.</p>
 <p>show that the container still exists even though it’s not running</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_show_all_docker_containers</span>()</code></pre>
 <pre><code>## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## 42878f70ed26        postgres:10         &quot;docker-entrypoint.s…&quot;   15 seconds ago      Exited (0) Less than a second ago                       sql-pet</code></pre>
+## f49bb27fb4df        postgres:10         &quot;docker-entrypoint.s…&quot;   16 seconds ago      Exited (0) Less than a second ago                       sql-pet
+## 4d1200a07f20        fedora:29           &quot;/bin/bash&quot;              13 days ago         Exited (0) 13 days ago                                  f29
+## 81a5fdbd6042        rocker/geospatial   &quot;/init&quot;                  2 weeks ago         Exited (0) 2 weeks ago                                  blissful_greider</code></pre>
 <p>We are leaving the <code>sql-pet</code> container intact so it can be used in running the
 rest of the examples and book.</p>
 <p>Clean up by removing the local files used in creating the database:</p>

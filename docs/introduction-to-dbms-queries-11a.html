@@ -9,7 +9,7 @@
   <meta name="description" content="An introduction to Docker and postgreSQL for R users to simulate use cases behind corporate walls.">
   <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
-  <meta property="og:title" content="Chapter 10 Introduction to DBMS queries (11a) | R, Databases and Docker />
+  <meta property="og:title" content="Chapter 10 Introduction to DBMS queries (11a) | R, Databases and Docker" />
   <meta property="og:type" content="book" />
   
   
@@ -17,7 +17,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 10 Introduction to DBMS queries (11a) | R, Databases and Docker />
+  <meta name="twitter:title" content="Chapter 10 Introduction to DBMS queries (11a) | R, Databases and Docker" />
   
   <meta name="twitter:description" content="An introduction to Docker and postgreSQL for R users to simulate use cases behind corporate walls." />
   
@@ -79,7 +79,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -440,6 +440,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="H.3.5" data-path="postgresql-authentication-96c.html"><a href="postgresql-authentication-96c.html#remove-the-container"><i class="fa fa-check"></i><b>H.3.5</b> Remove the container</a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="I" data-path="docker-concepts-96d.html"><a href="docker-concepts-96d.html"><i class="fa fa-check"></i><b>I</b> Docker Concepts (96d)</a><ul>
+<li class="chapter" data-level="I.1" data-path="docker-concepts-96d.html"><a href="docker-concepts-96d.html#introduction-2"><i class="fa fa-check"></i><b>I.1</b> Introduction</a></li>
+<li class="chapter" data-level="I.2" data-path="docker-concepts-96d.html"><a href="docker-concepts-96d.html#virtual-machines-and-hypervisors"><i class="fa fa-check"></i><b>I.2</b> Virtual machines and hypervisors</a></li>
+<li class="chapter" data-level="I.3" data-path="docker-concepts-96d.html"><a href="docker-concepts-96d.html#containers"><i class="fa fa-check"></i><b>I.3</b> Containers</a></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -516,7 +521,7 @@ tables</code></pre>
 </div>
 <div id="listing-all-the-fields-for-all-the-tables" class="section level3">
 <h3><span class="header-section-number">10.1.2</span> Listing all the fields for all the tables</h3>
-<p>The first example, <code>DBI::dbListTables(con)</code> returned 22 tables and the second example, <code>DBI::dbListFields(con, &quot;rental&quot;)</code> returns 7 fields. Here we combine the two calls to return a list of tables which has a list of all the fields in the table. The code block just shows the first two tables.</p>
+<p>The first example, <code>DBI::dbListTables(con)</code> returned 22 tables and the second example, <code>DBI::dbListFields(con, "rental")</code> returns 7 fields. Here we combine the two calls to return a list of tables which has a list of all the fields in the table. The code block just shows the first two tables.</p>
 <pre class="sourceCode r"><code class="sourceCode r">table_columns &lt;-<span class="st"> </span><span class="kw">lapply</span>(tables, dbListFields, <span class="dt">conn =</span> con)
 
 <span class="co"># or using purr:</span>
@@ -593,26 +598,26 @@ table_columns &lt;-<span class="st"> </span><span class="kw">map</span>(tables, 
 
 one_percent_sample</code></pre>
 <pre><code>##    rental_id         rental_date inventory_id customer_id
-## 1        324 2005-05-27 01:00:04         3364         292
-## 2        325 2005-05-27 01:09:55         2510         449
-## 3        326 2005-05-27 01:10:11         3979         432
-## 4        327 2005-05-27 01:18:57         2678         105
-## 5        328 2005-05-27 01:29:31         2524         451
-## 6        329 2005-05-27 01:57:14         2659         231
-## 7        330 2005-05-27 02:15:30         1536         248
-## 8        331 2005-05-27 02:22:26         1872          67
-## 9        332 2005-05-27 02:27:10         1529         299
-## 10       333 2005-05-27 02:52:21         4001         412
-## 11       334 2005-05-27 03:03:07         3973         194
-## 12       335 2005-05-27 03:07:10         1411          16
-## 13       336 2005-05-27 03:15:23         1811         275
-## 14       337 2005-05-27 03:22:30          751          19
-## 15       338 2005-05-27 03:42:52         2596         165
-## 16       339 2005-05-27 03:47:18         2410         516
-## 17       340 2005-05-27 03:55:25          946         209
-## 18       341 2005-05-27 04:01:42         4168          56
-## 19       342 2005-05-27 04:11:04         4019         539
-## 20       343 2005-05-27 04:13:41         3301         455</code></pre>
+## 1       9529 2005-07-31 01:05:26          816         123
+## 2       9530 2005-07-31 01:09:06         1718         148
+## 3       9531 2005-07-31 01:11:53         4550         268
+## 4       9532 2005-07-31 01:16:51         1309         488
+## 5       9533 2005-07-31 01:18:10         4156         522
+## 6       9534 2005-07-31 01:18:27         4457         519
+## 7       9535 2005-07-31 01:18:53         2413         485
+## 8       9536 2005-07-31 01:19:02         2547         310
+## 9       9537 2005-07-31 01:23:00          546         488
+## 10      9538 2005-07-31 01:25:22         3402          68
+## 11      9539 2005-07-31 01:36:19         3793         436
+## 12      9540 2005-07-31 01:40:06         2200         365
+## 13      9541 2005-07-31 01:40:14         1774         422
+## 14      9542 2005-07-31 01:41:48         2243         595
+## 15      9543 2005-07-31 01:43:34          956         369
+## 16      9544 2005-07-31 01:44:51         2383          28
+## 17      9545 2005-07-31 01:46:24         3451         594
+## 18      9546 2005-07-31 01:47:40          211          63
+## 19      9547 2005-07-31 01:52:34         2414         440
+## 20      9548 2005-07-31 01:54:19         3038         576</code></pre>
 <p>Exact sample of 100 records. This technique depends on knowing the range of a record index, such as the <code>rental_id</code> in the <code>rental</code> table of out <code>dvdrental</code> database.</p>
 <p>Start by finding the min and max values.</p>
 <pre class="sourceCode r"><code class="sourceCode r">DBI<span class="op">::</span><span class="kw">dbListFields</span>(con, <span class="st">&quot;rental&quot;</span>)</code></pre>
@@ -731,8 +736,8 @@ rental_table &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <spa
 ## 2        1 8040</code></pre>
 <p>&lt;&lt;smy We haven’t investigated this, but it looks like <code>dplyr</code> collect() function triggers a call simmilar to the dbGetQuery call above. The default <code>dplyr</code> behavior looks like dbSendQuery() and dbFetch() model is used.&gt;&gt;</p>
 <p>When you create a report to run repeatedly, you might want to put that query into R markdown. That way you can also execute that SQL code in a chunk with the following header:</p>
-<p>{<code>sql, connection=con, output.var = &quot;query_results&quot;</code>}</p>
-<pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> <span class="ot">&quot;staff_id&quot;</span>, <span class="fu">COUNT</span>(*) <span class="kw">AS</span> <span class="ot">&quot;n&quot;</span>
+<p>{<code>sql, connection=con, output.var = "query_results"</code>}</p>
+<pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> <span class="ot">&quot;staff_id&quot;</span>, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> <span class="ot">&quot;n&quot;</span>
 <span class="kw">FROM</span> <span class="ot">&quot;rental&quot;</span>
 <span class="kw">GROUP</span> <span class="kw">BY</span> <span class="ot">&quot;staff_id&quot;</span>;</code></pre>
 <p>Rmarkdown stores that query result in a tibble which can be printed by referring to it:</p>
@@ -829,7 +834,7 @@ rental_table &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <spa
 ##  n obs: 16044 
 ##  n variables: 7 
 ## 
-## ── Variable type:integer ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+## ── Variable type:integer ─────────────────────────────────────────────
 ##      variable missing complete     n    mean      sd p0     p25    p50
 ##   customer_id       0    16044 16044  297.14  172.45  1  148     296  
 ##  inventory_id       0    16044 16044 2291.84 1322.21  1 1154    2291  
@@ -841,7 +846,7 @@ rental_table &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <spa
 ##  12037.25 16049 ▇▇▇▇▇▇▇▇
 ##      2        2 ▇▁▁▁▁▁▁▇
 ## 
-## ── Variable type:POSIXct ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+## ── Variable type:POSIXct ─────────────────────────────────────────────
 ##     variable missing complete     n        min        max     median
 ##  last_update       0    16044 16044 2006-02-15 2006-02-23 2006-02-16
 ##  rental_date       0    16044 16044 2005-05-24 2006-02-14 2005-07-28
@@ -874,7 +879,7 @@ rental_table &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <spa
 <p>Wickham, Hadley. 2018. “A Grammar of Data Manipulation • Dplyr.” <a href=""></a>. <a href="https://dplyr.tidyverse.org/">https://dplyr.tidyverse.org/</a>.</p>
 </div>
 <div id="ref-Baumer2018">
-<p>Baumer, Benjamin S. 2018. “A Grammar for Reproducible and Painless Extract-Transform-Load Operations on Medium Data.” <em>Journal of Computational and Graphical Statistics</em>, August. Informa UK Limited, 1–9. <a href="https://doi.org/10.1080/10618600.2018.1512867">https://doi.org/10.1080/10618600.2018.1512867</a>.</p>
+<p>Baumer, Benjamin S. 2018. “A Grammar for Reproducible and Painless Extract-Transform-Load Operations on Medium Data.” <em>Journal of Computational and Graphical Statistics</em>, August, 1–9. <a href="https://doi.org/10.1080/10618600.2018.1512867">https://doi.org/10.1080/10618600.2018.1512867</a>.</p>
 </div>
 </div>
             </section>
