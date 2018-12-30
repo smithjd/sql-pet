@@ -106,7 +106,7 @@ For this tutorial, the most important thing to know about 3NF is that the data y
 1.  find the many many different tables that contains your data.   
 2.  Understand the relationships that tie the tables together correctly to ensure that data is not dropped or duplicated.  Data that is dropped or duplicated can either over or understate your aggregated numeric values.  
 
-![hospital-billing-erd](ERD_Hospital_Billing_System.png)
+![hospital-billing-erd](screenshots/ERD_Hospital_Billing_System.PNG)
 
 https://www.smartdraw.com/entity-relationship-diagram/examples/hospital-billing-entity-relationship-diagram/
 
@@ -301,8 +301,8 @@ Table: (\#tab:unnamed-chunk-9)Adding Meta Data Columns
 
 showing           store_id   manager_staff_id   address_id  last_update           db          user       dtts                
 ---------------  ---------  -----------------  -----------  --------------------  ----------  ---------  --------------------
-derived column           1                  1            1  2006-02-15 09:57:12   dvdrental   postgres   2018/12/29 01:40:32 
-derived column           2                  2            2  2006-02-15 09:57:12   dvdrental   postgres   2018/12/29 01:40:32 
+derived column           1                  1            1  2006-02-15 09:57:12   dvdrental   postgres   2018/12/30 00:45:16 
+derived column           2                  2            2  2006-02-15 09:57:12   dvdrental   postgres   2018/12/30 00:45:16 
  
     All the previous examples easily fit on a single line.  This one is longer.  Each column is entered on its own line, indented past the select keyword, and preceeded by a comma.  
     
@@ -577,12 +577,12 @@ Operator | Description | example
 =	|Checks if the values of two operands are equal or not, if yes then condition becomes true.	|(a = b) is not true.
 != |	Checks if the values of two operands are equal or not, if values are not equal then condition becomes true.	| (a != b) is true.
 <>	|Checks if the values of two operands are equal or not, if values are not equal then condition becomes true.	| (a <> b) is true.
-> |	Checks if the value of left operand is greater than the value of right operand, if yes then condition becomes true.	|(a > b) is not true.
+`>` |	Checks if the value of left operand is greater than the value of right operand, if yes then condition becomes true.	|(a > b) is not true.
 <	| Checks if the value of left operand is less than the value of right operand, if yes then condition becomes true.	| (a < b) is true.
->=|	Checks if the value of left operand is greater than or equal to the value of right operand, if yes then condition becomes true.	|(a >= b) is not true.
-<=|	Checks if the value of left operand is less than or equal to the value of right operand, if yes then condition becomes true.	|(a <= b) is true.
-!<|	Checks if the value of left operand is not less than the value of right operand, if yes then condition becomes true.	|(a !< b) is false.
-!>|	Checks if the value of left operand is not greater than the value of right operand, if yes then condition becomes true.	|(a !> b) is true.
+`>=` |	Checks if the value of left operand is greater than or equal to the value of right operand, if yes then condition becomes true.	|(a >= b) is not true.
+<= |	Checks if the value of left operand is less than or equal to the value of right operand, if yes then condition becomes true.	|(a <= b) is true.
+!< |	Checks if the value of left operand is not less than the value of right operand, if yes then condition becomes true.	|(a !< b) is false.
+!> |	Checks if the value of left operand is not greater than the value of right operand, if yes then condition becomes true.	|(a !> b) is true.
 
 Operator|Description
 --------|------------------------------------------------------------------------------------------
