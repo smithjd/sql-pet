@@ -84,9 +84,6 @@ kable(table_list)
 |address                    |
 |film_actor                 |
 |customer                   |
-|smy_film                   |
-|results_of_query           |
-|results_of_analysis        |
 ### Digging into the `information_schema`
 
 We usually need more detail than just a list of tables. Most SQL databases have an `information_schema` that has a standard structure to describe and control the database.
@@ -96,7 +93,7 @@ The `information_schema` is in a different schema from the default, so to connec
 ```r
 table_info_schema_table <- tbl(con, dbplyr::in_schema("information_schema", "tables"))
 ```
-The `information_schema` is large and complex and contains 213 tables.  So it's easy to get lost in it.
+The `information_schema` is large and complex and contains 210 tables.  So it's easy to get lost in it.
 
 This query retrieves a list of the tables in the database that includes additional detail, not just the name of the table.
 
@@ -127,9 +124,6 @@ dvdrental       public         inventory                    BASE TABLE
 dvdrental       public         language                     BASE TABLE 
 dvdrental       public         payment                      BASE TABLE 
 dvdrental       public         rental                       BASE TABLE 
-dvdrental       public         results_of_analysis          BASE TABLE 
-dvdrental       public         results_of_query             BASE TABLE 
-dvdrental       public         smy_film                     BASE TABLE 
 dvdrental       public         staff                        BASE TABLE 
 dvdrental       public         store                        BASE TABLE 
 dvdrental       public         actor_info                   VIEW       
@@ -174,9 +168,6 @@ dvdrental       public         inventory                    BASE TABLE
 dvdrental       public         language                     BASE TABLE 
 dvdrental       public         payment                      BASE TABLE 
 dvdrental       public         rental                       BASE TABLE 
-dvdrental       public         results_of_analysis          BASE TABLE 
-dvdrental       public         results_of_query             BASE TABLE 
-dvdrental       public         smy_film                     BASE TABLE 
 dvdrental       public         staff                        BASE TABLE 
 dvdrental       public         store                        BASE TABLE 
 dvdrental       public         actor_info                   VIEW       
@@ -206,7 +197,7 @@ But the `information_schema` has a lot more useful information that we can use.
 columns_info_schema_table <- tbl(con, dbplyr::in_schema("information_schema", "columns"))
 ```
 
-Since the `information_schema` contains 1874 columns, we are narrowing our focus to just one table.  This query retrieves more information about the `rental` table:
+Since the `information_schema` contains 1855 columns, we are narrowing our focus to just one table.  This query retrieves more information about the `rental` table:
 
 ```r
 columns_info_schema_info <- columns_info_schema_table %>%
@@ -356,7 +347,6 @@ public_tables %>%
 table_name                     n
 ---------------------------  ---
 film                          13
-smy_film                      13
 staff                         11
 customer                      10
 customer_list                  9
@@ -370,6 +360,7 @@ actor                          4
 actor_info                     4
 city                           4
 inventory                      4
+store                          4
 
 How many *column names* are shared across tables (or duplicated)?
 
@@ -378,20 +369,20 @@ public_tables %>% count(column_name, sort = TRUE) %>% filter(n > 1)
 ```
 
 ```
-## # A tibble: 42 x 2
+## # A tibble: 34 x 2
 ##    column_name     n
 ##    <chr>       <int>
-##  1 last_update    15
-##  2 store_id        6
-##  3 film_id         5
-##  4 address_id      4
-##  5 description     4
-##  6 first_name      4
-##  7 last_name       4
-##  8 length          4
-##  9 name            4
-## 10 rating          4
-## # ... with 32 more rows
+##  1 last_update    14
+##  2 address_id      4
+##  3 film_id         4
+##  4 first_name      4
+##  5 last_name       4
+##  6 name            4
+##  7 store_id        4
+##  8 actor_id        3
+##  9 address         3
+## 10 category        3
+## # ... with 24 more rows
 ```
 
 How many column names are unique?
@@ -404,7 +395,7 @@ public_tables %>% count(column_name) %>% filter(n == 1) %>% count()
 ## # A tibble: 1 x 1
 ##      nn
 ##   <int>
-## 1    18
+## 1    24
 ```
 
 ## Database keys
@@ -429,7 +420,7 @@ glimpse(rs)
 ```
 
 ```
-## Observations: 61,842
+## Observations: 61,215
 ## Variables: 3
 ## $ table_name <chr> "dvdrental.information_schema.administrable_role_au...
 ## $ conname    <chr> "actor_pkey", "actor_pkey", "actor_pkey", "country_...
