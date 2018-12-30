@@ -600,7 +600,7 @@ languages_loj <- language_table %>%
   summarize(lojs = n()) %>%
   select(join_type, language_id, film_lang_id, name, lojs)
 print(languages_loj)
-View(languages_loj)
+# View(languages_loj)  # 'View' causes problems with building the book.  Please comment out after using
 sp_print_df(languages_loj)
 ```
 
@@ -1289,12 +1289,14 @@ not_rented <- dbGetQuery(con,
 
 sp_print_df(not_rented)
 
-View(dbGetQuery(con,"select min(last_update) mn, max(last_update) mx from inventory;"))
+# 'View' causes problems with building the book.  Please comment out after using it interactively:
 
-View(dbGetQuery(con,"select rental_date,count(*) 
-                       from rental
-                     group by rental_date
-                     order by rental_date;"))
+# View(dbGetQuery(con,"select min(last_update) mn, max(last_update) mx from inventory;"))
+
+# View(dbGetQuery(con,"select rental_date,count(*) 
+#                        from rental
+#                      group by rental_date
+#                      order by rental_date;"))
 ```
 
 ## Different strategies for interacting with the database
