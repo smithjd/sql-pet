@@ -1,13 +1,30 @@
 # Additional technical details for Windows users (95)
 
+> This chapter explains:
+> 
+> * How to setup your environment for Windows
+> * How to use Git and GitHub effectively on Windows
+
+Skip these instructions if your computer has either OSX or a Unix variant.
+
+## Hardware requirements
+You will need an Intel or AMD processor with 64-bit hardware and the hardware virtualization feature. Most machines you buy today will have that, but older ones may not. You will need to go into the BIOS / firmware and enable the virtualization feature. You will need at least 4 gigabytes of RAM!
+
+## Software requirements
+You will need Windows 7 64-bit or later. If you can afford it, I highly recommend upgrading to Windows 10 Pro.
+
+### Windows 7, 8, 8.1 and Windows 10 Home (64 bit)
+Install Docker Toolbox. The instructions are here: <https://docs.docker.com/toolbox/toolbox_install_windows/>. Make sure you try the test cases and they work!
+
+### Windows 10 Pro
+Install Docker for Windows *stable*. The instructions are here: <https://docs.docker.com/docker-for-windows/install/#start-docker-for-windows>. Again, make sure you try the test cases and they work.
+
 ## Docker for Windows settings
 
 ### Shared drives
 If you're going to mount host files into container file systems (as we do in the following chapters), you need to set up shared drives. Open the Docker settings dialog and select `Shared Drives`. Check the drives you want to share. In this screenshot, the `D:` drive is my 1 terabyte hard drive.
 
-```{r echo=FALSE, fig.align='center', out.width='90%'}
-knitr::include_graphics("screenshots/2018-08-26_15_16_51-Shared_Drives.png")
-```
+<img src="screenshots/2018-08-26_15_16_51-Shared_Drives.png" width="90%" style="display: block; margin: auto;" />
 
 ### Kubernetes
 Kubernetes is a container orchestration / cloud management package that's a major DevOps tool. It's heavily supported by Red Hat and Google, and as a result is becoming a required skill for DevOps.
@@ -16,9 +33,7 @@ However, it's overkill for this project at the moment. So you should make sure i
 
 Go to the `Kubernetes` dialog and make sure the `Enable Kubernetes` checkbox is cleared.
 
-```{r echo=FALSE, fig.align='center', out.width='90%'}
-knitr::include_graphics("screenshots/2018-08-26_15_26_22-Kubernetes.png")
-```
+<img src="screenshots/2018-08-26_15_26_22-Kubernetes.png" width="90%" style="display: block; margin: auto;" />
 
 ## Git, GitHub and line endings
 [Git](https://git-scm.com/) was originally developed for Linux - in fact, it was created by Linus Torvalds to manage hundreds of different versions of the Linux kernel on different machines all around the world. As usage has grown, Git has achieved a huge following and is the version control system used by most large open source projects, including this one.

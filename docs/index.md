@@ -2,7 +2,7 @@
 title: "R, Databases and Docker"
 author: John David Smith, Sophie Yang, M. Edward (Ed) 
   Borasky,  Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni
-date: "2018-12-28"
+date: "2018-12-29"
 bibliography: [book.bib, packages.bib]
 description: An introduction to Docker and postgreSQL for R users to simulate use cases behind corporate walls.
 documentclass: book
