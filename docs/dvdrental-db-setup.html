@@ -516,7 +516,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)
 
 <span class="kw">cat</span>(docker_messages, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</code></pre>
-<pre><code>## Sending build context to Docker daemon  49.16MB
+<pre><code>## Sending build context to Docker daemon  50.18MB
 
 
 ## Step 1/4 : FROM postgres:10
@@ -558,7 +558,7 @@ docker_cmd &lt;-<span class="st"> </span><span class="kw">glue</span>(
 )</code></pre>
 <p>If you are curious you can paste <code>docker_cmd</code> into a terminal window after the command ‘docker’:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, docker_cmd, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</code></pre>
-<pre><code>## [1] &quot;83bbf73ee0e2efb35e672cc8e009d23802df6c610d6b0744c23bd62471ac47a2&quot;</code></pre>
+<pre><code>## [1] &quot;1562b5180d4b419ebd2547bff8e3456e8fddd17b82f1a0405bb2e275f54294b3&quot;</code></pre>
 </div>
 <div id="connect-to-postgres-with-r" class="section level2">
 <h2><span class="header-section-number">6.6</span> Connect to Postgres with R</h2>
@@ -611,7 +611,7 @@ docker_cmd &lt;-<span class="st"> </span><span class="kw">glue</span>(
 <p>Show that the container still exists even though it’s not running</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_show_all_docker_containers</span>()</code></pre>
 <pre><code>## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## 83bbf73ee0e2        postgres-dvdrental   &quot;docker-entrypoint.s…&quot;   8 seconds ago       Exited (0) Less than a second ago                       sql-pet</code></pre>
+## 1562b5180d4b        postgres-dvdrental   &quot;docker-entrypoint.s…&quot;   7 seconds ago       Exited (0) Less than a second ago                       sql-pet</code></pre>
 <p>Next time, you can just use this command to start the container:</p>
 <blockquote>
 <p><code>sp_docker_start(&quot;sql-pet&quot;)</code></p>
