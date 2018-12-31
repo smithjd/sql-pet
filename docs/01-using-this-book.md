@@ -2,54 +2,30 @@
 
 > This chapter explains:
 > 
-> * The prerequisites for running the code in this book
-> * What R packages are used in the book
+> * Getting the code used in this book
+> * How you can contribute to the book project
 
 This book is full of examples that you can replicate on your computer. 
 
-## Prerequisites
-You will need:
-
-* A computer running 
-  + Windows (Windows 7 64-bit or later - Windows 10-Pro is recommended),
-  + MacOS, or
-  + Linux (any Linux distro that will run Docker Community Edition, R and RStudio will work)
-* Current versions of [R and RStudio](https://www.datacamp.com/community/tutorials/installing-R-windows-mac-ubuntu) [@Vargas2018) required.
-* Docker (instructions below)
-* Our companion package `sqlpetr` [@Borasky2018a] 
-
-The database we use is PostgreSQL 10, but you do not need to install it - it's installed via a Docker image. 
-
-In addition to the current version of R and RStudio, you will need current versions of the following packages:
-
-* `DBI` [@R-DBI]
-* `DiagrammeR` [@R-DiagrammeR]
-* `RPostgres` [@R-RPostgres]
-* `dbplyr` [@R-dbplyr]
-* `devtools` [@R-devtools]
-* `downloader` [@R-downloader]
-* `glue` [@R-glue]
-* `here` [@R-here]
-* `knitr` [@R-knitr]
-* `skimr` [@R-skimr]
-* `tidyverse` [@R-tidyverse]
-
-* `bookdown` [@R-bookdown] (for compiling the book, if you want to)
-
-## Installing Docker
-
-Install Docker.  Installation depends on your operating system:
-
-  + [On a Mac](https://docs.docker.com/docker-for-mac/install/) [@Docker2018c]
-  + [On UNIX flavors](https://docs.docker.com/install/#supported-platforms) [@Docker2018b]
-  + For Windows, [consider these issues and follow these instructions](https://smithjd.github.io/sql-pet/docker-hosting-for-windows.html).
-
-## Download the repo
+## Retrieve the code from GitHub
 
 The code to generate the book and the exercises it contains can be downloaded from [this repo](https://github.com/smithjd/sql-pet). 
 
 ## Read along, experiment as you go
 
-We have never been sure whether we're writing an expository book or a massive tutorial.  You may use it either way.
+We have never been sure whether we're writing an expository book or a massive tutorial.  You may use it either way.  The best way to learn the material we cover is to *experiment*.
 
-After the introductory chapters and the chapter that creates the persistent database ("The dvdrental database in Postgres in Docker (05)), you can jump around and each chapter stands on its own.
+After the introductory chapters and the chapter that [creates the persistent database](#dvdrental-db-setup), you can jump around and each chapter stands on its own.
+
+## Participating
+
+### Browsing the book
+If you just want to read the book and copy / paste code into your working environment, simply browse to <https://smithjd.github.io/sql-pet>. If you get stuck, or find things aren't working, open an issue at <https://github.com/smithjd/sql-pet/issues/new/>.
+
+### Diving in
+If you want to experiment with the code in the book, run it in RStudio and interact with it, you'll need to do two more things:
+
+1. Install the `sqlpetr` R package [@Borasky2018a]. See <https://smithjd.github.io/sqlpetr> for the package documentation. Installation may take some time if it has to install or update packages not available on your computer.
+2. Clone the Git repository <https://github.com/smithjd/sql-pet.git> and open the project file `sql-pet.Rproj` in RStudio.
+
+Enjoy!

@@ -1,4 +1,4 @@
-# Additional technical details for Windows users (95)
+# Additional technical details for Windows users (95) {#windows-tech-details}
 
 > This chapter explains:
 > 
