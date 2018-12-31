@@ -94,22 +94,6 @@ dbListTables(con)
 ## [19] "film"                       "address"                   
 ## [21] "film_actor"                 "customer"
 ```
-<!--
-The following needs to be expanded and explained -- it doesn't stand on its own as written.
-### Alternative: put the database password in an environment file
-
-The goal is to put the password in an untracked file that will **not** be committed in your source code repository. Your code can reference the name of the variable, but the value of that variable will not appear in open text in your source code.
-
-We have chosen to call the file `dev_environment.csv` in the current working directory where you are executing this script. That file name appears in the `.gitignore` file, so that you will not accidentally commit it. We are going to create that file now.
-
-You will be prompted for the database password. By default, a PostgreSQL database defines a database user named `postgres`, whose password is `postgres`. If you have changed the password or created a new user with a different password, then enter those new values when prompted. Otherwise, enter `postgres` and `postgres` at the two prompts.
-
-In an interactive environment, you could execute a snippet of code that prompts the user for their username and password with the following snippet (which isn't run in the book):
-
-Your password is still in plain text in the file, `dev_environment.csv`, so you should protect that file from exposure. However, you do not need to worry about committing that file accidentally to your git repository, because the name of the file appears in the `.gitignore` file.
-
-For security, we use values from the `environment_variables` data.frame, rather than keeping the `username` and `password` in plain text in a source file.
--->
 
 ## Clean up
 

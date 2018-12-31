@@ -150,7 +150,7 @@ kable(rs1)
 
 db          current_date   current_timestamp     showing                  session_user   host          port
 ----------  -------------  --------------------  -----------------------  -------------  -----------  -----
-dvdrental   2018-12-29     2018-12-28 17:40:38   result set description   postgres       172.17.0.2    5432
+dvdrental   2018-12-31     2018-12-30 16:47:15   result set description   postgres       172.17.0.2    5432
 
 Since we will only be working in the `dvdrental` database in this tutorial and reduce the number of output columns shown, only the 'result set description' will be used. 
 
@@ -181,7 +181,7 @@ kable(rs1)
 showing      db          table_schema          tbl_vws
 -----------  ----------  -------------------  --------
 DB Schemas   dvdrental   pg_catalog                121
-DB Schemas   dvdrental   public                     25
+DB Schemas   dvdrental   public                     22
 DB Schemas   dvdrental   information_schema         67
 
 We see that there are three schemas.  The pg_catalog is the standard PostgreSQL meta data and core schema.  Postgres uses this schema to manage the internal workings of the database.  DBA's are the primary users of pg_catalog. We used the pg_catalog schema to answer the question 'How many databases reside in the Docker Container?', but normally the data analyst is not interested in analyzing database data.
@@ -206,7 +206,7 @@ kable(rs1)
 showing                     db          table_schema          tbl_vws
 --------------------------  ----------  -------------------  --------
 1. ORDER BY table_catalog   dvdrental   pg_catalog                121
-1. ORDER BY table_catalog   dvdrental   public                     25
+1. ORDER BY table_catalog   dvdrental   public                     22
 1. ORDER BY table_catalog   dvdrental   information_schema         67
 
 ```r
@@ -224,7 +224,7 @@ kable(rs2)
 showing                    db          table_schema          tbl_vws
 -------------------------  ----------  -------------------  --------
 2. ORDER BY tbl_vws desc   dvdrental   pg_catalog                121
-2. ORDER BY tbl_vws desc   dvdrental   public                     25
+2. ORDER BY tbl_vws desc   dvdrental   public                     22
 2. ORDER BY tbl_vws desc   dvdrental   information_schema         67
 
 
@@ -489,7 +489,7 @@ db          table_schema         table_type    tbls
 dvdrental   information_schema   BASE TABLE       7
 dvdrental   information_schema   VIEW            60
 dvdrental   pg_catalog           BASE TABLE      62
-dvdrental   public               BASE TABLE      18
+dvdrental   public               BASE TABLE      15
 dvdrental   public               VIEW             7
 dvdrental   pg_catalog           VIEW            59
 

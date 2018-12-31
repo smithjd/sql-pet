@@ -2,7 +2,7 @@
 title: "R, Databases and Docker"
 author: John David Smith, Sophie Yang, M. Edward (Ed) 
   Borasky,  Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni
-date: "2018-12-29"
+date: "2018-12-30"
 bibliography: [book.bib, packages.bib]
 description: An introduction to Docker and postgreSQL for R users to simulate use cases behind corporate walls.
 documentclass: book
@@ -15,24 +15,25 @@ site: bookdown::bookdown_site
 > This chapter introduces:
 > 
 > * The motivation for this book and the strategies we have adopted
-> * How Docker can be used to set up a dbms to demonstrate access to a service like Postgres from R
-> * The requirements for setting up the book's sandbox environment 
-> * The team that developed the Docker sandbox and wrote the book
+> * How Docker can be used to set up a dbms to demonstrate access to a service like PostgreSQL from R
+> * Our team and how this project came about
 
 ## Using R to query a DBMS in your organization
 
-* *Data characteristics*
-  * Large data stores in organizations kept in databases have specific access constraints and structural characteristics that can be challenging to an R user (*useR* in the jargon).  
+* **Data characteristics**
+  * Large data stores in organizations that are kept in SQL databases have specific access constraints and structural characteristics that can be challenging to an R user (*useR* in the jargon).  
 
-* *Technology hurdles*
-  * Handling large volumes of data and considering performance issues in a dbms environment require an understanding of what's happening in "the back end."
-  * The interfaces (passwords, packages, etc.) and gaps between R and a back end database are intentionally hidden from public view.
-  * Resources for diagnosing interface problem behind corporate walls may or may not address all the issues that R users face, so a **simulated** environment such as we offer her is very helpful.
+* **Technology hurdles**
+  * Handling large volumes of data and considering performance issues in a dbms environment require an understanding of what's happening in "the back end" (which is often out of view).
+  * The interfaces (passwords, packages, etc.) and gaps between R and a back end database are hidden from public view as a matter of security.
+  * Resources for diagnosing interface problem behind corporate walls may or may not address all the issues that R users face, so a **simulated** environment such as we offer here is can be an important learning resources.
 
-* *Use cases*
-  * R users frequently need to make sense of complex data structures and coding schemes to address incompletely formed questions so that exploratory data analysis has to be fast. 
-  * Exploratory and diagnostic techniques for the purpose should not be reinvented and can benefit from more public instruction or discussion.
+* **Use cases**
+  * R users frequently need to make sense of complex data structures and coding schemes to address incompletely formed questions: therefore informal exploratory data analysis has to be intuitive and fast. The technology details should not get in the way.
+  * Sharing and discussing exploratory and diagnostic techniques of exploration and retrieval is best in public but is constrained by organizational requirements.
   * Data documentation is often incomplete and emphasizes operational characteristics rather than analytic ones.  A careful useR often needs to confirm the documentation on the fly and de-normalize data carefully.
+
+We have found that postgreSQL in a Docker container solves many of the foregoing problems.
 
 ## Docker as a tool for UseRs
 
@@ -46,18 +47,10 @@ Noam Ross's "[Docker for the UseR](https://nyhackr.blob.core.windows.net/present
 This book explores #2 because it allows us to work on the database access issues described above and to practice on an industrial-scale DBMS.  
 
 * Docker is a comparatively easy way to simulate the relationship between an R/RStudio session and a database -- all on on your machine (provided you have Docker installed and running). 
-* Running PostgreSQL on a Docker container avoids OS or system dependencies or conflicts that might come up. 
+* Running PostgreSQL on a Docker container avoids OS or system dependencies or conflicts that cause confusion and limit reproducibility. 
 * A Docker environment consumes relatively few resources.  Our sandbox does much less but only includes postgreSQL and sample data, so it takes up about 5% of the space taken up by the Vagrant environment that inspired this project. [@Makubuya2018]
-* A simple Docker container such as the one used in our sandbox is easy to use.
-* Docker is a widely used technology for deploying applications in the cloud, so worth for many useRs it's worth mastering.
-
-## Docker and R on your machine
-
-Here is an overview of how R and Docker fit on your operating system in this book's sandbox:
-    
-![R and Docker](./screenshots/environment_overview.png)
-
-(There is more details about the sandbox environment in the chapter on [mapping your environment](#sandbox-environment).
+* A simple Docker container such as the one used in our sandbox is easy to use and could be extended for other uses.
+* Docker is a widely used technology for deploying applications in the cloud, so for many useRs it's worth mastering.
 
 ## Who are we?
 

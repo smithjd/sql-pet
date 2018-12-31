@@ -1,4 +1,4 @@
-# The dvdrental database in Postgres in Docker (05a)
+# Create the dvdrental database in Postgres in Docker (05a) {#dvdrental-db-setup}
 
 > This chapter demonstrates how to:
 >
@@ -68,7 +68,7 @@ cat(docker_messages, sep = "\n")
 ```
 
 ```
-## Sending build context to Docker daemon  46.75MB
+## Sending build context to Docker daemon  49.16MB
 ## Step 1/4 : FROM postgres:10
 ##  ---> ac25c2bac3c4
 ## Step 2/4 : WORKDIR /tmp
@@ -117,7 +117,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "ad7e5f46377b09e7f35b6ac5af7302424791cbf63979055472d09ae8a006d5ea"
+## [1] "83bbf73ee0e2efb35e672cc8e009d23802df6c610d6b0744c23bd62471ac47a2"
 ```
 ## Connect to Postgres with R
 
@@ -219,7 +219,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## ad7e5f46377b        postgres-dvdrental   "docker-entrypoint.s…"   7 seconds ago       Exited (0) Less than a second ago                       sql-pet
+## 83bbf73ee0e2        postgres-dvdrental   "docker-entrypoint.s…"   8 seconds ago       Exited (0) Less than a second ago                       sql-pet
 ```
 
 Next time, you can just use this command to start the container: 
