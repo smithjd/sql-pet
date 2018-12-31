@@ -301,8 +301,8 @@ Table: (\#tab:unnamed-chunk-9)Adding Meta Data Columns
 
 showing           store_id   manager_staff_id   address_id  last_update           db          user       dtts                
 ---------------  ---------  -----------------  -----------  --------------------  ----------  ---------  --------------------
-derived column           1                  1            1  2006-02-15 09:57:12   dvdrental   postgres   2018/12/31 00:47:10 
-derived column           2                  2            2  2006-02-15 09:57:12   dvdrental   postgres   2018/12/31 00:47:10 
+derived column           1                  1            1  2006-02-15 09:57:12   dvdrental   postgres   2018/12/31 01:09:02 
+derived column           2                  2            2  2006-02-15 09:57:12   dvdrental   postgres   2018/12/31 01:09:02 
  
     All the previous examples easily fit on a single line.  This one is longer.  Each column is entered on its own line, indented past the select keyword, and preceeded by a comma.  
     
