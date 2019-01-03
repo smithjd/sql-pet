@@ -2,14 +2,52 @@
 
 > This chapter explains:
 > 
-> * What you need to run the code in this book
+> * The overall structure of our Docker-based PostgreSQL sandbox
+> * Hardware and software that is needed to run the code in this book
 > * Where to get documentation for Docker and its installation
-> * Minimal details for storing postgreSQL login credentials
-> * How you can contribute to the book project
+> * Mention of how postgreSQL login credentials can be stored
+
+## R and the Docker / PostgreSQL playground on your machine
+
+Here is an overview of how R and Docker fit on your operating system in this book's sandbox:
+    
+![R and Docker](./screenshots/environment_overview.png)
+
+You run R from RStudio to set up Docker, run postgreSQL inside it and then send queries directly to postgreSQL from R. (We provide more details about our sandbox environment in the chapter on [mapping your environment](#sandbox-environment).
+
+## Sandbox prerequisites
+
+The sandbox environment requires:
+
+* A computer running 
+  + Windows (Windows 7 64-bit or later - Windows 10-Pro is recommended),
+  + MacOS, or
+  + Linux (any Linux distro that will run Docker Community Edition, R and RStudio will work)
+* Current versions of [R and RStudio](https://www.datacamp.com/community/tutorials/installing-R-windows-mac-ubuntu) [@Vargas2018) required.
+* Docker (instructions below)
+* Our companion package `sqlpetr` [@Borasky2018a] 
+
+The database we use is PostgreSQL 10, but you do not need to install it - it's installed via a Docker image. 
+
+In addition to the current version of R and RStudio, you will need current versions of the following packages:
+
+* `DBI` [@R-DBI]
+* `DiagrammeR` [@R-DiagrammeR]
+* `RPostgres` [@R-RPostgres]
+* `dbplyr` [@R-dbplyr]
+* `devtools` [@R-devtools]
+* `downloader` [@R-downloader]
+* `glue` [@R-glue]
+* `here` [@R-here]
+* `knitr` [@R-knitr]
+* `skimr` [@R-skimr]
+* `tidyverse` [@R-tidyverse]
+
+* `bookdown` [@R-bookdown] (for compiling the book, if you want to)
 
 ## R, RStudio and Git
 
-Most of you will probably have these already, but if you don't:
+Most readers will probably have these already, but if not:
 
 1. If you do not have R:
     * Go to <https://cran.rstudio.com/> [@RCT2018].
@@ -22,15 +60,16 @@ Most of you will probably have these already, but if you don't:
     * On MacOS, go to <https://sourceforge.net/projects/git-osx-installer/files/> and follow instructions.
     * On Linux, install Git from your distribution.
 
-## Docker
-You will need Docker Community Edition (Docker CE).
+## Install Docker
 
-* Windows: Go to <https://store.docker.com/editions/community/docker-ce-desktop-windows>. If you don't have a Docker Store login, you'll need to create one. Then:
+Installation depends on your operating system and we have found that it can be somewhat intricate.  You will need Docker Community Edition (Docker CE):
+
+* For Windows, [consider these issues and follow these instructions](#windows-tech-details): Go to <https://store.docker.com/editions/community/docker-ce-desktop-windows>. If you don't have a Docker Store login, you'll need to create one. Then:
     * If you have Windows 10 Pro, download and install Docker for Windows.
     * If you have an older version of Windows, download and install Docker Toolbox (<https://docs.docker.com/toolbox/overview/>).
     * Note that both versions require 64-bit hardware and the virtualization needs to be enabled in the firmware.
-* MacOS: Go to <https://store.docker.com/editions/community/docker-ce-desktop-mac>. If you don't have a Docker Store login, you'll need to create one. Then download and install Docker for Mac. Your MacOS must be at least release Yosemite (10.10.3).
-* Linux: note that, as with Windows and MacOS, you'll need a Docker Store login. Although most Linux distros ship with some version of Docker, chances are it's not the same as the official Docker CE version.
+* [On a Mac](https://docs.docker.com/docker-for-mac/install/) [@Docker2018c]: Go to <https://store.docker.com/editions/community/docker-ce-desktop-mac>. If you don't have a Docker Store login, you'll need to create one. Then download and install Docker for Mac. Your MacOS must be at least release Yosemite (10.10.3).
+* [On UNIX flavors](https://docs.docker.com/install/#supported-platforms) [@Docker2018b]: note that, as with Windows and MacOS, you'll need a Docker Store login. Although most Linux distros ship with some version of Docker, chances are it's not the same as the official Docker CE version.
     * Ubuntu: <https://store.docker.com/editions/community/docker-ce-server-ubuntu>,
     * Fedora: <https://store.docker.com/editions/community/docker-ce-server-fedora>,
     * CentOS: <https://store.docker.com/editions/community/docker-ce-server-centos>,
@@ -38,40 +77,11 @@ You will need Docker Community Edition (Docker CE).
     
 ***Note that on Linux, you will need to be a member of the `docker` group to use Docker.*** To do that, execute `sudo usermod -aG docker ${USER}`. Then, log out and back in again.
 
-## Defining the PostgreSQL connection parameters
-We use a PostgreSQL database server running in a Docker container for the database functions. To connect to it, you have to define some parameters. These parameters are used in two places:
+## PostgreSQL and connection parameters
+
+We use a PostgreSQL database server running in a Docker container for the database functions.  It is installed inside Docker, so you do not have to download or install it yourself. To connect to it, you have to define some parameters. These parameters are used in two places:
 
 1. When the Docker container is created, they're used to initialize the database, and
 2. Whenever we connect to the database, we need to specify them to authenticate.
 
-We define the parameters in an environment file that R reads when starting up. The file is called `.Renviron`, and is located in your home directory.  See the more extensive discussion of [securing and using dbms credentials](#dbms-login).
-
-The easiest way to make this file is to copy the following R code and paste it into the R console:
-
-```
-cat(
-  "\nDEFAULT_POSTGRES_USER_NAME=postgres",
-  file = "~/.Renviron",
-  sep = "",
-  append = TRUE
-)
-cat(
-  "\nDEFAULT_POSTGRES_PASSWORD=postgres\n",
-  file = "~/.Renviron",
-  sep = "",
-  append = TRUE
-)
-```
-
-## Participating
-
-### Browsing the book
-If you just want to read the book and copy / paste code into your working environment, simply browse to <https://smithjd.github.io/sql-pet>. If you get stuck, or find things aren't working, open an issue at <https://github.com/smithjd/sql-pet/issues/new/>.
-
-### Diving in
-If you want to experiment with the code in the book, run it in RStudio and interact with it, you'll need to do two more things:
-
-1. Install the `sqlpetr` R package [@Borasky2018a]. See <https://smithjd.github.io/sqlpetr> for the package documentation. This will take some time; it is installing a number of packages.
-2. Clone the Git repository <https://github.com/smithjd/sql-pet.git> and open the project file `sql-pet.Rproj` in RStudio.
-
-Onward!
+We define the parameters in an environment file that R reads when starting up. The file is called `.Renviron`, and is located in your home directory.  See the discussion of [securing and using dbms credentials](#dbms-login).

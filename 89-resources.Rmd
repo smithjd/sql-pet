@@ -3,7 +3,7 @@
 # Other resources (89)
 
 ## Editing this book
-* Here are instructions for [editing this tutorial](https://github.com/smithjd/sql-pet/blob/master/maintaining-the-bookdown-site.md) WARNING-BROKEN LINK!
+* Here are instructions for [editing this book](https://github.com/smithjd/sql-pet/blob/master/Contributing.md) 
 
 ## Docker alternatives
 * Choosing [between Docker and Vagrant](https://medium.com/@Mahmoud_Zalt/vagrant-vs-docker-679c9ce4231b) [@Zait2017]
