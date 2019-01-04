@@ -2,7 +2,7 @@
 title: "R, Databases and Docker"
 author: John David Smith, Sophie Yang, M. Edward (Ed) 
   Borasky,  Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni
-date: "2018-12-30"
+date: "2019-01-03"
 bibliography: [book.bib, packages.bib]
 description: An introduction to Docker and postgreSQL for R users to simulate use cases behind corporate walls.
 documentclass: book
@@ -17,6 +17,20 @@ site: bookdown::bookdown_site
 > * The motivation for this book and the strategies we have adopted
 > * How Docker can be used to set up a dbms to demonstrate access to a service like PostgreSQL from R
 > * Our team and how this project came about
+
+## Navigation
+If this is the first `bookdown` [@Xie2016] book you've read, here's how to navigate the website.
+
+1. The controls on the upper left: there are four controls on the upper left.
+
+    * A "hamburger" menu: this toggles the table of contents on the left side of the page on or off.
+    * A magnifying glass: this toggles a search box on or off.
+    * A letter "A": this lets you pick how you want the site to display. You have your choice of small or large text, a serif or sans-serif font, and a white, sepia or night theme.
+    * A pencil: this is the "Edit" button. This will take you to a GitHub edit dialog for the chapter you're reading. If you're a committer to the repository, you'll be able to edit the source directly. 
+    
+        If not, GitHub will fork a copy of the repository to your own account and you'll be able to edit that version. Then you can make a pull request.
+    
+2. The share buttons in the upper right hand corner. There's one for Twitter, one for Facebook, and one that gives a menu of options, including LinkedIn.
 
 ## Using R to query a DBMS in your organization
 

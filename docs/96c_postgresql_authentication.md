@@ -73,11 +73,13 @@ cattle_conn <- sqlpetr::sp_get_postgres_connection(
 ### Adding a role
 Now, let's add a role. We'll add a role that can log in and create databases, but isn't a superuser. Since this is a demo and not a real production database cluster, we'll specify a password in plaintext. And we'll create a database for our new user.
 
+Create the role:
 
 ```sql
 CREATE ROLE charlie LOGIN CREATEDB PASSWORD 'chaplin';
 ```
 
+Create the database:
 
 ```sql
 CREATE DATABASE charlie OWNER = charlie;
@@ -95,13 +97,22 @@ cattle_conn <- sqlpetr::sp_get_postgres_connection(
   password = "chaplin",
   seconds_to_test = 30
 )
+print(cattle_conn)
+```
+
+```
+## <PqConnection> charlie@localhost:5432
 ```
 
 OK, we can connect. Let's do some stuff!
 
 ```r
 data("iris")
+
+# `dbCreateTable` creates the table with columns matching the data frame. But it does not send data to the table.
 DBI::dbCreateTable(cattle_conn, "iris", iris)
+
+# To send data, we use `dbAppendTable`.
 DBI::dbAppendTable(cattle_conn, "iris", iris)
 ```
 

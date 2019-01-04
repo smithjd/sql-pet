@@ -68,19 +68,19 @@ cat(docker_messages, sep = "\n")
 ```
 
 ```
-## Sending build context to Docker daemon  50.18MB
+## Sending build context to Docker daemon  42.03MB
 ## Step 1/4 : FROM postgres:10
-##  ---> ac25c2bac3c4
+##  ---> 6eb6c50a02e7
 ## Step 2/4 : WORKDIR /tmp
 ##  ---> Using cache
-##  ---> 3f00a18e0bdf
+##  ---> 851566b61822
 ## Step 3/4 : COPY init-dvdrental.sh /docker-entrypoint-initdb.d/
 ##  ---> Using cache
-##  ---> 3453d61d8e3e
+##  ---> a41ee6860211
 ## Step 4/4 : RUN apt-get -qq update &&   apt-get install -y -qq curl zip  > /dev/null 2>&1 &&   curl -Os http://www.postgresqltutorial.com/wp-content/uploads/2017/10/dvdrental.zip &&   unzip dvdrental.zip &&   rm dvdrental.zip &&   chmod ugo+w dvdrental.tar &&   chown postgres dvdrental.tar &&   chmod u+x /docker-entrypoint-initdb.d/init-dvdrental.sh &&   apt-get remove -y curl zip
 ##  ---> Using cache
-##  ---> f5e93aa64875
-## Successfully built f5e93aa64875
+##  ---> 9b1114a185a1
+## Successfully built 9b1114a185a1
 ## Successfully tagged postgres-dvdrental:latest
 ```
 
@@ -117,7 +117,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "1562b5180d4b419ebd2547bff8e3456e8fddd17b82f1a0405bb2e275f54294b3"
+## [1] "0f6c900ce39a604daa5a18e522dc8dcb700709f5ece71f476108a0a406e27268"
 ```
 ## Connect to Postgres with R
 
@@ -219,7 +219,9 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## 1562b5180d4b        postgres-dvdrental   "docker-entrypoint.s…"   7 seconds ago       Exited (0) Less than a second ago                       sql-pet
+## 0f6c900ce39a        postgres-dvdrental   "docker-entrypoint.s…"   11 seconds ago      Exited (0) Less than a second ago                       sql-pet
+## 4d1200a07f20        fedora:29            "/bin/bash"              2 weeks ago         Exited (0) 2 weeks ago                                  f29
+## 81a5fdbd6042        rocker/geospatial    "/init"                  3 weeks ago         Exited (0) 3 weeks ago                                  blissful_greider
 ```
 
 Next time, you can just use this command to start the container: 
