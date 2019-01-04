@@ -24,7 +24,7 @@ library(tidyverse)
 ```
 
 ```
-## ── Attaching packages ────────────────────────────────── tidyverse 1.2.1 ──
+## ── Attaching packages ─────────────────────────────────────────── tidyverse 1.2.1 ──
 ```
 
 ```
@@ -35,7 +35,7 @@ library(tidyverse)
 ```
 
 ```
-## ── Conflicts ───────────────────────────────────── tidyverse_conflicts() ──
+## ── Conflicts ────────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()
 ```
@@ -129,7 +129,9 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE                COMMAND                  CREATED              STATUS                     PORTS               NAMES
-## f6f5d14be0ad        postgres-dvdrental   "docker-entrypoint.s…"   About a minute ago   Exited (0) 5 seconds ago                       sql-pet
+## 0f6c900ce39a        postgres-dvdrental   "docker-entrypoint.s…"   About a minute ago   Exited (0) 5 seconds ago                       sql-pet
+## 4d1200a07f20        fedora:29            "/bin/bash"              2 weeks ago          Exited (0) 2 weeks ago                         f29
+## 81a5fdbd6042        rocker/geospatial    "/init"                  3 weeks ago          Exited (0) 3 weeks ago                         blissful_greider
 ```
 
 Remove the `sql-pet` container if it exists (e.g., from a prior run)
@@ -189,7 +191,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "0a862481ec5073dc7569d7e56b1005df0fa62e35e3f48d0a16a1e4e8096850a7"
+## [1] "55a44c7277d5986359e65c032d8f14c19d83cd0d2840aa87e8a5c265611059bb"
 ```
 
 Peek inside the docker container and list the files in the `petdir`
@@ -232,8 +234,10 @@ sp_show_all_docker_containers()
 ```
 
 ```
-## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES
-## 0a862481ec50        postgres:10         "docker-entrypoint.s…"   5 seconds ago       Up 3 seconds        0.0.0.0:5432->5432/tcp   sql-pet
+## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                   PORTS                    NAMES
+## 55a44c7277d5        postgres:10         "docker-entrypoint.s…"   4 seconds ago       Up 3 seconds             0.0.0.0:5432->5432/tcp   sql-pet
+## 4d1200a07f20        fedora:29           "/bin/bash"              2 weeks ago         Exited (0) 2 weeks ago                            f29
+## 81a5fdbd6042        rocker/geospatial   "/init"                  3 weeks ago         Exited (0) 3 weeks ago                            blissful_greider
 ```
 inside Docker, execute the postgress SQL command-line program to create the dvdrental database:
 
@@ -366,7 +370,9 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## 0a862481ec50        postgres:10         "docker-entrypoint.s…"   19 seconds ago      Exited (0) Less than a second ago                       sql-pet
+## 55a44c7277d5        postgres:10         "docker-entrypoint.s…"   17 seconds ago      Exited (0) Less than a second ago                       sql-pet
+## 4d1200a07f20        fedora:29           "/bin/bash"              2 weeks ago         Exited (0) 2 weeks ago                                  f29
+## 81a5fdbd6042        rocker/geospatial   "/init"                  3 weeks ago         Exited (0) 3 weeks ago                                  blissful_greider
 ```
 
 We are leaving the `sql-pet` container intact so it can be used in running the

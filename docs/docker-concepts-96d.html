@@ -142,10 +142,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
-<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#using-r-to-query-a-dbms-in-your-organization"><i class="fa fa-check"></i><b>1.1</b> Using R to query a DBMS in your organization</a></li>
-<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#docker-as-a-tool-for-users"><i class="fa fa-check"></i><b>1.2</b> Docker as a tool for UseRs</a></li>
-<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#who-are-we"><i class="fa fa-check"></i><b>1.3</b> Who are we?</a></li>
-<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#how-did-this-project-come-about"><i class="fa fa-check"></i><b>1.4</b> How did this project come about?</a></li>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#navigation"><i class="fa fa-check"></i><b>1.1</b> Navigation</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#using-r-to-query-a-dbms-in-your-organization"><i class="fa fa-check"></i><b>1.2</b> Using R to query a DBMS in your organization</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#docker-as-a-tool-for-users"><i class="fa fa-check"></i><b>1.3</b> Docker as a tool for UseRs</a></li>
+<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#who-are-we"><i class="fa fa-check"></i><b>1.4</b> Who are we?</a></li>
+<li class="chapter" data-level="1.5" data-path="index.html"><a href="index.html#how-did-this-project-come-about"><i class="fa fa-check"></i><b>1.5</b> How did this project come about?</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="setup-instructions-00.html"><a href="setup-instructions-00.html"><i class="fa fa-check"></i><b>2</b> Setup instructions (00)</a><ul>
 <li class="chapter" data-level="2.1" data-path="setup-instructions-00.html"><a href="setup-instructions-00.html#r-and-the-docker-postgresql-playground-on-your-machine"><i class="fa fa-check"></i><b>2.1</b> R and the Docker / PostgreSQL playground on your machine</a></li>
@@ -452,6 +453,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="I.2" data-path="docker-concepts-96d.html"><a href="docker-concepts-96d.html#virtual-machines-and-hypervisors"><i class="fa fa-check"></i><b>I.2</b> Virtual machines and hypervisors</a></li>
 <li class="chapter" data-level="I.3" data-path="docker-concepts-96d.html"><a href="docker-concepts-96d.html#containers"><i class="fa fa-check"></i><b>I.3</b> Containers</a></li>
 <li class="chapter" data-level="I.4" data-path="docker-concepts-96d.html"><a href="docker-concepts-96d.html#docker"><i class="fa fa-check"></i><b>I.4</b> Docker</a></li>
+<li class="chapter" data-level="I.5" data-path="docker-concepts-96d.html"><a href="docker-concepts-96d.html#docker-objects"><i class="fa fa-check"></i><b>I.5</b> Docker objects</a></li>
+<li class="chapter" data-level="I.6" data-path="docker-concepts-96d.html"><a href="docker-concepts-96d.html#windows-hosting"><i class="fa fa-check"></i><b>I.6</b> Windows hosting</a></li>
+<li class="chapter" data-level="I.7" data-path="docker-concepts-96d.html"><a href="docker-concepts-96d.html#macos-hosting"><i class="fa fa-check"></i><b>I.7</b> macOS hosting</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -482,21 +486,60 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="virtual-machines-and-hypervisors" class="section level2">
 <h2><span class="header-section-number">I.2</span> Virtual machines and hypervisors</h2>
-<p>A <em>virtual machine</em> is a machine that is running purely as software hosted by another real machine. To the outside user, a virtual machine looks just like a real one. But it has no processors, memory or I/O devices - all of those are supplied and managed by the host.</p>
+<p>A <em>virtual machine</em> is a machine that is running purely as software hosted by another real machine. To the user, a virtual machine looks just like a real one. But it has no processors, memory or I/O devices of its own - all of those are supplied and managed by the host.</p>
 <p>A virtual machine can run any operating system that will run on the host’s hardware. A Linux host can run a Windows virtual machine and vice versa.</p>
 <p>A <em>hypervisor</em> is the component of the host system software that manages virtual machines, usually called <em>guests</em>. Linux systems have a native hypervisor called <em>Kernel Virtual Machine (kvm)</em>. And laptop, desktop and server processors from Intel and Advanced Micro Devices (AMD) have hardware that makes this hypervisor more efficient.</p>
 <p>Windows servers and Windows 10 Pro have a hypervisor called <em>Hyper-V</em>. Like kvm, Hyper-V can take advantage of the hardware in Intel and AMD processors. On Macintosh, there is a <em>Hypervisor Framework</em> (<a href="https://developer.apple.com/documentation/hypervisor" class="uri">https://developer.apple.com/documentation/hypervisor</a>) and other tools build on that.</p>
+<p>If this book is about Docker, why do we care about virtual machines and hypervisors? Docker is a Linux subsystem - it only runs on Linux laptops, desktops and servers. As we’ll see shortly, if we want to run Docker on Windows or MacOS, we’ll need a hypervisor, a Linux virtual machine and some “glue logic” to provide a Docker user experience equivalent to the one on a Linux system.</p>
 </div>
 <div id="containers" class="section level2">
 <h2><span class="header-section-number">I.3</span> Containers</h2>
 <p>A <em>container</em> is a set of processes running in an operating system. The host operating system is usually Linux, but other operating systems also can host containers.</p>
-<p>Unlike a virtual machine, the container has no operating system of its own. If the host is running Linux, so is the container. And since the container OS is the same as the host OS, there’s no need for a hypervisor or hardware to support the hypervisor. So a container is more efficient than a virtual machine.</p>
-<p>A container <strong>does</strong> have its own filesystem. From inside the container, this filesystem looks like a Linux filesystem, but it can use any Linux distro. For example, you can have an Ubuntu 18.04 LTS host running Ubuntu 14.04 LTS or Fedora 28 or CentOS 7 containers.</p>
+<p>Unlike a virtual machine, the container has no operating system kernel of its own. If the host is running the Linux kernel, so is the container. And since the container OS is the same as the host OS, there’s no need for a hypervisor or hardware to support the hypervisor. So a container is more efficient than a virtual machine.</p>
+<p>A container <strong>does</strong> have its own filesystem. From inside the container, this filesystem looks like a Linux filesystem, but it can use any Linux distro. For example, you can have an Ubuntu 18.04 LTS host running Ubuntu 14.04 LTS or Fedora 28 or CentOS 7 containers. The kernel will always be the host kernel, but the utilities and applications will be those from the container.</p>
 </div>
 <div id="docker" class="section level2">
 <h2><span class="header-section-number">I.4</span> Docker</h2>
-<p>While there are both older (<em>lxc</em>) and newer container tools, the one that has caught on in terms of widespread use is <em>Docker</em>.</p>
+<p>While there are both older (<em>lxc</em>) and newer container tools, the one that has caught on in terms of widespread use is <em>Docker</em> <span class="citation">(Docker <a href="#ref-Docker2019a">2019</a><a href="#ref-Docker2019a">a</a>)</span>. Docker is widely used on cloud providers to deploy services of all kinds. Using Docker on the desktop to deliver standardized packages, as we are doing in the book, is a secondard use case, but a common one.</p>
+<p>If you’re using a Linux laptop / desktop, all you need to do is install Docker CE <span class="citation">(Docker <a href="#ref-Docker2018b">2018</a><a href="#ref-Docker2018b">a</a>)</span>. However, most laptops and desktops don’t run Linux - they run Windows or MacOS. As noted above, to use Docker on Windows or MacOS, you need a hypervisor and a Linux virtual machine.</p>
+</div>
+<div id="docker-objects" class="section level2">
+<h2><span class="header-section-number">I.5</span> Docker objects</h2>
+<p>The Docker subsystem manages several kinds of objects - containers, images, volumes and networks. In this book, we are only using the basic command line tools to manage containers, images and volumes.</p>
+<p>Docker <code>images</code> are files that define a container’s initial filesystem. You can find pre-built images on Docker Hub and the Docker Store - the base PostgreSQL image we use comes from Docker Hub (<a href="https://hub.docker.com/_/postgres/" class="uri">https://hub.docker.com/_/postgres/</a>). If there isn’t a Docker image that does exactly what you want, you can build your own by creating a Dockerfile and running <code>docker build</code>. We do this in <a href="dvdrental-db-setup.html#build-the-pet-sql-docker-image">Build the pet-sql Docker Image</a>.</p>
+<p>Docker <code>volumes</code> TBD</p>
+<p>Docker <code>networks</code> TBD</p>
+</div>
+<div id="windows-hosting" class="section level2">
+<h2><span class="header-section-number">I.6</span> Windows hosting</h2>
+<p>There are two ways to get Docker on Windows. For Windows 10 Home and older versions of Windows, you need Docker Toolbox <span class="citation">(Docker <a href="#ref-Docker2019b">2019</a><a href="#ref-Docker2019b">e</a>)</span>. Note that for Docker Toolbox, you need a 64-bit AMD or Intel processor with the virtualization hardware installed and enabled in the BIOS.</p>
+<p>For Windows 10 Pro, you have the Hyper-V virtualizer as standard equipment, and can use Docker for Windows <span class="citation">(Docker <a href="#ref-Docker2019c">2019</a><a href="#ref-Docker2019c">c</a>)</span>.</p>
+</div>
+<div id="macos-hosting" class="section level2">
+<h2><span class="header-section-number">I.7</span> macOS hosting</h2>
+<p>As with Windows, there are two ways to get Docker. For older Intel systems, you’ll need Docker Toolbox <span class="citation">(Docker <a href="#ref-Docker2019d">2019</a><a href="#ref-Docker2019d">d</a>)</span>. Newer systems (2010 or later running at least macOS El Capitan 10.11) can run Docker for Mac <span class="citation">(Docker <a href="#ref-Docker2019e">2019</a><a href="#ref-Docker2019e">b</a>)</span>.</p>
 
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-Docker2019a">
+<p>Docker. 2019a. “Docker Documentation.” 2019. <a href="https://docs.docker.com/">https://docs.docker.com/</a>.</p>
+</div>
+<div id="ref-Docker2018b">
+<p>Docker. 2018a. “Docker CE Supported Platforms.” 2018. <a href="https://docs.docker.com/install/#supported-platforms">https://docs.docker.com/install/#supported-platforms</a>.</p>
+</div>
+<div id="ref-Docker2019b">
+<p>Docker. 2019e. “Install Docker Toolbox on Windows.” 2019. <a href="https://docs.docker.com/toolbox/toolbox_install_windows/">https://docs.docker.com/toolbox/toolbox_install_windows/</a>.</p>
+</div>
+<div id="ref-Docker2019c">
+<p>Docker. 2019c. “Install Docker for Windows.” 2019. <a href="https://docs.docker.com/docker-for-windows/install/">https://docs.docker.com/docker-for-windows/install/</a>.</p>
+</div>
+<div id="ref-Docker2019d">
+<p>Docker. 2019d. “Install Docker Toolbox on macOS.” 2019. <a href="https://docs.docker.com/toolbox/toolbox_install_mac/">https://docs.docker.com/toolbox/toolbox_install_mac/</a>.</p>
+</div>
+<div id="ref-Docker2019e">
+<p>Docker. 2019b. “Install Docker for Mac.” 2019. <a href="https://docs.docker.com/docker-for-mac/install/">https://docs.docker.com/docker-for-mac/install/</a>.</p>
 </div>
 </div>
             </section>

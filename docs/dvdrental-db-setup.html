@@ -142,10 +142,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
-<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#using-r-to-query-a-dbms-in-your-organization"><i class="fa fa-check"></i><b>1.1</b> Using R to query a DBMS in your organization</a></li>
-<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#docker-as-a-tool-for-users"><i class="fa fa-check"></i><b>1.2</b> Docker as a tool for UseRs</a></li>
-<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#who-are-we"><i class="fa fa-check"></i><b>1.3</b> Who are we?</a></li>
-<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#how-did-this-project-come-about"><i class="fa fa-check"></i><b>1.4</b> How did this project come about?</a></li>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#navigation"><i class="fa fa-check"></i><b>1.1</b> Navigation</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#using-r-to-query-a-dbms-in-your-organization"><i class="fa fa-check"></i><b>1.2</b> Using R to query a DBMS in your organization</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#docker-as-a-tool-for-users"><i class="fa fa-check"></i><b>1.3</b> Docker as a tool for UseRs</a></li>
+<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#who-are-we"><i class="fa fa-check"></i><b>1.4</b> Who are we?</a></li>
+<li class="chapter" data-level="1.5" data-path="index.html"><a href="index.html#how-did-this-project-come-about"><i class="fa fa-check"></i><b>1.5</b> How did this project come about?</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="setup-instructions-00.html"><a href="setup-instructions-00.html"><i class="fa fa-check"></i><b>2</b> Setup instructions (00)</a><ul>
 <li class="chapter" data-level="2.1" data-path="setup-instructions-00.html"><a href="setup-instructions-00.html#r-and-the-docker-postgresql-playground-on-your-machine"><i class="fa fa-check"></i><b>2.1</b> R and the Docker / PostgreSQL playground on your machine</a></li>
@@ -452,6 +453,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="I.2" data-path="docker-concepts-96d.html"><a href="docker-concepts-96d.html#virtual-machines-and-hypervisors"><i class="fa fa-check"></i><b>I.2</b> Virtual machines and hypervisors</a></li>
 <li class="chapter" data-level="I.3" data-path="docker-concepts-96d.html"><a href="docker-concepts-96d.html#containers"><i class="fa fa-check"></i><b>I.3</b> Containers</a></li>
 <li class="chapter" data-level="I.4" data-path="docker-concepts-96d.html"><a href="docker-concepts-96d.html#docker"><i class="fa fa-check"></i><b>I.4</b> Docker</a></li>
+<li class="chapter" data-level="I.5" data-path="docker-concepts-96d.html"><a href="docker-concepts-96d.html#docker-objects"><i class="fa fa-check"></i><b>I.5</b> Docker objects</a></li>
+<li class="chapter" data-level="I.6" data-path="docker-concepts-96d.html"><a href="docker-concepts-96d.html#windows-hosting"><i class="fa fa-check"></i><b>I.6</b> Windows hosting</a></li>
+<li class="chapter" data-level="I.7" data-path="docker-concepts-96d.html"><a href="docker-concepts-96d.html#macos-hosting"><i class="fa fa-check"></i><b>I.7</b> macOS hosting</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -522,21 +526,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)
 
 <span class="kw">cat</span>(docker_messages, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</code></pre>
-<pre><code>## Sending build context to Docker daemon  38.43MB
+<pre><code>## Sending build context to Docker daemon  42.03MB
 
 
 ## Step 1/4 : FROM postgres:10
 ##  ---&gt; 6eb6c50a02e7
 ## Step 2/4 : WORKDIR /tmp
 ##  ---&gt; Using cache
-##  ---&gt; 23ed134b86f5
+##  ---&gt; 851566b61822
 ## Step 3/4 : COPY init-dvdrental.sh /docker-entrypoint-initdb.d/
 ##  ---&gt; Using cache
-##  ---&gt; b6bde886337e
+##  ---&gt; a41ee6860211
 ## Step 4/4 : RUN apt-get -qq update &amp;&amp;   apt-get install -y -qq curl zip  &gt; /dev/null 2&gt;&amp;1 &amp;&amp;   curl -Os http://www.postgresqltutorial.com/wp-content/uploads/2017/10/dvdrental.zip &amp;&amp;   unzip dvdrental.zip &amp;&amp;   rm dvdrental.zip &amp;&amp;   chmod ugo+w dvdrental.tar &amp;&amp;   chown postgres dvdrental.tar &amp;&amp;   chmod u+x /docker-entrypoint-initdb.d/init-dvdrental.sh &amp;&amp;   apt-get remove -y curl zip
 ##  ---&gt; Using cache
-##  ---&gt; 8b31b0a84c46
-## Successfully built 8b31b0a84c46
+##  ---&gt; 9b1114a185a1
+## Successfully built 9b1114a185a1
 ## Successfully tagged postgres-dvdrental:latest</code></pre>
 </div>
 <div id="run-the-pet-sql-docker-image" class="section level2">
@@ -564,7 +568,7 @@ docker_cmd &lt;-<span class="st"> </span><span class="kw">glue</span>(
 )</code></pre>
 <p>If you are curious you can paste <code>docker_cmd</code> into a terminal window after the command ‘docker’:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, docker_cmd, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</code></pre>
-<pre><code>## [1] &quot;f6f5d14be0ad7a15744b8fce523f5c578288df470fd12fc1a899e48b65c7a9ff&quot;</code></pre>
+<pre><code>## [1] &quot;0f6c900ce39a604daa5a18e522dc8dcb700709f5ece71f476108a0a406e27268&quot;</code></pre>
 </div>
 <div id="connect-to-postgres-with-r" class="section level2">
 <h2><span class="header-section-number">6.6</span> Connect to Postgres with R</h2>
@@ -617,7 +621,9 @@ docker_cmd &lt;-<span class="st"> </span><span class="kw">glue</span>(
 <p>Show that the container still exists even though it’s not running</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_show_all_docker_containers</span>()</code></pre>
 <pre><code>## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## f6f5d14be0ad        postgres-dvdrental   &quot;docker-entrypoint.s…&quot;   14 seconds ago      Exited (0) Less than a second ago                       sql-pet</code></pre>
+## 0f6c900ce39a        postgres-dvdrental   &quot;docker-entrypoint.s…&quot;   11 seconds ago      Exited (0) Less than a second ago                       sql-pet
+## 4d1200a07f20        fedora:29            &quot;/bin/bash&quot;              2 weeks ago         Exited (0) 2 weeks ago                                  f29
+## 81a5fdbd6042        rocker/geospatial    &quot;/init&quot;                  3 weeks ago         Exited (0) 3 weeks ago                                  blissful_greider</code></pre>
 <p>Next time, you can just use this command to start the container:</p>
 <blockquote>
 <p><code>sp_docker_start("sql-pet")</code></p>
