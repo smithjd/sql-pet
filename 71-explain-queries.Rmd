@@ -1,4 +1,4 @@
-# Explain queries (71)
+# Explain queries {#chapter_explain-queries}
 
 > This chapter demonstrates:
 > 

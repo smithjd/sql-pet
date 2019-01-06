@@ -1,4 +1,4 @@
-# Docker Concepts (96d)
+# Docker Concepts {#chapter_appendix-docker-concepts}
 
 ## Introduction
 Docker and the DevOps tools surrounding it have fostered a revolution in the way services are delivered over the internet. In this book, we're piggybacking on a small piece of that revolution, Docker on the desktop.

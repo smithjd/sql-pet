@@ -1,4 +1,4 @@
-# DBI and SQL (11c)
+# DBI package and SQL {#chapter_dbi-package-sql}
 
 ## This chapter:
 > 

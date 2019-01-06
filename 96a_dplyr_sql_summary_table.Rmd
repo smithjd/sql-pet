@@ -1,4 +1,4 @@
-# Dplyr functions and SQL cross-walk (96)
+# Dplyr functions and SQL cross-walk {#chapter_appendix-dplyr-functions}
 
 Where are these covered and should they be included?
 

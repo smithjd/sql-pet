@@ -1,6 +1,4 @@
-# (APPENDIX) Appendix {-} 
-
-# Other resources (89)
+# Other resources {#chapter_appendix-other-resources}
 
 ## Editing this book
 * Here are instructions for [editing this book](https://github.com/smithjd/sql-pet/blob/master/Contributing.md) 
