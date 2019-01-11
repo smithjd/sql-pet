@@ -57,6 +57,8 @@ Run Docker to bring up PostgreSQL.  The first time it runs it will take a minute
   
 Doing all of that work behind the scenes involves two layers.  Depending on how you look at it, that may be more or less difficult to understand than [an alternative method]((#step-at-a-time-docker)).
 
+The previous commands built a Docker _image_ named `postgres-dvdrental`. The following commands will run that image in a _container_ named `sql-pet`, exposing PostgreSQL's port 5432 on your local machine:
+
 ```{r}
 wd <- getwd()
 
@@ -64,7 +66,7 @@ docker_cmd <- glue(
   "run ",      # Run is the Docker command.  Everything that follows are `run` parameters.
   "--detach ", # (or `-d`) tells Docker to disconnect from the terminal / program issuing the command
   " --name sql-pet ",     # tells Docker to give the container a name: `sql-pet`
-  "--publish 5432:5432 ", # tells Docker to expose the Postgres port 5432 to the local network with 5432
+  "--publish 5432:5432 ", # tells Docker to expose the PostgreSQL port 5432 to the local network with 5432
   "--mount ", # tells Docker to mount a volume -- mapping Docker's internal file structure to the host file structure
   "type=bind,", # tells Docker that the mount command points to an actual file on the host system
   'source="', # specifies the directory on the host to mount into the container at the mount point specified by `target=`
