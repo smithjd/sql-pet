@@ -2,7 +2,7 @@
 
 > This chapter demonstrates how to:
 >
->  * Run, clean-up and close postgreSQL in Docker containers.
+>  * Run, clean-up and close PostgreSQL in Docker containers.
 >  * Keep necessary credentials secret while being available to R when it executes.
 >  * Interact with PostgreSQL when it's running inside a Docker container.
 >  * Read and write to PostgreSQL from R.
@@ -53,19 +53,19 @@ The following command shows that a container named `cattle` is running `postgres
 sp_check_that_docker_is_up()
 
 ```
-## Connect, read and write to Postgres from R
+## Connect, read and write to PostgreSQL from R
 
 
-### Connect with Postgres
+### Connect with PostgreSQL
 
-Connect to the postgrSQL using the `sp_get_postgres_connection` function:
+Connect to PostgreSQL using the `sp_get_postgres_connection` function:
 ```{r}
 con <- sp_get_postgres_connection(user = "postgres",
                          password = "postgres",
                          dbname = "postgres",
                          seconds_to_test = 30)
 ```
-Notice that we are using the postgreSQL default username and password at this point and that it's in plain text. That is bad practice because user credentials should not be shared in open code like that.  A [subsequent chapter](#dbms-login) demonstrates how to store and use credentials to access the dbms so that they are kept private.
+Notice that we are using the PostgreSQL default username and password at this point and that it's in plain text. That is bad practice because user credentials should not be shared in open code like that.  A [subsequent chapter](#dbms-login) demonstrates how to store and use credentials to access the dbms so that they are kept private.
 
 Make sure that you can connect to the PostgreSQL database that you have just started. If you have been executing the code from this tutorial, the database will not contain any tables yet:
 
@@ -73,7 +73,7 @@ Make sure that you can connect to the PostgreSQL database that you have just sta
 DBI::dbListTables(con)
 ```
 
-### Interact with Postgres
+### Interact with PostgreSQL
 
 Write `mtcars` to PostgreSQL
 ```{r}
@@ -118,4 +118,4 @@ Tell Docker to *remove* the `cattle` container from it's library of active conta
 sp_docker_remove_container("cattle")
 ```
 
-If we just **stop** the Docker container but don't remove it (as we did with the `sp_docker_remove_container("cattle")` command), the `cattle` container will persist and we can start it up again later with `sp_docker_start("cattle")`.  In that case, `mtcars` would still be there and we could retrieve it from postgreSQL again.  Since `sp_docker_remove_container("cattle")`  has removed it, the updated database has been deleted.  (There are enough copies of `mtcars` in the world, so no great loss.)
+If we just **stop** the Docker container but don't remove it (as we did with the `sp_docker_remove_container("cattle")` command), the `cattle` container will persist and we can start it up again later with `sp_docker_start("cattle")`.  In that case, `mtcars` would still be there and we could retrieve it from PostgreSQL again.  Since `sp_docker_remove_container("cattle")`  has removed it, the updated database has been deleted.  (There are enough copies of `mtcars` in the world, so no great loss.)

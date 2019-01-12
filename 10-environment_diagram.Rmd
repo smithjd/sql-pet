@@ -52,6 +52,8 @@ Here is an overview of our sandbox environment.  In this chapter we explore each
 
 You communicate with Rstudio, which can send commands to both R and to Unix.  Commands to your OS can be entered directly in the terminal pane or via an R function like `exec2()`.  On a Unix or Mac computer, you typically communicate with `bash`, while you have several choices on a Windows computer.
 
+The following two screenshots show the default options available for the `Terminal` option in RStudio's `Preferences` for Mac and Windows, respectively.
+
 ![Mac choices](screenshots/rstudio-shell-choices-on-mac.png)
 
 ![Windows choices](screenshots/rstudio-shell-choices-on-windows.png)
@@ -61,13 +63,13 @@ To check on the RStudio version you are using, enter this R command:
 > `require(rstudioapi)` <br>
 > `versionInfo()`
 
-The [RStudio cheat sheet](https://github.com/rstudio/cheatsheets/raw/master/rstudio-ide.pdf) is handy for learning your way around the IDE.
+The [RStudio IDE cheat sheet](https://www.rstudio.com/resources/cheatsheets/#ide) ([PDF](https://github.com/rstudio/cheatsheets/raw/master/rstudio-ide.pdf)) is handy for learning your way around the IDE.
 
 ### OS / local command line interface 
 
 You can type commands directly into a terminal window on your computer to communicate with your operating system (OS).  It will be a `bash` prompt on a Unix or Mac, but could be one of several flavors on Windows.  Our diagram conflates the operating system with the command line interface (CLI) which is a bit of a simplification as discussed below.
 
-In addition to operating system commands, you can communicate with the Docker client through the CLI to start and stop the Docker server, load containers with programs such as Unix, postgreSQL, communicae with those programs, etc.
+In addition to operating system commands, you can communicate with the Docker client through the CLI to start and stop the Docker server, load containers with programs such as Unix, PostgreSQL, communicae with those programs, etc.
 
 To check on the OS version you are using, enter this on your RStudio terminal or local CLI:
 
@@ -81,13 +83,13 @@ A [Unix / Linux command line cheet](http://cheatsheetworld.com/programming/unix-
 
 ### R
 
-R processes instructions from Rstudio.  It can send instructions to your OS via the `system2` function.  R can also talks directly to postgreSQL through the DBI package.
+R processes instructions from Rstudio.  It can send instructions to your OS via the `system2` function.  R can also talk directly to PostgreSQL through the DBI package.
 
-R functions like `file.info("file.typ")` communicate with your operating system but do not visibly issue a command to your CLI.  That's an example of an equivalence that can be useful or confusing (as in our environment diagram): you can get the same information from `ls -ql README.md` on a Unix command line as `file.info("README.md")` on the R console.
+R functions like `file.info("file.typ")` communicate with your operating system, but do not visibly issue a command to your CLI.  That's an example of an equivalence that can be useful or confusing (as in our environment diagram): you can get the same information from `ls -ql README.md` on a Unix command line as `file.info("README.md")` on the R console.
 
-Although this sandbox seeks to make it easy, connecting to the database often involves technical and organizational hurdles like getting authorization. The main purpose of this book is to provide a sandbox for database queries to experiment with sending commands with the one of the *DBI* functions to the dbms directly from R.  However, Docker and postreSQL commands are useful to know and may be necessary in extending the book's examples. 
+Although this sandbox seeks to make it easy, connecting to the database often involves technical and organizational hurdles like getting authorization. The main purpose of this book is to provide a sandbox for database queries to experiment with sending commands with one of the *DBI* functions to the dbms directly from R.  However, Docker and PostreSQL commands are useful to know and may be necessary in extending the book's examples. 
 
-To check on the version of R that you are using, enter this on your R command line:
+To check on the version of R that you are using, enter this on your R Console command line:
 
 > `R.version`
 
@@ -97,16 +99,16 @@ The [growing collection of RStudio cheet sheets](https://www.rstudio.com/resourc
 
 The docker client sets up the Docker server, loads containers, and passes instructions from your OS to the programs running in the Docker server. A Docker container will always contain a subset of the Linux operating system, so that it contains a second CLI in your sandbox.  See more about the [Docker environment](https://docs.docker.com/engine/docker-overview/#the-docker-platform).  
 
-In addition to interaction with docker through your computer's CLI or the RStudio terminal pane, the [`docker`](https://bhaskarvk.github.io/docker/) and 
- [`stevedore`](https://richfitz.github.io/stevedore/) packages can communicate with Docker from R.  Both packages rely on the `reticulate` packaage and python.  
+In addition to interaction with Docker through your computer's CLI or the RStudio Terminal pane, the [`docker`](https://bhaskarvk.github.io/docker/) and 
+ [`stevedore`](https://richfitz.github.io/stevedore/) packages can communicate with Docker from R.  Both packages rely on the `reticulate` package and python.  
  
-For this book, we chose to send instructions to Docker through R's `system2()` function calls which do pass commands along to Docker through your computer's CLI.  We chose that route in order to be as transparent as possible and because the book's sandbox environment is fairly simple.  Although docker has different 44 commands, in this book we only use a subset: `ps`, `build`, `run`, `exec`, `start`, `stop`, and `rm`.  We wrap all of these commands in `sqlpetr` package functions to encourage you to focus on R and postgreSQL.
+For this book, we chose to send instructions to Docker through R's `system2()` function calls which do pass commands along to Docker through your computer's CLI.  We chose that route in order to be as transparent as possible and because the book's sandbox environment is fairly simple.  Although Docker has 44 different commands, in this book we only use a subset: `ps`, `build`, `run`, `exec`, `start`, `stop`, and `rm`.  We wrap all of these commands in `sqlpetr` package functions to encourage you to focus on R and PostgreSQL.
 
-To check on the Docker version you are using, enter this on your RStudio terminal or local CLI:
+To check on the Docker version you are using, enter this on your RStudio Terminal or local CLI:
 
 > `docker version`
 
-To see what images (if any) are stored locally and available for running in Docker, enter this on your RStudio terminal or local CLI:
+To see what images (if any) are stored locally and available for running in Docker, enter this on your RStudio Terminal or local CLI:
 
 > `docker image ls`
 
@@ -114,15 +116,15 @@ There are many Docker command-line cheat sheets; [this one](https://dockercheats
 
 ### In Docker: Linux
 
-Docker runs a subset of the Linux operating system that in turn runs other programs like psql or postgreSQL.  You may want to poke around the Linux environment inside Docker.  To find what version of Linux Docker is running, enter the following command on your local CLI or in the RStudio terminal pane:
+Docker runs a subset of the Linux operating system that in turn runs other programs like psql or PostgreSQL.  You may want to poke around the Linux environment inside Docker.  To find what version of Linux Docker is running, enter the following command on your local CLI or in the RStudio Terminal pane:
 
 > `docker exec -ti sql-pet uname -a`
 
-As Linux can itself have different CLIs, enter the following command on your local CLI or in the RStudio terminal pane to find out which CLI is running inside Docker:
+As Linux can itself have different CLIs, enter the following command on your local CLI or in the RStudio Terminal pane to find out which CLI is running inside Docker:
 
 > `docker exec -ti sql-pet echo $0`
 
-To enter an interactive session inside Docker's Linux environment, enter the following command on your local CLI or in the RStudio terminal pane:
+To enter an interactive session inside Docker's Linux environment, enter the following command on your local CLI or in the RStudio Terminal pane:
 
 > `docker exec -ti sql-pet bash`
 
@@ -134,7 +136,7 @@ A [Unix / Linux command line cheet](http://cheatsheetworld.com/programming/unix-
 
 ### In Docker: `psql`
 
-If you are comfortable executing SQL from a command line directly against the database, you can run the `psql` application in our Docker environment.  To start up a `psql` session to investigate postgreSQL from a command line enter the following command on your computer's CLI or the RStudio terminal pane:
+If you are comfortable executing SQL from a command line directly against the database, you can run the `psql` application in our Docker environment.  To start up a `psql` session to investigate PostgreSQL from a command line enter the following command on your computer's CLI or the RStudio Terminal pane:
 
 > `$ docker exec -ti sql-pet psql -a -p 5432 -d dvdrental -U postgres`
 
@@ -142,36 +144,36 @@ Exit that environment with:
 
 > `\q`
 
-Us this handy [psql cheat sheet](https://gpdb.docs.pivotal.io/gs/43/pdf/PSQLQuickRef.pdf) to get around.
+Us this handy psql cheat sheet ([PDF](https://gpdb.docs.pivotal.io/gs/43/pdf/PSQLQuickRef.pdf)) to get around.
 
-### In Docker: `postgreSQL`
+### In Docker: `PostgreSQL`
 
-The postgreSQL database is a whole environment unto itself.  It can receive instructions through bash from `psql`, and it will respond to `DBI` queries from R on port 5282.
+The PostgreSQL database is a whole environment unto itself.  It can receive instructions through bash from `psql`, and it will respond to `DBI` queries from R on port 5282.
 
-To check on the version of postgreSQL *client* (e.g., `psql`) you are using, enter this on your RStudio terminal or local command line interface:
+To check on the version of PostgreSQL *client* (e.g., `psql`) you are using, enter this on your RStudio terminal or local command line interface:
 
 > `docker exec -ti sql-pet psql --version`
 
-To check on the version of postgreSQL *server* you are running in Docker, enter this on your RStudio terminal or local command line interface:
+To check on the version of PostgreSQL *server* you are running in Docker, enter this on your RStudio Terminal or local command line interface:
 
 > `docker exec -ti sql-pet psql -U postgres -c 'select version();'`
 
-Here's a recommended [PostgreSQL cheat sheet](http://www.postgresqltutorial.com/wp-content/uploads/2018/03/PostgreSQL-Cheat-Sheet.pdf).
+Here's a recommended PostgreSQL cheat sheet ([PDF](http://www.postgresqltutorial.com/wp-content/uploads/2018/03/PostgreSQL-Cheat-Sheet.pdf)).
 
 ## Getting there from here: entity connections, equivalence, and commands
 
 pathways, equivalences, command structures.
 
-We use two trivial commands to explore the various *interfaces*.  `ls -l` is the unix command for listing information about a file and `\du` is the psql command to list the users that exist in postgreSQL.
+We use two trivial commands to explore the various *interfaces*.  `ls -l` is the unix command for listing information about a file and `\du` is the psql command to list the users that exist in PostgreSQL.
 
-Your OS and the OS inside docker may be looking at the same file but they are in different time zones.
+Your OS and the OS inside Docker may be looking at the same file but they are in different time zones.
 
 ### Get info on a local file from R code
 
 ```{r}
 file.info("README.md")
 ```
-The equivalent information from executing a command on the CLI or terminal would be
+The equivalent information from executing a command on the CLI or Terminal would be
 
 ```{r}
 system2("ls",  "-l README.md", stdout = TRUE, stderr = FALSE)
@@ -184,19 +186,19 @@ system2("docker", "exec sql-pet ls -l petdir/README.md", stdout = TRUE, stderr =
 
 ### Docker and psql together from R or your CLI
 
-As you become familiar with using docker, you'll see that there are various ways to do any given task.  Here's an illustration of how to get a list of users who have access to the postegreSQL database.
+As you become familiar with using Docker, you'll see that there are various ways to do any given task.  Here's an illustration of how to get a list of users who have access to the PostegreSQL database.
 
 ```{r}
 system2("docker", "exec sql-pet psql -U postgres -c '\\du' ", 
         stdout = TRUE, stderr = FALSE)
 ```
-From the RStudio terminal window, the equivalent would be a matter of dropping off some of the R code:
+From the RStudio Terminal window, the equivalent would be a matter of dropping off some of the R code:
 
 > `docker exec -it sql-pet psql -U postgres -c '\du'`
 
 ### Nesting commands illustrates how entities are connected
 
-The following tables illustrates how the different entities communicate with each other by decomposing a command from the chapter on [creating a docker container one step at a time](#step-at-a-time-docker):
+The following table illustrates how the different entities communicate with each other by decomposing a command from the chapter on [creating a Docker container one step at a time](#step-at-a-time-docker):
 
 > `system2("docker", "exec sql-pet pg_restore -U postgres -d dvdrental petdir/dvdrental.tar", stdout = TRUE, stderr = TRUE)`
 
@@ -213,24 +215,24 @@ The following tables illustrates how the different entities communicate with eac
 
 ## Exercises
 
-Docker containers have a small foot print.  In our container, we are running a limited Linux kernel and a Postgres database.  To show how tiny the docker environment is, we will look at all the processes running inside Docker and the top level file structure.
+Docker containers have a small foot print.  In our container, we are running a limited Linux kernel and a PostgreSQL database.  To show how tiny the Docker environment is, we will look at all the processes running inside Docker and the top level file structure.
 
 
-In the following exercies, use the `-i` option and the CONTAINER = `sql-pet`.
+In the following exercises, use the `-i` option and the CONTAINER = `sql-pet`.
 
 Start up R/RStudio and convert the CLI command to an R/RStudio command 
     
 |# |Question          | Docker CLI Command         | R RStudio command | Local Command LINE
 |--|------------------|----------------------------|-------------------|---------------
 |1 |How many processes are running inside the Docker container?| docker exec -i sql-pet ps -eF|
-|1a|How many process are running on your local machine?|||widows: tasklist Mac/Linux: ps -ef
+|1a|How many process are running on your local machine?|||widows: tasklist<b>Mac/Linux: ps -ef
 |2 |What is the total number of files and directories in Docker?|docker exec -i sql-pet ls -al||
 |2a|What is the total number of files and directories on your local machine?||||
 |3 |Is Docker Running?|docker version|||
 |3a|What are your Client and Server Versions?|||
-|4 |Does Postgres exist in the container?|docker ps -a||
-|4a|What is the status of Postgres?|docker ps -a||
-|4b|What is the size of Postgres?|docker images||
+|4 |Does PostgreSQL exist in the container?|docker ps -a||
+|4a|What is the status of PostgreSQL?|docker ps -a||
+|4b|What is the size of PostgreSQL?|docker images||
 |4c|What is the size of your laptop OS|||https://www.quora.com/What-is-the-actual-size-of-Windows-10-ISO-file
 |5 |If sql-pet status is Up, How do I stop it?|docker stop sql-pet||
 |5a|If sql-pet status is Exited, How do I start it?|docker start sql-pet||

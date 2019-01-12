@@ -42,7 +42,7 @@ Your DBA will create your user accounts and priviledges for the database(s) that
 
 One of the challenges when working with a database(s) is finding where your data actually resides.    Your best resources will be one or more subject matter experts, `SME`, and your DBA.  Your data may actually reside in multiple databases, e.g., a detail and summary databases.  In our tutorial, we focus on the one database, `dvdrental`.  Database names usually reflect something about the data that they contain.
 
-Your laptop is a server for the Docker Postgres databases.  A database is a collection of files that Postgres manages in the background.  
+Your laptop is a server for the Docker PostgreSQL databases.  A database is a collection of files that PostgreSQL manages in the background.  
 
 ## How many databases reside in the Docker Container?
 
@@ -148,7 +148,7 @@ rs1 <-
 kable(rs1)
 ```
 
-We see that there are three schemas.  The pg_catalog is the standard PostgreSQL meta data and core schema.  Postgres uses this schema to manage the internal workings of the database.  DBA's are the primary users of pg_catalog. We used the pg_catalog schema to answer the question 'How many databases reside in the Docker Container?', but normally the data analyst is not interested in analyzing database data.
+We see that there are three schemas.  The pg_catalog is the standard PostgreSQL meta data and core schema.  PostgreSQL uses this schema to manage the internal workings of the database.  DBA's are the primary users of pg_catalog. We used the pg_catalog schema to answer the question 'How many databases reside in the Docker Container?', but normally the data analyst is not interested in analyzing database data.
 
 The information_schema contains ANSI standardized views used across the different SQL vendors, (Oracle, Sysbase, MS SQL Server, IBM DB2, etc). The information_schema contains a plethora of metadata that will help you locate your data tables, understand the relationships between the tables, and write efficient SQL queries.
 
