@@ -1,4 +1,4 @@
-# Securing and using your dbms log-in credentials (05b){#dbms-login}
+# Securing and using your dbms log-in credentials {#chapter_dbms-login-credentials}
 
 > This chapter demonstrates how to:
 >

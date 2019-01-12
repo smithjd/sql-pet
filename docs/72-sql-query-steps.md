@@ -1,4 +1,4 @@
-# SQL queries behind the scenes (72)
+# SQL queries broken down {#chapter_sql-queries-breakdown}
 
 > This chapter explains:
 > 

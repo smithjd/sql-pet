@@ -1,4 +1,4 @@
-# Writing to the DBMS (73)
+# Writing to the DBMS {#chapter_writing-to-the-dbms}
 
 At the end of this chapter, you will be able to 
 

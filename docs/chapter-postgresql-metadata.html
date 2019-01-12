@@ -1,0 +1,2126 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Chapter 14 Getting metadata about and from PostgreSQL | R, Databases and Docker</title>
+  <meta name="description" content="An introduction to Docker and postgreSQL for R users to simulate use cases behind corporate walls.">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+
+  <meta property="og:title" content="Chapter 14 Getting metadata about and from PostgreSQL | R, Databases and Docker />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="An introduction to Docker and postgreSQL for R users to simulate use cases behind corporate walls." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 14 Getting metadata about and from PostgreSQL | R, Databases and Docker />
+  
+  <meta name="twitter:description" content="An introduction to Docker and postgreSQL for R users to simulate use cases behind corporate walls." />
+  
+
+<meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
+
+
+<meta name="date" content="2019-01-11">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="chapter-sql-quick-start.html">
+<link rel="next" href="chapter-dbms-environment.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+<script src="libs/htmlwidgets-1.3/htmlwidgets.js"></script>
+<link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="libs/datatables-binding-0.5/datatables.js"></script>
+<link href="libs/dt-core-1.10.16/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.10.16/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.10.16/js/jquery.dataTables.min.js"></script>
+<link href="libs/crosstalk-1.0.0/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
+<script src="libs/viz-0.3/viz.js"></script>
+<link href="libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
+<script src="libs/grViz-binding-1.0.0/grViz.js"></script>
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">R, Databases and Docker</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#navigation"><i class="fa fa-check"></i><b>1.1</b> Navigation</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#using-r-to-query-a-dbms-in-your-organization"><i class="fa fa-check"></i><b>1.2</b> Using R to query a DBMS in your organization</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#docker-as-a-tool-for-users"><i class="fa fa-check"></i><b>1.3</b> Docker as a tool for UseRs</a></li>
+<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#who-are-we"><i class="fa fa-check"></i><b>1.4</b> Who are we?</a></li>
+<li class="chapter" data-level="1.5" data-path="index.html"><a href="index.html#how-did-this-project-come-about"><i class="fa fa-check"></i><b>1.5</b> How did this project come about?</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html"><i class="fa fa-check"></i><b>2</b> Basic Concepts</a><ul>
+<li class="chapter" data-level="2.1" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#the-big-picture-r-and-the-docker-postgresql-playground-on-your-machine"><i class="fa fa-check"></i><b>2.1</b> The big picture: R and the Docker / PostgreSQL playground on your machine</a></li>
+<li class="chapter" data-level="2.2" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#r"><i class="fa fa-check"></i><b>2.2</b> R</a></li>
+<li class="chapter" data-level="2.3" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#docker"><i class="fa fa-check"></i><b>2.3</b> Docker</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#virtual-machines-and-hypervisors"><i class="fa fa-check"></i><b>2.3.1</b> Virtual machines and hypervisors</a></li>
+<li class="chapter" data-level="2.3.2" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#containers"><i class="fa fa-check"></i><b>2.3.2</b> Containers</a></li>
+<li class="chapter" data-level="2.3.3" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#docker-itself"><i class="fa fa-check"></i><b>2.3.3</b> Docker itself</a></li>
+<li class="chapter" data-level="2.3.4" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#docker-objects"><i class="fa fa-check"></i><b>2.3.4</b> Docker objects</a></li>
+<li class="chapter" data-level="2.3.5" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#hosting-docker-on-windows-machines"><i class="fa fa-check"></i><b>2.3.5</b> Hosting Docker on Windows machines</a></li>
+<li class="chapter" data-level="2.3.6" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#hosting-docker-on-macos-machines"><i class="fa fa-check"></i><b>2.3.6</b> Hosting Docker on macOS machines</a></li>
+<li class="chapter" data-level="2.3.7" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#hosting-docker-on-unix-machines"><i class="fa fa-check"></i><b>2.3.7</b> Hosting Docker on UNIX machines</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#sql"><i class="fa fa-check"></i><b>2.4</b> SQL</a></li>
+<li class="chapter" data-level="2.5" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#postgressql"><i class="fa fa-check"></i><b>2.5</b> PostgresSQL</a><ul>
+<li class="chapter" data-level="2.5.1" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#data-mapping-between-r-vs-sql-concepts"><i class="fa fa-check"></i><b>2.5.1</b> Data mapping between R vs SQL concepts</a></li>
+<li class="chapter" data-level="2.5.2" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#postgresql-and-connection-parameters"><i class="fa fa-check"></i><b>2.5.2</b> PostgreSQL and connection parameters</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="chapter-how-to-use-this-book.html"><a href="chapter-how-to-use-this-book.html"><i class="fa fa-check"></i><b>3</b> How to use this book</a><ul>
+<li class="chapter" data-level="3.1" data-path="chapter-how-to-use-this-book.html"><a href="chapter-how-to-use-this-book.html#retrieve-the-code-from-github"><i class="fa fa-check"></i><b>3.1</b> Retrieve the code from GitHub</a></li>
+<li class="chapter" data-level="3.2" data-path="chapter-how-to-use-this-book.html"><a href="chapter-how-to-use-this-book.html#read-along-experiment-as-you-go"><i class="fa fa-check"></i><b>3.2</b> Read along, experiment as you go</a></li>
+<li class="chapter" data-level="3.3" data-path="chapter-how-to-use-this-book.html"><a href="chapter-how-to-use-this-book.html#participating"><i class="fa fa-check"></i><b>3.3</b> Participating</a><ul>
+<li class="chapter" data-level="3.3.1" data-path="chapter-how-to-use-this-book.html"><a href="chapter-how-to-use-this-book.html#browsing-the-book"><i class="fa fa-check"></i><b>3.3.1</b> Browsing the book</a></li>
+<li class="chapter" data-level="3.3.2" data-path="chapter-how-to-use-this-book.html"><a href="chapter-how-to-use-this-book.html#diving-in"><i class="fa fa-check"></i><b>3.3.2</b> Diving in</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html"><i class="fa fa-check"></i><b>4</b> Learning Goals and Use Cases</a><ul>
+<li class="chapter" data-level="4.1" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html#ask-yourself-what-are-you-aiming-for"><i class="fa fa-check"></i><b>4.1</b> Ask yourself, what are you aiming for?</a></li>
+<li class="chapter" data-level="4.2" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html#learning-goals"><i class="fa fa-check"></i><b>4.2</b> Learning Goals</a></li>
+<li class="chapter" data-level="4.3" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html#imagining-a-dvd-rental-business"><i class="fa fa-check"></i><b>4.3</b> Imagining a DVD rental business</a></li>
+<li class="chapter" data-level="4.4" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html#use-cases"><i class="fa fa-check"></i><b>4.4</b> Use cases</a></li>
+<li class="chapter" data-level="4.5" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html#investigating-a-question-using-with-an-organizations-database"><i class="fa fa-check"></i><b>4.5</b> Investigating a question using with an organization’s database</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html"><i class="fa fa-check"></i><b>5</b> Connecting Docker, PostgreSQL, and R</a><ul>
+<li class="chapter" data-level="5.1" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#verify-that-docker-is-running"><i class="fa fa-check"></i><b>5.1</b> Verify that Docker is running</a></li>
+<li class="chapter" data-level="5.2" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#clean-up-if-appropriate"><i class="fa fa-check"></i><b>5.2</b> Clean up if appropriate</a></li>
+<li class="chapter" data-level="5.3" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#connect-read-and-write-to-postgres-from-r"><i class="fa fa-check"></i><b>5.3</b> Connect, read and write to Postgres from R</a><ul>
+<li class="chapter" data-level="5.3.1" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#connect-with-postgres"><i class="fa fa-check"></i><b>5.3.1</b> Connect with Postgres</a></li>
+<li class="chapter" data-level="5.3.2" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#interact-with-postgres"><i class="fa fa-check"></i><b>5.3.2</b> Interact with Postgres</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#clean-up"><i class="fa fa-check"></i><b>5.4</b> Clean up</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html"><i class="fa fa-check"></i><b>6</b> Create the dvdrental database in Postgres in Docker</a><ul>
+<li class="chapter" data-level="6.1" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html#overview"><i class="fa fa-check"></i><b>6.1</b> Overview</a></li>
+<li class="chapter" data-level="6.2" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html#verify-that-docker-is-up-and-running"><i class="fa fa-check"></i><b>6.2</b> Verify that Docker is up and running</a></li>
+<li class="chapter" data-level="6.3" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html#clean-up-if-appropriate-1"><i class="fa fa-check"></i><b>6.3</b> Clean up if appropriate</a></li>
+<li class="chapter" data-level="6.4" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html#build-the-pet-sql-docker-image"><i class="fa fa-check"></i><b>6.4</b> Build the pet-sql Docker Image</a></li>
+<li class="chapter" data-level="6.5" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html#run-the-pet-sql-docker-image"><i class="fa fa-check"></i><b>6.5</b> Run the pet-sql Docker Image</a></li>
+<li class="chapter" data-level="6.6" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html#connect-to-postgres-with-r"><i class="fa fa-check"></i><b>6.6</b> Connect to Postgres with R</a></li>
+<li class="chapter" data-level="6.7" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html#stop-and-start-to-demonstrate-persistence"><i class="fa fa-check"></i><b>6.7</b> Stop and start to demonstrate persistence</a></li>
+<li class="chapter" data-level="6.8" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html#cleaning-up"><i class="fa fa-check"></i><b>6.8</b> Cleaning up</a></li>
+<li class="chapter" data-level="6.9" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html#using-the-sql-pet-container-in-the-rest-of-the-book"><i class="fa fa-check"></i><b>6.9</b> Using the <code>sql-pet</code> container in the rest of the book</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="chapter-dbms-login-credentials.html"><a href="chapter-dbms-login-credentials.html"><i class="fa fa-check"></i><b>7</b> Securing and using your dbms log-in credentials</a><ul>
+<li class="chapter" data-level="7.1" data-path="chapter-dbms-login-credentials.html"><a href="chapter-dbms-login-credentials.html#set-up-the-sql-pet-docker-container"><i class="fa fa-check"></i><b>7.1</b> Set up the sql-pet Docker container</a><ul>
+<li class="chapter" data-level="7.1.1" data-path="chapter-dbms-login-credentials.html"><a href="chapter-dbms-login-credentials.html#verify-that-docker-is-running-1"><i class="fa fa-check"></i><b>7.1.1</b> Verify that Docker is running</a></li>
+<li class="chapter" data-level="7.1.2" data-path="chapter-dbms-login-credentials.html"><a href="chapter-dbms-login-credentials.html#start-the-docker-container"><i class="fa fa-check"></i><b>7.1.2</b> Start the Docker container:</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="chapter-dbms-login-credentials.html"><a href="chapter-dbms-login-credentials.html#storing-your-dbms-credentials"><i class="fa fa-check"></i><b>7.2</b> Storing your dbms credentials</a><ul>
+<li class="chapter" data-level="7.2.1" data-path="chapter-dbms-login-credentials.html"><a href="chapter-dbms-login-credentials.html#connect-with-postgres-using-the-sys.getenv-function"><i class="fa fa-check"></i><b>7.2.1</b> Connect with Postgres using the Sys.getenv function</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="chapter-dbms-login-credentials.html"><a href="chapter-dbms-login-credentials.html#clean-up-1"><i class="fa fa-check"></i><b>7.3</b> Clean up</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="chapter-your-local-environment.html"><a href="chapter-your-local-environment.html"><i class="fa fa-check"></i><b>8</b> Mapping your local environment</a><ul>
+<li class="chapter" data-level="8.1" data-path="chapter-your-local-environment.html"><a href="chapter-your-local-environment.html#set-up-our-standard-pet-sql-environment"><i class="fa fa-check"></i><b>8.1</b> Set up our standard pet-sql environment</a></li>
+<li class="chapter" data-level="8.2" data-path="chapter-your-local-environment.html"><a href="chapter-your-local-environment.html#sandbox-environment"><i class="fa fa-check"></i><b>8.2</b> Sandbox Environment</a><ul>
+<li class="chapter" data-level="8.2.1" data-path="chapter-your-local-environment.html"><a href="chapter-your-local-environment.html#sandbox-entities-and-their-roles"><i class="fa fa-check"></i><b>8.2.1</b> Sandbox entities and their roles</a></li>
+<li class="chapter" data-level="8.2.2" data-path="chapter-your-local-environment.html"><a href="chapter-your-local-environment.html#rstudio"><i class="fa fa-check"></i><b>8.2.2</b> RStudio</a></li>
+<li class="chapter" data-level="8.2.3" data-path="chapter-your-local-environment.html"><a href="chapter-your-local-environment.html#os-local-command-line-interface"><i class="fa fa-check"></i><b>8.2.3</b> OS / local command line interface</a></li>
+<li class="chapter" data-level="8.2.4" data-path="chapter-your-local-environment.html"><a href="chapter-your-local-environment.html#r-1"><i class="fa fa-check"></i><b>8.2.4</b> R</a></li>
+<li class="chapter" data-level="8.2.5" data-path="chapter-your-local-environment.html"><a href="chapter-your-local-environment.html#docker-client"><i class="fa fa-check"></i><b>8.2.5</b> Docker client</a></li>
+<li class="chapter" data-level="8.2.6" data-path="chapter-your-local-environment.html"><a href="chapter-your-local-environment.html#in-docker-linux"><i class="fa fa-check"></i><b>8.2.6</b> In Docker: Linux</a></li>
+<li class="chapter" data-level="8.2.7" data-path="chapter-your-local-environment.html"><a href="chapter-your-local-environment.html#in-docker-psql"><i class="fa fa-check"></i><b>8.2.7</b> In Docker: <code>psql</code></a></li>
+<li class="chapter" data-level="8.2.8" data-path="chapter-your-local-environment.html"><a href="chapter-your-local-environment.html#in-docker-postgresql"><i class="fa fa-check"></i><b>8.2.8</b> In Docker: <code>postgreSQL</code></a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="chapter-your-local-environment.html"><a href="chapter-your-local-environment.html#getting-there-from-here-entity-connections-equivalence-and-commands"><i class="fa fa-check"></i><b>8.3</b> Getting there from here: entity connections, equivalence, and commands</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="chapter-your-local-environment.html"><a href="chapter-your-local-environment.html#get-info-on-a-local-file-from-r-code"><i class="fa fa-check"></i><b>8.3.1</b> Get info on a local file from R code</a></li>
+<li class="chapter" data-level="8.3.2" data-path="chapter-your-local-environment.html"><a href="chapter-your-local-environment.html#get-info-on-the-same-os-file-inside-docker-from-r-code"><i class="fa fa-check"></i><b>8.3.2</b> Get info on the same OS file inside Docker from R Code</a></li>
+<li class="chapter" data-level="8.3.3" data-path="chapter-your-local-environment.html"><a href="chapter-your-local-environment.html#docker-and-psql-together-from-r-or-your-cli"><i class="fa fa-check"></i><b>8.3.3</b> Docker and psql together from R or your CLI</a></li>
+<li class="chapter" data-level="8.3.4" data-path="chapter-your-local-environment.html"><a href="chapter-your-local-environment.html#nesting-commands-illustrates-how-entities-are-connected"><i class="fa fa-check"></i><b>8.3.4</b> Nesting commands illustrates how entities are connected</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="chapter-your-local-environment.html"><a href="chapter-your-local-environment.html#exercises"><i class="fa fa-check"></i><b>8.4</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html"><i class="fa fa-check"></i><b>9</b> Introduction to DBMS queries</a><ul>
+<li class="chapter" data-level="9.1" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#getting-data-from-the-database"><i class="fa fa-check"></i><b>9.1</b> Getting data from the database</a><ul>
+<li class="chapter" data-level="9.1.1" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#finding-out-whats-there"><i class="fa fa-check"></i><b>9.1.1</b> Finding out what’s there</a></li>
+<li class="chapter" data-level="9.1.2" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#listing-all-the-fields-for-all-the-tables"><i class="fa fa-check"></i><b>9.1.2</b> Listing all the fields for all the tables</a></li>
+<li class="chapter" data-level="9.1.3" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#downloading-an-entire-table"><i class="fa fa-check"></i><b>9.1.3</b> Downloading an entire table</a></li>
+<li class="chapter" data-level="9.1.4" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#a-table-object-that-can-be-reused"><i class="fa fa-check"></i><b>9.1.4</b> A table object that can be reused</a></li>
+<li class="chapter" data-level="9.1.5" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#controlling-the-number-of-rows-returned"><i class="fa fa-check"></i><b>9.1.5</b> Controlling the number of rows returned</a></li>
+<li class="chapter" data-level="9.1.6" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#random-rows-from-the-dbms"><i class="fa fa-check"></i><b>9.1.6</b> Random rows from the dbms</a></li>
+<li class="chapter" data-level="9.1.7" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#sub-setting-variables"><i class="fa fa-check"></i><b>9.1.7</b> Sub-setting variables</a></li>
+<li class="chapter" data-level="9.1.8" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#translating-dplyr-code-to-sql-queries"><i class="fa fa-check"></i><b>9.1.8</b> Translating <code>dplyr</code> code to <code>SQL</code> queries</a></li>
+</ul></li>
+<li class="chapter" data-level="9.2" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#examining-a-single-table-with-r"><i class="fa fa-check"></i><b>9.2</b> Examining a single table with R</a><ul>
+<li class="chapter" data-level="9.2.1" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#str---a-base-package-workhorse"><i class="fa fa-check"></i><b>9.2.1</b> <code>str</code> - a base package workhorse</a></li>
+<li class="chapter" data-level="9.2.2" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#always-look-at-your-data-with-head-view-or-kable"><i class="fa fa-check"></i><b>9.2.2</b> Always <strong>look</strong> at your data with <code>head</code>, <code>View</code>, or <code>kable</code></a></li>
+<li class="chapter" data-level="9.2.3" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#the-summary-function-in-base"><i class="fa fa-check"></i><b>9.2.3</b> The <code>summary</code> function in base</a></li>
+<li class="chapter" data-level="9.2.4" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#the-glimpse-function-in-the-tibble-package"><i class="fa fa-check"></i><b>9.2.4</b> The <code>glimpse</code> function in the <code>tibble</code> package</a></li>
+<li class="chapter" data-level="9.2.5" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#the-skim-function-in-the-skimr-package"><i class="fa fa-check"></i><b>9.2.5</b> The <code>skim</code> function in the <code>skimr</code> package</a></li>
+<li class="chapter" data-level="9.2.6" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#close-the-connection-and-shut-down-sql-pet"><i class="fa fa-check"></i><b>9.2.6</b> Close the connection and shut down sql-pet</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#additional-reading"><i class="fa fa-check"></i><b>9.3</b> Additional reading</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html"><i class="fa fa-check"></i><b>10</b> Lazy Evaluation and Lazy Queries</a><ul>
+<li class="chapter" data-level="10.1" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#this-chapter"><i class="fa fa-check"></i><b>10.1</b> This chapter:</a><ul>
+<li class="chapter" data-level="10.1.1" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#setup"><i class="fa fa-check"></i><b>10.1.1</b> Setup</a></li>
+</ul></li>
+<li class="chapter" data-level="10.2" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#r-is-lazy-and-comes-with-guardrails"><i class="fa fa-check"></i><b>10.2</b> R is lazy and comes with guardrails</a><ul>
+<li class="chapter" data-level="10.2.1" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy-loading"><i class="fa fa-check"></i><b>10.2.1</b> Lazy loading</a></li>
+<li class="chapter" data-level="10.2.2" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy-evaluation"><i class="fa fa-check"></i><b>10.2.2</b> Lazy evaluation</a></li>
+<li class="chapter" data-level="10.2.3" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy-queries"><i class="fa fa-check"></i><b>10.2.3</b> Lazy Queries</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy-evaluation-and-lazy-queries"><i class="fa fa-check"></i><b>10.3</b> Lazy evaluation and lazy queries</a><ul>
+<li class="chapter" data-level="10.3.1" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#dplyr-connection-objects"><i class="fa fa-check"></i><b>10.3.1</b> Dplyr connection objects</a></li>
+</ul></li>
+<li class="chapter" data-level="10.4" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#when-does-a-lazy-query-trigger-data-retrieval"><i class="fa fa-check"></i><b>10.4</b> When does a lazy query trigger data retrieval?</a><ul>
+<li class="chapter" data-level="10.4.1" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#create-a-black-box-query-for-experimentation"><i class="fa fa-check"></i><b>10.4.1</b> Create a black box query for experimentation</a></li>
+<li class="chapter" data-level="10.4.2" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#experiment-overview"><i class="fa fa-check"></i><b>10.4.2</b> Experiment overview</a></li>
+<li class="chapter" data-level="10.4.3" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_print"><i class="fa fa-check"></i><b>10.4.3</b> Q %&gt;% print()</a></li>
+<li class="chapter" data-level="10.4.4" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_as-tibble"><i class="fa fa-check"></i><b>10.4.4</b> Q %&gt;% as.tibble()</a></li>
+<li class="chapter" data-level="10.4.5" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_head"><i class="fa fa-check"></i><b>10.4.5</b> Q %&gt;% head()</a></li>
+<li class="chapter" data-level="10.4.6" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_length"><i class="fa fa-check"></i><b>10.4.6</b> Q %&gt;% length()</a></li>
+<li class="chapter" data-level="10.4.7" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_str"><i class="fa fa-check"></i><b>10.4.7</b> Q %&gt;% str()</a></li>
+<li class="chapter" data-level="10.4.8" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_nrow"><i class="fa fa-check"></i><b>10.4.8</b> Q %&gt;% nrow()</a></li>
+<li class="chapter" data-level="10.4.9" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_tally"><i class="fa fa-check"></i><b>10.4.9</b> Q %&gt;% tally()</a></li>
+<li class="chapter" data-level="10.4.10" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_collect"><i class="fa fa-check"></i><b>10.4.10</b> Q %&gt;% collect()</a></li>
+<li class="chapter" data-level="10.4.11" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_show-query"><i class="fa fa-check"></i><b>10.4.11</b> Q %&gt;% show_query()</a></li>
+<li class="chapter" data-level="10.4.12" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_build"><i class="fa fa-check"></i><b>10.4.12</b> Qc &lt;- Q %&gt;% count(customer_email)</a></li>
+</ul></li>
+<li class="chapter" data-level="10.5" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#other-resources"><i class="fa fa-check"></i><b>10.5</b> Other resources</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="chapter-dbi-package-sql.html"><a href="chapter-dbi-package-sql.html"><i class="fa fa-check"></i><b>11</b> DBI package and SQL</a><ul>
+<li class="chapter" data-level="11.1" data-path="chapter-dbi-package-sql.html"><a href="chapter-dbi-package-sql.html#this-chapter-1"><i class="fa fa-check"></i><b>11.1</b> This chapter:</a><ul>
+<li class="chapter" data-level="11.1.1" data-path="chapter-dbi-package-sql.html"><a href="chapter-dbi-package-sql.html#setup-1"><i class="fa fa-check"></i><b>11.1.1</b> Setup</a></li>
+</ul></li>
+<li class="chapter" data-level="11.2" data-path="chapter-dbi-package-sql.html"><a href="chapter-dbi-package-sql.html#sql-in-r-markdown"><i class="fa fa-check"></i><b>11.2</b> SQL in R Markdown</a></li>
+<li class="chapter" data-level="11.3" data-path="chapter-dbi-package-sql.html"><a href="chapter-dbi-package-sql.html#dbi-package"><i class="fa fa-check"></i><b>11.3</b> DBI Package</a><ul>
+<li class="chapter" data-level="11.3.1" data-path="chapter-dbi-package-sql.html"><a href="chapter-dbi-package-sql.html#retrieve-the-whole-table"><i class="fa fa-check"></i><b>11.3.1</b> Retrieve the whole table</a></li>
+<li class="chapter" data-level="11.3.2" data-path="chapter-dbi-package-sql.html"><a href="chapter-dbi-package-sql.html#or-a-chunk-at-a-time"><i class="fa fa-check"></i><b>11.3.2</b> Or a chunk at a time</a></li>
+</ul></li>
+<li class="chapter" data-level="11.4" data-path="chapter-dbi-package-sql.html"><a href="chapter-dbi-package-sql.html#dividing-the-work-between-r-on-your-machine-and-the-dbms"><i class="fa fa-check"></i><b>11.4</b> Dividing the work between R on your machine and the DBMS</a><ul>
+<li class="chapter" data-level="11.4.1" data-path="chapter-dbi-package-sql.html"><a href="chapter-dbi-package-sql.html#make-the-server-do-as-much-work-as-you-can"><i class="fa fa-check"></i><b>11.4.1</b> Make the server do as much work as you can</a></li>
+<li class="chapter" data-level="11.4.2" data-path="chapter-dbi-package-sql.html"><a href="chapter-dbi-package-sql.html#criteria-for-choosing-between-dplyr-and-native-sql"><i class="fa fa-check"></i><b>11.4.2</b> Criteria for choosing between <code>dplyr</code> and native SQL</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html"><i class="fa fa-check"></i><b>12</b> Joins and complex queries (13)</a><ul>
+<li class="chapter" data-level="12.1" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#database-privileges"><i class="fa fa-check"></i><b>12.1</b> Database Privileges</a></li>
+<li class="chapter" data-level="12.2" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#database-constraints"><i class="fa fa-check"></i><b>12.2</b> Database constraints</a><ul>
+<li class="chapter" data-level="12.2.1" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#dvd-rental-primary-foreign-key-constraints"><i class="fa fa-check"></i><b>12.2.1</b> DVD Rental Primary Foreign Key Constraints</a></li>
+</ul></li>
+<li class="chapter" data-level="12.3" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#making-up-data-for-join-examples"><i class="fa fa-check"></i><b>12.3</b> Making up data for Join Examples</a><ul>
+<li class="chapter" data-level="12.3.1" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#sql-delete-data-syntax"><i class="fa fa-check"></i><b>12.3.1</b> SQL Delete Data Syntax</a></li>
+<li class="chapter" data-level="12.3.2" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#delete-new-practice-customers-from-the-customer-table."><i class="fa fa-check"></i><b>12.3.2</b> Delete New Practice Customers from the Customer table.</a></li>
+<li class="chapter" data-level="12.3.3" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#delete-new-practice-films-from-the-film-table."><i class="fa fa-check"></i><b>12.3.3</b> Delete New Practice Films from the Film table.</a></li>
+<li class="chapter" data-level="12.3.4" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#sql-single-row-insert-data-syntax"><i class="fa fa-check"></i><b>12.3.4</b> SQL Single Row Insert Data Syntax</a></li>
+<li class="chapter" data-level="12.3.5" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#primary-and-foreign-key-constraint-error-messages"><i class="fa fa-check"></i><b>12.3.5</b> Primary and Foreign Key Constraint Error Messages</a></li>
+<li class="chapter" data-level="12.3.6" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#r-exercise-inserting-a-single-row-via-a-dataframe"><i class="fa fa-check"></i><b>12.3.6</b> R Exercise: Inserting a Single Row via a Dataframe</a></li>
+</ul></li>
+<li class="chapter" data-level="12.4" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#sql-multi-row-insert-data-syntax"><i class="fa fa-check"></i><b>12.4</b> SQL Multi-Row Insert Data Syntax</a></li>
+<li class="chapter" data-level="12.5" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#sql-multi-row-insert-data-example"><i class="fa fa-check"></i><b>12.5</b> SQL Multi-Row Insert Data Example</a><ul>
+<li class="chapter" data-level="12.5.1" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#r-exercise-inserting-multiple-rows-via-a-dataframe"><i class="fa fa-check"></i><b>12.5.1</b> R Exercise: Inserting Multiple Rows via a Dataframe</a></li>
+</ul></li>
+<li class="chapter" data-level="12.6" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#messy-data"><i class="fa fa-check"></i><b>12.6</b> Messy Data</a><ul>
+<li class="chapter" data-level="12.6.1" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#messing-up-the-row"><i class="fa fa-check"></i><b>12.6.1</b> Messing up the row</a></li>
+</ul></li>
+<li class="chapter" data-level="12.7" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#joins"><i class="fa fa-check"></i><b>12.7</b> Joins</a><ul>
+<li class="chapter" data-level="12.7.1" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#join-types"><i class="fa fa-check"></i><b>12.7.1</b> Join Types</a></li>
+<li class="chapter" data-level="12.7.2" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#valentines-party"><i class="fa fa-check"></i><b>12.7.2</b> Valentines Party</a></li>
+<li class="chapter" data-level="12.7.3" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#join-syntax"><i class="fa fa-check"></i><b>12.7.3</b> Join Syntax</a></li>
+<li class="chapter" data-level="12.7.4" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#join-tables"><i class="fa fa-check"></i><b>12.7.4</b> Join Tables</a></li>
+</ul></li>
+<li class="chapter" data-level="12.8" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#natural-join-delayed-time-bomb"><i class="fa fa-check"></i><b>12.8</b> Natural Join Delayed Time Bomb</a><ul>
+<li class="chapter" data-level="12.8.1" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#dplyr-language-distribution-exercise"><i class="fa fa-check"></i><b>12.8.1</b> dplyr language distribution Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="12.9" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#join-templates"><i class="fa fa-check"></i><b>12.9</b> Join Templates</a><ul>
+<li class="chapter" data-level="12.9.1" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#dplyr-inner-join-template"><i class="fa fa-check"></i><b>12.9.1</b> dplyr Inner Join Template</a></li>
+<li class="chapter" data-level="12.9.2" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#dplyr-left-outer-join-template"><i class="fa fa-check"></i><b>12.9.2</b> dplyr Left Outer Join Template</a></li>
+</ul></li>
+<li class="chapter" data-level="12.10" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#sql-anti-join-costs"><i class="fa fa-check"></i><b>12.10</b> SQL anti join Costs</a></li>
+<li class="chapter" data-level="12.11" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#dplyr-anti-joins"><i class="fa fa-check"></i><b>12.11</b> dplyr Anti joins</a><ul>
+<li class="chapter" data-level="12.11.1" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#dplyr-costs"><i class="fa fa-check"></i><b>12.11.1</b> dplyr Costs</a></li>
+</ul></li>
+<li class="chapter" data-level="12.12" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#exercises-1"><i class="fa fa-check"></i><b>12.12</b> Exercises</a><ul>
+<li class="chapter" data-level="12.12.1" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#anti-joins-find-customers-who-have-never-rented-a-movie-take-2."><i class="fa fa-check"></i><b>12.12.1</b> Anti joins – Find customers who have never rented a movie, take 2.</a></li>
+<li class="chapter" data-level="12.12.2" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#sql-rows-per-table"><i class="fa fa-check"></i><b>12.12.2</b> SQL Rows Per Table</a></li>
+</ul></li>
+<li class="chapter" data-level="12.13" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#store-analysis"><i class="fa fa-check"></i><b>12.13</b> Store analysis</a><ul>
+<li class="chapter" data-level="12.13.1" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#sql-store-revenue-stream"><i class="fa fa-check"></i><b>12.13.1</b> SQL store revenue stream</a></li>
+<li class="chapter" data-level="12.13.2" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#sqlestimate-outstanding-balance"><i class="fa fa-check"></i><b>12.13.2</b> SQL:Estimate Outstanding Balance</a></li>
+<li class="chapter" data-level="12.13.3" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#sql-actual-outstanding-balance"><i class="fa fa-check"></i><b>12.13.3</b> SQL actual outstanding balance</a></li>
+<li class="chapter" data-level="12.13.4" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#rank-customers-with-highest-open-amounts"><i class="fa fa-check"></i><b>12.13.4</b> Rank customers with highest open amounts</a></li>
+<li class="chapter" data-level="12.13.5" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#what-film-has-been-rented-the-most"><i class="fa fa-check"></i><b>12.13.5</b> what film has been rented the most</a></li>
+<li class="chapter" data-level="12.13.6" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#what-film-has-been-generated-the-most-revenue-assuming-all-amounts-are-collected"><i class="fa fa-check"></i><b>12.13.6</b> what film has been generated the most revenue assuming all amounts are collected</a></li>
+<li class="chapter" data-level="12.13.7" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#which-films-are-in-one-store-but-not-the-other."><i class="fa fa-check"></i><b>12.13.7</b> which films are in one store but not the other.</a></li>
+<li class="chapter" data-level="12.13.8" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#compute-the-outstanding-balance."><i class="fa fa-check"></i><b>12.13.8</b> Compute the outstanding balance.</a></li>
+</ul></li>
+<li class="chapter" data-level="12.14" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#different-strategies-for-interacting-with-the-database"><i class="fa fa-check"></i><b>12.14</b> Different strategies for interacting with the database</a><ul>
+<li class="chapter" data-level="12.14.1" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#use-dbgetquery"><i class="fa fa-check"></i><b>12.14.1</b> Use dbGetQuery</a></li>
+<li class="chapter" data-level="12.14.2" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#use-dbexecute"><i class="fa fa-check"></i><b>12.14.2</b> Use dbExecute</a></li>
+<li class="chapter" data-level="12.14.3" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#anti-join-find-sophie-who-has-never-rented-a-movie."><i class="fa fa-check"></i><b>12.14.3</b> Anti join – Find Sophie who has never rented a movie.</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html"><i class="fa fa-check"></i><b>13</b> SQL Quick start - simple retrieval</a><ul>
+<li class="chapter" data-level="13.1" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#intro"><i class="fa fa-check"></i><b>13.1</b> Intro</a></li>
+<li class="chapter" data-level="13.2" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#databases-and-third-normal-form---3nf"><i class="fa fa-check"></i><b>13.2</b> Databases and Third Normal Form - 3NF</a></li>
+<li class="chapter" data-level="13.3" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#sql-commands"><i class="fa fa-check"></i><b>13.3</b> SQL Commands</a></li>
+<li class="chapter" data-level="13.4" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#sql-select-quick-start"><i class="fa fa-check"></i><b>13.4</b> SQL SELECT Quick Start</a><ul>
+<li class="chapter" data-level="13.4.1" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#select-clause-column-selection-vertical-partioning-of-data"><i class="fa fa-check"></i><b>13.4.1</b> SELECT Clause: Column Selection – Vertical Partioning of Data</a></li>
+<li class="chapter" data-level="13.4.2" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#sql-comments"><i class="fa fa-check"></i><b>13.4.2</b> SQL Comments</a></li>
+<li class="chapter" data-level="13.4.3" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#from-clause"><i class="fa fa-check"></i><b>13.4.3</b> FROM Clause</a></li>
+<li class="chapter" data-level="13.4.4" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#where-clause-row-selection-horizontal-partitioning-of-data"><i class="fa fa-check"></i><b>13.4.4</b> WHERE Clause: Row Selection – Horizontal Partitioning of Data</a></li>
+</ul></li>
+<li class="chapter" data-level="13.5" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#paradigm-shift-from-r-dplyr-to-sql"><i class="fa fa-check"></i><b>13.5</b> Paradigm Shift from R-Dplyr to SQL</a><ul>
+<li class="chapter" data-level="13.5.1" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#big-bang-versus-piped-incremental-steps."><i class="fa fa-check"></i><b>13.5.1</b> Big bang versus piped incremental steps.</a></li>
+<li class="chapter" data-level="13.5.2" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#sql-execution-order"><i class="fa fa-check"></i><b>13.5.2</b> SQL Execution Order</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html"><i class="fa fa-check"></i><b>14</b> Getting metadata about and from PostgreSQL</a><ul>
+<li class="chapter" data-level="14.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#database-contents-and-structure"><i class="fa fa-check"></i><b>14.1</b> Database contents and structure</a><ul>
+<li class="chapter" data-level="14.1.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#database-structure"><i class="fa fa-check"></i><b>14.1.1</b> Database structure</a></li>
+<li class="chapter" data-level="14.1.2" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#contents-of-the-information_schema"><i class="fa fa-check"></i><b>14.1.2</b> Contents of the <code>information_schema</code></a></li>
+<li class="chapter" data-level="14.1.3" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#what-tables-are-in-the-database"><i class="fa fa-check"></i><b>14.1.3</b> What tables are in the database?</a></li>
+<li class="chapter" data-level="14.1.4" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#digging-into-the-information_schema"><i class="fa fa-check"></i><b>14.1.4</b> Digging into the <code>information_schema</code></a></li>
+</ul></li>
+<li class="chapter" data-level="14.2" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#what-columns-do-those-tables-contain"><i class="fa fa-check"></i><b>14.2</b> What columns do those tables contain?</a><ul>
+<li class="chapter" data-level="14.2.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#what-is-the-difference-between-a-view-and-a-base-table"><i class="fa fa-check"></i><b>14.2.1</b> What is the difference between a <code>VIEW</code> and a <code>BASE TABLE</code>?</a></li>
+<li class="chapter" data-level="14.2.2" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#what-data-types-are-found-in-the-database"><i class="fa fa-check"></i><b>14.2.2</b> What data types are found in the database?</a></li>
+</ul></li>
+<li class="chapter" data-level="14.3" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#characterizing-how-things-are-named"><i class="fa fa-check"></i><b>14.3</b> Characterizing how things are named</a><ul>
+<li class="chapter" data-level="14.3.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#counting-columns-and-name-reuse"><i class="fa fa-check"></i><b>14.3.1</b> Counting columns and name reuse</a></li>
+</ul></li>
+<li class="chapter" data-level="14.4" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#database-keys"><i class="fa fa-check"></i><b>14.4</b> Database keys</a><ul>
+<li class="chapter" data-level="14.4.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#direct-sql"><i class="fa fa-check"></i><b>14.4.1</b> Direct SQL</a></li>
+<li class="chapter" data-level="14.4.2" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#database-keys-with-dplyr"><i class="fa fa-check"></i><b>14.4.2</b> Database keys with dplyr</a></li>
+</ul></li>
+<li class="chapter" data-level="14.5" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#creating-your-own-data-dictionary"><i class="fa fa-check"></i><b>14.5</b> Creating your own data dictionary</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="chapter-dbms-environment.html"><a href="chapter-dbms-environment.html"><i class="fa fa-check"></i><b>15</b> Drilling into your DBMS environment</a><ul>
+<li class="chapter" data-level="15.1" data-path="chapter-dbms-environment.html"><a href="chapter-dbms-environment.html#which-database"><i class="fa fa-check"></i><b>15.1</b> Which database?</a></li>
+<li class="chapter" data-level="15.2" data-path="chapter-dbms-environment.html"><a href="chapter-dbms-environment.html#how-many-databases-reside-in-the-docker-container"><i class="fa fa-check"></i><b>15.2</b> How many databases reside in the Docker Container?</a></li>
+<li class="chapter" data-level="15.3" data-path="chapter-dbms-environment.html"><a href="chapter-dbms-environment.html#which-schema"><i class="fa fa-check"></i><b>15.3</b> Which Schema?</a></li>
+<li class="chapter" data-level="15.4" data-path="chapter-dbms-environment.html"><a href="chapter-dbms-environment.html#exercises-2"><i class="fa fa-check"></i><b>15.4</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="chapter-explain-queries.html"><a href="chapter-explain-queries.html"><i class="fa fa-check"></i><b>16</b> Explain queries</a><ul>
+<li class="chapter" data-level="16.1" data-path="chapter-explain-queries.html"><a href="chapter-explain-queries.html#performance-considerations"><i class="fa fa-check"></i><b>16.1</b> Performance considerations</a></li>
+<li class="chapter" data-level="16.2" data-path="chapter-explain-queries.html"><a href="chapter-explain-queries.html#clean-up-2"><i class="fa fa-check"></i><b>16.2</b> Clean up</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="chapter-sql-queries-breakdown.html"><a href="chapter-sql-queries-breakdown.html"><i class="fa fa-check"></i><b>17</b> SQL queries broken down</a><ul>
+<li class="chapter" data-level="17.1" data-path="chapter-sql-queries-breakdown.html"><a href="chapter-sql-queries-breakdown.html#sql-execution-steps"><i class="fa fa-check"></i><b>17.1</b> SQL Execution Steps</a></li>
+<li class="chapter" data-level="17.2" data-path="chapter-sql-queries-breakdown.html"><a href="chapter-sql-queries-breakdown.html#passing-values-to-sql-statements"><i class="fa fa-check"></i><b>17.2</b> Passing values to SQL statements</a></li>
+<li class="chapter" data-level="17.3" data-path="chapter-sql-queries-breakdown.html"><a href="chapter-sql-queries-breakdown.html#pass-multiple-sets-of-values-with-dbbind"><i class="fa fa-check"></i><b>17.3</b> Pass multiple sets of values with dbBind():</a></li>
+<li class="chapter" data-level="17.4" data-path="chapter-sql-queries-breakdown.html"><a href="chapter-sql-queries-breakdown.html#clean-up-3"><i class="fa fa-check"></i><b>17.4</b> Clean up</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html"><i class="fa fa-check"></i><b>18</b> Writing to the DBMS</a><ul>
+<li class="chapter" data-level="18.1" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#create-a-new-table"><i class="fa fa-check"></i><b>18.1</b> Create a new table</a></li>
+<li class="chapter" data-level="18.2" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#modify-an-existing-table"><i class="fa fa-check"></i><b>18.2</b> Modify an existing table</a></li>
+<li class="chapter" data-level="18.3" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#remove-table-and-clean-up"><i class="fa fa-check"></i><b>18.3</b> Remove table and Clean up</a></li>
+</ul></li>
+<li class="appendix"><span><b>Appendices</b></span></li>
+<li class="chapter" data-level="A" data-path="chapter-appendix-other-resources.html"><a href="chapter-appendix-other-resources.html"><i class="fa fa-check"></i><b>A</b> Other resources</a><ul>
+<li class="chapter" data-level="A.1" data-path="chapter-appendix-other-resources.html"><a href="chapter-appendix-other-resources.html#editing-this-book"><i class="fa fa-check"></i><b>A.1</b> Editing this book</a></li>
+<li class="chapter" data-level="A.2" data-path="chapter-appendix-other-resources.html"><a href="chapter-appendix-other-resources.html#docker-alternatives"><i class="fa fa-check"></i><b>A.2</b> Docker alternatives</a></li>
+<li class="chapter" data-level="A.3" data-path="chapter-appendix-other-resources.html"><a href="chapter-appendix-other-resources.html#docker-and-r"><i class="fa fa-check"></i><b>A.3</b> Docker and R</a></li>
+<li class="chapter" data-level="A.4" data-path="chapter-appendix-other-resources.html"><a href="chapter-appendix-other-resources.html#documentation-for-docker-and-postgres"><i class="fa fa-check"></i><b>A.4</b> Documentation for Docker and Postgres</a></li>
+<li class="chapter" data-level="A.5" data-path="chapter-appendix-other-resources.html"><a href="chapter-appendix-other-resources.html#sql-and-dplyr"><i class="fa fa-check"></i><b>A.5</b> SQL and dplyr</a></li>
+<li class="chapter" data-level="A.6" data-path="chapter-appendix-other-resources.html"><a href="chapter-appendix-other-resources.html#more-resources"><i class="fa fa-check"></i><b>A.6</b> More Resources</a></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="chapter-environment-diagram.html"><a href="chapter-environment-diagram.html"><i class="fa fa-check"></i><b>B</b> Mapping your local environment diagram</a><ul>
+<li class="chapter" data-level="B.1" data-path="chapter-environment-diagram.html"><a href="chapter-environment-diagram.html#environment-tools-used-in-this-chapter"><i class="fa fa-check"></i><b>B.1</b> Environment Tools Used in this Chapter</a></li>
+<li class="chapter" data-level="B.2" data-path="chapter-environment-diagram.html"><a href="chapter-environment-diagram.html#communicating-with-docker-applications"><i class="fa fa-check"></i><b>B.2</b> Communicating with Docker Applications</a></li>
+</ul></li>
+<li class="chapter" data-level="C" data-path="chapter-step-at-a-time-docker.html"><a href="chapter-step-at-a-time-docker.html"><i class="fa fa-check"></i><b>C</b> Creating the sql-pet Docker container one step at a time</a><ul>
+<li class="chapter" data-level="C.1" data-path="chapter-step-at-a-time-docker.html"><a href="chapter-step-at-a-time-docker.html#overview-1"><i class="fa fa-check"></i><b>C.1</b> Overview</a></li>
+<li class="chapter" data-level="C.2" data-path="chapter-step-at-a-time-docker.html"><a href="chapter-step-at-a-time-docker.html#download-the-dvdrental-backup-file"><i class="fa fa-check"></i><b>C.2</b> Download the <code>dvdrental</code> backup file</a></li>
+<li class="chapter" data-level="C.3" data-path="chapter-step-at-a-time-docker.html"><a href="chapter-step-at-a-time-docker.html#build-the-docker-container"><i class="fa fa-check"></i><b>C.3</b> Build the Docker Container</a></li>
+<li class="chapter" data-level="C.4" data-path="chapter-step-at-a-time-docker.html"><a href="chapter-step-at-a-time-docker.html#create-the-database-and-restore-from-the-backup"><i class="fa fa-check"></i><b>C.4</b> Create the database and restore from the backup</a></li>
+<li class="chapter" data-level="C.5" data-path="chapter-step-at-a-time-docker.html"><a href="chapter-step-at-a-time-docker.html#connect-to-the-database-with-r"><i class="fa fa-check"></i><b>C.5</b> Connect to the database with R</a></li>
+<li class="chapter" data-level="C.6" data-path="chapter-step-at-a-time-docker.html"><a href="chapter-step-at-a-time-docker.html#cleaning-up-1"><i class="fa fa-check"></i><b>C.6</b> Cleaning up</a></li>
+</ul></li>
+<li class="chapter" data-level="D" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html"><i class="fa fa-check"></i><b>D</b> APPENDIX D - Quick Guide to SQL</a><ul>
+<li class="chapter" data-level="D.1" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html#data-definition-langauge-ddl"><i class="fa fa-check"></i><b>D.1</b> Data Definition Langauge (DDL)</a></li>
+<li class="chapter" data-level="D.2" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html#data-manipulation-langauge-dml"><i class="fa fa-check"></i><b>D.2</b> Data Manipulation Langauge (DML)</a></li>
+<li class="chapter" data-level="D.3" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html#data-control-language-dcl"><i class="fa fa-check"></i><b>D.3</b> Data Control Language (DCL)</a></li>
+<li class="chapter" data-level="D.4" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html#transaction-control-language-tcl"><i class="fa fa-check"></i><b>D.4</b> Transaction Control Language (TCL)</a></li>
+</ul></li>
+<li class="chapter" data-level="E" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html"><i class="fa fa-check"></i><b>E</b> Additional technical details for Windows users</a><ul>
+<li class="chapter" data-level="E.1" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#hardware-requirements"><i class="fa fa-check"></i><b>E.1</b> Hardware requirements</a></li>
+<li class="chapter" data-level="E.2" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#software-requirements"><i class="fa fa-check"></i><b>E.2</b> Software requirements</a><ul>
+<li class="chapter" data-level="E.2.1" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#windows-7-8-8.1-and-windows-10-home-64-bit"><i class="fa fa-check"></i><b>E.2.1</b> Windows 7, 8, 8.1 and Windows 10 Home (64 bit)</a></li>
+<li class="chapter" data-level="E.2.2" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#windows-10-pro"><i class="fa fa-check"></i><b>E.2.2</b> Windows 10 Pro</a></li>
+</ul></li>
+<li class="chapter" data-level="E.3" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#docker-for-windows-settings"><i class="fa fa-check"></i><b>E.3</b> Docker for Windows settings</a><ul>
+<li class="chapter" data-level="E.3.1" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#shared-drives"><i class="fa fa-check"></i><b>E.3.1</b> Shared drives</a></li>
+<li class="chapter" data-level="E.3.2" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#kubernetes"><i class="fa fa-check"></i><b>E.3.2</b> Kubernetes</a></li>
+</ul></li>
+<li class="chapter" data-level="E.4" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#git-github-and-line-endings"><i class="fa fa-check"></i><b>E.4</b> Git, GitHub and line endings</a></li>
+</ul></li>
+<li class="chapter" data-level="F" data-path="chapter-appendix-setup-instructions.html"><a href="chapter-appendix-setup-instructions.html"><i class="fa fa-check"></i><b>F</b> Setup instructions</a><ul>
+<li class="chapter" data-level="F.1" data-path="chapter-appendix-setup-instructions.html"><a href="chapter-appendix-setup-instructions.html#sandbox-prerequisites"><i class="fa fa-check"></i><b>F.1</b> Sandbox prerequisites</a></li>
+<li class="chapter" data-level="F.2" data-path="chapter-appendix-setup-instructions.html"><a href="chapter-appendix-setup-instructions.html#r-rstudio-and-git"><i class="fa fa-check"></i><b>F.2</b> R, RStudio and Git</a></li>
+<li class="chapter" data-level="F.3" data-path="chapter-appendix-setup-instructions.html"><a href="chapter-appendix-setup-instructions.html#install-docker"><i class="fa fa-check"></i><b>F.3</b> Install Docker</a></li>
+</ul></li>
+<li class="chapter" data-level="G" data-path="chapter-appendix-dplyr-functions.html"><a href="chapter-appendix-dplyr-functions.html"><i class="fa fa-check"></i><b>G</b> Dplyr functions and SQL cross-walk</a></li>
+<li class="chapter" data-level="H" data-path="chapter-appendix-dbi-functions.html"><a href="chapter-appendix-dbi-functions.html"><i class="fa fa-check"></i><b>H</b> DBI package functions - coverage</a></li>
+<li class="chapter" data-level="I" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html"><i class="fa fa-check"></i><b>I</b> PostgreSQL Authentication</a><ul>
+<li class="chapter" data-level="I.1" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#introduction"><i class="fa fa-check"></i><b>I.1</b> Introduction</a></li>
+<li class="chapter" data-level="I.2" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#password-authentication-on-the-postgresql-docker-image"><i class="fa fa-check"></i><b>I.2</b> Password authentication on the PostgreSQL Docker image</a></li>
+<li class="chapter" data-level="I.3" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#adding-roles"><i class="fa fa-check"></i><b>I.3</b> Adding roles</a><ul>
+<li class="chapter" data-level="I.3.1" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#setting-up-docker"><i class="fa fa-check"></i><b>I.3.1</b> Setting up Docker</a></li>
+<li class="chapter" data-level="I.3.2" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#creating-a-new-container"><i class="fa fa-check"></i><b>I.3.2</b> Creating a new container</a></li>
+<li class="chapter" data-level="I.3.3" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#adding-a-role"><i class="fa fa-check"></i><b>I.3.3</b> Adding a role</a></li>
+<li class="chapter" data-level="I.3.4" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#did-it-work"><i class="fa fa-check"></i><b>I.3.4</b> Did it work?</a></li>
+<li class="chapter" data-level="I.3.5" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#remove-the-container"><i class="fa fa-check"></i><b>I.3.5</b> Remove the container</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="J" data-path="chapter-appendix-docker-concepts.html"><a href="chapter-appendix-docker-concepts.html"><i class="fa fa-check"></i><b>J</b> Docker Concepts</a><ul>
+<li class="chapter" data-level="J.1" data-path="chapter-appendix-docker-concepts.html"><a href="chapter-appendix-docker-concepts.html#introduction-1"><i class="fa fa-check"></i><b>J.1</b> Introduction</a></li>
+<li class="chapter" data-level="J.2" data-path="chapter-appendix-docker-concepts.html"><a href="chapter-appendix-docker-concepts.html#virtual-machines-and-hypervisors-1"><i class="fa fa-check"></i><b>J.2</b> Virtual machines and hypervisors</a></li>
+<li class="chapter" data-level="J.3" data-path="chapter-appendix-docker-concepts.html"><a href="chapter-appendix-docker-concepts.html#containers-1"><i class="fa fa-check"></i><b>J.3</b> Containers</a></li>
+<li class="chapter" data-level="J.4" data-path="chapter-appendix-docker-concepts.html"><a href="chapter-appendix-docker-concepts.html#docker-1"><i class="fa fa-check"></i><b>J.4</b> Docker</a></li>
+<li class="chapter" data-level="J.5" data-path="chapter-appendix-docker-concepts.html"><a href="chapter-appendix-docker-concepts.html#docker-objects-1"><i class="fa fa-check"></i><b>J.5</b> Docker objects</a></li>
+<li class="chapter" data-level="J.6" data-path="chapter-appendix-docker-concepts.html"><a href="chapter-appendix-docker-concepts.html#windows-hosting"><i class="fa fa-check"></i><b>J.6</b> Windows hosting</a></li>
+<li class="chapter" data-level="J.7" data-path="chapter-appendix-docker-concepts.html"><a href="chapter-appendix-docker-concepts.html#macos-hosting"><i class="fa fa-check"></i><b>J.7</b> macOS hosting</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">R, Databases and Docker</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="chapter_postgresql-metadata" class="section level1">
+<h1><span class="header-section-number">Chapter 14</span> Getting metadata about and from PostgreSQL</h1>
+<blockquote>
+<p>This chapter demonstrates:</p>
+<ul>
+<li>What kind of data about the database is contained in a dbms</li>
+<li>Several methods for obtaining metadata from the dbms</li>
+</ul>
+</blockquote>
+<p>The following packages are used in this chapter:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)
+<span class="kw">library</span>(DBI)
+<span class="kw">library</span>(RPostgres)
+<span class="kw">library</span>(glue)
+<span class="kw">library</span>(here)
+<span class="kw">require</span>(knitr)
+<span class="kw">library</span>(dbplyr)
+<span class="kw">library</span>(sqlpetr)</code></pre>
+<p>Assume that the Docker container with PostgreSQL and the dvdrental database are ready to go.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_docker_start</span>(<span class="st">&quot;sql-pet&quot;</span>)</code></pre>
+<p>Connect to the database:</p>
+<pre class="sourceCode r"><code class="sourceCode r">con &lt;-<span class="st"> </span><span class="kw">sp_get_postgres_connection</span>(
+  <span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),
+  <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),
+  <span class="dt">dbname =</span> <span class="st">&quot;dvdrental&quot;</span>,
+  <span class="dt">seconds_to_test =</span> <span class="dv">30</span>
+)</code></pre>
+<div id="database-contents-and-structure" class="section level2">
+<h2><span class="header-section-number">14.1</span> Database contents and structure</h2>
+<p>After just looking at the data you seek, it might be worthwhile stepping back and looking at the big picture.</p>
+<div id="database-structure" class="section level3">
+<h3><span class="header-section-number">14.1.1</span> Database structure</h3>
+<p>For large or complex databases you need to use both the available documentation for your database (e.g., <a href="http://www.postgresqltutorial.com/postgresql-sample-database/">the dvdrental</a> database) and the other empirical tools that are available. For example it’s worth learning to interpret the symbols in an <a href="https://en.wikipedia.org/wiki/Entity%E2%80%93relationship_model">Entity Relationship Diagram</a>:</p>
+<p><img src="screenshots/ER-diagram-symbols.png" /></p>
+<p>The <code>information_schema</code> is a trove of information <em>about</em> the database. Its format is more or less consistent across the different SQL implementations that are available. Here we explore some of what’s available using several different methods. Postgres stores <a href="https://www.postgresql.org/docs/current/static/infoschema-columns.html">a lot of metadata</a>.</p>
+</div>
+<div id="contents-of-the-information_schema" class="section level3">
+<h3><span class="header-section-number">14.1.2</span> Contents of the <code>information_schema</code></h3>
+<p>For this chapter R needs the <code>dbplyr</code> package to access alternate schemas. A <a href="http://www.postgresqltutorial.com/postgresql-server-and-database-objects/">schema</a> is an object that contains one or more tables. Most often there will be a default schema, but to access the metadata, you need to explicitly specify which schema contains the data you want.</p>
+</div>
+<div id="what-tables-are-in-the-database" class="section level3">
+<h3><span class="header-section-number">14.1.3</span> What tables are in the database?</h3>
+<p>The simplest way to get a list of tables is with</p>
+<pre class="sourceCode r"><code class="sourceCode r">table_list &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbListTables</span>(con)
+
+<span class="kw">kable</span>(table_list)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">x</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">actor_info</td>
+</tr>
+<tr class="even">
+<td align="left">customer_list</td>
+</tr>
+<tr class="odd">
+<td align="left">film_list</td>
+</tr>
+<tr class="even">
+<td align="left">nicer_but_slower_film_list</td>
+</tr>
+<tr class="odd">
+<td align="left">sales_by_film_category</td>
+</tr>
+<tr class="even">
+<td align="left">staff</td>
+</tr>
+<tr class="odd">
+<td align="left">sales_by_store</td>
+</tr>
+<tr class="even">
+<td align="left">staff_list</td>
+</tr>
+<tr class="odd">
+<td align="left">category</td>
+</tr>
+<tr class="even">
+<td align="left">film_category</td>
+</tr>
+<tr class="odd">
+<td align="left">country</td>
+</tr>
+<tr class="even">
+<td align="left">actor</td>
+</tr>
+<tr class="odd">
+<td align="left">language</td>
+</tr>
+<tr class="even">
+<td align="left">inventory</td>
+</tr>
+<tr class="odd">
+<td align="left">payment</td>
+</tr>
+<tr class="even">
+<td align="left">rental</td>
+</tr>
+<tr class="odd">
+<td align="left">city</td>
+</tr>
+<tr class="even">
+<td align="left">store</td>
+</tr>
+<tr class="odd">
+<td align="left">film</td>
+</tr>
+<tr class="even">
+<td align="left">address</td>
+</tr>
+<tr class="odd">
+<td align="left">film_actor</td>
+</tr>
+<tr class="even">
+<td align="left">customer</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="digging-into-the-information_schema" class="section level3">
+<h3><span class="header-section-number">14.1.4</span> Digging into the <code>information_schema</code></h3>
+<p>We usually need more detail than just a list of tables. Most SQL databases have an <code>information_schema</code> that has a standard structure to describe and control the database.</p>
+<p>The <code>information_schema</code> is in a different schema from the default, so to connect to the <code>tables</code> table in the <code>information_schema</code> we connect to the database in a different way:</p>
+<pre class="sourceCode r"><code class="sourceCode r">table_info_schema_table &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, dbplyr<span class="op">::</span><span class="kw">in_schema</span>(<span class="st">&quot;information_schema&quot;</span>, <span class="st">&quot;tables&quot;</span>))</code></pre>
+<p>The <code>information_schema</code> is large and complex and contains 210 tables. So it’s easy to get lost in it.</p>
+<p>This query retrieves a list of the tables in the database that includes additional detail, not just the name of the table.</p>
+<pre class="sourceCode r"><code class="sourceCode r">table_info &lt;-<span class="st"> </span>table_info_schema_table <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(table_schema <span class="op">==</span><span class="st"> &quot;public&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(table_catalog, table_schema, table_name, table_type) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">arrange</span>(table_type, table_name) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">collect</span>()
+
+<span class="kw">kable</span>(table_info)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">table_catalog</th>
+<th align="left">table_schema</th>
+<th align="left">table_name</th>
+<th align="left">table_type</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">actor</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">address</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">category</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">city</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">country</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">customer</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">film</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">film_actor</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">film_category</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">inventory</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">language</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">payment</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">rental</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">staff</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">store</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">actor_info</td>
+<td align="left">VIEW</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">customer_list</td>
+<td align="left">VIEW</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">film_list</td>
+<td align="left">VIEW</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">nicer_but_slower_film_list</td>
+<td align="left">VIEW</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">sales_by_film_category</td>
+<td align="left">VIEW</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">sales_by_store</td>
+<td align="left">VIEW</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">staff_list</td>
+<td align="left">VIEW</td>
+</tr>
+<tr class="odd">
+<td align="left">In this context</td>
+<td align="left"><code>table_catalog</code></td>
+<td align="left">is synonymous with `database</td>
+<td align="left">`.</td>
+</tr>
+</tbody>
+</table>
+<p>Notice that <em>VIEWS</em> are composites made up of one or more <em>BASE TABLES</em>.</p>
+<p>The SQL world has its own terminology. For example <code>rs</code> is shorthand for <code>result set</code>. That’s equivalent to using <code>df</code> for a <code>data frame</code>. The following SQL query returns the same information as the previous one.</p>
+<pre class="sourceCode r"><code class="sourceCode r">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(
+  con,
+  <span class="st">&quot;select table_catalog, table_schema, table_name, table_type </span>
+<span class="st">  from information_schema.tables </span>
+<span class="st">  where table_schema not in (&#39;pg_catalog&#39;,&#39;information_schema&#39;)</span>
+<span class="st">  order by table_type, table_name </span>
+<span class="st">  ;&quot;</span>
+)
+<span class="kw">kable</span>(rs)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">table_catalog</th>
+<th align="left">table_schema</th>
+<th align="left">table_name</th>
+<th align="left">table_type</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">actor</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">address</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">category</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">city</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">country</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">customer</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">film</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">film_actor</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">film_category</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">inventory</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">language</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">payment</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">rental</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">staff</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">store</td>
+<td align="left">BASE TABLE</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">actor_info</td>
+<td align="left">VIEW</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">customer_list</td>
+<td align="left">VIEW</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">film_list</td>
+<td align="left">VIEW</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">nicer_but_slower_film_list</td>
+<td align="left">VIEW</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">sales_by_film_category</td>
+<td align="left">VIEW</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">sales_by_store</td>
+<td align="left">VIEW</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">public</td>
+<td align="left">staff_list</td>
+<td align="left">VIEW</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="what-columns-do-those-tables-contain" class="section level2">
+<h2><span class="header-section-number">14.2</span> What columns do those tables contain?</h2>
+<p>Of course, the <code>DBI</code> package has a <code>dbListFields</code> function that provides the simplest way to get the minimum, a list of column names:</p>
+<pre class="sourceCode r"><code class="sourceCode r">DBI<span class="op">::</span><span class="kw">dbListFields</span>(con, <span class="st">&quot;rental&quot;</span>)</code></pre>
+<pre><code>## [1] &quot;rental_id&quot;    &quot;rental_date&quot;  &quot;inventory_id&quot; &quot;customer_id&quot; 
+## [5] &quot;return_date&quot;  &quot;staff_id&quot;     &quot;last_update&quot;</code></pre>
+<p>But the <code>information_schema</code> has a lot more useful information that we can use.</p>
+<pre class="sourceCode r"><code class="sourceCode r">columns_info_schema_table &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, dbplyr<span class="op">::</span><span class="kw">in_schema</span>(<span class="st">&quot;information_schema&quot;</span>, <span class="st">&quot;columns&quot;</span>))</code></pre>
+<p>Since the <code>information_schema</code> contains 1855 columns, we are narrowing our focus to just one table. This query retrieves more information about the <code>rental</code> table:</p>
+<pre class="sourceCode r"><code class="sourceCode r">columns_info_schema_info &lt;-<span class="st"> </span>columns_info_schema_table <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(table_schema <span class="op">==</span><span class="st"> &quot;public&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(
+    table_catalog, table_schema, table_name, column_name, data_type, ordinal_position,
+    character_maximum_length, column_default, numeric_precision, numeric_precision_radix
+  ) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="ot">Inf</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">data_type =</span> <span class="kw">case_when</span>(
+    data_type <span class="op">==</span><span class="st"> &quot;character varying&quot;</span> <span class="op">~</span><span class="st"> </span><span class="kw">paste0</span>(data_type, <span class="st">&quot; (&quot;</span>, character_maximum_length, <span class="st">&quot;)&quot;</span>),
+    data_type <span class="op">==</span><span class="st"> &quot;real&quot;</span> <span class="op">~</span><span class="st"> </span><span class="kw">paste0</span>(data_type, <span class="st">&quot; (&quot;</span>, numeric_precision, <span class="st">&quot;,&quot;</span>, numeric_precision_radix, <span class="st">&quot;)&quot;</span>),
+    <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> </span>data_type
+  )) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(table_name <span class="op">==</span><span class="st"> &quot;rental&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>table_schema, <span class="op">-</span>numeric_precision, <span class="op">-</span>numeric_precision_radix)
+
+<span class="kw">glimpse</span>(columns_info_schema_info)</code></pre>
+<pre><code>## Observations: 7
+## Variables: 7
+## $ table_catalog            &lt;chr&gt; &quot;dvdrental&quot;, &quot;dvdrental&quot;, &quot;dvdrental&quot;, …
+## $ table_name               &lt;chr&gt; &quot;rental&quot;, &quot;rental&quot;, &quot;rental&quot;, &quot;rental&quot;,…
+## $ column_name              &lt;chr&gt; &quot;rental_id&quot;, &quot;rental_date&quot;, &quot;inventory_…
+## $ data_type                &lt;chr&gt; &quot;integer&quot;, &quot;timestamp without time zone…
+## $ ordinal_position         &lt;int&gt; 1, 2, 3, 4, 5, 6, 7
+## $ character_maximum_length &lt;int&gt; NA, NA, NA, NA, NA, NA, NA
+## $ column_default           &lt;chr&gt; &quot;nextval(&#39;rental_rental_id_seq&#39;::regcla…</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">kable</span>(columns_info_schema_info)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">table_catalog</th>
+<th align="left">table_name</th>
+<th align="left">column_name</th>
+<th align="left">data_type</th>
+<th align="right">ordinal_position</th>
+<th align="right">character_maximum_length</th>
+<th align="left">column_default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">rental</td>
+<td align="left">rental_id</td>
+<td align="left">integer</td>
+<td align="right">1</td>
+<td align="right">NA</td>
+<td align="left">nextval(‘rental_rental_id_seq’::regclass)</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">rental</td>
+<td align="left">rental_date</td>
+<td align="left">timestamp without time zone</td>
+<td align="right">2</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">rental</td>
+<td align="left">inventory_id</td>
+<td align="left">integer</td>
+<td align="right">3</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">rental</td>
+<td align="left">customer_id</td>
+<td align="left">smallint</td>
+<td align="right">4</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">rental</td>
+<td align="left">return_date</td>
+<td align="left">timestamp without time zone</td>
+<td align="right">5</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental</td>
+<td align="left">rental</td>
+<td align="left">staff_id</td>
+<td align="left">smallint</td>
+<td align="right">6</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental</td>
+<td align="left">rental</td>
+<td align="left">last_update</td>
+<td align="left">timestamp without time zone</td>
+<td align="right">7</td>
+<td align="right">NA</td>
+<td align="left">now()</td>
+</tr>
+</tbody>
+</table>
+<div id="what-is-the-difference-between-a-view-and-a-base-table" class="section level3">
+<h3><span class="header-section-number">14.2.1</span> What is the difference between a <code>VIEW</code> and a <code>BASE TABLE</code>?</h3>
+<p>The <code>BASE TABLE</code> has the underlying data in the database</p>
+<pre class="sourceCode r"><code class="sourceCode r">table_info_schema_table <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(table_schema <span class="op">==</span><span class="st"> &quot;public&quot;</span> <span class="op">&amp;</span><span class="st"> </span>table_type <span class="op">==</span><span class="st"> &quot;BASE TABLE&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(table_name, table_type) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">left_join</span>(columns_info_schema_table, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;table_name&quot;</span> =<span class="st"> &quot;table_name&quot;</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(
+    table_type, table_name, column_name, data_type, ordinal_position,
+    column_default
+  ) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="ot">Inf</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(<span class="kw">str_detect</span>(table_name, <span class="st">&quot;cust&quot;</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">kable</span>()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">table_type</th>
+<th align="left">table_name</th>
+<th align="left">column_name</th>
+<th align="left">data_type</th>
+<th align="right">ordinal_position</th>
+<th align="left">column_default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">BASE TABLE</td>
+<td align="left">customer</td>
+<td align="left">store_id</td>
+<td align="left">smallint</td>
+<td align="right">2</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">BASE TABLE</td>
+<td align="left">customer</td>
+<td align="left">first_name</td>
+<td align="left">character varying</td>
+<td align="right">3</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">BASE TABLE</td>
+<td align="left">customer</td>
+<td align="left">last_name</td>
+<td align="left">character varying</td>
+<td align="right">4</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">BASE TABLE</td>
+<td align="left">customer</td>
+<td align="left">email</td>
+<td align="left">character varying</td>
+<td align="right">5</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">BASE TABLE</td>
+<td align="left">customer</td>
+<td align="left">address_id</td>
+<td align="left">smallint</td>
+<td align="right">6</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">BASE TABLE</td>
+<td align="left">customer</td>
+<td align="left">active</td>
+<td align="left">integer</td>
+<td align="right">10</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">BASE TABLE</td>
+<td align="left">customer</td>
+<td align="left">customer_id</td>
+<td align="left">integer</td>
+<td align="right">1</td>
+<td align="left">nextval(‘customer_customer_id_seq’::regclass)</td>
+</tr>
+<tr class="even">
+<td align="left">BASE TABLE</td>
+<td align="left">customer</td>
+<td align="left">activebool</td>
+<td align="left">boolean</td>
+<td align="right">7</td>
+<td align="left">true</td>
+</tr>
+<tr class="odd">
+<td align="left">BASE TABLE</td>
+<td align="left">customer</td>
+<td align="left">create_date</td>
+<td align="left">date</td>
+<td align="right">8</td>
+<td align="left">(‘now’::text)::date</td>
+</tr>
+<tr class="even">
+<td align="left">BASE TABLE</td>
+<td align="left">customer</td>
+<td align="left">last_update</td>
+<td align="left">timestamp without time zone</td>
+<td align="right">9</td>
+<td align="left">now()</td>
+</tr>
+</tbody>
+</table>
+<p>Probably should explore how the <code>VIEW</code> is made up of data from BASE TABLEs.</p>
+<pre class="sourceCode r"><code class="sourceCode r">table_info_schema_table <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(table_schema <span class="op">==</span><span class="st"> &quot;public&quot;</span> <span class="op">&amp;</span><span class="st"> </span>table_type <span class="op">==</span><span class="st"> &quot;VIEW&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(table_name, table_type) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">left_join</span>(columns_info_schema_table, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;table_name&quot;</span> =<span class="st"> &quot;table_name&quot;</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(
+    table_type, table_name, column_name, data_type, ordinal_position,
+    column_default
+  ) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="ot">Inf</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(<span class="kw">str_detect</span>(table_name, <span class="st">&quot;cust&quot;</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">kable</span>()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">table_type</th>
+<th align="left">table_name</th>
+<th align="left">column_name</th>
+<th align="left">data_type</th>
+<th align="right">ordinal_position</th>
+<th align="left">column_default</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">VIEW</td>
+<td align="left">customer_list</td>
+<td align="left">id</td>
+<td align="left">integer</td>
+<td align="right">1</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">VIEW</td>
+<td align="left">customer_list</td>
+<td align="left">name</td>
+<td align="left">text</td>
+<td align="right">2</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">VIEW</td>
+<td align="left">customer_list</td>
+<td align="left">address</td>
+<td align="left">character varying</td>
+<td align="right">3</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">VIEW</td>
+<td align="left">customer_list</td>
+<td align="left">zip code</td>
+<td align="left">character varying</td>
+<td align="right">4</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">VIEW</td>
+<td align="left">customer_list</td>
+<td align="left">phone</td>
+<td align="left">character varying</td>
+<td align="right">5</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">VIEW</td>
+<td align="left">customer_list</td>
+<td align="left">city</td>
+<td align="left">character varying</td>
+<td align="right">6</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">VIEW</td>
+<td align="left">customer_list</td>
+<td align="left">country</td>
+<td align="left">character varying</td>
+<td align="right">7</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">VIEW</td>
+<td align="left">customer_list</td>
+<td align="left">notes</td>
+<td align="left">text</td>
+<td align="right">8</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">VIEW</td>
+<td align="left">customer_list</td>
+<td align="left">sid</td>
+<td align="left">smallint</td>
+<td align="right">9</td>
+<td align="left">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="what-data-types-are-found-in-the-database" class="section level3">
+<h3><span class="header-section-number">14.2.2</span> What data types are found in the database?</h3>
+<pre class="sourceCode r"><code class="sourceCode r">columns_info_schema_info <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(data_type)</code></pre>
+<pre><code>## # A tibble: 3 x 2
+##   data_type                       n
+##   &lt;chr&gt;                       &lt;int&gt;
+## 1 integer                         2
+## 2 smallint                        2
+## 3 timestamp without time zone     3</code></pre>
+</div>
+</div>
+<div id="characterizing-how-things-are-named" class="section level2">
+<h2><span class="header-section-number">14.3</span> Characterizing how things are named</h2>
+<p>Names are the handle for accessing the data. Tables and columns may or may not be named consistently or in a way that makes sense to you. You should look at these names <em>as data</em>.</p>
+<div id="counting-columns-and-name-reuse" class="section level3">
+<h3><span class="header-section-number">14.3.1</span> Counting columns and name reuse</h3>
+<p>Pull out some rough-and-ready but useful statistics about your database. Since we are in SQL-land we talk about variables as <code>columns</code>.</p>
+<pre class="sourceCode r"><code class="sourceCode r">public_tables &lt;-<span class="st"> </span>columns_info_schema_table <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(table_schema <span class="op">==</span><span class="st"> &quot;public&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">collect</span>()
+
+public_tables <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">count</span>(table_name, <span class="dt">sort =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>(<span class="dt">n =</span> <span class="dv">15</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">kable</span>()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">table_name</th>
+<th align="right">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">film</td>
+<td align="right">13</td>
+</tr>
+<tr class="even">
+<td align="left">staff</td>
+<td align="right">11</td>
+</tr>
+<tr class="odd">
+<td align="left">customer</td>
+<td align="right">10</td>
+</tr>
+<tr class="even">
+<td align="left">customer_list</td>
+<td align="right">9</td>
+</tr>
+<tr class="odd">
+<td align="left">address</td>
+<td align="right">8</td>
+</tr>
+<tr class="even">
+<td align="left">film_list</td>
+<td align="right">8</td>
+</tr>
+<tr class="odd">
+<td align="left">nicer_but_slower_film_list</td>
+<td align="right">8</td>
+</tr>
+<tr class="even">
+<td align="left">staff_list</td>
+<td align="right">8</td>
+</tr>
+<tr class="odd">
+<td align="left">rental</td>
+<td align="right">7</td>
+</tr>
+<tr class="even">
+<td align="left">payment</td>
+<td align="right">6</td>
+</tr>
+<tr class="odd">
+<td align="left">actor</td>
+<td align="right">4</td>
+</tr>
+<tr class="even">
+<td align="left">actor_info</td>
+<td align="right">4</td>
+</tr>
+<tr class="odd">
+<td align="left">city</td>
+<td align="right">4</td>
+</tr>
+<tr class="even">
+<td align="left">inventory</td>
+<td align="right">4</td>
+</tr>
+<tr class="odd">
+<td align="left">store</td>
+<td align="right">4</td>
+</tr>
+</tbody>
+</table>
+<p>How many <em>column names</em> are shared across tables (or duplicated)?</p>
+<pre class="sourceCode r"><code class="sourceCode r">public_tables <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(column_name, <span class="dt">sort =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(n <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>)</code></pre>
+<pre><code>## # A tibble: 34 x 2
+##    column_name     n
+##    &lt;chr&gt;       &lt;int&gt;
+##  1 last_update    14
+##  2 address_id      4
+##  3 film_id         4
+##  4 first_name      4
+##  5 last_name       4
+##  6 name            4
+##  7 store_id        4
+##  8 actor_id        3
+##  9 address         3
+## 10 category        3
+## # … with 24 more rows</code></pre>
+<p>How many column names are unique?</p>
+<pre class="sourceCode r"><code class="sourceCode r">public_tables <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(column_name) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(n <span class="op">==</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>()</code></pre>
+<pre><code>## # A tibble: 1 x 1
+##      nn
+##   &lt;int&gt;
+## 1    24</code></pre>
+</div>
+</div>
+<div id="database-keys" class="section level2">
+<h2><span class="header-section-number">14.4</span> Database keys</h2>
+<div id="direct-sql" class="section level3">
+<h3><span class="header-section-number">14.4.1</span> Direct SQL</h3>
+<p>How do we use this output? Could it be generated by dplyr?</p>
+<pre class="sourceCode r"><code class="sourceCode r">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(
+  con,
+  <span class="st">&quot;</span>
+<span class="st">--SELECT conrelid::regclass as table_from</span>
+<span class="st">select table_catalog||&#39;.&#39;||table_schema||&#39;.&#39;||table_name table_name</span>
+<span class="st">, conname, pg_catalog.pg_get_constraintdef(r.oid, true) as condef</span>
+<span class="st">FROM information_schema.columns c,pg_catalog.pg_constraint r</span>
+<span class="st">WHERE 1 = 1 --r.conrelid = &#39;16485&#39; </span>
+<span class="st">  AND r.contype  in (&#39;f&#39;,&#39;p&#39;) ORDER BY 1</span>
+<span class="st">;&quot;</span>
+)
+<span class="kw">glimpse</span>(rs)</code></pre>
+<pre><code>## Observations: 61,215
+## Variables: 3
+## $ table_name &lt;chr&gt; &quot;dvdrental.information_schema.administrable_role_auth…
+## $ conname    &lt;chr&gt; &quot;actor_pkey&quot;, &quot;actor_pkey&quot;, &quot;actor_pkey&quot;, &quot;country_pk…
+## $ condef     &lt;chr&gt; &quot;PRIMARY KEY (actor_id)&quot;, &quot;PRIMARY KEY (actor_id)&quot;, &quot;…</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">kable</span>(<span class="kw">head</span>(rs))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">table_name</th>
+<th align="left">conname</th>
+<th align="left">condef</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">dvdrental.information_schema.administrable_role_authorizations</td>
+<td align="left">actor_pkey</td>
+<td align="left">PRIMARY KEY (actor_id)</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental.information_schema.administrable_role_authorizations</td>
+<td align="left">actor_pkey</td>
+<td align="left">PRIMARY KEY (actor_id)</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental.information_schema.administrable_role_authorizations</td>
+<td align="left">actor_pkey</td>
+<td align="left">PRIMARY KEY (actor_id)</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental.information_schema.administrable_role_authorizations</td>
+<td align="left">country_pkey</td>
+<td align="left">PRIMARY KEY (country_id)</td>
+</tr>
+<tr class="odd">
+<td align="left">dvdrental.information_schema.administrable_role_authorizations</td>
+<td align="left">country_pkey</td>
+<td align="left">PRIMARY KEY (country_id)</td>
+</tr>
+<tr class="even">
+<td align="left">dvdrental.information_schema.administrable_role_authorizations</td>
+<td align="left">country_pkey</td>
+<td align="left">PRIMARY KEY (country_id)</td>
+</tr>
+<tr class="odd">
+<td align="left">The following is more compact and looks more useful. What is the</td>
+<td align="left">difference bet</td>
+<td align="left">ween the two?</td>
+</tr>
+</tbody>
+</table>
+<pre class="sourceCode r"><code class="sourceCode r">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(
+  con,
+  <span class="st">&quot;select conrelid::regclass as table_from</span>
+<span class="st">      ,c.conname</span>
+<span class="st">      ,pg_get_constraintdef(c.oid)</span>
+<span class="st">  from pg_constraint c</span>
+<span class="st">  join pg_namespace n on n.oid = c.connamespace</span>
+<span class="st"> where c.contype in (&#39;f&#39;,&#39;p&#39;)</span>
+<span class="st">   and n.nspname = &#39;public&#39;</span>
+<span class="st">order by conrelid::regclass::text, contype DESC;</span>
+<span class="st">&quot;</span>
+)
+<span class="kw">glimpse</span>(rs)</code></pre>
+<pre><code>## Observations: 33
+## Variables: 3
+## $ table_from           &lt;chr&gt; &quot;actor&quot;, &quot;address&quot;, &quot;address&quot;, &quot;category&quot;, …
+## $ conname              &lt;chr&gt; &quot;actor_pkey&quot;, &quot;address_pkey&quot;, &quot;fk_address_c…
+## $ pg_get_constraintdef &lt;chr&gt; &quot;PRIMARY KEY (actor_id)&quot;, &quot;PRIMARY KEY (add…</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">kable</span>(<span class="kw">head</span>(rs))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">table_from</th>
+<th align="left">conname</th>
+<th align="left">pg_get_constraintdef</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">actor</td>
+<td align="left">actor_pkey</td>
+<td align="left">PRIMARY KEY (actor_id)</td>
+</tr>
+<tr class="even">
+<td align="left">address</td>
+<td align="left">address_pkey</td>
+<td align="left">PRIMARY KEY (address_id)</td>
+</tr>
+<tr class="odd">
+<td align="left">address</td>
+<td align="left">fk_address_city</td>
+<td align="left">FOREIGN KEY (city_id) REFERENCES city(city_id)</td>
+</tr>
+<tr class="even">
+<td align="left">category</td>
+<td align="left">category_pkey</td>
+<td align="left">PRIMARY KEY (category_id)</td>
+</tr>
+<tr class="odd">
+<td align="left">city</td>
+<td align="left">city_pkey</td>
+<td align="left">PRIMARY KEY (city_id)</td>
+</tr>
+<tr class="even">
+<td align="left">city</td>
+<td align="left">fk_city</td>
+<td align="left">FOREIGN KEY (country_id) REFERENCES country(country_id)</td>
+</tr>
+</tbody>
+</table>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dim</span>(rs)[<span class="dv">1</span>]</code></pre>
+<pre><code>## [1] 33</code></pre>
+</div>
+<div id="database-keys-with-dplyr" class="section level3">
+<h3><span class="header-section-number">14.4.2</span> Database keys with dplyr</h3>
+<p>This query shows the primary and foreign keys in the database.</p>
+<pre class="sourceCode r"><code class="sourceCode r">tables &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, dbplyr<span class="op">::</span><span class="kw">in_schema</span>(<span class="st">&quot;information_schema&quot;</span>, <span class="st">&quot;tables&quot;</span>))
+table_constraints &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, dbplyr<span class="op">::</span><span class="kw">in_schema</span>(<span class="st">&quot;information_schema&quot;</span>, <span class="st">&quot;table_constraints&quot;</span>))
+key_column_usage &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, dbplyr<span class="op">::</span><span class="kw">in_schema</span>(<span class="st">&quot;information_schema&quot;</span>, <span class="st">&quot;key_column_usage&quot;</span>))
+referential_constraints &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, dbplyr<span class="op">::</span><span class="kw">in_schema</span>(<span class="st">&quot;information_schema&quot;</span>, <span class="st">&quot;referential_constraints&quot;</span>))
+constraint_column_usage &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, dbplyr<span class="op">::</span><span class="kw">in_schema</span>(<span class="st">&quot;information_schema&quot;</span>, <span class="st">&quot;constraint_column_usage&quot;</span>))
+
+keys &lt;-<span class="st"> </span>tables <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">left_join</span>(table_constraints, <span class="dt">by =</span> <span class="kw">c</span>(
+    <span class="st">&quot;table_catalog&quot;</span> =<span class="st"> &quot;table_catalog&quot;</span>,
+    <span class="st">&quot;table_schema&quot;</span> =<span class="st"> &quot;table_schema&quot;</span>,
+    <span class="st">&quot;table_name&quot;</span> =<span class="st"> &quot;table_name&quot;</span>
+  )) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="co"># table_constraints %&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(constraint_type <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;FOREIGN KEY&quot;</span>, <span class="st">&quot;PRIMARY KEY&quot;</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">left_join</span>(key_column_usage,
+    <span class="dt">by =</span> <span class="kw">c</span>(
+      <span class="st">&quot;table_catalog&quot;</span> =<span class="st"> &quot;table_catalog&quot;</span>,
+      <span class="st">&quot;constraint_catalog&quot;</span> =<span class="st"> &quot;constraint_catalog&quot;</span>,
+      <span class="st">&quot;constraint_schema&quot;</span> =<span class="st"> &quot;constraint_schema&quot;</span>,
+      <span class="st">&quot;table_name&quot;</span> =<span class="st"> &quot;table_name&quot;</span>,
+      <span class="st">&quot;table_schema&quot;</span> =<span class="st"> &quot;table_schema&quot;</span>,
+      <span class="st">&quot;constraint_name&quot;</span> =<span class="st"> &quot;constraint_name&quot;</span>
+    )
+  ) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="co"># left_join(constraint_column_usage) %&gt;% # does this table add anything useful?</span>
+<span class="st">  </span><span class="kw">select</span>(table_name, table_type, constraint_name, constraint_type, column_name, ordinal_position) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">arrange</span>(table_name) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">collect</span>()
+<span class="kw">glimpse</span>(keys)</code></pre>
+<pre><code>## Observations: 35
+## Variables: 6
+## $ table_name       &lt;chr&gt; &quot;actor&quot;, &quot;address&quot;, &quot;address&quot;, &quot;category&quot;, &quot;cit…
+## $ table_type       &lt;chr&gt; &quot;BASE TABLE&quot;, &quot;BASE TABLE&quot;, &quot;BASE TABLE&quot;, &quot;BASE…
+## $ constraint_name  &lt;chr&gt; &quot;actor_pkey&quot;, &quot;address_pkey&quot;, &quot;fk_address_city&quot;…
+## $ constraint_type  &lt;chr&gt; &quot;PRIMARY KEY&quot;, &quot;PRIMARY KEY&quot;, &quot;FOREIGN KEY&quot;, &quot;P…
+## $ column_name      &lt;chr&gt; &quot;actor_id&quot;, &quot;address_id&quot;, &quot;city_id&quot;, &quot;category_…
+## $ ordinal_position &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1,…</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">kable</span>(keys)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">table_name</th>
+<th align="left">table_type</th>
+<th align="left">constraint_name</th>
+<th align="left">constraint_type</th>
+<th align="left">column_name</th>
+<th align="right">ordinal_position</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">actor</td>
+<td align="left">BASE TABLE</td>
+<td align="left">actor_pkey</td>
+<td align="left">PRIMARY KEY</td>
+<td align="left">actor_id</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">address</td>
+<td align="left">BASE TABLE</td>
+<td align="left">address_pkey</td>
+<td align="left">PRIMARY KEY</td>
+<td align="left">address_id</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">address</td>
+<td align="left">BASE TABLE</td>
+<td align="left">fk_address_city</td>
+<td align="left">FOREIGN KEY</td>
+<td align="left">city_id</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">category</td>
+<td align="left">BASE TABLE</td>
+<td align="left">category_pkey</td>
+<td align="left">PRIMARY KEY</td>
+<td align="left">category_id</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">city</td>
+<td align="left">BASE TABLE</td>
+<td align="left">city_pkey</td>
+<td align="left">PRIMARY KEY</td>
+<td align="left">city_id</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">city</td>
+<td align="left">BASE TABLE</td>
+<td align="left">fk_city</td>
+<td align="left">FOREIGN KEY</td>
+<td align="left">country_id</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">country</td>
+<td align="left">BASE TABLE</td>
+<td align="left">country_pkey</td>
+<td align="left">PRIMARY KEY</td>
+<td align="left">country_id</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">customer</td>
+<td align="left">BASE TABLE</td>
+<td align="left">customer_address_id_fkey</td>
+<td align="left">FOREIGN KEY</td>
+<td align="left">address_id</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">customer</td>
+<td align="left">BASE TABLE</td>
+<td align="left">customer_pkey</td>
+<td align="left">PRIMARY KEY</td>
+<td align="left">customer_id</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">film</td>
+<td align="left">BASE TABLE</td>
+<td align="left">film_language_id_fkey</td>
+<td align="left">FOREIGN KEY</td>
+<td align="left">language_id</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">film</td>
+<td align="left">BASE TABLE</td>
+<td align="left">film_pkey</td>
+<td align="left">PRIMARY KEY</td>
+<td align="left">film_id</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">film_actor</td>
+<td align="left">BASE TABLE</td>
+<td align="left">film_actor_actor_id_fkey</td>
+<td align="left">FOREIGN KEY</td>
+<td align="left">actor_id</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">film_actor</td>
+<td align="left">BASE TABLE</td>
+<td align="left">film_actor_film_id_fkey</td>
+<td align="left">FOREIGN KEY</td>
+<td align="left">film_id</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">film_actor</td>
+<td align="left">BASE TABLE</td>
+<td align="left">film_actor_pkey</td>
+<td align="left">PRIMARY KEY</td>
+<td align="left">actor_id</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">film_actor</td>
+<td align="left">BASE TABLE</td>
+<td align="left">film_actor_pkey</td>
+<td align="left">PRIMARY KEY</td>
+<td align="left">film_id</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td align="left">film_category</td>
+<td align="left">BASE TABLE</td>
+<td align="left">film_category_category_id_fkey</td>
+<td align="left">FOREIGN KEY</td>
+<td align="left">category_id</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">film_category</td>
+<td align="left">BASE TABLE</td>
+<td align="left">film_category_film_id_fkey</td>
+<td align="left">FOREIGN KEY</td>
+<td align="left">film_id</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">film_category</td>
+<td align="left">BASE TABLE</td>
+<td align="left">film_category_pkey</td>
+<td align="left">PRIMARY KEY</td>
+<td align="left">film_id</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">film_category</td>
+<td align="left">BASE TABLE</td>
+<td align="left">film_category_pkey</td>
+<td align="left">PRIMARY KEY</td>
+<td align="left">category_id</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td align="left">inventory</td>
+<td align="left">BASE TABLE</td>
+<td align="left">inventory_film_id_fkey</td>
+<td align="left">FOREIGN KEY</td>
+<td align="left">film_id</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">inventory</td>
+<td align="left">BASE TABLE</td>
+<td align="left">inventory_pkey</td>
+<td align="left">PRIMARY KEY</td>
+<td align="left">inventory_id</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">language</td>
+<td align="left">BASE TABLE</td>
+<td align="left">language_pkey</td>
+<td align="left">PRIMARY KEY</td>
+<td align="left">language_id</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">payment</td>
+<td align="left">BASE TABLE</td>
+<td align="left">payment_customer_id_fkey</td>
+<td align="left">FOREIGN KEY</td>
+<td align="left">customer_id</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">payment</td>
+<td align="left">BASE TABLE</td>
+<td align="left">payment_pkey</td>
+<td align="left">PRIMARY KEY</td>
+<td align="left">payment_id</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">payment</td>
+<td align="left">BASE TABLE</td>
+<td align="left">payment_rental_id_fkey</td>
+<td align="left">FOREIGN KEY</td>
+<td align="left">rental_id</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">payment</td>
+<td align="left">BASE TABLE</td>
+<td align="left">payment_staff_id_fkey</td>
+<td align="left">FOREIGN KEY</td>
+<td align="left">staff_id</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">rental</td>
+<td align="left">BASE TABLE</td>
+<td align="left">rental_customer_id_fkey</td>
+<td align="left">FOREIGN KEY</td>
+<td align="left">customer_id</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">rental</td>
+<td align="left">BASE TABLE</td>
+<td align="left">rental_inventory_id_fkey</td>
+<td align="left">FOREIGN KEY</td>
+<td align="left">inventory_id</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">rental</td>
+<td align="left">BASE TABLE</td>
+<td align="left">rental_pkey</td>
+<td align="left">PRIMARY KEY</td>
+<td align="left">rental_id</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">rental</td>
+<td align="left">BASE TABLE</td>
+<td align="left">rental_staff_id_key</td>
+<td align="left">FOREIGN KEY</td>
+<td align="left">staff_id</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">staff</td>
+<td align="left">BASE TABLE</td>
+<td align="left">staff_address_id_fkey</td>
+<td align="left">FOREIGN KEY</td>
+<td align="left">address_id</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">staff</td>
+<td align="left">BASE TABLE</td>
+<td align="left">staff_pkey</td>
+<td align="left">PRIMARY KEY</td>
+<td align="left">staff_id</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">store</td>
+<td align="left">BASE TABLE</td>
+<td align="left">store_address_id_fkey</td>
+<td align="left">FOREIGN KEY</td>
+<td align="left">address_id</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">store</td>
+<td align="left">BASE TABLE</td>
+<td align="left">store_manager_staff_id_fkey</td>
+<td align="left">FOREIGN KEY</td>
+<td align="left">manager_staff_id</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">store</td>
+<td align="left">BASE TABLE</td>
+<td align="left">store_pkey</td>
+<td align="left">PRIMARY KEY</td>
+<td align="left">store_id</td>
+<td align="right">1</td>
+</tr>
+</tbody>
+</table>
+<p>What do we learn from the following query? How is it useful?</p>
+<pre class="sourceCode r"><code class="sourceCode r">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(
+  con,
+  <span class="st">&quot;SELECT r.*,</span>
+<span class="st">  pg_catalog.pg_get_constraintdef(r.oid, true) as condef</span>
+<span class="st">  FROM pg_catalog.pg_constraint r</span>
+<span class="st">  WHERE 1=1 --r.conrelid = &#39;16485&#39; AND r.contype = &#39;f&#39; ORDER BY 1;</span>
+<span class="st">  &quot;</span>
+)
+
+<span class="kw">head</span>(rs)</code></pre>
+<pre><code>##                        conname connamespace contype condeferrable
+## 1 cardinal_number_domain_check        12703       c         FALSE
+## 2              yes_or_no_check        12703       c         FALSE
+## 3                   year_check         2200       c         FALSE
+## 4                   actor_pkey         2200       p         FALSE
+## 5                 address_pkey         2200       p         FALSE
+## 6                category_pkey         2200       p         FALSE
+##   condeferred convalidated conrelid contypid conindid confrelid
+## 1       FALSE         TRUE        0    12716        0         0
+## 2       FALSE         TRUE        0    12724        0         0
+## 3       FALSE         TRUE        0    16397        0         0
+## 4       FALSE         TRUE    16420        0    16555         0
+## 5       FALSE         TRUE    16461        0    16557         0
+## 6       FALSE         TRUE    16427        0    16559         0
+##   confupdtype confdeltype confmatchtype conislocal coninhcount
+## 1                                             TRUE           0
+## 2                                             TRUE           0
+## 3                                             TRUE           0
+## 4                                             TRUE           0
+## 5                                             TRUE           0
+## 6                                             TRUE           0
+##   connoinherit conkey confkey conpfeqop conppeqop conffeqop conexclop
+## 1        FALSE   &lt;NA&gt;    &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+## 2        FALSE   &lt;NA&gt;    &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+## 3        FALSE   &lt;NA&gt;    &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+## 4         TRUE    {1}    &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+## 5         TRUE    {1}    &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+## 6         TRUE    {1}    &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+##                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  conbin
+## 1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       {OPEXPR :opno 525 :opfuncid 150 :opresulttype 16 :opretset false :opcollid 0 :inputcollid 0 :args ({COERCETODOMAINVALUE :typeId 23 :typeMod -1 :collation 0 :location 195} {CONST :consttype 23 :consttypmod -1 :constcollid 0 :constlen 4 :constbyval true :constisnull false :location 204 :constvalue 4 [ 0 0 0 0 0 0 0 0 ]}) :location 201}
+## 2 {SCALARARRAYOPEXPR :opno 98 :opfuncid 67 :useOr true :inputcollid 100 :args ({RELABELTYPE :arg {COERCETODOMAINVALUE :typeId 1043 :typeMod 7 :collation 100 :location 121} :resulttype 25 :resulttypmod -1 :resultcollid 100 :relabelformat 2 :location -1} {ARRAYCOERCEEXPR :arg {ARRAY :array_typeid 1015 :array_collid 100 :element_typeid 1043 :elements ({CONST :consttype 1043 :consttypmod -1 :constcollid 100 :constlen -1 :constbyval false :constisnull false :location 131 :constvalue 7 [ 28 0 0 0 89 69 83 ]} {CONST :consttype 1043 :consttypmod -1 :constcollid 100 :constlen -1 :constbyval false :constisnull false :location 138 :constvalue 6 [ 24 0 0 0 78 79 ]}) :multidims false :location -1} :elemfuncid 0 :resulttype 1009 :resulttypmod -1 :resultcollid 100 :isExplicit false :coerceformat 2 :location -1}) :location 127}
+## 3                                                                                                             {BOOLEXPR :boolop and :args ({OPEXPR :opno 525 :opfuncid 150 :opresulttype 16 :opretset false :opcollid 0 :inputcollid 0 :args ({COERCETODOMAINVALUE :typeId 23 :typeMod -1 :collation 0 :location 62} {CONST :consttype 23 :consttypmod -1 :constcollid 0 :constlen 4 :constbyval true :constisnull false :location 71 :constvalue 4 [ 109 7 0 0 0 0 0 0 ]}) :location 68} {OPEXPR :opno 523 :opfuncid 149 :opresulttype 16 :opretset false :opcollid 0 :inputcollid 0 :args ({COERCETODOMAINVALUE :typeId 23 :typeMod -1 :collation 0 :location 82} {CONST :consttype 23 :consttypmod -1 :constcollid 0 :constlen 4 :constbyval true :constisnull false :location 91 :constvalue 4 [ 107 8 0 0 0 0 0 0 ]}) :location 88}) :location 77}
+## 4                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  &lt;NA&gt;
+## 5                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  &lt;NA&gt;
+## 6                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  &lt;NA&gt;
+##                                                                                       consrc
+## 1                                                                               (VALUE &gt;= 0)
+## 2 ((VALUE)::text = ANY ((ARRAY[&#39;YES&#39;::character varying, &#39;NO&#39;::character varying])::text[]))
+## 3                                                      ((VALUE &gt;= 1901) AND (VALUE &lt;= 2155))
+## 4                                                                                       &lt;NA&gt;
+## 5                                                                                       &lt;NA&gt;
+## 6                                                                                       &lt;NA&gt;
+##                                                                                         condef
+## 1                                                                           CHECK (VALUE &gt;= 0)
+## 2 CHECK (VALUE::text = ANY (ARRAY[&#39;YES&#39;::character varying, &#39;NO&#39;::character varying]::text[]))
+## 3                                                      CHECK (VALUE &gt;= 1901 AND VALUE &lt;= 2155)
+## 4                                                                       PRIMARY KEY (actor_id)
+## 5                                                                     PRIMARY KEY (address_id)
+## 6                                                                    PRIMARY KEY (category_id)</code></pre>
+</div>
+</div>
+<div id="creating-your-own-data-dictionary" class="section level2">
+<h2><span class="header-section-number">14.5</span> Creating your own data dictionary</h2>
+<p>If you are going to work with a database for an extended period it can be useful to create your own data dictionary. This can take the form of <a href="https://caitlinhudon.com/2018/10/30/data-dictionaries/">keeping detaild notes</a> as well as extracting metadata from the dbms. Here is an illustration of the idea.</p>
+<pre class="sourceCode r"><code class="sourceCode r">some_tables &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;rental&quot;</span>, <span class="st">&quot;city&quot;</span>, <span class="st">&quot;store&quot;</span>)
+
+all_meta &lt;-<span class="st"> </span><span class="kw">map_df</span>(some_tables, sp_get_dbms_data_dictionary, <span class="dt">con =</span> con)
+
+all_meta</code></pre>
+<pre><code>## # A tibble: 15 x 11
+##    table_name var_name var_type num_rows num_blank num_unique min   q_25 
+##    &lt;chr&gt;      &lt;chr&gt;    &lt;chr&gt;       &lt;int&gt;     &lt;int&gt;      &lt;int&gt; &lt;chr&gt; &lt;chr&gt;
+##  1 rental     rental_… integer     16044         0      16044 1     4013 
+##  2 rental     rental_… double      16044         0      15815 2005… 2005…
+##  3 rental     invento… integer     16044         0       4580 1     1154 
+##  4 rental     custome… integer     16044         0        599 1     148  
+##  5 rental     return_… double      16044       183      15836 2005… 2005…
+##  6 rental     staff_id integer     16044         0          2 1     1    
+##  7 rental     last_up… double      16044         0          3 2006… 2006…
+##  8 city       city_id  integer       600         0        600 1     150  
+##  9 city       city     charact…      600         0        599 A Co… Dzer…
+## 10 city       country… integer       600         0        109 1     28   
+## 11 city       last_up… double        600         0          1 2006… 2006…
+## 12 store      store_id integer         2         0          2 1     1    
+## 13 store      manager… integer         2         0          2 1     1    
+## 14 store      address… integer         2         0          2 1     1    
+## 15 store      last_up… double          2         0          1 2006… 2006…
+## # … with 3 more variables: q_50 &lt;chr&gt;, q_75 &lt;chr&gt;, max &lt;chr&gt;</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">glimpse</span>(all_meta)</code></pre>
+<pre><code>## Observations: 15
+## Variables: 11
+## $ table_name &lt;chr&gt; &quot;rental&quot;, &quot;rental&quot;, &quot;rental&quot;, &quot;rental&quot;, &quot;rental&quot;, &quot;re…
+## $ var_name   &lt;chr&gt; &quot;rental_id&quot;, &quot;rental_date&quot;, &quot;inventory_id&quot;, &quot;customer…
+## $ var_type   &lt;chr&gt; &quot;integer&quot;, &quot;double&quot;, &quot;integer&quot;, &quot;integer&quot;, &quot;double&quot;, …
+## $ num_rows   &lt;int&gt; 16044, 16044, 16044, 16044, 16044, 16044, 16044, 600,…
+## $ num_blank  &lt;int&gt; 0, 0, 0, 0, 183, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+## $ num_unique &lt;int&gt; 16044, 15815, 4580, 599, 15836, 2, 3, 600, 599, 109, …
+## $ min        &lt;chr&gt; &quot;1&quot;, &quot;2005-05-24 22:53:30&quot;, &quot;1&quot;, &quot;1&quot;, &quot;2005-05-25 23:…
+## $ q_25       &lt;chr&gt; &quot;4013&quot;, &quot;2005-07-07 00:58:00&quot;, &quot;1154&quot;, &quot;148&quot;, &quot;2005-0…
+## $ q_50       &lt;chr&gt; &quot;8025&quot;, &quot;2005-07-28 16:03:27&quot;, &quot;2291&quot;, &quot;296&quot;, &quot;2005-0…
+## $ q_75       &lt;chr&gt; &quot;12037&quot;, &quot;2005-08-17 21:13:35&quot;, &quot;3433&quot;, &quot;446&quot;, &quot;2005-…
+## $ max        &lt;chr&gt; &quot;16049&quot;, &quot;2006-02-14 15:16:03&quot;, &quot;4581&quot;, &quot;599&quot;, &quot;2005-…</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">kable</span>(<span class="kw">head</span>(all_meta))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">table_name</th>
+<th align="left">var_name</th>
+<th align="left">var_type</th>
+<th align="right">num_rows</th>
+<th align="right">num_blank</th>
+<th align="right">num_unique</th>
+<th align="left">min</th>
+<th align="left">q_25</th>
+<th align="left">q_50</th>
+<th align="left">q_75</th>
+<th align="left">max</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">rental</td>
+<td align="left">rental_id</td>
+<td align="left">integer</td>
+<td align="right">16044</td>
+<td align="right">0</td>
+<td align="right">16044</td>
+<td align="left">1</td>
+<td align="left">4013</td>
+<td align="left">8025</td>
+<td align="left">12037</td>
+<td align="left">16049</td>
+</tr>
+<tr class="even">
+<td align="left">rental</td>
+<td align="left">rental_date</td>
+<td align="left">double</td>
+<td align="right">16044</td>
+<td align="right">0</td>
+<td align="right">15815</td>
+<td align="left">2005-05-24 22:53:30</td>
+<td align="left">2005-07-07 00:58:00</td>
+<td align="left">2005-07-28 16:03:27</td>
+<td align="left">2005-08-17 21:13:35</td>
+<td align="left">2006-02-14 15:16:03</td>
+</tr>
+<tr class="odd">
+<td align="left">rental</td>
+<td align="left">inventory_id</td>
+<td align="left">integer</td>
+<td align="right">16044</td>
+<td align="right">0</td>
+<td align="right">4580</td>
+<td align="left">1</td>
+<td align="left">1154</td>
+<td align="left">2291</td>
+<td align="left">3433</td>
+<td align="left">4581</td>
+</tr>
+<tr class="even">
+<td align="left">rental</td>
+<td align="left">customer_id</td>
+<td align="left">integer</td>
+<td align="right">16044</td>
+<td align="right">0</td>
+<td align="right">599</td>
+<td align="left">1</td>
+<td align="left">148</td>
+<td align="left">296</td>
+<td align="left">446</td>
+<td align="left">599</td>
+</tr>
+<tr class="odd">
+<td align="left">rental</td>
+<td align="left">return_date</td>
+<td align="left">double</td>
+<td align="right">16044</td>
+<td align="right">183</td>
+<td align="right">15836</td>
+<td align="left">2005-05-25 23:55:21</td>
+<td align="left">2005-07-10 15:48:58</td>
+<td align="left">2005-08-01 19:31:15</td>
+<td align="left">2005-08-20 23:32:29</td>
+<td align="left">2005-09-02 02:35:22</td>
+</tr>
+<tr class="even">
+<td align="left">rental</td>
+<td align="left">staff_id</td>
+<td align="left">integer</td>
+<td align="right">16044</td>
+<td align="right">0</td>
+<td align="right">2</td>
+<td align="left">1</td>
+<td align="left">1</td>
+<td align="left">1</td>
+<td align="left">2</td>
+<td align="left">2</td>
+</tr>
+<tr class="odd">
+<td align="left">## Save your</td>
+<td align="left">work!</td>
+<td align="left"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+<p>The work you do to understand the structure and contents of a database can be useful for others (including future-you). So at the end of a session, you might look at all the data frames you want to save. Consider saving them in a form where you can add notes at the appropriate level (as in a Google Doc representing table or columns that you annotate over time).</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ls</span>()</code></pre>
+<pre><code>##  [1] &quot;all_meta&quot;                  &quot;columns_info_schema_info&quot; 
+##  [3] &quot;columns_info_schema_table&quot; &quot;con&quot;                      
+##  [5] &quot;constraint_column_usage&quot;   &quot;cranex&quot;                   
+##  [7] &quot;key_column_usage&quot;          &quot;keys&quot;                     
+##  [9] &quot;public_tables&quot;             &quot;referential_constraints&quot;  
+## [11] &quot;rs&quot;                        &quot;some_tables&quot;              
+## [13] &quot;table_constraints&quot;         &quot;table_info&quot;               
+## [15] &quot;table_info_schema_table&quot;   &quot;table_list&quot;               
+## [17] &quot;tables&quot;</code></pre>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="chapter-sql-quick-start.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="chapter-dbms-environment.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/smithjd/sql-pet/edit/master/21-r-query-postgres-metadata.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

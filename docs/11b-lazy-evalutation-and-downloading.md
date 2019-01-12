@@ -1,4 +1,4 @@
-# Lazy Evaluation and Lazy Queries (11b)
+# Lazy Evaluation and Lazy Queries {#chapter_lazy-evaluation-queries}
 
 ## This chapter:
 > 
@@ -99,7 +99,7 @@ rental_table
 ##  8         9 2005-05-25 00:00:40         2580         126
 ##  9        10 2005-05-25 00:02:21         1824         399
 ## 10        11 2005-05-25 00:09:02         4443         142
-## # ... with more rows, and 3 more variables: return_date <dttm>,
+## # … with more rows, and 3 more variables: return_date <dttm>,
 ## #   staff_id <int>, last_update <dttm>
 ```
 But consider the structure of  `rental_table`:
@@ -244,7 +244,7 @@ Q %>% print()
 ##  8 2005-05-25 00:00:40 Mike.Hillyer@sakilasta… ellen.simpson@sakilacustome…
 ##  9 2005-05-25 00:02:21 Jon.Stephens@sakilasta… danny.isom@sakilacustomer.o…
 ## 10 2005-05-25 00:09:02 Jon.Stephens@sakilasta… april.burns@sakilacustomer.…
-## # ... with more rows
+## # … with more rows
 ```
 ![](screenshots/green-check.png) R retrieves 10 observations and 3 columns.  In its role as IDE, R has provided nicely formatted output that is similar to what it prints for a tibble, with descriptive information about the dataset and each column:
 
@@ -266,6 +266,11 @@ Q %>% as.tibble()
 ```
 
 ```
+## Warning: `as.tibble()` is deprecated, use `as_tibble()` (but mind the new semantics).
+## This warning is displayed once per session.
+```
+
+```
 ## # A tibble: 16,044 x 3
 ##    rental_date         staff_email             customer_email              
 ##    <dttm>              <chr>                   <chr>                       
@@ -279,7 +284,7 @@ Q %>% as.tibble()
 ##  8 2005-05-25 00:00:40 Mike.Hillyer@sakilasta… ellen.simpson@sakilacustome…
 ##  9 2005-05-25 00:02:21 Jon.Stephens@sakilasta… danny.isom@sakilacustomer.o…
 ## 10 2005-05-25 00:09:02 Jon.Stephens@sakilasta… april.burns@sakilacustomer.…
-## # ... with 16,034 more rows
+## # … with 16,034 more rows
 ```
 
 ### Q %>% head() {#lazy_q_head}
@@ -340,11 +345,11 @@ Q %>% str(max.level = 3)
 ##   .. ..- attr(*, "class")= chr [1:3] "op_rename" "op_single" "op"
 ##   ..$ dots:List of 3
 ##   .. ..$ : language ~rental_date
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x55d3f4211e20> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x7ffc45f72ed0> 
 ##   .. ..$ : language ~staff_email
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x55d3f4211e20> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x7ffc45f72ed0> 
 ##   .. ..$ : language ~customer_email
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x55d3f4211e20> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x7ffc45f72ed0> 
 ##   .. ..- attr(*, "class")= chr "quosures"
 ##   ..$ args: list()
 ##   ..- attr(*, "class")= chr [1:3] "op_select" "op_single" "op"
@@ -448,10 +453,10 @@ Q %>% show_query()
 ##   FROM "rental" AS "TBL_LEFT"
 ##   LEFT JOIN "staff" AS "TBL_RIGHT"
 ##   ON ("TBL_LEFT"."staff_id" = "TBL_RIGHT"."staff_id")
-## ) "gpxujgllzy") "TBL_LEFT"
+## ) "qzdwvvvtzq") "TBL_LEFT"
 ##   LEFT JOIN "customer" AS "TBL_RIGHT"
 ##   ON ("TBL_LEFT"."customer_id" = "TBL_RIGHT"."customer_id")
-## ) "klkdendaka") "ovofwovqtp"
+## ) "rnitnthkfz") "ohetoyqsmw"
 ```
 Hand-written SQL code to do the same job will probably look a lot nicer and could be more efficient, but functionally dplyr does the job.
 
@@ -482,10 +487,10 @@ Qc
 ##  5 tammy.sanders@sakilacustomer.org  41             
 ##  6 wesley.bull@sakilacustomer.org    40             
 ##  7 sue.peters@sakilacustomer.org     40             
-##  8 tim.cary@sakilacustomer.org       39             
+##  8 marion.snyder@sakilacustomer.org  39             
 ##  9 rhonda.kennedy@sakilacustomer.org 39             
-## 10 marion.snyder@sakilacustomer.org  39             
-## # ... with more rows
+## 10 tim.cary@sakilacustomer.org       39             
+## # … with more rows
 ```
 
 See more example of lazy execution can be found [Here](https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html).
