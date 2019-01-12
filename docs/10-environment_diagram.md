@@ -1,4 +1,4 @@
-# Mapping your local environment (10) {#your-local-environment}
+# Mapping your local environment {#chapter_your-local-environment}
 
 > This chapter explores:
 > 
@@ -74,7 +74,7 @@ In addition to operating system commands, you can communicate with the Docker cl
 
 To check on the OS version you are using, enter this on your RStudio terminal or local CLI:
 
-> `version -a`
+> `uname -a`
 
 An OS can contain different comand line interfaces.  Check on it with this on your RStudio terminal or local CLI:
 
@@ -178,9 +178,9 @@ file.info("README.md")
 
 ```
 ##           size isdir mode               mtime               ctime
-## README.md 4973 FALSE  644 2018-12-28 18:44:32 2018-12-28 18:44:32
-##                         atime  uid  gid uname grname
-## README.md 2019-01-03 18:53:00 1000 1000 znmeb  znmeb
+## README.md 4973 FALSE  644 2018-12-22 17:12:51 2018-12-22 17:12:51
+##                         atime uid gid uname grname
+## README.md 2019-01-11 17:03:39 502  80   jds  admin
 ```
 The equivalent information from executing a command on the CLI or terminal would be
 
@@ -190,7 +190,7 @@ system2("ls",  "-l README.md", stdout = TRUE, stderr = FALSE)
 ```
 
 ```
-## [1] "-rw-r--r-- 1 znmeb znmeb 4973 Dec 28 18:44 README.md"
+## [1] "-rw-r--r--  1 jds  admin  4973 Dec 22 17:12 README.md"
 ```
 ### Get info on the same OS file inside Docker from R Code
 

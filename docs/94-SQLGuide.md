@@ -1,4 +1,4 @@
-# APPENDIX D - Quick Guide to SQL (94)
+# APPENDIX D - Quick Guide to SQL {#chapter_appendix-sql-quick-guide}
 
 SQL stands for Structured Query Language. It is a database language where we can perform certain operations on the existing database and we can use it create a new database. There are four main categories where the SQL commands fall into: DDL, DML, DCL, and TCL.
 

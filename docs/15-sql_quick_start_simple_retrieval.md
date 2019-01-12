@@ -1,4 +1,4 @@
-# SQL Quick start - simple retrieval (15)
+# SQL Quick start - simple retrieval {#chapter_sql-quick-start}
 
 > This chapter demonstrates:
 > 
@@ -301,8 +301,8 @@ Table: (\#tab:unnamed-chunk-9)Adding Meta Data Columns
 
 showing           store_id   manager_staff_id   address_id  last_update           db          user       dtts                
 ---------------  ---------  -----------------  -----------  --------------------  ----------  ---------  --------------------
-derived column           1                  1            1  2006-02-15 09:57:12   dvdrental   postgres   2019/01/04 06:31:48 
-derived column           2                  2            2  2006-02-15 09:57:12   dvdrental   postgres   2019/01/04 06:31:48 
+derived column           1                  1            1  2006-02-15 09:57:12   dvdrental   postgres   2019/01/12 01:04:22 
+derived column           2                  2            2  2006-02-15 09:57:12   dvdrental   postgres   2019/01/12 01:04:22 
  
     All the previous examples easily fit on a single line.  This one is longer.  Each column is entered on its own line, indented past the select keyword, and preceeded by a comma.  
     
