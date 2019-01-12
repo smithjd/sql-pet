@@ -1,19 +1,9 @@
-# Setup instructions (00)
+# Setup instructions{#chapter_appendix-setup-instructions}
 
-> This chapter explains:
+> This appendix explains:
 > 
-> * The overall structure of our Docker-based PostgreSQL sandbox
-> * Hardware and software that is needed to run the code in this book
-> * Where to get documentation for Docker and its installation
-> * Mention of how postgreSQL login credentials can be stored
-
-## R and the Docker / PostgreSQL playground on your machine
-
-Here is an overview of how R and Docker fit on your operating system in this book's sandbox:
-    
-![R and Docker](./screenshots/environment_overview.png)
-
-You run R from RStudio to set up Docker, run postgreSQL inside it and then send queries directly to postgreSQL from R. (We provide more details about our sandbox environment in the chapter on [mapping your environment](#sandbox-environment).
+> * Hardware and software prerequisites for setting up the sandbox used in this book
+> * Documentation for all of the elements used in this sandbox
 
 ## Sandbox prerequisites
 
@@ -64,24 +54,15 @@ Most readers will probably have these already, but if not:
 
 Installation depends on your operating system and we have found that it can be somewhat intricate.  You will need Docker Community Edition (Docker CE):
 
-* For Windows, [consider these issues and follow these instructions](#windows-tech-details): Go to <https://store.docker.com/editions/community/docker-ce-desktop-windows>. If you don't have a Docker Store login, you'll need to create one. Then:
+* For Windows, [consider these issues and follow these instructions](#windows-tech-details): Go to <https://store.docker.com/editions/community/docker-ce-desktop-windows>. If you don't have a Docker Store log in, you'll need to create one. Then:
     * If you have Windows 10 Pro, download and install Docker for Windows.
     * If you have an older version of Windows, download and install Docker Toolbox (<https://docs.docker.com/toolbox/overview/>).
     * Note that both versions require 64-bit hardware and the virtualization needs to be enabled in the firmware.
 * [On a Mac](https://docs.docker.com/docker-for-mac/install/) [@Docker2018c]: Go to <https://store.docker.com/editions/community/docker-ce-desktop-mac>. If you don't have a Docker Store login, you'll need to create one. Then download and install Docker for Mac. Your MacOS must be at least release Yosemite (10.10.3).
-* [On UNIX flavors](https://docs.docker.com/install/#supported-platforms) [@Docker2018b]: note that, as with Windows and MacOS, you'll need a Docker Store login. Although most Linux distros ship with some version of Docker, chances are it's not the same as the official Docker CE version.
+* [On UNIX flavors](https://docs.docker.com/install/#supported-platforms) [@Docker2018b]: note that, as with Windows and MacOS, you'll need a Docker Store loin. Although most Linux distros ship with some version of Docker, chances are it's not the same as the official Docker CE version.
     * Ubuntu: <https://store.docker.com/editions/community/docker-ce-server-ubuntu>,
     * Fedora: <https://store.docker.com/editions/community/docker-ce-server-fedora>,
-    * CentOS: <https://store.docker.com/editions/community/docker-ce-server-centos>,
+    * Cent OS: <https://store.docker.com/editions/community/docker-ce-server-centos>,
     * Debian: <https://store.docker.com/editions/community/docker-ce-server-debian>.
     
 ***Note that on Linux, you will need to be a member of the `docker` group to use Docker.*** To do that, execute `sudo usermod -aG docker ${USER}`. Then, log out and back in again.
-
-## PostgreSQL and connection parameters
-
-We use a PostgreSQL database server running in a Docker container for the database functions.  It is installed inside Docker, so you do not have to download or install it yourself. To connect to it, you have to define some parameters. These parameters are used in two places:
-
-1. When the Docker container is created, they're used to initialize the database, and
-2. Whenever we connect to the database, we need to specify them to authenticate.
-
-We define the parameters in an environment file that R reads when starting up. The file is called `.Renviron`, and is located in your home directory.  See the discussion of [securing and using dbms credentials](#dbms-login).

@@ -1,4 +1,4 @@
-# How to use this book (01)
+# How to use this book {#chapter_how-to-use-this-book}
 
 > This chapter explains:
 > 

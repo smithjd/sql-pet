@@ -1,4 +1,4 @@
-# Mapping your local environment (92)
+# Mapping your local environment diagram {#chapter_environment-diagram}
 
 
 

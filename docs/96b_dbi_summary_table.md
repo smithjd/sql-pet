@@ -1,4 +1,4 @@
-# DBI package functions - coverage (96b)
+# DBI package functions - coverage {#chapter_appendix-dbi-functions}
 
 Where are these covered and should the by included?
 
