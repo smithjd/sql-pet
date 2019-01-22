@@ -5,6 +5,8 @@
 > * The overall structure of our Docker-based PostgreSQL sandbox
 > * Basic concepts around each of the elements that make up our sandbox: tidy data, pipes, Docker, PostgreSQL, and data representation.
 
+> Needs references.
+
 ## The big picture: R and the Docker / PostgreSQL playground on your machine
 
 Here is an overview of how R and Docker fit on your operating system in this book's sandbox:
@@ -13,11 +15,25 @@ Here is an overview of how R and Docker fit on your operating system in this boo
 
 You run R from RStudio to set up Docker, launch PostgreSQL inside it and then send queries directly to PostgreSQL from R. (We provide more details about our sandbox environment in the chapter on [mapping your environment](#chapter_appendix-sandbox-environment).
 
+## Your OS
+
+Your chair, your keyboard, and your OS.  ( No issues :-)
+
+Lots of possible glitches.  
+
 ## R
 
 We assume a general familiarity with R and RStudio. 
 
 This book is [Tidyverse-oriented](https://www.tidyverse.org), so we assume familiarity with the pipe operator, tidy data[@Wickham2014], lazy evaluation, and techniques for tidying data[@Wickham2018].
+
+Use `dplyr` on regular tibbles.  reading the pipe operator as "and then".
+
+Packages involved
+
+* dplyr
+* DBI
+* your flavor of dbms
 
 ## Docker
 
@@ -51,11 +67,12 @@ The Docker subsystem manages several kinds of objects - containers, images, volu
 
 Docker `images` are files that define a container's initial filesystem. You can find pre-built images on Docker Hub and the Docker Store - the base PostgreSQL image we use comes from Docker Hub (<https://hub.docker.com/_/postgres/>). If there isn't a Docker image that does exactly what you want, you can build your own by creating a Dockerfile and running `docker build`. We do this in [Build the pet-sql Docker Image].
 
-Docker `volumes` TBD
+Docker `volumes` TBD -- used to 
 
-Docker `networks` TBD
+Docker `networks` TBD -- used to publish the port.
 
 ### Hosting Docker on Windows machines
+
 There are two ways to get Docker on Windows. For Windows 10 Home and older versions of Windows, you need Docker Toolbox [@Docker2019b]. Note that for Docker Toolbox, you need a 64-bit AMD or Intel processor with the virtualization hardware installed and enabled in the BIOS.
 
 For Windows 10 Pro, you have the Hyper-V virtualizer as standard equipment, and can use Docker for Windows [@Docker2019c].
@@ -67,23 +84,35 @@ As with Windows, there are two ways to get Docker. For older Intel systems, you'
 
 Unix was the original host.  Needs more stuff here.
 
-## SQL
+## organizational dbms
 
 Lots of theory about data Normalization, but the bottom line is that "data normalization is practical". Getting your data into Tidy format may or may not be a tidy process. 
 
 Efficiency: for storage and retrieval on the databse side vs for analysis
 
-## PostgresSQL 
+DBAs.
 
+speed and integrity.  good and not-so-good data base design.  how used & abused. 
+
+Your question and the data model may be at odds.
+
+## SQL
+
+PostgresSQL and other SQL variants. 
+
+Tables.
+
+Declarative language. No pipe. 
 
 ### Data mapping between R vs SQL concepts
+
 factors in R, etc. Where is the discussion of DBI translation? See “9.1.8 Translating dplyr  code to SQL queries”
 
 https://cran.r-project.org/web/packages/DBI/vignettes/spec.html#_details_
 
 ### PostgreSQL and connection parameters
 
-
+Important PITA.
 
 We use a PostgreSQL database server running in a Docker container for the database functions.  It is installed inside Docker, so you do not have to download or install it yourself. To connect to it, you have to define some parameters. These parameters are used in two places:
 
