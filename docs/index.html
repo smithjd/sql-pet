@@ -25,7 +25,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
 
 
-<meta name="date" content="2019-01-12">
+<meta name="date" content="2019-01-25">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -61,6 +61,69 @@
 <script src="libs/grViz-binding-1.0.0/grViz.js"></script>
 
 
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -87,7 +150,7 @@
 </ul></li>
 <li class="chapter" data-level="2" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html"><i class="fa fa-check"></i><b>2</b> Basic Concepts</a><ul>
 <li class="chapter" data-level="2.1" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#the-big-picture-r-and-the-docker-postgresql-playground-on-your-machine"><i class="fa fa-check"></i><b>2.1</b> The big picture: R and the Docker / PostgreSQL playground on your machine</a></li>
-<li class="chapter" data-level="2.2" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#your-os"><i class="fa fa-check"></i><b>2.2</b> Your OS</a></li>
+<li class="chapter" data-level="2.2" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#your-computer-and-its-operating-system"><i class="fa fa-check"></i><b>2.2</b> Your computer and its operating system</a></li>
 <li class="chapter" data-level="2.3" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#r"><i class="fa fa-check"></i><b>2.3</b> R</a></li>
 <li class="chapter" data-level="2.4" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#docker"><i class="fa fa-check"></i><b>2.4</b> Docker</a><ul>
 <li class="chapter" data-level="2.4.1" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#virtual-machines-and-hypervisors"><i class="fa fa-check"></i><b>2.4.1</b> Virtual machines and hypervisors</a></li>
@@ -98,10 +161,14 @@
 <li class="chapter" data-level="2.4.6" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#hosting-docker-on-macos-machines"><i class="fa fa-check"></i><b>2.4.6</b> Hosting Docker on macOS machines</a></li>
 <li class="chapter" data-level="2.4.7" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#hosting-docker-on-unix-machines"><i class="fa fa-check"></i><b>2.4.7</b> Hosting Docker on UNIX machines</a></li>
 </ul></li>
-<li class="chapter" data-level="2.5" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#organizational-dbms"><i class="fa fa-check"></i><b>2.5</b> organizational dbms</a></li>
-<li class="chapter" data-level="2.6" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#sql"><i class="fa fa-check"></i><b>2.6</b> SQL</a><ul>
-<li class="chapter" data-level="2.6.1" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#data-mapping-between-r-vs-sql-concepts"><i class="fa fa-check"></i><b>2.6.1</b> Data mapping between R vs SQL concepts</a></li>
-<li class="chapter" data-level="2.6.2" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#postgresql-and-connection-parameters"><i class="fa fa-check"></i><b>2.6.2</b> PostgreSQL and connection parameters</a></li>
+<li class="chapter" data-level="2.5" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#normal-and-normalized-data"><i class="fa fa-check"></i><b>2.5</b> ‘Normal’ and ‘normalized’ data</a><ul>
+<li class="chapter" data-level="2.5.1" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#tidy-data"><i class="fa fa-check"></i><b>2.5.1</b> Tidy data</a></li>
+<li class="chapter" data-level="2.5.2" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#design-of-normal-data"><i class="fa fa-check"></i><b>2.5.2</b> Design of “normal data”</a></li>
+</ul></li>
+<li class="chapter" data-level="2.6" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#organizational-dbms"><i class="fa fa-check"></i><b>2.6</b> Organizational dbms</a></li>
+<li class="chapter" data-level="2.7" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#sql"><i class="fa fa-check"></i><b>2.7</b> SQL</a><ul>
+<li class="chapter" data-level="2.7.1" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#data-mapping-between-r-vs-sql-data-types"><i class="fa fa-check"></i><b>2.7.1</b> Data mapping between R vs SQL data types</a></li>
+<li class="chapter" data-level="2.7.2" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#postgresql-and-connection-parameters"><i class="fa fa-check"></i><b>2.7.2</b> PostgreSQL and connection parameters</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="chapter-how-to-use-this-book.html"><a href="chapter-how-to-use-this-book.html"><i class="fa fa-check"></i><b>3</b> How to use this book</a><ul>
@@ -259,8 +326,7 @@
 <li class="chapter" data-level="12.7.4" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#join-tables"><i class="fa fa-check"></i><b>12.7.4</b> Join Tables</a></li>
 </ul></li>
 <li class="chapter" data-level="12.8" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#natural-join-delayed-time-bomb"><i class="fa fa-check"></i><b>12.8</b> Natural Join Delayed Time Bomb</a><ul>
-<li class="chapter" data-level="12.8.1" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#sql-language_id-distribution"><i class="fa fa-check"></i><b>12.8.1</b> SQL Language_id Distribution</a></li>
-<li class="chapter" data-level="12.8.2" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#dplyr-language-distribution-exercise"><i class="fa fa-check"></i><b>12.8.2</b> dplyr language distribution Exercise</a></li>
+<li class="chapter" data-level="12.8.1" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#dplyr-language-distribution-exercise"><i class="fa fa-check"></i><b>12.8.1</b> dplyr language distribution Exercise</a></li>
 </ul></li>
 <li class="chapter" data-level="12.9" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#join-templates"><i class="fa fa-check"></i><b>12.9</b> Join Templates</a><ul>
 <li class="chapter" data-level="12.9.1" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#dplyr-inner-join-template"><i class="fa fa-check"></i><b>12.9.1</b> dplyr Inner Join Template</a></li>
@@ -283,7 +349,6 @@
 <li class="chapter" data-level="12.13.6" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#what-film-has-been-generated-the-most-revenue-assuming-all-amounts-are-collected"><i class="fa fa-check"></i><b>12.13.6</b> what film has been generated the most revenue assuming all amounts are collected</a></li>
 <li class="chapter" data-level="12.13.7" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#which-films-are-in-one-store-but-not-the-other."><i class="fa fa-check"></i><b>12.13.7</b> which films are in one store but not the other.</a></li>
 <li class="chapter" data-level="12.13.8" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#compute-the-outstanding-balance."><i class="fa fa-check"></i><b>12.13.8</b> Compute the outstanding balance.</a></li>
-<li class="chapter" data-level="12.13.9" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#which-stores-have-movies-that-have-never-rented"><i class="fa fa-check"></i><b>12.13.9</b> Which Stores Have Movies That Have Never Rented?</a></li>
 </ul></li>
 <li class="chapter" data-level="12.14" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#different-strategies-for-interacting-with-the-database"><i class="fa fa-check"></i><b>12.14</b> Different strategies for interacting with the database</a><ul>
 <li class="chapter" data-level="12.14.1" data-path="joins-and-complex-queries-13.html"><a href="joins-and-complex-queries-13.html#use-dbgetquery"><i class="fa fa-check"></i><b>12.14.1</b> Use dbGetQuery</a></li>
@@ -325,7 +390,6 @@
 <li class="chapter" data-level="14.4.2" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#database-keys-with-dplyr"><i class="fa fa-check"></i><b>14.4.2</b> Database keys with dplyr</a></li>
 </ul></li>
 <li class="chapter" data-level="14.5" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#creating-your-own-data-dictionary"><i class="fa fa-check"></i><b>14.5</b> Creating your own data dictionary</a></li>
-<li class="chapter" data-level="14.6" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#save-your-work"><i class="fa fa-check"></i><b>14.6</b> Save your work!</a></li>
 </ul></li>
 <li class="chapter" data-level="15" data-path="chapter-dbms-environment.html"><a href="chapter-dbms-environment.html"><i class="fa fa-check"></i><b>15</b> Drilling into your DBMS environment</a><ul>
 <li class="chapter" data-level="15.1" data-path="chapter-dbms-environment.html"><a href="chapter-dbms-environment.html#which-database"><i class="fa fa-check"></i><b>15.1</b> Which database?</a></li>
@@ -429,7 +493,7 @@
 <div id="header">
 <h1 class="title">R, Databases and Docker</h1>
 <p class="author"><em>John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni</em></p>
-<p class="date"><em>2019-01-12</em></p>
+<p class="date"><em>2019-01-25</em></p>
 </div>
 <div id="chapter_introduction" class="section level1">
 <h1><span class="header-section-number">Chapter 1</span> Introduction</h1>
@@ -465,7 +529,7 @@
 </div>
 <div id="docker-as-a-tool-for-users" class="section level2">
 <h2><span class="header-section-number">1.2</span> Docker as a tool for UseRs</h2>
-<p>Noam Ross’s “<a href="https://nyhackr.blob.core.windows.net/presentations/Docker-for-the-UseR_Noam-Ross.pdf">Docker for the UseR</a>” <span class="citation">(Ross <a href="#ref-Ross2018a">2018</a>)</span> suggests that there are four distinct Docker use-cases for useRs.</p>
+<p>Noam Ross’s “<a href="https://nyhackr.blob.core.windows.net/presentations/Docker-for-the-UseR_Noam-Ross.pdf">Docker for the UseR</a>” <span class="citation">(Ross <a href="#ref-Ross2018a">2018</a><a href="#ref-Ross2018a">a</a>)</span> suggests that there are four distinct Docker use-cases for useRs.</p>
 <ol style="list-style-type: decimal">
 <li>Make a fixed working environment for reproducible analysis</li>
 <li>Access a service outside of R <strong>(e.g., Postgres)</strong></li>
@@ -519,7 +583,7 @@
 <h3>References</h3>
 <div id="refs" class="references">
 <div id="ref-Ross2018a">
-<p>Ross, Noam. 2018. “Docker for the UseR - Slides.” July 10, 2018. <a href="https://github.com/noamross/nyhackr-docker-talk/blob/master/Noam_Ross_DockerForTheUseR_nyhackr_2018-07-10.pdf">https://github.com/noamross/nyhackr-docker-talk/blob/master/Noam_Ross_DockerForTheUseR_nyhackr_2018-07-10.pdf</a>.</p>
+<p>Ross, Noam. 2018a. “Docker for the UseR - Slides.” July 10, 2018. <a href="https://github.com/noamross/nyhackr-docker-talk/blob/master/Noam_Ross_DockerForTheUseR_nyhackr_2018-07-10.pdf">https://github.com/noamross/nyhackr-docker-talk/blob/master/Noam_Ross_DockerForTheUseR_nyhackr_2018-07-10.pdf</a>.</p>
 </div>
 <div id="ref-Makubuya2018">
 <p>Makubuya, Aaron. 2018. “Using R with Databases.” 2018. <a href="https://github.com/Cascadia-R/Using_R_With_Databases">https://github.com/Cascadia-R/Using_R_With_Databases</a>.</p>
