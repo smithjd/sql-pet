@@ -180,7 +180,7 @@ file.info("README.md")
 ##           size isdir mode               mtime               ctime
 ## README.md 4973 FALSE  644 2018-12-22 17:12:51 2018-12-22 17:12:51
 ##                         atime uid gid uname grname
-## README.md 2019-01-11 17:03:39 502  80   jds  admin
+## README.md 2019-01-25 11:41:58 502  80   jds  admin
 ```
 The equivalent information from executing a command on the CLI or terminal would be
 

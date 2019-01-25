@@ -80,7 +80,7 @@ sp_check_that_docker_is_up()
 ```
 ## [1] "Docker is up, running these containers:"                                                                                                       
 ## [2] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES"   
-## [3] "da01250e06f3        postgres:10         \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
+## [3] "3c62e766e6ea        postgres:10         \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
 ```
 ## Connect, read and write to Postgres from R
 
