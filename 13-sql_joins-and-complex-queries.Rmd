@@ -40,7 +40,7 @@ sp_docker_start("sql-pet")
 Now connect to the database with R
 
 ```{r}
-# need to wait for Docker & Postgres to come up before connecting.
+# need to wait for Docker & PostgreSQL to come up before connecting.
 
 con <- sp_get_postgres_connection(
   user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
@@ -247,7 +247,7 @@ sp_print_df(new_customers)
     <values list> : values assoicated with the column list.
 ```
 
-Postgres and some other flavors of SQL allow multiple rows to be inserted at a time.  The syntax is identical to the Single Row syntax, but includes multiple `<values list>` clauses separated by commas.  The following code block illustrates the SQL multi-row insert.  Note that the customer_id column takes on sequential values to satisfy the PK constraint.
+PostgreSQL and some other flavors of SQL allow multiple rows to be inserted at a time.  The syntax is identical to the Single Row syntax, but includes multiple `<values list>` clauses separated by commas.  The following code block illustrates the SQL multi-row insert.  Note that the customer_id column takes on sequential values to satisfy the PK constraint.
 
 
 ## SQL Multi-Row Insert Data Example
@@ -269,7 +269,7 @@ dbExecute(
 )
 ```
 
-The Postgres R multi-row insert is similar to the single row insert.  The single column values are converted to a vector of values.
+The PostgreSQL R multi-row insert is similar to the single row insert.  The single column values are converted to a vector of values.
 
 ### R Exercise: Inserting Multiple Rows via a Dataframe
 
@@ -414,7 +414,7 @@ In section 'SQL Quick Start Simple Retrieval', there is a brief discussion of da
 
 Bill Kent famously summarized 3NF as every non-key column "must provide a fact about the key,the whole key, and nothing but the key, so help me Codd." 
 
-Normalization breaks data down and JOINs denormalizes the data and builds it back up.  The tables are typically related via a primary key - foreign key relationship. The Postgres database enforces the primary and foreign key constraints in the DVD rental database.  
+Normalization breaks data down and JOINs denormalizes the data and builds it back up.  The tables are typically related via a primary key - foreign key relationship. The PostgreSQL database enforces the primary and foreign key constraints in the DVD rental database.  
 
 
 

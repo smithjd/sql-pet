@@ -14,12 +14,12 @@
 * Scott Came's materials about Docker and R [on his website](http://www.cascadia-analytics.com/2018/07/21/docker-r-p1.html) [@Came2018] and at the 2018 UseR Conference focus on **R inside Docker**.
 * It's worth studying the [ROpensci Docker tutorial](https://ropenscilabs.github.io/r-docker-tutorial/) [@ROpenSciLabs2018]
 
-## Documentation for Docker and Postgres
+## Documentation for Docker and PostgreSQL
 
 * [The Postgres image documentation](https://docs.docker.com/samples/library/postgres/) [@Docker2018]
-* Postgres & Docker [documentation](https://docs.docker.com/samples/library/postgres/#postgres_db) [@Docker2018]
+* PostgreSQL & Docker [documentation](https://docs.docker.com/samples/library/postgres/#postgres_db) [@Docker2018]
 * [Dockerize PostgreSQL](https://docs.docker.com/engine/examples/postgresql_service/) [@Docker2018a]
-* Usage examples of [Postgres with Docker](https://amattn.com/p/tutorial_postgresql_usage_examples_with_docker.html) WARNING-EXPIRED CERTIFICATE 2018-12-20
+* Usage examples of [PostgreSQL with Docker](https://amattn.com/p/tutorial_postgresql_usage_examples_with_docker.html) WARNING-EXPIRED CERTIFICATE 2018-12-20
 
 ## SQL and dplyr
 
