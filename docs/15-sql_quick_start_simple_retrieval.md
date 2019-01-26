@@ -169,7 +169,7 @@ The difference between the two statements is the AGGREGATE has
 
 This section focuses on getting new SQL users familiar with the six SQL query clauses and a single table.   SQL queries from multiple tables are discussed in the JOIN section of this tutorial.  The JOIN section resolves the issue introduced with 3NF, the splitting of data into many many tables, back into a denormalaized format similar to the Excel spreadsheet.
 
-The DBI::dbGetQuery function is used to submit SQL SELECT statements to the Postgres database.  At a minimum it requires two parameters, a connection object and a SQL SELECT statement.
+The DBI::dbGetQuery function is used to submit SQL SELECT statements to the PostgreSQL database.  At a minimum it requires two parameters, a connection object and a SQL SELECT statement.
 
 In the following section we only look at SELECT DETAIL statements.
 
@@ -196,6 +196,7 @@ Table: (\#tab:unnamed-chunk-5)select all columns
 ---------  -----------------  -----------  --------------------
         1                  1            1  2006-02-15 09:57:12 
         2                  2            2  2006-02-15 09:57:12 
+       10                 10           10  2019-01-25 20:47:56 
                 
 #### 2.  Same Query as 1, but only show first two columns; 
 
@@ -218,6 +219,7 @@ Table: (\#tab:unnamed-chunk-6)select first two columns only
 ---------  -----------------
         1                  1
         2                  2
+       10                 10
 
 #### 3.  Same Query as 2, but reverse the column order               
 dvdrental=# select manager_staff_id,store_id from store;
@@ -240,6 +242,7 @@ Table: (\#tab:unnamed-chunk-7)reverse the column order
 -----------------  ---------
                 1          1
                 2          2
+               10         10
     
        
                         
@@ -264,6 +267,7 @@ Table: (\#tab:unnamed-chunk-8)Rename Columns
 --------  ------
        1       1
        2       2
+      10      10
 
 
     The manager_staff_id has changed to mgr_sid.
@@ -301,13 +305,14 @@ Table: (\#tab:unnamed-chunk-9)Adding Meta Data Columns
 
 showing           store_id   manager_staff_id   address_id  last_update           db          user       dtts                
 ---------------  ---------  -----------------  -----------  --------------------  ----------  ---------  --------------------
-derived column           1                  1            1  2006-02-15 09:57:12   dvdrental   postgres   2019/01/25 19:42:41 
-derived column           2                  2            2  2006-02-15 09:57:12   dvdrental   postgres   2019/01/25 19:42:41 
+derived column           1                  1            1  2006-02-15 09:57:12   dvdrental   postgres   2019/01/26 04:48:11 
+derived column           2                  2            2  2006-02-15 09:57:12   dvdrental   postgres   2019/01/26 04:48:11 
+derived column          10                 10           10  2019-01-25 20:47:56   dvdrental   postgres   2019/01/26 04:48:11 
  
     All the previous examples easily fit on a single line.  This one is longer.  Each column is entered on its own line, indented past the select keyword, and preceeded by a comma.  
     
     1.  The showing column is a hard coded string surrounded by single quotes.  Note that single quotes are for hard coded values and double quotes are for column aliases.  
-    2.  The db and dtts, date timestamp, are new columns generated from Postgres System Information Functions.
+    2.  The db and dtts, date timestamp, are new columns generated from PostgreSQL System Information Functions.
     3.  Note that `user` is not a function call, no parenthesis.  
     
 ### SQL Comments
@@ -340,6 +345,7 @@ showing                      store_id   manager_staff_id   address_id  last_upda
 --------------------------  ---------  -----------------  -----------  --------------------  ----------  ---------
 single line comment, dtts           1                  1            1  2006-02-15 09:57:12   dvdrental   postgres 
 single line comment, dtts           2                  2            2  2006-02-15 09:57:12   dvdrental   postgres 
+single line comment, dtts          10                 10           10  2019-01-25 20:47:56   dvdrental   postgres 
 
     The dtts  line is commented out with the two dashes and is dropped from the end of the result set columns.
     
@@ -371,6 +377,7 @@ showing                                  store_id   manager_staff_id   address_i
 --------------------------------------  ---------  -----------------  -----------  --------------------
 block comment drop db, user, and dtts           1                  1            1  2006-02-15 09:57:12 
 block comment drop db, user, and dtts           2                  2            2  2006-02-15 09:57:12 
+block comment drop db, user, and dtts          10                 10           10  2019-01-25 20:47:56 
 
     The three columns db, user, and dtts, between the /\* and \*/ have been commented and no longer appear as the end columns of the result set.
     
@@ -449,6 +456,7 @@ Table: (\#tab:unnamed-chunk-12)select all columns
 ---------  -----------------  -----------  --------------------
         1                  1            1  2006-02-15 09:57:12 
         2                  2            2  2006-02-15 09:57:12 
+       10                 10           10  2019-01-25 20:47:56 
 
 #### 8 WHERE condition logically never TRUE.
 
@@ -493,6 +501,7 @@ Table: (\#tab:unnamed-chunk-14)WHERE always TRUE
 ---------  -----------------  -----------  --------------------
         1                  1            1  2006-02-15 09:57:12 
         2                  2            2  2006-02-15 09:57:12 
+       10                 10           10  2019-01-25 20:47:56 
     
     Since 1 = 1 is always true, all rows are always returned.  Initially this construct seems useless, but actually is also quite handy when debugging large scripts and creating a backup of table.
     
@@ -539,6 +548,7 @@ Table: (\#tab:unnamed-chunk-16)WHERE NOT EQUAL
  store_id   manager_staff_id   address_id  last_update         
 ---------  -----------------  -----------  --------------------
         1                  1            1  2006-02-15 09:57:12 
+       10                 10           10  2019-01-25 20:47:56 
 
     <> is syntactically the same as !=
         

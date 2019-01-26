@@ -51,7 +51,7 @@ docker_ver <- system2("docker", "version", stdout = TRUE) %>%
 linux_lbl <- 'Linux Version'
 linux_ver <- system2('docker', 'exec -i sql-pet /bin/uname -r', stdout = TRUE)
 
-# Postgres Information
+# PostgreSQL Information
 con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
                          password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
                          dbname = "dvdrental",
@@ -112,13 +112,13 @@ digraph Envgraph {
     '@@5-1' 
   }
 
-  # subgraph for Docker-Postgres information
+  # subgraph for Docker-PostgreSQL information
   subgraph cluster6 {
     node [fixedsize = true, width = 3]
     '@@6-1' 
   }
 
-  # subgraph for Docker-Postgres information
+  # subgraph for Docker-PostgreSQL information
   subgraph cluster7 {
     node [fixedsize = true, height = 1.25, width = 4.0]
     '@@7-1' -> '@@7-2' -> '@@7-3'
@@ -135,7 +135,7 @@ digraph Envgraph {
   RStudio     -> '@@3'    [lhead = cluster3] # RStudio Information
   Docker      -> '@@4'    [lhead = cluster4] # Docker Information
   Docker      -> '@@5'    [lhead = cluster5] # Docker-Linux Information
-  Docker      -> '@@6'    [lhead = cluster6] # Docker-Postgres Information
+  Docker      -> '@@6'    [lhead = cluster6] # Docker-PostgreSQL Information
 
   '@@1' -> CLI
   CLI         -> '@@7'    [lhead = cluster7] # CLI 

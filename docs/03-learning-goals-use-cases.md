@@ -22,13 +22,13 @@
 After working through the code in this book, you can expect to be able to:
 
 * Set up a PostgreSQL database in a Docker environment.
-* Gain familiarity with the various ways of interacting with the Docker and postgreSQL environments
+* Gain familiarity with the various ways of interacting with the Docker and PostgreSQL environments
 * Run queries against PostgreSQL in an environment that simulates what you will find in a corporate setting.
 * Understand techniques and some of the trade-offs between:
     * queries aimed at exploration or informal investigation using [dplyr](https://cran.r-project.org/package=dplyr) [@Wickham2018]; and 
-    * queries that should be written in SAL because performance is important due to the size of the database or the frequency with which a query is to be run.
+    * queries that should be written in SQL, because performance is important due to the size of the database or the frequency with which a query is to be run.
 * Understand the equivalence between `dplyr` and SQL queries, and how R translates one into the other.
-* Gain familiarity with techniques that help you explore a dbms and verify its documentation.
+* Gain familiarity with techniques that help you explore a database and verify its documentation.
 * Gain familiarity with the standard metadata that a SQL database contains to describe its own contents.
 * Understand some advanced SQL techniques.
 * Gain some understanding of techniques for assessing query structure and performance.
@@ -36,15 +36,15 @@ After working through the code in this book, you can expect to be able to:
 
 ## Imagining a DVD rental business
 
-Years ago people rented videos on DVD disks, and video stores were a big business.  To understand the data base that we use in this book, try to imagine managing a video rental store [like Movie Madness](https://en.wikipedia.org/wiki/Movie_Madness_Video) in Portland, Oregon.
-<img src="screenshots/movie-madness-sample.png" style="display: block; margin: auto;" />
+Years ago, people rented videos on DVD disks and video stores were a big business.  To understand the data base that we use in this book, try to imagine managing a video rental store [like Movie Madness](https://en.wikipedia.org/wiki/Movie_Madness_Video) in Portland, Oregon.
+<img src="screenshots/movie-madness-sample.png" width="175" style="display: block; margin: auto;" />
 *What data would be needed and what questions would you have to answer about the business?*
 
-This tutorial uses [the Postgres version of "dvd rental" database](http://www.postgresqltutorial.com/postgresql-sample-database/) which represents the transaction database for running a movie (e.g., dvd) rental business.  The database can be  [downloaded here](http://www.postgresqltutorial.com/wp-content/uploads/2017/10/dvdrental.zip).  Here's a glimpse of it's structure, which we explore using several diffeent methods:
+This tutorial uses [the PostgreSQL version of "dvd rental" database](http://www.postgresqltutorial.com/postgresql-sample-database/) which represents the transaction database for running a movie (e.g., dvd) rental business.  The database can be  [downloaded here](http://www.postgresqltutorial.com/wp-content/uploads/2017/10/dvdrental.zip).  Here's a glimpse of it's structure, which we explore using several different methods:
     
 ![Entity Relationship diagram for the dvdrental database](./screenshots/dvdrental-er-diagram.png)
 
-A data analyst uses the database abstraction and the practical business questions to make better decision and solve problems.
+A data analyst uses the database abstraction and the practical business questions to make better decisions and solve problems.
 
 ## Use cases 
 
@@ -57,12 +57,12 @@ Imagine that you have one of following several roles at our fictional company **
 * As the Director of Analytics, I want to test as much of the production R code in my shop as possible against a new release of the DBMS that the IT department is implementing next month.
 * etc.
 
-## Investigating a question using with an organization's database
+## Investigating a question using an organization's database
 
 * Need both familiarity with the data and a focus question
   + An iterative process where 
     + the data resource can shape your understanding of the question
-    + the question you need to answer will frame how your see the data resource
+    + the question you need to answer will frame how you see the data resource
   + You need to go back and forth between the two, asking 
     + do I understand the question?
     + do I understand the data?
@@ -70,8 +70,8 @@ Imagine that you have one of following several roles at our fictional company **
 * How well do you understand the data resource (in the DBMS)?
   + Use all available documentation and understand its limits
   + Use your own tools and skills to examine the data resource
-  + what's *missing* from the database: (columns, records, cells)
-  + why is the data missing?
+  + What is *missing* from the database: (columns, records, cells)
+  + Why is the data missing?
   
 * How well do you understand the question you seek to answer?
   + How general or specific is your question?
