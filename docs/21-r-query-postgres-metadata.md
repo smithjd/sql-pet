@@ -44,7 +44,7 @@ For large or complex databases you need to use both the available documentation 
 
 ![](./screenshots/ER-diagram-symbols.png)
 
-The `information_schema` is a trove of information *about* the database.  Its format is more or less consistent across the different SQL implementations that are available.   Here we explore some of what's available using several different methods.  Postgres stores [a lot of metadata](https://www.postgresql.org/docs/current/static/infoschema-columns.html).
+The `information_schema` is a trove of information *about* the database.  Its format is more or less consistent across the different SQL implementations that are available.   Here we explore some of what's available using several different methods.  PostgreSQL stores [a lot of metadata](https://www.postgresql.org/docs/current/static/infoschema-columns.html).
 
 ### Contents of the `information_schema` 
 For this chapter R needs the `dbplyr` package to access alternate schemas.  A [schema](http://www.postgresqltutorial.com/postgresql-server-and-database-objects/) is an object that contains one or more tables.  Most often there will be a default schema, but to access the metadata, you need to explicitly specify which schema contains the data you want.
@@ -84,6 +84,7 @@ kable(table_list)
 |address                    |
 |film_actor                 |
 |customer                   |
+|smy_customer               |
 ### Digging into the `information_schema`
 
 We usually need more detail than just a list of tables. Most SQL databases have an `information_schema` that has a standard structure to describe and control the database.
@@ -93,7 +94,7 @@ The `information_schema` is in a different schema from the default, so to connec
 ```r
 table_info_schema_table <- tbl(con, dbplyr::in_schema("information_schema", "tables"))
 ```
-The `information_schema` is large and complex and contains 210 tables.  So it's easy to get lost in it.
+The `information_schema` is large and complex and contains 211 tables.  So it's easy to get lost in it.
 
 This query retrieves a list of the tables in the database that includes additional detail, not just the name of the table.
 
@@ -124,6 +125,7 @@ dvdrental       public         inventory                    BASE TABLE
 dvdrental       public         language                     BASE TABLE 
 dvdrental       public         payment                      BASE TABLE 
 dvdrental       public         rental                       BASE TABLE 
+dvdrental       public         smy_customer                 BASE TABLE 
 dvdrental       public         staff                        BASE TABLE 
 dvdrental       public         store                        BASE TABLE 
 dvdrental       public         actor_info                   VIEW       
@@ -168,6 +170,7 @@ dvdrental       public         inventory                    BASE TABLE
 dvdrental       public         language                     BASE TABLE 
 dvdrental       public         payment                      BASE TABLE 
 dvdrental       public         rental                       BASE TABLE 
+dvdrental       public         smy_customer                 BASE TABLE 
 dvdrental       public         staff                        BASE TABLE 
 dvdrental       public         store                        BASE TABLE 
 dvdrental       public         actor_info                   VIEW       
@@ -197,7 +200,7 @@ But the `information_schema` has a lot more useful information that we can use.
 columns_info_schema_table <- tbl(con, dbplyr::in_schema("information_schema", "columns"))
 ```
 
-Since the `information_schema` contains 1855 columns, we are narrowing our focus to just one table.  This query retrieves more information about the `rental` table:
+Since the `information_schema` contains 1865 columns, we are narrowing our focus to just one table.  This query retrieves more information about the `rental` table:
 
 ```r
 columns_info_schema_info <- columns_info_schema_table %>%
@@ -266,18 +269,28 @@ table_info_schema_table %>%
 
 
 
-table_type   table_name   column_name   data_type                      ordinal_position  column_default                                
------------  -----------  ------------  ----------------------------  -----------------  ----------------------------------------------
-BASE TABLE   customer     store_id      smallint                                      2  NA                                            
-BASE TABLE   customer     first_name    character varying                             3  NA                                            
-BASE TABLE   customer     last_name     character varying                             4  NA                                            
-BASE TABLE   customer     email         character varying                             5  NA                                            
-BASE TABLE   customer     address_id    smallint                                      6  NA                                            
-BASE TABLE   customer     active        integer                                      10  NA                                            
-BASE TABLE   customer     customer_id   integer                                       1  nextval('customer_customer_id_seq'::regclass) 
-BASE TABLE   customer     activebool    boolean                                       7  true                                          
-BASE TABLE   customer     create_date   date                                          8  ('now'::text)::date                           
-BASE TABLE   customer     last_update   timestamp without time zone                   9  now()                                         
+table_type   table_name     column_name   data_type                      ordinal_position  column_default                                
+-----------  -------------  ------------  ----------------------------  -----------------  ----------------------------------------------
+BASE TABLE   customer       store_id      smallint                                      2  NA                                            
+BASE TABLE   customer       first_name    character varying                             3  NA                                            
+BASE TABLE   customer       last_name     character varying                             4  NA                                            
+BASE TABLE   customer       email         character varying                             5  NA                                            
+BASE TABLE   customer       address_id    smallint                                      6  NA                                            
+BASE TABLE   customer       active        integer                                      10  NA                                            
+BASE TABLE   customer       customer_id   integer                                       1  nextval('customer_customer_id_seq'::regclass) 
+BASE TABLE   customer       activebool    boolean                                       7  true                                          
+BASE TABLE   customer       create_date   date                                          8  ('now'::text)::date                           
+BASE TABLE   customer       last_update   timestamp without time zone                   9  now()                                         
+BASE TABLE   smy_customer   customer_id   integer                                       1  NA                                            
+BASE TABLE   smy_customer   store_id      smallint                                      2  NA                                            
+BASE TABLE   smy_customer   first_name    character varying                             3  NA                                            
+BASE TABLE   smy_customer   last_name     character varying                             4  NA                                            
+BASE TABLE   smy_customer   email         character varying                             5  NA                                            
+BASE TABLE   smy_customer   address_id    smallint                                      6  NA                                            
+BASE TABLE   smy_customer   activebool    boolean                                       7  NA                                            
+BASE TABLE   smy_customer   create_date   date                                          8  NA                                            
+BASE TABLE   smy_customer   last_update   timestamp without time zone                   9  NA                                            
+BASE TABLE   smy_customer   active        integer                                      10  NA                                            
 
 Probably should explore how the `VIEW` is made up of data from BASE TABLEs.
 
@@ -349,6 +362,7 @@ table_name                     n
 film                          13
 staff                         11
 customer                      10
+smy_customer                  10
 customer_list                  9
 address                        8
 film_list                      8
@@ -360,7 +374,6 @@ actor                          4
 actor_info                     4
 city                           4
 inventory                      4
-store                          4
 
 How many *column names* are shared across tables (or duplicated)?
 
@@ -369,20 +382,20 @@ public_tables %>% count(column_name, sort = TRUE) %>% filter(n > 1)
 ```
 
 ```
-## # A tibble: 34 x 2
+## # A tibble: 36 x 2
 ##    column_name     n
 ##    <chr>       <int>
-##  1 last_update    14
-##  2 address_id      4
-##  3 film_id         4
-##  4 first_name      4
-##  5 last_name       4
-##  6 name            4
-##  7 store_id        4
-##  8 actor_id        3
-##  9 address         3
-## 10 category        3
-## # … with 24 more rows
+##  1 last_update    15
+##  2 address_id      5
+##  3 first_name      5
+##  4 last_name       5
+##  5 store_id        5
+##  6 customer_id     4
+##  7 film_id         4
+##  8 name            4
+##  9 active          3
+## 10 actor_id        3
+## # … with 26 more rows
 ```
 
 How many column names are unique?
@@ -395,7 +408,7 @@ public_tables %>% count(column_name) %>% filter(n == 1) %>% count()
 ## # A tibble: 1 x 1
 ##      nn
 ##   <int>
-## 1    24
+## 1    22
 ```
 
 ## Database keys
@@ -420,7 +433,7 @@ glimpse(rs)
 ```
 
 ```
-## Observations: 61,215
+## Observations: 61,545
 ## Variables: 3
 ## $ table_name <chr> "dvdrental.information_schema.administrable_role_auth…
 ## $ conname    <chr> "actor_pkey", "actor_pkey", "actor_pkey", "country_pk…
@@ -675,10 +688,10 @@ all_meta
 ##  9 city       city     charact…      600         0        599 A Co… Dzer…
 ## 10 city       country… integer       600         0        109 1     28   
 ## 11 city       last_up… double        600         0          1 2006… 2006…
-## 12 store      store_id integer         2         0          2 1     1    
-## 13 store      manager… integer         2         0          2 1     1    
-## 14 store      address… integer         2         0          2 1     1    
-## 15 store      last_up… double          2         0          1 2006… 2006…
+## 12 store      store_id integer         3         0          3 1     1    
+## 13 store      manager… integer         3         0          3 1     1    
+## 14 store      address… integer         3         0          3 1     1    
+## 15 store      last_up… double          3         0          2 2006… 2006…
 ## # … with 3 more variables: q_50 <chr>, q_75 <chr>, max <chr>
 ```
 
@@ -727,13 +740,12 @@ ls()
 ```
 ##  [1] "all_meta"                  "columns_info_schema_info" 
 ##  [3] "columns_info_schema_table" "con"                      
-##  [5] "constraint_column_usage"   "cranex"                   
-##  [7] "key_column_usage"          "keys"                     
-##  [9] "public_tables"             "referential_constraints"  
-## [11] "rs"                        "some_tables"              
-## [13] "table_constraints"         "table_info"               
-## [15] "table_info_schema_table"   "table_list"               
-## [17] "tables"
+##  [5] "constraint_column_usage"   "key_column_usage"         
+##  [7] "keys"                      "public_tables"            
+##  [9] "referential_constraints"   "rs"                       
+## [11] "some_tables"               "table_constraints"        
+## [13] "table_info"                "table_info_schema_table"  
+## [15] "table_list"                "tables"
 ```
 
 
