@@ -118,12 +118,12 @@ str(rental_table)
 ##   .. .. .. ..$ oid    : int [1:437] 16 17 18 19 20 21 22 23 24 25 ...
 ##   .. .. .. ..$ typname: chr [1:437] "bool" "bytea" "char" "name" ...
 ##   ..$ disco: NULL
-##   ..- attr(*, "class")= chr [1:4] "src_PqConnection" "src_dbi" "src_sql" "src"
+##   ..- attr(*, "class")= chr [1:3] "src_dbi" "src_sql" "src"
 ##  $ ops:List of 2
 ##   ..$ x   : 'ident' chr "rental"
 ##   ..$ vars: chr [1:7] "rental_id" "rental_date" "inventory_id" "customer_id" ...
 ##   ..- attr(*, "class")= chr [1:3] "op_base_remote" "op_base" "op"
-##  - attr(*, "class")= chr [1:5] "tbl_PqConnection" "tbl_dbi" "tbl_sql" "tbl_lazy" ...
+##  - attr(*, "class")= chr [1:4] "tbl_dbi" "tbl_sql" "tbl_lazy" "tbl"
 ```
 
 It has two rows.  The first row contains all the information in the `con` object, which contains information about all the tables and objects in the database:
@@ -333,7 +333,7 @@ Q %>% str(max.level = 3)
 ##  $ src:List of 2
 ##   ..$ con  :Formal class 'PqConnection' [package "RPostgres"] with 3 slots
 ##   ..$ disco: NULL
-##   ..- attr(*, "class")= chr [1:4] "src_PqConnection" "src_dbi" "src_sql" "src"
+##   ..- attr(*, "class")= chr [1:3] "src_dbi" "src_sql" "src"
 ##  $ ops:List of 4
 ##   ..$ name: chr "select"
 ##   ..$ x   :List of 4
@@ -345,15 +345,15 @@ Q %>% str(max.level = 3)
 ##   .. ..- attr(*, "class")= chr [1:3] "op_rename" "op_single" "op"
 ##   ..$ dots:List of 3
 ##   .. ..$ : language ~rental_date
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x555807154c90> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x7f9551ea6768> 
 ##   .. ..$ : language ~staff_email
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x555807154c90> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x7f9551ea6768> 
 ##   .. ..$ : language ~customer_email
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x555807154c90> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x7f9551ea6768> 
 ##   .. ..- attr(*, "class")= chr "quosures"
 ##   ..$ args: list()
 ##   ..- attr(*, "class")= chr [1:3] "op_select" "op_single" "op"
-##  - attr(*, "class")= chr [1:5] "tbl_PqConnection" "tbl_dbi" "tbl_sql" "tbl_lazy" ...
+##  - attr(*, "class")= chr [1:4] "tbl_dbi" "tbl_sql" "tbl_lazy" "tbl"
 ```
 
 ### Q %>% nrow() {#lazy_q_nrow}
@@ -453,10 +453,10 @@ Q %>% show_query()
 ##   FROM "rental" AS "TBL_LEFT"
 ##   LEFT JOIN "staff" AS "TBL_RIGHT"
 ##   ON ("TBL_LEFT"."staff_id" = "TBL_RIGHT"."staff_id")
-## ) "numyjiqqhm") "TBL_LEFT"
+## ) "qzdwvvvtzq") "TBL_LEFT"
 ##   LEFT JOIN "customer" AS "TBL_RIGHT"
 ##   ON ("TBL_LEFT"."customer_id" = "TBL_RIGHT"."customer_id")
-## ) "hmhasbfivm") "zsyekarbfx"
+## ) "rnitnthkfz") "ohetoyqsmw"
 ```
 Hand-written SQL code to do the same job will probably look a lot nicer and could be more efficient, but functionally dplyr does the job.
 

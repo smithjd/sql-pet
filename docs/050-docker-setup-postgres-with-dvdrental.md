@@ -68,19 +68,19 @@ cat(docker_messages, sep = "\n")
 ```
 
 ```
-## Sending build context to Docker daemon  38.54MB
+## Sending build context to Docker daemon  57.02MB
 ## Step 1/4 : FROM postgres:10
-##  ---> 9a50cc1d4aea
+##  ---> ac25c2bac3c4
 ## Step 2/4 : WORKDIR /tmp
 ##  ---> Using cache
-##  ---> c33aafa9fc59
+##  ---> 3f00a18e0bdf
 ## Step 3/4 : COPY init-dvdrental.sh /docker-entrypoint-initdb.d/
 ##  ---> Using cache
-##  ---> e2267b83e94c
+##  ---> 3453d61d8e3e
 ## Step 4/4 : RUN apt-get -qq update &&   apt-get install -y -qq curl zip  > /dev/null 2>&1 &&   curl -Os http://www.postgresqltutorial.com/wp-content/uploads/2017/10/dvdrental.zip &&   unzip dvdrental.zip &&   rm dvdrental.zip &&   chmod ugo+w dvdrental.tar &&   chown postgres dvdrental.tar &&   chmod u+x /docker-entrypoint-initdb.d/init-dvdrental.sh &&   apt-get remove -y curl zip
 ##  ---> Using cache
-##  ---> 6968c8d0d08b
-## Successfully built 6968c8d0d08b
+##  ---> f5e93aa64875
+## Successfully built f5e93aa64875
 ## Successfully tagged postgres-dvdrental:latest
 ```
 
@@ -119,7 +119,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "dd04cdd9c43ecf335e80b376801cfc7aa54e4bfcdcc03e38564bdf001a185453"
+## [1] "9bdc1e748065e88917f89c8604f33f4a0b10cf1589108f75cd226859f20c4c28"
 ```
 ## Connect to PostgreSQL with R
 
@@ -221,7 +221,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## dd04cdd9c43e        postgres-dvdrental   "docker-entrypoint.s…"   10 seconds ago      Exited (0) Less than a second ago                       sql-pet
+## 9bdc1e748065        postgres-dvdrental   "docker-entrypoint.s…"   7 seconds ago       Exited (0) Less than a second ago                       sql-pet
 ```
 
 Next time, you can just use this command to start the container: 
