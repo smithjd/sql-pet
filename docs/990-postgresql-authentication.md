@@ -53,6 +53,13 @@ We'll create a "cattle" container with a default PostgreSQL 10 database cluster.
 
 ```r
 sqlpetr::sp_make_simple_pg("cattle")
+```
+
+```
+## [1] 0
+```
+
+```r
 cattle_conn <- sqlpetr::sp_get_postgres_connection(
   host = "localhost",
   port = 5432,

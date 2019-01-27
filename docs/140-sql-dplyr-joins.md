@@ -1,4 +1,4 @@
-Introduction to SQL Joins {#chapter_sql-joins}
+SQL & dplyr joins {#chapter_sql-dplyr-joins}
 
 > This chapter demonstrates how to:
 > 
@@ -8,39 +8,41 @@ Introduction to SQL Joins {#chapter_sql-joins}
 > * Query the database to get basic information about each dvdrental story
 > * How to interact with the database using different strategies
 
-```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
-# These packages are called in almost every chapter of the book:
-library(tidyverse)
-library(DBI)
-library(DiagrammeR)
-library(RPostgres)
-library(glue)
-library(here)
-require(knitr)
-library(dbplyr)
-library(sqlpetr)
-```
+
 
 Verify Docker is up and running:
-```{r Verify Docker is up}
+
+```r
 sp_check_that_docker_is_up()
+```
+
+```
+## [1] "Docker is up but running no containers"
 ```
 
 Verify pet DB is available, it may be stopped.
 
-```{r Verify pet DB is available}
+
+```r
 sp_show_all_docker_containers()
+```
+
+```
+## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                     PORTS               NAMES
+## 9bdc1e748065        postgres-dvdrental   "docker-entrypoint.s…"   54 seconds ago      Exited (0) 2 seconds ago                       sql-pet
 ```
 
 Start up the `docker-pet` container
 
-```{r Start up the docker-pet container}
+
+```r
 sp_docker_start("sql-pet")
 ```
 
 Now connect to the database with R
 
-```{r connect to the database}
+
+```r
 # need to wait for Docker & Postgres to come up before connecting.
 
 con <- sp_get_postgres_connection(
@@ -51,328 +53,53 @@ con <- sp_get_postgres_connection(
 )
 ```
 
+## Initialize Data
 
-## Making up data for Join Examples
 
-Each chapter in the book stands on its own.  If you have worked through the code blocks in this chapter in a previous session, you created some new customer records in order to work through material in the rest of the chapter. 
-
-The DVD rental database data is too clean to demonstrate some join concepts.  To dirty the data, this chapter performs a number of database operations on data tables that a data analyst is typically restricted from doing in the real world.  
-
-1.  Deleting records from tables.
-2.  Inserting records from tables.
-3.  Enabling and disabling table constraints.
-
-In our Docker environment, you have no restrictions on the database operations you can perform.
-
-In the next couple of code blocks, we delete the new data and then recreate the data for the join examples in this next chapter.
-
-### SQL Delete Data Syntax
-
-```
-    DELETE FROM <source> WHERE <where_clause>;
+```r
+dbExecute(  con,"delete from customer where customer_id >= 600;")
 ```
 
-### Delete New Practice Customers from the Customer table.
-
-In the next code block we delete out the new customers that were added when the book was compliled or added while working through the chapter.  Out of the box, the DVD rental database's highest customer_id = 599.
-
 ```
-dbExecute() always returns a scalar numeric that specifies the number of rows affected by the statement. 
+## [1] 7
 ```
 
-```{r Delete new customers}
-dbExecute(
-  con,
-  "delete from customer 
-   where customer_id >= 600;
-  "
-)
-```
-
-The number above tells us how many rows were actually deleted from the customer table.
-
-### Delete New Practice Store from the Store Table.
-
-In the next code block we delete out the new stores that were added when the book was compliled or added working through the exercises.  Out of the box, the DVD rental database's highest store_id = 2.
-
-```{r Delete new stores}
+```r
 dbExecute(con, "delete from store where store_id > 2;")
 ```
 
-### SQL Single Row Insert Data Syntax
-
 ```
-    INSERT INTO <target> <column_list> VALUES <values list>;
-    <target> : target table/view
-    <column list> : csv list of columns
-    <values list> : values assoicated with the column list.
+## [1] 1
 ```
 
-The `column list` is the list of column names on the table and the corresponding list of values must have the correct data type.  The following code block returns the `CUSTOMER` column names and data types.
-
-```{r SQL Customer Columns}
-customer_cols <- dbGetQuery(
-  con,
-  "select table_name, column_name, ordinal_position, data_type 
-          from information_schema.columns 
-         where table_catalog = 'dvdrental' 
-           and table_name = 'customer'
-       ;"
-)
-
-sp_print_df(customer_cols)
-```
-
-In the next code block, we insert Sophie as a new customer into the customer table via a SQL insert statement.  The columns list clause has three id columns, customer_id, store_id, and address_id.  The customer_id is a primary key column and the other two 'look like' foreign key columns.
-
-For now, we are interested in getting some new customers into the customer table.  We look at the relations between the customer and the store tables later in this chapter.
-
-
-```{r SQL Single Row Insert}
-dbExecute(
-  con,
-  "
-insert into customer 
-  (customer_id,store_id,first_name,last_name,email,address_id,activebool
-  ,create_date,last_update,active)
-  values(600,3,'Sophie','Yang','sophie.yang@sakilacustomer.org',1,TRUE,now(),now()::date,1)
-  "
-)
-```
-
-The number above should be 1 indicating that one record was inserted.
-
-```{r display new customers}
-new_customers <- dbGetQuery(con
-                ,"select customer_id,store_id,first_name,last_name
-                     from customer where customer_id >= 600;")
-sp_print_df(new_customers)
-```
-
-### Primary Key Constraint Error Message
-
-For the new customers, we are concerned with not violating the PK and FK constraints.
-In the next SQL code block, we try and reinsert the newly created customer record inserted above.  Instead of having the code block fail, it throws a duplicate key exception error message.  If you `knit` the document, the exception error message is thrown to the `R Markdown` tab.   
-
-```{r Proess Duplicate Customer Key Error}
-dbExecute(con, "
-do $$
-DECLARE v_customer_id INTEGER;
-begin
-    v_customer_id = 600;
-    insert into customer 
-    (customer_id,store_id,first_name,last_name,email,address_id,activebool
-    ,create_date,last_update,active)
-     values(v_customer_id,3,'Sophie','Yang','sophie.yang@sakilacustomer.org',1,TRUE
-           ,now(),now()::date,1);
-exception
-when unique_violation then
-    raise notice 'SQLERRM = %, customer_id = %', SQLERRM, v_customer_id;
-when others then 
-    raise 'SQLERRM = % SQLSTATE =%', SQLERRM, SQLSTATE;
-end;
-$$ language 'plpgsql';")
-```
-
-The number above shows how many rows were inserted.  To ensure that the thrown error message is part of the book, the error message is shown below.
-
-```
-NOTICE:  SQLERRM = duplicate key value violates unique constraint "customer_pkey", customer_id = 600
-CONTEXT:  PL/pgSQL function inline_code_block line 12 at RAISE
-```
-
-### R Exercise: Inserting a Single Row via a Dataframe
-
-In the following code block replace Sophie Yang with your name where appropriate.  
-Note:
-
-1.  The last data frame parameter sets the stringsAsFactors is `FALSE`.  Databases do not have a native `FACTOR` type.
-2.  The dataframe column names must match the table column names. 
-3.  The dbWriteTable function needs `append` = true to actually insert the new row.
-4.  The dbWriteTable function has an option 'overwrite'.  It is set to FALSE  by default.  If it is set to TRUE, the table is first truncated before the row is inserted.  
-5.  No write occurs if both overwrite and append = FALSE.
-
-```{r R Dataframe Insert}
-df <- data.frame(
-  customer_id = 601
-  , store_id = 2
-  , first_name = "Sophie"
-  , last_name = "Yang"
-  , email = "sophie.yang@sakilacustomer.org"
-  , address_id = 1
-  , activebool = TRUE
-  , create_date = Sys.Date()
-  , last_update = Sys.time()
-  , active = 1
-  , stringsAsFactors = FALSE
-)
-dbWriteTable(con, "customer", value = df, append = TRUE, row.names = FALSE)
-
-new_customers <- dbGetQuery(con
-                , "select customer_id,store_id,first_name,last_name
-                     from customer where customer_id >= 600;")
-sp_print_df(new_customers)
-```
-
-## SQL Multi-Row Insert Data Syntax
-
-```
-    INSERT INTO <target> <column_list> VALUES <values list1>, ... <values listn>;
-    <target>       : target table/view
-    <column list>  : csv list of columns
-   (<values list>) : values assoicated with the column list.
-```
-
-Postgres and some other flavors of SQL allow multiple rows to be inserted at a time.  The syntax is identical to the Single Row syntax, but includes multiple `(<values list>)` clauses separated by commas.  Note that each value list is enclosed it a set of parenthesis.  The following code block illustrates the SQL multi-row insert.  Note that the customer_id column takes on sequential values to satisfy the PK constraint.
-
-
-## SQL Multi-Row Insert Data Example
-
-```{r SQL Multi-Row Insert Data}
-#
+```r
 dbExecute(
   con,
   "insert into customer 
   (customer_id,store_id,first_name,last_name,email,address_id,activebool
   ,create_date,last_update,active)
-   values(602,4,'John','Smith','john.smith@sakilacustomer.org',2,TRUE
-         ,now()::date,now()::date,1)
-         ,(603,5,'Ian','Frantz','ian.frantz@sakilacustomer.org',3,TRUE
-         ,now()::date,now()::date,1)
-         ,(604,6,'Ed','Borasky','ed.borasky@sakilacustomer.org',4,TRUE
-         ,now()::date,now()::date,1)
+   values(600,3,'Sophie','Yang','sophie.yang@sakilacustomer.org',1,TRUE,now(),now()::date,1)
+         ,(601,2,'Sophie','Yang','sophie.yang@sakilacustomer.org',1,TRUE,now(),now()::date,1)
+         ,(602,4,'John','Smith','john.smith@sakilacustomer.org',2,TRUE,now()::date,now()::date,1)
+         ,(603,5,'Ian','Frantz','ian.frantz@sakilacustomer.org',3,TRUE,now()::date,now()::date,1)
+         ,(604,6,'Ed','Borasky','ed.borasky@sakilacustomer.org',4,TRUE,now()::date,now()::date,1)
          ;"
 )
 ```
 
-## DPLYR Multi-Row Insert Data Example
-
-The Postgres R multi-row insert is similar to the single row insert.  The single column values are converted to a vector of values.
-
-### R Exercise: Inserting Multiple Rows via a Dataframe
-
-Replace the two first_name, last_name, and email column values with your own made up values in the following code block.  The output should be all of our new customers, customer_id = {600 - 606}.
-
-```{r DPLYR Multi-Row Insert Data}
-
-customer_id <- c(605, 606)
-store_id <- c(3, 4)
-first_name <- c("John", "Ian")
-last_name <- c("Smith", "Frantz")
-email <- c("john.smith@sakilacustomer.org", "ian.frantz@sakilacustomer.org")
-address_id <- c(3, 4)
-activebool <- c(TRUE, TRUE)
-create_date <- c(Sys.Date(), Sys.Date())
-last_update <- c(Sys.time(), Sys.time())
-active <- c(1, 1)
-
-df2 <- data.frame(customer_id, store_id, first_name, last_name, email,
-  address_id, activebool, create_date, last_update, active,
-  stringsAsFactors = FALSE
-)
-
-
-dbWriteTable(con, "customer",
-  value = df2, append = TRUE, row.names = FALSE
-)
-
-new_customers <- dbGetQuery(con
-                , "select customer_id,store_id,first_name,last_name
-                     from customer where customer_id >= 600;")
-sp_print_df(new_customers)
+```
+## [1] 5
 ```
 
-Confirm that the two new rows, customer_id = { 605, 606} are in the output.
-
-The next two code block show all the rows in the  store and staff tables.  Notice that neither table has a staff_id or a manager_staff_id = 10.  We will attempt to insert such a row in the upcoming code blocks.
-
-```{r new store data}
-stores <- dbGetQuery(con,"select * from store;")
-sp_print_df(stores)
-```
-
-```{r staff table}
-staff  <- dbGetQuery(con
-            ,"select staff_id, first_name, last_name, address_id, email, store_id
-                from staff;")
-sp_print_df(staff)
-```
-
-### Creating a Messy Store Row
-
-A new store row is needed to illustrate a right outer join in a future code block.  However, one cannot insert/update a row into the `store` table with a manager_staff_id = 10 because of a foreign key constraint on the manager_staff_id column.  
-
-The manager_staff_id value must satisfy two conditions before the database will allow the new store row to be inserted into the table when the table constraints are enabled.:
-
-1.  The manager_staff_id must be unique when inserted into the store table.
-2.  The manager_staff_id must match a `staff` table staff_id value.
-
-Next we show both error messages:
-
-1.  The next code block attempts to insert a new store, `store_id = 10`, with manager_staff_id = 1, but fails with a unique constraint error message.  The manager_staff_id = 1 already exists in the store table.
-
-```{r Proess Updating of Store manager_staff_id Duplicate Key Error}
-dbExecute(con, "
-do $$
-DECLARE v_manager_staff_id INTEGER;
-begin
-    v_manager_staff_id = 1;
-    insert into store (store_id,manager_staff_id,address_id,last_update)
-         values (10,v_manager_staff_id,10,now()::date);
-exception
-when foreign_key_violation then
-    raise notice 'SQLERRM = %, manager_staff_id = %', SQLERRM, v_manager_staff_id;
-when others then
-    raise notice 'SQLERRM = % SQLSTATE =%', SQLERRM, SQLSTATE;
-end;
-$$ language 'plpgsql';")
-
-```
-
-```
-Error in result_create(conn@ptr, statement) : Failed to prepare query: server closed the connection unexpectedly This probably means the server terminated abnormally before or while processing the request.
-```
-
-The number above should be 0 and indicates no row was inserted.
-
-2.  The next code block attempts to insert a new store, `store_id = 10`, with manager_staff_id = 10, but fails with a foreign key constraint error message because there does not exist a staff table row with staff_id = 10.
-
-```{r Proess Updating of Store manager_staff_id Foreign Key Error}
-dbExecute(con, "
-do $$
-DECLARE v_manager_staff_id INTEGER;
-begin
-    v_manager_staff_id = 10;
-    insert into store (store_id,manager_staff_id,address_id,last_update)
-         values (10,v_manager_staff_id,10,now()::date);
-exception
-when foreign_key_violation then
-    raise notice 'SQLERRM = %, manager_staff_id = %', SQLERRM, v_manager_staff_id;
-when others then
-    raise notice 'SQLERRM = % SQLSTATE =%', SQLERRM, SQLSTATE;
-end;
-$$ language 'plpgsql';")
-```
-
-```
-NOTICE:  SQLERRM = insert or update on table "store" violates foreign key constraint "store_manager_staff_id_fkey", manager_staff_id = 10
-CONTEXT:  PL/pgSQL function inline_code_block line 9 at RAISE
-```
-
-Again, the number above should be 0 and indicates no row was inserted.
-
-The following three code blocks
-
-1.  disables all the database constraints on the `store` table
-2.  Inserts the store row with store_id = 10 via a dataframe.
-3.  Re-enabes the database constraints on the store table
-
-```{r Disable store trigger}
-#
+```r
 dbExecute(con, "ALTER TABLE store DISABLE TRIGGER ALL;")
 ```
 
-```{r "insert store id = 10 row"}
+```
+## [1] 0
+```
+
+```r
 df <- data.frame(
     store_id = 10
   , manager_staff_id = 10
@@ -380,45 +107,24 @@ df <- data.frame(
   , last_update = Sys.time()
 )
 dbWriteTable(con, "store", value = df, append = TRUE, row.names = FALSE)
-```
-
-```{r enable store trigger}
 dbExecute(con, "ALTER TABLE store ENABLE TRIGGER ALL;")
 ```
 
-The zeros after the dbExecute code blocks indicate that the dbExecute calls did not alter any rows on the table.
-
-In the next code block we confirm our new row, store_id = 10, was actually inserted.
-
-```{r }
-stores <- dbGetQuery(con,"select * from store;")
-sp_print_df(stores)
+```
+## [1] 0
 ```
 
-<!--
-
-## Creating Duplicate Customer Rows 
-
-In the next section we create a new table, `smy_customer`.  We will load all customers with customer_id > 594 twice.  The `smy_customer` table will be used in the dplyr semi-join section. 
-
-```{r}
-dbExecute(con,"drop table if exists smy_customer;")
-dbExecute(con,"create table smy_customer 
-    as select * 
-         from customer  
-        where customer_id > 594;")
-dbExecute(con,"insert into smy_customer 
-               select * 
-                 from customer  
-                where customer_id > 594;")
-
-smy_cust_dupes <- dbGetQuery(con,'select * 
-                                    from smy_customer 
-                                  order by customer_id')
-
-sp_print_df(smy_cust_dupes)
+```r
+dbGetQuery(con,"select * from store;")
 ```
--->
+
+```
+##   store_id manager_staff_id address_id         last_update
+## 1        1                1          1 2006-02-15 09:57:12
+## 2        2                2          2 2006-02-15 09:57:12
+## 3       10               10         10 2019-01-27 14:13:31
+```
+
 
 ## Joins
 
@@ -428,36 +134,8 @@ Normalization breaks data down and JOINs denormalizes the data and builds it bac
 
 ### Join Types
 
-```{r SQL TYPES,echo = FALSE}
-grViz("
-digraph SQL_TYPES {
-
-  # a 'graph' statement
-  graph [overlap = true, fontsize = 10]
-
-  node [shape = box,
-        fixedsize = false,
-        hegith = 1.5
-        width = 1.50]
-  0[label='0.  SQL Joins']
-  1[label='1.  Inner Join\nL.col1 {<,=,>} R.col2']
-  2[label='2.  Outer Join\nL.col1=tbl1.col2']
-  3[label='3.  Self Join\nL.col1=tbl1.col2']
-  4[label='4.  Cross Join\nL.col1=R.col2']
-  5[label='5.  Equi Join\nL.col1=R.col2'] 
-  6[label='6.  Natural Join\nL.col1=R.col1']
-  7[label='7.  Left Join\nL.col1=R.col1']
-  8[label='8.  Right Join\nL.col1=R.col1']
-  9[label='9.  Full Join\nL.col1=tbl2.col1']
-  # several 'edge' statements
-  0 -> {1,2,3,4} [arrowhead=none]
-  1 -> 5 [arrowhead=none]
-  5 -> 6 [arrowhead=none]
-  2 -> {7,8,9} [arrowhead=none]
-  #3 -> {7,8,9}
-}
-")
-```  
+<!--html_preserve--><div id="htmlwidget-1d9f9b9fdca3023baa83" style="width:672px;height:480px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1d9f9b9fdca3023baa83">{"x":{"diagram":"\ndigraph SQL_TYPES {\n\n  # a \"graph\" statement\n  graph [overlap = true, fontsize = 10]\n\n  node [shape = box,\n        fixedsize = false,\n        hegith = 1.5\n        width = 1.50]\n  0[label=\"0.  SQL Joins\"]\n  1[label=\"1.  Inner Join\nL.col1 {<,=,>} R.col2\"]\n  2[label=\"2.  Outer Join\nL.col1=R.col2\"]\n  3[label=\"3.  Self Join\nL.col1=tbl1.col2\"]\n  4[label=\"4.  Cross Join\nL.col1=R.col2\"]\n  5[label=\"5.  Equi Join\nL.col1=R.col2\"] \n  6[label=\"6.  Natural Join\nL.col1=R.col1\"]\n  7[label=\"7.  Left Join\nL.col1=R.col1\"]\n  8[label=\"8.  Right Join\nL.col1=R.col1\"]\n  9[label=\"9.  Full Join\nL.col1=tbl2.col1\"]\n  # several \"edge\" statements\n  0 -> {1,2,3,4} [arrowhead=none]\n  1 -> 5 [arrowhead=none]\n  5 -> 6 [arrowhead=none]\n  2 -> {7,8,9} [arrowhead=none]\n  #3 -> {7,8,9}\n}\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 The diagram above shows the hierarchy of the different types of joins.  In the boxes above:
 
@@ -537,7 +215,8 @@ The dplyr default join is a natural join, joining tables on common column names.
 
 The next code block calculates the `store_id` distribution in the `customer` and `store` tables across all their rows.  The results will be used in following sections to validate different join result sets.
 
-```{r SQL Customer store_id Distribution}
+
+```r
 store_distribution_sql <- dbGetQuery(con
           ,"select 'customer' tbl, store_id,count(*) count 
               from customer group by store_id
@@ -549,25 +228,39 @@ store_distribution_sql <- dbGetQuery(con
 sp_print_df(store_distribution_sql)
 ```
 
+<!--html_preserve--><div id="htmlwidget-b18b48ec4ad649442f3b" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-b18b48ec4ad649442f3b">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9"],["customer","customer","customer","customer","customer","customer","store","store","store"],[1,2,3,4,5,6,1,2,10],[326,274,1,1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>tbl<\/th>\n      <th>store_id<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
 ### Sample Customer and Store Join Data
 
 The following code block extracts sample customer and the store data.  The customer data is restricted to 10 rows to illustrate the different joins.  The 10 rows are used in the detail examples in order to perform a sanity check that the join is actually working.  Each detail example is followed by an aggregated summary across all rows of `customer` and `store` table.
 
-```{r Sample Customer and Store Join Data}
+
+```r
 sample_customers <- dbGetQuery(con,"select customer_id,first_name,last_name,store_id
                                       from customer 
                                      where customer_id between 595 and 604")
 stores <- dbGetQuery(con,"select * from store;")
 sp_print_df(sample_customers)
+```
+
+<!--html_preserve--><div id="htmlwidget-514d280a38cf86ead40b" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-514d280a38cf86ead40b">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10"],[595,596,597,598,599,600,601,602,603,604],["Terrence","Enrique","Freddie","Wade","Austin","Sophie","Sophie","John","Ian","Ed"],["Gunderson","Forsythe","Duggan","Delvalle","Cintron","Yang","Yang","Smith","Frantz","Borasky"],[1,1,1,1,2,3,2,4,5,6]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>store_id<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
+```r
 sp_print_df(stores)
 ```
+
+<!--html_preserve--><div id="htmlwidget-74434d812ec23342fdce" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-74434d812ec23342fdce">{"x":{"filter":"none","data":[["1","2","3"],[1,2,10],[1,2,10],[1,2,10],["2006-02-15T17:57:12Z","2006-02-15T17:57:12Z","2019-01-27T22:13:31Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>store_id<\/th>\n      <th>manager_staff_id<\/th>\n      <th>address_id<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
  
 
 ### dplyr store_id distribution Exercise
 
 Execute and Review the output from the code block below.  Union and arrange the output to match the SQL output in the previous code block.  
 
-```{r dplyr store_id distribution}
+
+```r
 customer_table <- DBI::dbReadTable(con, "customer")
 store_table <- DBI::dbReadTable(con, "store")
 
@@ -584,11 +277,20 @@ store_summary <- store_table %>%
   select(table,store_id,count)
 
 sp_print_df(customer_summary)
+```
+
+<!--html_preserve--><div id="htmlwidget-8da54f9f5480ad7c3ec3" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-8da54f9f5480ad7c3ec3">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["customer","customer","customer","customer","customer","customer"],[1,2,3,4,5,6],[326,274,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table<\/th>\n      <th>store_id<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
+```r
 sp_print_df(store_summary)
+```
 
+<!--html_preserve--><div id="htmlwidget-124fb78127817ec02cd9" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-124fb78127817ec02cd9">{"x":{"filter":"none","data":[["1","2","3"],["store","store","store"],[1,2,10],[1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table<\/th>\n      <th>store_id<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
+```r
 ## UNION the two summary tables and ARRANGE the output to match the SQL output from the previouse code block
-
-
 ```
 
 ## Join Templates
@@ -618,7 +320,8 @@ The suffix parameter is a way to distinguish the same column name in the joined 
 For an inner join between two tables, it doesn't matter which table is on the left, the first table, and which is on the right, the second table, because join conditions on both tables must be satisfied.  Reviewing the table below shows the inner join on our 10 sample customers and 3 store records returned only 6 rows.  The inner join detail shows only rows with matching store_id's.  
 
 
-```{r SQL inner join details}
+
+```r
 customer_store_details_sij <- dbGetQuery(con,
 "select 'ij' join_type,customer_id,first_name,last_name,c.store_id c_store_id
        ,s.store_id s_store_id,s.manager_staff_id, s.address_id
@@ -627,16 +330,26 @@ customer_store_details_sij <- dbGetQuery(con,
 sp_print_df(customer_store_details_sij)
 ```
 
+<!--html_preserve--><div id="htmlwidget-dd0a51033db44e820d90" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-dd0a51033db44e820d90">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["ij","ij","ij","ij","ij","ij"],[595,596,597,598,599,601],["Terrence","Enrique","Freddie","Wade","Austin","Sophie"],["Gunderson","Forsythe","Duggan","Delvalle","Cintron","Yang"],[1,1,1,1,2,2],[1,1,1,1,2,2],[1,1,1,1,2,2],[1,1,1,1,2,2]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>join_type<\/th>\n      <th>customer_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>c_store_id<\/th>\n      <th>s_store_id<\/th>\n      <th>manager_staff_id<\/th>\n      <th>address_id<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,5,6,7,8]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
 ### Dplyr Inner Join Details {example_inner-join-details-dplyr}
 
-```{r dplyr inner join Details}
+
+```r
 customer_ij <- customer_table %>%
   inner_join(store_table, by = c("store_id" = "store_id"), suffix(c(".c", ".s"))) %>%
     filter(customer_id >= 595 & customer_id <= 604 ) %>%
-    select(customer_id,first_name,last_name,store_id 
-       ,store_id,manager_staff_id, address_id) 
+    mutate(join_type = 'ij'
+          ) %>% 
+    rename(s_address_id = address_id.y) %>%
+    select(join_type,customer_id,first_name,last_name,store_id 
+       ,store_id,manager_staff_id, s_address_id) 
 sp_print_df(customer_ij)
 ```
+
+<!--html_preserve--><div id="htmlwidget-1fe403c81784621152ab" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1fe403c81784621152ab">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["ij","ij","ij","ij","ij","ij"],[595,596,597,598,599,601],["Terrence","Enrique","Freddie","Wade","Austin","Sophie"],["Gunderson","Forsythe","Duggan","Delvalle","Cintron","Yang"],[1,1,1,1,2,2],[1,1,1,1,2,2],[1,1,1,1,2,2]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>join_type<\/th>\n      <th>customer_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>store_id<\/th>\n      <th>manager_staff_id<\/th>\n      <th>s_address_id<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,5,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 Compare the output from the SQL and Dplyr version.  The SQL output has a `c_store_id` and a `s_store_id` column and the Dplyr output only has `store_id`.  In this case, because it is an inner join, it doesn't matter because they will always the same.
 
@@ -644,7 +357,8 @@ Compare the output from the SQL and Dplyr version.  The SQL output has a `c_stor
 
 Note that both the store_id is available from both the customer and store tables, c.store_id,s.store_id, in the select clause.
 
-```{r SQL Inner Join Summary}
+
+```r
 customer_store_summay_sij <- dbGetQuery(
   con,
   "select c.store_id c_store_id,s.store_id s_store_id,count(*) n
@@ -655,11 +369,15 @@ customer_store_summay_sij <- dbGetQuery(
 sp_print_df(customer_store_summay_sij)
 ```
 
+<!--html_preserve--><div id="htmlwidget-ed78248b32e6634f28e5" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-ed78248b32e6634f28e5">{"x":{"filter":"none","data":[["1","2"],[1,2],[1,2],[326,274]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>c_store_id<\/th>\n      <th>s_store_id<\/th>\n      <th>n<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
 ### Dplyr Inner Join Summary {example_inner-join-summary_dplyr}
 
 In the previous SQL code block, `c.` and `s.` were used in the `inner join` as table aliases.  The `dplyr` suffix is similar to the SQL table alias. The role of the dplyr suffix and the SQL alias is to disambiguate duplicate table and column names referenced.    
 
-```{r dplyr inner join summary}
+
+```r
 customer_store_summary_dij <- customer_table %>%
   inner_join(store_table, by = c("store_id" = "store_id"), suffix(c(".c", ".s"))) %>%
      mutate( join_type = "ij"
@@ -671,13 +389,17 @@ customer_store_summary_dij <- customer_table %>%
 sp_print_df(customer_store_summary_dij)
 ```
 
+<!--html_preserve--><div id="htmlwidget-2ae622211a824c064fbd" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2ae622211a824c064fbd">{"x":{"filter":"none","data":[["1","2"],["ij","ij"],[1,2],[1,2],[326,274]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>join_type<\/th>\n      <th>c_store_id<\/th>\n      <th>s_store_id<\/th>\n      <th>n<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
 ## Left Joins
 
 ### SQL Left Join Details {example_left-join-details-sql}
 
 The SQL block below shows all 10 sample customer rows, the customer table is on the left and is the driving table, in the detail output which join to 2 of the 3 rows in the store table.  All the rows with customer store_id greater than 2 have null/blank store column values.  
 
-```{r SQL left join details}
+
+```r
 customer_store_details_sloj <- dbGetQuery(con,
 "select 'loj' join_type,customer_id,first_name,last_name,c.store_id c_store_id
        ,s.store_id s_store_id,s.manager_staff_id, s.address_id
@@ -686,41 +408,74 @@ customer_store_details_sloj <- dbGetQuery(con,
 sp_print_df(customer_store_details_sloj)
 ```
 
+<!--html_preserve--><div id="htmlwidget-09904734225327216f09" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-09904734225327216f09">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10"],["loj","loj","loj","loj","loj","loj","loj","loj","loj","loj"],[595,596,597,598,599,600,601,602,603,604],["Terrence","Enrique","Freddie","Wade","Austin","Sophie","Sophie","John","Ian","Ed"],["Gunderson","Forsythe","Duggan","Delvalle","Cintron","Yang","Yang","Smith","Frantz","Borasky"],[1,1,1,1,2,3,2,4,5,6],[1,1,1,1,2,null,2,null,null,null],[1,1,1,1,2,null,2,null,null,null],[1,1,1,1,2,null,2,null,null,null]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>join_type<\/th>\n      <th>customer_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>c_store_id<\/th>\n      <th>s_store_id<\/th>\n      <th>manager_staff_id<\/th>\n      <th>address_id<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,5,6,7,8]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
 ### Dplyr Left Join Details {example_left-join-details-dplyr}
 
 The next code block shows the left join details.  Note that the s_store_id column is derived via the mutate function, but not shown in the output below.  Without the s_store_id column, it might accidentally be assumed that the store.store_id = customer.store_id when the store.store_id values are actually NULL/NA based on the output without the s_store_id column.
 
-```{r Dplyr left outer join Details}
 
+```r
 customer_store_detail_dloj <- customer_table %>%
   left_join(store_table, by = c("store_id" = "store_id"), suffix(c(".c", ".s"))) %>%
     filter(customer_id >= 595 & customer_id <= 604 ) %>%
       mutate(join_type = "loj"
              ,s_store_id = if_else(is.na(manager_staff_id), manager_staff_id, store_id)
             ) %>%
-    select(customer_id,first_name,last_name,store_id 
-       ,manager_staff_id, address_id) 
+    rename(s_address_id = address_id.y) %>%
+    select(join_type,customer_id,first_name,last_name,store_id 
+       ,manager_staff_id, s_address_id) 
 
 sp_print_df(customer_store_detail_dloj)
 ```
+
+<!--html_preserve--><div id="htmlwidget-b619f31f38e9f2471fcc" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-b619f31f38e9f2471fcc">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10"],["loj","loj","loj","loj","loj","loj","loj","loj","loj","loj"],[595,596,597,598,599,600,601,602,603,604],["Terrence","Enrique","Freddie","Wade","Austin","Sophie","Sophie","John","Ian","Ed"],["Gunderson","Forsythe","Duggan","Delvalle","Cintron","Yang","Yang","Smith","Frantz","Borasky"],[1,1,1,1,2,3,2,4,5,6],[1,1,1,1,2,null,2,null,null,null],[1,1,1,1,2,null,2,null,null,null]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>join_type<\/th>\n      <th>customer_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>store_id<\/th>\n      <th>manager_staff_id<\/th>\n      <th>s_address_id<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,5,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 The following code block includes the derived s_store_id value.  The output makes it explicit that the s_store_id value is missing.  The sp_print_df function is replaced with the print function to show the actual NA values.  
 
 
 
-```{r Dplyr left outer join Details with c/s store_id}
 
+```r
 customer_store_detail_dloj <- customer_table %>%
   left_join(store_table, by = c("store_id" = "store_id"), suffix(c(".c", ".s"))) %>%
     filter(customer_id >= 595 & customer_id <= 604 ) %>%
       mutate(join_type = "loj"
              ,s_store_id = if_else(is.na(manager_staff_id), manager_staff_id, store_id)
             ) %>%
-    rename(c_store_id = store_id) %>%
+    rename(c_store_id = store_id
+          ,s_address_id = address_id.y) %>%
     select(customer_id,first_name,last_name,c_store_id 
-       ,s_store_id,manager_staff_id, address_id) 
+       ,s_store_id,manager_staff_id, s_address_id) 
 
 print(customer_store_detail_dloj)
+```
+
+```
+##    customer_id first_name last_name c_store_id s_store_id manager_staff_id
+## 1          595   Terrence Gunderson          1          1                1
+## 2          596    Enrique  Forsythe          1          1                1
+## 3          597    Freddie    Duggan          1          1                1
+## 4          598       Wade  Delvalle          1          1                1
+## 5          599     Austin   Cintron          2          2                2
+## 6          600     Sophie      Yang          3         NA               NA
+## 7          601     Sophie      Yang          2          2                2
+## 8          602       John     Smith          4         NA               NA
+## 9          603        Ian    Frantz          5         NA               NA
+## 10         604         Ed   Borasky          6         NA               NA
+##    s_address_id
+## 1             1
+## 2             1
+## 3             1
+## 4             1
+## 5             2
+## 6            NA
+## 7             2
+## 8            NA
+## 9            NA
+## 10           NA
 ```
 
 In the remaining examples, the `dplyr` code blocks will show both the customer and store store_id values with the either `c_` or `s_` store_id prefix .  The sp_print_df function returns the SQL NULL and R NA values as blanks.
@@ -731,7 +486,8 @@ For a left outer join between two tables, it does matter which table is on the l
 
 Note that SQL returns the store_id from both the customer and store tables, c.store_id,s.store_id, in the select clause.
 
-```{r SQL Left Join Summary}
+
+```r
 customer_store_summary_sloj <- dbGetQuery(
   con,
   "select c.store_id c_store_id,s.store_id s_store_id,count(*) loj
@@ -743,6 +499,9 @@ customer_store_summary_sloj <- dbGetQuery(
 sp_print_df(customer_store_summary_sloj)
 ```
 
+<!--html_preserve--><div id="htmlwidget-beeafef17c4840807f51" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-beeafef17c4840807f51">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[1,2,3,4,5,6],[1,2,null,null,null,null],[326,274,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>c_store_id<\/th>\n      <th>s_store_id<\/th>\n      <th>loj<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
 The lojs column returns the number of rows found on the store_id, from the customer table and the store table if on both tables, rows 1 - 2.  The right table, the store table returned blank/NA, when the key only exists in the customer table, rows 3 - 6.
 
 1.  The left outer join always returns all rows from the left table, the driving/key table, if not reduced via a filter()/where clause.  
@@ -753,8 +512,8 @@ The lojs column returns the number of rows found on the store_id, from the custo
 
 The dplyr outer join verbs do not return the non-driving table join values.  Compare the mutate verb s_store_id in the code block below with s.store_id in the equivalent SQL code block above.
 
-```{r Dplyr left outer join}
 
+```r
 customer_store_summary_dloj <- customer_table %>%
   left_join(store_table, by = c("store_id", "store_id"), suffix(c(".c", ".s"))) %>%
   mutate(
@@ -769,10 +528,27 @@ customer_store_summary_dloj <- customer_table %>%
 sp_print_df(customer_store_summary_dloj)
 ```
 
+<!--html_preserve--><div id="htmlwidget-f6a2206cea77e899a1de" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-f6a2206cea77e899a1de">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["loj","loj","loj","loj","loj","loj"],[1,2,3,4,5,6],[1,2,null,null,null,null],[326,274,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>join_type<\/th>\n      <th>c_store_id<\/th>\n      <th>s_store_id<\/th>\n      <th>n<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 
-```{r}
+
+
+```r
 print(customer_store_summary_dloj)
+```
+
+```
+## # A tibble: 6 x 4
+## # Groups:   join_type, c_store_id [6]
+##   join_type c_store_id s_store_id     n
+##   <chr>          <int>      <int> <int>
+## 1 loj                1          1   326
+## 2 loj                2          2   274
+## 3 loj                3         NA     1
+## 4 loj                4         NA     1
+## 5 loj                5         NA     1
+## 6 loj                6         NA     1
 ```
 
 ## Why Include one of the Inner Join Key columns?
@@ -787,7 +563,8 @@ One can think of the two components of an inner join as a transaction is either 
 
 The SQL block below shows only our sample customer rows, (customer_id between 595 and 604). The driving table is on the right, the `store` table.  Only six of the 10 sample customer rows appear which have store_id = {1, 2}.  All three `store` rows appear, row_id = {1,2,10}.  The right join is least frequently used join type.
 
-```{r SQL right join details}
+
+```r
 customer_store_detail_sroj <- dbGetQuery(con,
 "select 'roj' join_type,customer_id,first_name,last_name,c.store_id c_store_id
        ,s.store_id s_store_id,s.manager_staff_id, s.address_id
@@ -795,6 +572,9 @@ customer_store_detail_sroj <- dbGetQuery(con,
 where coalesce(customer_id,595) between 595 and 604;")
 sp_print_df(customer_store_detail_sroj)
 ```
+
+<!--html_preserve--><div id="htmlwidget-80fb537b5ba0bd90fb93" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-80fb537b5ba0bd90fb93">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7"],["roj","roj","roj","roj","roj","roj","roj"],[595,596,597,598,599,601,null],["Terrence","Enrique","Freddie","Wade","Austin","Sophie",null],["Gunderson","Forsythe","Duggan","Delvalle","Cintron","Yang",null],[1,1,1,1,2,2,null],[1,1,1,1,2,2,10],[1,1,1,1,2,2,10],[1,1,1,1,2,2,10]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>join_type<\/th>\n      <th>customer_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>c_store_id<\/th>\n      <th>s_store_id<\/th>\n      <th>manager_staff_id<\/th>\n      <th>address_id<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,5,6,7,8]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 Compare the SQL left join where clause
 
@@ -815,24 +595,29 @@ See the next dplyr code block to see the alternative where clause shown above.
 
 ### Dplyr Right Join Details {example_right-join-details-dplyr}
 
-```{r Dplyr Right outer join Details}
 
+```r
 customer_store_detail_droj <- customer_table %>%
   right_join(store_table, by = c("store_id" = "store_id"), suffix(c(".c", ".s"))) %>%
     filter((customer_id >= 595 & customer_id <= 604) | is.na(customer_id)) %>%
       mutate(join_type = "roj"
              ,c_store_id = if_else(is.na(customer_id), customer_id, store_id)
             ) %>%
-    rename(s_store_id = store_id) %>%
+    rename(s_store_id = store_id
+          ,s_address_id = address_id.y) %>%
     select(customer_id,first_name,last_name,s_store_id 
-       ,c_store_id,manager_staff_id, address_id) 
+       ,c_store_id,manager_staff_id, s_address_id) 
 
 sp_print_df(customer_store_detail_droj)
 ```
 
+<!--html_preserve--><div id="htmlwidget-703a15d93cfc9aff608e" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-703a15d93cfc9aff608e">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7"],[595,596,597,598,599,601,null],["Terrence","Enrique","Freddie","Wade","Austin","Sophie",null],["Gunderson","Forsythe","Duggan","Delvalle","Cintron","Yang",null],[1,1,1,1,2,2,10],[1,1,1,1,2,2,null],[1,1,1,1,2,2,10],[1,1,1,1,2,2,10]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>s_store_id<\/th>\n      <th>c_store_id<\/th>\n      <th>manager_staff_id<\/th>\n      <th>s_address_id<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,4,5,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
 ### SQL Right Outer Join Summary {example_right-join-summary-sql}
 
-```{r SQL Right Outer Join Summary}
+
+```r
 customer_store_summary_sroj <- dbGetQuery(
   con,
   "select 'roj' join_type,c.store_id c_store_id,s.store_id s_store_id,count(*) rojs
@@ -843,6 +628,9 @@ order by s.store_id;"
 sp_print_df(customer_store_summary_sroj)
 ```
 
+<!--html_preserve--><div id="htmlwidget-6d936e3915a36e12cd53" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-6d936e3915a36e12cd53">{"x":{"filter":"none","data":[["1","2","3"],["roj","roj","roj"],[1,2,null],[1,2,10],[326,274,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>join_type<\/th>\n      <th>c_store_id<\/th>\n      <th>s_store_id<\/th>\n      <th>rojs<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
 The rojs column returns the number of rows found on the keys from the right table, `store`, and the left table, the `customer` table.    
 
 1.  The right outer join always returns all rows from the right table, the driving/key table, if not reduced via a filter()/where clause.  
@@ -851,7 +639,8 @@ The rojs column returns the number of rows found on the keys from the right tabl
 
 ### dplyr Right Join Summary {example_right-join-summary-dplyr}
 
-```{r right outer join summary}
+
+```r
 customer_store_summary_droj <- customer_table %>%
   right_join(store_table, by = c("store_id", "store_id"), suffix(c(".c", ".s")), all = store_table) %>%
   mutate(
@@ -866,6 +655,9 @@ customer_store_summary_droj <- customer_table %>%
 sp_print_df(customer_store_summary_droj)
 ```
 
+<!--html_preserve--><div id="htmlwidget-c195b56d57c26c8f1d4d" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-c195b56d57c26c8f1d4d">{"x":{"filter":"none","data":[["1","2","3"],["rojs","rojs","rojs"],[1,2,10],[1,2,null],[326,274,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>join_type<\/th>\n      <th>s_store_id<\/th>\n      <th>c_store_id<\/th>\n      <th>n<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
 ## Full Join
 
 ### SQL Full Join Details {example_full-join-details-sql}
@@ -874,7 +666,8 @@ The full outer join is a conbination of the left and right outer joins and retur
 
 The next SQL block implements a full outer join and returns 12 rows.  Change the `Show entries` from 10 to 25 to see all the entries.  
 
-```{r SQL full outer join details}
+
+```r
 customer_store_details_sfoj <- dbGetQuery(con,
   "select 'foj' join_type, c.customer_id,c.first_name,c.last_name,c.store_id c_store_id
           ,s.store_id s_store_id,s.manager_staff_id,s.address_id
@@ -883,28 +676,36 @@ customer_store_details_sfoj <- dbGetQuery(con,
 sp_print_df(customer_store_details_sfoj)
 ```
 
+<!--html_preserve--><div id="htmlwidget-7a589913f405d7a14fbe" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-7a589913f405d7a14fbe">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11"],["foj","foj","foj","foj","foj","foj","foj","foj","foj","foj","foj"],[595,596,597,598,599,600,601,602,603,604,null],["Terrence","Enrique","Freddie","Wade","Austin","Sophie","Sophie","John","Ian","Ed",null],["Gunderson","Forsythe","Duggan","Delvalle","Cintron","Yang","Yang","Smith","Frantz","Borasky",null],[1,1,1,1,2,3,2,4,5,6,null],[1,1,1,1,2,null,2,null,null,null,10],[1,1,1,1,2,null,2,null,null,null,10],[1,1,1,1,2,null,2,null,null,null,10]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>join_type<\/th>\n      <th>customer_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>c_store_id<\/th>\n      <th>s_store_id<\/th>\n      <th>manager_staff_id<\/th>\n      <th>address_id<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,5,6,7,8]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
 ### Dplyr Full Join Details {example_full-join-details-sql}
 
-```{r Dplyr Full Join Details}
 
+```r
 customer_store_detail_dfoj <- customer_table %>%
   full_join(store_table, by = c("store_id" = "store_id"), suffix(c(".c", ".s"))) %>%
     filter((customer_id >= 595 & customer_id <= 604) | is.na(customer_id)) %>%
       mutate(join_type = "roj"
              ,c_store_id = if_else(is.na(customer_id), customer_id, store_id)
             ) %>%
-    rename(s_store_id = store_id) %>%
+    rename(s_store_id = store_id
+          ,s_address_id = address_id.y) %>%
     select(customer_id,first_name,last_name,s_store_id 
-       ,c_store_id,manager_staff_id, address_id) 
+       ,c_store_id,manager_staff_id, s_address_id) 
 
 sp_print_df(customer_store_detail_dfoj)
 ```
+
+<!--html_preserve--><div id="htmlwidget-a3fe20e2cfd2d5bbfba3" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-a3fe20e2cfd2d5bbfba3">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11"],[595,596,597,598,599,600,601,602,603,604,null],["Terrence","Enrique","Freddie","Wade","Austin","Sophie","Sophie","John","Ian","Ed",null],["Gunderson","Forsythe","Duggan","Delvalle","Cintron","Yang","Yang","Smith","Frantz","Borasky",null],[1,1,1,1,2,3,2,4,5,6,10],[1,1,1,1,2,3,2,4,5,6,null],[1,1,1,1,2,null,2,null,null,null,10],[1,1,1,1,2,null,2,null,null,null,10]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>s_store_id<\/th>\n      <th>c_store_id<\/th>\n      <th>manager_staff_id<\/th>\n      <th>s_address_id<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,4,5,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ### SQL Full Join Summary {example_full-join-summary-sql}
 
 The result set below is ordered by the store.store_id.  
 
-```{r SQL Full  Join Summary}
+
+```r
 customer_store_summary_sfoj <- dbGetQuery(
   con,
   "select 'foj' join_type,c.store_id c_store_id,s.store_id s_store_id,count(*) fojs
@@ -915,12 +716,15 @@ order by s.store_id,c.store_id;"
 sp_print_df(customer_store_summary_sfoj)
 ```
 
+<!--html_preserve--><div id="htmlwidget-a98751c486bb4e6734fc" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-a98751c486bb4e6734fc">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7"],["foj","foj","foj","foj","foj","foj","foj"],[1,2,null,3,4,5,6],[1,2,10,null,null,null,null],[326,274,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>join_type<\/th>\n      <th>c_store_id<\/th>\n      <th>s_store_id<\/th>\n      <th>fojs<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
 ### Dplyr Full Join Summary {example_full-join-summary-dplyr}
 
 The full outer join summary seven rows.  Store_id = {1,2} appear in both table tables.  Store_id = {3 - 6} appear only in the customer table which is on the left.  Store_id = 10 appears only in the `store` table which is on the right.
 
-```{r Dplyr full outer join}
 
+```r
 customer_store_summary_dfoj <- customer_table %>%
   full_join(store_table, by = c("store_id", "store_id"), suffix(c(".c", ".s"))) %>%
   mutate(join_type = "fojs"
@@ -932,6 +736,9 @@ customer_store_summary_dfoj <- customer_table %>%
 
 sp_print_df(customer_store_summary_dfoj)
 ```
+
+<!--html_preserve--><div id="htmlwidget-90472fc291eea3b37ad9" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-90472fc291eea3b37ad9">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7"],["fojs","fojs","fojs","fojs","fojs","fojs","fojs"],[1,2,null,3,4,5,6],[1,2,10,null,null,null,null],[326,274,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>join_type<\/th>\n      <th>c_store_id<\/th>\n      <th>s_store_id<\/th>\n      <th>n<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ## Semi Join 
 
@@ -964,7 +771,8 @@ For all the table1 rows where the  EXISTS clause returns TRUE, the table1 rows a
 
 All the previous joins were mutating joins, the joins resulted in a blending of columns from both tables.  A semi join only returns rows from a single table and is a filtering join. The mutating examples included a count column to show the 1-to-n relationships.  Filtering joins are 1-to-1 and the count column  is dropped in the following examples.
 
-```{r SQL Semi Join 1}
+
+```r
 customer_store_ssj <- dbGetQuery(con,
 "select 'sj' join_type,customer_id,first_name,last_name,c.store_id c_store_id
    from customer c 
@@ -974,13 +782,17 @@ customer_store_ssj <- dbGetQuery(con,
 sp_print_df(customer_store_ssj)
 ```
 
+<!--html_preserve--><div id="htmlwidget-6c084255227fcd56827e" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-6c084255227fcd56827e">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["sj","sj","sj","sj","sj","sj"],[595,596,597,598,599,601],["Terrence","Enrique","Freddie","Wade","Austin","Sophie"],["Gunderson","Forsythe","Duggan","Delvalle","Cintron","Yang"],[1,1,1,1,2,2]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>join_type<\/th>\n      <th>customer_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>c_store_id<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
 Note that this returned the six rows from the customer table that satisfied the c.store_id = s.store_id join condition.  It is the same as the SQL Inner Join example earlier, but without the store columns.  All the relationships are 1-to-1.
 
 ### Dplyr Semi Join Customer to Store {example_semi-join-dplyr-1}
 
 The corresponding Dplyr version is shown in the next code block.
 
-```{r Dplyer semi join Customer to Store}
+
+```r
 customer_store_dsj <- customer_table %>% 
   semi_join(store_table, by = c("store_id" = "store_id"), suffix(c(".c", ".s"))) %>%
     filter(customer_id >= 595 & customer_id <= 604 ) %>%
@@ -990,11 +802,15 @@ customer_store_dsj <- customer_table %>%
 sp_print_df(customer_store_dsj)
 ```
 
+<!--html_preserve--><div id="htmlwidget-cc911bce9136bf4e7dfd" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-cc911bce9136bf4e7dfd">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["sj","sj","sj","sj","sj","sj"],[595,596,597,598,599,601],["Terrence","Enrique","Freddie","Wade","Austin","Sophie"],["Gunderson","Forsythe","Duggan","Delvalle","Cintron","Yang"],[1,1,1,1,2,2]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>join_type<\/th>\n      <th>customer_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>store_id<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
 ### SQL Semi Join Store to Customer {example_semi-join-sql-2}
 
 In the following Semi Join, the driving table is switched to the `store` table and our 10 sample customers as the right table.  
 
-```{r SQL Semi Join Store-Customer}
+
+```r
 store_customer_detail_ssj <- dbGetQuery(con,
 "select 'sj' join_type,s.store_id s_store_id,s.manager_staff_id, s.address_id
    from store s
@@ -1007,13 +823,17 @@ store_customer_detail_ssj <- dbGetQuery(con,
 sp_print_df(store_customer_detail_ssj)
 ```
 
+<!--html_preserve--><div id="htmlwidget-6c3e37b0fa7ac693f7cc" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-6c3e37b0fa7ac693f7cc">{"x":{"filter":"none","data":[["1","2"],["sj","sj"],[1,2],[1,2],[1,2]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>join_type<\/th>\n      <th>s_store_id<\/th>\n      <th>manager_staff_id<\/th>\n      <th>address_id<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
 Here we see that we get the two rows from the store table that satisfy the s.store_id = c.store_id, store_id = {1,2}.  In this example the relationship between store and customer is 1-to-n, but we do not know that from the output.
 
 ### Dplyr Semi Join Store to Customer {example_semi-join-dplyr-2}
 
 The corresponding Dplyr version is shown in the next code block.  Note that the filter condition on the customer table has been removed because the semi_join does not return any customer columns.
 
-```{r Dplyer semi join Store to Customer}
+
+```r
 store_customer_dsj <-  store_table %>%
   semi_join(customer_table, by = c("store_id" = "store_id"), suffix(c(".c", ".s"))) %>%
     mutate(join_type = 'sj') %>%
@@ -1021,11 +841,15 @@ store_customer_dsj <-  store_table %>%
 sp_print_df(store_customer_dsj)
 ```
 
+<!--html_preserve--><div id="htmlwidget-88984347109043009685" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-88984347109043009685">{"x":{"filter":"none","data":[["1","2"],["sj","sj"],[1,2],[1,2],[1,2]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>join_type<\/th>\n      <th>store_id<\/th>\n      <th>manager_staff_id<\/th>\n      <th>address_id<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
 ### SQL Semi Join Store to Customer Take 2 {example_semi-join-sql-3}
 
 In the `Semi Join Customer to Store` examples, we saw four rows with store_id = 1 and two rows with store_id = 2.  The EXISTS key word is replaced with a count of the matching rows.  
 
-```{r SQL Semi Join Store-Customer Take 2}
+
+```r
 store_customer_detail_ssj2 <- dbGetQuery(con,
 "select 'sj' join_type,s.store_id s_store_id,s.manager_staff_id, s.address_id
    from store s
@@ -1038,6 +862,9 @@ store_customer_detail_ssj2 <- dbGetQuery(con,
 sp_print_df(store_customer_detail_ssj2)
 ```
 
+<!--html_preserve--><div id="htmlwidget-d80799441e19bf040cbf" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-d80799441e19bf040cbf">{"x":{"filter":"none","data":[["1","2"],["sj","sj"],[1,2],[1,2],[1,2]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>join_type<\/th>\n      <th>s_store_id<\/th>\n      <th>manager_staff_id<\/th>\n      <th>address_id<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
 To generalize the test above, replace `in {2,4}` with `> 0`.  
 
 ## Anti Joins
@@ -1048,8 +875,8 @@ A `semi join` returns rows from one table that has one or more matching rows in 
 
 The anti join is an outer join without the inner joined rows.  It only returns the rows from the driving table that do not have a matching row from the other table.  
 
-```{r dplyr anti Join}
 
+```r
 customer_store_aj <- customer_table %>% 
     filter(customer_id > 594) %>%
     anti_join(store_table, by = c("store_id", "store_id"), suffix(c(".c", ".s"))) %>%
@@ -1057,6 +884,9 @@ customer_store_aj <- customer_table %>%
 
 sp_print_df(customer_store_aj)
 ```
+
+<!--html_preserve--><div id="htmlwidget-5bc260cc0681d28b4458" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-5bc260cc0681d28b4458">{"x":{"filter":"none","data":[["1","2","3","4"],[600,602,603,604],[3,4,5,6],["Sophie","John","Ian","Ed"],["Yang","Smith","Frantz","Borasky"],["sophie.yang@sakilacustomer.org","john.smith@sakilacustomer.org","ian.frantz@sakilacustomer.org","ed.borasky@sakilacustomer.org"],[1,2,3,4],[true,true,true,true],["2019-01-27","2019-01-27","2019-01-27","2019-01-27"],["2019-01-27T08:00:00Z","2019-01-27T08:00:00Z","2019-01-27T08:00:00Z","2019-01-27T08:00:00Z"],[1,1,1,1],["anti_join","anti_join","anti_join","anti_join"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>address_id<\/th>\n      <th>activebool<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n      <th>active<\/th>\n      <th>join_type<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,6,10]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 All of the rows returned from the customer table have store_id = {3 - 6} which do not exist in the store_id.
 
@@ -1066,7 +896,8 @@ SQL doesn't have an anti join key word.  Here are three different ways to achiev
 
 This is the negation of the same construct used in the semi join discusion.  The anit-join tests for 0 matches instead of 1 or more matches for the semi-join.
 
-```{r SQL anti Join 1}
+
+```r
 rs <- dbGetQuery(
   con,
   "select 'aj' join_type, customer_id, first_name, last_name, c.store_id
@@ -1078,9 +909,13 @@ order by c.customer_id
 sp_print_df(rs)
 ```
 
+<!--html_preserve--><div id="htmlwidget-5e6debc8bc477449b2d2" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-5e6debc8bc477449b2d2">{"x":{"filter":"none","data":[["1","2","3","4"],["aj","aj","aj","aj"],[600,602,603,604],["Sophie","John","Ian","Ed"],["Yang","Smith","Frantz","Borasky"],[3,4,5,6]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>join_type<\/th>\n      <th>customer_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>store_id<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
 #### SQL anti Join 2, Left Outer Join where NULL on Right {example_anti-join-sql-1}
 
-```{r SQL anti Join 2}
+
+```r
 rs <- dbGetQuery(
   con,
   "select 'aj' join_type, customer_id, first_name, last_name, c.store_id ajs
@@ -1091,9 +926,13 @@ order by c.customer_id;"
 sp_print_df(rs)
 ```
 
+<!--html_preserve--><div id="htmlwidget-a769f33e9bc2b11da24f" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-a769f33e9bc2b11da24f">{"x":{"filter":"none","data":[["1","2","3","4"],["aj","aj","aj","aj"],[600,602,603,604],["Sophie","John","Ian","Ed"],["Yang","Smith","Frantz","Borasky"],[3,4,5,6]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>join_type<\/th>\n      <th>customer_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>ajs<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
 #### SQL anti Join 3, ID in driving table and NOT IN lookup table {example_anti-join-sql-3}
 
-```{r SQL anti Join 3}
+
+```r
 rs <- dbGetQuery(
   con,
   "select 'aj' join_type, customer_id, first_name, last_name, c.store_id
@@ -1102,13 +941,16 @@ rs <- dbGetQuery(
 order by c.customer_id;"
 )
 sp_print_df(rs)
-
 ```
+
+<!--html_preserve--><div id="htmlwidget-5afb8971f37330fd8cc4" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-5afb8971f37330fd8cc4">{"x":{"filter":"none","data":[["1","2","3","4"],["aj","aj","aj","aj"],[600,602,603,604],["Sophie","John","Ian","Ed"],["Yang","Smith","Frantz","Borasky"],[3,4,5,6]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>join_type<\/th>\n      <th>customer_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>store_id<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 
 <!-- Show all different joins together with filter to allow comparison between different mutating joins
 
-```{r testit, results='hide'}
+
+```r
 customer_store_summary_dfoj %>%
     union(customer_store_summary_droj) %>%
     union(customer_store_summary_dloj) %>%
@@ -1116,20 +958,29 @@ customer_store_summary_dfoj %>%
     arrange(join_type,s_store_id,c_store_id)
 ```
 
-```{r}
+
+```r
 sp_print_df(customer_store_summary_dfoj)
 ```
 
-```{r  results='hide'}
+<!--html_preserve--><div id="htmlwidget-e9ae68682532316859d5" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-e9ae68682532316859d5">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7"],["fojs","fojs","fojs","fojs","fojs","fojs","fojs"],[1,2,null,3,4,5,6],[1,2,10,null,null,null,null],[326,274,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>join_type<\/th>\n      <th>c_store_id<\/th>\n      <th>s_store_id<\/th>\n      <th>n<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
+
+```r
 customer_store_details_sij %>%
 union(customer_store_details_sloj) %>%
 union(customer_store_detail_sroj) %>%
 union(customer_store_details_sfoj) %>%
 arrange(join_type,s_store_id)
 ```
-```{r}
+
+```r
 sp_print_df(customer_store_details_sij)
 ```
+
+<!--html_preserve--><div id="htmlwidget-32dc6527565d6d2fa8eb" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-32dc6527565d6d2fa8eb">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["ij","ij","ij","ij","ij","ij"],[595,596,597,598,599,601],["Terrence","Enrique","Freddie","Wade","Austin","Sophie"],["Gunderson","Forsythe","Duggan","Delvalle","Cintron","Yang"],[1,1,1,1,2,2],[1,1,1,1,2,2],[1,1,1,1,2,2],[1,1,1,1,2,2]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>join_type<\/th>\n      <th>customer_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>c_store_id<\/th>\n      <th>s_store_id<\/th>\n      <th>manager_staff_id<\/th>\n      <th>address_id<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,5,6,7,8]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 --->
 
@@ -1137,7 +988,8 @@ sp_print_df(customer_store_details_sij)
 
 All the previous examples are equa-joins and is the most common type of join.  The next example is made up and shows a '<=' join.  The `store` table is usd.  Assume that the store_id actually represents some distance.  The example shows all distances <= to all other distances.   
 
-```{r}
+
+```r
 store_store_slej <- dbGetQuery(
   con,
   "select 'lej' join_type,s1.store_id starts,s2.store_id stops, s2.store_id - s1.store_id delta
@@ -1146,6 +998,9 @@ order by s1.store_id;"
 )
 sp_print_df(store_store_slej)
 ```
+
+<!--html_preserve--><div id="htmlwidget-bbe1f43178625f07ed69" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-bbe1f43178625f07ed69">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["lej","lej","lej","lej","lej","lej"],[1,1,1,2,2,10],[1,2,10,2,10,10],[0,1,9,0,8,0]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>join_type<\/th>\n      <th>starts<\/th>\n      <th>stops<\/th>\n      <th>delta<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ### Dplyr Non-equa Join {example_inner-join-dplyr}
 
@@ -1172,17 +1027,16 @@ The explaination below is from [here](https://stackoverflow.com/questions/474857
 
 In by = c("col1" = "col2"),  = is not and equality operator, but an assignment operator (the equality operator in R is ==). The expression inside c(...) creates a named character vector (name: col1 value: col2) that dplyr uses for the join. Nowhere do you define the kind of comparison that is made during the join, the comparison is hard-coded in dplyr. I don't think dplyr supports non-equi joins (yet).
 
-```{r}
+
+```r
 # diconnect from the db
  dbDisconnect(con)
 
  sp_docker_stop("sql-pet")
 ```
 
-```{r}
+
+```r
 knitr::knit_exit()
 ```
-
-
-
 

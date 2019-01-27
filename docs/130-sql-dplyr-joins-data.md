@@ -8,39 +8,41 @@ SQL & dplyr joins additional data {#chapter_sql-dplyr-data}
 > * Query the database to get basic information about each dvdrental story
 > * How to interact with the database using different strategies
 
-```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
-# These packages are called in almost every chapter of the book:
-library(tidyverse)
-library(DBI)
-library(DiagrammeR)
-library(RPostgres)
-library(glue)
-library(here)
-require(knitr)
-library(dbplyr)
-library(sqlpetr)
-```
+
 
 Verify Docker is up and running:
-```{r Verify Docker is up}
+
+```r
 sp_check_that_docker_is_up()
+```
+
+```
+## [1] "Docker is up but running no containers"
 ```
 
 Verify pet DB is available, it may be stopped.
 
-```{r Verify pet DB is available}
+
+```r
 sp_show_all_docker_containers()
+```
+
+```
+## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                     PORTS               NAMES
+## 9bdc1e748065        postgres-dvdrental   "docker-entrypoint.s…"   49 seconds ago      Exited (0) 2 seconds ago                       sql-pet
 ```
 
 Start up the `docker-pet` container
 
-```{r Start up the docker-pet container}
+
+```r
 sp_docker_start("sql-pet")
 ```
 
 Now connect to the database with R
 
-```{r connect to the database}
+
+```r
 # need to wait for Docker & Postgres to come up before connecting.
 
 con <- sp_get_postgres_connection(
@@ -80,7 +82,8 @@ In the next code block we delete out the new customers that were added when the 
 dbExecute() always returns a scalar numeric that specifies the number of rows affected by the statement. 
 ```
 
-```{r Delete new customers}
+
+```r
 dbExecute(
   con,
   "delete from customer 
@@ -89,14 +92,23 @@ dbExecute(
 )
 ```
 
+```
+## [1] 7
+```
+
 The number above tells us how many rows were actually deleted from the customer table.
 
 ### Delete New Practice Store from the Store Table.
 
 In the next code block we delete out the new stores that were added when the book was compliled or added working through the exercises.  Out of the box, the DVD rental database's highest store_id = 2.
 
-```{r Delete new stores}
+
+```r
 dbExecute(con, "delete from store where store_id > 2;")
+```
+
+```
+## [1] 1
 ```
 
 ### SQL Single Row Insert Data Syntax
@@ -110,7 +122,8 @@ dbExecute(con, "delete from store where store_id > 2;")
 
 The `column list` is the list of column names on the table and the corresponding list of values must have the correct data type.  The following code block returns the `CUSTOMER` column names and data types.
 
-```{r SQL Customer Columns}
+
+```r
 customer_cols <- dbGetQuery(
   con,
   "select table_name, column_name, ordinal_position, data_type 
@@ -123,12 +136,16 @@ customer_cols <- dbGetQuery(
 sp_print_df(customer_cols)
 ```
 
+<!--html_preserve--><div id="htmlwidget-1d9f9b9fdca3023baa83" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1d9f9b9fdca3023baa83">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10"],["customer","customer","customer","customer","customer","customer","customer","customer","customer","customer"],["customer_id","store_id","first_name","last_name","email","address_id","activebool","create_date","last_update","active"],[1,2,3,4,5,6,7,8,9,10],["integer","smallint","character varying","character varying","character varying","smallint","boolean","date","timestamp without time zone","integer"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_name<\/th>\n      <th>column_name<\/th>\n      <th>ordinal_position<\/th>\n      <th>data_type<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":3},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
 In the next code block, we insert Sophie as a new customer into the customer table via a SQL insert statement.  The columns list clause has three id columns, customer_id, store_id, and address_id.  The customer_id is a primary key column and the other two 'look like' foreign key columns.
 
 For now, we are interested in getting some new customers into the customer table.  We look at the relations between the customer and the store tables later in this chapter.
 
 
-```{r SQL Single Row Insert}
+
+```r
 dbExecute(
   con,
   "
@@ -140,21 +157,30 @@ insert into customer
 )
 ```
 
+```
+## [1] 1
+```
+
 The number above should be 1 indicating that one record was inserted.
 
-```{r display new customers}
+
+```r
 new_customers <- dbGetQuery(con
                 ,"select customer_id,store_id,first_name,last_name
                      from customer where customer_id >= 600;")
 sp_print_df(new_customers)
 ```
 
+<!--html_preserve--><div id="htmlwidget-b18b48ec4ad649442f3b" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-b18b48ec4ad649442f3b">{"x":{"filter":"none","data":[["1"],[600],[3],["Sophie"],["Yang"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
 ### Primary Key Constraint Error Message
 
 For the new customers, we are concerned with not violating the PK and FK constraints.
 In the next SQL code block, we try and reinsert the newly created customer record inserted above.  Instead of having the code block fail, it throws a duplicate key exception error message.  If you `knit` the document, the exception error message is thrown to the `R Markdown` tab.   
 
-```{r Proess Duplicate Customer Key Error}
+
+```r
 dbExecute(con, "
 do $$
 DECLARE v_customer_id INTEGER;
@@ -172,6 +198,10 @@ when others then
     raise 'SQLERRM = % SQLSTATE =%', SQLERRM, SQLSTATE;
 end;
 $$ language 'plpgsql';")
+```
+
+```
+## [1] 0
 ```
 
 The number above shows how many rows were inserted.  To ensure that the thrown error message is part of the book, the error message is shown below.
@@ -192,7 +222,8 @@ Note:
 4.  The dbWriteTable function has an option 'overwrite'.  It is set to FALSE  by default.  If it is set to TRUE, the table is first truncated before the row is inserted.  
 5.  No write occurs if both overwrite and append = FALSE.
 
-```{r R Dataframe Insert}
+
+```r
 df <- data.frame(
   customer_id = 601
   , store_id = 2
@@ -214,6 +245,9 @@ new_customers <- dbGetQuery(con
 sp_print_df(new_customers)
 ```
 
+<!--html_preserve--><div id="htmlwidget-514d280a38cf86ead40b" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-514d280a38cf86ead40b">{"x":{"filter":"none","data":[["1","2"],[600,601],[3,2],["Sophie","Sophie"],["Yang","Yang"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
 ## SQL Multi-Row Insert Data Syntax
 
 ```
@@ -228,7 +262,8 @@ Postgres and some other flavors of SQL allow multiple rows to be inserted at a t
 
 ## SQL Multi-Row Insert Data Example
 
-```{r SQL Multi-Row Insert Data}
+
+```r
 #
 dbExecute(
   con,
@@ -245,6 +280,10 @@ dbExecute(
 )
 ```
 
+```
+## [1] 3
+```
+
 ## DPLYR Multi-Row Insert Data Example
 
 The Postgres R multi-row insert is similar to the single row insert.  The single column values are converted to a vector of values.
@@ -253,8 +292,8 @@ The Postgres R multi-row insert is similar to the single row insert.  The single
 
 Replace the two first_name, last_name, and email column values with your own made up values in the following code block.  The output should be all of our new customers, customer_id = {600 - 606}.
 
-```{r DPLYR Multi-Row Insert Data}
 
+```r
 customer_id <- c(605, 606)
 store_id <- c(3, 4)
 first_name <- c("John", "Ian")
@@ -282,21 +321,32 @@ new_customers <- dbGetQuery(con
 sp_print_df(new_customers)
 ```
 
+<!--html_preserve--><div id="htmlwidget-74434d812ec23342fdce" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-74434d812ec23342fdce">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7"],[600,601,602,603,604,605,606],[3,2,4,5,6,3,4],["Sophie","Sophie","John","Ian","Ed","John","Ian"],["Yang","Yang","Smith","Frantz","Borasky","Smith","Frantz"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
 Confirm that the two new rows, customer_id = { 605, 606} are in the output.
 
 The next two code block show all the rows in the  store and staff tables.  Notice that neither table has a staff_id or a manager_staff_id = 10.  We will attempt to insert such a row in the upcoming code blocks.
 
-```{r new store data}
+
+```r
 stores <- dbGetQuery(con,"select * from store;")
 sp_print_df(stores)
 ```
 
-```{r staff table}
+<!--html_preserve--><div id="htmlwidget-8da54f9f5480ad7c3ec3" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-8da54f9f5480ad7c3ec3">{"x":{"filter":"none","data":[["1","2"],[1,2],[1,2],[1,2],["2006-02-15T17:57:12Z","2006-02-15T17:57:12Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>store_id<\/th>\n      <th>manager_staff_id<\/th>\n      <th>address_id<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
+
+```r
 staff  <- dbGetQuery(con
             ,"select staff_id, first_name, last_name, address_id, email, store_id
                 from staff;")
 sp_print_df(staff)
 ```
+
+<!--html_preserve--><div id="htmlwidget-124fb78127817ec02cd9" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-124fb78127817ec02cd9">{"x":{"filter":"none","data":[["1","2"],[1,2],["Mike","Jon"],["Hillyer","Stephens"],[3,4],["Mike.Hillyer@sakilastaff.com","Jon.Stephens@sakilastaff.com"],[1,2]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>staff_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>address_id<\/th>\n      <th>email<\/th>\n      <th>store_id<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,4,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ### Creating a Messy Store Row
 
@@ -311,7 +361,8 @@ Next we show both error messages:
 
 1.  The next code block attempts to insert a new store, `store_id = 10`, with manager_staff_id = 1, but fails with a unique constraint error message.  The manager_staff_id = 1 already exists in the store table.
 
-```{r Proess Updating of Store manager_staff_id Duplicate Key Error}
+
+```r
 dbExecute(con, "
 do $$
 DECLARE v_manager_staff_id INTEGER;
@@ -326,7 +377,10 @@ when others then
     raise notice 'SQLERRM = % SQLSTATE =%', SQLERRM, SQLSTATE;
 end;
 $$ language 'plpgsql';")
+```
 
+```
+## [1] 0
 ```
 
 ```
@@ -337,7 +391,8 @@ The number above should be 0 and indicates no row was inserted.
 
 2.  The next code block attempts to insert a new store, `store_id = 10`, with manager_staff_id = 10, but fails with a foreign key constraint error message because there does not exist a staff table row with staff_id = 10.
 
-```{r Proess Updating of Store manager_staff_id Foreign Key Error}
+
+```r
 dbExecute(con, "
 do $$
 DECLARE v_manager_staff_id INTEGER;
@@ -355,6 +410,10 @@ $$ language 'plpgsql';")
 ```
 
 ```
+## [1] 0
+```
+
+```
 NOTICE:  SQLERRM = insert or update on table "store" violates foreign key constraint "store_manager_staff_id_fkey", manager_staff_id = 10
 CONTEXT:  PL/pgSQL function inline_code_block line 9 at RAISE
 ```
@@ -367,12 +426,18 @@ The following three code blocks
 2.  Inserts the store row with store_id = 10 via a dataframe.
 3.  Re-enabes the database constraints on the store table
 
-```{r Disable store trigger}
+
+```r
 #
 dbExecute(con, "ALTER TABLE store DISABLE TRIGGER ALL;")
 ```
 
-```{r "insert store id = 10 row"}
+```
+## [1] 0
+```
+
+
+```r
 df <- data.frame(
     store_id = 10
   , manager_staff_id = 10
@@ -382,18 +447,27 @@ df <- data.frame(
 dbWriteTable(con, "store", value = df, append = TRUE, row.names = FALSE)
 ```
 
-```{r enable store trigger}
+
+```r
 dbExecute(con, "ALTER TABLE store ENABLE TRIGGER ALL;")
+```
+
+```
+## [1] 0
 ```
 
 The zeros after the dbExecute code blocks indicate that the dbExecute calls did not alter any rows on the table.
 
 In the next code block we confirm our new row, store_id = 10, was actually inserted.
 
-```{r }
+
+```r
 stores <- dbGetQuery(con,"select * from store;")
 sp_print_df(stores)
 ```
+
+<!--html_preserve--><div id="htmlwidget-dd0a51033db44e820d90" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-dd0a51033db44e820d90">{"x":{"filter":"none","data":[["1","2","3"],[1,2,10],[1,2,10],[1,2,10],["2006-02-15T17:57:12Z","2006-02-15T17:57:12Z","2019-01-27T22:13:26Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>store_id<\/th>\n      <th>manager_staff_id<\/th>\n      <th>address_id<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 <!--
 
@@ -401,36 +475,59 @@ sp_print_df(stores)
 
 In the next section we create a new table, `smy_customer`.  We will load all customers with customer_id > 594 twice.  The `smy_customer` table will be used in the dplyr semi-join section. 
 
-```{r}
+
+```r
 dbExecute(con,"drop table if exists smy_customer;")
+```
+
+```
+## [1] 0
+```
+
+```r
 dbExecute(con,"create table smy_customer 
     as select * 
          from customer  
         where customer_id > 594;")
+```
+
+```
+## [1] 12
+```
+
+```r
 dbExecute(con,"insert into smy_customer 
                select * 
                  from customer  
                 where customer_id > 594;")
+```
 
+```
+## [1] 12
+```
+
+```r
 smy_cust_dupes <- dbGetQuery(con,'select * 
                                     from smy_customer 
                                   order by customer_id')
 
 sp_print_df(smy_cust_dupes)
 ```
+
+<!--html_preserve--><div id="htmlwidget-1fe403c81784621152ab" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1fe403c81784621152ab">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24"],[595,595,596,596,597,597,598,598,599,599,600,600,601,601,602,602,603,603,604,604,605,605,606,606],[1,1,1,1,1,1,1,1,2,2,3,3,2,2,4,4,5,5,6,6,3,3,4,4],["Terrence","Terrence","Enrique","Enrique","Freddie","Freddie","Wade","Wade","Austin","Austin","Sophie","Sophie","Sophie","Sophie","John","John","Ian","Ian","Ed","Ed","John","John","Ian","Ian"],["Gunderson","Gunderson","Forsythe","Forsythe","Duggan","Duggan","Delvalle","Delvalle","Cintron","Cintron","Yang","Yang","Yang","Yang","Smith","Smith","Frantz","Frantz","Borasky","Borasky","Smith","Smith","Frantz","Frantz"],["terrence.gunderson@sakilacustomer.org","terrence.gunderson@sakilacustomer.org","enrique.forsythe@sakilacustomer.org","enrique.forsythe@sakilacustomer.org","freddie.duggan@sakilacustomer.org","freddie.duggan@sakilacustomer.org","wade.delvalle@sakilacustomer.org","wade.delvalle@sakilacustomer.org","austin.cintron@sakilacustomer.org","austin.cintron@sakilacustomer.org","sophie.yang@sakilacustomer.org","sophie.yang@sakilacustomer.org","sophie.yang@sakilacustomer.org","sophie.yang@sakilacustomer.org","john.smith@sakilacustomer.org","john.smith@sakilacustomer.org","ian.frantz@sakilacustomer.org","ian.frantz@sakilacustomer.org","ed.borasky@sakilacustomer.org","ed.borasky@sakilacustomer.org","john.smith@sakilacustomer.org","john.smith@sakilacustomer.org","ian.frantz@sakilacustomer.org","ian.frantz@sakilacustomer.org"],[601,601,602,602,603,603,604,604,605,605,1,1,1,1,2,2,3,3,4,4,3,3,4,4],[true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true],["2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14","2019-01-27","2019-01-27","2019-01-27","2019-01-27","2019-01-27","2019-01-27","2019-01-27","2019-01-27","2019-01-27","2019-01-27","2019-01-27","2019-01-27","2019-01-27","2019-01-27"],["2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2019-01-27T08:00:00Z","2019-01-27T08:00:00Z","2019-01-27T22:13:26Z","2019-01-27T22:13:26Z","2019-01-27T08:00:00Z","2019-01-27T08:00:00Z","2019-01-27T08:00:00Z","2019-01-27T08:00:00Z","2019-01-27T08:00:00Z","2019-01-27T08:00:00Z","2019-01-27T22:13:26Z","2019-01-27T22:13:26Z","2019-01-27T22:13:26Z","2019-01-27T22:13:26Z"],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>address_id<\/th>\n      <th>activebool<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n      <th>active<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,6,10]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 -->
 
-```{r}
+
+```r
 # diconnect from the db
  dbDisconnect(con)
 
  sp_docker_stop("sql-pet")
 ```
 
-```{r}
+
+```r
 knitr::knit_exit()
 ```
-
-
-
 

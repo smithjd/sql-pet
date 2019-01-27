@@ -1,4 +1,4 @@
-# Joins and complex queries (13)
+SQL Joins exercises {#chapter_sql-joins-exercises}
 
 <!-- 
 
@@ -556,7 +556,7 @@ DVD_rental_distribution_sql <- dbGetQuery(con,
    from rental r join inventory i on r.inventory_id = i.inventory_id
         join film f on i.film_id = f.film_id
  group by i.inventory_id,f.title) dvd
-group by rented
+group by rented")
  
 
 sp_print_df(DVD_rank_sql)
