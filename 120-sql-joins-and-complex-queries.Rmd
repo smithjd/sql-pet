@@ -1,4 +1,4 @@
-SQL joins and complex queries {#chapter_sql-joins-complex}
+# SQL joins and complex queries {#chapter_sql-joins-complex}
 
 > This chapter demonstrates how to:
 > 
@@ -8,8 +8,8 @@ SQL joins and complex queries {#chapter_sql-joins-complex}
 > * Query the database to get basic information about each dvdrental story
 > * How to interact with the database using different strategies
 
+These packages are called in almost every chapter of the book:
 ```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
-# These packages are called in almost every chapter of the book:
 library(tidyverse)
 library(DBI)
 library(RPostgres)
@@ -37,11 +37,9 @@ Start up the `docker-pet` container
 sp_docker_start("sql-pet")
 ```
 
-Now connect to the database with R
+Now connect to the database with R.  Need to wait for Docker & PostgreSQL to come up before connecting.
 
 ```{r}
-# need to wait for Docker & PostgreSQL to come up before connecting.
-
 con <- sp_get_postgres_connection(
   user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
   password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
@@ -600,7 +598,7 @@ languages_loj <- language_table %>%
   summarize(lojs = n()) %>%
   select(join_type, language_id, film_lang_id, name, lojs)
 print(languages_loj)
-View(languages_loj)
+
 sp_print_df(languages_loj)
 ```
 
@@ -621,7 +619,6 @@ rs <- dbGetQuery(
 order by l.language_id;"
 )
 sp_print_df(rs)
-# rs
 ```
 
 The lojs column returns the number of rows found on the keys from the left table, language, and the right table, the film table.  For the "English" row, the language_id and film_lang_id match and `r rs$lojs[1]` inner joins were performed.  For all the other languages, there was only 1 join and they all came from the left outer table, the language table, language_id's 2 - 6.  The right table, the film table returned NA, because no match was found.
@@ -815,8 +812,11 @@ In this next section we look at two methods to implemnt an anti join in dplyr.
 ```{r}
 customer_table <- tbl(con, "customer") # DBI::dbReadTable(con, "customer")
 rental_table <- tbl(con, "rental") # DBI::dbReadTable(con, "rental")
+```
 
-# Method 1.  dplyr anti_join
+Method 1.  dplyr anti_join
+```{r}
+
 daj1 <-
   anti_join(customer_table, rental_table, by = "customer_id", suffix = c(".c", ".r")) %>%
   select(c("first_name", "last_name", "email")) %>%
@@ -826,8 +826,11 @@ daj1 <-
 ```{r}
 customer_table <- tbl(con, "customer") # DBI::dbReadTable(con, "customer")
 rental_table <- tbl(con, "rental") # DBI::dbReadTable(con, "rental")
+```
 
-# Method 2.  dplyr loj with NA
+Method 2.  dplyr loj with NA
+```{r}
+
 daj2 <-
   left_join(customer_table, rental_table, by = c("customer_id", "customer_id"), suffix = c(".c", ".r")) %>%
   filter(is.na(rental_id)) %>%
@@ -1289,9 +1292,9 @@ not_rented <- dbGetQuery(con,
 
 sp_print_df(not_rented)
 
-View(dbGetQuery(con,"select min(last_update) mn, max(last_update) mx from inventory;"))
+sp_print_df(dbGetQuery(con,"select min(last_update) mn, max(last_update) mx from inventory;"))
 
-View(dbGetQuery(con,"select rental_date,count(*) 
+sp_print_df(dbGetQuery(con,"select rental_date,count(*) 
                        from rental
                      group by rental_date
                      order by rental_date;"))
@@ -1428,14 +1431,12 @@ tbl_pk_fk_ids_df <- inner_join(tbl_pk_fk_df,
 
 tbl_fk_df <- tbl_pk_fk_ids_df %>% filter(constraint_type == "FOREIGN KEY")
 tbl_pk_df <- tbl_pk_fk_ids_df %>% filter(constraint_type == "PRIMARY KEY")
-# View(tbl_pk_fk_ids_df)
+
 sp_print_df(tbl_fk_df)
 sp_print_df(tbl_pk_df)
 ```
-
+Create an edge data frame, edf
 ```{r echo = FALSE}
-# Create an edge data frame, edf
-
 fk_edf <-
   create_edge_df(
     from = tbl_fk_df$src_tbl_id,
@@ -1458,9 +1459,9 @@ graph <-
 # View the graph
 render_graph(graph, height = 3000)
 ```
-
+Disconnect from the db:
 ```{r}
-# diconnect from the db
+
 dbDisconnect(con)
 
 sp_docker_stop("sql-pet")

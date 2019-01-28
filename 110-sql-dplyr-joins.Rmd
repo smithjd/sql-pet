@@ -1,4 +1,4 @@
-Introduction to SQL Joins {#chapter_sql-joins}
+# Introduction to SQL Joins {#chapter_sql-joins}
 
 > This chapter demonstrates how to:
 > 
@@ -8,8 +8,8 @@ Introduction to SQL Joins {#chapter_sql-joins}
 > * Query the database to get basic information about each dvdrental story
 > * How to interact with the database using different strategies
 
+These packages are called in almost every chapter of the book:
 ```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
-# These packages are called in almost every chapter of the book:
 library(tidyverse)
 library(DBI)
 library(DiagrammeR)
@@ -38,10 +38,10 @@ Start up the `docker-pet` container
 sp_docker_start("sql-pet")
 ```
 
-Now connect to the database with R
+Now connect to the database with R.  Need to wait for Docker & Postgres to come up before connecting.
 
 ```{r connect to the database}
-# need to wait for Docker & Postgres to come up before connecting.
+
 
 con <- sp_get_postgres_connection(
   user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
@@ -1172,8 +1172,9 @@ The explaination below is from [here](https://stackoverflow.com/questions/474857
 
 In by = c("col1" = "col2"),  = is not and equality operator, but an assignment operator (the equality operator in R is ==). The expression inside c(...) creates a named character vector (name: col1 value: col2) that dplyr uses for the join. Nowhere do you define the kind of comparison that is made during the join, the comparison is hard-coded in dplyr. I don't think dplyr supports non-equi joins (yet).
 
+Diconnect from the db:
 ```{r}
-# diconnect from the db
+
  dbDisconnect(con)
 
  sp_docker_stop("sql-pet")

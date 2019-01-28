@@ -179,11 +179,14 @@ To illustrate the different issues involved in data retrieval, we create equival
 
 ```r
 staff_table <- dplyr::tbl(con, "staff") 
-# the 'staff' table has 2 rows
-
-customer_table <- dplyr::tbl(con, "customer") 
-# the 'customer' table has 599 rows
 ```
+The 'staff' table has 2 rows
+
+
+```r
+customer_table <- dplyr::tbl(con, "customer") 
+```
+The 'customer' table has 599 rows
 
 ## When does a lazy query trigger data retrieval?
 
@@ -345,11 +348,11 @@ Q %>% str(max.level = 3)
 ##   .. ..- attr(*, "class")= chr [1:3] "op_rename" "op_single" "op"
 ##   ..$ dots:List of 3
 ##   .. ..$ : language ~rental_date
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7f9551ea6768> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fcc8f261c48> 
 ##   .. ..$ : language ~staff_email
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7f9551ea6768> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fcc8f261c48> 
 ##   .. ..$ : language ~customer_email
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7f9551ea6768> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fcc8f261c48> 
 ##   .. ..- attr(*, "class")= chr "quosures"
 ##   ..$ args: list()
 ##   ..- attr(*, "class")= chr [1:3] "op_select" "op_single" "op"

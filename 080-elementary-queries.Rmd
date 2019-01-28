@@ -52,15 +52,17 @@ DBI::dbListFields(con, "rental")
 
 The first example, `DBI::dbListTables(con)` returned 22 tables and the second example, `DBI::dbListFields(con, "rental")` returns 7 fields.  Here we combine the two calls to return a list of tables which has a list of all the fields in the table.  The code block just shows the first two tables.
 
+```{r combine table and column data - lapply}
+table_columns <- lapply(tables, dbListFields, conn = con)
+```
+
+Or, using purr:
+```{r combine table and column data - purr}
+table_columns <- map(tables, ~ dbListFields(.,conn = con) )
+```
+Rename each list [[1]] ... [[22]] to meaningful table name
 ```{r combine table and column data}
 
-table_columns <- lapply(tables, dbListFields, conn = con)
-
-# or using purr:
-
-table_columns <- map(tables, ~ dbListFields(.,conn = con) )
-
-# rename each list [[1]] ... [[22]] to meaningful table name
 names(table_columns) <- tables
 
 head(table_columns)
@@ -276,6 +278,6 @@ sp_docker_stop("sql-pet")
 
 ## Additional reading
 
-* @Wickham2018
-* @Baumer2018
+* [@Wickham2018]
+* [@Baumer2018]
 
