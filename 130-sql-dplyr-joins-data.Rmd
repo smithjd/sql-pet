@@ -1,4 +1,4 @@
-SQL & dplyr joins additional data {#chapter_sql-dplyr-data}
+# SQL & dplyr joins additional data {#chapter_sql-dplyr-data}
 
 > This chapter demonstrates how to:
 > 
@@ -8,8 +8,8 @@ SQL & dplyr joins additional data {#chapter_sql-dplyr-data}
 > * Query the database to get basic information about each dvdrental story
 > * How to interact with the database using different strategies
 
+These packages are called in almost every chapter of the book:
 ```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
-# These packages are called in almost every chapter of the book:
 library(tidyverse)
 library(DBI)
 library(DiagrammeR)
@@ -38,11 +38,9 @@ Start up the `docker-pet` container
 sp_docker_start("sql-pet")
 ```
 
-Now connect to the database with R
+Now connect to the database with R. Need to wait for Docker & Postgres to come up before connecting.
 
 ```{r connect to the database}
-# need to wait for Docker & Postgres to come up before connecting.
-
 con <- sp_get_postgres_connection(
   user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
   password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
@@ -50,7 +48,6 @@ con <- sp_get_postgres_connection(
   seconds_to_test = 30
 )
 ```
-
 
 ## Making up data for Join Examples
 
@@ -418,10 +415,10 @@ smy_cust_dupes <- dbGetQuery(con,'select *
 
 sp_print_df(smy_cust_dupes)
 ```
--->
 
+Diconnect from the db:
 ```{r}
-# diconnect from the db
+
  dbDisconnect(con)
 
  sp_docker_stop("sql-pet")

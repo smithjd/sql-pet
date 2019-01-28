@@ -96,11 +96,13 @@ rental_table$ops$vars
 To illustrate the different issues involved in data retrieval, we create equivalent connection objects to link to two other tables.  
 ```{r}
 staff_table <- dplyr::tbl(con, "staff") 
-# the 'staff' table has 2 rows
-
-customer_table <- dplyr::tbl(con, "customer") 
-# the 'customer' table has 599 rows
 ```
+The 'staff' table has 2 rows
+
+```{r}
+customer_table <- dplyr::tbl(con, "customer") 
+```
+The 'customer' table has 599 rows
 
 ## When does a lazy query trigger data retrieval?
 
