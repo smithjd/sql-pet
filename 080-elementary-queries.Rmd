@@ -141,8 +141,8 @@ rental_table <- dplyr::tbl(con, "rental")
 Run query with the filter verb listing the randomly sampled rows to be retrieved:
 ```{r}
 rental_sample <- rental_table %>% 
-  DBI::filter(rental_id %in% sample_rows) %>% 
-  DBI::collect()
+  dplyr::filter(rental_id %in% sample_rows) %>% 
+  dplyr::collect()
 
 str(rental_sample)
 
