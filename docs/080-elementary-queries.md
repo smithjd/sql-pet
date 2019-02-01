@@ -8,6 +8,8 @@
 > * Get acquainted with some useful tools for investigating a single table
 > * Begin thinking about how to divide the work between your local R session and the dbms
 
+## Setup
+
 The following packages are used in this chapter:
 
 ```r
@@ -22,12 +24,12 @@ library(sqlpetr)
 Assume that the Docker container with PostgreSQL and the dvdrental database are ready to go. If not go back to [Chapter 7][Build the pet-sql Docker Image]
 
 ```r
-sp_docker_start("sql-pet")
+sqlpetr::sp_docker_start("sql-pet")
 ```
 Connect to the database:
 
 ```r
-con <- sp_get_postgres_connection(
+con <- sqlpetr::sp_get_postgres_connection(
   user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
   password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
   dbname = "dvdrental",
@@ -84,7 +86,7 @@ table_columns <- lapply(tables, dbListFields, conn = con)
 Or, using purr:
 
 ```r
-table_columns <- map(tables, ~ dbListFields(.,conn = con) )
+table_columns <- purrr::map(tables, ~ dbListFields(.,conn = con) )
 ```
 Rename each list [[1]] ... [[22]] to meaningful table name
 
@@ -121,7 +123,7 @@ head(table_columns)
 
 Later on we'll discuss how to get more extensive data about each table and column from the database's own store of metadata using a similar technique.  As we go further the issue of scale will come up again and again: you need to be careful about how much data a call to the dbms will return, whether it's a list of tables or a table that could have millions of rows.
 
-It's improtant to connect with people who own, generate, or are the subjects of the data.  A good chat with people who own the data, generate it, or are the subjects can generate insights and set the context for your investigation of the database. The purpose for collecting the data or circumsances where it was collected may be burried far afield in an organization, but *usually someone knows*.  The metadata discussed in a later chapter is essential but will only take you so far.
+It's important to connect with people who own, generate, or are the subjects of the data.  A good chat with people who own the data, generate it, or are the subjects can generate insights and set the context for your investigation of the database. The purpose for collecting the data or circumstances where it was collected may be buried far afield in an organization, but *usually someone knows*.  The metadata discussed in a later chapter is essential but will only take you so far.
 
 There are different ways of just **looking at the data**, which we explore below.
 
@@ -155,6 +157,11 @@ The `dplyr::tbl` function gives us more control over access to a table by enabli
 
 ```r
 rental_table <- dplyr::tbl(con, "rental")
+class(rental_table)
+```
+
+```
+## [1] "tbl_dbi"  "tbl_sql"  "tbl_lazy" "tbl"
 ```
 
 
@@ -163,7 +170,7 @@ rental_table <- dplyr::tbl(con, "rental")
 The `collect` function triggers the creation of a tibble and controls the number of rows that the DBMS sends to R.  
 
 ```r
-rental_table %>% collect(n = 3) %>% dim
+rental_table %>% dplyr::collect(n = 3) %>% dim
 ```
 
 ```
@@ -171,7 +178,7 @@ rental_table %>% collect(n = 3) %>% dim
 ```
 
 ```r
-rental_table %>% collect(n = 500) %>% dim
+rental_table %>% dplyr::collect(n = 500) %>% dim
 ```
 
 ```
@@ -180,13 +187,13 @@ rental_table %>% collect(n = 500) %>% dim
 
 ### Random rows from the dbms
 
-When the dbms contains many rows, a sample of the data may be plenty for your purposes.  Although `dplyr` has nice functions to sample a data frame that's already in R (e.g., the `sample_n` and `sample_frac` functions), to get a sample from the dbms we have to use `dbGetQuery` to send native SQL to the database. To peak ahead, here is one example of a query that retrieves 20 rows from a 1% sample:
+When the dbms contains many rows, a sample of the data may be plenty for your purposes.  Although `dplyr` has nice functions to sample a data frame that's already in R (e.g., the `sample_n` and `sample_frac` functions), to get a sample from the dbms we have to use `dbGetQuery` to send native SQL to the database. To peek ahead, here is one example of a query that retrieves 20 rows from a 1% sample:
 
 
 ```r
 one_percent_sample <- DBI::dbGetQuery(
   con,
-  "SELECT rental_id, rental_date, inventory_id, customer_id FROM rental TABLESAMPLE SYSTEM(1) LIMIT 20;
+  "SELECT rental_id, rental_date, inventory_id, customer_id FROM rental TABLESAMPLE BERNOULLI(1) LIMIT 20;
   "
 )
 
@@ -195,28 +202,30 @@ one_percent_sample
 
 ```
 ##    rental_id         rental_date inventory_id customer_id
-## 1       7709 2005-07-28 04:22:14         3800          81
-## 2       7710 2005-07-28 04:24:07         3716          77
-## 3       7711 2005-07-28 04:26:42         2695         426
-## 4       7712 2005-07-28 04:29:53         3256         361
-## 5       7713 2005-07-28 04:32:14         2018         572
-## 6       7714 2005-07-28 04:32:30          940          70
-## 7       7715 2005-07-28 04:32:38         3210         512
-## 8       7716 2005-07-28 04:33:15         1493         284
-## 9       7717 2005-07-28 04:33:54          730         459
-## 10      7718 2005-07-28 04:37:59         3587           4
-## 11      7719 2005-07-28 04:39:09         2481         286
-## 12      7720 2005-07-28 04:41:44          185         520
-## 13      7721 2005-07-28 04:42:58         2228          83
-## 14      7722 2005-07-28 04:44:58         3828         309
-## 15      7723 2005-07-28 04:45:37         3263         147
-## 16      7724 2005-07-28 04:46:30          346           3
-## 17      7725 2005-07-28 04:47:14         1922         326
-## 18      7726 2005-07-28 04:52:19         2578         219
-## 19      7727 2005-07-28 04:52:43         2274         123
-## 20      7728 2005-07-28 04:56:33          492         130
+## 1        220 2005-05-26 10:06:49         1259         542
+## 2        317 2005-05-26 23:23:56           26         391
+## 3        565 2005-05-28 09:26:31         1494         288
+## 4        923 2005-05-30 11:58:50         1884          37
+## 5       1092 2005-05-31 12:15:57         4412         278
+## 6       1431 2005-06-15 18:26:29         3193         438
+## 7       1500 2005-06-15 22:00:45         2652         237
+## 8       1682 2005-06-16 11:54:25         2165         476
+## 9       1689 2005-06-16 12:18:41         4036          48
+## 10      1704 2005-06-16 13:45:56         4425         488
+## 11      1799 2005-06-16 20:17:20         2847         505
+## 12      1849 2005-06-17 00:13:19         2507         341
+## 13      1877 2005-06-17 02:54:16         3404         261
+## 14      1994 2005-06-17 11:07:06         2203         346
+## 15      2048 2005-06-17 14:55:29         2055         454
+## 16      2189 2005-06-18 01:20:26          249         500
+## 17      2204 2005-06-18 02:11:38         1137         426
+## 18      2319 2005-06-18 09:24:22         1521         393
+## 19      2335 2005-06-18 10:59:36         3968         446
+## 20      2428 2005-06-18 17:47:34         3892         241
 ```
-Exact sample of 100 records.  This technique depends on knowing the range of a record index, such as the `rental_id` in the `rental` table of out `dvdrental` database.
+**Exact sample of 100 records**
+
+This technique depends on knowing the range of a record index, such as the `rental_id` in the `rental` table of our `dvdrental` database.
 
 Start by finding the min and max values.
 
@@ -230,7 +239,7 @@ DBI::dbListFields(con, "rental")
 ```
 
 ```r
-rental_df <- dbReadTable(con, "rental")
+rental_df <- DBI::dbReadTable(con, "rental")
 
 max(rental_df$rental_id)
 ```
@@ -252,13 +261,15 @@ Set the random number seed and draw the sample.
 ```r
 set.seed(123)
 sample_rows <- sample(1:16049, 100)
-rental_table <- tbl(con, "rental")
+rental_table <- dplyr::tbl(con, "rental")
 ```
 
 Run query with the filter verb listing the randomly sampled rows to be retrieved:
 
 ```r
-rental_sample <- rental_table %>% filter(rental_id %in% sample_rows) %>% collect()
+rental_sample <- rental_table %>% 
+  dplyr::filter(rental_id %in% sample_rows) %>% 
+  dplyr::collect()
 
 str(rental_sample)
 ```
@@ -277,10 +288,10 @@ str(rental_sample)
 
 ### Sub-setting variables
 
-A table in the dbms may not only have many more rows than you want and also many more columns.  The `select` command controls which columns are retrieved.
+A table in the dbms may not only have many more rows than you want, but also many more columns.  The `select` command controls which columns are retrieved.
 
 ```r
-rental_table %>% select(rental_date, return_date) %>% head()
+rental_table %>% dplyr::select(rental_date, return_date) %>% head()
 ```
 
 ```
@@ -316,18 +327,18 @@ LIMIT 6')
 ```
 
 
-We won't discuss `dplyr` methods for sub-setting variables, deriving new ones, or sub-setting rows based on the values found in the table because they are covered well in other places, including:
+We won't discuss `dplyr` methods for sub-setting variables, deriving new ones, or sub-setting rows based on the values found in the table, because they are covered well in other places, including:
 
   * Comprehensive reference: [https://dplyr.tidyverse.org/](https://dplyr.tidyverse.org/)
   * Good tutorial: [https://suzan.rbind.io/tags/dplyr/](https://suzan.rbind.io/tags/dplyr/) 
 
-In practice we find that, **renaming variables** is often quite important because the names in an SQL database might not meet your needs as an analyst.  In "the wild" you will find names that are ambiguous or overly specified, with spaces in them, and other problems that will make them difficult to use in R.  It is good practice to do whatever renaming you are going to do in a predictable place like at the top of your code.  The names in the `dvdrental` database are simple and clear, but if they were not, you might rename them for subsequent use in this way:
+In practice we find that, **renaming variables** is often quite important because the names in an SQL database might not meet your needs as an analyst.  In "the wild", you will find names that are ambiguous or overly specified, with spaces in them, and other problems that will make them difficult to use in R.  It is good practice to do whatever renaming you are going to do in a predictable place like at the top of your code.  The names in the `dvdrental` database are simple and clear, but if they were not, you might rename them for subsequent use in this way:
 
 
 ```r
 tbl(con, "rental") %>%
-  rename(rental_id_number = rental_id, inventory_id_number = inventory_id) %>% 
-  select(rental_id_number, rental_date, inventory_id_number) %>%
+  dplyr::rename(rental_id_number = rental_id, inventory_id_number = inventory_id) %>% 
+  dplyr::select(rental_id_number, rental_date, inventory_id_number) %>%
   head()
 ```
 
@@ -367,12 +378,12 @@ The one difference is that the `SQL` code returns a regular data frame and the `
 
 ### Translating `dplyr` code to `SQL` queries
 
-Where did the translations we've showon above come from?  The `show_query` function shows how `dplyr` is translating your query to the dialect of the target dbms:
+Where did the translations we've shown above come from?  The `show_query` function shows how `dplyr` is translating your query to the dialect of the target dbms:
 
 ```r
 rental_table %>%
-  count(staff_id) %>%
-  show_query()
+  dplyr::count(staff_id) %>%
+  dplyr::show_query()
 ```
 
 ```
@@ -385,7 +396,7 @@ Here is an extensive discussion of how `dplyr` code is translated into SQL:
 
 * [https://dbplyr.tidyverse.org/articles/sql-translation.html](https://dbplyr.tidyverse.org/articles/sql-translation.html) 
 
-The SQL code can submit the same query directly to the DBMS with the `DBI::dbGetQuery` function:
+If you prefer to use SQL directly, rather than `dplyr`, you can submit SQL code to the DBMS through the `DBI::dbGetQuery` function:
 
 ```r
 DBI::dbGetQuery(
@@ -402,9 +413,8 @@ DBI::dbGetQuery(
 ## 1        2 8004
 ## 2        1 8040
 ```
-<<smy We haven't investigated this, but it looks like `dplyr` collect() function triggers a call simmilar to the dbGetQuery call above.  The default `dplyr` behavior looks like dbSendQuery() and dbFetch() model is used.>>
 
-When you create a report to run repeatedly, you might want to put that query into R markdown.  That way you can also execute that SQL code in a chunk with the following header:
+When you create a report to run repeatedly, you might want to put that query into R markdown. That way you can also execute that SQL code in a chunk with the following header:
 
   {`sql, connection=con, output.var = "query_results"`}
 
@@ -426,14 +436,58 @@ query_results
 ## 2        1 8040
 ```
 
+## Mixing dplyr and SQL
+
+When dplyr finds code that it does not know how to translate into SQL, it will simply pass it along to the dbms. Therefore you can interleave native commands that your dbms will understand in the middle of dplyr code.  Consider this example that's derived from [@Ruiz2019]:
+
+
+```r
+rental_table %>%
+  dplyr::select_at(vars( -contains("_id"))) %>% 
+  dplyr::mutate(today = now()) %>%
+  dplyr::show_query()
+```
+
+```
+## <SQL>
+## SELECT "rental_date", "return_date", "last_update", NOW() AS "today"
+## FROM (SELECT "rental_date", "return_date", "last_update"
+## FROM "rental") "yhbysdoypk"
+```
+That is native to PostgreSQL, not [ANSI standard](https://en.wikipedia.org/wiki/SQL#Interoperability_and_standardization) SQL.
+
+Verify that it works:
+
+```r
+rental_table %>%
+  dplyr::select_at(vars( -contains("_id"))) %>% 
+  head() %>% 
+  dplyr::mutate(today = now()) %>%
+  dplyr::collect()
+```
+
+```
+## # A tibble: 6 x 4
+##   rental_date         return_date         last_update        
+##   <dttm>              <dttm>              <dttm>             
+## 1 2005-05-24 22:54:33 2005-05-28 19:40:33 2006-02-16 02:30:53
+## 2 2005-05-24 23:03:39 2005-06-01 22:12:39 2006-02-16 02:30:53
+## 3 2005-05-24 23:04:41 2005-06-03 01:43:41 2006-02-16 02:30:53
+## 4 2005-05-24 23:05:21 2005-06-02 04:33:21 2006-02-16 02:30:53
+## 5 2005-05-24 23:08:07 2005-05-27 01:32:07 2006-02-16 02:30:53
+## 6 2005-05-24 23:11:53 2005-05-29 20:34:53 2006-02-16 02:30:53
+## # … with 1 more variable: today <dttm>
+```
+
+
 ## Examining a single table with R
 
 Dealing with a large, complex database highlights the utility of specific tools in R.  We include brief examples that we find to be handy:
 
   + Base R structure: `str`
-  + printing out some of the data: `datatable`, `kable`, and `View`
-  + summary statistics: `summary`
-  + `glimpse` oin the   `tibble` package, which is included in the `tidyverse`
+  + Printing out some of the data: `datatable`, `kable`, and `View`
+  + Summary statistics: `summary`
+  + `glimpse` in the `tibble` package, which is included in the `tidyverse`
   + `skim` in the `skimr` package
 
 ### `str` - a base package workhorse
@@ -460,15 +514,19 @@ str(rental_tibble)
 There is no substitute for looking at your data and R provides several ways to just browse it.  The `head` function controls the number of rows that are displayed.  Note that tail does not work against a database object.  In every-day practice you would look at more than the default 6 rows, but here we wrap `head` around the data frame: 
 
 ```r
-sp_print_df(head(rental_tibble))
+sqlpetr::sp_print_df(head(rental_tibble))
 ```
 
-<!--html_preserve--><div id="htmlwidget-ef4d0ff2b8248cf49567" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-ef4d0ff2b8248cf49567">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[2,3,4,5,6,7],["2005-05-25T05:54:33Z","2005-05-25T06:03:39Z","2005-05-25T06:04:41Z","2005-05-25T06:05:21Z","2005-05-25T06:08:07Z","2005-05-25T06:11:53Z"],[1525,1711,2452,2079,2792,3995],[459,408,333,222,549,269],["2005-05-29T02:40:33Z","2005-06-02T05:12:39Z","2005-06-03T08:43:41Z","2005-06-02T11:33:21Z","2005-05-27T08:32:07Z","2005-05-30T03:34:53Z"],[1,1,2,1,1,2],["2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>rental_id<\/th>\n      <th>rental_date<\/th>\n      <th>inventory_id<\/th>\n      <th>customer_id<\/th>\n      <th>return_date<\/th>\n      <th>staff_id<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-4f68022fd73b3d133ebb" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-4f68022fd73b3d133ebb">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[2,3,4,5,6,7],["2005-05-25T05:54:33Z","2005-05-25T06:03:39Z","2005-05-25T06:04:41Z","2005-05-25T06:05:21Z","2005-05-25T06:08:07Z","2005-05-25T06:11:53Z"],[1525,1711,2452,2079,2792,3995],[459,408,333,222,549,269],["2005-05-29T02:40:33Z","2005-06-02T05:12:39Z","2005-06-03T08:43:41Z","2005-06-02T11:33:21Z","2005-05-27T08:32:07Z","2005-05-30T03:34:53Z"],[1,1,2,1,1,2],["2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>rental_id<\/th>\n      <th>rental_date<\/th>\n      <th>inventory_id<\/th>\n      <th>customer_id<\/th>\n      <th>return_date<\/th>\n      <th>staff_id<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
-### The `summary` function in base
+### The `summary` function in `base`
 
-The basic statistics that the base package `summary` provides can serve a unique diagnostic purpose in this context.  For example, the following output shows that `rental_id` is a sequential number from 1 to 16,049 with no gaps.  The same is true of `inventory_id`.  The number of NA's is a good first guess as to the number of dvd's rented out or lost on 2005-09-02 02:35:22.
+The `base` package's `summary` function provides basic statistics that serve a unique diagnostic purpose in this context. For example, the following output shows that:
+
+    * `rental_id` is a number from 1 to 16,049. In a previous section, we ran the `str` function and saw that there are 16,044 observations in this table. Therefore, the `rental_id` seems to be sequential from 1:16049, but there are 5 values missing from that sequence. _Exercise for the Reader_: Which 5 values from 1:16049 are missing from `rental_id` values in the `rental` table? (_Hint_: In the chapter on SQL Joins, you will learn the functions needed to answer this question.)
+    * The number of NA's in the `return_date` column is a good first guess as to the number of DVDs rented out or lost as of 2005-09-02 02:35:22.
+
 
 ```r
 summary(rental_tibble)
@@ -500,6 +558,8 @@ summary(rental_tibble)
 ##  Max.   :2006-02-23 09:12:08  
 ## 
 ```
+
+So the `summary` function is surprisingly useful as we first start to look at the table contents.
 
 ### The `glimpse` function in the `tibble` package
 
@@ -540,7 +600,7 @@ library(skimr)
 ```
 
 ```r
-skim(rental_tibble)
+skimr::skim(rental_tibble)
 ```
 
 ```
@@ -548,7 +608,7 @@ skim(rental_tibble)
 ##  n obs: 16044 
 ##  n variables: 7 
 ## 
-## ── Variable type:integer ───────────────────────────────────────────────────────
+## ── Variable type:integer ───────────────────────────────────────────────────
 ##      variable missing complete     n    mean      sd p0     p25    p50
 ##   customer_id       0    16044 16044  297.14  172.45  1  148     296  
 ##  inventory_id       0    16044 16044 2291.84 1322.21  1 1154    2291  
@@ -560,7 +620,7 @@ skim(rental_tibble)
 ##  12037.25 16049 ▇▇▇▇▇▇▇▇
 ##      2        2 ▇▁▁▁▁▁▁▇
 ## 
-## ── Variable type:POSIXct ───────────────────────────────────────────────────────
+## ── Variable type:POSIXct ───────────────────────────────────────────────────
 ##     variable missing complete     n        min        max     median
 ##  last_update       0    16044 16044 2006-02-15 2006-02-23 2006-02-16
 ##  rental_date       0    16044 16044 2005-05-24 2006-02-14 2005-07-28
@@ -572,7 +632,7 @@ skim(rental_tibble)
 ```
 
 ```r
-wide_rental_skim <- skim_to_wide(rental_tibble)
+wide_rental_skim <- skimr::skim_to_wide(rental_tibble)
 ```
 
 ### Close the connection and shut down sql-pet
@@ -580,8 +640,8 @@ wide_rental_skim <- skim_to_wide(rental_tibble)
 Where you place the `collect` function matters.
 
 ```r
-dbDisconnect(con)
-sp_docker_stop("sql-pet")
+DBI::dbDisconnect(con)
+sqlpetr::sp_docker_stop("sql-pet")
 ```
 
 ## Additional reading
