@@ -272,12 +272,18 @@ There is no substitute for looking at your data and R provides several ways to j
 sqlpetr::sp_print_df(head(rental_tibble))
 ```
 
-### The `summary` function in base
+### The `summary` function in `base`
 
-The base package's `summary` function provides basic statistics that serve a unique diagnostic purpose in this context.  For example, the following output shows that `rental_id` is a sequential number from 1 to 16,049 with no gaps.  The same is true of `inventory_id`.  The number of NA's is a good first guess as to the number of dvd's rented out or lost on 2005-09-02 02:35:22.
+The `base` package's `summary` function provides basic statistics that serve a unique diagnostic purpose in this context. For example, the following output shows that:
+
+    * `rental_id` is a number from 1 to 16,049. In a previous section, we ran the `str` function and saw that there are 16,044 observations in this table. Therefore, the `rental_id` seems to be sequential from 1:16049, but there are 5 values missing from that sequence. _Exercise for the Reader_: Which 5 values from 1:16049 are missing from `rental_id` values in the `rental` table? (_Hint_: In the chapter on SQL Joins, you will learn the functions needed to answer this question.)
+    * The number of NA's in the `return_date` column is a good first guess as to the number of DVDs rented out or lost as of 2005-09-02 02:35:22.
+
 ```{r}
 summary(rental_tibble)
 ```
+
+So the `summary` function is surprisingly useful as we first start to look at the table contents.
 
 ### The `glimpse` function in the `tibble` package
 
