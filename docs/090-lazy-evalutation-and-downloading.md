@@ -1,12 +1,12 @@
 # Lazy Evaluation and Lazy Queries {#chapter_lazy-evaluation-queries}
 
-## This chapter:
+> This chapter:
 > 
 > * Reviews lazy evaluation and discusses its interaction with remote query execution on a dbms 
 > * Demonstrates how `dplyr` queries behave in connection with several different functions
 > * Offers some further resources on lazy loading, evaluation, execution, etc.
 
-### Setup
+## Setup
 
 The following packages are used in this chapter:
 
@@ -37,7 +37,7 @@ con <- sp_get_postgres_connection(
 
 ## R is lazy and comes with guardrails
 
-By design, R is both a language and an interactive development environment (IDE).  As a language, R tries to be as efficient as possible.  As an IDE, R creates some guardrails to make it easy and safe to work with your data. For example `getOption("max.print")` prevents R from printing more rows of data than you can handle, with a nice default of 99999, which may or may not suit you.
+By design, R is both a language and an interactive development environment (IDE).  As a language, R tries to be as efficient as possible.  As an IDE, R creates some guardrails to make it easy and safe to work with your data. For example `getOption("max.print")` prevents R from printing more rows of data than you want to handle in an interactive session, with a default of 99999 lines, which may or may not suit you.
 
 On the other hand SQL is a *"Structured Query Language (SQL): a standard computer language for relational database management and data manipulation."* ^[https://www.techopedia.com/definition/1245/structured-query-language-sql]. SQL has has various database-specific Interactive Development Environments (IDEs): for PostgreSQL it's [pgAdmin](https://www.pgadmin.org/).  Roger Peng explains in [R Programming for Data Science](https://bookdown.org/rdpeng/rprogdatascience/history-and-overview-of-r.html#basic-features-of-r) that:
 
@@ -348,11 +348,11 @@ Q %>% str(max.level = 3)
 ##   .. ..- attr(*, "class")= chr [1:3] "op_rename" "op_single" "op"
 ##   ..$ dots:List of 3
 ##   .. ..$ : language ~rental_date
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fcc8f261c48> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fbbcbc30a48> 
 ##   .. ..$ : language ~staff_email
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fcc8f261c48> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fbbcbc30a48> 
 ##   .. ..$ : language ~customer_email
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fcc8f261c48> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fbbcbc30a48> 
 ##   .. ..- attr(*, "class")= chr "quosures"
 ##   ..$ args: list()
 ##   ..- attr(*, "class")= chr [1:3] "op_select" "op_single" "op"
