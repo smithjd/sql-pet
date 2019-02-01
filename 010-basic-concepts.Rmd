@@ -15,7 +15,7 @@ You run R from RStudio to set up Docker, launch PostgreSQL inside it and then se
 
 ## Your computer and its operating system
 
-The playground that we construct in this book is designed so that some of the mysteries of accessing a corporate database are more visible because they all happen on your computer. The challenge, however, is that we know very little about your computer and its operating system. In the workshops we've given about this book, the details of individual computers have turned out to be diverse and difficult to pin down in advance.  So there can be many issues, but not many basic concepts that we can highlight in advance.
+The playground that we construct in this book is designed so that some of the mysteries of accessing a corporate database are more visible -- it's all happenning on *your computer*. The challenge, however, is that we know very little about your computer and its operating system. In the workshops we've given about this book, the details of individual computers have turned out to be diverse and difficult to pin down in advance.  So there can be many issues, but not many basic concepts that we can highlight in advance.
 
 ## R
 
@@ -92,7 +92,7 @@ It's a naive misconception to think that the data you are analyzing "comes from 
 
 ## SQL
 
-Although there is are [ANSI standards](https://en.wikipedia.org/wiki/SQL#Interoperability_and_standardization) for [SQL syntax](https://en.wikipedia.org/wiki/SQL_syntax), different implementations vary in enough details that R's ability to customize queries for those implementations is very helpful.
+Although there are [ANSI standards](https://en.wikipedia.org/wiki/SQL#Interoperability_and_standardization) for [SQL syntax](https://en.wikipedia.org/wiki/SQL_syntax), different implementations vary in enough details that R's ability to customize queries for those implementations is very helpful.
 
 The tables in a dbms correspond to a data frame in R, so interaction with a dbms is fairly natural for useRs. 
 
