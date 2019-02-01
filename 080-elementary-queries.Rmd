@@ -111,7 +111,7 @@ When the dbms contains many rows, a sample of the data may be plenty for your pu
 ```{r}
 one_percent_sample <- DBI::dbGetQuery(
   con,
-  "SELECT rental_id, rental_date, inventory_id, customer_id FROM rental TABLESAMPLE SYSTEM(1) LIMIT 20;
+  "SELECT rental_id, rental_date, inventory_id, customer_id FROM rental TABLESAMPLE BERNOULLI(1) LIMIT 20;
   "
 )
 
