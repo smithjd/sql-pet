@@ -1,5 +1,4 @@
 # SQL Joins exercises {#chapter_sql-joins-exercises}
-
 <!-- 
 
 -->
@@ -64,6 +63,92 @@ con <- sp_get_postgres_connection(
 )
 ```
 
+Delete new records inserted in previous chapters.
+
+```{r}
+dbExecute(con, "delete from film_category where film_id >= 1001;")
+dbExecute(con, "delete from rental where rental_id >= 16050;")
+dbExecute(con, "delete from inventory where film_id >= 1001;")
+dbExecute(con, "delete from film where film_id >= 1001;")
+dbExecute(con, "delete from customer where customer_id >= 600;")
+dbExecute(con, "delete from store where store_id > 2;")
+```
+
+Insert new records.
+
+```{r}
+# Insert new customers
+dbExecute(
+  con,
+  "insert into customer 
+  (customer_id,store_id,first_name,last_name,email,address_id,activebool
+  ,create_date,last_update,active)
+   values(600,3,'Sophie','Yang','sophie.yang@sakilacustomer.org',1,TRUE,now(),now()::date,1)
+         ,(601,2,'Sophie','Yang','sophie.yang@sakilacustomer.org',1,TRUE,now(),now()::date,1)
+         ,(602,4,'John','Smith','john.smith@sakilacustomer.org',2,TRUE,now()::date,now()::date,1)
+         ,(603,5,'Ian','Frantz','ian.frantz@sakilacustomer.org',3,TRUE,now()::date,now()::date,1)
+         ,(604,6,'Ed','Borasky','ed.borasky@sakilacustomer.org',4,TRUE,now()::date,now()::date,1)
+         ;"
+)
+
+# Insert new store record
+dbExecute(con, "ALTER TABLE store DISABLE TRIGGER ALL;")
+df <- data.frame(
+    store_id = 10
+  , manager_staff_id = 10
+  , address_id = 10
+  , last_update = Sys.time()
+)
+dbWriteTable(con, "store", value = df, append = TRUE, row.names = FALSE)
+dbExecute(con, "ALTER TABLE store ENABLE TRIGGER ALL;")
+dbGetQuery(con,"select * from store;")
+
+# Insert new film row.
+dbExecute(
+  con,
+  "insert into film
+  (film_id,title,description,release_year,language_id
+  ,rental_duration,rental_rate,length,replacement_cost,rating
+   ,last_update,special_features,fulltext)
+  values(1001,'Sophie''s Choice','orphaned language_id=10',2018,1
+        ,7,4.99,120,14.99,'PG'
+        ,now()::date,'{Trailers}','')
+        ,(1002,'Sophie''s Choice','orphaned language_id=10',2018,1
+        ,7,4.99,120,14.99,'PG'
+        ,now()::date,'{Trailers}','')
+  ;
+  ")
+
+# Insert Film Category
+dbExecute(
+  con,
+  "insert into film_category
+  (film_id,category_id,last_update)
+  values(1001,6,now()::date)
+       ,(1001,7,now()::date)
+       ,(1002,6,now()::date)
+       ,(1002,7,now()::date)
+  ;")  
+
+# Insert new film into inventory.
+dbExecute(
+  con,
+  "insert into inventory
+  (inventory_id,film_id,store_id,last_update)
+  values(4582,1001,1,now()::date)
+       ,(4583,1001,2,now()::date)
+  ;")  
+  
+# Insert new film rental record.
+dbExecute(
+  con,
+  "insert into rental
+  (rental_id,rental_date,inventory_id,customer_id,return_date,staff_id,last_update)
+  values(16050,now()::date - interval '1 week',4582,600,now()::date,1,now()::date)
+  ;")  
+  
+```
+
 ## Table Structures
 
 ### Customer Columns
@@ -82,12 +167,15 @@ A couple of things immediately jump out based on the column names:
   *  Just looking at the column names, one cannot tell if the customer is uniquely identified by just the customer_id or the customer_id + store_id.  Are there customers who visit both stores?
   
 2.  Based on the column names, it looks like there are three string/character columns, first_name, last_name, and email.  
+
 *  What are the sizes of these colums?
 
 3.  Two dates, create_date and last_update.
 4.  Two active columns, `activebool` and `active`.  The activebool looks like it is a boolean column.  What type of column is active, integer or text?
 
 Databases maintains a data dictionary of metadata on all the database objects.  SQL databases have two useful tables for getting table and table column information, `information_schema.tables` and `information_schema.columns`.
+
+AS an example, the following code block returns a summary of the number of tables and views in the differnt schemas.  The tables and views used in this tutorial are in the public table_schema.  
 
 ```{r}
 tables <- dbGetQuery(con
@@ -104,7 +192,11 @@ tables <- dbGetQuery(con
                    ,t.table_type
           ")
 sp_print_df(tables)
+```
 
+The metadata of the tables and views in the public `table_schema` are contained in the `information_schema`.  The `information_schema` provides information about all of the tables, views, columns, and procedures in a database.  We are interested in the `tables` and `columns` views.
+
+```{r}
 info_schema <- dbGetQuery(con
          ,"Select t.table_catalog
                  ,t.table_schema
@@ -118,9 +210,7 @@ info_schema <- dbGetQuery(con
 sp_print_df(info_schema)
 ```
 
-
 The next code block uses the `information_schema.columns` to return column information from any table in the dvdrental database.  
-
 
 ```{r}
 table_str_sql <- function (table_name) {
@@ -149,11 +239,6 @@ dbGetQuery(
        ,table_name
        )
 }    
-```
-
-```{r}
-table_str_sql('tables')
-
 ```
 
 The next code block returns the customer metadata via a call to the previous function.
@@ -188,7 +273,7 @@ From the DVD Rental ERD, [here](https://www.postgresqltutorial.com/postgresql-sa
 
 The other constraint is a foreign key constraint which is one or more columns in one table that make up a primary key in another table.  
 
-The following SQL code block returns a tables primary and foreign keys.
+The following SQL code block is a function that returns a table's primary and foreign keys.
 
 ```{r tbl_pk_fk_sql}
 tbl_pk_fk_sql <- function(table_name) {
@@ -229,6 +314,8 @@ tbl_pk_fk_sql <- function(table_name) {
 ```
 
 ### Customer primary and foreign key constraints
+
+The next code block returns the customer primary and foreign key metadata via a call to the previous function.
 
 ```{r}
 tbl_pk_fk_sql('country')
@@ -287,11 +374,14 @@ store_locations_sql <- dbGetQuery(con,
 sp_print_df(store_locations_sql)
 ```
 
-The DVD Rental business is international and operates in three countries, Canada, Austraila, and the United States.  Each country has one store.  The first two stores have a single employee.  The third store has no employees  yet.  Has this store recently closed or not yet opened?  The third store has a current last_update column.  It is most likely it has not yet opened.
+Our DVD Rental business is international and operates in three countries, Canada, Austraila, and the United States.  Each country has one store.  Has this store recently been closed or not yet opened?  The third store has a current last_update column.  It may not have opened yet.
 
 #### Replicate the output above using dplyr syntax.
 
 ```{r}
+#table_str_sql('store')
+#tbl_pk_fk_sql('table_name')
+
 store_table <- DBI::dbReadTable(con, "store")
 address_table <- DBI::dbReadTable(con, "address")
 city_table <- DBI::dbReadTable(con, "city")
@@ -312,7 +402,6 @@ Discuss how to access common named columns.  Last_update.x above.  Figure out th
 
 To answer this question we look at the `staff`, `address`, `city`, and `country` tables.
 
-
 ```{r}
 store_employees_sql <- dbGetQuery(con,
 "select s.first_name
@@ -330,11 +419,12 @@ store_employees_sql <- dbGetQuery(con,
          join country c2 on c.country_id = c2.country_id
 ")
 sp_print_df(store_employees_sql)
-
 ```
 
+Our DVD Rental business is international and operates in three countries, Canada, Austraila, and the United States.  Each country has one store.  Has this store recently been closed or not yet opened?  The third store has a current last_update column.  It may not have opened yet.
 
-The DVD Rental business is international and operates in three countries, Canada, Austraila, and the United States.    
+The stores in Canada and Austrailia have one employee each.  The store in the United States has no employees yet.  
+
 
 #### Replicate the output above using dplyr syntax.
 
@@ -361,6 +451,20 @@ customer_cnt_sql <- dbGetQuery(con,
 sp_print_df(customer_cnt_sql)
 ```
 
+<style>
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "blue">
+
+Our DVD Rental business is international and operates in three countries, Canada, Austraila, and the United States.  Each country has one store.  Has this store recently been closed or not yet opened?  The third store has a current last_update column.  It may not have opened yet.
+
+The stores in Canada and Austrailia have one employee each.  The store in the United States has no employees yet.  
+
+The business has 604 customers.   
+
+</div>
+
+
 #### Replicate the output above using dplyr syntax.
 
 ```{r}
@@ -372,30 +476,101 @@ customer_cnt_dplyr <- customer_table %>%
 sp_print_df(customer_cnt_dplyr)
 ```
 
-### 4. How Many Customers Are In Each Country?
+### 4. How Many and What Percent of Customers Are From Each Country?
 
-We know that the DVD rental business has three stores, two active, and 604 customers.  The two stores are located in Canada and Australia.   
+To answer this question we look at the `customer`, `address`, `city`, and `country` tables. 
 
 ```{r}
 customers_sql <- dbGetQuery(con,
-                            
-"select *
-       ,sum(pct) over (order by pct desc rows between unbounded preceding and current row) running_pct
-       ,sum(count) over (order by count desc rows between unbounded preceding and current row) running_total
-  from (select c.active,country.country,count(*) count
+"select c.active,country.country,count(*) count
               ,round(100 * count(*) / sum(count(*)) over(),4) as pct
          from customer c
               join address a on c.address_id = a.address_id
               join city  on a.city_id = city.city_id
               join country on city.country_id = country.country_id
          group by c.active,country
-       ) ctry
+order by count(*) desc
+")
+sp_print_df(customers_sql)
+```
+
+<style>
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "blue">
+
+Our DVD Rental business is international and operates in three countries, Canada, Austraila, and the United States.  Each country has one store.  Has this store recently been closed or not yet opened?  The third store has a current last_update column.  It may not have opened yet.
+
+The stores in Canada and Austrailia have one employee each.  The store in the United States has no employees yet.  
+
+The business has 604 customers. 
+
+Based on the table above, the DVD Rental business has customers in 118 countries.  The DVD Rental business cannot have many walk in customers.  It must use a mail order distribution model.
+
+
+</div>
+
+#### Replicate the output above using dplyr syntax.
+
+```{r}
+customer_table <- DBI::dbReadTable(con, "customer")
+address_table <- DBI::dbReadTable(con, "address")
+city_table <- DBI::dbReadTable(con, "city")
+country_table <- DBI::dbReadTable(con,"country")
+
+customers_dplyr <- customer_table %>%
+    inner_join(address_table, by = c("address_id" = "address_id"), suffix(c(".s", ".a"))) %>%
+    inner_join(city_table, by = c("city_id" = "city_id"), suffix(c(".a", ".c"))) %>%
+    inner_join(country_table, by = c("country_id" = "country_id"), suffix(c(".a", ".c"))) %>%
+    group_by(active,country) %>%
+    summarize(count=n()) %>%
+    mutate(total=nrow(customer_table)
+          ,pct=round(100 * count/total,4)
+          ) %>%
+    arrange(desc(count)) %>%
+    select (active,country,count,pct) 
+sp_print_df(customers_dplyr)
+```
+
+### 5 What Countries Constitute the Top 25% of the Customer Base?
+
+Using the previous SQL code, we will add two new columns.  One column shows a running total and the second column shows a running percentage.
+
+The SQL block uses a nested SQL block.  The inner block is the same SQL used in the previous SQL code block.
+
+A subquery is a SELECT statement nested within another SELECT statement.  In the example below, the nested SQL block follows the `from` and enclosed in parenthesis.  The nested subquery is aliased as `ctry`.  The subquery returns intermediate results, country counts.
+
+```
+select ...
+  from (select ... from ...  where )
+ where ....  
+```
+
+```{r}
+customers_sql <- dbGetQuery(con,
+                            
+"select active,country,count
+       ,sum(count) over (order by count desc rows between unbounded preceding and current row) running_total
+       , pct
+       ,sum(pct) over (order by pct desc rows between unbounded preceding and current row) running_pct
+  from (-- Start of inner SQL Block
+        select c.active,country.country,count(*) count
+              ,round(100 * count(*) / sum(count(*)) over(),4) as pct
+         from customer c
+              join address a on c.address_id = a.address_id
+              join city  on a.city_id = city.city_id
+              join country on city.country_id = country.country_id
+         group by c.active,country
+       ) ctry  -- End of inner SQL Block
  order by count desc
 ")
 sp_print_df(customers_sql)
 ```
 
-Based on the table above, the DVD Rental business has customers in 118 countries.  The DVD Rental business cannot have many walk in customers.  It must use a mail order distribution model.
+<style>div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}</style>
+<div class = "blue">
+The top 25% of the customer base are from India, China, the United States, and Japan.
+</div>
 
 #### Replicate the output above using dplyr syntax.
 
@@ -417,20 +592,23 @@ customers_dplyr <- customer_table %>%
     arrange(desc(count)) %>%
     mutate(running_pct=cumsum(pct)
           ,running_total=cumsum(count)) %>%
-    select (country,count,total,pct,running_pct,running_total) 
+    select (country,count,running_total,pct,running_pct) 
 sp_print_df(customers_dplyr)
 ```
 
 
-### 5. How many customers are in Australia and Canada?
+### 6. How many customers are in Australia and Canada?
 
 ```{r}
 customers_sql %>% filter(country == 'Australia' | country == 'Canada')
 ```
 
-The two countries with a store have less the 2% of the business' customer world wide base.  
+<style>div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}</style>
+<div class = "blue">
+The two countries with a store have less the 2% of the business' customer base world wide.  
+</div>
 
-### 6. How Many Languages?
+### 7. How Many Languages?
 
 With an international customer base, how many languages does the DVD Rental business distribute DVD's in.
 
@@ -445,6 +623,8 @@ select * from language
 sp_print_df(languages_sql)
 ```
 
+It looks like the DVD's can be in possibly six languages.
+
 #### Replicate the output above using dplyr syntax.
 
 ```{r}
@@ -453,7 +633,7 @@ language_table <- DBI::dbReadTable(con, "language")
 sp_print_df(language_table)
 ```
 
-### 7.  What is the distribution of DVD's by Language 
+### 8.  What is the distribution of DVD's by Language 
 
 ```{r}
 language_distribution_sql <- dbGetQuery(con,
@@ -467,7 +647,10 @@ order by l.language_id
 sp_print_df(language_distribution_sql)
 ```
 
-The DVD Rental business has three stores, two open.  Each open store has one employee each.  The customer base is in 118 countries.  The current stock of 1000 DVD's are all in English only.  
+<style>div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}</style>
+<div class = "blue">
+This is a surprise.  For international customer base, the current stock of 1002 DVD's are in English only.  
+</div>
 
 #### Replicate the output above using dplyr syntax.
 
@@ -482,20 +665,25 @@ language_distribution_dplyr <- language_table %>%
 sp_print_df(language_distribution_dplyr)
 ```
 
-### 8.  Rank Films Based on the Number of Times Rented
+### 9.  Rank Films Based on the Number of Times Rented
 
 To answer this question we look at the `rental`, `inventory`, and `film` tables.
 
 ```{r}
 film_rank_sql <- dbGetQuery(con,
 "select f.film_id,f.title,count(*) 
-   from rental r join inventory i on r.inventory_id = i.inventory_id
+   from rental r join inventory i on r.inventory_id = i.inventory_id 
         join film f on i.film_id = f.film_id
  group by f.film_id,f.title
  order by count(*) desc")
-
+  
 sp_print_df(film_rank_sql)
 ```
+
+<style>div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}</style>
+<div class = "blue">
+The most frequently rented movie, 34 times, is 'Bucket Brotherhood'.
+</div>
 
 #### Replicate the output above using dplyr syntax.
 
@@ -513,9 +701,120 @@ film_rank_dplyr <- rental_table %>%
 sp_print_df(film_rank_dplyr)
 ```
 
-### 9.  DVD rental distribution.
+### 10 What is the rental distribution/DVD for the top two rented films?
 
-DVD's get scratched or wear out through use.  The store managers would like to replace any DVD that has been rented more than 25 times.  This is similar to the previous exercise.  Instead of looking at the film level, it looks at the DVD level.
+From the previous exercise we know that the top two films are `Bucket Brotherhood` and `Rocketeer Mother`.  To answer this question we look at the `rental`, `inventory`, and `film` tables again.  Instead of looking at the film level, we need to look at the individual dvd's for each film to answer this question.
+
+
+```{r}
+film_rank_sql <- dbGetQuery(con,
+"select i.store_id,i.film_id,f.title,i.inventory_id,count(*) 
+   from rental r join inventory i on r.inventory_id = i.inventory_id 
+        join film f on i.film_id = f.film_id
+  where i.film_id in (103,738)
+group by i.store_id,i.film_id,f.title,i.inventory_id")
+
+sp_print_df(film_rank_sql)
+```
+
+<style>div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}</style>
+<div class = "blue">
+The `Bucket Brotherhood` and `Rocketeer Mother` DVD's are equally distributed between the two stores, 4 dvd's each per film.  The `Bucket Brotherhood` was rented 17 times from both stores.  The `Rocketeer Mother` was rented 15 times from store 1 and 18 times from store 2.
+</div>
+
+#### Replicate the output above using dplyr syntax.
+
+```{r}
+rental_table <- DBI::dbReadTable(con, "rental")
+inventory_table <- DBI::dbReadTable(con, "inventory")
+film_table <- DBI::dbReadTable(con, "film")
+
+film_rank_dplyr2 <- rental_table %>%
+    inner_join(inventory_table, by = c("inventory_id" = "inventory_id"), suffix(c(".r", ".i"))) %>%
+    inner_join(film_table, by = c("film_id" = "film_id"), suffix(c(".f", ".i"))) %>%
+    filter(film_id %in% c(103,738)) %>%
+    group_by(store_id,film_id,title,inventory_id) %>%
+    summarize(count = n()) %>%
+    arrange(film_id,store_id,inventory_id)
+sp_print_df(film_rank_dplyr2)
+```
+
+### 11.  DVD rental distribution Running Totals.
+
+In exercise 'What Countries Constitute the Top 25% of the Customer Base?' you had a running total and running percent for each county.  Use the preceding exercise and add a running total by film-dvd within a store, film-dvd across stores, and a running total for each dvd.  To make validation easy, restrict the query to the top two DVD rentals.
+
+```{r}
+film_rank_sql <- dbGetQuery(con,
+"
+/*
+Analyzes inventory rentals details and summarize at store and business levels
+*/
+select *
+  from (
+          select store_id
+                ,film_id
+                ,title
+                ,inventory_id
+                ,inv_cnt
+                ,rt_store
+                ,rt_film
+--                ,film_store_cnt
+                ,film_cnt
+                ,sum(inv_cnt) over (partition by '' order by film_cnt desc,inventory_id ) rt
+                ,row_number() over (partition by film_id,store_id order by rt_store desc) rn_store
+                ,row_number() over (partition by film_id order by rt_store desc) rn_film
+            from (
+                    SELECT store_id
+                          ,f.film_id
+                          ,f.title
+                          ,i.inventory_id
+                          ,sum(1) over (partition by f.film_id,store_id,i.inventory_id) inv_cnt
+                          ,sum(1) over (partition by f.film_id,store_id order by i.inventory_id) rt_store
+                          ,sum(1) over (partition by f.film_id order by store_id,i.inventory_id) rt_film
+                          ,sum(1) over (partition by f.film_id,store_id ) film_store_cnt
+                          ,sum(1) over (partition by f.film_id ) film_cnt
+                      FROM rental r INNER JOIN inventory i ON r.inventory_id = i.inventory_id
+                           join film f on f.film_id = i.film_id
+                     WHERE f.film_id in (103,738)
+                 ) as src
+          GROUP BY store_id,film_id,title,inventory_id,inv_cnt,rt_store, rt_film, film_store_cnt,film_cnt
+        ) rn
+order by film_cnt desc,inventory_id
+")
+
+
+sp_print_df(film_rank_sql)
+
+
+```
+
+#### Replicate the output above using dplyr syntax.
+
+```{r}
+rental_table <- DBI::dbReadTable(con, "rental")
+inventory_table <- DBI::dbReadTable(con, "inventory")
+film_table <- DBI::dbReadTable(con, "film")
+
+x <- film_rank_dplyr2 %>% 
+  mutate(rt_store = cumsum(count)) %>%
+  group_by(film_id) %>% 
+  mutate(rt_film_id = cumsum(count)
+        ,rt_label = 'dvd business')  %>%
+  group_by (rt_label) %>%
+  mutate(rt = cumsum(count) ) %>%
+  select (rt_label,store_id:rt_film_id,rt)
+
+                  
+
+sp_print_df(x)
+```
+
+
+
+
+### 12.  DVD rental distribution.
+
+DVD's get scratched or wear out through use.  The store managers would like to replace any DVD that has been rented more than 25 times.  This is similar to the previous exercise.  Instead of looking at the film level, it looks at each DVD.
 
 To answer this question we look at the `rental`, `inventory`, and `film` tables again.
 
@@ -548,20 +847,37 @@ DVD_rank_dplyr <- rental_table %>%
 sp_print_df(DVD_rank_dplyr)
 ```
 
+#### Replicate the output above using dplyr syntax.
+
 ```{r}
 DVD_rental_distribution_sql <- dbGetQuery(con,
 "select rented,count(*)
-   from (
- select i.inventory_id,f.title,count(*) rented
-   from rental r join inventory i on r.inventory_id = i.inventory_id
-        join film f on i.film_id = f.film_id
- group by i.inventory_id,f.title) dvd
-group by rented")
+   from (select i.inventory_id,f.title,count(*) rented
+           from rental r join inventory i on r.inventory_id = i.inventory_id
+                join film f on i.film_id = f.film_id
+           group by i.inventory_id,f.title) dvd
+   group by rented
+order by rented")
  
 
-sp_print_df(DVD_rank_sql)
+sp_print_df(DVD_rental_distribution_sql)
 ```
 
+```{r}
+rental_table <- DBI::dbReadTable(con, "rental")
+inventory_table <- DBI::dbReadTable(con, "inventory")
+film_table <- DBI::dbReadTable(con, "film")
+
+DVD_rank_dplyr <- rental_table %>%
+    inner_join(inventory_table, by = c("inventory_id" = "inventory_id"), suffix(c(".r", ".i"))) %>%
+    inner_join(film_table, by = c("film_id" = "film_id"), suffix(c(".f", ".i"))) %>%
+    group_by(inventory_id,title) %>%
+    summarize(count = n()) %>%
+    group_by(count) %>% 
+    summarize(rented=n()) %>%
+    arrange(count)
+sp_print_df(DVD_rank_dplyr)
+```
 
 There are two columns `activebool`, boolean, and `active`, integer, in the customer table.  We do not have a description for these two columns. Just based on the column names, they are some kind of customer active or inactive flag.  Earlier we saw that the `active` is an int4 data type.  An int4 takes on a large range of values.
 
@@ -1014,8 +1330,7 @@ rs <- dbGetQuery(
                  ;
                 "
 )
-sp_print_df(head(rs))
-rs
+sp_print_df(rs)
 ```
 
 #### Exercise dplyr Rows Per Table 
@@ -1058,7 +1373,7 @@ rs <- dbGetQuery(
                 "
 )
 sp_print_df(head(rs))
-rs
+
 ```
 
 #### Exercise dplyr film distribution based on language
@@ -1209,7 +1524,6 @@ WHERE p.rental_id IS NULL
 ;"
 )
 sp_print_df(head(rs))
-rs
 ```
 
 ```{r}
@@ -1257,7 +1571,7 @@ rs <- dbGetQuery(
                  ;"
 )
 sp_print_df(head(rs))
-rs
+
 ```
 ### what film has been rented the most
 ```{r}
@@ -1282,7 +1596,7 @@ LIMIT 25
 ;"
 )
 sp_print_df(head(rs))
-rs
+
 ```
 
 ### what film has been generated the most revenue assuming all amounts are collected
