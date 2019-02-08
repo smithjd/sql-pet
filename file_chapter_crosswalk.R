@@ -27,8 +27,7 @@ cross_walk <- bind_rows(index_file_metadata, file_metadata) %>%
 mdfile <- file(description = "chapter_title_crosswalk.md", open = "w")
 
 cat(
-  "|Ch # | Chapter Title | File Name | Link Tag|\n",
-  "|----|-------------|---------------------|---------|---------|\n",
+  "|Ch # | Chapter Title | File Name | Link Tag|\n|----|---------------------|---------------------|---------|\n",
   file = mdfile)
 md_source <- cross_walk %>%
   glue_data("|{chapter_no}|{title}|{filename}|{link_tag}|")
