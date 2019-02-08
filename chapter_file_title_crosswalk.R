@@ -24,7 +24,7 @@ cross_walk <- bind_rows(index_file_metadata, file_metadata) %>%
 
 # View(cross_walk)
 
-mdfile <- file(description = "chapter_title_crosswalk.md", open = "w")
+mdfile <- file(description = "chapter_file_title_crosswalk.md", open = "w")
 
 cat(
   "|Ch # | Chapter Title | File Name | Link Tag|\n|----|---------------------|---------------------|---------|\n",
