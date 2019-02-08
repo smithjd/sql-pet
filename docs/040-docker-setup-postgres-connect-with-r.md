@@ -37,9 +37,9 @@ sp_check_that_docker_is_up()
 ```
 
 ```
-## [1] "Docker is up, running these containers:"                                                                                                      
-## [2] "CONTAINER ID        IMAGE                COMMAND                  CREATED              STATUS              PORTS                    NAMES"    
-## [3] "78273b060518        postgres-dvdrental   \"docker-entrypoint.s…\"   About a minute ago   Up About a minute   0.0.0.0:5432->5432/tcp   sql-pet"
+## [1] "Docker is up, running these containers:"                                                                                                     
+## [2] "CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS              PORTS                    NAMES"    
+## [3] "d5031ca48fed        postgres-dvdrental   \"docker-entrypoint.s…\"   15 hours ago        Up 15 hours         0.0.0.0:5432->5432/tcp   sql-pet"
 ```
 
 ## Clean up if appropriate
@@ -67,10 +67,6 @@ We name containers `cattle` for "throw-aways" and `pet` for ones we treasure and
 sp_make_simple_pg("cattle")
 ```
 
-```
-## [1] 0
-```
-
 Docker returns a long string of numbers.  If you are running this command for the first time, Docker downloads the PostgreSQL image, which takes a bit of time.
 
 The following command shows that a container named `cattle` is running `postgres:10`.  `postgres` is waiting for a connection:
@@ -82,7 +78,7 @@ sp_check_that_docker_is_up()
 ```
 ## [1] "Docker is up, running these containers:"                                                                                                       
 ## [2] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES"   
-## [3] "f124923a89f6        postgres:10         \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
+## [3] "3c7a3a2e7761        postgres:10         \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
 ```
 ## Connect, read and write to PostgreSQL from R
 

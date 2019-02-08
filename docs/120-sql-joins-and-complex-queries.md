@@ -30,7 +30,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                     PORTS               NAMES
-## a4c28314c51a        postgres-dvdrental   "docker-entrypoint.s…"   37 seconds ago      Exited (0) 2 seconds ago                       sql-pet
+## a1d38f797a8e        postgres-dvdrental   "docker-entrypoint.s…"   38 seconds ago      Exited (0) 2 seconds ago                       sql-pet
 ```
 
 Start up the `docker-pet` container
@@ -179,7 +179,7 @@ sp_print_df(new_customers)
 ```
 
 <!--html_preserve--><div id="htmlwidget-514d280a38cf86ead40b" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-514d280a38cf86ead40b">{"x":{"filter":"none","data":[["1"],[600],[3],["Sophie"],["Yang"],["sophie.yang@sakilacustomer.org"],[1],[true],["2019-02-01"],["2019-02-01T08:00:00Z"],[1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>address_id<\/th>\n      <th>activebool<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n      <th>active<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,6,10]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<script type="application/json" data-for="htmlwidget-514d280a38cf86ead40b">{"x":{"filter":"none","data":[["1"],[600],[3],["Sophie"],["Yang"],["sophie.yang@sakilacustomer.org"],[1],[true],["2019-02-08"],["2019-02-08T08:00:00Z"],[1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>address_id<\/th>\n      <th>activebool<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n      <th>active<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,6,10]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ### Primary and Foreign Key Constraint Error Messages
 
@@ -230,7 +230,7 @@ sp_print_df(new_customers)
 ```
 
 <!--html_preserve--><div id="htmlwidget-74434d812ec23342fdce" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-74434d812ec23342fdce">{"x":{"filter":"none","data":[["1","2"],[600,601],[3,2],["Sophie","Sophie"],["Yang","Yang"],["sophie.yang@sakilacustomer.org","sophie.yang@sakilacustomer.org"],[1,1],[true,true],["2019-02-01","2019-02-01"],["2019-02-01T08:00:00Z","2019-02-01T23:53:36Z"],[1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>address_id<\/th>\n      <th>activebool<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n      <th>active<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,6,10]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<script type="application/json" data-for="htmlwidget-74434d812ec23342fdce">{"x":{"filter":"none","data":[["1","2"],[600,601],[3,2],["Sophie","Sophie"],["Yang","Yang"],["sophie.yang@sakilacustomer.org","sophie.yang@sakilacustomer.org"],[1,1],[true,true],["2019-02-08","2019-02-08"],["2019-02-08T08:00:00Z","2019-02-08T17:13:00Z"],[1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>address_id<\/th>\n      <th>activebool<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n      <th>active<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,6,10]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ## SQL Multi-Row Insert Data Syntax
 
@@ -304,7 +304,7 @@ sp_print_df(new_customers)
 ```
 
 <!--html_preserve--><div id="htmlwidget-8da54f9f5480ad7c3ec3" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-8da54f9f5480ad7c3ec3">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7"],[600,601,602,603,604,605,606],[3,2,1,1,1,3,4],["Sophie","Sophie","John","Ian","Ed","John","Ian"],["Yang","Yang","Smith","Frantz","Borasky","Smith","Frantz"],["sophie.yang@sakilacustomer.org","sophie.yang@sakilacustomer.org","john.smith@sakilacustomer.org","ian.frantz@sakilacustomer.org","ed.borasky@sakilacustomer.org","john.smith@sakilacustomer.org","ian.frantz@sakilacustomer.org"],[1,1,2,3,4,3,4],[true,true,true,true,true,true,true],["2019-02-01","2019-02-01","2019-02-01","2019-02-01","2019-02-01","2019-02-01","2019-02-01"],["2019-02-01T08:00:00Z","2019-02-01T23:53:36Z","2019-02-01T08:00:00Z","2019-02-01T08:00:00Z","2019-02-01T08:00:00Z","2019-02-01T23:53:36Z","2019-02-01T23:53:36Z"],[1,1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>address_id<\/th>\n      <th>activebool<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n      <th>active<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,6,10]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<script type="application/json" data-for="htmlwidget-8da54f9f5480ad7c3ec3">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7"],[600,601,602,603,604,605,606],[3,2,1,1,1,3,4],["Sophie","Sophie","John","Ian","Ed","John","Ian"],["Yang","Yang","Smith","Frantz","Borasky","Smith","Frantz"],["sophie.yang@sakilacustomer.org","sophie.yang@sakilacustomer.org","john.smith@sakilacustomer.org","ian.frantz@sakilacustomer.org","ed.borasky@sakilacustomer.org","john.smith@sakilacustomer.org","ian.frantz@sakilacustomer.org"],[1,1,2,3,4,3,4],[true,true,true,true,true,true,true],["2019-02-08","2019-02-08","2019-02-08","2019-02-08","2019-02-08","2019-02-08","2019-02-08"],["2019-02-08T08:00:00Z","2019-02-08T17:13:00Z","2019-02-08T08:00:00Z","2019-02-08T08:00:00Z","2019-02-08T08:00:00Z","2019-02-08T17:13:00Z","2019-02-08T17:13:00Z"],[1,1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>address_id<\/th>\n      <th>activebool<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n      <th>active<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,6,10]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 The `film` table has a primary key, film_id, and a foreign key column, language_id.  In the next code bloock we see five sample rows from the film table.
 
@@ -1043,7 +1043,7 @@ print(glue("sql_aj1 loj-null costs=", sql_aj1[1, 1]))
 ```
 
 ```
-## sql_aj1 loj-null costs=GroupAggregate  (cost=24.24..24.30 rows=3 width=96) (actual time=0.411..0.518 rows=5 loops=1)
+## sql_aj1 loj-null costs=GroupAggregate  (cost=24.24..24.30 rows=3 width=96) (actual time=0.395..0.509 rows=5 loops=1)
 ```
 
 ```r
@@ -1051,7 +1051,7 @@ print(glue("sql_aj2 not in costs=", sql_aj2[1, 1]))
 ```
 
 ```
-## sql_aj2 not in costs=GroupAggregate  (cost=67.60..67.65 rows=3 width=96) (actual time=16.427..16.534 rows=5 loops=1)
+## sql_aj2 not in costs=GroupAggregate  (cost=67.60..67.65 rows=3 width=96) (actual time=16.649..16.759 rows=5 loops=1)
 ```
 
 ```r
@@ -1059,7 +1059,7 @@ print(glue("sql_aj3 not exist costs=", sql_aj3[1, 1]))
 ```
 
 ```
-## sql_aj3 not exist costs=GroupAggregate  (cost=24.24..24.30 rows=3 width=96) (actual time=0.437..0.564 rows=5 loops=1)
+## sql_aj3 not exist costs=GroupAggregate  (cost=24.24..24.30 rows=3 width=96) (actual time=0.543..0.669 rows=5 loops=1)
 ```
 
 ## dplyr Anti joins  
@@ -1185,7 +1185,7 @@ sp_print_df(sql_aj1)
 ```
 
 <!--html_preserve--><div id="htmlwidget-6c084255227fcd56827e" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-6c084255227fcd56827e">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13"],["GroupAggregate  (cost=564.97..570.22 rows=300 width=12) (actual time=260.099..260.239 rows=7 loops=1)","  Group Key: c.customer_id","  -&gt;  Sort  (cost=564.97..565.72 rows=300 width=4) (actual time=260.068..260.122 rows=7 loops=1)","        Sort Key: c.customer_id","        Sort Method: quicksort  Memory: 25kB","        -&gt;  Hash Anti Join  (cost=510.99..552.63 rows=300 width=4) (actual time=259.854..260.003 rows=7 loops=1)","              Hash Cond: (c.customer_id = r.customer_id)","              -&gt;  Seq Scan on customer c  (cost=0.00..14.99 rows=599 width=4) (actual time=0.016..4.245 rows=606 loops=1)","              -&gt;  Hash  (cost=310.44..310.44 rows=16044 width=2) (actual time=251.156..251.162 rows=16044 loops=1)","                    Buckets: 16384  Batches: 1  Memory Usage: 661kB","                    -&gt;  Seq Scan on rental r  (cost=0.00..310.44 rows=16044 width=2) (actual time=0.013..124.135 rows=16044 loops=1)","Planning time: 0.130 ms","Execution time: 260.419 ms"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>QUERY PLAN<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<script type="application/json" data-for="htmlwidget-6c084255227fcd56827e">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13"],["GroupAggregate  (cost=564.97..570.22 rows=300 width=12) (actual time=268.697..268.862 rows=7 loops=1)","  Group Key: c.customer_id","  -&gt;  Sort  (cost=564.97..565.72 rows=300 width=4) (actual time=268.652..268.729 rows=7 loops=1)","        Sort Key: c.customer_id","        Sort Method: quicksort  Memory: 25kB","        -&gt;  Hash Anti Join  (cost=510.99..552.63 rows=300 width=4) (actual time=268.408..268.574 rows=7 loops=1)","              Hash Cond: (c.customer_id = r.customer_id)","              -&gt;  Seq Scan on customer c  (cost=0.00..14.99 rows=599 width=4) (actual time=0.017..4.373 rows=606 loops=1)","              -&gt;  Hash  (cost=310.44..310.44 rows=16044 width=2) (actual time=259.469..259.485 rows=16044 loops=1)","                    Buckets: 16384  Batches: 1  Memory Usage: 661kB","                    -&gt;  Seq Scan on rental r  (cost=0.00..310.44 rows=16044 width=2) (actual time=0.015..129.095 rows=16044 loops=1)","Planning time: 0.200 ms","Execution time: 269.089 ms"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>QUERY PLAN<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ```r
 sql_aj1
@@ -1193,19 +1193,19 @@ sql_aj1
 
 ```
 ##                                                                                                                              QUERY PLAN
-## 1                                 GroupAggregate  (cost=564.97..570.22 rows=300 width=12) (actual time=260.099..260.239 rows=7 loops=1)
+## 1                                 GroupAggregate  (cost=564.97..570.22 rows=300 width=12) (actual time=268.697..268.862 rows=7 loops=1)
 ## 2                                                                                                              Group Key: c.customer_id
-## 3                                        ->  Sort  (cost=564.97..565.72 rows=300 width=4) (actual time=260.068..260.122 rows=7 loops=1)
+## 3                                        ->  Sort  (cost=564.97..565.72 rows=300 width=4) (actual time=268.652..268.729 rows=7 loops=1)
 ## 4                                                                                                               Sort Key: c.customer_id
 ## 5                                                                                                  Sort Method: quicksort  Memory: 25kB
-## 6                              ->  Hash Anti Join  (cost=510.99..552.63 rows=300 width=4) (actual time=259.854..260.003 rows=7 loops=1)
+## 6                              ->  Hash Anti Join  (cost=510.99..552.63 rows=300 width=4) (actual time=268.408..268.574 rows=7 loops=1)
 ## 7                                                                                            Hash Cond: (c.customer_id = r.customer_id)
-## 8                           ->  Seq Scan on customer c  (cost=0.00..14.99 rows=599 width=4) (actual time=0.016..4.245 rows=606 loops=1)
-## 9                                  ->  Hash  (cost=310.44..310.44 rows=16044 width=2) (actual time=251.156..251.162 rows=16044 loops=1)
+## 8                           ->  Seq Scan on customer c  (cost=0.00..14.99 rows=599 width=4) (actual time=0.017..4.373 rows=606 loops=1)
+## 9                                  ->  Hash  (cost=310.44..310.44 rows=16044 width=2) (actual time=259.469..259.485 rows=16044 loops=1)
 ## 10                                                                                      Buckets: 16384  Batches: 1  Memory Usage: 661kB
-## 11                     ->  Seq Scan on rental r  (cost=0.00..310.44 rows=16044 width=2) (actual time=0.013..124.135 rows=16044 loops=1)
-## 12                                                                                                              Planning time: 0.130 ms
-## 13                                                                                                           Execution time: 260.419 ms
+## 11                     ->  Seq Scan on rental r  (cost=0.00..310.44 rows=16044 width=2) (actual time=0.015..129.095 rows=16044 loops=1)
+## 12                                                                                                              Planning time: 0.200 ms
+## 13                                                                                                           Execution time: 269.089 ms
 ```
 
 ```r
@@ -1223,7 +1223,7 @@ print(glue("sql_aj1 loj-null costs=", sql_aj1[1, 1]))
 ```
 
 ```
-## sql_aj1 loj-null costs=GroupAggregate  (cost=564.97..570.22 rows=300 width=12) (actual time=260.099..260.239 rows=7 loops=1)
+## sql_aj1 loj-null costs=GroupAggregate  (cost=564.97..570.22 rows=300 width=12) (actual time=268.697..268.862 rows=7 loops=1)
 ```
 
 ```r
@@ -1231,7 +1231,7 @@ print(glue("sql_aj3 not exist costs=", sql_aj3[1, 1]))
 ```
 
 ```
-## sql_aj3 not exist costs=HashAggregate  (cost=554.13..557.13 rows=300 width=12) (actual time=244.551..244.609 rows=7 loops=1)
+## sql_aj3 not exist costs=HashAggregate  (cost=554.13..557.13 rows=300 width=12) (actual time=251.615..251.675 rows=7 loops=1)
 ```
 
 ## Exercises
