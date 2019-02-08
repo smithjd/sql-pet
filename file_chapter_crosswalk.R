@@ -2,11 +2,11 @@ library(tidyverse)
 library(glue)
 rmd_file_list <- dir(".", pattern = "^[0-9].*Rmd$")
 
-title_df <- tibble(filename = rmd_file_list,
+file_metadata <- tibble(filename = rmd_file_list,
                    raw_lines = rmd_file_list %>%
   map( ~readLines(file(.), n = 1)))
 
-title_df <- title_df %>%
+file_metadata <- file_metadata %>%
   mutate(
     title = str_extract(raw_lines, "^.*\\{#"),
     title = str_sub(title,start = 3L, end = -3L),
@@ -15,14 +15,14 @@ title_df <- title_df %>%
          ) %>%
   select(-raw_lines)
 
-index_df <- tibble(filename = "index.Rmd",
+index_file_metadata <- tibble(filename = "index.Rmd",
                    title = "Introduction",
                    link_tag = "chapter_introduction")
 
-cross_walk <- bind_rows(index_df, title_df) %>%
+cross_walk <- bind_rows(index_file_metadata, file_metadata) %>%
   mutate(chapter_no = dplyr::row_number() )
 
-View(cross_walk)
+# View(cross_walk)
 
 mdfile <- file(description = "chapter_title_crosswalk.md", open = "w")
 
