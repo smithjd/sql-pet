@@ -27,11 +27,11 @@ sp_check_that_docker_is_up()
 
 Verify pet DB is available, it may be stopped.
 
-```{r}
+  ```{r}
 sp_show_all_docker_containers()
 ```
 
-Start up the `docker-pet` container
+Start up the `docker-pet` container.
 
 ```{r}
 sp_docker_start("sql-pet")
@@ -50,15 +50,19 @@ con <- sp_get_postgres_connection(
 
 ## Database Privileges
 
-In the DVD rental database, you have all database privileges to perform any CRUD operaion, create, read, update, and delete on any database object.  As a data analyst, you typically only get select privilege which allows you to read only a subset of the tables in a database.  Occasionally, a proof of concept project may have a sandbox spun up where users are granted additional priviledges.
+In the DVD rental database, you have all database privileges to perform any create, read, update or delete(CRUD) operation on any database object.  As a data analyst, you typically only get select privilege which allows you to read only a subset of the tables in a database.  Occasionally, a proof of concept project may have a sandbox spun up where users are granted additional priviledges.
 
 ## Database constraints
 
-As a data analyst, you really do not need to worry about database constraints since you are primarily writing dplyr/SQL queries to pull data out of the database. Constraints can be enforced at multiple levels: column, table, multiple tables, or at the schema itself.  The common database constraints are a column is `NOT NULL`, a column is `UNIQUE`, a column is a `PRIMARY KEY`, both `NOT NULL` and `UNIQUE`, or a column is a `FOREIGN KEY`, the `PRIMARY KEY` on another table.  Constraints restrict column values to a set of defined values and help enforce referential integrity between tables.
+As a data analyst, you really do not need to worry about database constraints since you are primarily writing dplyr/SQL queries to pull data out of the database. Constraints can be enforced at multiple levels: column, table, multiple tables, or at the schema itself.  The common database constraints are a column is `NOT NULL`, a column is `UNIQUE`, a column is a `PRIMARY KEY`, both `NOT NULL` and `UNIQUE`, or a column is a `FOREIGN KEY` relationship to the `PRIMARY KEY` on another table.  Constraints restrict column values to a set of defined values and help enforce referential integrity between tables.
 
 ### DVD Rental Primary Foreign Key Constraints
 
-For this tutorial, we are primarily concerned with primary and foreign key relationships between tables in order to correctly join the data between tables.  If one looks at all the tables in the DVD Rental ERD, add link here, the first column is the name of the table followed by "_id".  This is the primary key on the table.  In some of the tables, there are other columns that begin with the name of a different table, the foreign table, and end in "_id".  These are foreign keys and the foreign key value is the primary key value on the foreign table.  The DBA will index the primary and foreign key columns to speed up query performanace.
+For this tutorial, we are primarily concerned with primary and foreign key relationships between tables in order to correctly join the data between tables.  If one looks at all the tables in the DVD Rental ERD the first column is the name of the table followed by "_id".  
+
+![Entity Relationship diagram for the dvdrental database](./screenshots/dvdrental-er-diagram.png)
+
+This is the primary key on the table.  In some of the tables, there are other columns that begin with the name of a different table, the foreign table, and end in "_id".  These are foreign keys and the foreign key value is the primary key value on the foreign table.  The DBA will index the primary and foreign key columns to speed up query performanace.
 
 In the table below, all the primary foreign key relationships are shown because the DVD rental system is small.  Real world databases typically have hundreds or thousands of primary foreign key relationships.  In the search box, enter 'PRIMARY' or 'FOREIGN' to see the table primary key or the table's foreign key relationships.
 
