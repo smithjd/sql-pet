@@ -42,7 +42,11 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                     PORTS               NAMES
+<<<<<<< HEAD
 ## ff3f1bc166ce        postgres-dvdrental   "docker-entrypoint.s…"   59 seconds ago      Exited (0) 3 seconds ago                       sql-pet
+=======
+## a1d38f797a8e        postgres-dvdrental   "docker-entrypoint.s…"   58 seconds ago      Exited (0) 2 seconds ago                       sql-pet
+>>>>>>> master
 ```
 
 Start up the `docker-pet` container
@@ -172,7 +176,11 @@ dbGetQuery(con,"select * from store;")
 ##   store_id manager_staff_id address_id         last_update
 ## 1        1                1          1 2006-02-15 09:57:12
 ## 2        2                2          2 2006-02-15 09:57:12
+<<<<<<< HEAD
 ## 3       10               10         10 2019-02-09 17:46:28
+=======
+## 3       10               10         10 2019-02-08 09:13:20
+>>>>>>> master
 ```
 
 ```r
@@ -564,7 +572,11 @@ sp_print_df(store_locations_sql)
 ```
 
 <!--html_preserve--><div id="htmlwidget-514d280a38cf86ead40b" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<<<<<<< HEAD
 <script type="application/json" data-for="htmlwidget-514d280a38cf86ead40b">{"x":{"filter":"none","data":[["1","2","3"],[1,2,10],["47 MySakila Drive","28 MySQL Boulevard","1795 Santiago de Compostela Way"],["Lethbridge","Woodridge","Laredo"],["Alberta","QLD","Texas"],["","","18743"],["Canada","Australia","United States"],["2006-02-15T17:57:12Z","2006-02-15T17:57:12Z","2019-02-10T01:46:28Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>store_id<\/th>\n      <th>address<\/th>\n      <th>city<\/th>\n      <th>district<\/th>\n      <th>postal_code<\/th>\n      <th>country<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":1},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+=======
+<script type="application/json" data-for="htmlwidget-514d280a38cf86ead40b">{"x":{"filter":"none","data":[["1","2","3"],[1,2,10],["47 MySakila Drive","28 MySQL Boulevard","1795 Santiago de Compostela Way"],["Lethbridge","Woodridge","Laredo"],["Alberta","QLD","Texas"],["","","18743"],["Canada","Australia","United States"],["2006-02-15T17:57:12Z","2006-02-15T17:57:12Z","2019-02-08T17:13:20Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>store_id<\/th>\n      <th>address<\/th>\n      <th>city<\/th>\n      <th>district<\/th>\n      <th>postal_code<\/th>\n      <th>country<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":1},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+>>>>>>> master
 
 Our DVD Rental business is international and operates in three countries, Canada, Austraila, and the United States.  Each country has one store.  Has this store recently been closed or not yet opened?  The third store has a current last_update column.  It may not have opened yet.
 
@@ -589,7 +601,11 @@ sp_print_df(store_locations_dplyr)
 ```
 
 <!--html_preserve--><div id="htmlwidget-74434d812ec23342fdce" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<<<<<<< HEAD
 <script type="application/json" data-for="htmlwidget-74434d812ec23342fdce">{"x":{"filter":"none","data":[["1","2","3"],[1,2,10],["47 MySakila Drive","28 MySQL Boulevard","1795 Santiago de Compostela Way"],["Lethbridge","Woodridge","Laredo"],["Alberta","QLD","Texas"],["","","18743"],["Canada","Australia","United States"],["2006-02-15T17:57:12Z","2006-02-15T17:57:12Z","2019-02-10T01:46:28Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>store_id<\/th>\n      <th>address<\/th>\n      <th>city<\/th>\n      <th>district<\/th>\n      <th>postal_code<\/th>\n      <th>country<\/th>\n      <th>last_update.x<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":1},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+=======
+<script type="application/json" data-for="htmlwidget-74434d812ec23342fdce">{"x":{"filter":"none","data":[["1","2","3"],[1,2,10],["47 MySakila Drive","28 MySQL Boulevard","1795 Santiago de Compostela Way"],["Lethbridge","Woodridge","Laredo"],["Alberta","QLD","Texas"],["","","18743"],["Canada","Australia","United States"],["2006-02-15T17:57:12Z","2006-02-15T17:57:12Z","2019-02-08T17:13:20Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>store_id<\/th>\n      <th>address<\/th>\n      <th>city<\/th>\n      <th>district<\/th>\n      <th>postal_code<\/th>\n      <th>country<\/th>\n      <th>last_update.x<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":1},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+>>>>>>> master
 <!--
 Discuss how to access common named columns.  Last_update.x above.  Figure out the mechanics of finding the suffix needed.
 -->
@@ -1289,7 +1305,11 @@ sp_print_df(customer_rental_anti_join_sql)
 ```
 
 <!--html_preserve--><div id="htmlwidget-a769f33e9bc2b11da24f" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<<<<<<< HEAD
 <script type="application/json" data-for="htmlwidget-a769f33e9bc2b11da24f">{"x":{"filter":"none","data":[["1","2","3","4"],["Sophie","Ian","Ed","John"],["Yang","Frantz","Borasky","Smith"],["sophie.yang@sakilacustomer.org","ian.frantz@sakilacustomer.org","ed.borasky@sakilacustomer.org","john.smith@sakilacustomer.org"],[1,1,1,1],["2019-02-10","2019-02-10","2019-02-10","2019-02-10"],["2019-02-10T08:00:00Z","2019-02-10T08:00:00Z","2019-02-10T08:00:00Z","2019-02-10T08:00:00Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>active<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":4},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+=======
+<script type="application/json" data-for="htmlwidget-a769f33e9bc2b11da24f">{"x":{"filter":"none","data":[["1","2","3","4"],["Sophie","Ian","Ed","John"],["Yang","Frantz","Borasky","Smith"],["sophie.yang@sakilacustomer.org","ian.frantz@sakilacustomer.org","ed.borasky@sakilacustomer.org","john.smith@sakilacustomer.org"],[1,1,1,1],["2019-02-08","2019-02-08","2019-02-08","2019-02-08"],["2019-02-08T08:00:00Z","2019-02-08T08:00:00Z","2019-02-08T08:00:00Z","2019-02-08T08:00:00Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>active<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":4},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+>>>>>>> master
 
 #### SQL Anti Join - Not IN Syntax
 
@@ -1311,7 +1331,11 @@ sp_print_df(customer_rental_not_in_sql)
 ```
 
 <!--html_preserve--><div id="htmlwidget-5afb8971f37330fd8cc4" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<<<<<<< HEAD
 <script type="application/json" data-for="htmlwidget-5afb8971f37330fd8cc4">{"x":{"filter":"none","data":[["1","2","3","4"],["Sophie","John","Ian","Ed"],["Yang","Smith","Frantz","Borasky"],["sophie.yang@sakilacustomer.org","john.smith@sakilacustomer.org","ian.frantz@sakilacustomer.org","ed.borasky@sakilacustomer.org"],[1,1,1,1],["2019-02-10","2019-02-10","2019-02-10","2019-02-10"],["2019-02-10T08:00:00Z","2019-02-10T08:00:00Z","2019-02-10T08:00:00Z","2019-02-10T08:00:00Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>active<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":4},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+=======
+<script type="application/json" data-for="htmlwidget-5afb8971f37330fd8cc4">{"x":{"filter":"none","data":[["1","2","3","4"],["Sophie","John","Ian","Ed"],["Yang","Smith","Frantz","Borasky"],["sophie.yang@sakilacustomer.org","john.smith@sakilacustomer.org","ian.frantz@sakilacustomer.org","ed.borasky@sakilacustomer.org"],[1,1,1,1],["2019-02-08","2019-02-08","2019-02-08","2019-02-08"],["2019-02-08T08:00:00Z","2019-02-08T08:00:00Z","2019-02-08T08:00:00Z","2019-02-08T08:00:00Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>active<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":4},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+>>>>>>> master
 
 ### SQL ANTI Join -- Not EXISTS Syntax
 
@@ -1333,7 +1357,11 @@ sp_print_df(customer_rental_not_in_sql)
 ```
 
 <!--html_preserve--><div id="htmlwidget-e9ae68682532316859d5" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<<<<<<< HEAD
 <script type="application/json" data-for="htmlwidget-e9ae68682532316859d5">{"x":{"filter":"none","data":[["1","2","3","4"],["Sophie","John","Ian","Ed"],["Yang","Smith","Frantz","Borasky"],["sophie.yang@sakilacustomer.org","john.smith@sakilacustomer.org","ian.frantz@sakilacustomer.org","ed.borasky@sakilacustomer.org"],[1,1,1,1],["2019-02-10","2019-02-10","2019-02-10","2019-02-10"],["2019-02-10T08:00:00Z","2019-02-10T08:00:00Z","2019-02-10T08:00:00Z","2019-02-10T08:00:00Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>active<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":4},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+=======
+<script type="application/json" data-for="htmlwidget-e9ae68682532316859d5">{"x":{"filter":"none","data":[["1","2","3","4"],["Sophie","John","Ian","Ed"],["Yang","Smith","Frantz","Borasky"],["sophie.yang@sakilacustomer.org","john.smith@sakilacustomer.org","ian.frantz@sakilacustomer.org","ed.borasky@sakilacustomer.org"],[1,1,1,1],["2019-02-08","2019-02-08","2019-02-08","2019-02-08"],["2019-02-08T08:00:00Z","2019-02-08T08:00:00Z","2019-02-08T08:00:00Z","2019-02-08T08:00:00Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>active<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":4},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+>>>>>>> master
 
 In the three previous examples, each returned 5 rows.  Note that there are two Sophie rows in the previous three examples that look like duplicates.  In the next example, the code block uses a count(*)-group by-having syntax.  The customer_cnt column shows the number of customer rows and the rentals column shows the number of rentals rows involved in the join.
 
@@ -1366,7 +1394,11 @@ sp_print_df(customer_rental_groupby1_sql)
 ```
 
 <!--html_preserve--><div id="htmlwidget-32dc6527565d6d2fa8eb" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<<<<<<< HEAD
 <script type="application/json" data-for="htmlwidget-32dc6527565d6d2fa8eb">{"x":{"filter":"none","data":[["1","2","3"],["Ian","John","Ed"],["Frantz","Smith","Borasky"],["ian.frantz@sakilacustomer.org","john.smith@sakilacustomer.org","ed.borasky@sakilacustomer.org"],[1,1,1],["2019-02-10","2019-02-10","2019-02-10"],["2019-02-10T08:00:00Z","2019-02-10T08:00:00Z","2019-02-10T08:00:00Z"],[1,1,1],[0,0,0]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>active<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n      <th>customer_cnt<\/th>\n      <th>rentals<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[4,7,8]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+=======
+<script type="application/json" data-for="htmlwidget-32dc6527565d6d2fa8eb">{"x":{"filter":"none","data":[["1","2","3"],["John","Ian","Ed"],["Smith","Frantz","Borasky"],["john.smith@sakilacustomer.org","ian.frantz@sakilacustomer.org","ed.borasky@sakilacustomer.org"],[1,1,1],["2019-02-08","2019-02-08","2019-02-08"],["2019-02-08T08:00:00Z","2019-02-08T08:00:00Z","2019-02-08T08:00:00Z"],[1,1,1],[0,0,0]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>active<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n      <th>customer_cnt<\/th>\n      <th>rentals<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[4,7,8]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+>>>>>>> master
 
 
 In the previous example only four rows were returned because the two Sophie entries were grouped together, see the customer_cnt column.  To avoid dropping one of the Sophie records, we can add the customer_id to prevent the group by operation combining the two rows,
@@ -1402,7 +1434,11 @@ sp_print_df(customer_rental_groupby2_sql)
 ```
 
 <!--html_preserve--><div id="htmlwidget-bbe1f43178625f07ed69" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<<<<<<< HEAD
 <script type="application/json" data-for="htmlwidget-bbe1f43178625f07ed69">{"x":{"filter":"none","data":[["1","2","3","4"],[601,602,603,604],["Sophie","John","Ian","Ed"],["Yang","Smith","Frantz","Borasky"],["sophie.yang@sakilacustomer.org","john.smith@sakilacustomer.org","ian.frantz@sakilacustomer.org","ed.borasky@sakilacustomer.org"],[1,1,1,1],["2019-02-10","2019-02-10","2019-02-10","2019-02-10"],["2019-02-10T08:00:00Z","2019-02-10T08:00:00Z","2019-02-10T08:00:00Z","2019-02-10T08:00:00Z"],[1,1,1,1],[0,0,0,0]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>cust_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>active<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n      <th>cust_cnt<\/th>\n      <th>rentals<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,5,8,9]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+=======
+<script type="application/json" data-for="htmlwidget-bbe1f43178625f07ed69">{"x":{"filter":"none","data":[["1","2","3","4"],[601,602,603,604],["Sophie","John","Ian","Ed"],["Yang","Smith","Frantz","Borasky"],["sophie.yang@sakilacustomer.org","john.smith@sakilacustomer.org","ian.frantz@sakilacustomer.org","ed.borasky@sakilacustomer.org"],[1,1,1,1],["2019-02-08","2019-02-08","2019-02-08","2019-02-08"],["2019-02-08T08:00:00Z","2019-02-08T08:00:00Z","2019-02-08T08:00:00Z","2019-02-08T08:00:00Z"],[1,1,1,1],[0,0,0,0]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>cust_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>active<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n      <th>cust_cnt<\/th>\n      <th>rentals<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,5,8,9]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+>>>>>>> master
 
 Exercise 
 
@@ -1421,7 +1457,11 @@ sp_print_df(x)
 ```
 
 <!--html_preserve--><div id="htmlwidget-f44584fa5e4f08aaeb0b" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<<<<<<< HEAD
 <script type="application/json" data-for="htmlwidget-f44584fa5e4f08aaeb0b">{"x":{"filter":"none","data":[["1","2","3","4"],["Sophie","John","Ian","Ed"],["Yang","Smith","Frantz","Borasky"],["sophie.yang@sakilacustomer.org","john.smith@sakilacustomer.org","ian.frantz@sakilacustomer.org","ed.borasky@sakilacustomer.org"],[1,1,1,1],["2019-02-10","2019-02-10","2019-02-10","2019-02-10"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>active<\/th>\n      <th>create_date<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":4},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+=======
+<script type="application/json" data-for="htmlwidget-f44584fa5e4f08aaeb0b">{"x":{"filter":"none","data":[["1","2","3","4"],["Sophie","John","Ian","Ed"],["Yang","Smith","Frantz","Borasky"],["sophie.yang@sakilacustomer.org","john.smith@sakilacustomer.org","ian.frantz@sakilacustomer.org","ed.borasky@sakilacustomer.org"],[1,1,1,1],["2019-02-08","2019-02-08","2019-02-08","2019-02-08"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>active<\/th>\n      <th>create_date<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":4},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+>>>>>>> master
 
 ### Which customers have rented the most films
 
@@ -1515,7 +1555,11 @@ sp_print_df(customer_rental_high_low_sql)
 ```
 
 <!--html_preserve--><div id="htmlwidget-f943e07c4e65c2196ba8" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<<<<<<< HEAD
 <script type="application/json" data-for="htmlwidget-f943e07c4e65c2196ba8">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9"],[148,526,144,236,75,604,603,601,602],["Eleanor","Karl","Clara","Marcia","Tammy","Ed","Ian","Sophie","John"],["Hunt","Seal","Shaw","Dean","Sanders","Borasky","Frantz","Yang","Smith"],["eleanor.hunt@sakilacustomer.org","karl.seal@sakilacustomer.org","clara.shaw@sakilacustomer.org","marcia.dean@sakilacustomer.org","tammy.sanders@sakilacustomer.org","ed.borasky@sakilacustomer.org","ian.frantz@sakilacustomer.org","sophie.yang@sakilacustomer.org","john.smith@sakilacustomer.org"],[1,1,1,1,1,1,1,1,1],["2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2019-02-10T08:00:00Z","2019-02-10T08:00:00Z","2019-02-10T08:00:00Z","2019-02-10T08:00:00Z"],[46,45,42,42,41,1,1,1,1],[46,45,42,42,41,0,0,0,0]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>cust_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>active<\/th>\n      <th>last_update<\/th>\n      <th>cust_cnt<\/th>\n      <th>rentals<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,5,7,8]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+=======
+<script type="application/json" data-for="htmlwidget-f943e07c4e65c2196ba8">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9"],[148,526,144,236,75,604,603,601,602],["Eleanor","Karl","Clara","Marcia","Tammy","Ed","Ian","Sophie","John"],["Hunt","Seal","Shaw","Dean","Sanders","Borasky","Frantz","Yang","Smith"],["eleanor.hunt@sakilacustomer.org","karl.seal@sakilacustomer.org","clara.shaw@sakilacustomer.org","marcia.dean@sakilacustomer.org","tammy.sanders@sakilacustomer.org","ed.borasky@sakilacustomer.org","ian.frantz@sakilacustomer.org","sophie.yang@sakilacustomer.org","john.smith@sakilacustomer.org"],[1,1,1,1,1,1,1,1,1],["2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2019-02-08T08:00:00Z","2019-02-08T08:00:00Z","2019-02-08T08:00:00Z","2019-02-08T08:00:00Z"],[46,45,42,42,41,1,1,1,1],[46,45,42,42,41,0,0,0,0]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>cust_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>active<\/th>\n      <th>last_update<\/th>\n      <th>cust_cnt<\/th>\n      <th>rentals<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,5,7,8]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+>>>>>>> master
 
 ### Exercise 
 
@@ -1539,7 +1583,11 @@ sp_print_df(customer_rental_ij_d)
 ```
 
 <!--html_preserve--><div id="htmlwidget-4b34001b371daf31fcf2" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<<<<<<< HEAD
 <script type="application/json" data-for="htmlwidget-4b34001b371daf31fcf2">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9"],[148,526,144,236,75,601,602,603,604],["Eleanor","Karl","Clara","Marcia","Tammy","Sophie","John","Ian","Ed"],["Hunt","Seal","Shaw","Dean","Sanders","Yang","Smith","Frantz","Borasky"],["eleanor.hunt@sakilacustomer.org","karl.seal@sakilacustomer.org","clara.shaw@sakilacustomer.org","marcia.dean@sakilacustomer.org","tammy.sanders@sakilacustomer.org","sophie.yang@sakilacustomer.org","john.smith@sakilacustomer.org","ian.frantz@sakilacustomer.org","ed.borasky@sakilacustomer.org"],[1,1,1,1,1,1,1,1,1],["2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14","2019-02-10","2019-02-10","2019-02-10","2019-02-10"],[46,45,42,42,41,0,0,0,0]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>active<\/th>\n      <th>create_date<\/th>\n      <th>rentals<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,5,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+=======
+<script type="application/json" data-for="htmlwidget-4b34001b371daf31fcf2">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9"],[148,526,144,236,75,601,602,603,604],["Eleanor","Karl","Clara","Marcia","Tammy","Sophie","John","Ian","Ed"],["Hunt","Seal","Shaw","Dean","Sanders","Yang","Smith","Frantz","Borasky"],["eleanor.hunt@sakilacustomer.org","karl.seal@sakilacustomer.org","clara.shaw@sakilacustomer.org","marcia.dean@sakilacustomer.org","tammy.sanders@sakilacustomer.org","sophie.yang@sakilacustomer.org","john.smith@sakilacustomer.org","ian.frantz@sakilacustomer.org","ed.borasky@sakilacustomer.org"],[1,1,1,1,1,1,1,1,1],["2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14","2019-02-08","2019-02-08","2019-02-08","2019-02-08"],[46,45,42,42,41,0,0,0,0]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>active<\/th>\n      <th>create_date<\/th>\n      <th>rentals<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,5,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+>>>>>>> master
 
 ## Top-n1 and bottom-n2 customers 
 
@@ -1614,7 +1662,11 @@ sp_print_df(customer_rentals_hi_low_sql(top_n,bot_n))
 ```
 
 <!--html_preserve--><div id="htmlwidget-b1bdbba72aec9089045d" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<<<<<<< HEAD
 <script type="application/json" data-for="htmlwidget-b1bdbba72aec9089045d">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10"],[148,526,144,236,75,600,602,603,601,604],["Eleanor","Karl","Clara","Marcia","Tammy","Sophie","John","Ian","Sophie","Ed"],["Hunt","Seal","Shaw","Dean","Sanders","Yang","Smith","Frantz","Yang","Borasky"],["eleanor.hunt@sakilacustomer.org","karl.seal@sakilacustomer.org","clara.shaw@sakilacustomer.org","marcia.dean@sakilacustomer.org","tammy.sanders@sakilacustomer.org","sophie.yang@sakilacustomer.org","john.smith@sakilacustomer.org","ian.frantz@sakilacustomer.org","sophie.yang@sakilacustomer.org","ed.borasky@sakilacustomer.org"],[1,1,1,1,1,1,1,1,1,1],["2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2019-02-10T08:00:00Z","2019-02-10T08:00:00Z","2019-02-10T08:00:00Z","2019-02-10T08:00:00Z","2019-02-10T08:00:00Z"],[46,45,42,42,41,1,1,1,1,1],[46,45,42,42,41,1,0,0,0,0],[1,2,3,4,5,600,601,602,603,604],[604,603,602,601,600,5,4,3,2,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>cust_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>active<\/th>\n      <th>last_update<\/th>\n      <th>cust_cnt<\/th>\n      <th>rentals<\/th>\n      <th>hi_low<\/th>\n      <th>low_hi<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,5,7,8,9,10]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+=======
+<script type="application/json" data-for="htmlwidget-b1bdbba72aec9089045d">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10"],[148,526,144,236,75,600,602,603,601,604],["Eleanor","Karl","Clara","Marcia","Tammy","Sophie","John","Ian","Sophie","Ed"],["Hunt","Seal","Shaw","Dean","Sanders","Yang","Smith","Frantz","Yang","Borasky"],["eleanor.hunt@sakilacustomer.org","karl.seal@sakilacustomer.org","clara.shaw@sakilacustomer.org","marcia.dean@sakilacustomer.org","tammy.sanders@sakilacustomer.org","sophie.yang@sakilacustomer.org","john.smith@sakilacustomer.org","ian.frantz@sakilacustomer.org","sophie.yang@sakilacustomer.org","ed.borasky@sakilacustomer.org"],[1,1,1,1,1,1,1,1,1,1],["2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2019-02-08T08:00:00Z","2019-02-08T08:00:00Z","2019-02-08T08:00:00Z","2019-02-08T08:00:00Z","2019-02-08T08:00:00Z"],[46,45,42,42,41,1,1,1,1,1],[46,45,42,42,41,1,0,0,0,0],[1,2,3,4,5,600,601,602,603,604],[604,603,602,601,600,5,4,3,2,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>cust_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>active<\/th>\n      <th>last_update<\/th>\n      <th>cust_cnt<\/th>\n      <th>rentals<\/th>\n      <th>hi_low<\/th>\n      <th>low_hi<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,5,7,8,9,10]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+>>>>>>> master
 
 ## Exercise
 
@@ -1653,7 +1705,11 @@ sp_print_df(customer_rentals_hi_low_dplr(top_n,bot_n))
 ```
 
 <!--html_preserve--><div id="htmlwidget-af6ac1c69230c2179f6a" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<<<<<<< HEAD
 <script type="application/json" data-for="htmlwidget-af6ac1c69230c2179f6a">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10"],[248,61,110,281,318,600,601,602,603,604],["Caroline","Katherine","Tiffany","Leona","Brian","Sophie","Sophie","John","Ian","Ed"],["Bowman","Rivera","Jordan","Obrien","Wyman","Yang","Yang","Smith","Frantz","Borasky"],["caroline.bowman@sakilacustomer.org","katherine.rivera@sakilacustomer.org","tiffany.jordan@sakilacustomer.org","leona.obrien@sakilacustomer.org","brian.wyman@sakilacustomer.org","sophie.yang@sakilacustomer.org","sophie.yang@sakilacustomer.org","john.smith@sakilacustomer.org","ian.frantz@sakilacustomer.org","ed.borasky@sakilacustomer.org"],[1,1,1,1,1,1,1,1,1,1],["2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14","2019-02-10","2019-02-10","2019-02-10","2019-02-10","2019-02-10"],[15,14,14,14,12,1,0,0,0,0],[595,596,597,598,599,600,601,602,603,604],[10,9,8,7,6,5,4,3,2,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>active<\/th>\n      <th>create_date<\/th>\n      <th>rentals<\/th>\n      <th>hi_low<\/th>\n      <th>low_hi<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,5,7,8,9]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+=======
+<script type="application/json" data-for="htmlwidget-af6ac1c69230c2179f6a">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10"],[248,61,110,281,318,600,601,602,603,604],["Caroline","Katherine","Tiffany","Leona","Brian","Sophie","Sophie","John","Ian","Ed"],["Bowman","Rivera","Jordan","Obrien","Wyman","Yang","Yang","Smith","Frantz","Borasky"],["caroline.bowman@sakilacustomer.org","katherine.rivera@sakilacustomer.org","tiffany.jordan@sakilacustomer.org","leona.obrien@sakilacustomer.org","brian.wyman@sakilacustomer.org","sophie.yang@sakilacustomer.org","sophie.yang@sakilacustomer.org","john.smith@sakilacustomer.org","ian.frantz@sakilacustomer.org","ed.borasky@sakilacustomer.org"],[1,1,1,1,1,1,1,1,1,1],["2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14","2019-02-08","2019-02-08","2019-02-08","2019-02-08","2019-02-08"],[15,14,14,14,12,1,0,0,0,0],[595,596,597,598,599,600,601,602,603,604],[10,9,8,7,6,5,4,3,2,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>active<\/th>\n      <th>create_date<\/th>\n      <th>rentals<\/th>\n      <th>hi_low<\/th>\n      <th>low_hi<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,5,7,8,9]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+>>>>>>> master
 
 ### SQL Rows Per Table 
 
@@ -2147,7 +2203,11 @@ sp_print_df(not_rented)
 ```
 
 <!--html_preserve--><div id="htmlwidget-d53f5dec90ce090aa13d" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<<<<<<< HEAD
 <script type="application/json" data-for="htmlwidget-d53f5dec90ce090aa13d">{"x":{"filter":"none","data":[["1","2"],[2,2],[1,1001],["Academy Dinosaur","Sophie's Choice"],["A Epic Drama of a Feminist And a Mad Scientist who must Battle a Teacher in The Canadian Rockies","orphaned language_id=10"],["2006-02-15T18:09:17Z","2019-02-10T08:00:00Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>store_id<\/th>\n      <th>film_id<\/th>\n      <th>title<\/th>\n      <th>description<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+=======
+<script type="application/json" data-for="htmlwidget-d53f5dec90ce090aa13d">{"x":{"filter":"none","data":[["1","2"],[2,2],[1,1001],["Academy Dinosaur","Sophie's Choice"],["A Epic Drama of a Feminist And a Mad Scientist who must Battle a Teacher in The Canadian Rockies","orphaned language_id=10"],["2006-02-15T18:09:17Z","2019-02-08T08:00:00Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>store_id<\/th>\n      <th>film_id<\/th>\n      <th>title<\/th>\n      <th>description<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+>>>>>>> master
 
 ## Different strategies for interacting with the database
 
