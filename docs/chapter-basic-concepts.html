@@ -25,7 +25,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
 
 
-<meta name="date" content="2019-02-08">
+<meta name="date" content="2019-02-09">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -750,7 +750,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">2.5</span> ‘Normal’ and ‘normalized’ data</h2>
 <div id="tidy-data" class="section level3">
 <h3><span class="header-section-number">2.5.1</span> Tidy data</h3>
-<p>Tidy data <span class="citation">(Wickham <a href="#ref-Wickham2014">2014</a>)</span> is well behaved from the point of view of analysis and tools in the Tidyverse <span class="citation">(RStudio <a href="#ref-RStudio2019">2019</a>)</span>. Tidy data is easier to think about and it is usually worthwhile to make the data tidy<span class="citation">(Wickham <a href="#ref-Wickham2018">2018</a>)</span>. Tidy data is roughly equivalent to <em>third normal form</em> as discussed below.</p>
+<p>Tidy data <span class="citation">(Wickham <a href="#ref-Wickham2014">2014</a>)</span> is well behaved from the point of view of analysis and tools in the Tidyverse <span class="citation">(RStudio <a href="#ref-RStudio2019">2019</a>)</span>. Tidy data is easier to think about and it is usually worthwhile to make the data tidy <span class="citation">(Wickham <a href="#ref-Wickham2018">2018</a>)</span>. Tidy data is roughly equivalent to <em>third normal form</em> as discussed below.</p>
 </div>
 <div id="design-of-normal-data" class="section level3">
 <h3><span class="header-section-number">2.5.2</span> Design of “normal data”</h3>
@@ -766,7 +766,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">2.7</span> SQL</h2>
 <p>Although there are <a href="https://en.wikipedia.org/wiki/SQL#Interoperability_and_standardization">ANSI standards</a> for <a href="https://en.wikipedia.org/wiki/SQL_syntax">SQL syntax</a>, different implementations vary in enough details that R’s ability to customize queries for those implementations is very helpful.</p>
 <p>The tables in a dbms correspond to a data frame in R, so interaction with a dbms is fairly natural for useRs.</p>
-<p>SQL code is characterized by the fact that it describes <em>what</em> to retrieve, leaving the dbms back end to determine how to do it. The pipe operator (<code>%&gt;%</code>, which is read as <em>and then</em>) is inherently procedural: the way we use it in this book to construct queries step-by-step has no equivalent in SQL.</p>
+<p>SQL code is characterized by the fact that it describes <em>what</em> to retrieve, leaving the dbms back end to determine how to do it. Therefore it has a <em>batch</em> feel. The pipe operator (<code>%&gt;%</code>, which is read as <em>and then</em>) is inherently procedural when it’s used with dplyr: it can be used to construct queries step-by-step. Once a test dplyr query has been executed, it is easy to inspect the results and add steps with the pipe operator to refine or expand the query.</p>
 <div id="data-mapping-between-r-vs-sql-data-types" class="section level3">
 <h3><span class="header-section-number">2.7.1</span> Data mapping between R vs SQL data types</h3>
 <p>The following code shows how different elements of the R bestiary are translated to and from ANSI standard data types. Note that R factors are translated as <code>TEXT</code> so that missing levels are ignored on the SQL side.</p>
@@ -846,8 +846,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="postgresql-and-connection-parameters" class="section level3">
 <h3><span class="header-section-number">2.7.2</span> PostgreSQL and connection parameters</h3>
-<p>Important PITA.</p>
-<p>We use a PostgreSQL database server running in a Docker container for the database functions. It is installed inside Docker, so you do not have to download or install it yourself. To connect to it, you have to define some parameters. These parameters are used in two places:</p>
+<p>An <strong>important detail:</strong> We use a PostgreSQL database server running in a Docker container for the database functions. It is installed inside Docker, so you do not have to download or install it yourself. To connect to it, you have to define some parameters. These parameters are used in two places:</p>
 <ol style="list-style-type: decimal">
 <li>When the Docker container is created, they’re used to initialize the database, and</li>
 <li>Whenever we connect to the database, we need to specify them to authenticate.</li>
