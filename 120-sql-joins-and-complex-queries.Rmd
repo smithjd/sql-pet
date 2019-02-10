@@ -337,7 +337,7 @@ One cannot insert/update a row into the `film` table with a language_id = 10 bec
 
 ## Messy Data
 
-The data in the DVD rental system is too clean to show some of the issues one comes across in the real world.  In the following `xxxx` code blocks, we look at one row in the film table where the film_id = 1.  We first reinitialize language_id to 1 and display the row.  
+The data in the DVD rental system is too clean to show some of the issues one comes across in the real world.  In the following code blocks, we look at one row in the film table where the film_id = 1.  We first reinitialize language_id to 1 and display the row.  
 
 ```{r Messy data 1}
 
@@ -460,7 +460,7 @@ The hostess knows that there is usually some data anomolies.  As she looks out s
 
 The table below shows the two R join function call formats, standalone function call and pipe function call and the corresponding SQL join format.
 
-|Join|dplyr                                                                            |sql
+|Join|dplyr|sql
 |-----|--------------------------------------------------------------------------------|------------------------------------------------------
 |inner|inner_join(customer_tbl, rental_tbl, by = 'customer_id', suffix = c(".c", ".r"))|from customer c join rental r on c.customer_id = r.customer_id
 |     |customer_tbl %>% inner_join(rental_tbl, by = 'customer_id', suffix = c(".c", ".r"))|
@@ -489,6 +489,7 @@ In the next couple of examples, we will pull all the language and `film` table d
 ## Natural Join Delayed Time Bomb
 
 The dplyr default join is a natural join, joining tables on common column names.  One of many links why one should not use natural joins can be found [here](http://gplivna.blogspot.com/2007/10/natural-joins-are-evil-motto-if-you.html).  If two tables are joined via a natural join on column `C1` the join continues to work as long as no additional common columns are added to either table.  If a new new column `C2` is added to one of the tables and `C2` already exists in the other table, BOOM, the delayed time bomb goes off.  The natural join still executes, doesn't throw any errors, but the returned result set may be smaller, much smaller, than before the new `C2` column was added.  
+
 ### SQL Language_id Distribution
 
 The next code block calculates the `language_id` distribution in the `film` and `language` tables.  The results will be used in following sections to validate different join result sets.
@@ -665,7 +666,7 @@ sp_print_df(rs)
 rs
 ```
 
-The rojs column returns the number of rows found on the keys from the right table, film, and the left table, the language table.  For the "English" row, the language_id and film_lang_id match and a 1000 inner joins were performed.  For language_id = 30 from the right table, there was only 1 join to a non-existant row in the language table on the left.  
+The rojs column returns the number of rows found on the keys from the right table, film, and the left table, language.  For the "English" row, the language_id and film_lang_id match and a 999 inner joins were performed.  For language_id = 10  from the right table, there were 2 joins to a non-existant row in the language table on the left.  
 
 1.  The right outer join always returns all rows from the right table, the driving/key table, if not reduced via a filter()/where clause.  
 2.  All rows that inner join returns all the columns/derived columns specified in the select clause from both the left and right tables.  
@@ -703,7 +704,7 @@ Looking at the SQL output, the full outer join is the combination of the left an
 
 1.  Language_id = 1 is the inner join.
 2.  Language_id = 2 - 6 is the left outer join
-3.  Language_id = 30 is the right outer join.
+3.  Language_id = NULL is the right outer join.
 
 One can also just look at the language_id on the left and language_id_f on the right for a non NA value to see which side  is outer side/driving side of the join.
 
