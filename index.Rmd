@@ -20,18 +20,17 @@ site: bookdown::bookdown_site
 
 ## Using R to query a DBMS in your organization
 
-* **Data characteristics**
-  * Large data stores in organizations that are kept in SQL databases have specific access constraints and structural characteristics that can be challenging to an R user (*useR* in the jargon).  
+Many R users (or *useRs*) live a dual life: in the vibrant open-source R community where R is created, improved, discussed, and taught. And then they go to work in a secured, complex, closed organizational environment where they may be on their own.  Here is [a request on the Rstudio community site](https://community.rstudio.com/t/moving-from-rjdbc-to-odbc/22419) for help that has been lightly edited to emphasize the generality that we see:
 
-* **Technology hurdles**
-  * Handling large volumes of data and considering performance issues in a dbms environment require an understanding of what's happening in "the back end" (which is often out of view).
-  * The interfaces (passwords, packages, etc.) and gaps between R and a back end database are hidden from public view as a matter of security.
-  * Resources for diagnosing interface problems behind corporate walls may or may not address all the issues that R users face, so a **simulated** environment such as we offer here can be an important learning resource.
+> I'm trying to migrate some inherited scripts that [...] to connect to a [...] database to [...] instead. I've reviewed the https://db.rstudio.com docs and tried a number of configurations but haven't been able to connect. *I'm in uncharted territory within my org, so haven't been able to get much help internally.*
 
-* **Use cases**
-  * R users frequently need to make sense of complex data structures and coding schemes to address incompletely formed questions: therefore informal exploratory data analysis has to be intuitive and fast. The technology details should not get in the way.
-  * Sharing and discussing exploratory and diagnostic techniques of exploration and retrieval is best in public, but is constrained by organizational requirements.
-  * Data documentation is often incomplete and emphasizes operational characteristics, rather than analytic ones.  A careful useR often needs to confirm the documentation on the fly and de-normalize data carefully.
+This book will help you create a hybrid environment on your machine that can mimic some of the uncharted territory in your organization.  It goes far beyond the basic connection issues and covers issues that you face when you are finding your way around or writing queries to your organization's databases, not just when maintaining inherited scripts.
+
+* **Technology hurdles**.  The interfaces (passwords, packages, etc.) and gaps between R and a back end database are hidden from public view as a matter of security, so pinpointing exactly where a problem is can be difficult. A **simulated** environment such as we offer here can be an important learning resource.
+
+* **Scale issues**. We see at least two types of scale issues.  Handling large volumes of data so that performance issues must be a consideration requires a basic understanding of what's happening in "the back end" (which is necessarily hidden from view). Therefore mastering techniques for drawing samples or small batches of data are essential. In addition to their size, your organization's databases will often have structural characteristics that are complex and obscure.  Data documentation is often incomplete and emphasizes operational characteristics, rather than analytic opportunities.  A careful useR often needs to confirm the documentation on the fly and de-normalize data carefully.
+
+* **Use cases**. R users frequently need to make sense of an organization's complex data structures and coding schemes to address incompletely formed questions so that informal exploratory data analysis has to be intuitive and fast. The technology details should not get in the way. Sharing and discussing exploratory and diagnostic retrieval techniquesis best in public, but is constrained by organizational requirements.
 
 We have found that PostgreSQL in a Docker container solves many of the foregoing problems.
 

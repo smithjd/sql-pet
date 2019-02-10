@@ -78,7 +78,7 @@ Unix was the original host for both R and Docker.  Unix-like commands show up.
 
 ### Tidy data
 
-Tidy data [@Wickham2014] is well behaved from the point of view of analysis and tools in the Tidyverse [@RStudio2019].  Tidy data is easier to think about and it is usually worthwhile to make the data tidy[@Wickham2018].  Tidy data is roughly equivalent to _third normal form_ as discussed below.
+Tidy data [@Wickham2014] is well behaved from the point of view of analysis and tools in the Tidyverse [@RStudio2019].  Tidy data is easier to think about and it is usually worthwhile to make the data tidy [@Wickham2018].  Tidy data is roughly equivalent to _third normal form_ as discussed below.
 
 ### Design of "normal data"
 
@@ -96,7 +96,7 @@ Although there are [ANSI standards](https://en.wikipedia.org/wiki/SQL#Interopera
 
 The tables in a dbms correspond to a data frame in R, so interaction with a dbms is fairly natural for useRs. 
 
-SQL code is characterized by the fact that it describes *what* to retrieve, leaving the dbms back end to determine how to do it.  The pipe operator (`%>%`, which is read as _and then_) is inherently procedural: the way we use it in this book to construct queries step-by-step has no equivalent in SQL.
+SQL code is characterized by the fact that it describes *what* to retrieve, leaving the dbms back end to determine how to do it.  Therefore it has a *batch* feel. The pipe operator (`%>%`, which is read as _and then_) is inherently procedural when it's used with dplyr: it can be used to construct queries step-by-step. Once a test dplyr query has been executed, it is easy to inspect the results and add steps with the pipe operator to refine or expand the query.  
 
 ### Data mapping between R vs SQL data types
 
@@ -113,9 +113,7 @@ The [DBI specification](https://cran.r-project.org/web/packages/DBI/vignettes/sp
 
 ### PostgreSQL and connection parameters
 
-Important PITA.
-
-We use a PostgreSQL database server running in a Docker container for the database functions.  It is installed inside Docker, so you do not have to download or install it yourself. To connect to it, you have to define some parameters. These parameters are used in two places:
+An **important detail:** We use a PostgreSQL database server running in a Docker container for the database functions.  It is installed inside Docker, so you do not have to download or install it yourself. To connect to it, you have to define some parameters. These parameters are used in two places:
 
 1. When the Docker container is created, they're used to initialize the database, and
 2. Whenever we connect to the database, we need to specify them to authenticate.
