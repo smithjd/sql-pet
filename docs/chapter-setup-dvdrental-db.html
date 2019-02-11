@@ -25,7 +25,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
 
 
-<meta name="date" content="2019-02-09">
+<meta name="date" content="2019-02-11">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -720,7 +720,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)
 
 <span class="kw">cat</span>(docker_messages, <span class="dt">sep =</span> <span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)</code></pre>
-<pre><code>## Sending build context to Docker daemon  65.12MB
+<pre><code>## Sending build context to Docker daemon  65.42MB
 
 
 ## Step 1/4 : FROM postgres:10
@@ -763,7 +763,7 @@ docker_cmd &lt;-<span class="st"> </span><span class="kw">glue</span>(
 )</code></pre>
 <p>If you are curious you can paste <code>docker_cmd</code> into a terminal window after the command ‘docker’:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, docker_cmd, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">TRUE</span>)</code></pre>
-<pre><code>## [1] &quot;ff3f1bc166cee7724eb382bd591e9a5a8c6b09e8cf68e0110f6e1e1c44c4a9e5&quot;</code></pre>
+<pre><code>## [1] &quot;57b9d5499fd741ec45ec33c84638e9b9c728bfe56b9683fb6d9ae19ef60663db&quot;</code></pre>
 </div>
 <div id="connect-to-postgresql-with-r" class="section level2">
 <h2><span class="header-section-number">6.6</span> Connect to PostgreSQL with R</h2>
@@ -815,8 +815,8 @@ docker_cmd &lt;-<span class="st"> </span><span class="kw">glue</span>(
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_docker_stop</span>(<span class="st">&quot;sql-pet&quot;</span>)</code></pre>
 <p>Show that the container still exists even though it’s not running</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_show_all_docker_containers</span>()</code></pre>
-<pre><code>## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## ff3f1bc166ce        postgres-dvdrental   &quot;docker-entrypoint.s…&quot;   8 seconds ago       Exited (0) Less than a second ago                       sql-pet</code></pre>
+<pre><code>## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                    PORTS               NAMES
+## 57b9d5499fd7        postgres-dvdrental   &quot;docker-entrypoint.s…&quot;   8 seconds ago       Exited (0) 1 second ago                       sql-pet</code></pre>
 <p>Next time, you can just use this command to start the container:</p>
 <blockquote>
 <p><code>sp_docker_start(&quot;sql-pet&quot;)</code></p>

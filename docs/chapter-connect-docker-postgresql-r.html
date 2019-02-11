@@ -25,7 +25,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
 
 
-<meta name="date" content="2019-02-09">
+<meta name="date" content="2019-02-11">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -698,9 +698,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Docker commands can be run from a terminal (e.g., the Rstudio Terminal pane) or with a <code>system2()</code> command. (We discuss the diffeent ways of interacting with Docker and other elements in your environment in a <a href="#your-local-environment">separate chapter</a>.) The necessary functions to start, stop Docker containers and do other busy work are provided in the <code>sqlpetr</code> package. As time permits and curiosity dictates, feel free to look at those functions to see how they work.</p>
 <p>Check that Docker is up and running:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_check_that_docker_is_up</span>()</code></pre>
-<pre><code>## [1] &quot;Docker is up, running these containers:&quot;                                                                                                     
-## [2] &quot;CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS              PORTS                    NAMES&quot;    
-## [3] &quot;d40de8eb6cfa        postgres-dvdrental   \&quot;docker-entrypoint.s…\&quot;   6 minutes ago       Up 5 minutes        0.0.0.0:5432-&gt;5432/tcp   sql-pet&quot;</code></pre>
+<pre><code>## [1] &quot;Docker is up but running no containers&quot;</code></pre>
 </div>
 <div id="clean-up-if-appropriate" class="section level2">
 <h2><span class="header-section-number">5.2</span> Clean up if appropriate</h2>
@@ -716,7 +714,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_check_that_docker_is_up</span>()</code></pre>
 <pre><code>## [1] &quot;Docker is up, running these containers:&quot;                                                                                                       
 ## [2] &quot;CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES&quot;   
-## [3] &quot;f2b1c5911998        postgres:10         \&quot;docker-entrypoint.s…\&quot;   1 second ago        Up Less than a second   0.0.0.0:5432-&gt;5432/tcp   cattle&quot;</code></pre>
+## [3] &quot;9ae5fbd4d5f7        postgres:10         \&quot;docker-entrypoint.s…\&quot;   1 second ago        Up Less than a second   0.0.0.0:5432-&gt;5432/tcp   cattle&quot;</code></pre>
 </div>
 <div id="connect-read-and-write-to-postgresql-from-r" class="section level2">
 <h2><span class="header-section-number">5.3</span> Connect, read and write to PostgreSQL from R</h2>
