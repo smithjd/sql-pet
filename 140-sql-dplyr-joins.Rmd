@@ -51,14 +51,17 @@ con <- sp_get_postgres_connection(
 )
 ```
 
+```{r collapse=TRUE}
 ## Initialize Data
 
-```{r Initialize Data}
-
-
-dbExecute(  con,"delete from customer where customer_id >= 600;")
+dbExecute(con, "delete from film_category where film_id >= 1001;")
+dbExecute(con, "delete from rental where rental_id >= 16050;")
+dbExecute(con, "delete from inventory where film_id >= 1001;")
+dbExecute(con, "delete from film where film_id >= 1001;")
+dbExecute(con, "delete from customer where customer_id >= 600;")
 dbExecute(con, "delete from store where store_id > 2;")
 
+# Insert new customers
 dbExecute(
   con,
   "insert into customer 
@@ -72,6 +75,7 @@ dbExecute(
          ;"
 )
 
+# Insert new store record
 dbExecute(con, "ALTER TABLE store DISABLE TRIGGER ALL;")
 df <- data.frame(
     store_id = 10
@@ -81,7 +85,51 @@ df <- data.frame(
 )
 dbWriteTable(con, "store", value = df, append = TRUE, row.names = FALSE)
 dbExecute(con, "ALTER TABLE store ENABLE TRIGGER ALL;")
-dbGetQuery(con,"select * from store;")
+
+# Insert new film row.
+dbExecute(
+  con,
+  "insert into film
+  (film_id,title,description,release_year,language_id
+  ,rental_duration,rental_rate,length,replacement_cost,rating
+   ,last_update,special_features,fulltext)
+  values(1001,'Sophie''s Choice','orphaned language_id=10',2018,1
+        ,7,4.99,120,14.99,'PG'
+        ,now()::date,'{Trailers}','')
+        ,(1002,'Sophie''s Choice','orphaned language_id=10',2018,1
+        ,7,4.99,120,14.99,'PG'
+        ,now()::date,'{Trailers}','')
+  ;
+  ")
+
+# Insert Film Category
+dbExecute(
+  con,
+  "insert into film_category
+  (film_id,category_id,last_update)
+  values(1001,6,now()::date)
+       ,(1001,7,now()::date)
+       ,(1002,6,now()::date)
+       ,(1002,7,now()::date)
+  ;")  
+
+# Insert new film into inventory.
+dbExecute(
+  con,
+  "insert into inventory
+  (inventory_id,film_id,store_id,last_update)
+  values(4582,1001,1,now()::date)
+       ,(4583,1001,2,now()::date)
+  ;")  
+  
+# Insert new film rental record.
+dbExecute(
+  con,
+  "insert into rental
+  (rental_id,rental_date,inventory_id,customer_id,return_date,staff_id,last_update)
+  values(16050,now()::date - interval '1 week',4582,600,now()::date,1,now()::date)
+  ;")  
+  
 ```
 
 
@@ -179,6 +227,9 @@ The table below shows the two R join function call formats, standalone function 
 |     |customer_tbl %>% semi_join(rental_tbl, by = 'customer_id') |
 |anti |anti_join(customer_tbl, rental_tbl, by = 'customer_id')    |     |     |customer_tbl %>% semi_join(rental_tbl, by = 'customer_id') |
 
+
+
+
 ### Join Tables
 
 The dplyr join documentation describes two different types of joins, `mutating` and `filtering` joins.  For those coming to R with a SQL background, the mutating documentation is misleading in one respect.  Here is the inner_join documentation.
@@ -190,9 +241,29 @@ The dplyr join documentation describes two different types of joins, `mutating` 
     If there are multiple matches between x and y, all combination of the matches are returned.
 ```
 
-The misleading part is 'and all the columns from *x* and *y*.'  If the join column is `KEY`, SQL will return x.KEY and y.KEY.  Dplyr returns just KEY.  It appears that the KEY value comes from the driving table.  This is important if you are translating SQL to R because SQL developers will reference both columns x.KEY and y.KEY.  One needs to mutate the the y.KEY column.  This difference should become clear in the outer join examples.  
+The misleading part is 'and all the columns from *x* and *y*.'  If the join column is `KEY`, SQL will return x.KEY and y.KEY.  Dplyr returns just KEY, the KEY from the driving table.  This is important if you are translating SQL to R because SQL developers will reference both columns x.KEY and y.KEY.  One needs to mutate the the y.KEY column.  This difference should become clear in the outer join examples.  
 
-In the next couple of examples, we will use a small sample of the `customer` and `store` table data from the database to illustrate the diffent joins.  In the *_join verbs, the `by` and `suffix` parameters are included because it helps document the actual join and the source of join columns.
+In the next couple of examples, we will use a small sample of the `customer` and `store` table data from the database to illustrate the diffent joins.  In the *_join verbs, the `by` and `suffix` parameters are included because it helps document the actual join and the source of join columns.  If the suffix parameter is excluded, it defaults to .x to refer to the first table and .y for the second table.  If the dplyr pipe has many joins, the suffix parameter makes it clearer which table the column came from.
+
+In the next code block, we perform a Cartesian join to illustrate the default suffix behavior.  Note that every column that has a suffix of x or y except the key column and that the column values may or may not be the same based on the column name without the suffix.  If one has a lot of joins in the piple with tables that have many duplicate column names, it is hard to keep track of the source of the column.
+
+```{r}
+store_table <- DBI::dbReadTable(con, "store")
+store_table$key <- 1
+cartesian_join <- inner_join(store_table,store_table, by=('key'='key')) %>%
+  select(-key,-last_update.x,-last_update.y)
+sp_print_df(cartesian_join)
+```
+
+The suffix parameter helps distinguish the duplicate column names as shown in next example.
+
+```{r}
+cartesian_join2 <- inner_join(store_table,store_table, by=('key'='key')
+                              , suffix=c('.store1','.store2')) %>%
+  select(-key,-last_update.store1,-last_update.store2)
+  
+sp_print_df(cartesian_join2)
+```
 
 ## Natural Join Delayed Time Bomb
 
@@ -231,6 +302,7 @@ sp_print_df(stores)
 ### dplyr store_id distribution Exercise
 
 Execute and Review the output from the code block below.  Union and arrange the output to match the SQL output in the previous code block.  
+
 
 ```{r dplyr store_id distribution}
 customer_table <- DBI::dbReadTable(con, "customer")
