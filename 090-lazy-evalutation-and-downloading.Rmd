@@ -36,13 +36,13 @@ con <- sp_get_postgres_connection(
 
 By design, R is both a language and an interactive development environment (IDE).  As a language, R tries to be as efficient as possible.  As an IDE, R creates some guardrails to make it easy and safe to work with your data. For example `getOption("max.print")` prevents R from printing more rows of data than you want to handle in an interactive session, with a default of `r getOption("max.print")` lines, which may or may not suit you.
 
-On the other hand SQL is a *"Structured Query Language (SQL): a standard computer language for relational database management and data manipulation."* ^[https://www.techopedia.com/definition/1245/structured-query-language-sql]. SQL has has various database-specific Interactive Development Environments (IDEs): for PostgreSQL it's [pgAdmin](https://www.pgadmin.org/).  Roger Peng explains in [R Programming for Data Science](https://bookdown.org/rdpeng/rprogdatascience/history-and-overview-of-r.html#basic-features-of-r) that:
+On the other hand SQL is a *"Structured Query Language (SQL): a standard computer language for relational database management and data manipulation."* ^[https://www.techopedia.com/definition/1245/structured-query-language-sql]. SQL has various database-specific Interactive Development Environments (IDEs): for PostgreSQL it's [pgAdmin](https://www.pgadmin.org/).  Roger Peng explains in [R Programming for Data Science](https://bookdown.org/rdpeng/rprogdatascience/history-and-overview-of-r.html#basic-features-of-r) that:
 
 > R has maintained the original S philosophy, which is that it provides a language that is both useful for interactive work, but contains a powerful programming language for developing new tools. 
 
-This is complicated when R interacts with SQL.  In [the vignette for dbplyr](https://cran.r-project.org/web/packages/dbplyr/vignettes/dbplyr.html) Hadley Wikham explains:
+This is complicated when R interacts with SQL.  In a [vignette for dbplyr](https://cran.r-project.org/web/packages/dbplyr/vignettes/dbplyr.html) Hadley Wikham explains:
 
-> The most important difference between ordinary data frames and remote database queries is that your R code is translated into SQL and executed in the database on the remote server, not in R on your local machine. When working with databases, dplyr tries to be as lazy as possible:
+> The most important difference between ordinary data frames and remote database queries is that your R code is translated into SQL and executed in the database on the remote server, not in R on your local machine. When working with databases, `dplyr`tries to be as lazy as possible:
 > 
 > * It never pulls data into R unless you explicitly ask for it.
 > 
@@ -67,47 +67,64 @@ Essentially "Lazy evaluation is a programming strategy that allows a symbol to b
 
 ## Lazy evaluation and lazy queries
 
-### Dplyr connection objects
-As introduced in the previous chapter, the `dplyr::tbl` function creates  an object that might **look** like a data frame in that when you enter it on the command line, it prints a bunch of rows from the dbms table.  But is actually a **list** object that `dplyr` uses for constructing queries and retrieving data from the DBMS.  
+### `dplyr` connection objects
+As introduced in the previous chapter, the `dplyr::tbl` function creates an object that might **look** like a data frame in that when you enter it on the command line, it prints a bunch of rows from the dbms table.  But is actually a **list** object that `dplyr` uses for constructing queries and retrieving data from the DBMS.  
 
 The following code illustrates these issues.  The `dplyr::tbl` function creates the connection object that we store in an object named `rental_table`:
 ```{r}
 rental_table <- dplyr::tbl(con, "rental")
 ```
-At first glance, it kind of **looks** like a data frame although it only prints 10 of the table's 16,044 rows:
+
+At first glance, it _acts_ like a data frame when you print it, although it only prints 10 of the table's 16,044 rows:
 ```{r}
 rental_table
 ```
-But consider the structure of  `rental_table`:
+
+However, notice that the first output line shows `??`, rather than providing the number of rows in the table. Similarly, the next to last line shows:
+```
+    ... with more rows, and 3 more variables
+```
+whereas the output for a normal `tbl` of this rental data would say:
+```
+    ... with 16,034 more rows, and 3 more variables
+```
+
+So even though `rental_table` is a `tbl`:
+```{r}
+class(rental_table)
+```
+
+It is not just a normal `tbl` of data. We can see that from the structure of `rental_table`:
 ```{r}
 str(rental_table)
 ```
 
-It has two rows.  The first row contains all the information in the `con` object, which contains information about all the tables and objects in the database:
+It has only _two_ rows!  The first row contains all the information in the `con` object, which contains information about all the tables and objects in the database:
 ```{r}
 rental_table$src$con@typnames$typname[380:437]
 ```
 The second row contains a list of the columns in the `rental` table, among other things:
-
 ```{r}
 rental_table$ops$vars
 ```
-
-To illustrate the different issues involved in data retrieval, we create equivalent connection objects to link to two other tables.  
-```{r}
-staff_table <- dplyr::tbl(con, "staff") 
-```
-The 'staff' table has 2 rows
-
-```{r}
-customer_table <- dplyr::tbl(con, "customer") 
-```
-The 'customer' table has 599 rows
+`rental_table` holds information needed to get the data from the 'rental' table, but `rental_table` does not hold the data itself. In the following sections, we will examine more closely this relationship between the `rental_table` object and the data in the database's 'rental' table.
 
 ## When does a lazy query trigger data retrieval?
 
 ### Create a black box query for experimentation
-Here is a typical string of dplyr verbs strung together with the magrittr `%>%` command that will be used to tease out the several different behaviors that a lazy query has when passed to different R functions.  This query joins three connection objects into a query we'll call `Q`:
+
+To illustrate the different issues involved in data retrieval, we create more connection objects to link to two other tables.  
+```{r}
+staff_table <- dplyr::tbl(con, "staff") 
+```
+The 'staff' table has 2 rows.
+
+```{r}
+customer_table <- dplyr::tbl(con, "customer") 
+```
+The 'customer' table has 599 rows.
+
+Here is a typical string of `dplyr`verbs strung together with the magrittr `%>%` pipe command that will be used to tease out the several different behaviors that a lazy query has when passed to different R functions.  This query joins three connection objects into a query we'll call `Q`:
 
 ```{r}
 Q <- rental_table %>%
@@ -120,13 +137,20 @@ Q <- rental_table %>%
 ```
 
 ### Experiment overview
-Think of `Q` as a black box for the moment.  The following examples will show how `Q` is interpreted differently by different functions. In this table, a single green check indicates that some rows are returned, two green checks indicates that all the rows are returned, and the red X indicates that no rows have are returned.
+Think of `Q` as a black box for the moment.  The following examples will show how `Q` is interpreted differently by different functions. 
+
+**Notation**
+
+* ![](screenshots/green-check.png): A single green check indicates that some rows are returned.
+* ![](screenshots/green-check.png) ![](screenshots/green-check.png): Two green checks indicate that all the rows are returned.
+* ![](screenshots/red-x.png): The red X indicates that no rows are returned.
 
 > R code | Result 
 > -------| --------------
 > [`Q %>% print()`](#lazy_q_print) | ![](screenshots/green-check.png) Prints x rows; same as just entering `Q`  
-> [`Q %>% as.tibble()`](#Q-as-tibble) | ![](screenshots/green-check.png)![](screenshots/green-check.png) Forces `Q` to be a tibble
+> [`Q %>% as_tibble()`](#Q-as-tibble) | ![](screenshots/green-check.png)![](screenshots/green-check.png) Forces `Q` to be a tibble
 > [`Q %>% head()`](#lazy_q_head) | ![](screenshots/green-check.png) Prints the first 6 rows 
+> [`Q %>% tail()`](#lazy_q_tail) | ![](screenshots/red-x.png) Error: tail() is not supported by sql sources 
 > [`Q %>% length()`](#lazy_q_length) |  ![](screenshots/red-x.png) Counts the rows in `Q`
 > [`Q %>% str()`](#lazy_q_str) |  ![](screenshots/red-x.png)Shows the top 3 levels of the **object** `Q` 
 > [`Q %>% nrow()`](#lazy_q_nrow) | ![](screenshots/red-x.png) **Attempts** to determine the number of rows 
@@ -138,11 +162,11 @@ Think of `Q` as a black box for the moment.  The following examples will show ho
 >
 > 
 
-(The next chapter will discuss how to build queries and how to explore intermediate steps.)
+The next chapter will discuss how to build queries and how to explore intermediate steps. But first, the following subsections provide a more detailed discussion of each row in the preceding table.
 
 ### Q %>% print(){#lazy_q_print}
 
-Remember that `Q %>% print()` is equivalent to `print(Q)` and the same as just entering `Q` on the command line.  We use the magrittr pipe operator here because chaining functions highlights how the same object behaves differently in each use.
+Remember that `Q %>% print()` is equivalent to `print(Q)` and the same as just entering `Q` on the command line.  We use the magrittr pipe operator here, because chaining functions highlights how the same object behaves differently in each use.
 ```{r}
 Q %>% print()
 ```
@@ -155,13 +179,13 @@ Q %>% print()
 >   \<dttm\>              \<chr\>                        \<chr\>
 >
 
-R has not determined how many rows are left to retrieve as it notes `... with more rows`. 
+R has not determined how many rows are left to retrieve as it shows with `[?? x 3]` and `... with more rows` in the data summary. 
 
-### Q %>% as.tibble() {#lazy_q_as-tibble}
+### Q %>% as_tibble() {#lazy_q_as-tibble}
 
-![](screenshots/green-check.png) ![](screenshots/green-check.png) In contrast to `print()`, the `as.tibble()` function causes R to download the whole table, using tibble's default of displaying only the first 10 rows.
+![](screenshots/green-check.png) ![](screenshots/green-check.png) In contrast to `print()`, the `as_tibble()` function causes R to download the whole table, using tibble's default of displaying only the first 10 rows.
 ```{r}
-Q %>% as.tibble()
+Q %>% as_tibble()
 ```
 
 ### Q %>% head() {#lazy_q_head}
@@ -169,6 +193,13 @@ Q %>% as.tibble()
 ![](screenshots/green-check.png) The `head()` function is very similar to print but has a different "`max.print`" value.
 ```{r}
 Q %>% head()
+```
+
+### Q %>% tail() {#lazy_q_tail}
+
+![](screenshots/red-x.png) Produces an error, because `Q` does not hold all of the data, so it is not possible to list the last few items from the table:
+```{r}
+Q %>% tail()
 ```
 
 ### Q %>% length() {#lazy_q_length}
@@ -215,7 +246,7 @@ The `collect` function triggers the creation of a tibble and controls the number
 Q %>% show_query()
 
 ```
-Hand-written SQL code to do the same job will probably look a lot nicer and could be more efficient, but functionally dplyr does the job.
+Hand-written SQL code to do the same job will probably look a lot nicer and could be more efficient, but functionally `dplyr` does the job.
 
 ### Qc <- Q %>% count(customer_email) {#lazy_q_build}
 
@@ -229,7 +260,7 @@ Qc <- Q %>% count(customer_email, sort = TRUE)
 Qc
 ```
 
-See more example of lazy execution can be found [Here](https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html).
+More examples of lazy execution can be found [here](https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html).
 
 ```{r}
 dbDisconnect(con)
@@ -239,5 +270,6 @@ sp_docker_stop("sql-pet")
 
 ## Other resources
 
-  * Benjamin S. Baumer, A Grammar for Reproducible and Painless Extract-Transform-Load Operations on Medium Data: [https://arxiv.org/pdf/1708.07073](https://arxiv.org/pdf/1708.07073) 
-
+* Benjamin S. Baumer. 2017. A Grammar for Reproducible and Painless Extract-Transform-Load Operations on Medium Data. [https://arxiv.org/abs/1708.07073](https://arxiv.org/abs/1708.07073) 
+* dplyr Reference documentation: Remote tables. [https://dplyr.tidyverse.org/reference/index.html#section-remote-tables](https://dplyr.tidyverse.org/reference/index.html#section-remote-tables)
+* Data Carpentry. SQL Databases and R. [https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html](https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html)
