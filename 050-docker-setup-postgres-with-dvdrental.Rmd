@@ -54,11 +54,24 @@ sp_docker_images_tibble()
 Now we can run the image in a container and connect to the database. To run the
 image we use an `sqlpetr` function called [`sp_pg_docker_run`](https://smithjd.github.io/sqlpetr/reference/sp_pg_docker_run.html)
 
+When the image runs in the container, we can mount the current working directory
+into a path in the container. You'll see this in action in a future chapter. 
+Docker will create this path if it doesn't exist.
+
+To specify the path, set the parameter `mount_here_as` to the name you want.
+Rules for the name:
+
+* If you don't want to mount into the container, specify `NULL`. This is the 
+default!
+* The name must start with a `/` and be a valid absolute path.
+The name should contain only slashes, letters, numbers and underscores. Other characters may or may not work. The `snakecase` package is your friend.
+
 ```{r}
 sp_pg_docker_run(
   container_name = "sql-pet",
   image_tag = "postgres-dvdrental",
-  postgres_password = "postgres"
+  postgres_password = "postgres",
+  mount_here_as = "/petdir"
 )
 ```
 
@@ -67,8 +80,6 @@ Did it work?
 sp_docker_containers_tibble()
 
 ```
-
-
 
 ## Connect to PostgreSQL with R
 
@@ -88,7 +99,8 @@ con <- sp_get_postgres_connection(
 List the tables in the database and the fields in one of those tables.  
 ```{r }
 dbListTables(con)
-cat("\n\n")
+```
+```{r }
 dbListFields(con, "rental")
 ```
 
