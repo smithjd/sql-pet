@@ -25,7 +25,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
 
 
-<meta name="date" content="2019-02-11">
+<meta name="date" content="2019-02-12">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -79,7 +79,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(title);
+  { content: attr(data-line-number);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -704,17 +704,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_make_simple_pg</span>(<span class="st">&quot;cattle&quot;</span>)</code></pre>
 <p>The first time you run this, Docker downloads the PostgreSQL image, which takes a bit of time. Did it work? The following command shows that a container named <code>cattle</code> is running <code>postgres:10</code>.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_check_that_docker_is_up</span>()</code></pre>
-<pre><code>## [1] &quot;Docker is up, running these containers:&quot;                                                                                                       
-## [2] &quot;CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES&quot;   
-## [3] &quot;af35b8893865        postgres:10         \&quot;docker-entrypoint.s…\&quot;   1 second ago        Up Less than a second   0.0.0.0:5432-&gt;5432/tcp   cattle&quot;</code></pre>
+<pre><code>## [1] &quot;Docker is up, running these containers:&quot;                                                                                                                
+## [2] &quot;CONTAINER ID        IMAGE                   COMMAND                  CREATED                  STATUS                  PORTS                    NAMES&quot;   
+## [3] &quot;8c9d4ac2e892        docker.io/postgres:10   \&quot;docker-entrypoint...\&quot;   Less than a second ago   Up Less than a second   0.0.0.0:5432-&gt;5432/tcp   cattle&quot;</code></pre>
 <p>For more details, our package <code>sqlpetr</code> has a function
 <a href="https://smithjd.github.io/sqlpetr/reference/sp_docker_containers_tibble.html"><code>sp_docker_containers_tibble</code></a> that returns a tibble of the containers in the system:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_docker_containers_tibble</span>()</code></pre>
-<pre><code>## # A tibble: 1 x 12
-##   container_id image command created_at created ports status size  names
-##   &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;
-## 1 af35b8893865 post… docker… 2019-02-1… 2 seco… 0.0.… Up Le… 0B (… catt…
-## # … with 3 more variables: labels &lt;chr&gt;, mounts &lt;chr&gt;, networks &lt;chr&gt;</code></pre>
+<pre><code>## Warning: 1 parsing failure.
+## row col  expected     actual         file
+##   1  -- 1 columns 12 columns literal data</code></pre>
+<pre><code>## # A tibble: 1 x 1
+##   container_id_image_command_created_at_created_ports_status_size_names_la…
+##   &lt;chr&gt;                                                                    
+## 1 8c9d4ac2e892</code></pre>
 </div>
 <div id="connecting-reading-and-writing-to-postgresql-from-r" class="section level2">
 <h2><span class="header-section-number">5.3</span> Connecting, reading and writing to PostgreSQL from R</h2>
@@ -757,8 +759,8 @@ are kept private.</p>
 <pre class="sourceCode r"><code class="sourceCode r">mtcars_df &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbReadTable</span>(con, <span class="st">&quot;mtcars&quot;</span>)</code></pre>
 <p>Show a few rows:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(mtcars_df))</code></pre>
-<div id="htmlwidget-7fa700eb3316e6543082" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-7fa700eb3316e6543082">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[21,21,22.8,21.4,18.7,18.1],[6,6,4,6,8,6],[160,160,108,258,360,225],[110,110,93,110,175,105],[3.9,3.9,3.85,3.08,3.15,2.76],[2.62,2.875,2.32,3.215,3.44,3.46],[16.46,17.02,18.61,19.44,17.02,20.22],[0,0,1,1,0,1],[1,1,1,0,0,0],[4,4,4,3,3,3],[4,4,1,1,2,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>mpg<\/th>\n      <th>cyl<\/th>\n      <th>disp<\/th>\n      <th>hp<\/th>\n      <th>drat<\/th>\n      <th>wt<\/th>\n      <th>qsec<\/th>\n      <th>vs<\/th>\n      <th>am<\/th>\n      <th>gear<\/th>\n      <th>carb<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6,7,8,9,10,11]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-2809d9247bcfd6e0ca07" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2809d9247bcfd6e0ca07">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[21,21,22.8,21.4,18.7,18.1],[6,6,4,6,8,6],[160,160,108,258,360,225],[110,110,93,110,175,105],[3.9,3.9,3.85,3.08,3.15,2.76],[2.62,2.875,2.32,3.215,3.44,3.46],[16.46,17.02,18.61,19.44,17.02,20.22],[0,0,1,1,0,1],[1,1,1,0,0,0],[4,4,4,3,3,3],[4,4,1,1,2,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>mpg<\/th>\n      <th>cyl<\/th>\n      <th>disp<\/th>\n      <th>hp<\/th>\n      <th>drat<\/th>\n      <th>wt<\/th>\n      <th>qsec<\/th>\n      <th>vs<\/th>\n      <th>am<\/th>\n      <th>gear<\/th>\n      <th>carb<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6,7,8,9,10,11]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <div id="clean-up" class="section level2">
@@ -773,7 +775,7 @@ are kept private.</p>
 <p>Verify that <code>cattle</code> is gone:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_docker_containers_tibble</span>()</code></pre>
 <pre><code>## # A tibble: 0 x 0</code></pre>
-<p>If we just <strong>stop</strong> the Docker container but don’t remove it (as we did with the <code>sp_docker_remove_container("cattle")</code> command), the <code>cattle</code> container will persist and we can start it up again later with <code>sp_docker_start("cattle")</code>. In that case, <code>mtcars</code> would still be there and we could retrieve it from PostgreSQL again. Since <code>sp_docker_remove_container("cattle")</code> has removed it, the updated database has been deleted. (There are enough copies of <code>mtcars</code> in the world, so no great loss.)</p>
+<p>If we just <strong>stop</strong> the Docker container but don’t remove it (as we did with the <code>sp_docker_remove_container(&quot;cattle&quot;)</code> command), the <code>cattle</code> container will persist and we can start it up again later with <code>sp_docker_start(&quot;cattle&quot;)</code>. In that case, <code>mtcars</code> would still be there and we could retrieve it from PostgreSQL again. Since <code>sp_docker_remove_container(&quot;cattle&quot;)</code> has removed it, the updated database has been deleted. (There are enough copies of <code>mtcars</code> in the world, so no great loss.)</p>
 
 </div>
 </div>
