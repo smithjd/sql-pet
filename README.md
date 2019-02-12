@@ -18,8 +18,8 @@
 
 ## Book
 
-* Tutorial materials from this repo go in the [R, Databases and Docker](https://smithjd.github.io/sql-pet/).
-* Each chapter is written so it can be executed independently (once the Docker container is built in Chapter 5). We are using a [Knit-then-Merge](https://bookdown.org/yihui/bookdown/new-session.html) approach so each chapter of the book can be Knitted separately.  
+* Tutorial materials from this repo go in the online book, "[R, Databases and Docker](https://smithjd.github.io/sql-pet/)".
+* Each chapter is written so it can be executed independently (once the Docker container is built in Chapter 5). We are using a [Knit-then-Merge](https://bookdown.org/yihui/bookdown/new-session.html) approach, so each chapter of the book can be Knitted separately.  
 * The book depends on the `sqlrpetr` package.  It can be downloaded using `devtools::install_github("smithjd/sqlpetr")`
 
 ## Prerequisites
@@ -27,28 +27,28 @@ You will need:
 
 * A computer running 
   + Windows (Windows 7 64-bit or late - Windows 10-Pro is recommended)
-  + MacOS
-  + Linux (any Linux distro that will run Docker Community Edition, R and RStudio will work)
+  + macOS
+  + Linux (any Linux distro that will run [Docker Community Edition](https://hub.docker.com/search/?type=edition&offering=community), [R](https://ftp.osuosl.org/pub/cran/), and [RStudio](https://www.rstudio.com/products/rstudio/download/) will work)
 * Current versions of [R and RStudio](https://www.datacamp.com/community/tutorials/installing-R-windows-mac-ubuntu)
-* Docker 
+* [Docker](https://www.docker.com/)
 
 ## Packages used in the book
 
 Here are the R packages that are used in this project and are discussed in the book:
 
-* DBI
-* DiagrammeR
-* RPostgres
-* dbplyr
-* devtools
-* downloader
-* glue
-* here
-* knitr
-* skimr
-* tidyverse
-* sqlpetr (installs with: `devtools::install_github("smithjd/sqlpetr")`)
-* bookdown
+* [DBI](https://cran.r-project.org/package=DBI)
+* [DiagrammeR](https://cran.r-project.org/package=DiagrammeR)
+* [RPostgres](https://cran.r-project.org/package=RPostgres)
+* [dbplyr](https://cran.r-project.org/package=dbplyr)
+* [devtools](https://cran.r-project.org/package=devtools)
+* [downloader](https://cran.r-project.org/package=downloader)
+* [glue](https://cran.r-project.org/package=glue)
+* [here](https://cran.r-project.org/package=here)
+* [knitr](https://cran.r-project.org/package=knitr)
+* [skimr](https://cran.r-project.org/package=skimr)
+* [tidyverse](https://cran.r-project.org/package=tidyverse)
+* [sqlpetr](https://github.com/smithjd/sqlpetr) (installs with: `devtools::install_github("smithjd/sqlpetr")`)
+* [bookdown](https://cran.r-project.org/package=bookdown)
 
 ## How to contribute
 If you'd like to contribute to this project, start by searching through the [issues](https://github.com/smithjd/sql-pet/issues) and [pull requests](https://github.com/smithjd/sql-pet/pulls) to see whether someone else has already raised a similar idea or question.
