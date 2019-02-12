@@ -2,7 +2,7 @@
 
 **Table of Contents**
 
-1. [Projects](#project-organization)
+1. [Project organization](#project-organization)
 1. [Book](#book)
 1. [Prerequisites](#prerequisites)
 1. [Packages used in the book](#packages-used-in-the-book)
@@ -60,7 +60,7 @@ If you don't see your idea listed, and you think it fits into the goals of this 
 
 We provide more guidelines for coding style and developer's workflow in the [Contributing](https://github.com/smithjd/sql-pet/blob/master/Contributing.md) document. The [project wiki](https://github.com/smithjd/sql-pet/wiki) is also a good source of information for developers.
 
-To compile the book, you need to additionally [install webshot](https://bookdown.org/yihui/bookdown/html-widgets.html) so that HTMLwidgets are displayed properly:
+To compile the book, you need to additionally [install webshot](https://bookdown.org/yihui/bookdown/html-widgets.html), so that HTMLwidgets are displayed properly:
 
 ```
    install.packages("webshot")
