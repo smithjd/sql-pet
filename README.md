@@ -4,8 +4,8 @@
 
 1. [Projects](#project-organization)
 1. [Book](#book)
-1. [Book](#prerequisites)
-1. [Book](#packages-used-in-the-book)
+1. [Prerequisites](#prerequisites)
+1. [Packages used in the book](#packages-used-in-the-book)
 1. [How to contribute](#how-to-contribute)
 1. [Code of Conduct](#code-of-conduct)
 1. [License](#license)
