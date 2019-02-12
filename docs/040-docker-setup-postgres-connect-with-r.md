@@ -11,7 +11,8 @@ Please install the `sqlpetr` package if not already installed:
 
 ```r
 library(devtools)
-if (!require(sqlpetr)) devtools::install_github("smithjd/sqlpetr")
+if (!require(sqlpetr)) devtools::install_github("smithjd/sqlpetr", 
+                                                build_opts = "")
 ```
 Note that when you install the package the first time, it will ask you to update the packages it uses and that can take some time.
 
@@ -37,17 +38,11 @@ sp_check_that_docker_is_up()
 ```
 
 ```
-## [1] "Docker is up, running these containers:"                                                                                                     
-## [2] "CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS              PORTS                    NAMES"    
-<<<<<<< HEAD
-## [3] "d40de8eb6cfa        postgres-dvdrental   \"docker-entrypoint.s…\"   6 minutes ago       Up 5 minutes        0.0.0.0:5432->5432/tcp   sql-pet"
-=======
-## [3] "d5031ca48fed        postgres-dvdrental   \"docker-entrypoint.s…\"   15 hours ago        Up 15 hours         0.0.0.0:5432->5432/tcp   sql-pet"
->>>>>>> master
+## [1] "Docker is up but running no containers"
 ```
 
 ## Clean up if appropriate
-Remove the `cattle` and `sql-pet` containers if they exist (e.g., from prior experiments).  
+Force-remove the `cattle` and `sql-pet` containers if they exist (e.g., from prior experiments).  
 
 ```r
 sp_docker_remove_container("cattle")
@@ -70,10 +65,7 @@ We name containers `cattle` for "throw-aways" and `pet` for ones we treasure and
 ```r
 sp_make_simple_pg("cattle")
 ```
-
-Docker returns a long string of numbers.  If you are running this command for the first time, Docker downloads the PostgreSQL image, which takes a bit of time.
-
-The following command shows that a container named `cattle` is running `postgres:10`.  `postgres` is waiting for a connection:
+The first time you run this, Docker downloads the PostgreSQL image, which takes a bit of time. Did it work? The following command shows that a container named `cattle` is running `postgres:10`.
 
 ```r
 sp_check_that_docker_is_up()
@@ -82,26 +74,54 @@ sp_check_that_docker_is_up()
 ```
 ## [1] "Docker is up, running these containers:"                                                                                                       
 ## [2] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES"   
-<<<<<<< HEAD
-## [3] "f2b1c5911998        postgres:10         \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
-=======
-## [3] "3c7a3a2e7761        postgres:10         \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
->>>>>>> master
+## [3] "af35b8893865        postgres:10         \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
 ```
-## Connect, read and write to PostgreSQL from R
 
+For more details, our package `sqlpetr` has a function
+[`sp_docker_containers_tibble`](https://smithjd.github.io/sqlpetr/reference/sp_docker_containers_tibble.html) that returns a tibble of the containers in the system:
 
-### Connect with PostgreSQL
-
-Connect to PostgreSQL using the `sp_get_postgres_connection` function:
 
 ```r
-con <- sp_get_postgres_connection(user = "postgres",
-                         password = "postgres",
-                         dbname = "postgres",
-                         seconds_to_test = 30)
+sp_docker_containers_tibble()
 ```
-Notice that we are using the PostgreSQL default username and password at this point and that it's in plain text. That is bad practice because user credentials should not be shared in open code like that.  A [subsequent chapter](#dbms-login) demonstrates how to store and use credentials to access the dbms so that they are kept private.
+
+```
+## # A tibble: 1 x 12
+##   container_id image command created_at created ports status size  names
+##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
+## 1 af35b8893865 post… docker… 2019-02-1… 2 seco… 0.0.… Up Le… 0B (… catt…
+## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
+```
+
+
+## Connecting, reading and writing to PostgreSQL from R
+
+
+### Connecting to PostgreSQL
+The [`sp_make_simple_pg`](https://smithjd.github.io/sqlpetr/reference/sp_make_simple_pg.html) function we called above created a container from the
+`postgres:10` library image from Docker Hub. As part of the process, it set the
+password for the PostgreSQL database superuser `postgres` to the value 
+"postgres".
+
+For simplicity, we are using a weak password at this point and it's shown here 
+and in the code in plain text. That is bad practice because user credentials 
+should not be shared in open code like that.  A [subsequent chapter](#dbms-login)
+demonstrates how to store and use credentials to access the DBMS so that they 
+are kept private.
+
+We connect to PostgreSQL using the `sp_get_postgres_connection` function:
+
+
+```r
+con <- sp_get_postgres_connection(
+  host = "localhost",
+  port = 5432,
+  user = "postgres",
+  password = "postgres",
+  dbname = "postgres",
+  seconds_to_test = 30
+)
+```
 
 Make sure that you can connect to the PostgreSQL database that you have just started. If you have been executing the code from this tutorial, the database will not contain any tables yet:
 
@@ -156,8 +176,8 @@ Show a few rows:
 sp_print_df(head(mtcars_df))
 ```
 
-<!--html_preserve--><div id="htmlwidget-1d9f9b9fdca3023baa83" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-1d9f9b9fdca3023baa83">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[21,21,22.8,21.4,18.7,18.1],[6,6,4,6,8,6],[160,160,108,258,360,225],[110,110,93,110,175,105],[3.9,3.9,3.85,3.08,3.15,2.76],[2.62,2.875,2.32,3.215,3.44,3.46],[16.46,17.02,18.61,19.44,17.02,20.22],[0,0,1,1,0,1],[1,1,1,0,0,0],[4,4,4,3,3,3],[4,4,1,1,2,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>mpg<\/th>\n      <th>cyl<\/th>\n      <th>disp<\/th>\n      <th>hp<\/th>\n      <th>drat<\/th>\n      <th>wt<\/th>\n      <th>qsec<\/th>\n      <th>vs<\/th>\n      <th>am<\/th>\n      <th>gear<\/th>\n      <th>carb<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6,7,8,9,10,11]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-7fa700eb3316e6543082" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-7fa700eb3316e6543082">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[21,21,22.8,21.4,18.7,18.1],[6,6,4,6,8,6],[160,160,108,258,360,225],[110,110,93,110,175,105],[3.9,3.9,3.85,3.08,3.15,2.76],[2.62,2.875,2.32,3.215,3.44,3.46],[16.46,17.02,18.61,19.44,17.02,20.22],[0,0,1,1,0,1],[1,1,1,0,0,0],[4,4,4,3,3,3],[4,4,1,1,2,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>mpg<\/th>\n      <th>cyl<\/th>\n      <th>disp<\/th>\n      <th>hp<\/th>\n      <th>drat<\/th>\n      <th>wt<\/th>\n      <th>qsec<\/th>\n      <th>vs<\/th>\n      <th>am<\/th>\n      <th>gear<\/th>\n      <th>carb<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6,7,8,9,10,11]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ## Clean up
 
@@ -166,6 +186,7 @@ Afterwards, always disconnect from the dbms:
 ```r
 DBI::dbDisconnect(con)
 ```
+
 Tell Docker to stop the `cattle` container:
 
 ```r
@@ -180,6 +201,16 @@ sp_docker_remove_container("cattle")
 
 ```
 ## [1] 0
+```
+
+Verify that `cattle` is gone:
+
+```r
+sp_docker_containers_tibble()
+```
+
+```
+## # A tibble: 0 x 0
 ```
 
 If we just **stop** the Docker container but don't remove it (as we did with the `sp_docker_remove_container("cattle")` command), the `cattle` container will persist and we can start it up again later with `sp_docker_start("cattle")`.  In that case, `mtcars` would still be there and we could retrieve it from PostgreSQL again.  Since `sp_docker_remove_container("cattle")`  has removed it, the updated database has been deleted.  (There are enough copies of `mtcars` in the world, so no great loss.)

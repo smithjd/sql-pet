@@ -25,7 +25,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
 
 
-<meta name="date" content="2019-02-09">
+<meta name="date" content="2019-02-11">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -79,7 +79,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -189,8 +189,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html"><i class="fa fa-check"></i><b>5</b> Connecting Docker, PostgreSQL, and R</a><ul>
 <li class="chapter" data-level="5.1" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#verify-that-docker-is-running"><i class="fa fa-check"></i><b>5.1</b> Verify that Docker is running</a></li>
 <li class="chapter" data-level="5.2" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#clean-up-if-appropriate"><i class="fa fa-check"></i><b>5.2</b> Clean up if appropriate</a></li>
-<li class="chapter" data-level="5.3" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#connect-read-and-write-to-postgresql-from-r"><i class="fa fa-check"></i><b>5.3</b> Connect, read and write to PostgreSQL from R</a><ul>
-<li class="chapter" data-level="5.3.1" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#connect-with-postgresql"><i class="fa fa-check"></i><b>5.3.1</b> Connect with PostgreSQL</a></li>
+<li class="chapter" data-level="5.3" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#connecting-reading-and-writing-to-postgresql-from-r"><i class="fa fa-check"></i><b>5.3</b> Connecting, reading and writing to PostgreSQL from R</a><ul>
+<li class="chapter" data-level="5.3.1" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#connecting-to-postgresql"><i class="fa fa-check"></i><b>5.3.1</b> Connecting to PostgreSQL</a></li>
 <li class="chapter" data-level="5.3.2" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#interact-with-postgresql"><i class="fa fa-check"></i><b>5.3.2</b> Interact with PostgreSQL</a></li>
 </ul></li>
 <li class="chapter" data-level="5.4" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#clean-up"><i class="fa fa-check"></i><b>5.4</b> Clean up</a></li>
@@ -199,7 +199,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.1" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html#overview"><i class="fa fa-check"></i><b>6.1</b> Overview</a></li>
 <li class="chapter" data-level="6.2" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html#verify-that-docker-is-up-and-running"><i class="fa fa-check"></i><b>6.2</b> Verify that Docker is up and running</a></li>
 <li class="chapter" data-level="6.3" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html#clean-up-if-appropriate-1"><i class="fa fa-check"></i><b>6.3</b> Clean up if appropriate</a></li>
-<li class="chapter" data-level="6.4" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html#build-the-pet-sql-docker-image"><i class="fa fa-check"></i><b>6.4</b> Build the pet-sql Docker Image</a></li>
+<li class="chapter" data-level="6.4" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html#build-the-pet-sql-docker-image"><i class="fa fa-check"></i><b>6.4</b> Build the pet-sql Docker image</a></li>
 <li class="chapter" data-level="6.5" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html#run-the-pet-sql-docker-image"><i class="fa fa-check"></i><b>6.5</b> Run the pet-sql Docker Image</a></li>
 <li class="chapter" data-level="6.6" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html#connect-to-postgresql-with-r"><i class="fa fa-check"></i><b>6.6</b> Connect to PostgreSQL with R</a></li>
 <li class="chapter" data-level="6.7" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html#stop-and-start-to-demonstrate-persistence"><i class="fa fa-check"></i><b>6.7</b> Stop and start to demonstrate persistence</a></li>
@@ -607,48 +607,40 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="B.1" data-path="chapter-environment-diagram.html"><a href="chapter-environment-diagram.html#environment-tools-used-in-this-chapter"><i class="fa fa-check"></i><b>B.1</b> Environment Tools Used in this Chapter</a></li>
 <li class="chapter" data-level="B.2" data-path="chapter-environment-diagram.html"><a href="chapter-environment-diagram.html#communicating-with-docker-applications"><i class="fa fa-check"></i><b>B.2</b> Communicating with Docker Applications</a></li>
 </ul></li>
-<li class="chapter" data-level="C" data-path="chapter-step-at-a-time-docker.html"><a href="chapter-step-at-a-time-docker.html"><i class="fa fa-check"></i><b>C</b> Creating the sql-pet Docker container one step at a time</a><ul>
-<li class="chapter" data-level="C.1" data-path="chapter-step-at-a-time-docker.html"><a href="chapter-step-at-a-time-docker.html#overview-1"><i class="fa fa-check"></i><b>C.1</b> Overview</a></li>
-<li class="chapter" data-level="C.2" data-path="chapter-step-at-a-time-docker.html"><a href="chapter-step-at-a-time-docker.html#download-the-dvdrental-backup-file"><i class="fa fa-check"></i><b>C.2</b> Download the <code>dvdrental</code> backup file</a></li>
-<li class="chapter" data-level="C.3" data-path="chapter-step-at-a-time-docker.html"><a href="chapter-step-at-a-time-docker.html#build-the-docker-container"><i class="fa fa-check"></i><b>C.3</b> Build the Docker Container</a></li>
-<li class="chapter" data-level="C.4" data-path="chapter-step-at-a-time-docker.html"><a href="chapter-step-at-a-time-docker.html#create-the-database-and-restore-from-the-backup"><i class="fa fa-check"></i><b>C.4</b> Create the database and restore from the backup</a></li>
-<li class="chapter" data-level="C.5" data-path="chapter-step-at-a-time-docker.html"><a href="chapter-step-at-a-time-docker.html#connect-to-the-database-with-r"><i class="fa fa-check"></i><b>C.5</b> Connect to the database with R</a></li>
-<li class="chapter" data-level="C.6" data-path="chapter-step-at-a-time-docker.html"><a href="chapter-step-at-a-time-docker.html#cleaning-up-1"><i class="fa fa-check"></i><b>C.6</b> Cleaning up</a></li>
+<li class="chapter" data-level="C" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html"><i class="fa fa-check"></i><b>C</b> APPENDIX D - Quick Guide to SQL</a><ul>
+<li class="chapter" data-level="C.1" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html#data-definition-langauge-ddl"><i class="fa fa-check"></i><b>C.1</b> Data Definition Langauge (DDL)</a></li>
+<li class="chapter" data-level="C.2" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html#data-manipulation-langauge-dml"><i class="fa fa-check"></i><b>C.2</b> Data Manipulation Langauge (DML)</a></li>
+<li class="chapter" data-level="C.3" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html#data-control-language-dcl"><i class="fa fa-check"></i><b>C.3</b> Data Control Language (DCL)</a></li>
+<li class="chapter" data-level="C.4" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html#transaction-control-language-tcl"><i class="fa fa-check"></i><b>C.4</b> Transaction Control Language (TCL)</a></li>
 </ul></li>
-<li class="chapter" data-level="D" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html"><i class="fa fa-check"></i><b>D</b> APPENDIX D - Quick Guide to SQL</a><ul>
-<li class="chapter" data-level="D.1" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html#data-definition-langauge-ddl"><i class="fa fa-check"></i><b>D.1</b> Data Definition Langauge (DDL)</a></li>
-<li class="chapter" data-level="D.2" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html#data-manipulation-langauge-dml"><i class="fa fa-check"></i><b>D.2</b> Data Manipulation Langauge (DML)</a></li>
-<li class="chapter" data-level="D.3" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html#data-control-language-dcl"><i class="fa fa-check"></i><b>D.3</b> Data Control Language (DCL)</a></li>
-<li class="chapter" data-level="D.4" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html#transaction-control-language-tcl"><i class="fa fa-check"></i><b>D.4</b> Transaction Control Language (TCL)</a></li>
+<li class="chapter" data-level="D" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html"><i class="fa fa-check"></i><b>D</b> Additional technical details for Windows users</a><ul>
+<li class="chapter" data-level="D.1" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#hardware-requirements"><i class="fa fa-check"></i><b>D.1</b> Hardware requirements</a></li>
+<li class="chapter" data-level="D.2" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#software-requirements"><i class="fa fa-check"></i><b>D.2</b> Software requirements</a><ul>
+<li class="chapter" data-level="D.2.1" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#windows-7-8-8.1-and-windows-10-home-64-bit"><i class="fa fa-check"></i><b>D.2.1</b> Windows 7, 8, 8.1 and Windows 10 Home (64 bit)</a></li>
+<li class="chapter" data-level="D.2.2" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#windows-10-pro"><i class="fa fa-check"></i><b>D.2.2</b> Windows 10 Pro</a></li>
 </ul></li>
-<li class="chapter" data-level="E" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html"><i class="fa fa-check"></i><b>E</b> Additional technical details for Windows users</a><ul>
-<li class="chapter" data-level="E.1" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#hardware-requirements"><i class="fa fa-check"></i><b>E.1</b> Hardware requirements</a></li>
-<li class="chapter" data-level="E.2" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#software-requirements"><i class="fa fa-check"></i><b>E.2</b> Software requirements</a><ul>
-<li class="chapter" data-level="E.2.1" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#windows-7-8-8.1-and-windows-10-home-64-bit"><i class="fa fa-check"></i><b>E.2.1</b> Windows 7, 8, 8.1 and Windows 10 Home (64 bit)</a></li>
-<li class="chapter" data-level="E.2.2" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#windows-10-pro"><i class="fa fa-check"></i><b>E.2.2</b> Windows 10 Pro</a></li>
+<li class="chapter" data-level="D.3" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#docker-for-windows-settings"><i class="fa fa-check"></i><b>D.3</b> Docker for Windows settings</a><ul>
+<li class="chapter" data-level="D.3.1" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#shared-drives"><i class="fa fa-check"></i><b>D.3.1</b> Shared drives</a></li>
+<li class="chapter" data-level="D.3.2" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#kubernetes"><i class="fa fa-check"></i><b>D.3.2</b> Kubernetes</a></li>
 </ul></li>
-<li class="chapter" data-level="E.3" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#docker-for-windows-settings"><i class="fa fa-check"></i><b>E.3</b> Docker for Windows settings</a><ul>
-<li class="chapter" data-level="E.3.1" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#shared-drives"><i class="fa fa-check"></i><b>E.3.1</b> Shared drives</a></li>
-<li class="chapter" data-level="E.3.2" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#kubernetes"><i class="fa fa-check"></i><b>E.3.2</b> Kubernetes</a></li>
+<li class="chapter" data-level="D.4" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#git-github-and-line-endings"><i class="fa fa-check"></i><b>D.4</b> Git, GitHub and line endings</a></li>
 </ul></li>
-<li class="chapter" data-level="E.4" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#git-github-and-line-endings"><i class="fa fa-check"></i><b>E.4</b> Git, GitHub and line endings</a></li>
+<li class="chapter" data-level="E" data-path="chapter-appendix-setup-instructions.html"><a href="chapter-appendix-setup-instructions.html"><i class="fa fa-check"></i><b>E</b> Setup instructions</a><ul>
+<li class="chapter" data-level="E.1" data-path="chapter-appendix-setup-instructions.html"><a href="chapter-appendix-setup-instructions.html#sandbox-prerequisites"><i class="fa fa-check"></i><b>E.1</b> Sandbox prerequisites</a></li>
+<li class="chapter" data-level="E.2" data-path="chapter-appendix-setup-instructions.html"><a href="chapter-appendix-setup-instructions.html#r-rstudio-and-git"><i class="fa fa-check"></i><b>E.2</b> R, RStudio and Git</a></li>
+<li class="chapter" data-level="E.3" data-path="chapter-appendix-setup-instructions.html"><a href="chapter-appendix-setup-instructions.html#install-docker"><i class="fa fa-check"></i><b>E.3</b> Install Docker</a></li>
 </ul></li>
-<li class="chapter" data-level="F" data-path="chapter-appendix-setup-instructions.html"><a href="chapter-appendix-setup-instructions.html"><i class="fa fa-check"></i><b>F</b> Setup instructions</a><ul>
-<li class="chapter" data-level="F.1" data-path="chapter-appendix-setup-instructions.html"><a href="chapter-appendix-setup-instructions.html#sandbox-prerequisites"><i class="fa fa-check"></i><b>F.1</b> Sandbox prerequisites</a></li>
-<li class="chapter" data-level="F.2" data-path="chapter-appendix-setup-instructions.html"><a href="chapter-appendix-setup-instructions.html#r-rstudio-and-git"><i class="fa fa-check"></i><b>F.2</b> R, RStudio and Git</a></li>
-<li class="chapter" data-level="F.3" data-path="chapter-appendix-setup-instructions.html"><a href="chapter-appendix-setup-instructions.html#install-docker"><i class="fa fa-check"></i><b>F.3</b> Install Docker</a></li>
-</ul></li>
-<li class="chapter" data-level="G" data-path="chapter-appendix-dplyr-functions.html"><a href="chapter-appendix-dplyr-functions.html"><i class="fa fa-check"></i><b>G</b> Dplyr functions and SQL cross-walk</a></li>
-<li class="chapter" data-level="H" data-path="chapter-appendix-dbi-functions.html"><a href="chapter-appendix-dbi-functions.html"><i class="fa fa-check"></i><b>H</b> DBI package functions - coverage</a></li>
-<li class="chapter" data-level="I" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html"><i class="fa fa-check"></i><b>I</b> PostgreSQL Authentication</a><ul>
-<li class="chapter" data-level="I.1" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#introduction"><i class="fa fa-check"></i><b>I.1</b> Introduction</a></li>
-<li class="chapter" data-level="I.2" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#password-authentication-on-the-postgresql-docker-image"><i class="fa fa-check"></i><b>I.2</b> Password authentication on the PostgreSQL Docker image</a></li>
-<li class="chapter" data-level="I.3" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#adding-roles"><i class="fa fa-check"></i><b>I.3</b> Adding roles</a><ul>
-<li class="chapter" data-level="I.3.1" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#setting-up-docker"><i class="fa fa-check"></i><b>I.3.1</b> Setting up Docker</a></li>
-<li class="chapter" data-level="I.3.2" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#creating-a-new-container"><i class="fa fa-check"></i><b>I.3.2</b> Creating a new container</a></li>
-<li class="chapter" data-level="I.3.3" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#adding-a-role"><i class="fa fa-check"></i><b>I.3.3</b> Adding a role</a></li>
-<li class="chapter" data-level="I.3.4" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#did-it-work"><i class="fa fa-check"></i><b>I.3.4</b> Did it work?</a></li>
-<li class="chapter" data-level="I.3.5" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#remove-the-container"><i class="fa fa-check"></i><b>I.3.5</b> Remove the container</a></li>
+<li class="chapter" data-level="F" data-path="chapter-appendix-dplyr-functions.html"><a href="chapter-appendix-dplyr-functions.html"><i class="fa fa-check"></i><b>F</b> Dplyr functions and SQL cross-walk</a></li>
+<li class="chapter" data-level="G" data-path="chapter-appendix-dbi-functions.html"><a href="chapter-appendix-dbi-functions.html"><i class="fa fa-check"></i><b>G</b> DBI package functions - coverage</a></li>
+<li class="chapter" data-level="H" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html"><i class="fa fa-check"></i><b>H</b> PostgreSQL Authentication</a><ul>
+<li class="chapter" data-level="H.1" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#introduction"><i class="fa fa-check"></i><b>H.1</b> Introduction</a></li>
+<li class="chapter" data-level="H.2" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#password-authentication-on-the-postgresql-docker-image"><i class="fa fa-check"></i><b>H.2</b> Password authentication on the PostgreSQL Docker image</a></li>
+<li class="chapter" data-level="H.3" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#adding-roles"><i class="fa fa-check"></i><b>H.3</b> Adding roles</a><ul>
+<li class="chapter" data-level="H.3.1" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#setting-up-docker"><i class="fa fa-check"></i><b>H.3.1</b> Setting up Docker</a></li>
+<li class="chapter" data-level="H.3.2" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#creating-a-new-container"><i class="fa fa-check"></i><b>H.3.2</b> Creating a new container</a></li>
+<li class="chapter" data-level="H.3.3" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#adding-a-role"><i class="fa fa-check"></i><b>H.3.3</b> Adding a role</a></li>
+<li class="chapter" data-level="H.3.4" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#did-it-work"><i class="fa fa-check"></i><b>H.3.4</b> Did it work?</a></li>
+<li class="chapter" data-level="H.3.5" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#remove-the-container"><i class="fa fa-check"></i><b>H.3.5</b> Remove the container</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
@@ -685,7 +677,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </blockquote>
 <p>Please install the <code>sqlpetr</code> package if not already installed:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(devtools)
-<span class="cf">if</span> (<span class="op">!</span><span class="kw">require</span>(sqlpetr)) devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;smithjd/sqlpetr&quot;</span>)</code></pre>
+<span class="cf">if</span> (<span class="op">!</span><span class="kw">require</span>(sqlpetr)) devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;smithjd/sqlpetr&quot;</span>, 
+                                                <span class="dt">build_opts =</span> <span class="st">&quot;&quot;</span>)</code></pre>
 <p>Note that when you install the package the first time, it will ask you to update the packages it uses and that can take some time.</p>
 <p>The following packages are used in this chapter:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)
@@ -698,36 +691,53 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Docker commands can be run from a terminal (e.g., the Rstudio Terminal pane) or with a <code>system2()</code> command. (We discuss the diffeent ways of interacting with Docker and other elements in your environment in a <a href="#your-local-environment">separate chapter</a>.) The necessary functions to start, stop Docker containers and do other busy work are provided in the <code>sqlpetr</code> package. As time permits and curiosity dictates, feel free to look at those functions to see how they work.</p>
 <p>Check that Docker is up and running:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_check_that_docker_is_up</span>()</code></pre>
-<pre><code>## [1] &quot;Docker is up, running these containers:&quot;                                                                                                     
-## [2] &quot;CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS              PORTS                    NAMES&quot;    
-## [3] &quot;d40de8eb6cfa        postgres-dvdrental   \&quot;docker-entrypoint.s…\&quot;   6 minutes ago       Up 5 minutes        0.0.0.0:5432-&gt;5432/tcp   sql-pet&quot;</code></pre>
+<pre><code>## [1] &quot;Docker is up but running no containers&quot;</code></pre>
 </div>
 <div id="clean-up-if-appropriate" class="section level2">
 <h2><span class="header-section-number">5.2</span> Clean up if appropriate</h2>
-<p>Remove the <code>cattle</code> and <code>sql-pet</code> containers if they exist (e.g., from prior experiments).</p>
+<p>Force-remove the <code>cattle</code> and <code>sql-pet</code> containers if they exist (e.g., from prior experiments).</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_docker_remove_container</span>(<span class="st">&quot;cattle&quot;</span>)</code></pre>
 <pre><code>## [1] 0</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_docker_remove_container</span>(<span class="st">&quot;sql-pet&quot;</span>)</code></pre>
 <pre><code>## [1] 0</code></pre>
 <p>We name containers <code>cattle</code> for “throw-aways” and <code>pet</code> for ones we treasure and keep around. :-)</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_make_simple_pg</span>(<span class="st">&quot;cattle&quot;</span>)</code></pre>
-<p>Docker returns a long string of numbers. If you are running this command for the first time, Docker downloads the PostgreSQL image, which takes a bit of time.</p>
-<p>The following command shows that a container named <code>cattle</code> is running <code>postgres:10</code>. <code>postgres</code> is waiting for a connection:</p>
+<p>The first time you run this, Docker downloads the PostgreSQL image, which takes a bit of time. Did it work? The following command shows that a container named <code>cattle</code> is running <code>postgres:10</code>.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_check_that_docker_is_up</span>()</code></pre>
 <pre><code>## [1] &quot;Docker is up, running these containers:&quot;                                                                                                       
 ## [2] &quot;CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES&quot;   
-## [3] &quot;f2b1c5911998        postgres:10         \&quot;docker-entrypoint.s…\&quot;   1 second ago        Up Less than a second   0.0.0.0:5432-&gt;5432/tcp   cattle&quot;</code></pre>
+## [3] &quot;af35b8893865        postgres:10         \&quot;docker-entrypoint.s…\&quot;   1 second ago        Up Less than a second   0.0.0.0:5432-&gt;5432/tcp   cattle&quot;</code></pre>
+<p>For more details, our package <code>sqlpetr</code> has a function
+<a href="https://smithjd.github.io/sqlpetr/reference/sp_docker_containers_tibble.html"><code>sp_docker_containers_tibble</code></a> that returns a tibble of the containers in the system:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_docker_containers_tibble</span>()</code></pre>
+<pre><code>## # A tibble: 1 x 12
+##   container_id image command created_at created ports status size  names
+##   &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;
+## 1 af35b8893865 post… docker… 2019-02-1… 2 seco… 0.0.… Up Le… 0B (… catt…
+## # … with 3 more variables: labels &lt;chr&gt;, mounts &lt;chr&gt;, networks &lt;chr&gt;</code></pre>
 </div>
-<div id="connect-read-and-write-to-postgresql-from-r" class="section level2">
-<h2><span class="header-section-number">5.3</span> Connect, read and write to PostgreSQL from R</h2>
-<div id="connect-with-postgresql" class="section level3">
-<h3><span class="header-section-number">5.3.1</span> Connect with PostgreSQL</h3>
-<p>Connect to PostgreSQL using the <code>sp_get_postgres_connection</code> function:</p>
-<pre class="sourceCode r"><code class="sourceCode r">con &lt;-<span class="st"> </span><span class="kw">sp_get_postgres_connection</span>(<span class="dt">user =</span> <span class="st">&quot;postgres&quot;</span>,
-                         <span class="dt">password =</span> <span class="st">&quot;postgres&quot;</span>,
-                         <span class="dt">dbname =</span> <span class="st">&quot;postgres&quot;</span>,
-                         <span class="dt">seconds_to_test =</span> <span class="dv">30</span>)</code></pre>
-<p>Notice that we are using the PostgreSQL default username and password at this point and that it’s in plain text. That is bad practice because user credentials should not be shared in open code like that. A <a href="#dbms-login">subsequent chapter</a> demonstrates how to store and use credentials to access the dbms so that they are kept private.</p>
+<div id="connecting-reading-and-writing-to-postgresql-from-r" class="section level2">
+<h2><span class="header-section-number">5.3</span> Connecting, reading and writing to PostgreSQL from R</h2>
+<div id="connecting-to-postgresql" class="section level3">
+<h3><span class="header-section-number">5.3.1</span> Connecting to PostgreSQL</h3>
+<p>The <a href="https://smithjd.github.io/sqlpetr/reference/sp_make_simple_pg.html"><code>sp_make_simple_pg</code></a> function we called above created a container from the
+<code>postgres:10</code> library image from Docker Hub. As part of the process, it set the
+password for the PostgreSQL database superuser <code>postgres</code> to the value
+“postgres”.</p>
+<p>For simplicity, we are using a weak password at this point and it’s shown here
+and in the code in plain text. That is bad practice because user credentials
+should not be shared in open code like that. A <a href="#dbms-login">subsequent chapter</a>
+demonstrates how to store and use credentials to access the DBMS so that they
+are kept private.</p>
+<p>We connect to PostgreSQL using the <code>sp_get_postgres_connection</code> function:</p>
+<pre class="sourceCode r"><code class="sourceCode r">con &lt;-<span class="st"> </span><span class="kw">sp_get_postgres_connection</span>(
+  <span class="dt">host =</span> <span class="st">&quot;localhost&quot;</span>,
+  <span class="dt">port =</span> <span class="dv">5432</span>,
+  <span class="dt">user =</span> <span class="st">&quot;postgres&quot;</span>,
+  <span class="dt">password =</span> <span class="st">&quot;postgres&quot;</span>,
+  <span class="dt">dbname =</span> <span class="st">&quot;postgres&quot;</span>,
+  <span class="dt">seconds_to_test =</span> <span class="dv">30</span>
+)</code></pre>
 <p>Make sure that you can connect to the PostgreSQL database that you have just started. If you have been executing the code from this tutorial, the database will not contain any tables yet:</p>
 <pre class="sourceCode r"><code class="sourceCode r">DBI<span class="op">::</span><span class="kw">dbListTables</span>(con)</code></pre>
 <pre><code>## character(0)</code></pre>
@@ -747,8 +757,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre class="sourceCode r"><code class="sourceCode r">mtcars_df &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbReadTable</span>(con, <span class="st">&quot;mtcars&quot;</span>)</code></pre>
 <p>Show a few rows:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(mtcars_df))</code></pre>
-<div id="htmlwidget-1d9f9b9fdca3023baa83" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-1d9f9b9fdca3023baa83">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[21,21,22.8,21.4,18.7,18.1],[6,6,4,6,8,6],[160,160,108,258,360,225],[110,110,93,110,175,105],[3.9,3.9,3.85,3.08,3.15,2.76],[2.62,2.875,2.32,3.215,3.44,3.46],[16.46,17.02,18.61,19.44,17.02,20.22],[0,0,1,1,0,1],[1,1,1,0,0,0],[4,4,4,3,3,3],[4,4,1,1,2,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>mpg<\/th>\n      <th>cyl<\/th>\n      <th>disp<\/th>\n      <th>hp<\/th>\n      <th>drat<\/th>\n      <th>wt<\/th>\n      <th>qsec<\/th>\n      <th>vs<\/th>\n      <th>am<\/th>\n      <th>gear<\/th>\n      <th>carb<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6,7,8,9,10,11]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-7fa700eb3316e6543082" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-7fa700eb3316e6543082">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[21,21,22.8,21.4,18.7,18.1],[6,6,4,6,8,6],[160,160,108,258,360,225],[110,110,93,110,175,105],[3.9,3.9,3.85,3.08,3.15,2.76],[2.62,2.875,2.32,3.215,3.44,3.46],[16.46,17.02,18.61,19.44,17.02,20.22],[0,0,1,1,0,1],[1,1,1,0,0,0],[4,4,4,3,3,3],[4,4,1,1,2,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>mpg<\/th>\n      <th>cyl<\/th>\n      <th>disp<\/th>\n      <th>hp<\/th>\n      <th>drat<\/th>\n      <th>wt<\/th>\n      <th>qsec<\/th>\n      <th>vs<\/th>\n      <th>am<\/th>\n      <th>gear<\/th>\n      <th>carb<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6,7,8,9,10,11]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <div id="clean-up" class="section level2">
@@ -760,7 +770,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Tell Docker to <em>remove</em> the <code>cattle</code> container from it’s library of active containers:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_docker_remove_container</span>(<span class="st">&quot;cattle&quot;</span>)</code></pre>
 <pre><code>## [1] 0</code></pre>
-<p>If we just <strong>stop</strong> the Docker container but don’t remove it (as we did with the <code>sp_docker_remove_container(&quot;cattle&quot;)</code> command), the <code>cattle</code> container will persist and we can start it up again later with <code>sp_docker_start(&quot;cattle&quot;)</code>. In that case, <code>mtcars</code> would still be there and we could retrieve it from PostgreSQL again. Since <code>sp_docker_remove_container(&quot;cattle&quot;)</code> has removed it, the updated database has been deleted. (There are enough copies of <code>mtcars</code> in the world, so no great loss.)</p>
+<p>Verify that <code>cattle</code> is gone:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_docker_containers_tibble</span>()</code></pre>
+<pre><code>## # A tibble: 0 x 0</code></pre>
+<p>If we just <strong>stop</strong> the Docker container but don’t remove it (as we did with the <code>sp_docker_remove_container("cattle")</code> command), the <code>cattle</code> container will persist and we can start it up again later with <code>sp_docker_start("cattle")</code>. In that case, <code>mtcars</code> would still be there and we could retrieve it from PostgreSQL again. Since <code>sp_docker_remove_container("cattle")</code> has removed it, the updated database has been deleted. (There are enough copies of <code>mtcars</code> in the world, so no great loss.)</p>
 
 </div>
 </div>

@@ -348,19 +348,11 @@ Q %>% str(max.level = 3)
 ##   .. ..- attr(*, "class")= chr [1:3] "op_rename" "op_single" "op"
 ##   ..$ dots:List of 3
 ##   .. ..$ : language ~rental_date
-<<<<<<< HEAD
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7ff688b23ad8> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x55d19f8ee140> 
 ##   .. ..$ : language ~staff_email
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7ff688b23ad8> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x55d19f8ee140> 
 ##   .. ..$ : language ~customer_email
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7ff688b23ad8> 
-=======
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fb52fe81310> 
-##   .. ..$ : language ~staff_email
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fb52fe81310> 
-##   .. ..$ : language ~customer_email
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fb52fe81310> 
->>>>>>> master
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x55d19f8ee140> 
 ##   .. ..- attr(*, "class")= chr "quosures"
 ##   ..$ args: list()
 ##   ..- attr(*, "class")= chr [1:3] "op_select" "op_single" "op"
@@ -464,10 +456,10 @@ Q %>% show_query()
 ##   FROM "rental" AS "TBL_LEFT"
 ##   LEFT JOIN "staff" AS "TBL_RIGHT"
 ##   ON ("TBL_LEFT"."staff_id" = "TBL_RIGHT"."staff_id")
-## ) "qzdwvvvtzq") "TBL_LEFT"
+## ) "azbiltixrs") "TBL_LEFT"
 ##   LEFT JOIN "customer" AS "TBL_RIGHT"
 ##   ON ("TBL_LEFT"."customer_id" = "TBL_RIGHT"."customer_id")
-## ) "rnitnthkfz") "ohetoyqsmw"
+## ) "wzdrntnmnu") "wcfkgagmnk"
 ```
 Hand-written SQL code to do the same job will probably look a lot nicer and could be more efficient, but functionally dplyr does the job.
 
