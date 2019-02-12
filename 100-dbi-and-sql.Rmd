@@ -77,7 +77,7 @@ When you are finished using the result set object, remember to free all of the a
 
 ### Or a chunk at a time
 
-The following code demonstrates the `n` argument to `dbFetch` to specify the maximum number of rows to return. Normally, you would probably pick some fixed number of records to return each time, but this code shows that you can vary the number of records returned by each call to `dbFetch`.
+The following code demonstrates using the `n` argument to `dbFetch` to specify the maximum number of rows to return. Normally, you would pick some fixed number of records to return each time, but this code shows that you can vary the number of records returned by each call to `dbFetch`.
 ```{r}
 result_set <- dbSendQuery(con, 'SELECT "title", "rental_duration", "length"
 FROM "film"
