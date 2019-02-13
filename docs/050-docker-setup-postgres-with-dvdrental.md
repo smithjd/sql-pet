@@ -68,19 +68,19 @@ cat(docker_messages, sep = "\n")
 ```
 
 ```
-## Sending build context to Docker daemon  65.42MB
+## Sending build context to Docker daemon  110.8MB
 ## Step 1/4 : FROM postgres:10
-##  ---> ac25c2bac3c4
+##  ---> 7520ebe749c0
 ## Step 2/4 : WORKDIR /tmp
 ##  ---> Using cache
-##  ---> 3f00a18e0bdf
+##  ---> c2bd5a9a8414
 ## Step 3/4 : COPY init-dvdrental.sh /docker-entrypoint-initdb.d/
 ##  ---> Using cache
-##  ---> 3453d61d8e3e
+##  ---> 9cb471adf280
 ## Step 4/4 : RUN apt-get -qq update &&   apt-get install -y -qq curl zip  > /dev/null 2>&1 &&   curl -Os http://www.postgresqltutorial.com/wp-content/uploads/2017/10/dvdrental.zip &&   unzip dvdrental.zip &&   rm dvdrental.zip &&   chmod ugo+w dvdrental.tar &&   chown postgres dvdrental.tar &&   chmod u+x /docker-entrypoint-initdb.d/init-dvdrental.sh &&   apt-get remove -y curl zip
 ##  ---> Using cache
-##  ---> f5e93aa64875
-## Successfully built f5e93aa64875
+##  ---> e1b4d4e53053
+## Successfully built e1b4d4e53053
 ## Successfully tagged postgres-dvdrental:latest
 ```
 
@@ -119,7 +119,7 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 ```
 
 ```
-## [1] "57b9d5499fd741ec45ec33c84638e9b9c728bfe56b9683fb6d9ae19ef60663db"
+## [1] "aadf35d5b8b936849c28aaf1dc1e67f06408323c1bb3d24a515c4221fc20fddf"
 ```
 ## Connect to PostgreSQL with R
 
@@ -220,8 +220,8 @@ sp_show_all_docker_containers()
 ```
 
 ```
-## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                    PORTS               NAMES
-## 57b9d5499fd7        postgres-dvdrental   "docker-entrypoint.s…"   8 seconds ago       Exited (0) 1 second ago                       sql-pet
+## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS               NAMES
+## aadf35d5b8b9        postgres-dvdrental   "docker-entrypoint.s…"   9 seconds ago       Exited (0) Less than a second ago                       sql-pet
 ```
 
 Next time, you can just use this command to start the container: 

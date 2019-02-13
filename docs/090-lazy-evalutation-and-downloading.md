@@ -19,15 +19,15 @@ require(knitr)
 library(bookdown)
 library(sqlpetr)
 ```
-Assume that the Docker container with PostgreSQL and the dvdrental database are ready to go. If not go back to [the previous Chapter][Build the pet-sql Docker Image]
+If you have not yet set up the Docker container with PostgreSQL and the dvdrental database, go back to [those instructions][Build the pet-sql Docker Image] to configure your environment. Otherwise, start your `sql-pet` container:
 
 ```r
-sp_docker_start("sql-pet")
+sqlpetr::sp_docker_start("sql-pet")
 ```
 Connect to the database:
 
 ```r
-con <- sp_get_postgres_connection(
+con <- sqlpetr::sp_get_postgres_connection(
   user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
   password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
   dbname = "dvdrental",
@@ -39,11 +39,11 @@ con <- sp_get_postgres_connection(
 
 By design, R is both a language and an interactive development environment (IDE).  As a language, R tries to be as efficient as possible.  As an IDE, R creates some guardrails to make it easy and safe to work with your data. For example `getOption("max.print")` prevents R from printing more rows of data than you want to handle in an interactive session, with a default of 99999 lines, which may or may not suit you.
 
-On the other hand SQL is a *"Structured Query Language (SQL): a standard computer language for relational database management and data manipulation."* ^[https://www.techopedia.com/definition/1245/structured-query-language-sql]. SQL has has various database-specific Interactive Development Environments (IDEs): for PostgreSQL it's [pgAdmin](https://www.pgadmin.org/).  Roger Peng explains in [R Programming for Data Science](https://bookdown.org/rdpeng/rprogdatascience/history-and-overview-of-r.html#basic-features-of-r) that:
+On the other hand SQL is a *"Structured Query Language (SQL): a standard computer language for relational database management and data manipulation."* ^[https://www.techopedia.com/definition/1245/structured-query-language-sql]. SQL has various database-specific Interactive Development Environments (IDEs), such as [pgAdmin](https://www.pgadmin.org/) for PostgreSQL.  Roger Peng explains in [R Programming for Data Science](https://bookdown.org/rdpeng/rprogdatascience/history-and-overview-of-r.html#basic-features-of-r) that:
 
 > R has maintained the original S philosophy, which is that it provides a language that is both useful for interactive work, but contains a powerful programming language for developing new tools. 
 
-This is complicated when R interacts with SQL.  In [the vignette for dbplyr](https://cran.r-project.org/web/packages/dbplyr/vignettes/dbplyr.html) Hadley Wikham explains:
+This is complicated when R interacts with SQL.  In a [vignette for dbplyr](https://cran.r-project.org/web/packages/dbplyr/vignettes/dbplyr.html) Hadley Wickham explains:
 
 > The most important difference between ordinary data frames and remote database queries is that your R code is translated into SQL and executed in the database on the remote server, not in R on your local machine. When working with databases, dplyr tries to be as lazy as possible:
 > 
@@ -52,7 +52,7 @@ This is complicated when R interacts with SQL.  In [the vignette for dbplyr](htt
 > * It delays doing any work until the last possible moment: it collects together everything you want to do and then sends it to the database in one step.
 > 
 
-Exactly when, which and how much data is returned from the dbms is the topic of this chapter.  Exactly how the data is represented in the dbms and then translated to a data frame is discussed in the [DBI specification](https://cran.r-project.org/web/packages/DBI/vignettes/spec.html#_fetch_records_from_a_previously_executed_query_).
+Exactly when, which, and how much data is returned from the dbms is the topic of this chapter.  Exactly how the data is represented in the dbms and then translated to a data frame is discussed in the [DBI specification](https://cran.r-project.org/web/packages/DBI/vignettes/spec.html#_fetch_records_from_a_previously_executed_query_).
 
 Eventually, if you are interacting with a dbms from R you will need to understand the differences between lazy loading, lazy evaluation, and lazy queries.
 
@@ -66,19 +66,20 @@ Essentially "Lazy evaluation is a programming strategy that allows a symbol to b
 
 ### Lazy Queries
 
-"*When you create a "lazy" query, you're creating a pointer to a set of conditions on the database, but the query isn't actually run and the data isn't actually loaded until you call "next" or some similar method to actually fetch the data and load it into an object.*" ^[https://www.quora.com/What-is-a-lazy-query]  The `collect()` function retrieves data into a local tibble.^[https://dplyr.tidyverse.org/reference/compute.html]
+"*When you create a "lazy" query, you're creating a pointer to a set of conditions on the database, but the query isn't actually run and the data isn't actually loaded until you call "next" or some similar method to actually fetch the data and load it into an object.*" ^[https://www.quora.com/What-is-a-lazy-query]
 
 ## Lazy evaluation and lazy queries
 
-### Dplyr connection objects
-As introduced in the previous chapter, the `dplyr::tbl` function creates  an object that might **look** like a data frame in that when you enter it on the command line, it prints a bunch of rows from the dbms table.  But is actually a **list** object that `dplyr` uses for constructing queries and retrieving data from the DBMS.  
+### `dplyr` connection objects
+As introduced in the previous chapter, the `dplyr::tbl` function creates an object that might **look** like a data frame in that when you enter it on the command line, it prints a bunch of rows from the dbms table.  But it is actually a **list** object that `dplyr` uses for constructing queries and retrieving data from the DBMS.  
 
 The following code illustrates these issues.  The `dplyr::tbl` function creates the connection object that we store in an object named `rental_table`:
 
 ```r
 rental_table <- dplyr::tbl(con, "rental")
 ```
-At first glance, it kind of **looks** like a data frame although it only prints 10 of the table's 16,044 rows:
+
+At first glance, it _acts_ like a data frame when you print it, although it only prints 10 of the table's 16,044 rows:
 
 ```r
 rental_table
@@ -99,10 +100,30 @@ rental_table
 ##  8         9 2005-05-25 00:00:40         2580         126
 ##  9        10 2005-05-25 00:02:21         1824         399
 ## 10        11 2005-05-25 00:09:02         4443         142
-## # … with more rows, and 3 more variables: return_date <dttm>,
+## # ... with more rows, and 3 more variables: return_date <dttm>,
 ## #   staff_id <int>, last_update <dttm>
 ```
-But consider the structure of  `rental_table`:
+
+However, notice that the first output line shows `??`, rather than providing the number of rows in the table. Similarly, the next to last line shows:
+```
+    ... with more rows, and 3 more variables
+```
+whereas the output for a normal `tbl` of this rental data would say:
+```
+    ... with 16,034 more rows, and 3 more variables
+```
+
+So even though `rental_table` is a `tbl`:
+
+```r
+class(rental_table)
+```
+
+```
+## [1] "tbl_dbi"  "tbl_sql"  "tbl_lazy" "tbl"
+```
+
+It is not just a normal `tbl` of data. We can see that from the structure of `rental_table`:
 
 ```r
 str(rental_table)
@@ -118,15 +139,15 @@ str(rental_table)
 ##   .. .. .. ..$ oid    : int [1:437] 16 17 18 19 20 21 22 23 24 25 ...
 ##   .. .. .. ..$ typname: chr [1:437] "bool" "bytea" "char" "name" ...
 ##   ..$ disco: NULL
-##   ..- attr(*, "class")= chr [1:4] "src_PqConnection" "src_dbi" "src_sql" "src"
+##   ..- attr(*, "class")= chr [1:3] "src_dbi" "src_sql" "src"
 ##  $ ops:List of 2
 ##   ..$ x   : 'ident' chr "rental"
 ##   ..$ vars: chr [1:7] "rental_id" "rental_date" "inventory_id" "customer_id" ...
 ##   ..- attr(*, "class")= chr [1:3] "op_base_remote" "op_base" "op"
-##  - attr(*, "class")= chr [1:5] "tbl_PqConnection" "tbl_dbi" "tbl_sql" "tbl_lazy" ...
+##  - attr(*, "class")= chr [1:4] "tbl_dbi" "tbl_sql" "tbl_lazy" "tbl"
 ```
 
-It has two rows.  The first row contains all the information in the `con` object, which contains information about all the tables and objects in the database:
+It has only _two_ rows!  The first row contains all the information in the `con` object, which contains information about all the tables and objects in the database:
 
 ```r
 rental_table$src$con@typnames$typname[380:437]
@@ -165,7 +186,6 @@ rental_table$src$con@typnames$typname[380:437]
 ```
 The second row contains a list of the columns in the `rental` table, among other things:
 
-
 ```r
 rental_table$ops$vars
 ```
@@ -174,59 +194,68 @@ rental_table$ops$vars
 ## [1] "rental_id"    "rental_date"  "inventory_id" "customer_id" 
 ## [5] "return_date"  "staff_id"     "last_update"
 ```
+`rental_table` holds information needed to get the data from the 'rental' table, but `rental_table` does not hold the data itself. In the following sections, we will examine more closely this relationship between the `rental_table` object and the data in the database's 'rental' table.
 
-To illustrate the different issues involved in data retrieval, we create equivalent connection objects to link to two other tables.  
+## When does a lazy query trigger data retrieval?
+
+### Create a black box query for experimentation
+
+To illustrate the different issues involved in data retrieval, we create more connection objects to link to two other tables.  
 
 ```r
 staff_table <- dplyr::tbl(con, "staff") 
 ```
-The 'staff' table has 2 rows
+The 'staff' table has 2 rows.
 
 
 ```r
 customer_table <- dplyr::tbl(con, "customer") 
 ```
-The 'customer' table has 599 rows
+The 'customer' table has 599 rows.
 
-## When does a lazy query trigger data retrieval?
-
-### Create a black box query for experimentation
-Here is a typical string of dplyr verbs strung together with the magrittr `%>%` command that will be used to tease out the several different behaviors that a lazy query has when passed to different R functions.  This query joins three connection objects into a query we'll call `Q`:
+Here is a typical string of `dplyr` verbs strung together with the magrittr `%>%` pipe command that will be used to tease out the several different behaviors that a lazy query has when passed to different R functions.  This query joins three connection objects into a query we'll call `Q`:
 
 
 ```r
 Q <- rental_table %>%
-  left_join(staff_table, by = c("staff_id" = "staff_id")) %>%
-  rename(staff_email = email) %>%
-  left_join(customer_table, by = c("customer_id" = "customer_id")) %>%
-  rename(customer_email = email) %>%
-  select(rental_date, staff_email, customer_email)
+  dplyr::left_join(staff_table, by = c("staff_id" = "staff_id")) %>%
+  dplyr::rename(staff_email = email) %>%
+  dplyr::left_join(customer_table, by = c("customer_id" = "customer_id")) %>%
+  dplyr::rename(customer_email = email) %>%
+  dplyr::select(rental_date, staff_email, customer_email)
 ```
 
 ### Experiment overview
-Think of `Q` as a black box for the moment.  The following examples will show how `Q` is interpreted differently by different functions. In this table, a single green check indicates that some rows are returned, two green checks indicates that all the rows are returned, and the red X indicates that no rows have are returned.
+Think of `Q` as a black box for the moment.  The following examples will show how `Q` is interpreted differently by different functions. 
+
+**Notation**
+
+* ![](screenshots/green-check.png): A single green check indicates that some rows are returned.
+* ![](screenshots/green-check.png) ![](screenshots/green-check.png): Two green checks indicate that all the rows are returned.
+* ![](screenshots/red-x.png): The red X indicates that no rows are returned.
 
 > R code | Result 
 > -------| --------------
 > [`Q %>% print()`](#lazy_q_print) | ![](screenshots/green-check.png) Prints x rows; same as just entering `Q`  
-> [`Q %>% as.tibble()`](#Q-as-tibble) | ![](screenshots/green-check.png)![](screenshots/green-check.png) Forces `Q` to be a tibble
+> [`Q %>% dplyr::as_tibble()`](#Q-as-tibble) | ![](screenshots/green-check.png)![](screenshots/green-check.png) Forces `Q` to be a tibble
 > [`Q %>% head()`](#lazy_q_head) | ![](screenshots/green-check.png) Prints the first 6 rows 
+> [`Q %>% tail()`](#lazy_q_tail) | ![](screenshots/red-x.png) Error: tail() is not supported by sql sources 
 > [`Q %>% length()`](#lazy_q_length) |  ![](screenshots/red-x.png) Counts the rows in `Q`
 > [`Q %>% str()`](#lazy_q_str) |  ![](screenshots/red-x.png)Shows the top 3 levels of the **object** `Q` 
 > [`Q %>% nrow()`](#lazy_q_nrow) | ![](screenshots/red-x.png) **Attempts** to determine the number of rows 
-> [`Q %>% tally()`](#lazy_q_tally) | ![](screenshots/green-check.png) ![](screenshots/green-check.png) Counts all the rows -- on the dbms side
-> [`Q %>% collect(n = 20)`](#lazy_q_collect) | ![](screenshots/green-check.png) Prints 20 rows  
-> [`Q %>% collect(n = 20) %>% head()`](#lazy_q_collect) | ![](screenshots/green-check.png) Prints 6 rows  
-> [`Q %>% show_query()`](#lazy-q-show-query) | ![](screenshots/red-x.png) **Translates** the lazy query object into SQL  
-> [`Qc <- Q %>% count(customer_email, sort = TRUE)` <br /> `Qc`](#lazy_q_build) | ![](screenshots/red-x.png) **Extends** the lazy query object
+> [`Q %>% dplyr::tally()`](#lazy_q_tally) | ![](screenshots/green-check.png) ![](screenshots/green-check.png) Counts all the rows -- on the dbms side
+> [`Q %>% dplyr::collect(n = 20)`](#lazy_q_collect) | ![](screenshots/green-check.png) Prints 20 rows  
+> [`Q %>% dplyr::collect(n = 20) %>% head()`](#lazy_q_collect) | ![](screenshots/green-check.png) Prints 6 rows  
+> [`Q %>% dplyr::show_query()`](#lazy-q-show-query) | ![](screenshots/red-x.png) **Translates** the lazy query object into SQL  
+> [`Qc <- Q %>% dplyr::count(customer_email, sort = TRUE)` <br /> `Qc`](#lazy_q_build) | ![](screenshots/red-x.png) **Extends** the lazy query object
 >
 > 
 
-(The next chapter will discuss how to build queries and how to explore intermediate steps.)
+The next chapter will discuss how to build queries and how to explore intermediate steps. But first, the following subsections provide a more detailed discussion of each row in the preceding table.
 
 ### Q %>% print(){#lazy_q_print}
 
-Remember that `Q %>% print()` is equivalent to `print(Q)` and the same as just entering `Q` on the command line.  We use the magrittr pipe operator here because chaining functions highlights how the same object behaves differently in each use.
+Remember that `Q %>% print()` is equivalent to `print(Q)` and the same as just entering `Q` on the command line.  We use the magrittr pipe operator here, because chaining functions highlights how the same object behaves differently in each use.
 
 ```r
 Q %>% print()
@@ -235,19 +264,19 @@ Q %>% print()
 ```
 ## # Source:   lazy query [?? x 3]
 ## # Database: postgres [postgres@localhost:5432/dvdrental]
-##    rental_date         staff_email             customer_email              
-##    <dttm>              <chr>                   <chr>                       
-##  1 2005-05-24 22:54:33 Mike.Hillyer@sakilasta… tommy.collazo@sakilacustome…
-##  2 2005-05-24 23:03:39 Mike.Hillyer@sakilasta… manuel.murrell@sakilacustom…
-##  3 2005-05-24 23:04:41 Jon.Stephens@sakilasta… andrew.purdy@sakilacustomer…
-##  4 2005-05-24 23:05:21 Mike.Hillyer@sakilasta… delores.hansen@sakilacustom…
-##  5 2005-05-24 23:08:07 Mike.Hillyer@sakilasta… nelson.christenson@sakilacu…
-##  6 2005-05-24 23:11:53 Jon.Stephens@sakilasta… cassandra.walters@sakilacus…
-##  7 2005-05-24 23:31:46 Jon.Stephens@sakilasta… minnie.romero@sakilacustome…
-##  8 2005-05-25 00:00:40 Mike.Hillyer@sakilasta… ellen.simpson@sakilacustome…
-##  9 2005-05-25 00:02:21 Jon.Stephens@sakilasta… danny.isom@sakilacustomer.o…
-## 10 2005-05-25 00:09:02 Jon.Stephens@sakilasta… april.burns@sakilacustomer.…
-## # … with more rows
+##    rental_date         staff_email            customer_email              
+##    <dttm>              <chr>                  <chr>                       
+##  1 2005-05-24 22:54:33 Mike.Hillyer@sakilast… tommy.collazo@sakilacustome…
+##  2 2005-05-24 23:03:39 Mike.Hillyer@sakilast… manuel.murrell@sakilacustom…
+##  3 2005-05-24 23:04:41 Jon.Stephens@sakilast… andrew.purdy@sakilacustomer…
+##  4 2005-05-24 23:05:21 Mike.Hillyer@sakilast… delores.hansen@sakilacustom…
+##  5 2005-05-24 23:08:07 Mike.Hillyer@sakilast… nelson.christenson@sakilacu…
+##  6 2005-05-24 23:11:53 Jon.Stephens@sakilast… cassandra.walters@sakilacus…
+##  7 2005-05-24 23:31:46 Jon.Stephens@sakilast… minnie.romero@sakilacustome…
+##  8 2005-05-25 00:00:40 Mike.Hillyer@sakilast… ellen.simpson@sakilacustome…
+##  9 2005-05-25 00:02:21 Jon.Stephens@sakilast… danny.isom@sakilacustomer.o…
+## 10 2005-05-25 00:09:02 Jon.Stephens@sakilast… april.burns@sakilacustomer.…
+## # ... with more rows
 ```
 ![](screenshots/green-check.png) R retrieves 10 observations and 3 columns.  In its role as IDE, R has provided nicely formatted output that is similar to what it prints for a tibble, with descriptive information about the dataset and each column:
 
@@ -258,36 +287,31 @@ Q %>% print()
 >   \<dttm\>              \<chr\>                        \<chr\>
 >
 
-R has not determined how many rows are left to retrieve as it notes `... with more rows`. 
+R has not determined how many rows are left to retrieve as it shows with `[?? x 3]` and `... with more rows` in the data summary. 
 
-### Q %>% as.tibble() {#lazy_q_as-tibble}
+### Q %>% dplyr::as_tibble() {#lazy_q_as-tibble}
 
-![](screenshots/green-check.png) ![](screenshots/green-check.png) In contrast to `print()`, the `as.tibble()` function causes R to download the whole table, using tibble's default of displaying only the first 10 rows.
+![](screenshots/green-check.png) ![](screenshots/green-check.png) In contrast to `print()`, the `as_tibble()` function causes R to download the whole table, using tibble's default of displaying only the first 10 rows.
 
 ```r
-Q %>% as.tibble()
-```
-
-```
-## Warning: `as.tibble()` is deprecated, use `as_tibble()` (but mind the new semantics).
-## This warning is displayed once per session.
+Q %>% dplyr::as_tibble()
 ```
 
 ```
 ## # A tibble: 16,044 x 3
-##    rental_date         staff_email             customer_email              
-##    <dttm>              <chr>                   <chr>                       
-##  1 2005-05-24 22:54:33 Mike.Hillyer@sakilasta… tommy.collazo@sakilacustome…
-##  2 2005-05-24 23:03:39 Mike.Hillyer@sakilasta… manuel.murrell@sakilacustom…
-##  3 2005-05-24 23:04:41 Jon.Stephens@sakilasta… andrew.purdy@sakilacustomer…
-##  4 2005-05-24 23:05:21 Mike.Hillyer@sakilasta… delores.hansen@sakilacustom…
-##  5 2005-05-24 23:08:07 Mike.Hillyer@sakilasta… nelson.christenson@sakilacu…
-##  6 2005-05-24 23:11:53 Jon.Stephens@sakilasta… cassandra.walters@sakilacus…
-##  7 2005-05-24 23:31:46 Jon.Stephens@sakilasta… minnie.romero@sakilacustome…
-##  8 2005-05-25 00:00:40 Mike.Hillyer@sakilasta… ellen.simpson@sakilacustome…
-##  9 2005-05-25 00:02:21 Jon.Stephens@sakilasta… danny.isom@sakilacustomer.o…
-## 10 2005-05-25 00:09:02 Jon.Stephens@sakilasta… april.burns@sakilacustomer.…
-## # … with 16,034 more rows
+##    rental_date         staff_email            customer_email              
+##    <dttm>              <chr>                  <chr>                       
+##  1 2005-05-24 22:54:33 Mike.Hillyer@sakilast… tommy.collazo@sakilacustome…
+##  2 2005-05-24 23:03:39 Mike.Hillyer@sakilast… manuel.murrell@sakilacustom…
+##  3 2005-05-24 23:04:41 Jon.Stephens@sakilast… andrew.purdy@sakilacustomer…
+##  4 2005-05-24 23:05:21 Mike.Hillyer@sakilast… delores.hansen@sakilacustom…
+##  5 2005-05-24 23:08:07 Mike.Hillyer@sakilast… nelson.christenson@sakilacu…
+##  6 2005-05-24 23:11:53 Jon.Stephens@sakilast… cassandra.walters@sakilacus…
+##  7 2005-05-24 23:31:46 Jon.Stephens@sakilast… minnie.romero@sakilacustome…
+##  8 2005-05-25 00:00:40 Mike.Hillyer@sakilast… ellen.simpson@sakilacustome…
+##  9 2005-05-25 00:02:21 Jon.Stephens@sakilast… danny.isom@sakilacustomer.o…
+## 10 2005-05-25 00:09:02 Jon.Stephens@sakilast… april.burns@sakilacustomer.…
+## # ... with 16,034 more rows
 ```
 
 ### Q %>% head() {#lazy_q_head}
@@ -301,14 +325,30 @@ Q %>% head()
 ```
 ## # Source:   lazy query [?? x 3]
 ## # Database: postgres [postgres@localhost:5432/dvdrental]
-##   rental_date         staff_email             customer_email               
-##   <dttm>              <chr>                   <chr>                        
-## 1 2005-05-24 22:54:33 Mike.Hillyer@sakilasta… tommy.collazo@sakilacustomer…
-## 2 2005-05-24 23:03:39 Mike.Hillyer@sakilasta… manuel.murrell@sakilacustome…
-## 3 2005-05-24 23:04:41 Jon.Stephens@sakilasta… andrew.purdy@sakilacustomer.…
-## 4 2005-05-24 23:05:21 Mike.Hillyer@sakilasta… delores.hansen@sakilacustome…
-## 5 2005-05-24 23:08:07 Mike.Hillyer@sakilasta… nelson.christenson@sakilacus…
-## 6 2005-05-24 23:11:53 Jon.Stephens@sakilasta… cassandra.walters@sakilacust…
+##   rental_date         staff_email             customer_email              
+##   <dttm>              <chr>                   <chr>                       
+## 1 2005-05-24 22:54:33 Mike.Hillyer@sakilasta… tommy.collazo@sakilacustome…
+## 2 2005-05-24 23:03:39 Mike.Hillyer@sakilasta… manuel.murrell@sakilacustom…
+## 3 2005-05-24 23:04:41 Jon.Stephens@sakilasta… andrew.purdy@sakilacustomer…
+## 4 2005-05-24 23:05:21 Mike.Hillyer@sakilasta… delores.hansen@sakilacustom…
+## 5 2005-05-24 23:08:07 Mike.Hillyer@sakilasta… nelson.christenson@sakilacu…
+## 6 2005-05-24 23:11:53 Jon.Stephens@sakilasta… cassandra.walters@sakilacus…
+```
+
+### Q %>% tail() {#lazy_q_tail}
+
+![](screenshots/red-x.png) Produces an error, because `Q` does not hold all of the data, so it is not possible to list the last few items from the table:
+
+```r
+try(
+  Q %>% tail(),
+  silent = FALSE,
+  outFile = stdout()
+)
+```
+
+```
+## Error : tail() is not supported by sql sources
 ```
 
 ### Q %>% length() {#lazy_q_length}
@@ -336,7 +376,7 @@ Q %>% str(max.level = 3)
 ##  $ src:List of 2
 ##   ..$ con  :Formal class 'PqConnection' [package "RPostgres"] with 3 slots
 ##   ..$ disco: NULL
-##   ..- attr(*, "class")= chr [1:4] "src_PqConnection" "src_dbi" "src_sql" "src"
+##   ..- attr(*, "class")= chr [1:3] "src_dbi" "src_sql" "src"
 ##  $ ops:List of 4
 ##   ..$ name: chr "select"
 ##   ..$ x   :List of 4
@@ -348,15 +388,15 @@ Q %>% str(max.level = 3)
 ##   .. ..- attr(*, "class")= chr [1:3] "op_rename" "op_single" "op"
 ##   ..$ dots:List of 3
 ##   .. ..$ : language ~rental_date
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fb35804d2d8> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fad83ce5628> 
 ##   .. ..$ : language ~staff_email
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fb35804d2d8> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fad83ce5628> 
 ##   .. ..$ : language ~customer_email
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fb35804d2d8> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fad83ce5628> 
 ##   .. ..- attr(*, "class")= chr "quosures"
 ##   ..$ args: list()
 ##   ..- attr(*, "class")= chr [1:3] "op_select" "op_single" "op"
-##  - attr(*, "class")= chr [1:5] "tbl_PqConnection" "tbl_dbi" "tbl_sql" "tbl_lazy" ...
+##  - attr(*, "class")= chr [1:4] "tbl_dbi" "tbl_sql" "tbl_lazy" "tbl"
 ```
 
 ### Q %>% nrow() {#lazy_q_nrow}
@@ -371,12 +411,12 @@ Q %>% nrow()
 ## [1] NA
 ```
 
-### Q %>% tally() {#lazy_q_tally}
+### Q %>% dplyr::tally() {#lazy_q_tally}
 
 ![](screenshots/green-check.png) The `tally` function actually counts all the rows.
 
 ```r
-Q %>% tally()
+Q %>% dplyr::tally()
 ```
 
 ```
@@ -388,62 +428,64 @@ Q %>% tally()
 ```
 The `nrow()` function knows that `Q` is a list.  On the other hand, the `tally()` function tells SQL to go count all the rows. Notice that `Q` results in 16,044 rows -- the same number of rows as `rental`.
 
-### Q %>% collect(){#lazy_q_collect}
+### Q %>% dplyr::collect(){#lazy_q_collect}
 
-![](screenshots/green-check.png) The `dplyr::collect()` function triggers a dbFetch() function behind the scenes, which forces R to download a specified number of rows:
+![](screenshots/green-check.png) The dplyr::[collect](https://dplyr.tidyverse.org/reference/compute.html) function triggers a call to the `DBI:dbFetch()` function behind the scenes, which forces R to download a specified number of rows:
 
 ```r
-Q %>% collect(n = 20)
+Q %>% dplyr::collect(n = 20)
 ```
 
 ```
 ## # A tibble: 20 x 3
-##    rental_date         staff_email             customer_email              
-##    <dttm>              <chr>                   <chr>                       
-##  1 2005-05-24 22:54:33 Mike.Hillyer@sakilasta… tommy.collazo@sakilacustome…
-##  2 2005-05-24 23:03:39 Mike.Hillyer@sakilasta… manuel.murrell@sakilacustom…
-##  3 2005-05-24 23:04:41 Jon.Stephens@sakilasta… andrew.purdy@sakilacustomer…
-##  4 2005-05-24 23:05:21 Mike.Hillyer@sakilasta… delores.hansen@sakilacustom…
-##  5 2005-05-24 23:08:07 Mike.Hillyer@sakilasta… nelson.christenson@sakilacu…
-##  6 2005-05-24 23:11:53 Jon.Stephens@sakilasta… cassandra.walters@sakilacus…
-##  7 2005-05-24 23:31:46 Jon.Stephens@sakilasta… minnie.romero@sakilacustome…
-##  8 2005-05-25 00:00:40 Mike.Hillyer@sakilasta… ellen.simpson@sakilacustome…
-##  9 2005-05-25 00:02:21 Jon.Stephens@sakilasta… danny.isom@sakilacustomer.o…
-## 10 2005-05-25 00:09:02 Jon.Stephens@sakilasta… april.burns@sakilacustomer.…
-## 11 2005-05-25 00:19:27 Jon.Stephens@sakilasta… deanna.byrd@sakilacustomer.…
-## 12 2005-05-25 00:22:55 Mike.Hillyer@sakilasta… raymond.mcwhorter@sakilacus…
-## 13 2005-05-25 00:31:15 Mike.Hillyer@sakilasta… theodore.culp@sakilacustome…
-## 14 2005-05-25 00:39:22 Mike.Hillyer@sakilasta… ronald.weiner@sakilacustome…
-## 15 2005-05-25 00:43:11 Jon.Stephens@sakilasta… steven.curley@sakilacustome…
-## 16 2005-05-25 01:06:36 Mike.Hillyer@sakilasta… isaac.oglesby@sakilacustome…
-## 17 2005-05-25 01:10:47 Jon.Stephens@sakilasta… ruth.martinez@sakilacustome…
-## 18 2005-05-25 01:17:24 Mike.Hillyer@sakilasta… ronnie.ricketts@sakilacusto…
-## 19 2005-05-25 01:48:41 Jon.Stephens@sakilasta… roberta.harper@sakilacustom…
-## 20 2005-05-25 01:59:46 Jon.Stephens@sakilasta… craig.morrell@sakilacustome…
+##    rental_date         staff_email            customer_email              
+##    <dttm>              <chr>                  <chr>                       
+##  1 2005-05-24 22:54:33 Mike.Hillyer@sakilast… tommy.collazo@sakilacustome…
+##  2 2005-05-24 23:03:39 Mike.Hillyer@sakilast… manuel.murrell@sakilacustom…
+##  3 2005-05-24 23:04:41 Jon.Stephens@sakilast… andrew.purdy@sakilacustomer…
+##  4 2005-05-24 23:05:21 Mike.Hillyer@sakilast… delores.hansen@sakilacustom…
+##  5 2005-05-24 23:08:07 Mike.Hillyer@sakilast… nelson.christenson@sakilacu…
+##  6 2005-05-24 23:11:53 Jon.Stephens@sakilast… cassandra.walters@sakilacus…
+##  7 2005-05-24 23:31:46 Jon.Stephens@sakilast… minnie.romero@sakilacustome…
+##  8 2005-05-25 00:00:40 Mike.Hillyer@sakilast… ellen.simpson@sakilacustome…
+##  9 2005-05-25 00:02:21 Jon.Stephens@sakilast… danny.isom@sakilacustomer.o…
+## 10 2005-05-25 00:09:02 Jon.Stephens@sakilast… april.burns@sakilacustomer.…
+## 11 2005-05-25 00:19:27 Jon.Stephens@sakilast… deanna.byrd@sakilacustomer.…
+## 12 2005-05-25 00:22:55 Mike.Hillyer@sakilast… raymond.mcwhorter@sakilacus…
+## 13 2005-05-25 00:31:15 Mike.Hillyer@sakilast… theodore.culp@sakilacustome…
+## 14 2005-05-25 00:39:22 Mike.Hillyer@sakilast… ronald.weiner@sakilacustome…
+## 15 2005-05-25 00:43:11 Jon.Stephens@sakilast… steven.curley@sakilacustome…
+## 16 2005-05-25 01:06:36 Mike.Hillyer@sakilast… isaac.oglesby@sakilacustome…
+## 17 2005-05-25 01:10:47 Jon.Stephens@sakilast… ruth.martinez@sakilacustome…
+## 18 2005-05-25 01:17:24 Mike.Hillyer@sakilast… ronnie.ricketts@sakilacusto…
+## 19 2005-05-25 01:48:41 Jon.Stephens@sakilast… roberta.harper@sakilacustom…
+## 20 2005-05-25 01:59:46 Jon.Stephens@sakilast… craig.morrell@sakilacustome…
 ```
 
 ```r
-Q %>% collect(n = 20) %>% head()
+Q %>% dplyr::collect(n = 20) %>% head()
 ```
 
 ```
 ## # A tibble: 6 x 3
-##   rental_date         staff_email             customer_email               
-##   <dttm>              <chr>                   <chr>                        
-## 1 2005-05-24 22:54:33 Mike.Hillyer@sakilasta… tommy.collazo@sakilacustomer…
-## 2 2005-05-24 23:03:39 Mike.Hillyer@sakilasta… manuel.murrell@sakilacustome…
-## 3 2005-05-24 23:04:41 Jon.Stephens@sakilasta… andrew.purdy@sakilacustomer.…
-## 4 2005-05-24 23:05:21 Mike.Hillyer@sakilasta… delores.hansen@sakilacustome…
-## 5 2005-05-24 23:08:07 Mike.Hillyer@sakilasta… nelson.christenson@sakilacus…
-## 6 2005-05-24 23:11:53 Jon.Stephens@sakilasta… cassandra.walters@sakilacust…
+##   rental_date         staff_email             customer_email              
+##   <dttm>              <chr>                   <chr>                       
+## 1 2005-05-24 22:54:33 Mike.Hillyer@sakilasta… tommy.collazo@sakilacustome…
+## 2 2005-05-24 23:03:39 Mike.Hillyer@sakilasta… manuel.murrell@sakilacustom…
+## 3 2005-05-24 23:04:41 Jon.Stephens@sakilasta… andrew.purdy@sakilacustomer…
+## 4 2005-05-24 23:05:21 Mike.Hillyer@sakilasta… delores.hansen@sakilacustom…
+## 5 2005-05-24 23:08:07 Mike.Hillyer@sakilasta… nelson.christenson@sakilacu…
+## 6 2005-05-24 23:11:53 Jon.Stephens@sakilasta… cassandra.walters@sakilacus…
 ```
-The `collect` function triggers the creation of a tibble and controls the number of rows that the DBMS sends to R.  Notice that `head` only prints 6 of the 25 rows that R has retrieved.  
+The `dplyr::collect` function triggers the creation of a tibble and controls the number of rows that the DBMS sends to R.  Notice that `head` only prints 6 of the 20 rows that R has retrieved.
 
-### Q %>% show_query() {#lazy_q_show-query}
+If you do not provide a value for the `n` argument, _all_ of the rows will be retrieved into your R workspace.
+
+### Q %>% dplyr::show_query() {#lazy_q_show-query}
 
 
 ```r
-Q %>% show_query()
+Q %>% dplyr::show_query()
 ```
 
 ```
@@ -456,19 +498,19 @@ Q %>% show_query()
 ##   FROM "rental" AS "TBL_LEFT"
 ##   LEFT JOIN "staff" AS "TBL_RIGHT"
 ##   ON ("TBL_LEFT"."staff_id" = "TBL_RIGHT"."staff_id")
-## ) "qzdwvvvtzq") "TBL_LEFT"
+## ) "qoohjqdtmu") "TBL_LEFT"
 ##   LEFT JOIN "customer" AS "TBL_RIGHT"
 ##   ON ("TBL_LEFT"."customer_id" = "TBL_RIGHT"."customer_id")
-## ) "rnitnthkfz") "ohetoyqsmw"
+## ) "ogeswethns") "mhrkaoyvwc"
 ```
-Hand-written SQL code to do the same job will probably look a lot nicer and could be more efficient, but functionally dplyr does the job.
+Hand-written SQL code to do the same job will probably look a lot nicer and could be more efficient, but functionally `dplyr` does the job.
 
-### Qc <- Q %>% count(customer_email) {#lazy_q_build}
+### Qc <- Q %>% dplyr::count(customer_email) {#lazy_q_build}
 
 ![](screenshots/red-x.png) Until `Q` is executed, we can add to it.  This behavior is the basis for a useful debugging and development process where queries are built up incrementally.
 
 ```r
-Qc <- Q %>% count(customer_email, sort = TRUE)
+Qc <- Q %>% dplyr::count(customer_email, sort = TRUE)
 ```
 
 ![](screenshots/green-check.png) When all the accumulated `dplyr` verbs are executed, they are submitted to the dbms and the number of rows that are returned follow the same rules as discussed above.
@@ -490,22 +532,23 @@ Qc
 ##  5 tammy.sanders@sakilacustomer.org  41             
 ##  6 wesley.bull@sakilacustomer.org    40             
 ##  7 sue.peters@sakilacustomer.org     40             
-##  8 marion.snyder@sakilacustomer.org  39             
+##  8 tim.cary@sakilacustomer.org       39             
 ##  9 rhonda.kennedy@sakilacustomer.org 39             
-## 10 tim.cary@sakilacustomer.org       39             
-## # … with more rows
+## 10 marion.snyder@sakilacustomer.org  39             
+## # ... with more rows
 ```
 
-See more example of lazy execution can be found [Here](https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html).
+See more examples of lazy execution [here](https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html).
 
 
 ```r
-dbDisconnect(con)
-sp_docker_stop("sql-pet")
+DBI::dbDisconnect(con)
+sqlpetr::sp_docker_stop("sql-pet")
 ```
 
 
 ## Other resources
 
-  * Benjamin S. Baumer, A Grammar for Reproducible and Painless Extract-Transform-Load Operations on Medium Data: [https://arxiv.org/pdf/1708.07073](https://arxiv.org/pdf/1708.07073) 
-
+* Benjamin S. Baumer. 2017. A Grammar for Reproducible and Painless Extract-Transform-Load Operations on Medium Data. [https://arxiv.org/abs/1708.07073](https://arxiv.org/abs/1708.07073) 
+* dplyr Reference documentation: Remote tables. [https://dplyr.tidyverse.org/reference/index.html#section-remote-tables](https://dplyr.tidyverse.org/reference/index.html#section-remote-tables)
+* Data Carpentry. SQL Databases and R. [https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html](https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html)
