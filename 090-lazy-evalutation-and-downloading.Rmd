@@ -198,7 +198,11 @@ Q %>% head()
 
 ![](screenshots/red-x.png) Produces an error, because `Q` does not hold all of the data, so it is not possible to list the last few items from the table:
 ```{r}
-Q %>% tail()
+try(
+  Q %>% tail(),
+  silent = FALSE,
+  outFile = stdout()
+)
 ```
 
 ### Q %>% length() {#lazy_q_length}
