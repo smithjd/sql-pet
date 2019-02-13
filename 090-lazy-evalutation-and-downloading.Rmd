@@ -197,12 +197,12 @@ Q %>% head()
 ### Q %>% tail() {#lazy_q_tail}
 
 ![](screenshots/red-x.png) Produces an error, because `Q` does not hold all of the data, so it is not possible to list the last few items from the table:
-```r
-Q %>% tail()  # Causes an error!
-```
-
-```
-Error: tail() is not supported by sql sources
+```{r}
+try(
+  Q %>% tail(),
+  silent = FALSE,
+  outFile = stdout()
+)
 ```
 
 ### Q %>% length() {#lazy_q_length}
