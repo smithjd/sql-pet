@@ -69,6 +69,31 @@ In the next couple of code blocks, we delete the new data and then recreate the 
     DELETE FROM <source> WHERE <where_clause>;
 ```
 
+### Delete New Practice Store from the Store Table.
+
+In the next code block we delete out the new stores that were added when the book was compliled or added working through the exercises.  Out of the box, the DVD rental database's highest store_id = 2.
+
+```{r Delete new stores}
+dbExecute(con, "delete from store where store_id > 2;")
+```
+
+### Delete film 1001, Sophie's Choice, records in film_category, rental, inventory, and film
+
+The records need to be deleted in a specific order to not violate constraints.
+
+```{r Delete new film}
+dbExecute(con, "delete from film_category where film_id >= 1001;")
+dbExecute(con, "delete from rental where rental_id >= 16050;")
+dbExecute(con, "delete from inventory where film_id >= 1001;")
+dbExecute(con, "delete from film where film_id >= 1001;")
+
+```
+
+### Delete New Practice Customers from the Customer table.
+
+In the next code block we delete out the new customers that were added when the book was compliled or added while working through the chapter.  Out of the box, the DVD rental database's highest customer_id = 599.
+
+
 ### Delete New Practice Customers from the Customer table.
 
 In the next code block we delete out the new customers that were added when the book was compliled or added while working through the chapter.  Out of the box, the DVD rental database's highest customer_id = 599.
@@ -87,14 +112,6 @@ dbExecute(
 ```
 
 The number above tells us how many rows were actually deleted from the customer table.
-
-### Delete New Practice Store from the Store Table.
-
-In the next code block we delete out the new stores that were added when the book was compliled or added working through the exercises.  Out of the box, the DVD rental database's highest store_id = 2.
-
-```{r Delete new stores}
-dbExecute(con, "delete from store where store_id > 2;")
-```
 
 ### SQL Single Row Insert Data Syntax
 
@@ -392,6 +409,61 @@ stores <- dbGetQuery(con,"select * from store;")
 sp_print_df(stores)
 ```
 
+
+
+## Create a film record
+
+```{r}
+dbExecute(
+  con,
+  "insert into film
+  (film_id,title,description,release_year,language_id
+  ,rental_duration,rental_rate,length,replacement_cost,rating
+   ,last_update,special_features,fulltext)
+  values(1001,'Sophie''s Choice','orphaned language_id=10',2018,1
+        ,7,4.99,120,14.99,'PG'
+        ,now()::date,'{Trailers}','')
+        ,(1002,'Sophie''s Choice','orphaned language_id=10',2018,1
+        ,7,4.99,120,14.99,'PG'
+        ,now()::date,'{Trailers}','')
+  ;
+  ")
+```
+
+```{r}
+dbExecute(
+  con,
+  "insert into film_category
+  (film_id,category_id,last_update)
+  values(1001,6,now()::date)
+       ,(1001,7,now()::date)
+       ,(1002,6,now()::date)
+       ,(1002,7,now()::date)
+  ;")  
+  
+```
+
+```{r}
+dbExecute(
+  con,
+  "insert into inventory
+  (inventory_id,film_id,store_id,last_update)
+  values(4582,1001,1,now()::date)
+       ,(4583,1001,2,now()::date)
+  ;")  
+  
+```
+
+```{r}
+dbExecute(
+  con,
+  "insert into rental
+  (rental_id,rental_date,inventory_id,customer_id,return_date,staff_id,last_update)
+  values(16050,now()::date - interval '1 week',4582,600,now()::date,1,now()::date)
+  ;")  
+  
+```
+
 <!--
 
 ## Creating Duplicate Customer Rows 
@@ -415,6 +487,7 @@ smy_cust_dupes <- dbGetQuery(con,'select *
 
 sp_print_df(smy_cust_dupes)
 ```
+-->
 
 Diconnect from the db:
 ```{r}

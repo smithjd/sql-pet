@@ -18,13 +18,13 @@ require(knitr)
 library(bookdown)
 library(sqlpetr)
 ```
-Assume that the Docker container with PostgreSQL and the dvdrental database are ready to go. If not go back to [the previous Chapter][Build the pet-sql Docker Image]
+If you have not yet set up the Docker container with PostgreSQL and the dvdrental database, go back to [those instructions][Build the pet-sql Docker Image] to configure your environment. Otherwise, start your `sql-pet` container:
 ```{r check on sql-pet}
-sp_docker_start("sql-pet")
+sqlpetr::sp_docker_start("sql-pet")
 ```
 Connect to the database:
 ```{r connect to postgresql}
-con <- sp_get_postgres_connection(
+con <- sqlpetr::sp_get_postgres_connection(
   user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
   password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
   dbname = "dvdrental",
@@ -58,37 +58,43 @@ film_table <- tbl(con, "film")
 
 ### Retrieve the whole table
 
-SQL code that is submitted to a database is evaluated all at once^[From R's perspective. Actually there are 4 steps behind the scenes.].  To think through an SQL query, either use dplyr to build it up step by step and then convert it to SQL code or an IDE such as [pgAdmin](https://www.pgadmin.org/). DBI returns a data.frame, so you don't have dplyr's guardrails.
+SQL code that is submitted to a database is evaluated all at once^[From R's perspective. Actually there are 4 steps behind the scenes.].  To think through an SQL query, you can use `dplyr` to build it up step by step and then convert it to SQL code. Or you can use an IDE such as [pgAdmin](https://www.pgadmin.org/) to develop your SQL code. Once you have the SQL code, the following R code demonstrates how to use `dbSendQuery` to submit SQL from your R environment.
+
 ```{r}
-res <- dbSendQuery(con, 'SELECT "title", "rental_duration", "length"
+result_set <- DBI::dbSendQuery(con, 'SELECT "title", "rental_duration", "length"
 FROM "film"
 WHERE ("rental_duration" > 5.0 AND "length" > 117.0)')
 
-res_output <- dbFetch(res)
-str(res_output)
+long_rental_films <- DBI::dbFetch(result_set)
+str(long_rental_films)
 
-dbClearResult(res)
+DBI::dbClearResult(result_set)
 ```
+
+The `dbFetch` function returns a `data.frame`, so you don't have `dplyr`'s guardrails that manage the amount of data returned to your workspace. You need to manage the amount of data yourself, using the `n = ` argument of `dbFetch` to specify the maximum number of records to retrieve per fetch. In the code above, we did not specify `n`, so `dbFetch` returned _all_ pending records as the default behavior.
+
+When you are finished using the result set object, remember to free all of the associated resources with `dbClearResult`, as shown in the code above for the `result_set` variable.
 
 ### Or a chunk at a time
 
+The following code demonstrates using the `n` argument to `dbFetch` to specify the maximum number of rows to return. Normally, you would pick some fixed number of records to return each time, but this code shows that you can vary the number of records returned by each call to `dbFetch`.
 ```{r}
-res <- dbSendQuery(con, 'SELECT "title", "rental_duration", "length"
+result_set <- dbSendQuery(con, 'SELECT "title", "rental_duration", "length"
 FROM "film"
 WHERE ("rental_duration" > 5.0 AND "length" > 117.0)')
 
 set.seed(5432)
 
 chunk_num <- 0
-while (!dbHasCompleted(res)) {
+while (!dbHasCompleted(result_set)) {
   chunk_num <- chunk_num + 1
-  chunk <- dbFetch(res, n = sample(7:13,1))
+  chunk <- dbFetch(result_set, n = sample(7:13,1))
   # print(nrow(chunk))
   chunk$chunk_num <- chunk_num
   if (!chunk_num %% 9) {print(chunk)}
 }
 
-dbClearResult(res)
+dbClearResult(result_set)
 ```
 
 ## Dividing the work between R on your machine and the DBMS
@@ -110,7 +116,7 @@ This probably belongs later in the book.
   + using what you know to write efficient queries that do most of the work on the server
 
 Where you place the `collect` function matters.
-Here is a typical string of dplyr verbs strung together with the magrittr `%>%` command that will be used to tease out the several different behaviors that a lazy query has when passed to different R functions.  This query joins three connection objects into a query we'll call `Q`:
+Here is a typical string of dplyr verbs strung together with the magrittr `%>%` pipe command that will be used to tease out the several different behaviors that a lazy query has when passed to different R functions.  This query joins three connection objects into a query we'll call `Q`:
 
 ```{r}
 rental_table <- dplyr::tbl(con, "rental")
@@ -120,15 +126,15 @@ customer_table <- dplyr::tbl(con, "customer")
 # the 'customer' table has 599 rows
 
 Q <- rental_table %>%
-  left_join(staff_table, by = c("staff_id" = "staff_id")) %>%
-  rename(staff_email = email) %>%
-  left_join(customer_table, by = c("customer_id" = "customer_id")) %>%
-  rename(customer_email = email) %>%
-  select(rental_date, staff_email, customer_email)
+  dplyr::left_join(staff_table, by = c("staff_id" = "staff_id")) %>%
+  dplyr::rename(staff_email = email) %>%
+  dplyr::left_join(customer_table, by = c("customer_id" = "customer_id")) %>%
+  dplyr::rename(customer_email = email) %>%
+  dplyr::select(rental_date, staff_email, customer_email)
 ```
 
 ```{r}
-Q %>% show_query()
+Q %>% dplyr::show_query()
 ```
 
 Here is the SQL query formatted for readability:
@@ -239,7 +245,7 @@ FROM   (SELECT "rental_id",
                "exddcnhait") "aohfdiedlb" 
 ```
 
-Hand-written SQL code to do the same job will probably look a lot nicer and could be more efficient, but functionally dplyr does the job.
+Hand-written SQL code to do the same job will probably look a lot nicer and could be more efficient, but functionally `dplyr` does the job.
 
 ```{r}
 GQ <- dbGetQuery(
@@ -256,7 +262,6 @@ But because `Q` hasn't been executed, we can add to it.  This behavior is the ba
 
 Where you place the `collect` function matters.
 ```{r}
-dbDisconnect(con)
-sp_docker_stop("sql-pet")
+DBI::dbDisconnect(con)
+sqlpetr::sp_docker_stop("sql-pet")
 ```
-
