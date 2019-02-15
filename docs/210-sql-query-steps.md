@@ -1,19 +1,20 @@
 # SQL queries broken down {#chapter_sql-queries-breakdown}
 
+> This chapter has two separate topics: SQL execution steps and passing values to SQL statements.  Do they belong together?  Does the chapter have the right title?
+
 > This chapter explains:
 > 
 > * Some details about how SQL queries work behind the scenes
 > * SQL queries are executed behind the scenes
 > * You can pass values to SQL queries
 
+These packages are called in almost every chapter of the book:
 
 ```r
-# These packages are called in almost every chapter of the book:
 library(tidyverse)
 library(DBI)
 library(RPostgres)
 library(glue)
-library(here)
 require(knitr)
 library(dbplyr)
 library(sqlpetr)
@@ -25,8 +26,7 @@ Start up the `docker-pet` container
 sp_docker_start("sql-pet")
 ```
 
-
-now connect to the database with R
+Connect to the database with R:
 
 ```r
 con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
@@ -42,9 +42,12 @@ con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"
 *  Plan/optimize the data acquisition path
 *  Execute the optimized query / acquire and return data
 
+> how do those steps map to the following code?
+
 
 ```r
 dbWriteTable(con, "mtcars", mtcars, overwrite = TRUE)
+
 rs <- dbSendQuery(con, "SELECT * FROM mtcars WHERE cyl = 4")
 dbFetch(rs)
 ```

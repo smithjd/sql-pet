@@ -79,7 +79,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(title);
+  { content: attr(data-line-number);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -188,7 +188,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="5" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html"><i class="fa fa-check"></i><b>5</b> Connecting Docker, PostgreSQL, and R</a><ul>
 <li class="chapter" data-level="5.1" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#verify-that-docker-is-running"><i class="fa fa-check"></i><b>5.1</b> Verify that Docker is running</a></li>
-<li class="chapter" data-level="5.2" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#clean-up-if-appropriate"><i class="fa fa-check"></i><b>5.2</b> Clean up if appropriate</a></li>
+<li class="chapter" data-level="5.2" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#remove-previous-containers-if-they-exist"><i class="fa fa-check"></i><b>5.2</b> Remove previous containers if they exist</a></li>
 <li class="chapter" data-level="5.3" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#connecting-reading-and-writing-to-postgresql-from-r"><i class="fa fa-check"></i><b>5.3</b> Connecting, reading and writing to PostgreSQL from R</a><ul>
 <li class="chapter" data-level="5.3.1" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#connecting-to-postgresql"><i class="fa fa-check"></i><b>5.3.1</b> Connecting to PostgreSQL</a></li>
 <li class="chapter" data-level="5.3.2" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#interact-with-postgresql"><i class="fa fa-check"></i><b>5.3.2</b> Interact with PostgreSQL</a></li>
@@ -198,7 +198,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html"><i class="fa fa-check"></i><b>6</b> Create the dvdrental database in PostgreSQL in Docker</a><ul>
 <li class="chapter" data-level="6.1" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html#overview"><i class="fa fa-check"></i><b>6.1</b> Overview</a></li>
 <li class="chapter" data-level="6.2" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html#verify-that-docker-is-up-and-running"><i class="fa fa-check"></i><b>6.2</b> Verify that Docker is up and running</a></li>
-<li class="chapter" data-level="6.3" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html#clean-up-if-appropriate-1"><i class="fa fa-check"></i><b>6.3</b> Clean up if appropriate</a></li>
+<li class="chapter" data-level="6.3" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html#clean-up-if-appropriate"><i class="fa fa-check"></i><b>6.3</b> Clean up if appropriate</a></li>
 <li class="chapter" data-level="6.4" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html#build-the-pet-sql-docker-image"><i class="fa fa-check"></i><b>6.4</b> Build the pet-sql Docker image</a></li>
 <li class="chapter" data-level="6.5" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html#run-the-pet-sql-docker-image"><i class="fa fa-check"></i><b>6.5</b> Run the pet-sql Docker Image</a></li>
 <li class="chapter" data-level="6.6" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html#connect-to-postgresql-with-r"><i class="fa fa-check"></i><b>6.6</b> Connect to PostgreSQL with R</a></li>
@@ -602,9 +602,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="24.4" data-path="chapter-sql-queries-breakdown.html"><a href="chapter-sql-queries-breakdown.html#clean-up-3"><i class="fa fa-check"></i><b>24.4</b> Clean up</a></li>
 </ul></li>
 <li class="chapter" data-level="25" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html"><i class="fa fa-check"></i><b>25</b> Writing to the DBMS</a><ul>
-<li class="chapter" data-level="25.1" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#create-a-new-table"><i class="fa fa-check"></i><b>25.1</b> Create a new table</a></li>
-<li class="chapter" data-level="25.2" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#modify-an-existing-table"><i class="fa fa-check"></i><b>25.2</b> Modify an existing table</a></li>
-<li class="chapter" data-level="25.3" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#remove-table-and-clean-up"><i class="fa fa-check"></i><b>25.3</b> Remove table and Clean up</a></li>
+<li class="chapter" data-level="25.1" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#set-up-a-cattle-container"><i class="fa fa-check"></i><b>25.1</b> Set up a <code>cattle</code> container</a><ul>
+<li class="chapter" data-level="25.1.1" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#remove-previous-containers-if-they-exist-1"><i class="fa fa-check"></i><b>25.1.1</b> Remove previous containers if they exist</a></li>
+<li class="chapter" data-level="25.1.2" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#connect-to-postgresql"><i class="fa fa-check"></i><b>25.1.2</b> Connect to PostgreSQL</a></li>
+</ul></li>
+<li class="chapter" data-level="25.2" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#interact-with-postgresql-1"><i class="fa fa-check"></i><b>25.2</b> Interact with PostgreSQL</a><ul>
+<li class="chapter" data-level="25.2.1" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#create-a-new-table-in-the-database"><i class="fa fa-check"></i><b>25.2.1</b> Create a new table in the database</a></li>
+<li class="chapter" data-level="25.2.2" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#modify-an-existing-table"><i class="fa fa-check"></i><b>25.2.2</b> Modify an existing table</a></li>
+<li class="chapter" data-level="25.2.3" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#remove-the-table"><i class="fa fa-check"></i><b>25.2.3</b> Remove the table</a></li>
+</ul></li>
+<li class="chapter" data-level="25.3" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#clean-up-4"><i class="fa fa-check"></i><b>25.3</b> Clean up</a></li>
 </ul></li>
 <li class="appendix"><span><b>Appendices</b></span></li>
 <li class="chapter" data-level="A" data-path="chapter-appendix-other-resources.html"><a href="chapter-appendix-other-resources.html"><i class="fa fa-check"></i><b>A</b> Other resources</a><ul>
@@ -620,8 +627,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="B.2" data-path="chapter-environment-diagram.html"><a href="chapter-environment-diagram.html#communicating-with-docker-applications"><i class="fa fa-check"></i><b>B.2</b> Communicating with Docker Applications</a></li>
 </ul></li>
 <li class="chapter" data-level="C" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html"><i class="fa fa-check"></i><b>C</b> APPENDIX D - Quick Guide to SQL</a><ul>
-<li class="chapter" data-level="C.1" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html#data-definition-langauge-ddl"><i class="fa fa-check"></i><b>C.1</b> Data Definition Langauge (DDL)</a></li>
-<li class="chapter" data-level="C.2" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html#data-manipulation-langauge-dml"><i class="fa fa-check"></i><b>C.2</b> Data Manipulation Langauge (DML)</a></li>
+<li class="chapter" data-level="C.1" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html#data-manipulation-langauge-dml"><i class="fa fa-check"></i><b>C.1</b> Data Manipulation Langauge (DML)</a></li>
+<li class="chapter" data-level="C.2" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html#data-definition-langauge-ddl"><i class="fa fa-check"></i><b>C.2</b> Data Definition Langauge (DDL)</a></li>
 <li class="chapter" data-level="C.3" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html#data-control-language-dcl"><i class="fa fa-check"></i><b>C.3</b> Data Control Language (DCL)</a></li>
 <li class="chapter" data-level="C.4" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html#transaction-control-language-tcl"><i class="fa fa-check"></i><b>C.4</b> Transaction Control Language (TCL)</a></li>
 </ul></li>
@@ -1647,7 +1654,7 @@ public_tables <span class="op">%&gt;%</span>
 <p>How many column names are unique?</p>
 <pre class="sourceCode r"><code class="sourceCode r">public_tables <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(column_name) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(n <span class="op">==</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>()</code></pre>
 <pre><code>## # A tibble: 1 x 1
-##       n
+##      nn
 ##   &lt;int&gt;
 ## 1    22</code></pre>
 </div>
@@ -2337,12 +2344,13 @@ all_meta</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ls</span>()</code></pre>
 <pre><code>##  [1] &quot;all_meta&quot;                  &quot;columns_info_schema_info&quot; 
 ##  [3] &quot;columns_info_schema_table&quot; &quot;con&quot;                      
-##  [5] &quot;constraint_column_usage&quot;   &quot;key_column_usage&quot;         
-##  [7] &quot;keys&quot;                      &quot;public_tables&quot;            
-##  [9] &quot;referential_constraints&quot;   &quot;rs&quot;                       
-## [11] &quot;some_tables&quot;               &quot;table_constraints&quot;        
-## [13] &quot;table_info&quot;                &quot;table_info_schema_table&quot;  
-## [15] &quot;table_list&quot;                &quot;tables&quot;</code></pre>
+##  [5] &quot;constraint_column_usage&quot;   &quot;cranex&quot;                   
+##  [7] &quot;key_column_usage&quot;          &quot;keys&quot;                     
+##  [9] &quot;public_tables&quot;             &quot;referential_constraints&quot;  
+## [11] &quot;rs&quot;                        &quot;some_tables&quot;              
+## [13] &quot;table_constraints&quot;         &quot;table_info&quot;               
+## [15] &quot;table_info_schema_table&quot;   &quot;table_list&quot;               
+## [17] &quot;tables&quot;</code></pre>
 
 </div>
 </div>

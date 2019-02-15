@@ -96,7 +96,9 @@ Although there are [ANSI standards](https://en.wikipedia.org/wiki/SQL#Interopera
 
 The tables in a dbms correspond to a data frame in R, so interaction with a dbms is fairly natural for useRs. 
 
-SQL code is characterized by the fact that it describes *what* to retrieve, leaving the dbms back end to determine how to do it.  Therefore it has a *batch* feel. The pipe operator (`%>%`, which is read as _and then_) is inherently procedural when it's used with dplyr: it can be used to construct queries step-by-step. Once a test dplyr query has been executed, it is easy to inspect the results and add steps with the pipe operator to refine or expand the query.  
+SQL code is characterized by the fact that it describes *what* to retrieve, leaving the dbms back end to determine how to do it.  Therefore it has a *batch* feel. The pipe operator (`%>%`, which is read as _and then_) is inherently procedural when it's used with dplyr: it can be used to construct queries step-by-step. Once a test dplyr query has been executed, it is easy to inspect the results and add steps with the pipe operator to refine or expand the query.
+
+[APPENDIX D - Quick Guide to SQL](#chapter_appendix-sql-quick-guide) lists the different elements of the SQL language.
 
 ### Data mapping between R vs SQL data types
 

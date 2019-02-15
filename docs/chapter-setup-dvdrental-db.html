@@ -79,7 +79,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(title);
+  { content: attr(data-line-number);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -188,7 +188,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="5" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html"><i class="fa fa-check"></i><b>5</b> Connecting Docker, PostgreSQL, and R</a><ul>
 <li class="chapter" data-level="5.1" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#verify-that-docker-is-running"><i class="fa fa-check"></i><b>5.1</b> Verify that Docker is running</a></li>
-<li class="chapter" data-level="5.2" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#clean-up-if-appropriate"><i class="fa fa-check"></i><b>5.2</b> Clean up if appropriate</a></li>
+<li class="chapter" data-level="5.2" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#remove-previous-containers-if-they-exist"><i class="fa fa-check"></i><b>5.2</b> Remove previous containers if they exist</a></li>
 <li class="chapter" data-level="5.3" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#connecting-reading-and-writing-to-postgresql-from-r"><i class="fa fa-check"></i><b>5.3</b> Connecting, reading and writing to PostgreSQL from R</a><ul>
 <li class="chapter" data-level="5.3.1" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#connecting-to-postgresql"><i class="fa fa-check"></i><b>5.3.1</b> Connecting to PostgreSQL</a></li>
 <li class="chapter" data-level="5.3.2" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#interact-with-postgresql"><i class="fa fa-check"></i><b>5.3.2</b> Interact with PostgreSQL</a></li>
@@ -198,7 +198,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html"><i class="fa fa-check"></i><b>6</b> Create the dvdrental database in PostgreSQL in Docker</a><ul>
 <li class="chapter" data-level="6.1" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html#overview"><i class="fa fa-check"></i><b>6.1</b> Overview</a></li>
 <li class="chapter" data-level="6.2" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html#verify-that-docker-is-up-and-running"><i class="fa fa-check"></i><b>6.2</b> Verify that Docker is up and running</a></li>
-<li class="chapter" data-level="6.3" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html#clean-up-if-appropriate-1"><i class="fa fa-check"></i><b>6.3</b> Clean up if appropriate</a></li>
+<li class="chapter" data-level="6.3" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html#clean-up-if-appropriate"><i class="fa fa-check"></i><b>6.3</b> Clean up if appropriate</a></li>
 <li class="chapter" data-level="6.4" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html#build-the-pet-sql-docker-image"><i class="fa fa-check"></i><b>6.4</b> Build the pet-sql Docker image</a></li>
 <li class="chapter" data-level="6.5" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html#run-the-pet-sql-docker-image"><i class="fa fa-check"></i><b>6.5</b> Run the pet-sql Docker Image</a></li>
 <li class="chapter" data-level="6.6" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html#connect-to-postgresql-with-r"><i class="fa fa-check"></i><b>6.6</b> Connect to PostgreSQL with R</a></li>
@@ -602,9 +602,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="24.4" data-path="chapter-sql-queries-breakdown.html"><a href="chapter-sql-queries-breakdown.html#clean-up-3"><i class="fa fa-check"></i><b>24.4</b> Clean up</a></li>
 </ul></li>
 <li class="chapter" data-level="25" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html"><i class="fa fa-check"></i><b>25</b> Writing to the DBMS</a><ul>
-<li class="chapter" data-level="25.1" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#create-a-new-table"><i class="fa fa-check"></i><b>25.1</b> Create a new table</a></li>
-<li class="chapter" data-level="25.2" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#modify-an-existing-table"><i class="fa fa-check"></i><b>25.2</b> Modify an existing table</a></li>
-<li class="chapter" data-level="25.3" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#remove-table-and-clean-up"><i class="fa fa-check"></i><b>25.3</b> Remove table and Clean up</a></li>
+<li class="chapter" data-level="25.1" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#set-up-a-cattle-container"><i class="fa fa-check"></i><b>25.1</b> Set up a <code>cattle</code> container</a><ul>
+<li class="chapter" data-level="25.1.1" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#remove-previous-containers-if-they-exist-1"><i class="fa fa-check"></i><b>25.1.1</b> Remove previous containers if they exist</a></li>
+<li class="chapter" data-level="25.1.2" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#connect-to-postgresql"><i class="fa fa-check"></i><b>25.1.2</b> Connect to PostgreSQL</a></li>
+</ul></li>
+<li class="chapter" data-level="25.2" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#interact-with-postgresql-1"><i class="fa fa-check"></i><b>25.2</b> Interact with PostgreSQL</a><ul>
+<li class="chapter" data-level="25.2.1" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#create-a-new-table-in-the-database"><i class="fa fa-check"></i><b>25.2.1</b> Create a new table in the database</a></li>
+<li class="chapter" data-level="25.2.2" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#modify-an-existing-table"><i class="fa fa-check"></i><b>25.2.2</b> Modify an existing table</a></li>
+<li class="chapter" data-level="25.2.3" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#remove-the-table"><i class="fa fa-check"></i><b>25.2.3</b> Remove the table</a></li>
+</ul></li>
+<li class="chapter" data-level="25.3" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#clean-up-4"><i class="fa fa-check"></i><b>25.3</b> Clean up</a></li>
 </ul></li>
 <li class="appendix"><span><b>Appendices</b></span></li>
 <li class="chapter" data-level="A" data-path="chapter-appendix-other-resources.html"><a href="chapter-appendix-other-resources.html"><i class="fa fa-check"></i><b>A</b> Other resources</a><ul>
@@ -620,8 +627,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="B.2" data-path="chapter-environment-diagram.html"><a href="chapter-environment-diagram.html#communicating-with-docker-applications"><i class="fa fa-check"></i><b>B.2</b> Communicating with Docker Applications</a></li>
 </ul></li>
 <li class="chapter" data-level="C" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html"><i class="fa fa-check"></i><b>C</b> APPENDIX D - Quick Guide to SQL</a><ul>
-<li class="chapter" data-level="C.1" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html#data-definition-langauge-ddl"><i class="fa fa-check"></i><b>C.1</b> Data Definition Langauge (DDL)</a></li>
-<li class="chapter" data-level="C.2" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html#data-manipulation-langauge-dml"><i class="fa fa-check"></i><b>C.2</b> Data Manipulation Langauge (DML)</a></li>
+<li class="chapter" data-level="C.1" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html#data-manipulation-langauge-dml"><i class="fa fa-check"></i><b>C.1</b> Data Manipulation Langauge (DML)</a></li>
+<li class="chapter" data-level="C.2" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html#data-definition-langauge-ddl"><i class="fa fa-check"></i><b>C.2</b> Data Definition Langauge (DDL)</a></li>
 <li class="chapter" data-level="C.3" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html#data-control-language-dcl"><i class="fa fa-check"></i><b>C.3</b> Data Control Language (DCL)</a></li>
 <li class="chapter" data-level="C.4" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html#transaction-control-language-tcl"><i class="fa fa-check"></i><b>C.4</b> Transaction Control Language (TCL)</a></li>
 </ul></li>
@@ -705,7 +712,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_check_that_docker_is_up</span>()</code></pre>
 <pre><code>## [1] &quot;Docker is up but running no containers&quot;</code></pre>
 </div>
-<div id="clean-up-if-appropriate-1" class="section level2">
+<div id="clean-up-if-appropriate" class="section level2">
 <h2><span class="header-section-number">6.3</span> Clean up if appropriate</h2>
 <p>Force-remove the <code>cattle</code> and <code>sql-pet</code> containers if they exist (e.g., from a prior runs):</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_docker_remove_container</span>(<span class="st">&quot;cattle&quot;</span>)</code></pre>
@@ -721,11 +728,16 @@ in <code>sqlpetr</code> to build this image, called <a href="https://smithjd.git
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_make_dvdrental_image</span>(<span class="st">&quot;postgres-dvdrental&quot;</span>)</code></pre>
 <p>Did it work? We have a function that lists the images into a tibble!</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_docker_images_tibble</span>()</code></pre>
-<pre><code>## # A tibble: 2 x 7
-##   image_id  repository   tag    digest          created  created_at   size 
-##   &lt;chr&gt;     &lt;chr&gt;        &lt;chr&gt;  &lt;chr&gt;           &lt;chr&gt;    &lt;chr&gt;        &lt;chr&gt;
-## 1 4ed448c7… postgres-dv… latest &lt;none&gt;          About a… 2019-02-15 … 251MB
-## 2 11160398… postgres     10     sha256:a0fdfd0… 21 hour… 2019-02-14 … 230MB</code></pre>
+<pre><code>## # A tibble: 7 x 7
+##   image_id  repository   tag    digest           created created_at   size 
+##   &lt;chr&gt;     &lt;chr&gt;        &lt;chr&gt;  &lt;chr&gt;            &lt;chr&gt;   &lt;chr&gt;        &lt;chr&gt;
+## 1 d9449a1f… postgres-dv… latest &lt;none&gt;           9 minu… 2019-02-15 … 251MB
+## 2 f5e93aa6… &lt;none&gt;       &lt;none&gt; &lt;none&gt;           5 mont… 2018-09-10 … 258MB
+## 3 ac25c2ba… postgres     10     sha256:b5f07874… 5 mont… 2018-09-04 … 228MB
+## 4 93ca3834… r-base       latest sha256:3801677d… 7 mont… 2018-07-16 … 678MB
+## 5 23e8b4b8… postgres     latest sha256:d8011033… 7 mont… 2018-07-16 … 236MB
+## 6 74f8760a… ubuntu       latest sha256:30e04dda… 7 mont… 2018-07-16 … 82.4…
+## 7 11cd0b38… alpine       latest sha256:70430763… 7 mont… 2018-07-06 … 4.41…</code></pre>
 </div>
 <div id="run-the-pet-sql-docker-image" class="section level2">
 <h2><span class="header-section-number">6.5</span> Run the pet-sql Docker Image</h2>
@@ -753,7 +765,7 @@ The name should contain only slashes, letters, numbers and underscores. Other ch
 <pre><code>## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;
-## 1 276884ed7553 post… docker… 2019-02-1… 1 seco… 0.0.… Up Le… 0B (… sql-…
+## 1 b0cb9ab1dadf post… docker… 2019-02-1… 1 seco… 0.0.… Up Le… 0B (… sql-…
 ## # … with 3 more variables: labels &lt;chr&gt;, mounts &lt;chr&gt;, networks &lt;chr&gt;</code></pre>
 </div>
 <div id="connect-to-postgresql-with-r" class="section level2">
@@ -799,7 +811,7 @@ the <em>running</em> containers. But we can use the <code>list_all</code> option
 <pre><code>## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;
-## 1 276884ed7553 post… docker… 2019-02-1… 7 seco… &lt;NA&gt;  Exite… 0B (… sql-…
+## 1 b0cb9ab1dadf post… docker… 2019-02-1… 5 seco… &lt;NA&gt;  Exite… 0B (… sql-…
 ## # … with 3 more variables: labels &lt;chr&gt;, mounts &lt;chr&gt;, networks &lt;chr&gt;</code></pre>
 <p>Restart the container and verify that the dvdrental tables are still there:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_docker_start</span>(<span class="st">&quot;sql-pet&quot;</span>)
@@ -807,7 +819,7 @@ the <em>running</em> containers. But we can use the <code>list_all</code> option
 <pre><code>## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;
-## 1 276884ed7553 post… docker… 2019-02-1… 9 seco… 0.0.… Up Le… 63B … sql-…
+## 1 b0cb9ab1dadf post… docker… 2019-02-1… 6 seco… 0.0.… Up Le… 63B … sql-…
 ## # … with 3 more variables: labels &lt;chr&gt;, mounts &lt;chr&gt;, networks &lt;chr&gt;</code></pre>
 <p>Connect to the <code>dvdrental</code> database in PostgreSQL:</p>
 <pre class="sourceCode r"><code class="sourceCode r">con &lt;-<span class="st"> </span><span class="kw">sp_get_postgres_connection</span>(
@@ -832,21 +844,21 @@ the <em>running</em> containers. But we can use the <code>list_all</code> option
 <p>Show that the container still exists even though it’s not running</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_show_all_docker_containers</span>()</code></pre>
 <pre><code>## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## 276884ed7553        postgres-dvdrental   &quot;docker-entrypoint.s…&quot;   9 seconds ago       Exited (0) Less than a second ago                       sql-pet</code></pre>
+## b0cb9ab1dadf        postgres-dvdrental   &quot;docker-entrypoint.s…&quot;   7 seconds ago       Exited (0) Less than a second ago                       sql-pet</code></pre>
 <p>Next time, you can just use this command to start the container:</p>
 <blockquote>
-<p><code>sp_docker_start("sql-pet")</code></p>
+<p><code>sp_docker_start(&quot;sql-pet&quot;)</code></p>
 </blockquote>
 <p>And once stopped, the container can be removed with:</p>
 <blockquote>
-<p><code>sp_check_that_docker_is_up("sql-pet")</code></p>
+<p><code>sp_check_that_docker_is_up(&quot;sql-pet&quot;)</code></p>
 </blockquote>
 </div>
 <div id="using-the-sql-pet-container-in-the-rest-of-the-book" class="section level2">
 <h2><span class="header-section-number">6.9</span> Using the <code>sql-pet</code> container in the rest of the book</h2>
 <p>After this point in the book, we assume that Docker is up and that we can always start up our <em>sql-pet database</em> with:</p>
 <blockquote>
-<p><code>sp_docker_start("sql-pet")</code></p>
+<p><code>sp_docker_start(&quot;sql-pet&quot;)</code></p>
 </blockquote>
 
 </div>

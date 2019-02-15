@@ -4,7 +4,7 @@ This chapter demonstrates how to:
 
 >
 >  * Set up and connect to a `cattle` database
->  * Create, modify, and remove a table.
+>  * Create, modify, and remove a database table
 >
 
 In a corporate setting, you may be creating your own tables or modifying existing tables less frequently than retrieving data. Nevertheless, in our sandbox you can easily do so.
@@ -66,7 +66,7 @@ sp_check_that_docker_is_up()
 ```
 ## [1] "Docker is up, running these containers:"                                                                                                       
 ## [2] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES"   
-## [3] "ed1d3f62c35c        postgres:10         \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
+## [3] "a4862b4d1df7        postgres:10         \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
 ```
 
 ### Connect to PostgreSQL
