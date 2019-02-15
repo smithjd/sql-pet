@@ -1,37 +1,111 @@
 # Writing to the DBMS {#chapter_writing-to-the-dbms}
 
-At the end of this chapter, you will be able to 
+This chapter demonstrates how to:
 
-  * Write queries in R using docker container.
-  * Start and connect to the database with R.
-  * Create, Modify, and remove the table.
+>
+>  * Set up and connect to a `cattle` database
+>  * Create, modify, and remove a table.
+>
 
+In a corporate setting, you may be creating your own tables or modifying existing tables less frequently than retrieving data. Nevertheless, in our sandbox you can easily do so.
 
-Start up the `docker-pet` container:
-
+The following packages are used in this chapter:
 
 ```r
-sp_docker_start("sql-pet")
+library(tidyverse)
+library(DBI)
+library(RPostgres)
+require(knitr)
+library(sqlpetr)
 ```
 
+## Set up a `cattle` container
 
-Now connect to the database with R using your login info:
+Check that Docker is up and running:
+
 
 ```r
-con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
-                         password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
-                         dbname = "dvdrental",
+sp_check_that_docker_is_up()
+```
+
+```
+## [1] "Docker is up but running no containers"
+```
+
+### Remove previous containers if they exist
+Remove the `cattle` and `sql-pet` containers if they exist (e.g., from prior experiments).  
+
+```r
+sp_docker_remove_container("cattle")
+```
+
+```
+## [1] 0
+```
+
+```r
+sp_docker_remove_container("sql-pet")
+```
+
+```
+## [1] 0
+```
+
+Create a new `cattle` container:
+
+```r
+sp_make_simple_pg("cattle")
+```
+
+Show that we're ready to connect:
+
+```r
+sp_check_that_docker_is_up()
+```
+
+```
+## [1] "Docker is up, running these containers:"                                                                                                       
+## [2] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES"   
+## [3] "ed1d3f62c35c        postgres:10         \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
+```
+
+### Connect to PostgreSQL
+
+Connect to PostgreSQL using the `sp_get_postgres_connection` function:
+
+```r
+con <- sp_get_postgres_connection(user = "postgres",
+                         password = "postgres",
+                         dbname = "postgres",
                          seconds_to_test = 30)
 ```
-## Create a new table
 
-This is an example from the DBI help file.
+## Interact with PostgreSQL
+
+Check on the contents of the database.
 
 
 ```r
-dbWriteTable(con, "cars", head(cars, 3)) # "cars" is a built-in dataset, not to be confused with mtcars
+DBI::dbListTables(con)
+```
 
-dbReadTable(con, "cars")   # there are 3 rows
+```
+## character(0)
+```
+It does not contain any tables yet.
+ 
+### Create a new table in the database
+
+This is an example from the DBI help file using the "cars" built-in dataset, not to be confused with mtcars:
+
+```r
+dbWriteTable(con, "cars", head(cars, 3)) #
+```
+
+The `cars` table has 3 rows:
+
+```r
+dbReadTable(con, "cars")  
 ```
 
 ```
@@ -40,7 +114,7 @@ dbReadTable(con, "cars")   # there are 3 rows
 ## 2     4   10
 ## 3     7    4
 ```
-## Modify an existing table
+### Modify an existing table
 
 To add additional rows or instances to the "cars" table, we will use INSERT command with their values.
 
@@ -58,8 +132,10 @@ dbExecute(
 ## [1] 3
 ```
 
+Now it has 6 rows:
+
 ```r
-dbReadTable(con, "cars")   # there are now 6 rows
+dbReadTable(con, "cars")
 ```
 
 ```
@@ -72,8 +148,9 @@ dbReadTable(con, "cars")   # there are now 6 rows
 ## 6     3    3
 ```
 
+Pass values using the param argument:
+
 ```r
-# Pass values using the param argument:
 dbExecute(
   con,
   "INSERT INTO cars (speed, dist) VALUES ($1, $2)",
@@ -85,8 +162,10 @@ dbExecute(
 ## [1] 4
 ```
 
+Now there are 10 rows:
+
 ```r
-dbReadTable(con, "cars")   # there are now 10 rows
+dbReadTable(con, "cars")
 ```
 
 ```
@@ -103,17 +182,26 @@ dbReadTable(con, "cars")   # there are now 10 rows
 ## 10     7    8
 ```
 
-## Remove table and Clean up
+### Remove the table 
 
-Here you will remove the table "cars", disconnect from the database and exit docker.
+Remove the "cars"  table.
 
 
 ```r
 dbRemoveTable(con, "cars")
+```
 
-# diconnect from the db
+## Clean up
+
+Disconnect from the database:
+
+```r
 dbDisconnect(con)
+```
 
-sp_docker_stop("sql-pet")
+Stop the `cattle` container, but leave it around for future use.
+
+```r
+sp_docker_stop("cattle")
 ```
 
