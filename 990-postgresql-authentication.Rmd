@@ -29,7 +29,8 @@ First, we need to make sure we don't have any other databases listening on the d
 ```{r}
 sqlpetr::sp_check_that_docker_is_up()
 sqlpetr::sp_docker_remove_container("cattle")
-sqlpetr::sp_docker_stop("sql-pet")
+sqlpetr::sp_docker_remove_container("sql-pet")
+# sqlpetr::sp_docker_stop("sql-pet")
 ```
 
 ### Creating a new container
