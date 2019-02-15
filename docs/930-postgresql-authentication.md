@@ -1,4 +1,4 @@
-# PostgreSQL Authentication {#chapter_appendix-postresql-authentication}
+# Appendix C - PostgreSQL Authentication {#chapter_appendix-postresql-authentication}
 
 ## Introduction
 PostgreSQL has a very robust and flexible set of authentication methods [@PGDG2018a]. In most production environments, these will be managed by the database administrator (DBA) on a need-to-access basis. People and programs will be granted access only to a minimum set of capabilities required to function, and nothing more.

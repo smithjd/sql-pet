@@ -1,4 +1,4 @@
-# Setup instructions{#chapter_appendix-setup-instructions}
+# Appendix A - Setup instructions{#chapter_appendix-setup-instructions}
 
 > This appendix explains:
 > 

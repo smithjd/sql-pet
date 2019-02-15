@@ -1,4 +1,4 @@
-# Additional technical details for Windows users {#chapter_windows-tech-details}
+# Appendix B - Additional technical details for Windows users {#chapter_windows-tech-details}
 
 > This chapter explains:
 > 
