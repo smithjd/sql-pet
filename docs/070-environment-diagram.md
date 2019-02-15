@@ -180,19 +180,15 @@ file.info("README.md")
 
 ```
 ##           size isdir mode               mtime               ctime
-## README.md 4278 FALSE  644 2019-02-12 12:36:58 2019-02-12 12:36:58
-##                         atime uid gid      uname grname
-## README.md 2019-02-12 19:24:29 501  20 jimtyhurst  staff
+## README.md 4278 FALSE  644 2019-02-15 14:12:35 2019-02-15 14:12:35
+##                         atime  uid  gid uname grname
+## README.md 2019-02-15 14:12:35 1000 1000 znmeb  znmeb
 ```
 The equivalent information from executing a command on the CLI or Terminal would be
 
 
 ```r
 system2("ls",  "-l README.md", stdout = TRUE, stderr = FALSE)
-```
-
-```
-## [1] "-rw-r--r--  1 jimtyhurst  staff  4278 Feb 12 12:36 README.md"
 ```
 ### Get info on the same OS file inside Docker from R Code
 
@@ -202,15 +198,7 @@ system2("docker", "exec sql-pet ls -l petdir/README.md", stdout = TRUE, stderr =
 ```
 
 ```
-## Warning in system2("docker", "exec sql-pet ls -l petdir/README.md", stdout
-## = TRUE, : running command ''docker' exec sql-pet ls -l petdir/README.md 2>/
-## dev/null' had status 2
-```
-
-```
-## character(0)
-## attr(,"status")
-## [1] 2
+## [1] "-rw-r--r-- 1 1000 1000 4278 Feb 15 22:12 petdir/README.md"
 ```
 
 ### Docker and psql together from R or your CLI

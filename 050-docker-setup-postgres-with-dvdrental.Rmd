@@ -9,7 +9,7 @@
 
 ## Overview
 
-In the last chapter we connected to PostgreSQL from R.  Now we set up a "realistic" database named `dvdrental`. There are different approaches to doing this: this chapter sets it up in a way that doesn't show all the Docker details.  If you are interested, you can look at an alternative approach in an appendix: [Creating the sql-pet Docker container a step at a time](#step-at-a-time-docker).  It breaks the process down into smaller chunks.
+In the last chapter we connected to PostgreSQL from R.  Now we set up a "realistic" database named `dvdrental`. There are different approaches to doing this: this chapter sets it up in a way that doesn't show all the Docker details.
 
 These packages are called in this Chapter:
 ```{r setup, echo=TRUE, message=FALSE, warning=FALSE}
@@ -29,72 +29,78 @@ sp_check_that_docker_is_up()
 ```
 
 ## Clean up if appropriate
-Remove the `cattle` and `sql-pet` containers if they exist (e.g., from a prior runs):
+Force-remove the `cattle` and `sql-pet` containers if they exist (e.g., from a prior runs):
 ```{r}
 sp_docker_remove_container("cattle")
 sp_docker_remove_container("sql-pet")
 ```
-## Build the pet-sql Docker Image
+## Build the pet-sql Docker image
+For the rest of the book we will be using a Docker image called
+`postgres-dvdrental`. To save space here in the book, we've created a function
+in `sqlpetr` to build this image, called [`sp_make_dvdrental_image`](https://smithjd.github.io/sqlpetr/reference/sp_make_dvdrental_image.html). Vignette [Building the `dvdrental` Docker Image
+](https://smithjd.github.io/sqlpetr/articles/building-the-dvdrental-docker-image.html) describes the build process.
 
-Build an image that derives from postgres:10.  The commands in `dvdrental.Dockerfile` creates a Docker container running PostgreSQL, and loads the `dvdrental` database.  The [dvdrental.Dockerfile](./dvdrental.Dockerfile) is discussed below.  
 ```{r}
+sp_make_dvdrental_image("postgres-dvdrental")
+```
 
-docker_messages <- system2("docker", 
-        glue("build ", # tells Docker to build an image that can be loaded as a container
-          "--tag postgres-dvdrental ", # (or -t) tells Docker to name the image
-          "--file dvdrental.Dockerfile ", #(or -f) tells Docker to read `build` instructions from the dvdrental.Dockerfile
-          " . "),  # tells Docker to look for dvdrental.Dockerfile, and files it references, in the current directory
-          stdout = TRUE, stderr = TRUE)
+Did it work? We have a function that lists the images into a tibble!
+```{r}
+sp_docker_images_tibble()
 
-cat(docker_messages, sep = "\n")
 ```
 
 ## Run the pet-sql Docker Image
-Run Docker to bring up PostgreSQL.  The first time it runs it will take a minute to create the PostgreSQL environment.  There are two important parts to this that may not be obvious:
+Now we can run the image in a container and connect to the database. To run the
+image we use an `sqlpetr` function called [`sp_pg_docker_run`](https://smithjd.github.io/sqlpetr/reference/sp_pg_docker_run.html)
 
-  * The `source=` parameter points to [dvdrental.Dockerfile](./dvdrental.Dockerfile), which does most of the heavy lifting.  It has detailed, line-by-line comments to explain what it is doing.  
-  *  *Inside* [dvdrental.Dockerfile](./dvdrental.Dockerfile) the command `COPY init-dvdrental.sh /docker-entrypoint-initdb.d/` copies  [init-dvdrental.sh](init-dvdrental.sh) from the local file system into the specified location in the Docker container.  When the PostgreSQL Docker container initializes, it looks for that file and executes it. 
-  
-Doing all of that work behind the scenes involves two layers.  Depending on how you look at it, that may be more or less difficult to understand than [an alternative method]((#step-at-a-time-docker)).
+When the image runs in the container, we can mount the current working directory
+into a path in the container. You'll see this in action in a future chapter. 
+Docker will create this path if it doesn't exist.
 
-The previous commands built a Docker _image_ named `postgres-dvdrental`. The following commands will run that image in a _container_ named `sql-pet`, exposing PostgreSQL's port 5432 on your local machine:
+To specify the path, set the parameter `mount_here_as` to the name you want.
+Rules for the name:
+
+* If you don't want to mount into the container, specify `NULL`. This is the 
+default!
+* The name must start with a `/` and be a valid absolute path.
+The name should contain only slashes, letters, numbers and underscores. Other characters may or may not work. The `snakecase` package is your friend.
 
 ```{r}
-wd <- getwd()
-
-docker_cmd <- glue(
-  "run ",      # Run is the Docker command.  Everything that follows are `run` parameters.
-  "--detach ", # (or `-d`) tells Docker to disconnect from the terminal / program issuing the command
-  " --name sql-pet ",     # tells Docker to give the container a name: `sql-pet`
-  "--publish 5432:5432 ", # tells Docker to expose the PostgreSQL port 5432 to the local network with 5432
-  "--mount ", # tells Docker to mount a volume -- mapping Docker's internal file structure to the host file structure
-  "type=bind,", # tells Docker that the mount command points to an actual file on the host system
-  'source="', # specifies the directory on the host to mount into the container at the mount point specified by `target=`
-  wd, '",', # the current working directory, as retrieved above
-  "target=/petdir", # tells Docker to refer to the current directory as "/petdir" in its file system
-  " postgres-dvdrental" # tells Docker to run the image was built in the previous step
+sp_pg_docker_run(
+  container_name = "sql-pet",
+  image_tag = "postgres-dvdrental",
+  postgres_password = "postgres",
+  mount_here_as = "/petdir"
 )
 ```
 
-If you are curious you can paste  `docker_cmd` into a terminal window after the command 'docker':
+Did it work?
 ```{r}
-system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
+sp_docker_containers_tibble()
+
 ```
+
 ## Connect to PostgreSQL with R
 
 Use the DBI package to connect to the `dvdrental` database in PostgreSQL.  Remember the settings discussion about [keeping passwords hidden][Pause for some security considerations]
 
 ```{r }
-con <- sp_get_postgres_connection(password = "postgres",
-                         user = "postgres",
-                         dbname = "dvdrental",
-                         seconds_to_test = 30)
+con <- sp_get_postgres_connection(
+  host = "localhost",
+  port = 5432,
+  user = "postgres",
+  password = "postgres",
+  dbname = "dvdrental",
+  seconds_to_test = 30
+)
 ```
 
 List the tables in the database and the fields in one of those tables.  
 ```{r }
 dbListTables(con)
-
+```
+```{r }
 dbListFields(con, "rental")
 ```
 
@@ -108,17 +114,33 @@ dbDisconnect(con)
 Stop the container:
 ```{r}
 sp_docker_stop("sql-pet")
+sp_docker_containers_tibble()
 ```
+
+When we stopped `sql-pet`, it no longer appeared in the tibble. But the
+container is still there. `sp_docker_containers_tibble` by default only lists
+the *running* containers. But we can use the `list_all` option and see it:
+
+```{r}
+sp_docker_containers_tibble(list_all = TRUE)
+```
+
+
 Restart the container and verify that the dvdrental tables are still there:
 ```{r}
 sp_docker_start("sql-pet")
+sp_docker_containers_tibble()
 ```
 Connect to the `dvdrental` database in PostgreSQL:
 ```{r}
-con <- sp_get_postgres_connection(user = "postgres",
-                         password = "postgres",
-                         dbname = "dvdrental",
-                         seconds_to_test = 30)
+con <- sp_get_postgres_connection(
+  host = "localhost",
+  port = 5432,
+  user = "postgres",
+  password = "postgres",
+  dbname = "dvdrental",
+  seconds_to_test = 30
+)
 ```
 
 Check that you can still see the fields in the `rental` table:
