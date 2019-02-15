@@ -3,7 +3,7 @@
 ## Introduction
 PostgreSQL has a very robust and flexible set of authentication methods [@PGDG2018a]. In most production environments, these will be managed by the database administrator (DBA) on a need-to-access basis. People and programs will be granted access only to a minimum set of capabilities required to function, and nothing more.
 
-In this book, we are using a PostgreSQL Docker image [@Docker2018]. When we create a container from that image, we use its native mechanism to create the `postgres` database superuser with a password specified in an R environment file `~/.Renviron`. See [Defining the PostgreSQL connection parameters] for how we do this.
+In this book, we are using a PostgreSQL Docker image [@Docker2018]. When we create a container from that image, we use its native mechanism to create the `postgres` database superuser with a password specified in an R environment file `~/.Renviron`. See [Defining the PostgreSQL connection parameters](#chapter_dbms-login-credentials) for how we do this.
 
 What that means is that you are the DBA - the database superuser - for the PostgreSQL database cluster running in the container! You can create and destroy databases, schemas, tables, views, etc. You can also create and destroy users - called `roles` in PostgreSQL, and `GRANT` or `REVOKE` their privileges with great precision.
 
@@ -18,7 +18,7 @@ Once a role has been created, you need five items to open a connection to the Po
 2. The `port`. This is the port the server is listening on. It's usually the default, `5432`, and that's what we use. But in a secure environment, it will often be some random number to lower the chances that an attacker can find the database server. And if you have more than one server on the network, you'll need to use different ports for each of them.
 3. The `dbname` to connect to. This database must exist or the connection attempt will fail.
 4. The `user`. This user must exist in the database cluster and be allowed to access the database. We are using the database superuser `postgres` in this book.
-5. The `password`. This is set by the DBA for the user. In this book we use the password defined in [Defining the PostgreSQL connection parameters].
+5. The `password`. This is set by the DBA for the user. In this book we use the password defined in [Defining the PostgreSQL connection parameters](#chapter_dbms-login-credentials).
 
 ## Adding roles
 As noted above, PostgreSQL has a very flexible fine-grained access permissions system. We can't cover all of it; see @PGDG2018c for the full details. But we can give an example.
@@ -53,6 +53,7 @@ We'll create a "cattle" container with a default PostgreSQL 10 database cluster.
 
 ```r
 sqlpetr::sp_make_simple_pg("cattle")
+
 cattle_conn <- sqlpetr::sp_get_postgres_connection(
   host = "localhost",
   port = 5432,
@@ -82,6 +83,7 @@ CREATE DATABASE charlie OWNER = charlie;
 
 ```r
 DBI::dbDisconnect(cattle_conn)
+
 cattle_conn <- sqlpetr::sp_get_postgres_connection(
   host = "localhost",
   port = 5432,
@@ -101,11 +103,15 @@ OK, we can connect. Let's do some stuff!
 
 ```r
 data("iris")
+```
+`dbCreateTable` creates the table with columns matching the data frame. But it does not send data to the table.
 
-# `dbCreateTable` creates the table with columns matching the data frame. But it does not send data to the table.
+```r
 DBI::dbCreateTable(cattle_conn, "iris", iris)
+```
+To send data, we use `dbAppendTable`.
 
-# To send data, we use `dbAppendTable`.
+```r
 DBI::dbAppendTable(cattle_conn, "iris", iris)
 ```
 
