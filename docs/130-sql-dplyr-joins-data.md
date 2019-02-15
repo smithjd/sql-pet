@@ -29,11 +29,8 @@ sp_show_all_docker_containers()
 ```
 
 ```
-## CONTAINER ID        IMAGE                             COMMAND                  CREATED             STATUS                     PORTS                                     NAMES
-## 5bbf878aaf9a        postgres-dvdrental                "docker-entrypoint..."   49 seconds ago      Exited (0) 2 seconds ago                                             sql-pet
-## 1261c73d983d        docker.io/dpage/pgadmin4:latest   "/entrypoint.sh"         9 hours ago         Exited (255) 9 hours ago   443/tcp, 0.0.0.0:8686->80/tcp             pgadmin4
-## 12c5f548caac        rstatsp:latest                    "/bin/sh -c 'servi..."   9 hours ago         Exited (255) 9 hours ago   80/tcp, 443/tcp, 0.0.0.0:8004->8004/tcp   rstats
-## 8082929a1424        postgis:latest                    "docker-entrypoint..."   9 hours ago         Exited (255) 9 hours ago   0.0.0.0:5439->5432/tcp                    postgis
+## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                     PORTS               NAMES
+## 6f13a331bfbf        postgres-dvdrental   "docker-entrypoint.s…"   49 seconds ago      Exited (0) 2 seconds ago                       sql-pet
 ```
 
 Start up the `docker-pet` container
@@ -75,6 +72,61 @@ In the next couple of code blocks, we delete the new data and then recreate the 
     DELETE FROM <source> WHERE <where_clause>;
 ```
 
+### Delete New Practice Store from the Store Table.
+
+In the next code block we delete out the new stores that were added when the book was compliled or added working through the exercises.  Out of the box, the DVD rental database's highest store_id = 2.
+
+
+```r
+dbExecute(con, "delete from store where store_id > 2;")
+```
+
+```
+## [1] 1
+```
+
+### Delete film 1001, Sophie's Choice, records in film_category, rental, inventory, and film
+
+The records need to be deleted in a specific order to not violate constraints.
+
+
+```r
+dbExecute(con, "delete from film_category where film_id >= 1001;")
+```
+
+```
+## [1] 0
+```
+
+```r
+dbExecute(con, "delete from rental where rental_id >= 16050;")
+```
+
+```
+## [1] 0
+```
+
+```r
+dbExecute(con, "delete from inventory where film_id >= 1001;")
+```
+
+```
+## [1] 0
+```
+
+```r
+dbExecute(con, "delete from film where film_id >= 1001;")
+```
+
+```
+## [1] 1
+```
+
+### Delete New Practice Customers from the Customer table.
+
+In the next code block we delete out the new customers that were added when the book was compliled or added while working through the chapter.  Out of the box, the DVD rental database's highest customer_id = 599.
+
+
 ### Delete New Practice Customers from the Customer table.
 
 In the next code block we delete out the new customers that were added when the book was compliled or added while working through the chapter.  Out of the box, the DVD rental database's highest customer_id = 599.
@@ -98,19 +150,6 @@ dbExecute(
 ```
 
 The number above tells us how many rows were actually deleted from the customer table.
-
-### Delete New Practice Store from the Store Table.
-
-In the next code block we delete out the new stores that were added when the book was compliled or added working through the exercises.  Out of the box, the DVD rental database's highest store_id = 2.
-
-
-```r
-dbExecute(con, "delete from store where store_id > 2;")
-```
-
-```
-## [1] 1
-```
 
 ### SQL Single Row Insert Data Syntax
 
@@ -137,8 +176,8 @@ customer_cols <- dbGetQuery(
 sp_print_df(customer_cols)
 ```
 
-<!--html_preserve--><div id="htmlwidget-7a7f97a483d9af35f9ff" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-7a7f97a483d9af35f9ff">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10"],["customer","customer","customer","customer","customer","customer","customer","customer","customer","customer"],["customer_id","store_id","first_name","last_name","email","address_id","activebool","create_date","last_update","active"],[1,2,3,4,5,6,7,8,9,10],["integer","smallint","character varying","character varying","character varying","smallint","boolean","date","timestamp without time zone","integer"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_name<\/th>\n      <th>column_name<\/th>\n      <th>ordinal_position<\/th>\n      <th>data_type<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":3},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-00429d2cc65231bf864b" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-00429d2cc65231bf864b">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10"],["customer","customer","customer","customer","customer","customer","customer","customer","customer","customer"],["customer_id","store_id","first_name","last_name","email","address_id","activebool","create_date","last_update","active"],[1,2,3,4,5,6,7,8,9,10],["integer","smallint","character varying","character varying","character varying","smallint","boolean","date","timestamp without time zone","integer"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_name<\/th>\n      <th>column_name<\/th>\n      <th>ordinal_position<\/th>\n      <th>data_type<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":3},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 In the next code block, we insert Sophie as a new customer into the customer table via a SQL insert statement.  The columns list clause has three id columns, customer_id, store_id, and address_id.  The customer_id is a primary key column and the other two 'look like' foreign key columns.
 
@@ -172,8 +211,8 @@ new_customers <- dbGetQuery(con
 sp_print_df(new_customers)
 ```
 
-<!--html_preserve--><div id="htmlwidget-b6536e72616fce88dec4" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-b6536e72616fce88dec4">{"x":{"filter":"none","data":[["1"],[600],[3],["Sophie"],["Yang"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-c6604ddb6e18e4fd6161" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-c6604ddb6e18e4fd6161">{"x":{"filter":"none","data":[["1"],[600],[3],["Sophie"],["Yang"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ### Primary Key Constraint Error Message
 
@@ -246,8 +285,8 @@ new_customers <- dbGetQuery(con
 sp_print_df(new_customers)
 ```
 
-<!--html_preserve--><div id="htmlwidget-0ef7fd4524816fd96bc0" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-0ef7fd4524816fd96bc0">{"x":{"filter":"none","data":[["1","2"],[600,601],[3,2],["Sophie","Sophie"],["Yang","Yang"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-2e04db5eba16dbe509a1" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2e04db5eba16dbe509a1">{"x":{"filter":"none","data":[["1","2"],[600,601],[3,2],["Sophie","Sophie"],["Yang","Yang"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ## SQL Multi-Row Insert Data Syntax
 
@@ -322,8 +361,8 @@ new_customers <- dbGetQuery(con
 sp_print_df(new_customers)
 ```
 
-<!--html_preserve--><div id="htmlwidget-76a47421723bc8a75e16" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-76a47421723bc8a75e16">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7"],[600,601,602,603,604,605,606],[3,2,4,5,6,3,4],["Sophie","Sophie","John","Ian","Ed","John","Ian"],["Yang","Yang","Smith","Frantz","Borasky","Smith","Frantz"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-3f1d70d605432563e0a9" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-3f1d70d605432563e0a9">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7"],[600,601,602,603,604,605,606],[3,2,4,5,6,3,4],["Sophie","Sophie","John","Ian","Ed","John","Ian"],["Yang","Yang","Smith","Frantz","Borasky","Smith","Frantz"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 Confirm that the two new rows, customer_id = { 605, 606} are in the output.
 
@@ -335,8 +374,8 @@ stores <- dbGetQuery(con,"select * from store;")
 sp_print_df(stores)
 ```
 
-<!--html_preserve--><div id="htmlwidget-bd282a4ec34eeed0ec5c" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-bd282a4ec34eeed0ec5c">{"x":{"filter":"none","data":[["1","2"],[1,2],[1,2],[1,2],["2006-02-15T17:57:12Z","2006-02-15T17:57:12Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>store_id<\/th>\n      <th>manager_staff_id<\/th>\n      <th>address_id<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-aba8aaa863882ee79efd" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-aba8aaa863882ee79efd">{"x":{"filter":"none","data":[["1","2"],[1,2],[1,2],[1,2],["2006-02-15T17:57:12Z","2006-02-15T17:57:12Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>store_id<\/th>\n      <th>manager_staff_id<\/th>\n      <th>address_id<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 
 ```r
@@ -346,8 +385,8 @@ staff  <- dbGetQuery(con
 sp_print_df(staff)
 ```
 
-<!--html_preserve--><div id="htmlwidget-85f88379a29a964c93b3" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-85f88379a29a964c93b3">{"x":{"filter":"none","data":[["1","2"],[1,2],["Mike","Jon"],["Hillyer","Stephens"],[3,4],["Mike.Hillyer@sakilastaff.com","Jon.Stephens@sakilastaff.com"],[1,2]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>staff_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>address_id<\/th>\n      <th>email<\/th>\n      <th>store_id<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,4,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-af10c2d370429962897d" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-af10c2d370429962897d">{"x":{"filter":"none","data":[["1","2"],[1,2],["Mike","Jon"],["Hillyer","Stephens"],[3,4],["Mike.Hillyer@sakilastaff.com","Jon.Stephens@sakilastaff.com"],[1,2]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>staff_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>address_id<\/th>\n      <th>email<\/th>\n      <th>store_id<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,4,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ### Creating a Messy Store Row
 
@@ -467,8 +506,80 @@ stores <- dbGetQuery(con,"select * from store;")
 sp_print_df(stores)
 ```
 
-<!--html_preserve--><div id="htmlwidget-ad2436e02abad7f153ef" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-ad2436e02abad7f153ef">{"x":{"filter":"none","data":[["1","2","3"],[1,2,10],[1,2,10],[1,2,10],["2006-02-15T17:57:12Z","2006-02-15T17:57:12Z","2019-02-12T08:39:01Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>store_id<\/th>\n      <th>manager_staff_id<\/th>\n      <th>address_id<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-f2fc6e4eeed1244c51fa" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-f2fc6e4eeed1244c51fa">{"x":{"filter":"none","data":[["1","2","3"],[1,2,10],[1,2,10],[1,2,10],["2006-02-15T17:57:12Z","2006-02-15T17:57:12Z","2019-02-15T21:31:15Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>store_id<\/th>\n      <th>manager_staff_id<\/th>\n      <th>address_id<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
+
+
+## Create a film record
+
+
+```r
+dbExecute(
+  con,
+  "insert into film
+  (film_id,title,description,release_year,language_id
+  ,rental_duration,rental_rate,length,replacement_cost,rating
+   ,last_update,special_features,fulltext)
+  values(1001,'Sophie''s Choice','orphaned language_id=10',2018,1
+        ,7,4.99,120,14.99,'PG'
+        ,now()::date,'{Trailers}','')
+        ,(1002,'Sophie''s Choice','orphaned language_id=10',2018,1
+        ,7,4.99,120,14.99,'PG'
+        ,now()::date,'{Trailers}','')
+  ;
+  ")
+```
+
+```
+## [1] 2
+```
+
+
+```r
+dbExecute(
+  con,
+  "insert into film_category
+  (film_id,category_id,last_update)
+  values(1001,6,now()::date)
+       ,(1001,7,now()::date)
+       ,(1002,6,now()::date)
+       ,(1002,7,now()::date)
+  ;")  
+```
+
+```
+## [1] 4
+```
+
+
+```r
+dbExecute(
+  con,
+  "insert into inventory
+  (inventory_id,film_id,store_id,last_update)
+  values(4582,1001,1,now()::date)
+       ,(4583,1001,2,now()::date)
+  ;")  
+```
+
+```
+## [1] 2
+```
+
+
+```r
+dbExecute(
+  con,
+  "insert into rental
+  (rental_id,rental_date,inventory_id,customer_id,return_date,staff_id,last_update)
+  values(16050,now()::date - interval '1 week',4582,600,now()::date,1,now()::date)
+  ;")  
+```
+
+```
+## [1] 1
+```
 
 <!--
 
@@ -515,8 +626,9 @@ smy_cust_dupes <- dbGetQuery(con,'select *
 sp_print_df(smy_cust_dupes)
 ```
 
-<!--html_preserve--><div id="htmlwidget-259bec3b25a13aa68ab7" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-259bec3b25a13aa68ab7">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24"],[595,595,596,596,597,597,598,598,599,599,600,600,601,601,602,602,603,603,604,604,605,605,606,606],[1,1,1,1,1,1,1,1,2,2,3,3,2,2,4,4,5,5,6,6,3,3,4,4],["Terrence","Terrence","Enrique","Enrique","Freddie","Freddie","Wade","Wade","Austin","Austin","Sophie","Sophie","Sophie","Sophie","John","John","Ian","Ian","Ed","Ed","John","John","Ian","Ian"],["Gunderson","Gunderson","Forsythe","Forsythe","Duggan","Duggan","Delvalle","Delvalle","Cintron","Cintron","Yang","Yang","Yang","Yang","Smith","Smith","Frantz","Frantz","Borasky","Borasky","Smith","Smith","Frantz","Frantz"],["terrence.gunderson@sakilacustomer.org","terrence.gunderson@sakilacustomer.org","enrique.forsythe@sakilacustomer.org","enrique.forsythe@sakilacustomer.org","freddie.duggan@sakilacustomer.org","freddie.duggan@sakilacustomer.org","wade.delvalle@sakilacustomer.org","wade.delvalle@sakilacustomer.org","austin.cintron@sakilacustomer.org","austin.cintron@sakilacustomer.org","sophie.yang@sakilacustomer.org","sophie.yang@sakilacustomer.org","sophie.yang@sakilacustomer.org","sophie.yang@sakilacustomer.org","john.smith@sakilacustomer.org","john.smith@sakilacustomer.org","ian.frantz@sakilacustomer.org","ian.frantz@sakilacustomer.org","ed.borasky@sakilacustomer.org","ed.borasky@sakilacustomer.org","john.smith@sakilacustomer.org","john.smith@sakilacustomer.org","ian.frantz@sakilacustomer.org","ian.frantz@sakilacustomer.org"],[601,601,602,602,603,603,604,604,605,605,1,1,1,1,2,2,3,3,4,4,3,3,4,4],[true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true],["2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14","2019-02-12","2019-02-12","2019-02-12","2019-02-12","2019-02-12","2019-02-12","2019-02-12","2019-02-12","2019-02-12","2019-02-12","2019-02-12","2019-02-12","2019-02-12","2019-02-12"],["2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2019-02-12T08:00:00Z","2019-02-12T08:00:00Z","2019-02-12T08:39:01Z","2019-02-12T08:39:01Z","2019-02-12T08:00:00Z","2019-02-12T08:00:00Z","2019-02-12T08:00:00Z","2019-02-12T08:00:00Z","2019-02-12T08:00:00Z","2019-02-12T08:00:00Z","2019-02-12T08:39:01Z","2019-02-12T08:39:01Z","2019-02-12T08:39:01Z","2019-02-12T08:39:01Z"],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>address_id<\/th>\n      <th>activebool<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n      <th>active<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,6,10]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-983dcd12844f4521842f" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-983dcd12844f4521842f">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24"],[595,595,596,596,597,597,598,598,599,599,600,600,601,601,602,602,603,603,604,604,605,605,606,606],[1,1,1,1,1,1,1,1,2,2,3,3,2,2,4,4,5,5,6,6,3,3,4,4],["Terrence","Terrence","Enrique","Enrique","Freddie","Freddie","Wade","Wade","Austin","Austin","Sophie","Sophie","Sophie","Sophie","John","John","Ian","Ian","Ed","Ed","John","John","Ian","Ian"],["Gunderson","Gunderson","Forsythe","Forsythe","Duggan","Duggan","Delvalle","Delvalle","Cintron","Cintron","Yang","Yang","Yang","Yang","Smith","Smith","Frantz","Frantz","Borasky","Borasky","Smith","Smith","Frantz","Frantz"],["terrence.gunderson@sakilacustomer.org","terrence.gunderson@sakilacustomer.org","enrique.forsythe@sakilacustomer.org","enrique.forsythe@sakilacustomer.org","freddie.duggan@sakilacustomer.org","freddie.duggan@sakilacustomer.org","wade.delvalle@sakilacustomer.org","wade.delvalle@sakilacustomer.org","austin.cintron@sakilacustomer.org","austin.cintron@sakilacustomer.org","sophie.yang@sakilacustomer.org","sophie.yang@sakilacustomer.org","sophie.yang@sakilacustomer.org","sophie.yang@sakilacustomer.org","john.smith@sakilacustomer.org","john.smith@sakilacustomer.org","ian.frantz@sakilacustomer.org","ian.frantz@sakilacustomer.org","ed.borasky@sakilacustomer.org","ed.borasky@sakilacustomer.org","john.smith@sakilacustomer.org","john.smith@sakilacustomer.org","ian.frantz@sakilacustomer.org","ian.frantz@sakilacustomer.org"],[601,601,602,602,603,603,604,604,605,605,1,1,1,1,2,2,3,3,4,4,3,3,4,4],[true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true],["2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14","2006-02-14","2019-02-15","2019-02-15","2019-02-15","2019-02-15","2019-02-15","2019-02-15","2019-02-15","2019-02-15","2019-02-15","2019-02-15","2019-02-15","2019-02-15","2019-02-15","2019-02-15"],["2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2013-05-26T21:49:45Z","2019-02-15T08:00:00Z","2019-02-15T08:00:00Z","2019-02-15T21:31:15Z","2019-02-15T21:31:15Z","2019-02-15T08:00:00Z","2019-02-15T08:00:00Z","2019-02-15T08:00:00Z","2019-02-15T08:00:00Z","2019-02-15T08:00:00Z","2019-02-15T08:00:00Z","2019-02-15T21:31:15Z","2019-02-15T21:31:15Z","2019-02-15T21:31:15Z","2019-02-15T21:31:15Z"],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>address_id<\/th>\n      <th>activebool<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n      <th>active<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,6,10]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+-->
 
 Diconnect from the db:
 

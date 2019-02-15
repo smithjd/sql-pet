@@ -25,7 +25,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
 
 
-<meta name="date" content="2019-02-12">
+<meta name="date" content="2019-02-15">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -79,7 +79,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -267,21 +267,22 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="10.2.3" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy-queries"><i class="fa fa-check"></i><b>10.2.3</b> Lazy Queries</a></li>
 </ul></li>
 <li class="chapter" data-level="10.3" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy-evaluation-and-lazy-queries"><i class="fa fa-check"></i><b>10.3</b> Lazy evaluation and lazy queries</a><ul>
-<li class="chapter" data-level="10.3.1" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#dplyr-connection-objects"><i class="fa fa-check"></i><b>10.3.1</b> Dplyr connection objects</a></li>
+<li class="chapter" data-level="10.3.1" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#dplyr-connection-objects"><i class="fa fa-check"></i><b>10.3.1</b> <code>dplyr</code> connection objects</a></li>
 </ul></li>
 <li class="chapter" data-level="10.4" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#when-does-a-lazy-query-trigger-data-retrieval"><i class="fa fa-check"></i><b>10.4</b> When does a lazy query trigger data retrieval?</a><ul>
 <li class="chapter" data-level="10.4.1" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#create-a-black-box-query-for-experimentation"><i class="fa fa-check"></i><b>10.4.1</b> Create a black box query for experimentation</a></li>
 <li class="chapter" data-level="10.4.2" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#experiment-overview"><i class="fa fa-check"></i><b>10.4.2</b> Experiment overview</a></li>
 <li class="chapter" data-level="10.4.3" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_print"><i class="fa fa-check"></i><b>10.4.3</b> Q %&gt;% print()</a></li>
-<li class="chapter" data-level="10.4.4" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_as-tibble"><i class="fa fa-check"></i><b>10.4.4</b> Q %&gt;% as.tibble()</a></li>
+<li class="chapter" data-level="10.4.4" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_as-tibble"><i class="fa fa-check"></i><b>10.4.4</b> Q %&gt;% dplyr::as_tibble()</a></li>
 <li class="chapter" data-level="10.4.5" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_head"><i class="fa fa-check"></i><b>10.4.5</b> Q %&gt;% head()</a></li>
-<li class="chapter" data-level="10.4.6" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_length"><i class="fa fa-check"></i><b>10.4.6</b> Q %&gt;% length()</a></li>
-<li class="chapter" data-level="10.4.7" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_str"><i class="fa fa-check"></i><b>10.4.7</b> Q %&gt;% str()</a></li>
-<li class="chapter" data-level="10.4.8" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_nrow"><i class="fa fa-check"></i><b>10.4.8</b> Q %&gt;% nrow()</a></li>
-<li class="chapter" data-level="10.4.9" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_tally"><i class="fa fa-check"></i><b>10.4.9</b> Q %&gt;% tally()</a></li>
-<li class="chapter" data-level="10.4.10" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_collect"><i class="fa fa-check"></i><b>10.4.10</b> Q %&gt;% collect()</a></li>
-<li class="chapter" data-level="10.4.11" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_show-query"><i class="fa fa-check"></i><b>10.4.11</b> Q %&gt;% show_query()</a></li>
-<li class="chapter" data-level="10.4.12" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_build"><i class="fa fa-check"></i><b>10.4.12</b> Qc &lt;- Q %&gt;% count(customer_email)</a></li>
+<li class="chapter" data-level="10.4.6" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_tail"><i class="fa fa-check"></i><b>10.4.6</b> Q %&gt;% tail()</a></li>
+<li class="chapter" data-level="10.4.7" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_length"><i class="fa fa-check"></i><b>10.4.7</b> Q %&gt;% length()</a></li>
+<li class="chapter" data-level="10.4.8" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_str"><i class="fa fa-check"></i><b>10.4.8</b> Q %&gt;% str()</a></li>
+<li class="chapter" data-level="10.4.9" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_nrow"><i class="fa fa-check"></i><b>10.4.9</b> Q %&gt;% nrow()</a></li>
+<li class="chapter" data-level="10.4.10" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_tally"><i class="fa fa-check"></i><b>10.4.10</b> Q %&gt;% dplyr::tally()</a></li>
+<li class="chapter" data-level="10.4.11" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_collect"><i class="fa fa-check"></i><b>10.4.11</b> Q %&gt;% dplyr::collect()</a></li>
+<li class="chapter" data-level="10.4.12" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_show-query"><i class="fa fa-check"></i><b>10.4.12</b> Q %&gt;% dplyr::show_query()</a></li>
+<li class="chapter" data-level="10.4.13" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_build"><i class="fa fa-check"></i><b>10.4.13</b> Qc &lt;- Q %&gt;% dplyr::count(customer_email)</a></li>
 </ul></li>
 <li class="chapter" data-level="10.5" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#other-resources"><i class="fa fa-check"></i><b>10.5</b> Other resources</a></li>
 </ul></li>
@@ -422,11 +423,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="14" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html"><i class="fa fa-check"></i><b>14</b> SQL &amp; dplyr joins additional data</a><ul>
 <li class="chapter" data-level="14.1" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#making-up-data-for-join-examples-2"><i class="fa fa-check"></i><b>14.1</b> Making up data for Join Examples</a><ul>
 <li class="chapter" data-level="14.1.1" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#sql-delete-data-syntax-2"><i class="fa fa-check"></i><b>14.1.1</b> SQL Delete Data Syntax</a></li>
-<li class="chapter" data-level="14.1.2" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#delete-new-practice-customers-from-the-customer-table.-2"><i class="fa fa-check"></i><b>14.1.2</b> Delete New Practice Customers from the Customer table.</a></li>
-<li class="chapter" data-level="14.1.3" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#delete-new-practice-store-from-the-store-table.-1"><i class="fa fa-check"></i><b>14.1.3</b> Delete New Practice Store from the Store Table.</a></li>
-<li class="chapter" data-level="14.1.4" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#sql-single-row-insert-data-syntax-2"><i class="fa fa-check"></i><b>14.1.4</b> SQL Single Row Insert Data Syntax</a></li>
-<li class="chapter" data-level="14.1.5" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#primary-key-constraint-error-message-1"><i class="fa fa-check"></i><b>14.1.5</b> Primary Key Constraint Error Message</a></li>
-<li class="chapter" data-level="14.1.6" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#r-exercise-inserting-a-single-row-via-a-dataframe-2"><i class="fa fa-check"></i><b>14.1.6</b> R Exercise: Inserting a Single Row via a Dataframe</a></li>
+<li class="chapter" data-level="14.1.2" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#delete-new-practice-store-from-the-store-table.-1"><i class="fa fa-check"></i><b>14.1.2</b> Delete New Practice Store from the Store Table.</a></li>
+<li class="chapter" data-level="14.1.3" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#delete-film-1001-sophies-choice-records-in-film_category-rental-inventory-and-film"><i class="fa fa-check"></i><b>14.1.3</b> Delete film 1001, Sophie’s Choice, records in film_category, rental, inventory, and film</a></li>
+<li class="chapter" data-level="14.1.4" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#delete-new-practice-customers-from-the-customer-table.-2"><i class="fa fa-check"></i><b>14.1.4</b> Delete New Practice Customers from the Customer table.</a></li>
+<li class="chapter" data-level="14.1.5" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#delete-new-practice-customers-from-the-customer-table.-3"><i class="fa fa-check"></i><b>14.1.5</b> Delete New Practice Customers from the Customer table.</a></li>
+<li class="chapter" data-level="14.1.6" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#sql-single-row-insert-data-syntax-2"><i class="fa fa-check"></i><b>14.1.6</b> SQL Single Row Insert Data Syntax</a></li>
+<li class="chapter" data-level="14.1.7" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#primary-key-constraint-error-message-1"><i class="fa fa-check"></i><b>14.1.7</b> Primary Key Constraint Error Message</a></li>
+<li class="chapter" data-level="14.1.8" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#r-exercise-inserting-a-single-row-via-a-dataframe-2"><i class="fa fa-check"></i><b>14.1.8</b> R Exercise: Inserting a Single Row via a Dataframe</a></li>
 </ul></li>
 <li class="chapter" data-level="14.2" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#sql-multi-row-insert-data-syntax-2"><i class="fa fa-check"></i><b>14.2</b> SQL Multi-Row Insert Data Syntax</a></li>
 <li class="chapter" data-level="14.3" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#sql-multi-row-insert-data-example-2"><i class="fa fa-check"></i><b>14.3</b> SQL Multi-Row Insert Data Example</a></li>
@@ -434,108 +437,72 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="14.4.1" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#r-exercise-inserting-multiple-rows-via-a-dataframe-2"><i class="fa fa-check"></i><b>14.4.1</b> R Exercise: Inserting Multiple Rows via a Dataframe</a></li>
 <li class="chapter" data-level="14.4.2" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#creating-a-messy-store-row-1"><i class="fa fa-check"></i><b>14.4.2</b> Creating a Messy Store Row</a></li>
 </ul></li>
+<li class="chapter" data-level="14.5" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#create-a-film-record"><i class="fa fa-check"></i><b>14.5</b> Create a film record</a></li>
 </ul></li>
 <li class="chapter" data-level="15" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html"><i class="fa fa-check"></i><b>15</b> SQL &amp; dplyr joins</a><ul>
-<li class="chapter" data-level="15.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#initialize-data"><i class="fa fa-check"></i><b>15.1</b> Initialize Data</a></li>
-<li class="chapter" data-level="15.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#joins-2"><i class="fa fa-check"></i><b>15.2</b> Joins</a><ul>
-<li class="chapter" data-level="15.2.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-types-2"><i class="fa fa-check"></i><b>15.2.1</b> Join Types</a></li>
-<li class="chapter" data-level="15.2.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#valentines-party-2"><i class="fa fa-check"></i><b>15.2.2</b> Valentines Party</a></li>
-<li class="chapter" data-level="15.2.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-syntax-2"><i class="fa fa-check"></i><b>15.2.3</b> Join Syntax</a></li>
-<li class="chapter" data-level="15.2.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-tables-2"><i class="fa fa-check"></i><b>15.2.4</b> Join Tables</a></li>
+<li class="chapter" data-level="15.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#joins-2"><i class="fa fa-check"></i><b>15.1</b> Joins</a><ul>
+<li class="chapter" data-level="15.1.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-types-2"><i class="fa fa-check"></i><b>15.1.1</b> Join Types</a></li>
+<li class="chapter" data-level="15.1.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#valentines-party-2"><i class="fa fa-check"></i><b>15.1.2</b> Valentines Party</a></li>
+<li class="chapter" data-level="15.1.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-syntax-2"><i class="fa fa-check"></i><b>15.1.3</b> Join Syntax</a></li>
+<li class="chapter" data-level="15.1.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-tables-2"><i class="fa fa-check"></i><b>15.1.4</b> Join Tables</a></li>
 </ul></li>
-<li class="chapter" data-level="15.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#natural-join-delayed-time-bomb-2"><i class="fa fa-check"></i><b>15.3</b> Natural Join Delayed Time Bomb</a><ul>
-<li class="chapter" data-level="15.3.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-customer-store_id-distribution-1"><i class="fa fa-check"></i><b>15.3.1</b> SQL Customer store_id Distribution</a></li>
-<li class="chapter" data-level="15.3.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sample-customer-and-store-join-data-1"><i class="fa fa-check"></i><b>15.3.2</b> Sample Customer and Store Join Data</a></li>
-<li class="chapter" data-level="15.3.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-store_id-distribution-exercise-1"><i class="fa fa-check"></i><b>15.3.3</b> dplyr store_id distribution Exercise</a></li>
+<li class="chapter" data-level="15.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#natural-join-delayed-time-bomb-2"><i class="fa fa-check"></i><b>15.2</b> Natural Join Delayed Time Bomb</a><ul>
+<li class="chapter" data-level="15.2.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-customer-store_id-distribution-1"><i class="fa fa-check"></i><b>15.2.1</b> SQL Customer store_id Distribution</a></li>
+<li class="chapter" data-level="15.2.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sample-customer-and-store-join-data-1"><i class="fa fa-check"></i><b>15.2.2</b> Sample Customer and Store Join Data</a></li>
+<li class="chapter" data-level="15.2.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-store_id-distribution-exercise-1"><i class="fa fa-check"></i><b>15.2.3</b> dplyr store_id distribution Exercise</a></li>
 </ul></li>
-<li class="chapter" data-level="15.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-templates-2"><i class="fa fa-check"></i><b>15.4</b> Join Templates</a></li>
-<li class="chapter" data-level="15.5" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#inner-joins-1"><i class="fa fa-check"></i><b>15.5</b> Inner Joins</a><ul>
-<li class="chapter" data-level="15.5.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-inner-join-details-example_inner-join-details-sql-1"><i class="fa fa-check"></i><b>15.5.1</b> SQL Inner Join Details {example_inner-join-details-sql}</a></li>
-<li class="chapter" data-level="15.5.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-inner-join-details-example_inner-join-details-dplyr-1"><i class="fa fa-check"></i><b>15.5.2</b> Dplyr Inner Join Details {example_inner-join-details-dplyr}</a></li>
-<li class="chapter" data-level="15.5.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-inner-join-summary-example_inner-join-summary-sql-1"><i class="fa fa-check"></i><b>15.5.3</b> SQL Inner Join Summary {example_inner-join-summary-sql}</a></li>
-<li class="chapter" data-level="15.5.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-inner-join-summary-example_inner-join-summary_dplyr-1"><i class="fa fa-check"></i><b>15.5.4</b> Dplyr Inner Join Summary {example_inner-join-summary_dplyr}</a></li>
+<li class="chapter" data-level="15.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-templates-2"><i class="fa fa-check"></i><b>15.3</b> Join Templates</a></li>
+<li class="chapter" data-level="15.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#inner-joins-1"><i class="fa fa-check"></i><b>15.4</b> Inner Joins</a><ul>
+<li class="chapter" data-level="15.4.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-inner-join-details-example_inner-join-details-sql-1"><i class="fa fa-check"></i><b>15.4.1</b> SQL Inner Join Details {example_inner-join-details-sql}</a></li>
+<li class="chapter" data-level="15.4.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-inner-join-details-example_inner-join-details-dplyr-1"><i class="fa fa-check"></i><b>15.4.2</b> Dplyr Inner Join Details {example_inner-join-details-dplyr}</a></li>
+<li class="chapter" data-level="15.4.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-inner-join-summary-example_inner-join-summary-sql-1"><i class="fa fa-check"></i><b>15.4.3</b> SQL Inner Join Summary {example_inner-join-summary-sql}</a></li>
+<li class="chapter" data-level="15.4.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-inner-join-summary-example_inner-join-summary_dplyr-1"><i class="fa fa-check"></i><b>15.4.4</b> Dplyr Inner Join Summary {example_inner-join-summary_dplyr}</a></li>
 </ul></li>
-<li class="chapter" data-level="15.6" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#left-joins-1"><i class="fa fa-check"></i><b>15.6</b> Left Joins</a><ul>
-<li class="chapter" data-level="15.6.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-left-join-details-example_left-join-details-sql-1"><i class="fa fa-check"></i><b>15.6.1</b> SQL Left Join Details {example_left-join-details-sql}</a></li>
-<li class="chapter" data-level="15.6.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-left-join-details-example_left-join-details-dplyr-1"><i class="fa fa-check"></i><b>15.6.2</b> Dplyr Left Join Details {example_left-join-details-dplyr}</a></li>
-<li class="chapter" data-level="15.6.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-left-join-summary-example_left-join-summary-sql-1"><i class="fa fa-check"></i><b>15.6.3</b> SQL Left Join Summary {example_left-join-summary-sql}</a></li>
-<li class="chapter" data-level="15.6.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-left-join-summary-example_left-join-summary-dplyr-1"><i class="fa fa-check"></i><b>15.6.4</b> Dplyr Left Join Summary {example_left-join-summary-dplyr}</a></li>
+<li class="chapter" data-level="15.5" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#left-joins-1"><i class="fa fa-check"></i><b>15.5</b> Left Joins</a><ul>
+<li class="chapter" data-level="15.5.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-left-join-details-example_left-join-details-sql-1"><i class="fa fa-check"></i><b>15.5.1</b> SQL Left Join Details {example_left-join-details-sql}</a></li>
+<li class="chapter" data-level="15.5.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-left-join-details-example_left-join-details-dplyr-1"><i class="fa fa-check"></i><b>15.5.2</b> Dplyr Left Join Details {example_left-join-details-dplyr}</a></li>
+<li class="chapter" data-level="15.5.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-left-join-summary-example_left-join-summary-sql-1"><i class="fa fa-check"></i><b>15.5.3</b> SQL Left Join Summary {example_left-join-summary-sql}</a></li>
+<li class="chapter" data-level="15.5.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-left-join-summary-example_left-join-summary-dplyr-1"><i class="fa fa-check"></i><b>15.5.4</b> Dplyr Left Join Summary {example_left-join-summary-dplyr}</a></li>
 </ul></li>
-<li class="chapter" data-level="15.7" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#why-include-one-of-the-inner-join-key-columns-1"><i class="fa fa-check"></i><b>15.7</b> Why Include one of the Inner Join Key columns?</a></li>
-<li class="chapter" data-level="15.8" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#right-joins-1"><i class="fa fa-check"></i><b>15.8</b> Right Joins</a><ul>
-<li class="chapter" data-level="15.8.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-right-join-details-example_right-join-details-sql-1"><i class="fa fa-check"></i><b>15.8.1</b> SQL Right Join Details {example_right-join-details-sql}</a></li>
-<li class="chapter" data-level="15.8.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-right-join-details-example_right-join-details-dplyr-1"><i class="fa fa-check"></i><b>15.8.2</b> Dplyr Right Join Details {example_right-join-details-dplyr}</a></li>
-<li class="chapter" data-level="15.8.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-right-outer-join-summary-example_right-join-summary-sql-1"><i class="fa fa-check"></i><b>15.8.3</b> SQL Right Outer Join Summary {example_right-join-summary-sql}</a></li>
-<li class="chapter" data-level="15.8.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-right-join-summary-example_right-join-summary-dplyr-1"><i class="fa fa-check"></i><b>15.8.4</b> dplyr Right Join Summary {example_right-join-summary-dplyr}</a></li>
+<li class="chapter" data-level="15.6" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#why-include-one-of-the-inner-join-key-columns-1"><i class="fa fa-check"></i><b>15.6</b> Why Include one of the Inner Join Key columns?</a></li>
+<li class="chapter" data-level="15.7" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#right-joins-1"><i class="fa fa-check"></i><b>15.7</b> Right Joins</a><ul>
+<li class="chapter" data-level="15.7.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-right-join-details-example_right-join-details-sql-1"><i class="fa fa-check"></i><b>15.7.1</b> SQL Right Join Details {example_right-join-details-sql}</a></li>
+<li class="chapter" data-level="15.7.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-right-join-details-example_right-join-details-dplyr-1"><i class="fa fa-check"></i><b>15.7.2</b> Dplyr Right Join Details {example_right-join-details-dplyr}</a></li>
+<li class="chapter" data-level="15.7.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-right-outer-join-summary-example_right-join-summary-sql-1"><i class="fa fa-check"></i><b>15.7.3</b> SQL Right Outer Join Summary {example_right-join-summary-sql}</a></li>
+<li class="chapter" data-level="15.7.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-right-join-summary-example_right-join-summary-dplyr-1"><i class="fa fa-check"></i><b>15.7.4</b> dplyr Right Join Summary {example_right-join-summary-dplyr}</a></li>
 </ul></li>
-<li class="chapter" data-level="15.9" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#full-join-1"><i class="fa fa-check"></i><b>15.9</b> Full Join</a><ul>
-<li class="chapter" data-level="15.9.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-full-join-details-example_full-join-details-sql-1"><i class="fa fa-check"></i><b>15.9.1</b> SQL Full Join Details {example_full-join-details-sql}</a></li>
-<li class="chapter" data-level="15.9.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-full-join-details-example_full-join-details-sql-1"><i class="fa fa-check"></i><b>15.9.2</b> Dplyr Full Join Details {example_full-join-details-sql}</a></li>
-<li class="chapter" data-level="15.9.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-full-join-summary-example_full-join-summary-sql-1"><i class="fa fa-check"></i><b>15.9.3</b> SQL Full Join Summary {example_full-join-summary-sql}</a></li>
-<li class="chapter" data-level="15.9.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-full-join-summary-example_full-join-summary-dplyr-1"><i class="fa fa-check"></i><b>15.9.4</b> Dplyr Full Join Summary {example_full-join-summary-dplyr}</a></li>
+<li class="chapter" data-level="15.8" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#full-join-1"><i class="fa fa-check"></i><b>15.8</b> Full Join</a><ul>
+<li class="chapter" data-level="15.8.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-full-join-details-example_full-join-details-sql-1"><i class="fa fa-check"></i><b>15.8.1</b> SQL Full Join Details {example_full-join-details-sql}</a></li>
+<li class="chapter" data-level="15.8.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-full-join-details-example_full-join-details-sql-1"><i class="fa fa-check"></i><b>15.8.2</b> Dplyr Full Join Details {example_full-join-details-sql}</a></li>
+<li class="chapter" data-level="15.8.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-full-join-summary-example_full-join-summary-sql-1"><i class="fa fa-check"></i><b>15.8.3</b> SQL Full Join Summary {example_full-join-summary-sql}</a></li>
+<li class="chapter" data-level="15.8.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-full-join-summary-example_full-join-summary-dplyr-1"><i class="fa fa-check"></i><b>15.8.4</b> Dplyr Full Join Summary {example_full-join-summary-dplyr}</a></li>
 </ul></li>
-<li class="chapter" data-level="15.10" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#semi-join-1"><i class="fa fa-check"></i><b>15.10</b> Semi Join</a><ul>
-<li class="chapter" data-level="15.10.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-semi-join-customer-to-store-example_semi-join-sql-1-1"><i class="fa fa-check"></i><b>15.10.1</b> SQL Semi Join Customer to Store {example_semi-join-sql-1}</a></li>
-<li class="chapter" data-level="15.10.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-semi-join-customer-to-store-example_semi-join-dplyr-1-1"><i class="fa fa-check"></i><b>15.10.2</b> Dplyr Semi Join Customer to Store {example_semi-join-dplyr-1}</a></li>
-<li class="chapter" data-level="15.10.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-semi-join-store-to-customer-example_semi-join-sql-2-1"><i class="fa fa-check"></i><b>15.10.3</b> SQL Semi Join Store to Customer {example_semi-join-sql-2}</a></li>
-<li class="chapter" data-level="15.10.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-semi-join-store-to-customer-example_semi-join-dplyr-2-1"><i class="fa fa-check"></i><b>15.10.4</b> Dplyr Semi Join Store to Customer {example_semi-join-dplyr-2}</a></li>
-<li class="chapter" data-level="15.10.5" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-semi-join-store-to-customer-take-2-example_semi-join-sql-3-1"><i class="fa fa-check"></i><b>15.10.5</b> SQL Semi Join Store to Customer Take 2 {example_semi-join-sql-3}</a></li>
+<li class="chapter" data-level="15.9" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#semi-join-1"><i class="fa fa-check"></i><b>15.9</b> Semi Join</a><ul>
+<li class="chapter" data-level="15.9.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-semi-join-customer-to-store-example_semi-join-sql-1-1"><i class="fa fa-check"></i><b>15.9.1</b> SQL Semi Join Customer to Store {example_semi-join-sql-1}</a></li>
+<li class="chapter" data-level="15.9.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-semi-join-customer-to-store-example_semi-join-dplyr-1-1"><i class="fa fa-check"></i><b>15.9.2</b> Dplyr Semi Join Customer to Store {example_semi-join-dplyr-1}</a></li>
+<li class="chapter" data-level="15.9.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-semi-join-store-to-customer-example_semi-join-sql-2-1"><i class="fa fa-check"></i><b>15.9.3</b> SQL Semi Join Store to Customer {example_semi-join-sql-2}</a></li>
+<li class="chapter" data-level="15.9.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-semi-join-store-to-customer-example_semi-join-dplyr-2-1"><i class="fa fa-check"></i><b>15.9.4</b> Dplyr Semi Join Store to Customer {example_semi-join-dplyr-2}</a></li>
+<li class="chapter" data-level="15.9.5" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-semi-join-store-to-customer-take-2-example_semi-join-sql-3-1"><i class="fa fa-check"></i><b>15.9.5</b> SQL Semi Join Store to Customer Take 2 {example_semi-join-sql-3}</a></li>
 </ul></li>
-<li class="chapter" data-level="15.11" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#anti-joins-1"><i class="fa fa-check"></i><b>15.11</b> Anti Joins</a></li>
-<li class="chapter" data-level="15.12" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#non-equa-join-example-1"><i class="fa fa-check"></i><b>15.12</b> Non-Equa-Join Example</a><ul>
-<li class="chapter" data-level="15.12.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-non-equa-join-example_inner-join-dplyr-1"><i class="fa fa-check"></i><b>15.12.1</b> Dplyr Non-equa Join {example_inner-join-dplyr}</a></li>
+<li class="chapter" data-level="15.10" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#anti-joins-1"><i class="fa fa-check"></i><b>15.10</b> Anti Joins</a></li>
+<li class="chapter" data-level="15.11" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#non-equa-join-example-1"><i class="fa fa-check"></i><b>15.11</b> Non-Equa-Join Example</a><ul>
+<li class="chapter" data-level="15.11.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-non-equa-join-example_inner-join-dplyr-1"><i class="fa fa-check"></i><b>15.11.1</b> Dplyr Non-equa Join {example_inner-join-dplyr}</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="16" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html"><i class="fa fa-check"></i><b>16</b> SQL Joins exercises</a><ul>
-<li class="chapter" data-level="16.1" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#table-structures"><i class="fa fa-check"></i><b>16.1</b> Table Structures</a><ul>
-<li class="chapter" data-level="16.1.1" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#customer-columns"><i class="fa fa-check"></i><b>16.1.1</b> Customer Columns</a></li>
-<li class="chapter" data-level="16.1.2" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#other-table-column-metadata"><i class="fa fa-check"></i><b>16.1.2</b> Other Table Column Metadata</a></li>
+<li class="chapter" data-level="16" data-path="sql-metadata-exercises.html"><a href="sql-metadata-exercises.html"><i class="fa fa-check"></i><b>16</b> SQL Metadata exercises</a><ul>
+<li class="chapter" data-level="16.1" data-path="sql-metadata-exercises.html"><a href="sql-metadata-exercises.html#table-structures"><i class="fa fa-check"></i><b>16.1</b> Table Structures</a><ul>
+<li class="chapter" data-level="16.1.1" data-path="sql-metadata-exercises.html"><a href="sql-metadata-exercises.html#customer-columns"><i class="fa fa-check"></i><b>16.1.1</b> Customer Columns</a></li>
 </ul></li>
-<li class="chapter" data-level="16.2" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#primary-and-foreign-key-constraints"><i class="fa fa-check"></i><b>16.2</b> Primary and Foreign Key Constraints</a><ul>
-<li class="chapter" data-level="16.2.1" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#customer-primary-and-foreign-key-constraints"><i class="fa fa-check"></i><b>16.2.1</b> Customer primary and foreign key constraints</a></li>
+<li class="chapter" data-level="16.2" data-path="sql-metadata-exercises.html"><a href="sql-metadata-exercises.html#table-column-metadata"><i class="fa fa-check"></i><b>16.2</b> Table Column Metadata</a><ul>
+<li class="chapter" data-level="16.2.1" data-path="sql-metadata-exercises.html"><a href="sql-metadata-exercises.html#sp_tbl_descr-parameterized-table-description-function"><i class="fa fa-check"></i><b>16.2.1</b> sp_tbl_descr – Parameterized Table Description Function</a></li>
 </ul></li>
-<li class="chapter" data-level="16.3" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#we-need-documentation-andor-a-dba."><i class="fa fa-check"></i><b>16.3</b> We need documentation and/or a DBA.</a></li>
-<li class="chapter" data-level="16.4" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#exercises-2"><i class="fa fa-check"></i><b>16.4</b> Exercises</a><ul>
-<li class="chapter" data-level="16.4.1" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#where-is-the-dvd-rental-business-located"><i class="fa fa-check"></i><b>16.4.1</b> 1. Where is the DVD Rental Business located?</a></li>
-<li class="chapter" data-level="16.4.2" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#how-many-employees-work-in-each-store-what-is-their-contact-information"><i class="fa fa-check"></i><b>16.4.2</b> 2. How Many Employees Work in Each Store? What is their contact information?</a></li>
-<li class="chapter" data-level="16.4.3" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#how-many-customers-does-the-dvd-rental-business-have"><i class="fa fa-check"></i><b>16.4.3</b> 3. How Many Customers Does the DVD Rental Business Have?</a></li>
-<li class="chapter" data-level="16.4.4" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#how-many-and-what-percent-of-customers-are-from-each-country"><i class="fa fa-check"></i><b>16.4.4</b> 4. How Many and What Percent of Customers Are From Each Country?</a></li>
-<li class="chapter" data-level="16.4.5" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#what-countries-constitute-the-top-25-of-the-customer-base"><i class="fa fa-check"></i><b>16.4.5</b> 5 What Countries Constitute the Top 25% of the Customer Base?</a></li>
-<li class="chapter" data-level="16.4.6" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#how-many-customers-are-in-australia-and-canada"><i class="fa fa-check"></i><b>16.4.6</b> 6. How many customers are in Australia and Canada?</a></li>
-<li class="chapter" data-level="16.4.7" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#how-many-languages"><i class="fa fa-check"></i><b>16.4.7</b> 7. How Many Languages?</a></li>
-<li class="chapter" data-level="16.4.8" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#what-is-the-distribution-of-dvds-by-language"><i class="fa fa-check"></i><b>16.4.8</b> 8. What is the distribution of DVD’s by Language</a></li>
-<li class="chapter" data-level="16.4.9" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#rank-films-based-on-the-number-of-times-rented"><i class="fa fa-check"></i><b>16.4.9</b> 9. Rank Films Based on the Number of Times Rented</a></li>
-<li class="chapter" data-level="16.4.10" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#what-is-the-rental-distributiondvd-for-the-top-two-rented-films"><i class="fa fa-check"></i><b>16.4.10</b> 10 What is the rental distribution/DVD for the top two rented films?</a></li>
-<li class="chapter" data-level="16.4.11" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#dvd-rental-distribution-running-totals."><i class="fa fa-check"></i><b>16.4.11</b> 11. DVD rental distribution Running Totals.</a></li>
-<li class="chapter" data-level="16.4.12" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#dvd-rental-distribution."><i class="fa fa-check"></i><b>16.4.12</b> 12. DVD rental distribution.</a></li>
-<li class="chapter" data-level="16.4.13" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#active-sql-analysis"><i class="fa fa-check"></i><b>16.4.13</b> Active SQL Analysis</a></li>
-<li class="chapter" data-level="16.4.14" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#find-the-customer-store-distribution"><i class="fa fa-check"></i><b>16.4.14</b> Find the Customer Store Distribution</a></li>
-<li class="chapter" data-level="16.4.15" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#find-all-customers-who-have-never-rented-a-movie."><i class="fa fa-check"></i><b>16.4.15</b> Find All customers who have never rented a movie.</a></li>
-<li class="chapter" data-level="16.4.16" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#sql-anti-join-not-exists-syntax"><i class="fa fa-check"></i><b>16.4.16</b> SQL ANTI Join – Not EXISTS Syntax</a></li>
-<li class="chapter" data-level="16.4.17" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#which-customers-have-rented-the-most-films"><i class="fa fa-check"></i><b>16.4.17</b> Which customers have rented the most films</a></li>
-<li class="chapter" data-level="16.4.18" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#exercise"><i class="fa fa-check"></i><b>16.4.18</b> Exercise</a></li>
-<li class="chapter" data-level="16.4.19" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#combining-the-reports"><i class="fa fa-check"></i><b>16.4.19</b> Combining the reports</a></li>
-<li class="chapter" data-level="16.4.20" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#exercise-1"><i class="fa fa-check"></i><b>16.4.20</b> Exercise</a></li>
+<li class="chapter" data-level="16.3" data-path="sql-metadata-exercises.html"><a href="sql-metadata-exercises.html#primary-and-foreign-key-constraints"><i class="fa fa-check"></i><b>16.3</b> Primary and Foreign Key Constraints</a><ul>
+<li class="chapter" data-level="16.3.1" data-path="sql-metadata-exercises.html"><a href="sql-metadata-exercises.html#sp_tbl_pk_fk-parameterized-table-primary-foreign-keys-function"><i class="fa fa-check"></i><b>16.3.1</b> sp_tbl_pk_fk – Parameterized Table Primary Foreign Key(s) Function</a></li>
+<li class="chapter" data-level="16.3.2" data-path="sql-metadata-exercises.html"><a href="sql-metadata-exercises.html#customer-primary-and-foreign-key-constraints"><i class="fa fa-check"></i><b>16.3.2</b> Customer primary and foreign key constraints</a></li>
 </ul></li>
-<li class="chapter" data-level="16.5" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#top-n1-and-bottom-n2-customers"><i class="fa fa-check"></i><b>16.5</b> Top-n1 and bottom-n2 customers</a><ul>
-<li class="chapter" data-level="16.5.1" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#inline-sql-block-syntax"><i class="fa fa-check"></i><b>16.5.1</b> Inline SQL Block Syntax</a></li>
-</ul></li>
-<li class="chapter" data-level="16.6" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#exercise-2"><i class="fa fa-check"></i><b>16.6</b> Exercise</a><ul>
-<li class="chapter" data-level="16.6.1" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#sql-rows-per-table-1"><i class="fa fa-check"></i><b>16.6.1</b> SQL Rows Per Table</a></li>
-</ul></li>
-<li class="chapter" data-level="16.7" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#store-analysis-1"><i class="fa fa-check"></i><b>16.7</b> Store analysis</a><ul>
-<li class="chapter" data-level="16.7.1" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#sql-store-revenue-stream-1"><i class="fa fa-check"></i><b>16.7.1</b> SQL store revenue stream</a></li>
-<li class="chapter" data-level="16.7.2" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#sqlestimate-outstanding-balance-1"><i class="fa fa-check"></i><b>16.7.2</b> SQL:Estimate Outstanding Balance</a></li>
-<li class="chapter" data-level="16.7.3" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#sql-actual-outstanding-balance-1"><i class="fa fa-check"></i><b>16.7.3</b> SQL actual outstanding balance</a></li>
-<li class="chapter" data-level="16.7.4" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#rank-customers-with-highest-open-amounts-1"><i class="fa fa-check"></i><b>16.7.4</b> Rank customers with highest open amounts</a></li>
-<li class="chapter" data-level="16.7.5" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#what-film-has-been-generated-the-most-revenue-assuming-all-amounts-are-collected-1"><i class="fa fa-check"></i><b>16.7.5</b> what film has been generated the most revenue assuming all amounts are collected</a></li>
-<li class="chapter" data-level="16.7.6" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#which-films-are-in-one-store-but-not-the-other.-1"><i class="fa fa-check"></i><b>16.7.6</b> which films are in one store but not the other.</a></li>
-<li class="chapter" data-level="16.7.7" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#compute-the-outstanding-balance.-1"><i class="fa fa-check"></i><b>16.7.7</b> Compute the outstanding balance.</a></li>
-</ul></li>
-<li class="chapter" data-level="16.8" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#different-strategies-for-interacting-with-the-database-1"><i class="fa fa-check"></i><b>16.8</b> Different strategies for interacting with the database</a><ul>
-<li class="chapter" data-level="16.8.1" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#use-dbgetquery-1"><i class="fa fa-check"></i><b>16.8.1</b> Use dbGetQuery</a></li>
-<li class="chapter" data-level="16.8.2" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#use-dbexecute-1"><i class="fa fa-check"></i><b>16.8.2</b> Use dbExecute</a></li>
-<li class="chapter" data-level="16.8.3" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#anti-join-find-sophie-who-has-never-rented-a-movie.-1"><i class="fa fa-check"></i><b>16.8.3</b> Anti join – Find Sophie who has never rented a movie.</a></li>
+<li class="chapter" data-level="16.4" data-path="sql-metadata-exercises.html"><a href="sql-metadata-exercises.html#we-need-documentation-andor-a-dba."><i class="fa fa-check"></i><b>16.4</b> We need documentation and/or a DBA.</a><ul>
+<li class="chapter" data-level="16.4.1" data-path="sql-metadata-exercises.html"><a href="sql-metadata-exercises.html#other-table-column-metadata"><i class="fa fa-check"></i><b>16.4.1</b> Other Table Column Metadata</a></li>
+<li class="chapter" data-level="16.4.2" data-path="sql-metadata-exercises.html"><a href="sql-metadata-exercises.html#other-table-pk-fk"><i class="fa fa-check"></i><b>16.4.2</b> Other Table PK FK</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="17" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html"><i class="fa fa-check"></i><b>17</b> SQL Quick start - simple retrieval</a><ul>
@@ -577,7 +544,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="19.1" data-path="chapter-dbms-environment.html"><a href="chapter-dbms-environment.html#which-database"><i class="fa fa-check"></i><b>19.1</b> Which database?</a></li>
 <li class="chapter" data-level="19.2" data-path="chapter-dbms-environment.html"><a href="chapter-dbms-environment.html#how-many-databases-reside-in-the-docker-container"><i class="fa fa-check"></i><b>19.2</b> How many databases reside in the Docker Container?</a></li>
 <li class="chapter" data-level="19.3" data-path="chapter-dbms-environment.html"><a href="chapter-dbms-environment.html#which-schema"><i class="fa fa-check"></i><b>19.3</b> Which Schema?</a></li>
-<li class="chapter" data-level="19.4" data-path="chapter-dbms-environment.html"><a href="chapter-dbms-environment.html#exercises-3"><i class="fa fa-check"></i><b>19.4</b> Exercises</a></li>
+<li class="chapter" data-level="19.4" data-path="chapter-dbms-environment.html"><a href="chapter-dbms-environment.html#exercises-2"><i class="fa fa-check"></i><b>19.4</b> Exercises</a></li>
 </ul></li>
 <li class="chapter" data-level="20" data-path="chapter-explain-queries.html"><a href="chapter-explain-queries.html"><i class="fa fa-check"></i><b>20</b> Explain queries</a><ul>
 <li class="chapter" data-level="20.1" data-path="chapter-explain-queries.html"><a href="chapter-explain-queries.html#performance-considerations"><i class="fa fa-check"></i><b>20.1</b> Performance considerations</a></li>
@@ -684,10 +651,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span class="kw">require</span>(knitr)
 <span class="kw">library</span>(bookdown)
 <span class="kw">library</span>(sqlpetr)</code></pre>
-<p>Assume that the Docker container with PostgreSQL and the dvdrental database are ready to go. If not go back to <a href="chapter-setup-dvdrental-db.html#build-the-pet-sql-docker-image">the previous Chapter</a></p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_docker_start</span>(<span class="st">&quot;sql-pet&quot;</span>)</code></pre>
+<p>If you have not yet set up the Docker container with PostgreSQL and the dvdrental database, go back to <a href="chapter-setup-dvdrental-db.html#build-the-pet-sql-docker-image">those instructions</a> to configure your environment. Otherwise, start your <code>sql-pet</code> container:</p>
+<pre class="sourceCode r"><code class="sourceCode r">sqlpetr<span class="op">::</span><span class="kw">sp_docker_start</span>(<span class="st">&quot;sql-pet&quot;</span>)</code></pre>
 <p>Connect to the database:</p>
-<pre class="sourceCode r"><code class="sourceCode r">con &lt;-<span class="st"> </span><span class="kw">sp_get_postgres_connection</span>(
+<pre class="sourceCode r"><code class="sourceCode r">con &lt;-<span class="st"> </span>sqlpetr<span class="op">::</span><span class="kw">sp_get_postgres_connection</span>(
   <span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),
   <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),
   <span class="dt">dbname =</span> <span class="st">&quot;dvdrental&quot;</span>,
@@ -696,12 +663,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="r-is-lazy-and-comes-with-guardrails" class="section level2">
 <h2><span class="header-section-number">10.2</span> R is lazy and comes with guardrails</h2>
-<p>By design, R is both a language and an interactive development environment (IDE). As a language, R tries to be as efficient as possible. As an IDE, R creates some guardrails to make it easy and safe to work with your data. For example <code>getOption(&quot;max.print&quot;)</code> prevents R from printing more rows of data than you want to handle in an interactive session, with a default of 99999 lines, which may or may not suit you.</p>
-<p>On the other hand SQL is a <em>“Structured Query Language (SQL): a standard computer language for relational database management and data manipulation.”</em>.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> SQL has has various database-specific Interactive Development Environments (IDEs): for PostgreSQL it’s <a href="https://www.pgadmin.org/">pgAdmin</a>. Roger Peng explains in <a href="https://bookdown.org/rdpeng/rprogdatascience/history-and-overview-of-r.html#basic-features-of-r">R Programming for Data Science</a> that:</p>
+<p>By design, R is both a language and an interactive development environment (IDE). As a language, R tries to be as efficient as possible. As an IDE, R creates some guardrails to make it easy and safe to work with your data. For example <code>getOption("max.print")</code> prevents R from printing more rows of data than you want to handle in an interactive session, with a default of 99999 lines, which may or may not suit you.</p>
+<p>On the other hand SQL is a <em>“Structured Query Language (SQL): a standard computer language for relational database management and data manipulation.”</em>.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> SQL has various database-specific Interactive Development Environments (IDEs), such as <a href="https://www.pgadmin.org/">pgAdmin</a> for PostgreSQL. Roger Peng explains in <a href="https://bookdown.org/rdpeng/rprogdatascience/history-and-overview-of-r.html#basic-features-of-r">R Programming for Data Science</a> that:</p>
 <blockquote>
 <p>R has maintained the original S philosophy, which is that it provides a language that is both useful for interactive work, but contains a powerful programming language for developing new tools.</p>
 </blockquote>
-<p>This is complicated when R interacts with SQL. In <a href="https://cran.r-project.org/web/packages/dbplyr/vignettes/dbplyr.html">the vignette for dbplyr</a> Hadley Wikham explains:</p>
+<p>This is complicated when R interacts with SQL. In a <a href="https://cran.r-project.org/web/packages/dbplyr/vignettes/dbplyr.html">vignette for dbplyr</a> Hadley Wickham explains:</p>
 <blockquote>
 <p>The most important difference between ordinary data frames and remote database queries is that your R code is translated into SQL and executed in the database on the remote server, not in R on your local machine. When working with databases, dplyr tries to be as lazy as possible:</p>
 <ul>
@@ -709,7 +676,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><p>It delays doing any work until the last possible moment: it collects together everything you want to do and then sends it to the database in one step.</p></li>
 </ul>
 </blockquote>
-<p>Exactly when, which and how much data is returned from the dbms is the topic of this chapter. Exactly how the data is represented in the dbms and then translated to a data frame is discussed in the <a href="https://cran.r-project.org/web/packages/DBI/vignettes/spec.html#_fetch_records_from_a_previously_executed_query_">DBI specification</a>.</p>
+<p>Exactly when, which, and how much data is returned from the dbms is the topic of this chapter. Exactly how the data is represented in the dbms and then translated to a data frame is discussed in the <a href="https://cran.r-project.org/web/packages/DBI/vignettes/spec.html#_fetch_records_from_a_previously_executed_query_">DBI specification</a>.</p>
 <p>Eventually, if you are interacting with a dbms from R you will need to understand the differences between lazy loading, lazy evaluation, and lazy queries.</p>
 <div id="lazy-loading" class="section level3">
 <h3><span class="header-section-number">10.2.1</span> Lazy loading</h3>
@@ -721,17 +688,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="lazy-queries" class="section level3">
 <h3><span class="header-section-number">10.2.3</span> Lazy Queries</h3>
-<p>“<em>When you create a &quot;lazy&quot; query, you’re creating a pointer to a set of conditions on the database, but the query isn’t actually run and the data isn’t actually loaded until you call &quot;next&quot; or some similar method to actually fetch the data and load it into an object.</em>”<a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a> The <code>collect()</code> function retrieves data into a local tibble.<a href="#fn7" class="footnote-ref" id="fnref7"><sup>7</sup></a></p>
+<p>“<em>When you create a "lazy" query, you’re creating a pointer to a set of conditions on the database, but the query isn’t actually run and the data isn’t actually loaded until you call "next" or some similar method to actually fetch the data and load it into an object.</em>”<a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a></p>
 </div>
 </div>
 <div id="lazy-evaluation-and-lazy-queries" class="section level2">
 <h2><span class="header-section-number">10.3</span> Lazy evaluation and lazy queries</h2>
 <div id="dplyr-connection-objects" class="section level3">
-<h3><span class="header-section-number">10.3.1</span> Dplyr connection objects</h3>
-<p>As introduced in the previous chapter, the <code>dplyr::tbl</code> function creates an object that might <strong>look</strong> like a data frame in that when you enter it on the command line, it prints a bunch of rows from the dbms table. But is actually a <strong>list</strong> object that <code>dplyr</code> uses for constructing queries and retrieving data from the DBMS.</p>
+<h3><span class="header-section-number">10.3.1</span> <code>dplyr</code> connection objects</h3>
+<p>As introduced in the previous chapter, the <code>dplyr::tbl</code> function creates an object that might <strong>look</strong> like a data frame in that when you enter it on the command line, it prints a bunch of rows from the dbms table. But it is actually a <strong>list</strong> object that <code>dplyr</code> uses for constructing queries and retrieving data from the DBMS.</p>
 <p>The following code illustrates these issues. The <code>dplyr::tbl</code> function creates the connection object that we store in an object named <code>rental_table</code>:</p>
 <pre class="sourceCode r"><code class="sourceCode r">rental_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">tbl</span>(con, <span class="st">&quot;rental&quot;</span>)</code></pre>
-<p>At first glance, it kind of <strong>looks</strong> like a data frame although it only prints 10 of the table’s 16,044 rows:</p>
+<p>At first glance, it <em>acts</em> like a data frame when you print it, although it only prints 10 of the table’s 16,044 rows:</p>
 <pre class="sourceCode r"><code class="sourceCode r">rental_table</code></pre>
 <pre><code>## # Source:   table&lt;rental&gt; [?? x 7]
 ## # Database: postgres [postgres@localhost:5432/dvdrental]
@@ -749,7 +716,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 10        11 2005-05-25 00:09:02         4443         142
 ## # … with more rows, and 3 more variables: return_date &lt;dttm&gt;,
 ## #   staff_id &lt;int&gt;, last_update &lt;dttm&gt;</code></pre>
-<p>But consider the structure of <code>rental_table</code>:</p>
+<p>However, notice that the first output line shows <code>??</code>, rather than providing the number of rows in the table. Similarly, the next to last line shows:</p>
+<pre><code>    ... with more rows, and 3 more variables</code></pre>
+<p>whereas the output for a normal <code>tbl</code> of this rental data would say:</p>
+<pre><code>    ... with 16,034 more rows, and 3 more variables</code></pre>
+<p>So even though <code>rental_table</code> is a <code>tbl</code>:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(rental_table)</code></pre>
+<pre><code>## [1] &quot;tbl_PqConnection&quot; &quot;tbl_dbi&quot;          &quot;tbl_sql&quot;         
+## [4] &quot;tbl_lazy&quot;         &quot;tbl&quot;</code></pre>
+<p>It is not just a normal <code>tbl</code> of data. We can see that from the structure of <code>rental_table</code>:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(rental_table)</code></pre>
 <pre><code>## List of 2
 ##  $ src:List of 2
@@ -766,7 +741,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##   ..$ vars: chr [1:7] &quot;rental_id&quot; &quot;rental_date&quot; &quot;inventory_id&quot; &quot;customer_id&quot; ...
 ##   ..- attr(*, &quot;class&quot;)= chr [1:3] &quot;op_base_remote&quot; &quot;op_base&quot; &quot;op&quot;
 ##  - attr(*, &quot;class&quot;)= chr [1:5] &quot;tbl_PqConnection&quot; &quot;tbl_dbi&quot; &quot;tbl_sql&quot; &quot;tbl_lazy&quot; ...</code></pre>
-<p>It has two rows. The first row contains all the information in the <code>con</code> object, which contains information about all the tables and objects in the database:</p>
+<p>It has only <em>two</em> rows! The first row contains all the information in the <code>con</code> object, which contains information about all the tables and objects in the database:</p>
 <pre class="sourceCode r"><code class="sourceCode r">rental_table<span class="op">$</span>src<span class="op">$</span>con<span class="op">@</span>typnames<span class="op">$</span>typname[<span class="dv">380</span><span class="op">:</span><span class="dv">437</span>]</code></pre>
 <pre><code>##  [1] &quot;customer&quot;                    &quot;_customer&quot;                  
 ##  [3] &quot;actor_actor_id_seq&quot;          &quot;actor&quot;                      
@@ -801,28 +776,35 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre class="sourceCode r"><code class="sourceCode r">rental_table<span class="op">$</span>ops<span class="op">$</span>vars</code></pre>
 <pre><code>## [1] &quot;rental_id&quot;    &quot;rental_date&quot;  &quot;inventory_id&quot; &quot;customer_id&quot; 
 ## [5] &quot;return_date&quot;  &quot;staff_id&quot;     &quot;last_update&quot;</code></pre>
-<p>To illustrate the different issues involved in data retrieval, we create equivalent connection objects to link to two other tables.</p>
-<pre class="sourceCode r"><code class="sourceCode r">staff_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">tbl</span>(con, <span class="st">&quot;staff&quot;</span>) </code></pre>
-<p>The ‘staff’ table has 2 rows</p>
-<pre class="sourceCode r"><code class="sourceCode r">customer_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">tbl</span>(con, <span class="st">&quot;customer&quot;</span>) </code></pre>
-<p>The ‘customer’ table has 599 rows</p>
+<p><code>rental_table</code> holds information needed to get the data from the ‘rental’ table, but <code>rental_table</code> does not hold the data itself. In the following sections, we will examine more closely this relationship between the <code>rental_table</code> object and the data in the database’s ‘rental’ table.</p>
 </div>
 </div>
 <div id="when-does-a-lazy-query-trigger-data-retrieval" class="section level2">
 <h2><span class="header-section-number">10.4</span> When does a lazy query trigger data retrieval?</h2>
 <div id="create-a-black-box-query-for-experimentation" class="section level3">
 <h3><span class="header-section-number">10.4.1</span> Create a black box query for experimentation</h3>
-<p>Here is a typical string of dplyr verbs strung together with the magrittr <code>%&gt;%</code> command that will be used to tease out the several different behaviors that a lazy query has when passed to different R functions. This query joins three connection objects into a query we’ll call <code>Q</code>:</p>
+<p>To illustrate the different issues involved in data retrieval, we create more connection objects to link to two other tables.</p>
+<pre class="sourceCode r"><code class="sourceCode r">staff_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">tbl</span>(con, <span class="st">&quot;staff&quot;</span>) </code></pre>
+<p>The ‘staff’ table has 2 rows.</p>
+<pre class="sourceCode r"><code class="sourceCode r">customer_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">tbl</span>(con, <span class="st">&quot;customer&quot;</span>) </code></pre>
+<p>The ‘customer’ table has 599 rows.</p>
+<p>Here is a typical string of <code>dplyr</code> verbs strung together with the magrittr <code>%&gt;%</code> pipe command that will be used to tease out the several different behaviors that a lazy query has when passed to different R functions. This query joins three connection objects into a query we’ll call <code>Q</code>:</p>
 <pre class="sourceCode r"><code class="sourceCode r">Q &lt;-<span class="st"> </span>rental_table <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">left_join</span>(staff_table, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;staff_id&quot;</span> =<span class="st"> &quot;staff_id&quot;</span>)) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">rename</span>(<span class="dt">staff_email =</span> email) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">left_join</span>(customer_table, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;customer_id&quot;</span> =<span class="st"> &quot;customer_id&quot;</span>)) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">rename</span>(<span class="dt">customer_email =</span> email) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">select</span>(rental_date, staff_email, customer_email)</code></pre>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">left_join</span>(staff_table, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;staff_id&quot;</span> =<span class="st"> &quot;staff_id&quot;</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">rename</span>(<span class="dt">staff_email =</span> email) <span class="op">%&gt;%</span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">left_join</span>(customer_table, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;customer_id&quot;</span> =<span class="st"> &quot;customer_id&quot;</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">rename</span>(<span class="dt">customer_email =</span> email) <span class="op">%&gt;%</span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(rental_date, staff_email, customer_email)</code></pre>
 </div>
 <div id="experiment-overview" class="section level3">
 <h3><span class="header-section-number">10.4.2</span> Experiment overview</h3>
-<p>Think of <code>Q</code> as a black box for the moment. The following examples will show how <code>Q</code> is interpreted differently by different functions. In this table, a single green check indicates that some rows are returned, two green checks indicates that all the rows are returned, and the red X indicates that no rows have are returned.</p>
+<p>Think of <code>Q</code> as a black box for the moment. The following examples will show how <code>Q</code> is interpreted differently by different functions.</p>
+<p><strong>Notation</strong></p>
+<ul>
+<li><img src="screenshots/green-check.png" />: A single green check indicates that some rows are returned.</li>
+<li><img src="screenshots/green-check.png" /> <img src="screenshots/green-check.png" />: Two green checks indicate that all the rows are returned.</li>
+<li><img src="screenshots/red-x.png" />: The red X indicates that no rows are returned.</li>
+</ul>
 <blockquote>
 <table>
 <colgroup>
@@ -841,7 +823,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <td><img src="screenshots/green-check.png" /> Prints x rows; same as just entering <code>Q</code></td>
 </tr>
 <tr class="even">
-<td><a href="#Q-as-tibble"><code>Q %&gt;% as.tibble()</code></a></td>
+<td><a href="#Q-as-tibble"><code>Q %&gt;% dplyr::as_tibble()</code></a></td>
 <td><img src="screenshots/green-check.png" /><img src="screenshots/green-check.png" /> Forces <code>Q</code> to be a tibble</td>
 </tr>
 <tr class="odd">
@@ -849,45 +831,49 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <td><img src="screenshots/green-check.png" /> Prints the first 6 rows</td>
 </tr>
 <tr class="even">
+<td><a href="chapter-lazy-evaluation-queries.html#lazy_q_tail"><code>Q %&gt;% tail()</code></a></td>
+<td><img src="screenshots/red-x.png" /> Error: tail() is not supported by sql sources</td>
+</tr>
+<tr class="odd">
 <td><a href="chapter-lazy-evaluation-queries.html#lazy_q_length"><code>Q %&gt;% length()</code></a></td>
 <td><img src="screenshots/red-x.png" /> Counts the rows in <code>Q</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><a href="chapter-lazy-evaluation-queries.html#lazy_q_str"><code>Q %&gt;% str()</code></a></td>
 <td><img src="screenshots/red-x.png" />Shows the top 3 levels of the <strong>object</strong> <code>Q</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><a href="chapter-lazy-evaluation-queries.html#lazy_q_nrow"><code>Q %&gt;% nrow()</code></a></td>
 <td><img src="screenshots/red-x.png" /> <strong>Attempts</strong> to determine the number of rows</td>
 </tr>
-<tr class="odd">
-<td><a href="chapter-lazy-evaluation-queries.html#lazy_q_tally"><code>Q %&gt;% tally()</code></a></td>
+<tr class="even">
+<td><a href="chapter-lazy-evaluation-queries.html#lazy_q_tally"><code>Q %&gt;% dplyr::tally()</code></a></td>
 <td><img src="screenshots/green-check.png" /> <img src="screenshots/green-check.png" /> Counts all the rows – on the dbms side</td>
 </tr>
-<tr class="even">
-<td><a href="chapter-lazy-evaluation-queries.html#lazy_q_collect"><code>Q %&gt;% collect(n = 20)</code></a></td>
+<tr class="odd">
+<td><a href="chapter-lazy-evaluation-queries.html#lazy_q_collect"><code>Q %&gt;% dplyr::collect(n = 20)</code></a></td>
 <td><img src="screenshots/green-check.png" /> Prints 20 rows</td>
 </tr>
-<tr class="odd">
-<td><a href="chapter-lazy-evaluation-queries.html#lazy_q_collect"><code>Q %&gt;% collect(n = 20) %&gt;% head()</code></a></td>
+<tr class="even">
+<td><a href="chapter-lazy-evaluation-queries.html#lazy_q_collect"><code>Q %&gt;% dplyr::collect(n = 20) %&gt;% head()</code></a></td>
 <td><img src="screenshots/green-check.png" /> Prints 6 rows</td>
 </tr>
-<tr class="even">
-<td><a href="#lazy-q-show-query"><code>Q %&gt;% show_query()</code></a></td>
+<tr class="odd">
+<td><a href="#lazy-q-show-query"><code>Q %&gt;% dplyr::show_query()</code></a></td>
 <td><img src="screenshots/red-x.png" /> <strong>Translates</strong> the lazy query object into SQL</td>
 </tr>
-<tr class="odd">
-<td><a href="chapter-lazy-evaluation-queries.html#lazy_q_build"><code>Qc &lt;- Q %&gt;% count(customer_email, sort = TRUE)</code> <br /> <code>Qc</code></a></td>
+<tr class="even">
+<td><a href="chapter-lazy-evaluation-queries.html#lazy_q_build"><code>Qc &lt;- Q %&gt;% dplyr::count(customer_email, sort = TRUE)</code> <br /> <code>Qc</code></a></td>
 <td><img src="screenshots/red-x.png" /> <strong>Extends</strong> the lazy query object</td>
 </tr>
 </tbody>
 </table>
 </blockquote>
-<p>(The next chapter will discuss how to build queries and how to explore intermediate steps.)</p>
+<p>The next chapter will discuss how to build queries and how to explore intermediate steps. But first, the following subsections provide a more detailed discussion of each row in the preceding table.</p>
 </div>
 <div id="lazy_q_print" class="section level3">
 <h3><span class="header-section-number">10.4.3</span> Q %&gt;% print()</h3>
-<p>Remember that <code>Q %&gt;% print()</code> is equivalent to <code>print(Q)</code> and the same as just entering <code>Q</code> on the command line. We use the magrittr pipe operator here because chaining functions highlights how the same object behaves differently in each use.</p>
+<p>Remember that <code>Q %&gt;% print()</code> is equivalent to <code>print(Q)</code> and the same as just entering <code>Q</code> on the command line. We use the magrittr pipe operator here, because chaining functions highlights how the same object behaves differently in each use.</p>
 <pre class="sourceCode r"><code class="sourceCode r">Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">print</span>()</code></pre>
 <pre><code>## # Source:   lazy query [?? x 3]
 ## # Database: postgres [postgres@localhost:5432/dvdrental]
@@ -911,14 +897,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 rental_date staff_email customer_email
 &lt;dttm&gt; &lt;chr&gt; &lt;chr&gt;</p>
 </blockquote>
-<p>R has not determined how many rows are left to retrieve as it notes <code>... with more rows</code>.</p>
+<p>R has not determined how many rows are left to retrieve as it shows with <code>[?? x 3]</code> and <code>... with more rows</code> in the data summary.</p>
 </div>
 <div id="lazy_q_as-tibble" class="section level3">
-<h3><span class="header-section-number">10.4.4</span> Q %&gt;% as.tibble()</h3>
-<p><img src="screenshots/green-check.png" /> <img src="screenshots/green-check.png" /> In contrast to <code>print()</code>, the <code>as.tibble()</code> function causes R to download the whole table, using tibble’s default of displaying only the first 10 rows.</p>
-<pre class="sourceCode r"><code class="sourceCode r">Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.tibble</span>()</code></pre>
-<pre><code>## Warning: `as.tibble()` is deprecated, use `as_tibble()` (but mind the new semantics).
-## This warning is displayed once per session.</code></pre>
+<h3><span class="header-section-number">10.4.4</span> Q %&gt;% dplyr::as_tibble()</h3>
+<p><img src="screenshots/green-check.png" /> <img src="screenshots/green-check.png" /> In contrast to <code>print()</code>, the <code>as_tibble()</code> function causes R to download the whole table, using tibble’s default of displaying only the first 10 rows.</p>
+<pre class="sourceCode r"><code class="sourceCode r">Q <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">as_tibble</span>()</code></pre>
 <pre><code>## # A tibble: 16,044 x 3
 ##    rental_date         staff_email             customer_email              
 ##    &lt;dttm&gt;              &lt;chr&gt;                   &lt;chr&gt;                       
@@ -949,14 +933,24 @@ rental_date staff_email customer_email
 ## 5 2005-05-24 23:08:07 Mike.Hillyer@sakilasta… nelson.christenson@sakilacus…
 ## 6 2005-05-24 23:11:53 Jon.Stephens@sakilasta… cassandra.walters@sakilacust…</code></pre>
 </div>
+<div id="lazy_q_tail" class="section level3">
+<h3><span class="header-section-number">10.4.6</span> Q %&gt;% tail()</h3>
+<p><img src="screenshots/red-x.png" /> Produces an error, because <code>Q</code> does not hold all of the data, so it is not possible to list the last few items from the table:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">try</span>(
+  Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">tail</span>(),
+  <span class="dt">silent =</span> <span class="ot">FALSE</span>,
+  <span class="dt">outFile =</span> <span class="kw">stdout</span>()
+)</code></pre>
+<pre><code>## Error : tail() is not supported by sql sources</code></pre>
+</div>
 <div id="lazy_q_length" class="section level3">
-<h3><span class="header-section-number">10.4.6</span> Q %&gt;% length()</h3>
+<h3><span class="header-section-number">10.4.7</span> Q %&gt;% length()</h3>
 <p><img src="screenshots/red-x.png" /> Because the <code>Q</code> object is relatively complex, using <code>str()</code> on it prints many lines. You can glimpse what’s going on with <code>length()</code>:</p>
 <pre class="sourceCode r"><code class="sourceCode r">Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">length</span>()</code></pre>
 <pre><code>## [1] 2</code></pre>
 </div>
 <div id="lazy_q_str" class="section level3">
-<h3><span class="header-section-number">10.4.7</span> Q %&gt;% str()</h3>
+<h3><span class="header-section-number">10.4.8</span> Q %&gt;% str()</h3>
 <p><img src="screenshots/red-x.png" /> Looking inside shows some of what’s going on (three levels deep):</p>
 <pre class="sourceCode r"><code class="sourceCode r">Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">str</span>(<span class="dt">max.level =</span> <span class="dv">3</span>) </code></pre>
 <pre><code>## List of 2
@@ -975,26 +969,26 @@ rental_date staff_email customer_email
 ##   .. ..- attr(*, &quot;class&quot;)= chr [1:3] &quot;op_rename&quot; &quot;op_single&quot; &quot;op&quot;
 ##   ..$ dots:List of 3
 ##   .. ..$ : language ~rental_date
-##   .. .. ..- attr(*, &quot;.Environment&quot;)=&lt;environment: 0x55eec55df340&gt; 
+##   .. .. ..- attr(*, &quot;.Environment&quot;)=&lt;environment: 0x5572b6564310&gt; 
 ##   .. ..$ : language ~staff_email
-##   .. .. ..- attr(*, &quot;.Environment&quot;)=&lt;environment: 0x55eec55df340&gt; 
+##   .. .. ..- attr(*, &quot;.Environment&quot;)=&lt;environment: 0x5572b6564310&gt; 
 ##   .. ..$ : language ~customer_email
-##   .. .. ..- attr(*, &quot;.Environment&quot;)=&lt;environment: 0x55eec55df340&gt; 
+##   .. .. ..- attr(*, &quot;.Environment&quot;)=&lt;environment: 0x5572b6564310&gt; 
 ##   .. ..- attr(*, &quot;class&quot;)= chr &quot;quosures&quot;
 ##   ..$ args: list()
 ##   ..- attr(*, &quot;class&quot;)= chr [1:3] &quot;op_select&quot; &quot;op_single&quot; &quot;op&quot;
 ##  - attr(*, &quot;class&quot;)= chr [1:5] &quot;tbl_PqConnection&quot; &quot;tbl_dbi&quot; &quot;tbl_sql&quot; &quot;tbl_lazy&quot; ...</code></pre>
 </div>
 <div id="lazy_q_nrow" class="section level3">
-<h3><span class="header-section-number">10.4.8</span> Q %&gt;% nrow()</h3>
+<h3><span class="header-section-number">10.4.9</span> Q %&gt;% nrow()</h3>
 <p><img src="screenshots/red-x.png" /> Notice the difference between <code>nrow()</code> and <code>tally()</code>. The <code>nrow</code> functions returns <code>NA</code> and does not execute a query:</p>
 <pre class="sourceCode r"><code class="sourceCode r">Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">nrow</span>()</code></pre>
 <pre><code>## [1] NA</code></pre>
 </div>
 <div id="lazy_q_tally" class="section level3">
-<h3><span class="header-section-number">10.4.9</span> Q %&gt;% tally()</h3>
+<h3><span class="header-section-number">10.4.10</span> Q %&gt;% dplyr::tally()</h3>
 <p><img src="screenshots/green-check.png" /> The <code>tally</code> function actually counts all the rows.</p>
-<pre class="sourceCode r"><code class="sourceCode r">Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">tally</span>()</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">Q <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">tally</span>()</code></pre>
 <pre><code>## # Source:   lazy query [?? x 1]
 ## # Database: postgres [postgres@localhost:5432/dvdrental]
 ##   n              
@@ -1003,9 +997,9 @@ rental_date staff_email customer_email
 <p>The <code>nrow()</code> function knows that <code>Q</code> is a list. On the other hand, the <code>tally()</code> function tells SQL to go count all the rows. Notice that <code>Q</code> results in 16,044 rows – the same number of rows as <code>rental</code>.</p>
 </div>
 <div id="lazy_q_collect" class="section level3">
-<h3><span class="header-section-number">10.4.10</span> Q %&gt;% collect()</h3>
-<p><img src="screenshots/green-check.png" /> The <code>dplyr::collect()</code> function triggers a dbFetch() function behind the scenes, which forces R to download a specified number of rows:</p>
-<pre class="sourceCode r"><code class="sourceCode r">Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="dv">20</span>)</code></pre>
+<h3><span class="header-section-number">10.4.11</span> Q %&gt;% dplyr::collect()</h3>
+<p><img src="screenshots/green-check.png" /> The dplyr::<a href="https://dplyr.tidyverse.org/reference/compute.html">collect</a> function triggers a call to the <code>DBI:dbFetch()</code> function behind the scenes, which forces R to download a specified number of rows:</p>
+<pre class="sourceCode r"><code class="sourceCode r">Q <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="dv">20</span>)</code></pre>
 <pre><code>## # A tibble: 20 x 3
 ##    rental_date         staff_email             customer_email              
 ##    &lt;dttm&gt;              &lt;chr&gt;                   &lt;chr&gt;                       
@@ -1029,7 +1023,7 @@ rental_date staff_email customer_email
 ## 18 2005-05-25 01:17:24 Mike.Hillyer@sakilasta… ronnie.ricketts@sakilacusto…
 ## 19 2005-05-25 01:48:41 Jon.Stephens@sakilasta… roberta.harper@sakilacustom…
 ## 20 2005-05-25 01:59:46 Jon.Stephens@sakilasta… craig.morrell@sakilacustome…</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r">Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="dv">20</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>()</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">Q <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="dv">20</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>()</code></pre>
 <pre><code>## # A tibble: 6 x 3
 ##   rental_date         staff_email             customer_email               
 ##   &lt;dttm&gt;              &lt;chr&gt;                   &lt;chr&gt;                        
@@ -1039,11 +1033,12 @@ rental_date staff_email customer_email
 ## 4 2005-05-24 23:05:21 Mike.Hillyer@sakilasta… delores.hansen@sakilacustome…
 ## 5 2005-05-24 23:08:07 Mike.Hillyer@sakilasta… nelson.christenson@sakilacus…
 ## 6 2005-05-24 23:11:53 Jon.Stephens@sakilasta… cassandra.walters@sakilacust…</code></pre>
-<p>The <code>collect</code> function triggers the creation of a tibble and controls the number of rows that the DBMS sends to R. Notice that <code>head</code> only prints 6 of the 25 rows that R has retrieved.</p>
+<p>The <code>dplyr::collect</code> function triggers the creation of a tibble and controls the number of rows that the DBMS sends to R. Notice that <code>head</code> only prints 6 of the 20 rows that R has retrieved.</p>
+<p>If you do not provide a value for the <code>n</code> argument, <em>all</em> of the rows will be retrieved into your R workspace.</p>
 </div>
 <div id="lazy_q_show-query" class="section level3">
-<h3><span class="header-section-number">10.4.11</span> Q %&gt;% show_query()</h3>
-<pre class="sourceCode r"><code class="sourceCode r">Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">show_query</span>()</code></pre>
+<h3><span class="header-section-number">10.4.12</span> Q %&gt;% dplyr::show_query()</h3>
+<pre class="sourceCode r"><code class="sourceCode r">Q <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">show_query</span>()</code></pre>
 <pre><code>## &lt;SQL&gt;
 ## SELECT &quot;rental_date&quot;, &quot;staff_email&quot;, &quot;customer_email&quot;
 ## FROM (SELECT &quot;rental_id&quot;, &quot;rental_date&quot;, &quot;inventory_id&quot;, &quot;customer_id&quot;, &quot;return_date&quot;, &quot;staff_id&quot;, &quot;last_update.x&quot;, &quot;first_name.x&quot;, &quot;last_name.x&quot;, &quot;address_id.x&quot;, &quot;staff_email&quot;, &quot;store_id.x&quot;, &quot;active.x&quot;, &quot;username&quot;, &quot;password&quot;, &quot;last_update.y&quot;, &quot;picture&quot;, &quot;store_id.y&quot;, &quot;first_name.y&quot;, &quot;last_name.y&quot;, &quot;email&quot; AS &quot;customer_email&quot;, &quot;address_id.y&quot;, &quot;activebool&quot;, &quot;create_date&quot;, &quot;last_update&quot;, &quot;active.y&quot;
@@ -1053,16 +1048,16 @@ rental_date staff_email customer_email
 ##   FROM &quot;rental&quot; AS &quot;TBL_LEFT&quot;
 ##   LEFT JOIN &quot;staff&quot; AS &quot;TBL_RIGHT&quot;
 ##   ON (&quot;TBL_LEFT&quot;.&quot;staff_id&quot; = &quot;TBL_RIGHT&quot;.&quot;staff_id&quot;)
-## ) &quot;reyrwjaagp&quot;) &quot;TBL_LEFT&quot;
+## ) &quot;owlcdiuswh&quot;) &quot;TBL_LEFT&quot;
 ##   LEFT JOIN &quot;customer&quot; AS &quot;TBL_RIGHT&quot;
 ##   ON (&quot;TBL_LEFT&quot;.&quot;customer_id&quot; = &quot;TBL_RIGHT&quot;.&quot;customer_id&quot;)
-## ) &quot;jktjcuykhb&quot;) &quot;nkrielhznn&quot;</code></pre>
-<p>Hand-written SQL code to do the same job will probably look a lot nicer and could be more efficient, but functionally dplyr does the job.</p>
+## ) &quot;uesvhrzxil&quot;) &quot;kyficxrgdh&quot;</code></pre>
+<p>Hand-written SQL code to do the same job will probably look a lot nicer and could be more efficient, but functionally <code>dplyr</code> does the job.</p>
 </div>
 <div id="lazy_q_build" class="section level3">
-<h3><span class="header-section-number">10.4.12</span> Qc &lt;- Q %&gt;% count(customer_email)</h3>
+<h3><span class="header-section-number">10.4.13</span> Qc &lt;- Q %&gt;% dplyr::count(customer_email)</h3>
 <p><img src="screenshots/red-x.png" /> Until <code>Q</code> is executed, we can add to it. This behavior is the basis for a useful debugging and development process where queries are built up incrementally.</p>
-<pre class="sourceCode r"><code class="sourceCode r">Qc &lt;-<span class="st"> </span>Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(customer_email, <span class="dt">sort =</span> <span class="ot">TRUE</span>)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">Qc &lt;-<span class="st"> </span>Q <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">count</span>(customer_email, <span class="dt">sort =</span> <span class="ot">TRUE</span>)</code></pre>
 <p><img src="screenshots/green-check.png" /> When all the accumulated <code>dplyr</code> verbs are executed, they are submitted to the dbms and the number of rows that are returned follow the same rules as discussed above.</p>
 <pre class="sourceCode r"><code class="sourceCode r">Qc</code></pre>
 <pre><code>## # Source:     lazy query [?? x 2]
@@ -1081,15 +1076,17 @@ rental_date staff_email customer_email
 ##  9 rhonda.kennedy@sakilacustomer.org 39             
 ## 10 tim.cary@sakilacustomer.org       39             
 ## # … with more rows</code></pre>
-<p>See more example of lazy execution can be found <a href="https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html">Here</a>.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dbDisconnect</span>(con)
-<span class="kw">sp_docker_stop</span>(<span class="st">&quot;sql-pet&quot;</span>)</code></pre>
+<p>See more examples of lazy execution <a href="https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html">here</a>.</p>
+<pre class="sourceCode r"><code class="sourceCode r">DBI<span class="op">::</span><span class="kw">dbDisconnect</span>(con)
+sqlpetr<span class="op">::</span><span class="kw">sp_docker_stop</span>(<span class="st">&quot;sql-pet&quot;</span>)</code></pre>
 </div>
 </div>
 <div id="other-resources" class="section level2">
 <h2><span class="header-section-number">10.5</span> Other resources</h2>
 <ul>
-<li>Benjamin S. Baumer, A Grammar for Reproducible and Painless Extract-Transform-Load Operations on Medium Data: <a href="https://arxiv.org/pdf/1708.07073">https://arxiv.org/pdf/1708.07073</a></li>
+<li>Benjamin S. Baumer. 2017. A Grammar for Reproducible and Painless Extract-Transform-Load Operations on Medium Data. <a href="https://arxiv.org/abs/1708.07073">https://arxiv.org/abs/1708.07073</a></li>
+<li>dplyr Reference documentation: Remote tables. <a href="https://dplyr.tidyverse.org/reference/index.html#section-remote-tables">https://dplyr.tidyverse.org/reference/index.html#section-remote-tables</a></li>
+<li>Data Carpentry. SQL Databases and R. <a href="https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html">https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html</a></li>
 </ul>
 
 </div>
@@ -1103,7 +1100,6 @@ rental_date staff_email customer_email
 <li id="fn4"><p><a href="http://adv-r.had.co.nz/Functions.html#function-arguments" class="uri">http://adv-r.had.co.nz/Functions.html#function-arguments</a><a href="chapter-lazy-evaluation-queries.html#fnref4" class="footnote-back">↩</a></p></li>
 <li id="fn5"><p><a href="https://colinfay.me/tidyeval-1/" class="uri">https://colinfay.me/tidyeval-1/</a><a href="chapter-lazy-evaluation-queries.html#fnref5" class="footnote-back">↩</a></p></li>
 <li id="fn6"><p><a href="https://www.quora.com/What-is-a-lazy-query" class="uri">https://www.quora.com/What-is-a-lazy-query</a><a href="chapter-lazy-evaluation-queries.html#fnref6" class="footnote-back">↩</a></p></li>
-<li id="fn7"><p><a href="https://dplyr.tidyverse.org/reference/compute.html" class="uri">https://dplyr.tidyverse.org/reference/compute.html</a><a href="chapter-lazy-evaluation-queries.html#fnref7" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
             </section>

@@ -70,28 +70,11 @@ sp_docker_images_tibble()
 ```
 
 ```
-## Warning: 7 parsing failures.
-## row col  expected    actual         file
-##   1  -- 1 columns 7 columns literal data
-##   2  -- 1 columns 7 columns literal data
-##   3  -- 1 columns 7 columns literal data
-##   4  -- 1 columns 7 columns literal data
-##   5  -- 1 columns 7 columns literal data
-## ... ... ......... ......... ............
-## See problems(...) for more details.
-```
-
-```
-## # A tibble: 7 x 1
-##   image_id_repository_tag_digest_created_created_at_size
-##   <chr>                                                 
-## 1 97e0890eea7d                                          
-## 2 6699b3ab3974                                          
-## 3 f94f2247ea09                                          
-## 4 46e6e5937df7                                          
-## 5 ebdd3a33f882                                          
-## 6 2fd32ba146a8                                          
-## 7 8ee0fb4d4cfc
+## # A tibble: 2 x 7
+##   image_id  repository   tag   digest          created   created_at   size 
+##   <chr>     <chr>        <chr> <chr>           <chr>     <chr>        <chr>
+## 1 4ed448c7… postgres-dv… late… <none>          Less tha… 2019-02-15 … 251MB
+## 2 11160398… postgres     10    sha256:a0fdfd0… 20 hours… 2019-02-14 … 230MB
 ```
 
 ## Run the pet-sql Docker Image
@@ -127,16 +110,11 @@ sp_docker_containers_tibble()
 ```
 
 ```
-## Warning: 1 parsing failure.
-## row col  expected     actual         file
-##   1  -- 1 columns 12 columns literal data
-```
-
-```
-## # A tibble: 1 x 1
-##   container_id_image_command_created_at_created_ports_status_size_names_la…
-##   <chr>                                                                    
-## 1 5bbf878aaf9a
+## # A tibble: 1 x 12
+##   container_id image command created_at created ports status size  names
+##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
+## 1 6f13a331bfbf post… docker… 2019-02-1… 1 seco… 0.0.… Up Le… 0B (… sql-…
+## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 
 ## Connect to PostgreSQL with R
@@ -212,22 +190,11 @@ sp_docker_containers_tibble(list_all = TRUE)
 ```
 
 ```
-## Warning: 4 parsing failures.
-## row col  expected     actual         file
-##   1  -- 1 columns 12 columns literal data
-##   2  -- 1 columns 12 columns literal data
-##   3  -- 1 columns 12 columns literal data
-##   4  -- 1 columns 12 columns literal data
-```
-
-```
-## # A tibble: 4 x 1
-##   container_id_image_command_created_at_created_ports_status_size_names_la…
-##   <chr>                                                                    
-## 1 5bbf878aaf9a                                                             
-## 2 1261c73d983d                                                             
-## 3 12c5f548caac                                                             
-## 4 8082929a1424
+## # A tibble: 1 x 12
+##   container_id image command created_at created ports status size  names
+##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
+## 1 6f13a331bfbf post… docker… 2019-02-1… 7 seco… <NA>  Exite… 0B (… sql-…
+## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 
 
@@ -239,16 +206,11 @@ sp_docker_containers_tibble()
 ```
 
 ```
-## Warning: 1 parsing failure.
-## row col  expected     actual         file
-##   1  -- 1 columns 12 columns literal data
-```
-
-```
-## # A tibble: 1 x 1
-##   container_id_image_command_created_at_created_ports_status_size_names_la…
-##   <chr>                                                                    
-## 1 5bbf878aaf9a
+## # A tibble: 1 x 12
+##   container_id image command created_at created ports status size  names
+##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
+## 1 6f13a331bfbf post… docker… 2019-02-1… 9 seco… 0.0.… Up Le… 63B … sql-…
+## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 Connect to the `dvdrental` database in PostgreSQL:
 
@@ -295,11 +257,8 @@ sp_show_all_docker_containers()
 ```
 
 ```
-## CONTAINER ID        IMAGE                             COMMAND                  CREATED             STATUS                              PORTS                                     NAMES
-## 5bbf878aaf9a        postgres-dvdrental                "docker-entrypoint..."   10 seconds ago      Exited (0) Less than a second ago                                             sql-pet
-## 1261c73d983d        docker.io/dpage/pgadmin4:latest   "/entrypoint.sh"         9 hours ago         Exited (255) 9 hours ago            443/tcp, 0.0.0.0:8686->80/tcp             pgadmin4
-## 12c5f548caac        rstatsp:latest                    "/bin/sh -c 'servi..."   9 hours ago         Exited (255) 9 hours ago            80/tcp, 443/tcp, 0.0.0.0:8004->8004/tcp   rstats
-## 8082929a1424        postgis:latest                    "docker-entrypoint..."   9 hours ago         Exited (255) 9 hours ago            0.0.0.0:5439->5432/tcp                    postgis
+## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS               NAMES
+## 6f13a331bfbf        postgres-dvdrental   "docker-entrypoint.s…"   9 seconds ago       Exited (0) Less than a second ago                       sql-pet
 ```
 
 Next time, you can just use this command to start the container: 

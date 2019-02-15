@@ -72,9 +72,9 @@ sp_check_that_docker_is_up()
 ```
 
 ```
-## [1] "Docker is up, running these containers:"                                                                                                                
-## [2] "CONTAINER ID        IMAGE                   COMMAND                  CREATED                  STATUS                  PORTS                    NAMES"   
-## [3] "8c9d4ac2e892        docker.io/postgres:10   \"docker-entrypoint...\"   Less than a second ago   Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
+## [1] "Docker is up, running these containers:"                                                                                                       
+## [2] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES"   
+## [3] "fc9c89d9e32b        postgres:10         \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
 ```
 
 For more details, our package `sqlpetr` has a function
@@ -86,16 +86,11 @@ sp_docker_containers_tibble()
 ```
 
 ```
-## Warning: 1 parsing failure.
-## row col  expected     actual         file
-##   1  -- 1 columns 12 columns literal data
-```
-
-```
-## # A tibble: 1 x 1
-##   container_id_image_command_created_at_created_ports_status_size_names_la…
-##   <chr>                                                                    
-## 1 8c9d4ac2e892
+## # A tibble: 1 x 12
+##   container_id image command created_at created ports status size  names
+##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
+## 1 fc9c89d9e32b post… docker… 2019-02-1… 2 seco… 0.0.… Up Le… 0B (… catt…
+## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 
 
@@ -181,8 +176,8 @@ Show a few rows:
 sp_print_df(head(mtcars_df))
 ```
 
-<!--html_preserve--><div id="htmlwidget-2809d9247bcfd6e0ca07" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-2809d9247bcfd6e0ca07">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[21,21,22.8,21.4,18.7,18.1],[6,6,4,6,8,6],[160,160,108,258,360,225],[110,110,93,110,175,105],[3.9,3.9,3.85,3.08,3.15,2.76],[2.62,2.875,2.32,3.215,3.44,3.46],[16.46,17.02,18.61,19.44,17.02,20.22],[0,0,1,1,0,1],[1,1,1,0,0,0],[4,4,4,3,3,3],[4,4,1,1,2,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>mpg<\/th>\n      <th>cyl<\/th>\n      <th>disp<\/th>\n      <th>hp<\/th>\n      <th>drat<\/th>\n      <th>wt<\/th>\n      <th>qsec<\/th>\n      <th>vs<\/th>\n      <th>am<\/th>\n      <th>gear<\/th>\n      <th>carb<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6,7,8,9,10,11]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-0964cd404d0078c41dc1" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-0964cd404d0078c41dc1">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[21,21,22.8,21.4,18.7,18.1],[6,6,4,6,8,6],[160,160,108,258,360,225],[110,110,93,110,175,105],[3.9,3.9,3.85,3.08,3.15,2.76],[2.62,2.875,2.32,3.215,3.44,3.46],[16.46,17.02,18.61,19.44,17.02,20.22],[0,0,1,1,0,1],[1,1,1,0,0,0],[4,4,4,3,3,3],[4,4,1,1,2,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>mpg<\/th>\n      <th>cyl<\/th>\n      <th>disp<\/th>\n      <th>hp<\/th>\n      <th>drat<\/th>\n      <th>wt<\/th>\n      <th>qsec<\/th>\n      <th>vs<\/th>\n      <th>am<\/th>\n      <th>gear<\/th>\n      <th>carb<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6,7,8,9,10,11]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ## Clean up
 
