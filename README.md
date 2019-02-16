@@ -20,7 +20,9 @@
 
 * Tutorial materials from this repo go in the online book, "[R, Databases and Docker](https://smithjd.github.io/sql-pet/)".
 * Each chapter is written so it can be executed independently (once the Docker container is built in Chapter 5). We are using a [Knit-then-Merge](https://bookdown.org/yihui/bookdown/new-session.html) approach, so each chapter of the book can be Knitted separately.  
-* The book depends on the `sqlrpetr` package.  It can be downloaded using `devtools::install_github("smithjd/sqlpetr")`
+* The book depends on the [sqlpetr](https://github.com/smithjd/sqlpetr) package, which can be installed using:
+
+    `remotes::install_github("smithjd/sqlpetr", force = TRUE, quiet = TRUE, build = TRUE, build_opts = "")`
 
 ## Prerequisites
 You will need:
@@ -47,7 +49,7 @@ Here are the R packages that are used in this project and are discussed in the b
 * [knitr](https://cran.r-project.org/package=knitr)
 * [skimr](https://cran.r-project.org/package=skimr)
 * [tidyverse](https://cran.r-project.org/package=tidyverse)
-* [sqlpetr](https://github.com/smithjd/sqlpetr) (installs with: `devtools::install_github("smithjd/sqlpetr")`)
+* [sqlpetr](https://github.com/smithjd/sqlpetr) (installs with: `remotes::install_github("smithjd/sqlpetr", force = TRUE, quiet = TRUE, build = TRUE, build_opts = "")`)
 * [bookdown](https://cran.r-project.org/package=bookdown)
 
 ## How to contribute
@@ -66,6 +68,8 @@ To compile the book, you need to additionally [install webshot](https://bookdown
    install.packages("webshot")
    webshot::install_phantomjs()
 ```
+
+Then run the `build_book.R` script to compile the book.
 
 ## Code of Conduct
 If you plan to participate in the project in any way, such as a developer, reviewer, contributor, committer, or student, you are expected to follow the project's [Code of Conduct](https://github.com/smithjd/sql-pet/blob/master/CODE_OF_CONDUCT.md). Please review those guidelines before choosing to participate in the project.
