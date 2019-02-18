@@ -29,7 +29,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                     PORTS               NAMES
-## 273b2b37fa58        postgres-dvdrental   "docker-entrypoint.s…"   52 seconds ago      Exited (0) 2 seconds ago                       sql-pet
+## 60a61f1e10f7        postgres-dvdrental   "docker-entrypoint.s…"   51 seconds ago      Exited (0) 2 seconds ago                       sql-pet
 ```
 
 Start up the `docker-pet` container
@@ -55,95 +55,51 @@ con <- sp_get_postgres_connection(
 
 
 ```r
-## Initialize Data
-
-dbExecute(con, "delete from film_category where film_id >= 1001;")
+source(file=here('book-src/sql_pet_data.R'),echo=TRUE)
+## 
+## > dbExecute(con, "delete from film_category where film_id >= 1001;")
 ## [1] 4
-dbExecute(con, "delete from rental where rental_id >= 16050;")
+## 
+## > dbExecute(con, "delete from rental where rental_id >= 16050;")
 ## [1] 1
-dbExecute(con, "delete from inventory where film_id >= 1001;")
+## 
+## > dbExecute(con, "delete from inventory where film_id >= 1001;")
 ## [1] 2
-dbExecute(con, "delete from film where film_id >= 1001;")
+## 
+## > dbExecute(con, "delete from film where film_id >= 1001;")
 ## [1] 2
-dbExecute(con, "delete from customer where customer_id >= 600;")
+## 
+## > dbExecute(con, "delete from customer where customer_id >= 600;")
 ## [1] 7
-dbExecute(con, "delete from store where store_id > 2;")
+## 
+## > dbExecute(con, "delete from store where store_id > 2;")
 ## [1] 1
-
-# Insert new customers
-dbExecute(
-  con,
-  "insert into customer 
-  (customer_id,store_id,first_name,last_name,email,address_id,activebool
-  ,create_date,last_update,active)
-   values(600,3,'Sophie','Yang','sophie.yang@sakilacustomer.org',1,TRUE,now(),now()::date,1)
-         ,(601,2,'Sophie','Yang','sophie.yang@sakilacustomer.org',1,TRUE,now(),now()::date,1)
-         ,(602,4,'John','Smith','john.smith@sakilacustomer.org',2,TRUE,now()::date,now()::date,1)
-         ,(603,5,'Ian','Frantz','ian.frantz@sakilacustomer.org',3,TRUE,now()::date,now()::date,1)
-         ,(604,6,'Ed','Borasky','ed.borasky@sakilacustomer.org',4,TRUE,now()::date,now()::date,1)
-         ;"
-)
+## 
+## > dbExecute(con, "insert into customer\n  (customer_id,store_id,first_name,last_name,email,address_id,activebool\n  ,create_date,last_update,active)\n ..." ... [TRUNCATED] 
 ## [1] 5
-
-# Insert new store record
-dbExecute(con, "ALTER TABLE store DISABLE TRIGGER ALL;")
+## 
+## > dbExecute(con, "ALTER TABLE store DISABLE TRIGGER ALL;")
 ## [1] 0
-df <- data.frame(
-    store_id = 10
-  , manager_staff_id = 10
-  , address_id = 10
-  , last_update = Sys.time()
-)
-dbWriteTable(con, "store", value = df, append = TRUE, row.names = FALSE)
-dbExecute(con, "ALTER TABLE store ENABLE TRIGGER ALL;")
+## 
+## > df <- data.frame(store_id = 10, manager_staff_id = 10, 
+## +     address_id = 10, last_update = Sys.time())
+## 
+## > dbWriteTable(con, "store", value = df, append = TRUE, 
+## +     row.names = FALSE)
+## 
+## > dbExecute(con, "ALTER TABLE store ENABLE TRIGGER ALL;")
 ## [1] 0
-
-# Insert new film row.
-dbExecute(
-  con,
-  "insert into film
-  (film_id,title,description,release_year,language_id
-  ,rental_duration,rental_rate,length,replacement_cost,rating
-   ,last_update,special_features,fulltext)
-  values(1001,'Sophie''s Choice','orphaned language_id=10',2018,1
-        ,7,4.99,120,14.99,'PG'
-        ,now()::date,'{Trailers}','')
-        ,(1002,'Sophie''s Choice','orphaned language_id=10',2018,1
-        ,7,4.99,120,14.99,'PG'
-        ,now()::date,'{Trailers}','')
-  ;
-  ")
+## 
+## > dbExecute(con, "insert into film\n  (film_id,title,description,release_year,language_id\n  ,rental_duration,rental_rate,length,replacement_cost,rati ..." ... [TRUNCATED] 
+## [1] 1
+## 
+## > dbExecute(con, "insert into film_category\n  (film_id,category_id,last_update)\n  values(1001,6,now()::date)\n  ,(1001,7,now()::date)\n  ;")
 ## [1] 2
-
-# Insert Film Category
-dbExecute(
-  con,
-  "insert into film_category
-  (film_id,category_id,last_update)
-  values(1001,6,now()::date)
-       ,(1001,7,now()::date)
-       ,(1002,6,now()::date)
-       ,(1002,7,now()::date)
-  ;")  
-## [1] 4
-
-# Insert new film into inventory.
-dbExecute(
-  con,
-  "insert into inventory
-  (inventory_id,film_id,store_id,last_update)
-  values(4582,1001,1,now()::date)
-       ,(4583,1001,2,now()::date)
-  ;")  
+## 
+## > dbExecute(con, "insert into inventory\n  (inventory_id,film_id,store_id,last_update)\n  values(4582,1001,1,now()::date)\n  ,(4583,1001,2,now()::date ..." ... [TRUNCATED] 
 ## [1] 2
-  
-# Insert new film rental record.
-dbExecute(
-  con,
-  "insert into rental
-  (rental_id,rental_date,inventory_id,customer_id,return_date,staff_id,last_update)
-  values(16050,now()::date - interval '1 week',4582,600,now()::date,1,now()::date)
-  ;")  
+## 
+## > dbExecute(con, "insert into rental\n  (rental_id,rental_date,inventory_id,customer_id,return_date,staff_id,last_update)\n  values(16050,now()::date  ..." ... [TRUNCATED] 
 ## [1] 1
 ```
 
@@ -305,7 +261,7 @@ sp_print_df(stores)
 ```
 
 <!--html_preserve--><div id="htmlwidget-124fb78127817ec02cd9" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-124fb78127817ec02cd9">{"x":{"filter":"none","data":[["1","2","3"],[1,2,10],[1,2,10],[1,2,10],["2006-02-15T17:57:12Z","2006-02-15T17:57:12Z","2019-02-15T23:24:57Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>store_id<\/th>\n      <th>manager_staff_id<\/th>\n      <th>address_id<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<script type="application/json" data-for="htmlwidget-124fb78127817ec02cd9">{"x":{"filter":"none","data":[["1","2","3"],[1,2,10],[1,2,10],[1,2,10],["2006-02-15T17:57:12Z","2006-02-15T17:57:12Z","2019-02-18T02:43:56Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>store_id<\/th>\n      <th>manager_staff_id<\/th>\n      <th>address_id<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
  
 
 ### dplyr store_id distribution Exercise
@@ -940,7 +896,7 @@ sp_print_df(customer_store_aj)
 ```
 
 <!--html_preserve--><div id="htmlwidget-a769f33e9bc2b11da24f" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-a769f33e9bc2b11da24f">{"x":{"filter":"none","data":[["1","2","3","4"],[600,602,603,604],[3,4,5,6],["Sophie","John","Ian","Ed"],["Yang","Smith","Frantz","Borasky"],["sophie.yang@sakilacustomer.org","john.smith@sakilacustomer.org","ian.frantz@sakilacustomer.org","ed.borasky@sakilacustomer.org"],[1,2,3,4],[true,true,true,true],["2019-02-15","2019-02-15","2019-02-15","2019-02-15"],["2019-02-15T08:00:00Z","2019-02-15T08:00:00Z","2019-02-15T08:00:00Z","2019-02-15T08:00:00Z"],[1,1,1,1],["anti_join","anti_join","anti_join","anti_join"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>address_id<\/th>\n      <th>activebool<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n      <th>active<\/th>\n      <th>join_type<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,6,10]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<script type="application/json" data-for="htmlwidget-a769f33e9bc2b11da24f">{"x":{"filter":"none","data":[["1","2","3","4"],[600,602,603,604],[3,4,5,6],["Sophie","John","Ian","Ed"],["Yang","Smith","Frantz","Borasky"],["sophie.yang@sakilacustomer.org","john.smith@sakilacustomer.org","ian.frantz@sakilacustomer.org","ed.borasky@sakilacustomer.org"],[1,2,3,4],[true,true,true,true],["2019-02-18","2019-02-18","2019-02-18","2019-02-18"],["2019-02-18T08:00:00Z","2019-02-18T08:00:00Z","2019-02-18T08:00:00Z","2019-02-18T08:00:00Z"],[1,1,1,1],["anti_join","anti_join","anti_join","anti_join"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>address_id<\/th>\n      <th>activebool<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n      <th>active<\/th>\n      <th>join_type<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,6,10]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 All of the rows returned from the customer table have store_id = {3 - 6} which do not exist in the store_id.
 

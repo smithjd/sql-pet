@@ -180,9 +180,9 @@ file.info("README.md")
 
 ```
 ##           size isdir mode               mtime               ctime
-## README.md 4278 FALSE  644 2019-02-13 10:52:48 2019-02-13 10:52:48
+## README.md 4493 FALSE  644 2019-02-17 13:04:05 2019-02-17 13:04:05
 ##                         atime uid gid uname grname
-## README.md 2019-02-15 12:05:39 502  80   jds  admin
+## README.md 2019-02-17 13:04:39 502  80   jds  admin
 ```
 The equivalent information from executing a command on the CLI or Terminal would be
 
@@ -198,7 +198,7 @@ system2("docker", "exec sql-pet ls -l petdir/README.md", stdout = TRUE, stderr =
 ```
 
 ```
-## [1] "-rw-r--r-- 1 root root 4278 Feb 13 18:52 petdir/README.md"
+## [1] "-rw-r--r-- 1 root root 4493 Feb 17 21:04 petdir/README.md"
 ```
 
 ### Docker and psql together from R or your CLI
