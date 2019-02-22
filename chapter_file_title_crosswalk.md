@@ -11,25 +11,26 @@
 |9|Introduction to DBMS queries |080-elementary-queries.Rmd|chapter_dbms-queries-intro|
 |10|Lazy Evaluation and Lazy Queries |090-lazy-evalutation-and-downloading.Rmd|chapter_lazy-evaluation-queries|
 |11|DBI package and SQL |100-dbi-and-sql.Rmd|chapter_dbi-package-sql|
-|12|Introduction to SQL Joins |110-sql-dplyr-joins.Rmd|chapter_sql-joins|
-|13|SQL joins and complex queries |120-sql-joins-and-complex-queries.Rmd|chapter_sql-joins-complex|
-|14|SQL & dplyr joins additional data |130-sql-dplyr-joins-data.Rmd|chapter_sql-dplyr-data|
-|15|SQL & dplyr joins |140-sql-dplyr-joins.Rmd|chapter_sql-dplyr-joins|
-|16|SQL Joins exercises |150-sql-joins-exercises.Rmd|chapter_sql-joins-exercises|
-|17|SQL Quick start - simple retrieval |170-sql-quick-start-simple-retrieval.Rmd|chapter_sql-quick-start|
-|18|Getting metadata about and from PostgreSQL |180-r-query-postgres-metadata.Rmd|chapter_postgresql-metadata|
-|19|Drilling into your DBMS environment |190-drilling-into-db-environment.Rmd|chapter_dbms-environment|
-|20|Explain queries |200-explain-queries.Rmd|chapter_explain-queries|
-|21|SQL queries broken down |210-sql-query-steps.Rmd|chapter_sql-queries-breakdown|
-|22|Writing to the DBMS |220-write-to-the-database.Rmd|chapter_writing-to-the-dbms|
-|23|NA|900-appendices-section.Rmd|NA|
-|24|Other resources |910-other-resources.Rmd|chapter_appendix-other-resources|
-|25|Mapping your local environment diagram |920-environment-diagram.Rmd|chapter_environment-diagram|
-|26|Creating the sql-pet Docker container one step at a time |930-docker-detailed-postgres-setup-with-dvdrental.Rmd|chapter_step-at-a-time-docker|
-|27|APPENDIX D - Quick Guide to SQL |940-sqlguide.Rmd|chapter_appendix-sql-quick-guide|
-|28|Additional technical details for Windows users |950-windows-tech-details.Rmd|chapter_windows-tech-details|
-|29|Setup instructions|960-setup-instructions.Rmd|chapter_appendix-setup-instructions|
-|30|Dplyr functions and SQL cross-walk |970-dplyr-sql-summary-table.Rmd|chapter_appendix-dplyr-functions|
-|31|DBI package functions - coverage |980-dbi-summary-table.Rmd|chapter_appendix-dbi-functions|
-|32|PostgreSQL Authentication |990-postgresql-authentication.Rmd|chapter_appendix-postresql-authentication|
-|33|NA|999-references.Rmd|NA|
+|12|Inserting rows into the DVDRENTAL database |107-sql-insert-rows.Rmd|chapter_sql-inserting-rows|
+|13|Introduction to SQL Joins |110-sql-dplyr-joins.Rmd|chapter_sql-joins|
+|14|SQL joins and complex queries |120-sql-joins-and-complex-queries.Rmd|chapter_sql-joins-complex|
+|15|SQL & dplyr joins additional data |130-sql-dplyr-joins-data.Rmd|chapter_sql-dplyr-data|
+|16|SQL & dplyr joins |140-sql-dplyr-joins.Rmd|chapter_sql-dplyr-joins|
+|17|NA|150-sql-joins-exercises.Rmd|NA|
+|18|NA|155-sql-joins-exercises.Rmd|NA|
+|19|Anti-join cost comparisons |160-anti-join-cost-comparisons.Rmd|chapter_anti-join-cost-comparisons|
+|20|SQL Quick start - simple retrieval |170-sql-quick-start-simple-retrieval.Rmd|chapter_sql-quick-start|
+|21|Getting metadata about and from PostgreSQL |180-r-query-postgres-metadata.Rmd|chapter_postgresql-metadata|
+|22|Drilling into your DBMS environment |190-drilling-into-db-environment.Rmd|chapter_dbms-environment|
+|23|Explain queries |200-explain-queries.Rmd|chapter_explain-queries|
+|24|SQL queries broken down |210-sql-query-steps.Rmd|chapter_sql-queries-breakdown|
+|25|Writing to the DBMS |220-write-to-the-database.Rmd|chapter_writing-to-the-dbms|
+|26|NA|900-appendices-section.Rmd|NA|
+|27|Appendix A - Setup instructions|910-setup-instructions.Rmd|chapter_appendix-setup-instructions|
+|28|Appendix B - Additional technical details for Windows users |920-windows-tech-details.Rmd|chapter_windows-tech-details|
+|29|Appendix C - PostgreSQL Authentication |930-postgresql-authentication.Rmd|chapter_appendix-postresql-authentication|
+|30|APPENDIX D - Quick Guide to SQL |960-sqlguide.Rmd|chapter_appendix-sql-quick-guide|
+|31|Dplyr functions and SQL cross-walk |970-dplyr-sql-summary-table.Rmd|chapter_appendix-dplyr-functions|
+|32|DBI package functions - coverage |980-dbi-summary-table.Rmd|chapter_appendix-dbi-functions|
+|33|Appendix Additional resources |997-additional-resources.Rmd|chapter_appendix-additional-resources|
+|34|NA|999-references.Rmd|NA|

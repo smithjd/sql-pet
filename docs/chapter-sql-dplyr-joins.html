@@ -5,11 +5,11 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Chapter 15 SQL &amp; dplyr joins | R, Databases, and Docker</title>
+  <title>Chapter 16 SQL &amp; dplyr joins | R, Databases, and Docker</title>
   <meta name="description" content="An introduction to Docker and PostgreSQL for R users to simulate use cases behind corporate walls.">
   <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
-  <meta property="og:title" content="Chapter 15 SQL &amp; dplyr joins | R, Databases, and Docker" />
+  <meta property="og:title" content="Chapter 16 SQL &amp; dplyr joins | R, Databases, and Docker" />
   <meta property="og:type" content="book" />
   
   
@@ -17,7 +17,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 15 SQL &amp; dplyr joins | R, Databases, and Docker" />
+  <meta name="twitter:title" content="Chapter 16 SQL &amp; dplyr joins | R, Databases, and Docker" />
   
   <meta name="twitter:description" content="An introduction to Docker and PostgreSQL for R users to simulate use cases behind corporate walls." />
   
@@ -25,7 +25,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
 
 
-<meta name="date" content="2019-02-17">
+<meta name="date" content="2019-02-22">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -298,318 +298,321 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="11.4.2" data-path="chapter-dbi-package-sql.html"><a href="chapter-dbi-package-sql.html#criteria-for-choosing-between-dplyr-and-native-sql"><i class="fa fa-check"></i><b>11.4.2</b> Criteria for choosing between <code>dplyr</code> and native SQL</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="12" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html"><i class="fa fa-check"></i><b>12</b> Introduction to SQL Joins</a><ul>
-<li class="chapter" data-level="12.1" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#setup-3"><i class="fa fa-check"></i><b>12.1</b> Setup</a></li>
-<li class="chapter" data-level="12.2" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#making-up-data-for-join-examples"><i class="fa fa-check"></i><b>12.2</b> Making up data for Join Examples</a><ul>
-<li class="chapter" data-level="12.2.1" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#sql-delete-data-syntax"><i class="fa fa-check"></i><b>12.2.1</b> SQL Delete Data Syntax</a></li>
-<li class="chapter" data-level="12.2.2" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#delete-new-practice-customers-from-the-customer-table."><i class="fa fa-check"></i><b>12.2.2</b> Delete New Practice Customers from the Customer table.</a></li>
-<li class="chapter" data-level="12.2.3" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#delete-new-practice-store-from-the-store-table."><i class="fa fa-check"></i><b>12.2.3</b> Delete New Practice Store from the Store Table.</a></li>
-<li class="chapter" data-level="12.2.4" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#sql-single-row-insert-data-syntax"><i class="fa fa-check"></i><b>12.2.4</b> SQL Single Row Insert Data Syntax</a></li>
-<li class="chapter" data-level="12.2.5" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#primary-key-constraint-error-message"><i class="fa fa-check"></i><b>12.2.5</b> Primary Key Constraint Error Message</a></li>
-<li class="chapter" data-level="12.2.6" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#r-exercise-inserting-a-single-row-via-a-dataframe"><i class="fa fa-check"></i><b>12.2.6</b> R Exercise: Inserting a Single Row via a Dataframe</a></li>
+<li class="chapter" data-level="12" data-path="chapter-sql-inserting-rows.html"><a href="chapter-sql-inserting-rows.html"><i class="fa fa-check"></i><b>12</b> Inserting rows into the DVDRENTAL database</a><ul>
+<li class="chapter" data-level="12.1" data-path="chapter-sql-inserting-rows.html"><a href="chapter-sql-inserting-rows.html#setup-3"><i class="fa fa-check"></i><b>12.1</b> Setup</a></li>
+<li class="chapter" data-level="12.2" data-path="chapter-sql-inserting-rows.html"><a href="chapter-sql-inserting-rows.html#making-up-data-for-join-examples"><i class="fa fa-check"></i><b>12.2</b> Making up data for Join Examples</a><ul>
+<li class="chapter" data-level="12.2.1" data-path="chapter-sql-inserting-rows.html"><a href="chapter-sql-inserting-rows.html#sql-delete-data-syntax"><i class="fa fa-check"></i><b>12.2.1</b> SQL Delete Data Syntax</a></li>
+<li class="chapter" data-level="12.2.2" data-path="chapter-sql-inserting-rows.html"><a href="chapter-sql-inserting-rows.html#delete-new-practice-customers-from-the-customer-table."><i class="fa fa-check"></i><b>12.2.2</b> Delete New Practice Customers from the Customer table.</a></li>
+<li class="chapter" data-level="12.2.3" data-path="chapter-sql-inserting-rows.html"><a href="chapter-sql-inserting-rows.html#delete-new-practice-store-from-the-store-table."><i class="fa fa-check"></i><b>12.2.3</b> Delete New Practice Store from the Store Table.</a></li>
+<li class="chapter" data-level="12.2.4" data-path="chapter-sql-inserting-rows.html"><a href="chapter-sql-inserting-rows.html#sql-single-row-insert-data-syntax"><i class="fa fa-check"></i><b>12.2.4</b> SQL Single Row Insert Data Syntax</a></li>
+<li class="chapter" data-level="12.2.5" data-path="chapter-sql-inserting-rows.html"><a href="chapter-sql-inserting-rows.html#primary-key-constraint-error-message"><i class="fa fa-check"></i><b>12.2.5</b> Primary Key Constraint Error Message</a></li>
+<li class="chapter" data-level="12.2.6" data-path="chapter-sql-inserting-rows.html"><a href="chapter-sql-inserting-rows.html#r-exercise-inserting-a-single-row-via-a-dataframe"><i class="fa fa-check"></i><b>12.2.6</b> R Exercise: Inserting a Single Row via a Dataframe</a></li>
 </ul></li>
-<li class="chapter" data-level="12.3" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#sql-multi-row-insert-data-syntax"><i class="fa fa-check"></i><b>12.3</b> SQL Multi-Row Insert Data Syntax</a></li>
-<li class="chapter" data-level="12.4" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#sql-multi-row-insert-data-example"><i class="fa fa-check"></i><b>12.4</b> SQL Multi-Row Insert Data Example</a></li>
-<li class="chapter" data-level="12.5" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#dplyr-multi-row-insert-data-example"><i class="fa fa-check"></i><b>12.5</b> DPLYR Multi-Row Insert Data Example</a><ul>
-<li class="chapter" data-level="12.5.1" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#r-exercise-inserting-multiple-rows-via-a-dataframe"><i class="fa fa-check"></i><b>12.5.1</b> R Exercise: Inserting Multiple Rows via a Dataframe</a></li>
-<li class="chapter" data-level="12.5.2" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#creating-a-messy-store-row"><i class="fa fa-check"></i><b>12.5.2</b> Creating a Messy Store Row</a></li>
-</ul></li>
-<li class="chapter" data-level="12.6" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#joins"><i class="fa fa-check"></i><b>12.6</b> Joins</a><ul>
-<li class="chapter" data-level="12.6.1" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#join-types"><i class="fa fa-check"></i><b>12.6.1</b> Join Types</a></li>
-<li class="chapter" data-level="12.6.2" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#valentines-party"><i class="fa fa-check"></i><b>12.6.2</b> Valentines Party</a></li>
-<li class="chapter" data-level="12.6.3" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#join-syntax"><i class="fa fa-check"></i><b>12.6.3</b> Join Syntax</a></li>
-<li class="chapter" data-level="12.6.4" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#join-tables"><i class="fa fa-check"></i><b>12.6.4</b> Join Tables</a></li>
-</ul></li>
-<li class="chapter" data-level="12.7" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#natural-join-delayed-time-bomb"><i class="fa fa-check"></i><b>12.7</b> Natural Join Delayed Time Bomb</a><ul>
-<li class="chapter" data-level="12.7.1" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#sql-customer-store_id-distribution"><i class="fa fa-check"></i><b>12.7.1</b> SQL Customer store_id Distribution</a></li>
-<li class="chapter" data-level="12.7.2" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#sample-customer-and-store-join-data"><i class="fa fa-check"></i><b>12.7.2</b> Sample Customer and Store Join Data</a></li>
-<li class="chapter" data-level="12.7.3" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#dplyr-store_id-distribution-exercise"><i class="fa fa-check"></i><b>12.7.3</b> dplyr store_id distribution Exercise</a></li>
-</ul></li>
-<li class="chapter" data-level="12.8" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#join-templates"><i class="fa fa-check"></i><b>12.8</b> Join Templates</a></li>
-<li class="chapter" data-level="12.9" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#inner-joins"><i class="fa fa-check"></i><b>12.9</b> Inner Joins</a><ul>
-<li class="chapter" data-level="12.9.1" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#sql-inner-join-details-example_inner-join-details-sql"><i class="fa fa-check"></i><b>12.9.1</b> SQL Inner Join Details {example_inner-join-details-sql}</a></li>
-<li class="chapter" data-level="12.9.2" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#dplyr-inner-join-details-example_inner-join-details-dplyr"><i class="fa fa-check"></i><b>12.9.2</b> Dplyr Inner Join Details {example_inner-join-details-dplyr}</a></li>
-<li class="chapter" data-level="12.9.3" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#sql-inner-join-summary-example_inner-join-summary-sql"><i class="fa fa-check"></i><b>12.9.3</b> SQL Inner Join Summary {example_inner-join-summary-sql}</a></li>
-<li class="chapter" data-level="12.9.4" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#dplyr-inner-join-summary-example_inner-join-summary_dplyr"><i class="fa fa-check"></i><b>12.9.4</b> Dplyr Inner Join Summary {example_inner-join-summary_dplyr}</a></li>
-</ul></li>
-<li class="chapter" data-level="12.10" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#left-joins"><i class="fa fa-check"></i><b>12.10</b> Left Joins</a><ul>
-<li class="chapter" data-level="12.10.1" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#sql-left-join-details-example_left-join-details-sql"><i class="fa fa-check"></i><b>12.10.1</b> SQL Left Join Details {example_left-join-details-sql}</a></li>
-<li class="chapter" data-level="12.10.2" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#dplyr-left-join-details-example_left-join-details-dplyr"><i class="fa fa-check"></i><b>12.10.2</b> Dplyr Left Join Details {example_left-join-details-dplyr}</a></li>
-<li class="chapter" data-level="12.10.3" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#sql-left-join-summary-example_left-join-summary-sql"><i class="fa fa-check"></i><b>12.10.3</b> SQL Left Join Summary {example_left-join-summary-sql}</a></li>
-<li class="chapter" data-level="12.10.4" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#dplyr-left-join-summary-example_left-join-summary-dplyr"><i class="fa fa-check"></i><b>12.10.4</b> Dplyr Left Join Summary {example_left-join-summary-dplyr}</a></li>
-</ul></li>
-<li class="chapter" data-level="12.11" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#why-include-one-of-the-inner-join-key-columns"><i class="fa fa-check"></i><b>12.11</b> Why Include one of the Inner Join Key columns?</a></li>
-<li class="chapter" data-level="12.12" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#right-joins"><i class="fa fa-check"></i><b>12.12</b> Right Joins</a><ul>
-<li class="chapter" data-level="12.12.1" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#sql-right-join-details-example_right-join-details-sql"><i class="fa fa-check"></i><b>12.12.1</b> SQL Right Join Details {example_right-join-details-sql}</a></li>
-<li class="chapter" data-level="12.12.2" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#dplyr-right-join-details-example_right-join-details-dplyr"><i class="fa fa-check"></i><b>12.12.2</b> Dplyr Right Join Details {example_right-join-details-dplyr}</a></li>
-<li class="chapter" data-level="12.12.3" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#sql-right-outer-join-summary-example_right-join-summary-sql"><i class="fa fa-check"></i><b>12.12.3</b> SQL Right Outer Join Summary {example_right-join-summary-sql}</a></li>
-<li class="chapter" data-level="12.12.4" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#dplyr-right-join-summary-example_right-join-summary-dplyr"><i class="fa fa-check"></i><b>12.12.4</b> dplyr Right Join Summary {example_right-join-summary-dplyr}</a></li>
-</ul></li>
-<li class="chapter" data-level="12.13" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#full-join"><i class="fa fa-check"></i><b>12.13</b> Full Join</a><ul>
-<li class="chapter" data-level="12.13.1" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#sql-full-join-details-example_full-join-details-sql"><i class="fa fa-check"></i><b>12.13.1</b> SQL Full Join Details {example_full-join-details-sql}</a></li>
-<li class="chapter" data-level="12.13.2" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#dplyr-full-join-details-example_full-join-details-sql"><i class="fa fa-check"></i><b>12.13.2</b> Dplyr Full Join Details {example_full-join-details-sql}</a></li>
-<li class="chapter" data-level="12.13.3" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#sql-full-join-summary-example_full-join-summary-sql"><i class="fa fa-check"></i><b>12.13.3</b> SQL Full Join Summary {example_full-join-summary-sql}</a></li>
-<li class="chapter" data-level="12.13.4" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#dplyr-full-join-summary-example_full-join-summary-dplyr"><i class="fa fa-check"></i><b>12.13.4</b> Dplyr Full Join Summary {example_full-join-summary-dplyr}</a></li>
-</ul></li>
-<li class="chapter" data-level="12.14" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#semi-join"><i class="fa fa-check"></i><b>12.14</b> Semi Join</a><ul>
-<li class="chapter" data-level="12.14.1" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#sql-semi-join-customer-to-store-example_semi-join-sql-1"><i class="fa fa-check"></i><b>12.14.1</b> SQL Semi Join Customer to Store {example_semi-join-sql-1}</a></li>
-<li class="chapter" data-level="12.14.2" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#dplyr-semi-join-customer-to-store-example_semi-join-dplyr-1"><i class="fa fa-check"></i><b>12.14.2</b> Dplyr Semi Join Customer to Store {example_semi-join-dplyr-1}</a></li>
-<li class="chapter" data-level="12.14.3" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#sql-semi-join-store-to-customer-example_semi-join-sql-2"><i class="fa fa-check"></i><b>12.14.3</b> SQL Semi Join Store to Customer {example_semi-join-sql-2}</a></li>
-<li class="chapter" data-level="12.14.4" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#dplyr-semi-join-store-to-customer-example_semi-join-dplyr-2"><i class="fa fa-check"></i><b>12.14.4</b> Dplyr Semi Join Store to Customer {example_semi-join-dplyr-2}</a></li>
-<li class="chapter" data-level="12.14.5" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#sql-semi-join-store-to-customer-take-2-example_semi-join-sql-3"><i class="fa fa-check"></i><b>12.14.5</b> SQL Semi Join Store to Customer Take 2 {example_semi-join-sql-3}</a></li>
-</ul></li>
-<li class="chapter" data-level="12.15" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#anti-joins"><i class="fa fa-check"></i><b>12.15</b> Anti Joins</a></li>
-<li class="chapter" data-level="12.16" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#non-equa-join-example"><i class="fa fa-check"></i><b>12.16</b> Non-Equa-Join Example</a><ul>
-<li class="chapter" data-level="12.16.1" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#dplyr-non-equa-join-example_inner-join-dplyr"><i class="fa fa-check"></i><b>12.16.1</b> Dplyr Non-equa Join {example_inner-join-dplyr}</a></li>
+<li class="chapter" data-level="12.3" data-path="chapter-sql-inserting-rows.html"><a href="chapter-sql-inserting-rows.html#sql-multi-row-insert-data-syntax"><i class="fa fa-check"></i><b>12.3</b> SQL Multi-Row Insert Data Syntax</a></li>
+<li class="chapter" data-level="12.4" data-path="chapter-sql-inserting-rows.html"><a href="chapter-sql-inserting-rows.html#sql-multi-row-insert-data-example"><i class="fa fa-check"></i><b>12.4</b> SQL Multi-Row Insert Data Example</a></li>
+<li class="chapter" data-level="12.5" data-path="chapter-sql-inserting-rows.html"><a href="chapter-sql-inserting-rows.html#dplyr-multi-row-insert-data-example"><i class="fa fa-check"></i><b>12.5</b> DPLYR Multi-Row Insert Data Example</a><ul>
+<li class="chapter" data-level="12.5.1" data-path="chapter-sql-inserting-rows.html"><a href="chapter-sql-inserting-rows.html#r-exercise-inserting-multiple-rows-via-a-dataframe"><i class="fa fa-check"></i><b>12.5.1</b> R Exercise: Inserting Multiple Rows via a Dataframe</a></li>
+<li class="chapter" data-level="12.5.2" data-path="chapter-sql-inserting-rows.html"><a href="chapter-sql-inserting-rows.html#creating-a-messy-store-row"><i class="fa fa-check"></i><b>12.5.2</b> Creating a Messy Store Row</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="13" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html"><i class="fa fa-check"></i><b>13</b> SQL joins and complex queries</a><ul>
-<li class="chapter" data-level="13.1" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#database-privileges"><i class="fa fa-check"></i><b>13.1</b> Database Privileges</a></li>
-<li class="chapter" data-level="13.2" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#database-constraints"><i class="fa fa-check"></i><b>13.2</b> Database constraints</a><ul>
-<li class="chapter" data-level="13.2.1" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#dvd-rental-primary-foreign-key-constraints"><i class="fa fa-check"></i><b>13.2.1</b> DVD Rental Primary Foreign Key Constraints</a></li>
+<li class="chapter" data-level="13" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html"><i class="fa fa-check"></i><b>13</b> Introduction to SQL Joins</a><ul>
+<li class="chapter" data-level="13.1" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#setup-4"><i class="fa fa-check"></i><b>13.1</b> Setup</a></li>
+<li class="chapter" data-level="13.2" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#joins"><i class="fa fa-check"></i><b>13.2</b> Joins</a><ul>
+<li class="chapter" data-level="13.2.1" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#join-types"><i class="fa fa-check"></i><b>13.2.1</b> Join Types</a></li>
+<li class="chapter" data-level="13.2.2" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#valentines-party"><i class="fa fa-check"></i><b>13.2.2</b> Valentines Party</a></li>
+<li class="chapter" data-level="13.2.3" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#join-syntax"><i class="fa fa-check"></i><b>13.2.3</b> Join Syntax</a></li>
+<li class="chapter" data-level="13.2.4" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#join-tables"><i class="fa fa-check"></i><b>13.2.4</b> Join Tables</a></li>
 </ul></li>
-<li class="chapter" data-level="13.3" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#making-up-data-for-join-examples-1"><i class="fa fa-check"></i><b>13.3</b> Making up data for Join Examples</a><ul>
-<li class="chapter" data-level="13.3.1" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#sql-delete-data-syntax-1"><i class="fa fa-check"></i><b>13.3.1</b> SQL Delete Data Syntax</a></li>
-<li class="chapter" data-level="13.3.2" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#delete-new-practice-customers-from-the-customer-table.-1"><i class="fa fa-check"></i><b>13.3.2</b> Delete New Practice Customers from the Customer table.</a></li>
-<li class="chapter" data-level="13.3.3" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#delete-new-practice-films-from-the-film-table."><i class="fa fa-check"></i><b>13.3.3</b> Delete New Practice Films from the Film table.</a></li>
-<li class="chapter" data-level="13.3.4" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#sql-single-row-insert-data-syntax-1"><i class="fa fa-check"></i><b>13.3.4</b> SQL Single Row Insert Data Syntax</a></li>
-<li class="chapter" data-level="13.3.5" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#primary-and-foreign-key-constraint-error-messages"><i class="fa fa-check"></i><b>13.3.5</b> Primary and Foreign Key Constraint Error Messages</a></li>
-<li class="chapter" data-level="13.3.6" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#r-exercise-inserting-a-single-row-via-a-dataframe-1"><i class="fa fa-check"></i><b>13.3.6</b> R Exercise: Inserting a Single Row via a Dataframe</a></li>
+<li class="chapter" data-level="13.3" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#natural-join-delayed-time-bomb"><i class="fa fa-check"></i><b>13.3</b> Natural Join Delayed Time Bomb</a><ul>
+<li class="chapter" data-level="13.3.1" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#sql-customer-store_id-distribution"><i class="fa fa-check"></i><b>13.3.1</b> SQL Customer store_id Distribution</a></li>
+<li class="chapter" data-level="13.3.2" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#sample-customer-and-store-join-data"><i class="fa fa-check"></i><b>13.3.2</b> Sample Customer and Store Join Data</a></li>
+<li class="chapter" data-level="13.3.3" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#dplyr-store_id-distribution-exercise"><i class="fa fa-check"></i><b>13.3.3</b> dplyr store_id distribution Exercise</a></li>
 </ul></li>
-<li class="chapter" data-level="13.4" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#sql-multi-row-insert-data-syntax-1"><i class="fa fa-check"></i><b>13.4</b> SQL Multi-Row Insert Data Syntax</a></li>
-<li class="chapter" data-level="13.5" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#sql-multi-row-insert-data-example-1"><i class="fa fa-check"></i><b>13.5</b> SQL Multi-Row Insert Data Example</a><ul>
-<li class="chapter" data-level="13.5.1" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#r-exercise-inserting-multiple-rows-via-a-dataframe-1"><i class="fa fa-check"></i><b>13.5.1</b> R Exercise: Inserting Multiple Rows via a Dataframe</a></li>
+<li class="chapter" data-level="13.4" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#join-templates"><i class="fa fa-check"></i><b>13.4</b> Join Templates</a></li>
+<li class="chapter" data-level="13.5" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#inner-joins"><i class="fa fa-check"></i><b>13.5</b> Inner Joins</a><ul>
+<li class="chapter" data-level="13.5.1" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#sql-inner-join-details-example_inner-join-details-sql"><i class="fa fa-check"></i><b>13.5.1</b> SQL Inner Join Details {example_inner-join-details-sql}</a></li>
+<li class="chapter" data-level="13.5.2" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#dplyr-inner-join-details-example_inner-join-details-dplyr"><i class="fa fa-check"></i><b>13.5.2</b> Dplyr Inner Join Details {example_inner-join-details-dplyr}</a></li>
+<li class="chapter" data-level="13.5.3" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#sql-inner-join-summary-example_inner-join-summary-sql"><i class="fa fa-check"></i><b>13.5.3</b> SQL Inner Join Summary {example_inner-join-summary-sql}</a></li>
+<li class="chapter" data-level="13.5.4" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#dplyr-inner-join-summary-example_inner-join-summary_dplyr"><i class="fa fa-check"></i><b>13.5.4</b> Dplyr Inner Join Summary {example_inner-join-summary_dplyr}</a></li>
 </ul></li>
-<li class="chapter" data-level="13.6" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#messy-data"><i class="fa fa-check"></i><b>13.6</b> Messy Data</a><ul>
-<li class="chapter" data-level="13.6.1" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#messing-up-the-row"><i class="fa fa-check"></i><b>13.6.1</b> Messing up the row</a></li>
+<li class="chapter" data-level="13.6" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#left-joins"><i class="fa fa-check"></i><b>13.6</b> Left Joins</a><ul>
+<li class="chapter" data-level="13.6.1" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#sql-left-join-details-example_left-join-details-sql"><i class="fa fa-check"></i><b>13.6.1</b> SQL Left Join Details {example_left-join-details-sql}</a></li>
+<li class="chapter" data-level="13.6.2" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#dplyr-left-join-details-example_left-join-details-dplyr"><i class="fa fa-check"></i><b>13.6.2</b> Dplyr Left Join Details {example_left-join-details-dplyr}</a></li>
+<li class="chapter" data-level="13.6.3" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#sql-left-join-summary-example_left-join-summary-sql"><i class="fa fa-check"></i><b>13.6.3</b> SQL Left Join Summary {example_left-join-summary-sql}</a></li>
+<li class="chapter" data-level="13.6.4" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#dplyr-left-join-summary-example_left-join-summary-dplyr"><i class="fa fa-check"></i><b>13.6.4</b> Dplyr Left Join Summary {example_left-join-summary-dplyr}</a></li>
 </ul></li>
-<li class="chapter" data-level="13.7" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#joins-1"><i class="fa fa-check"></i><b>13.7</b> Joins</a><ul>
-<li class="chapter" data-level="13.7.1" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#join-types-1"><i class="fa fa-check"></i><b>13.7.1</b> Join Types</a></li>
-<li class="chapter" data-level="13.7.2" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#valentines-party-1"><i class="fa fa-check"></i><b>13.7.2</b> Valentines Party</a></li>
-<li class="chapter" data-level="13.7.3" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#join-syntax-1"><i class="fa fa-check"></i><b>13.7.3</b> Join Syntax</a></li>
-<li class="chapter" data-level="13.7.4" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#join-tables-1"><i class="fa fa-check"></i><b>13.7.4</b> Join Tables</a></li>
+<li class="chapter" data-level="13.7" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#why-include-one-of-the-inner-join-key-columns"><i class="fa fa-check"></i><b>13.7</b> Why Include one of the Inner Join Key columns?</a></li>
+<li class="chapter" data-level="13.8" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#right-joins"><i class="fa fa-check"></i><b>13.8</b> Right Joins</a><ul>
+<li class="chapter" data-level="13.8.1" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#sql-right-join-details-example_right-join-details-sql"><i class="fa fa-check"></i><b>13.8.1</b> SQL Right Join Details {example_right-join-details-sql}</a></li>
+<li class="chapter" data-level="13.8.2" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#dplyr-right-join-details-example_right-join-details-dplyr"><i class="fa fa-check"></i><b>13.8.2</b> Dplyr Right Join Details {example_right-join-details-dplyr}</a></li>
+<li class="chapter" data-level="13.8.3" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#sql-right-outer-join-summary-example_right-join-summary-sql"><i class="fa fa-check"></i><b>13.8.3</b> SQL Right Outer Join Summary {example_right-join-summary-sql}</a></li>
+<li class="chapter" data-level="13.8.4" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#dplyr-right-join-summary-example_right-join-summary-dplyr"><i class="fa fa-check"></i><b>13.8.4</b> dplyr Right Join Summary {example_right-join-summary-dplyr}</a></li>
 </ul></li>
-<li class="chapter" data-level="13.8" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#natural-join-delayed-time-bomb-1"><i class="fa fa-check"></i><b>13.8</b> Natural Join Delayed Time Bomb</a><ul>
-<li class="chapter" data-level="13.8.1" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#dplyr-language-distribution-exercise"><i class="fa fa-check"></i><b>13.8.1</b> dplyr language distribution Exercise</a></li>
+<li class="chapter" data-level="13.9" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#full-join"><i class="fa fa-check"></i><b>13.9</b> Full Join</a><ul>
+<li class="chapter" data-level="13.9.1" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#sql-full-join-details-example_full-join-details-sql"><i class="fa fa-check"></i><b>13.9.1</b> SQL Full Join Details {example_full-join-details-sql}</a></li>
+<li class="chapter" data-level="13.9.2" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#dplyr-full-join-details-example_full-join-details-sql"><i class="fa fa-check"></i><b>13.9.2</b> Dplyr Full Join Details {example_full-join-details-sql}</a></li>
+<li class="chapter" data-level="13.9.3" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#sql-full-join-summary-example_full-join-summary-sql"><i class="fa fa-check"></i><b>13.9.3</b> SQL Full Join Summary {example_full-join-summary-sql}</a></li>
+<li class="chapter" data-level="13.9.4" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#dplyr-full-join-summary-example_full-join-summary-dplyr"><i class="fa fa-check"></i><b>13.9.4</b> Dplyr Full Join Summary {example_full-join-summary-dplyr}</a></li>
 </ul></li>
-<li class="chapter" data-level="13.9" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#join-templates-1"><i class="fa fa-check"></i><b>13.9</b> Join Templates</a><ul>
-<li class="chapter" data-level="13.9.1" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#dplyr-inner-join-template"><i class="fa fa-check"></i><b>13.9.1</b> dplyr Inner Join Template</a></li>
-<li class="chapter" data-level="13.9.2" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#dplyr-left-outer-join-template"><i class="fa fa-check"></i><b>13.9.2</b> dplyr Left Outer Join Template</a></li>
+<li class="chapter" data-level="13.10" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#semi-join"><i class="fa fa-check"></i><b>13.10</b> Semi Join</a><ul>
+<li class="chapter" data-level="13.10.1" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#sql-semi-join-customer-to-store-example_semi-join-sql-1"><i class="fa fa-check"></i><b>13.10.1</b> SQL Semi Join Customer to Store {example_semi-join-sql-1}</a></li>
+<li class="chapter" data-level="13.10.2" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#dplyr-semi-join-customer-to-store-example_semi-join-dplyr-1"><i class="fa fa-check"></i><b>13.10.2</b> Dplyr Semi Join Customer to Store {example_semi-join-dplyr-1}</a></li>
+<li class="chapter" data-level="13.10.3" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#sql-semi-join-store-to-customer-example_semi-join-sql-2"><i class="fa fa-check"></i><b>13.10.3</b> SQL Semi Join Store to Customer {example_semi-join-sql-2}</a></li>
+<li class="chapter" data-level="13.10.4" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#dplyr-semi-join-store-to-customer-example_semi-join-dplyr-2"><i class="fa fa-check"></i><b>13.10.4</b> Dplyr Semi Join Store to Customer {example_semi-join-dplyr-2}</a></li>
+<li class="chapter" data-level="13.10.5" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#sql-semi-join-store-to-customer-take-2-example_semi-join-sql-3"><i class="fa fa-check"></i><b>13.10.5</b> SQL Semi Join Store to Customer Take 2 {example_semi-join-sql-3}</a></li>
 </ul></li>
-<li class="chapter" data-level="13.10" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#sql-anti-join-costs"><i class="fa fa-check"></i><b>13.10</b> SQL anti join Costs</a></li>
-<li class="chapter" data-level="13.11" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#dplyr-anti-joins"><i class="fa fa-check"></i><b>13.11</b> dplyr Anti joins</a><ul>
-<li class="chapter" data-level="13.11.1" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#dplyr-costs"><i class="fa fa-check"></i><b>13.11.1</b> dplyr Costs</a></li>
-</ul></li>
-<li class="chapter" data-level="13.12" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#exercises-1"><i class="fa fa-check"></i><b>13.12</b> Exercises</a><ul>
-<li class="chapter" data-level="13.12.1" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#anti-joins-find-customers-who-have-never-rented-a-movie-take-2."><i class="fa fa-check"></i><b>13.12.1</b> Anti joins – Find customers who have never rented a movie, take 2.</a></li>
-<li class="chapter" data-level="13.12.2" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#sql-rows-per-table"><i class="fa fa-check"></i><b>13.12.2</b> SQL Rows Per Table</a></li>
-</ul></li>
-<li class="chapter" data-level="13.13" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#store-analysis"><i class="fa fa-check"></i><b>13.13</b> Store analysis</a><ul>
-<li class="chapter" data-level="13.13.1" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#sql-store-revenue-stream"><i class="fa fa-check"></i><b>13.13.1</b> SQL store revenue stream</a></li>
-<li class="chapter" data-level="13.13.2" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#sqlestimate-outstanding-balance"><i class="fa fa-check"></i><b>13.13.2</b> SQL:Estimate Outstanding Balance</a></li>
-<li class="chapter" data-level="13.13.3" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#sql-actual-outstanding-balance"><i class="fa fa-check"></i><b>13.13.3</b> SQL actual outstanding balance</a></li>
-<li class="chapter" data-level="13.13.4" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#rank-customers-with-highest-open-amounts"><i class="fa fa-check"></i><b>13.13.4</b> Rank customers with highest open amounts</a></li>
-<li class="chapter" data-level="13.13.5" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#what-film-has-been-rented-the-most"><i class="fa fa-check"></i><b>13.13.5</b> what film has been rented the most</a></li>
-<li class="chapter" data-level="13.13.6" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#what-film-has-been-generated-the-most-revenue-assuming-all-amounts-are-collected"><i class="fa fa-check"></i><b>13.13.6</b> what film has been generated the most revenue assuming all amounts are collected</a></li>
-<li class="chapter" data-level="13.13.7" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#which-films-are-in-one-store-but-not-the-other."><i class="fa fa-check"></i><b>13.13.7</b> which films are in one store but not the other.</a></li>
-<li class="chapter" data-level="13.13.8" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#compute-the-outstanding-balance."><i class="fa fa-check"></i><b>13.13.8</b> Compute the outstanding balance.</a></li>
-</ul></li>
-<li class="chapter" data-level="13.14" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#different-strategies-for-interacting-with-the-database"><i class="fa fa-check"></i><b>13.14</b> Different strategies for interacting with the database</a><ul>
-<li class="chapter" data-level="13.14.1" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#use-dbgetquery"><i class="fa fa-check"></i><b>13.14.1</b> Use dbGetQuery</a></li>
-<li class="chapter" data-level="13.14.2" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#use-dbexecute"><i class="fa fa-check"></i><b>13.14.2</b> Use dbExecute</a></li>
-<li class="chapter" data-level="13.14.3" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#anti-join-find-sophie-who-has-never-rented-a-movie."><i class="fa fa-check"></i><b>13.14.3</b> Anti join – Find Sophie who has never rented a movie.</a></li>
+<li class="chapter" data-level="13.11" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#anti-joins"><i class="fa fa-check"></i><b>13.11</b> Anti Joins</a></li>
+<li class="chapter" data-level="13.12" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#non-equa-join-example"><i class="fa fa-check"></i><b>13.12</b> Non-Equa-Join Example</a><ul>
+<li class="chapter" data-level="13.12.1" data-path="chapter-sql-joins.html"><a href="chapter-sql-joins.html#dplyr-non-equa-join-example_inner-join-dplyr"><i class="fa fa-check"></i><b>13.12.1</b> Dplyr Non-equa Join {example_inner-join-dplyr}</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="14" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html"><i class="fa fa-check"></i><b>14</b> SQL &amp; dplyr joins additional data</a><ul>
-<li class="chapter" data-level="14.1" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#making-up-data-for-join-examples-2"><i class="fa fa-check"></i><b>14.1</b> Making up data for Join Examples</a><ul>
-<li class="chapter" data-level="14.1.1" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#sql-delete-data-syntax-2"><i class="fa fa-check"></i><b>14.1.1</b> SQL Delete Data Syntax</a></li>
-<li class="chapter" data-level="14.1.2" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#delete-new-practice-store-from-the-store-table.-1"><i class="fa fa-check"></i><b>14.1.2</b> Delete New Practice Store from the Store Table.</a></li>
-<li class="chapter" data-level="14.1.3" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#delete-film-1001-sophies-choice-records-in-film_category-rental-inventory-and-film"><i class="fa fa-check"></i><b>14.1.3</b> Delete film 1001, Sophie’s Choice, records in film_category, rental, inventory, and film</a></li>
-<li class="chapter" data-level="14.1.4" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#delete-new-practice-customers-from-the-customer-table.-2"><i class="fa fa-check"></i><b>14.1.4</b> Delete New Practice Customers from the Customer table.</a></li>
-<li class="chapter" data-level="14.1.5" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#delete-new-practice-customers-from-the-customer-table.-3"><i class="fa fa-check"></i><b>14.1.5</b> Delete New Practice Customers from the Customer table.</a></li>
-<li class="chapter" data-level="14.1.6" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#sql-single-row-insert-data-syntax-2"><i class="fa fa-check"></i><b>14.1.6</b> SQL Single Row Insert Data Syntax</a></li>
-<li class="chapter" data-level="14.1.7" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#primary-key-constraint-error-message-1"><i class="fa fa-check"></i><b>14.1.7</b> Primary Key Constraint Error Message</a></li>
-<li class="chapter" data-level="14.1.8" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#r-exercise-inserting-a-single-row-via-a-dataframe-2"><i class="fa fa-check"></i><b>14.1.8</b> R Exercise: Inserting a Single Row via a Dataframe</a></li>
+<li class="chapter" data-level="14" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html"><i class="fa fa-check"></i><b>14</b> SQL joins and complex queries</a><ul>
+<li class="chapter" data-level="14.1" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#database-privileges"><i class="fa fa-check"></i><b>14.1</b> Database Privileges</a></li>
+<li class="chapter" data-level="14.2" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#database-constraints"><i class="fa fa-check"></i><b>14.2</b> Database constraints</a><ul>
+<li class="chapter" data-level="14.2.1" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#dvd-rental-primary-foreign-key-constraints"><i class="fa fa-check"></i><b>14.2.1</b> DVD Rental Primary Foreign Key Constraints</a></li>
 </ul></li>
-<li class="chapter" data-level="14.2" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#sql-multi-row-insert-data-syntax-2"><i class="fa fa-check"></i><b>14.2</b> SQL Multi-Row Insert Data Syntax</a></li>
-<li class="chapter" data-level="14.3" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#sql-multi-row-insert-data-example-2"><i class="fa fa-check"></i><b>14.3</b> SQL Multi-Row Insert Data Example</a></li>
-<li class="chapter" data-level="14.4" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#dplyr-multi-row-insert-data-example-1"><i class="fa fa-check"></i><b>14.4</b> DPLYR Multi-Row Insert Data Example</a><ul>
-<li class="chapter" data-level="14.4.1" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#r-exercise-inserting-multiple-rows-via-a-dataframe-2"><i class="fa fa-check"></i><b>14.4.1</b> R Exercise: Inserting Multiple Rows via a Dataframe</a></li>
-<li class="chapter" data-level="14.4.2" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#creating-a-messy-store-row-1"><i class="fa fa-check"></i><b>14.4.2</b> Creating a Messy Store Row</a></li>
+<li class="chapter" data-level="14.3" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#making-up-data-for-join-examples-1"><i class="fa fa-check"></i><b>14.3</b> Making up data for Join Examples</a><ul>
+<li class="chapter" data-level="14.3.1" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#sql-delete-data-syntax-1"><i class="fa fa-check"></i><b>14.3.1</b> SQL Delete Data Syntax</a></li>
+<li class="chapter" data-level="14.3.2" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#delete-new-practice-customers-from-the-customer-table.-1"><i class="fa fa-check"></i><b>14.3.2</b> Delete New Practice Customers from the Customer table.</a></li>
+<li class="chapter" data-level="14.3.3" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#delete-new-practice-films-from-the-film-table."><i class="fa fa-check"></i><b>14.3.3</b> Delete New Practice Films from the Film table.</a></li>
+<li class="chapter" data-level="14.3.4" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#sql-single-row-insert-data-syntax-1"><i class="fa fa-check"></i><b>14.3.4</b> SQL Single Row Insert Data Syntax</a></li>
+<li class="chapter" data-level="14.3.5" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#primary-and-foreign-key-constraint-error-messages"><i class="fa fa-check"></i><b>14.3.5</b> Primary and Foreign Key Constraint Error Messages</a></li>
+<li class="chapter" data-level="14.3.6" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#r-exercise-inserting-a-single-row-via-a-dataframe-1"><i class="fa fa-check"></i><b>14.3.6</b> R Exercise: Inserting a Single Row via a Dataframe</a></li>
 </ul></li>
-<li class="chapter" data-level="14.5" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#create-a-film-record"><i class="fa fa-check"></i><b>14.5</b> Create a film record</a></li>
+<li class="chapter" data-level="14.4" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#sql-multi-row-insert-data-syntax-1"><i class="fa fa-check"></i><b>14.4</b> SQL Multi-Row Insert Data Syntax</a></li>
+<li class="chapter" data-level="14.5" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#sql-multi-row-insert-data-example-1"><i class="fa fa-check"></i><b>14.5</b> SQL Multi-Row Insert Data Example</a><ul>
+<li class="chapter" data-level="14.5.1" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#r-exercise-inserting-multiple-rows-via-a-dataframe-1"><i class="fa fa-check"></i><b>14.5.1</b> R Exercise: Inserting Multiple Rows via a Dataframe</a></li>
 </ul></li>
-<li class="chapter" data-level="15" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html"><i class="fa fa-check"></i><b>15</b> SQL &amp; dplyr joins</a><ul>
-<li class="chapter" data-level="15.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#joins-2"><i class="fa fa-check"></i><b>15.1</b> Joins</a><ul>
-<li class="chapter" data-level="15.1.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-types-2"><i class="fa fa-check"></i><b>15.1.1</b> Join Types</a></li>
-<li class="chapter" data-level="15.1.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#valentines-party-2"><i class="fa fa-check"></i><b>15.1.2</b> Valentines Party</a></li>
-<li class="chapter" data-level="15.1.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-syntax-2"><i class="fa fa-check"></i><b>15.1.3</b> Join Syntax</a></li>
-<li class="chapter" data-level="15.1.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-tables-2"><i class="fa fa-check"></i><b>15.1.4</b> Join Tables</a></li>
+<li class="chapter" data-level="14.6" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#messy-data"><i class="fa fa-check"></i><b>14.6</b> Messy Data</a><ul>
+<li class="chapter" data-level="14.6.1" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#messing-up-the-row"><i class="fa fa-check"></i><b>14.6.1</b> Messing up the row</a></li>
 </ul></li>
-<li class="chapter" data-level="15.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#natural-join-delayed-time-bomb-2"><i class="fa fa-check"></i><b>15.2</b> Natural Join Delayed Time Bomb</a><ul>
-<li class="chapter" data-level="15.2.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-customer-store_id-distribution-1"><i class="fa fa-check"></i><b>15.2.1</b> SQL Customer store_id Distribution</a></li>
-<li class="chapter" data-level="15.2.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sample-customer-and-store-join-data-1"><i class="fa fa-check"></i><b>15.2.2</b> Sample Customer and Store Join Data</a></li>
-<li class="chapter" data-level="15.2.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-store_id-distribution-exercise-1"><i class="fa fa-check"></i><b>15.2.3</b> dplyr store_id distribution Exercise</a></li>
+<li class="chapter" data-level="14.7" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#joins-1"><i class="fa fa-check"></i><b>14.7</b> Joins</a><ul>
+<li class="chapter" data-level="14.7.1" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#join-types-1"><i class="fa fa-check"></i><b>14.7.1</b> Join Types</a></li>
+<li class="chapter" data-level="14.7.2" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#valentines-party-1"><i class="fa fa-check"></i><b>14.7.2</b> Valentines Party</a></li>
+<li class="chapter" data-level="14.7.3" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#join-syntax-1"><i class="fa fa-check"></i><b>14.7.3</b> Join Syntax</a></li>
+<li class="chapter" data-level="14.7.4" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#join-tables-1"><i class="fa fa-check"></i><b>14.7.4</b> Join Tables</a></li>
 </ul></li>
-<li class="chapter" data-level="15.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-templates-2"><i class="fa fa-check"></i><b>15.3</b> Join Templates</a></li>
-<li class="chapter" data-level="15.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#inner-joins-1"><i class="fa fa-check"></i><b>15.4</b> Inner Joins</a><ul>
-<li class="chapter" data-level="15.4.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-inner-join-details-example_inner-join-details-sql-1"><i class="fa fa-check"></i><b>15.4.1</b> SQL Inner Join Details {example_inner-join-details-sql}</a></li>
-<li class="chapter" data-level="15.4.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-inner-join-details-example_inner-join-details-dplyr-1"><i class="fa fa-check"></i><b>15.4.2</b> Dplyr Inner Join Details {example_inner-join-details-dplyr}</a></li>
-<li class="chapter" data-level="15.4.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-inner-join-summary-example_inner-join-summary-sql-1"><i class="fa fa-check"></i><b>15.4.3</b> SQL Inner Join Summary {example_inner-join-summary-sql}</a></li>
-<li class="chapter" data-level="15.4.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-inner-join-summary-example_inner-join-summary_dplyr-1"><i class="fa fa-check"></i><b>15.4.4</b> Dplyr Inner Join Summary {example_inner-join-summary_dplyr}</a></li>
+<li class="chapter" data-level="14.8" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#natural-join-delayed-time-bomb-1"><i class="fa fa-check"></i><b>14.8</b> Natural Join Delayed Time Bomb</a><ul>
+<li class="chapter" data-level="14.8.1" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#dplyr-language-distribution-exercise"><i class="fa fa-check"></i><b>14.8.1</b> dplyr language distribution Exercise</a></li>
 </ul></li>
-<li class="chapter" data-level="15.5" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#left-joins-1"><i class="fa fa-check"></i><b>15.5</b> Left Joins</a><ul>
-<li class="chapter" data-level="15.5.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-left-join-details-example_left-join-details-sql-1"><i class="fa fa-check"></i><b>15.5.1</b> SQL Left Join Details {example_left-join-details-sql}</a></li>
-<li class="chapter" data-level="15.5.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-left-join-details-example_left-join-details-dplyr-1"><i class="fa fa-check"></i><b>15.5.2</b> Dplyr Left Join Details {example_left-join-details-dplyr}</a></li>
-<li class="chapter" data-level="15.5.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-left-join-summary-example_left-join-summary-sql-1"><i class="fa fa-check"></i><b>15.5.3</b> SQL Left Join Summary {example_left-join-summary-sql}</a></li>
-<li class="chapter" data-level="15.5.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-left-join-summary-example_left-join-summary-dplyr-1"><i class="fa fa-check"></i><b>15.5.4</b> Dplyr Left Join Summary {example_left-join-summary-dplyr}</a></li>
+<li class="chapter" data-level="14.9" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#join-templates-1"><i class="fa fa-check"></i><b>14.9</b> Join Templates</a><ul>
+<li class="chapter" data-level="14.9.1" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#dplyr-inner-join-template"><i class="fa fa-check"></i><b>14.9.1</b> dplyr Inner Join Template</a></li>
+<li class="chapter" data-level="14.9.2" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#dplyr-left-outer-join-template"><i class="fa fa-check"></i><b>14.9.2</b> dplyr Left Outer Join Template</a></li>
 </ul></li>
-<li class="chapter" data-level="15.6" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#why-include-one-of-the-inner-join-key-columns-1"><i class="fa fa-check"></i><b>15.6</b> Why Include one of the Inner Join Key columns?</a></li>
-<li class="chapter" data-level="15.7" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#right-joins-1"><i class="fa fa-check"></i><b>15.7</b> Right Joins</a><ul>
-<li class="chapter" data-level="15.7.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-right-join-details-example_right-join-details-sql-1"><i class="fa fa-check"></i><b>15.7.1</b> SQL Right Join Details {example_right-join-details-sql}</a></li>
-<li class="chapter" data-level="15.7.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-right-join-details-example_right-join-details-dplyr-1"><i class="fa fa-check"></i><b>15.7.2</b> Dplyr Right Join Details {example_right-join-details-dplyr}</a></li>
-<li class="chapter" data-level="15.7.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-right-outer-join-summary-example_right-join-summary-sql-1"><i class="fa fa-check"></i><b>15.7.3</b> SQL Right Outer Join Summary {example_right-join-summary-sql}</a></li>
-<li class="chapter" data-level="15.7.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-right-join-summary-example_right-join-summary-dplyr-1"><i class="fa fa-check"></i><b>15.7.4</b> dplyr Right Join Summary {example_right-join-summary-dplyr}</a></li>
+<li class="chapter" data-level="14.10" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#sql-anti-join-costs"><i class="fa fa-check"></i><b>14.10</b> SQL anti join Costs</a></li>
+<li class="chapter" data-level="14.11" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#dplyr-anti-joins"><i class="fa fa-check"></i><b>14.11</b> dplyr Anti joins</a><ul>
+<li class="chapter" data-level="14.11.1" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#dplyr-costs"><i class="fa fa-check"></i><b>14.11.1</b> dplyr Costs</a></li>
 </ul></li>
-<li class="chapter" data-level="15.8" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#full-join-1"><i class="fa fa-check"></i><b>15.8</b> Full Join</a><ul>
-<li class="chapter" data-level="15.8.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-full-join-details-example_full-join-details-sql-1"><i class="fa fa-check"></i><b>15.8.1</b> SQL Full Join Details {example_full-join-details-sql}</a></li>
-<li class="chapter" data-level="15.8.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-full-join-details-example_full-join-details-sql-1"><i class="fa fa-check"></i><b>15.8.2</b> Dplyr Full Join Details {example_full-join-details-sql}</a></li>
-<li class="chapter" data-level="15.8.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-full-join-summary-example_full-join-summary-sql-1"><i class="fa fa-check"></i><b>15.8.3</b> SQL Full Join Summary {example_full-join-summary-sql}</a></li>
-<li class="chapter" data-level="15.8.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-full-join-summary-example_full-join-summary-dplyr-1"><i class="fa fa-check"></i><b>15.8.4</b> Dplyr Full Join Summary {example_full-join-summary-dplyr}</a></li>
+<li class="chapter" data-level="14.12" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#exercises-1"><i class="fa fa-check"></i><b>14.12</b> Exercises</a><ul>
+<li class="chapter" data-level="14.12.1" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#anti-joins-find-customers-who-have-never-rented-a-movie-take-2."><i class="fa fa-check"></i><b>14.12.1</b> Anti joins – Find customers who have never rented a movie, take 2.</a></li>
+<li class="chapter" data-level="14.12.2" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#sql-rows-per-table"><i class="fa fa-check"></i><b>14.12.2</b> SQL Rows Per Table</a></li>
 </ul></li>
-<li class="chapter" data-level="15.9" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#semi-join-1"><i class="fa fa-check"></i><b>15.9</b> Semi Join</a><ul>
-<li class="chapter" data-level="15.9.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-semi-join-customer-to-store-example_semi-join-sql-1-1"><i class="fa fa-check"></i><b>15.9.1</b> SQL Semi Join Customer to Store {example_semi-join-sql-1}</a></li>
-<li class="chapter" data-level="15.9.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-semi-join-customer-to-store-example_semi-join-dplyr-1-1"><i class="fa fa-check"></i><b>15.9.2</b> Dplyr Semi Join Customer to Store {example_semi-join-dplyr-1}</a></li>
-<li class="chapter" data-level="15.9.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-semi-join-store-to-customer-example_semi-join-sql-2-1"><i class="fa fa-check"></i><b>15.9.3</b> SQL Semi Join Store to Customer {example_semi-join-sql-2}</a></li>
-<li class="chapter" data-level="15.9.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-semi-join-store-to-customer-example_semi-join-dplyr-2-1"><i class="fa fa-check"></i><b>15.9.4</b> Dplyr Semi Join Store to Customer {example_semi-join-dplyr-2}</a></li>
-<li class="chapter" data-level="15.9.5" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-semi-join-store-to-customer-take-2-example_semi-join-sql-3-1"><i class="fa fa-check"></i><b>15.9.5</b> SQL Semi Join Store to Customer Take 2 {example_semi-join-sql-3}</a></li>
+<li class="chapter" data-level="14.13" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#store-analysis"><i class="fa fa-check"></i><b>14.13</b> Store analysis</a><ul>
+<li class="chapter" data-level="14.13.1" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#sql-store-revenue-stream"><i class="fa fa-check"></i><b>14.13.1</b> SQL store revenue stream</a></li>
+<li class="chapter" data-level="14.13.2" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#sqlestimate-outstanding-balance"><i class="fa fa-check"></i><b>14.13.2</b> SQL:Estimate Outstanding Balance</a></li>
+<li class="chapter" data-level="14.13.3" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#sql-actual-outstanding-balance"><i class="fa fa-check"></i><b>14.13.3</b> SQL actual outstanding balance</a></li>
+<li class="chapter" data-level="14.13.4" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#rank-customers-with-highest-open-amounts"><i class="fa fa-check"></i><b>14.13.4</b> Rank customers with highest open amounts</a></li>
+<li class="chapter" data-level="14.13.5" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#what-film-has-been-rented-the-most"><i class="fa fa-check"></i><b>14.13.5</b> what film has been rented the most</a></li>
+<li class="chapter" data-level="14.13.6" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#what-film-has-been-generated-the-most-revenue-assuming-all-amounts-are-collected"><i class="fa fa-check"></i><b>14.13.6</b> what film has been generated the most revenue assuming all amounts are collected</a></li>
+<li class="chapter" data-level="14.13.7" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#which-films-are-in-one-store-but-not-the-other."><i class="fa fa-check"></i><b>14.13.7</b> which films are in one store but not the other.</a></li>
+<li class="chapter" data-level="14.13.8" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#compute-the-outstanding-balance."><i class="fa fa-check"></i><b>14.13.8</b> Compute the outstanding balance.</a></li>
 </ul></li>
-<li class="chapter" data-level="15.10" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#anti-joins-1"><i class="fa fa-check"></i><b>15.10</b> Anti Joins</a></li>
-<li class="chapter" data-level="15.11" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#non-equa-join-example-1"><i class="fa fa-check"></i><b>15.11</b> Non-Equa-Join Example</a><ul>
-<li class="chapter" data-level="15.11.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-non-equa-join-example_inner-join-dplyr-1"><i class="fa fa-check"></i><b>15.11.1</b> Dplyr Non-equa Join {example_inner-join-dplyr}</a></li>
+<li class="chapter" data-level="14.14" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#different-strategies-for-interacting-with-the-database"><i class="fa fa-check"></i><b>14.14</b> Different strategies for interacting with the database</a><ul>
+<li class="chapter" data-level="14.14.1" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#use-dbgetquery"><i class="fa fa-check"></i><b>14.14.1</b> Use dbGetQuery</a></li>
+<li class="chapter" data-level="14.14.2" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#use-dbexecute"><i class="fa fa-check"></i><b>14.14.2</b> Use dbExecute</a></li>
+<li class="chapter" data-level="14.14.3" data-path="chapter-sql-joins-complex.html"><a href="chapter-sql-joins-complex.html#anti-join-find-sophie-who-has-never-rented-a-movie."><i class="fa fa-check"></i><b>14.14.3</b> Anti join – Find Sophie who has never rented a movie.</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="16" data-path="sql-metadata-exercises.html"><a href="sql-metadata-exercises.html"><i class="fa fa-check"></i><b>16</b> SQL Metadata exercises</a><ul>
-<li class="chapter" data-level="16.1" data-path="sql-metadata-exercises.html"><a href="sql-metadata-exercises.html#table-structures"><i class="fa fa-check"></i><b>16.1</b> Table Structures</a><ul>
-<li class="chapter" data-level="16.1.1" data-path="sql-metadata-exercises.html"><a href="sql-metadata-exercises.html#customer-columns"><i class="fa fa-check"></i><b>16.1.1</b> Customer Columns</a></li>
+<li class="chapter" data-level="15" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html"><i class="fa fa-check"></i><b>15</b> SQL &amp; dplyr joins additional data</a><ul>
+<li class="chapter" data-level="15.1" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#making-up-data-for-join-examples-2"><i class="fa fa-check"></i><b>15.1</b> Making up data for Join Examples</a><ul>
+<li class="chapter" data-level="15.1.1" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#sql-delete-data-syntax-2"><i class="fa fa-check"></i><b>15.1.1</b> SQL Delete Data Syntax</a></li>
+<li class="chapter" data-level="15.1.2" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#delete-new-practice-store-from-the-store-table.-1"><i class="fa fa-check"></i><b>15.1.2</b> Delete New Practice Store from the Store Table.</a></li>
+<li class="chapter" data-level="15.1.3" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#delete-film-1001-sophies-choice-records-in-film_category-rental-inventory-and-film"><i class="fa fa-check"></i><b>15.1.3</b> Delete film 1001, Sophie’s Choice, records in film_category, rental, inventory, and film</a></li>
+<li class="chapter" data-level="15.1.4" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#delete-new-practice-customers-from-the-customer-table.-2"><i class="fa fa-check"></i><b>15.1.4</b> Delete New Practice Customers from the Customer table.</a></li>
+<li class="chapter" data-level="15.1.5" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#delete-new-practice-customers-from-the-customer-table.-3"><i class="fa fa-check"></i><b>15.1.5</b> Delete New Practice Customers from the Customer table.</a></li>
+<li class="chapter" data-level="15.1.6" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#sql-single-row-insert-data-syntax-2"><i class="fa fa-check"></i><b>15.1.6</b> SQL Single Row Insert Data Syntax</a></li>
+<li class="chapter" data-level="15.1.7" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#primary-key-constraint-error-message-1"><i class="fa fa-check"></i><b>15.1.7</b> Primary Key Constraint Error Message</a></li>
+<li class="chapter" data-level="15.1.8" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#r-exercise-inserting-a-single-row-via-a-dataframe-2"><i class="fa fa-check"></i><b>15.1.8</b> R Exercise: Inserting a Single Row via a Dataframe</a></li>
 </ul></li>
-<li class="chapter" data-level="16.2" data-path="sql-metadata-exercises.html"><a href="sql-metadata-exercises.html#table-column-metadata"><i class="fa fa-check"></i><b>16.2</b> Table Column Metadata</a><ul>
-<li class="chapter" data-level="16.2.1" data-path="sql-metadata-exercises.html"><a href="sql-metadata-exercises.html#sp_tbl_descr-parameterized-table-description-function"><i class="fa fa-check"></i><b>16.2.1</b> sp_tbl_descr – Parameterized Table Description Function</a></li>
+<li class="chapter" data-level="15.2" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#sql-multi-row-insert-data-syntax-2"><i class="fa fa-check"></i><b>15.2</b> SQL Multi-Row Insert Data Syntax</a></li>
+<li class="chapter" data-level="15.3" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#sql-multi-row-insert-data-example-2"><i class="fa fa-check"></i><b>15.3</b> SQL Multi-Row Insert Data Example</a></li>
+<li class="chapter" data-level="15.4" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#dplyr-multi-row-insert-data-example-1"><i class="fa fa-check"></i><b>15.4</b> DPLYR Multi-Row Insert Data Example</a><ul>
+<li class="chapter" data-level="15.4.1" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#r-exercise-inserting-multiple-rows-via-a-dataframe-2"><i class="fa fa-check"></i><b>15.4.1</b> R Exercise: Inserting Multiple Rows via a Dataframe</a></li>
+<li class="chapter" data-level="15.4.2" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#creating-a-messy-store-row-1"><i class="fa fa-check"></i><b>15.4.2</b> Creating a Messy Store Row</a></li>
 </ul></li>
-<li class="chapter" data-level="16.3" data-path="sql-metadata-exercises.html"><a href="sql-metadata-exercises.html#primary-and-foreign-key-constraints"><i class="fa fa-check"></i><b>16.3</b> Primary and Foreign Key Constraints</a><ul>
-<li class="chapter" data-level="16.3.1" data-path="sql-metadata-exercises.html"><a href="sql-metadata-exercises.html#sp_tbl_pk_fk-parameterized-table-primary-foreign-keys-function"><i class="fa fa-check"></i><b>16.3.1</b> sp_tbl_pk_fk – Parameterized Table Primary Foreign Key(s) Function</a></li>
-<li class="chapter" data-level="16.3.2" data-path="sql-metadata-exercises.html"><a href="sql-metadata-exercises.html#customer-primary-and-foreign-key-constraints"><i class="fa fa-check"></i><b>16.3.2</b> Customer primary and foreign key constraints</a></li>
+<li class="chapter" data-level="15.5" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#create-a-film-record"><i class="fa fa-check"></i><b>15.5</b> Create a film record</a></li>
 </ul></li>
-<li class="chapter" data-level="16.4" data-path="sql-metadata-exercises.html"><a href="sql-metadata-exercises.html#we-need-documentation-andor-a-dba."><i class="fa fa-check"></i><b>16.4</b> We need documentation and/or a DBA.</a><ul>
-<li class="chapter" data-level="16.4.1" data-path="sql-metadata-exercises.html"><a href="sql-metadata-exercises.html#other-table-column-metadata"><i class="fa fa-check"></i><b>16.4.1</b> Other Table Column Metadata</a></li>
-<li class="chapter" data-level="16.4.2" data-path="sql-metadata-exercises.html"><a href="sql-metadata-exercises.html#other-table-pk-fk"><i class="fa fa-check"></i><b>16.4.2</b> Other Table PK FK</a></li>
+<li class="chapter" data-level="16" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html"><i class="fa fa-check"></i><b>16</b> SQL &amp; dplyr joins</a><ul>
+<li class="chapter" data-level="16.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#joins-2"><i class="fa fa-check"></i><b>16.1</b> Joins</a><ul>
+<li class="chapter" data-level="16.1.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-types-2"><i class="fa fa-check"></i><b>16.1.1</b> Join Types</a></li>
+<li class="chapter" data-level="16.1.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#valentines-party-2"><i class="fa fa-check"></i><b>16.1.2</b> Valentines Party</a></li>
+<li class="chapter" data-level="16.1.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-syntax-2"><i class="fa fa-check"></i><b>16.1.3</b> Join Syntax</a></li>
+<li class="chapter" data-level="16.1.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-tables-2"><i class="fa fa-check"></i><b>16.1.4</b> Join Tables</a></li>
 </ul></li>
+<li class="chapter" data-level="16.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#natural-join-delayed-time-bomb-2"><i class="fa fa-check"></i><b>16.2</b> Natural Join Delayed Time Bomb</a><ul>
+<li class="chapter" data-level="16.2.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-customer-store_id-distribution-1"><i class="fa fa-check"></i><b>16.2.1</b> SQL Customer store_id Distribution</a></li>
+<li class="chapter" data-level="16.2.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sample-customer-and-store-join-data-1"><i class="fa fa-check"></i><b>16.2.2</b> Sample Customer and Store Join Data</a></li>
+<li class="chapter" data-level="16.2.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-store_id-distribution-exercise-1"><i class="fa fa-check"></i><b>16.2.3</b> dplyr store_id distribution Exercise</a></li>
 </ul></li>
-<li class="chapter" data-level="17" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html"><i class="fa fa-check"></i><b>17</b> SQL Joins exercises</a></li>
-<li class="chapter" data-level="18" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html"><i class="fa fa-check"></i><b>18</b> SQL Union Exercise</a><ul>
-<li class="chapter" data-level="18.1" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#how-many-rows-are-in-each-table"><i class="fa fa-check"></i><b>18.1</b> 1. How many rows are in each table?</a></li>
-<li class="chapter" data-level="18.2" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#exercises-2"><i class="fa fa-check"></i><b>18.2</b> Exercises</a><ul>
-<li class="chapter" data-level="18.2.1" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#where-is-the-dvd-rental-business-located"><i class="fa fa-check"></i><b>18.2.1</b> 1. Where is the DVD Rental Business located?</a></li>
-<li class="chapter" data-level="18.2.2" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#list-each-store-and-the-staff-contact-information"><i class="fa fa-check"></i><b>18.2.2</b> 2. List Each Store and the Staff Contact Information?</a></li>
-<li class="chapter" data-level="18.2.3" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#how-many-active-inactive-and-total-customers-does-the-dvd-rental-business-have"><i class="fa fa-check"></i><b>18.2.3</b> 3. How Many Active, Inactive, and Total Customers Does the DVD Rental Business Have?</a></li>
-<li class="chapter" data-level="18.2.4" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#how-many-and-what-percent-of-customers-are-from-each-country"><i class="fa fa-check"></i><b>18.2.4</b> 4. How Many and What Percent of Customers Are From Each Country?</a></li>
-<li class="chapter" data-level="18.2.5" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#what-countries-constitute-the-top-25-of-the-customer-base"><i class="fa fa-check"></i><b>18.2.5</b> 5 What Countries Constitute the Top 25% of the Customer Base?</a></li>
-<li class="chapter" data-level="18.2.6" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#how-many-customers-are-in-australia-and-canada"><i class="fa fa-check"></i><b>18.2.6</b> 6. How many customers are in Australia and Canada?</a></li>
-<li class="chapter" data-level="18.2.7" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#how-many-languages"><i class="fa fa-check"></i><b>18.2.7</b> 7. How Many Languages?</a></li>
-<li class="chapter" data-level="18.2.8" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#what-is-the-distribution-of-dvds-by-language"><i class="fa fa-check"></i><b>18.2.8</b> 8. What is the distribution of DVD’s by Language</a></li>
-<li class="chapter" data-level="18.2.9" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#what-are-the-number-of-rentals-and-rented-amount-by-store-by-month"><i class="fa fa-check"></i><b>18.2.9</b> 9. What are the number of rentals and rented amount by store, by month?</a></li>
-<li class="chapter" data-level="18.2.10" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#rank-films-based-on-the-number-of-times-rented-and-associated-revenue"><i class="fa fa-check"></i><b>18.2.10</b> 10. Rank Films Based on the Number of Times Rented and Associated Revenue</a></li>
-<li class="chapter" data-level="18.2.11" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#what-is-the-rental-distributiondvd-for-the-top-two-rented-films"><i class="fa fa-check"></i><b>18.2.11</b> 11 What is the rental distribution/DVD for the top two rented films?</a></li>
-<li class="chapter" data-level="18.2.12" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#list-staffing-information-for-store-1-associated-with-the-bucket-brother-rentals"><i class="fa fa-check"></i><b>18.2.12</b> 12. List staffing information for store 1 associated with the <code>Bucket Brother</code> rentals?</a></li>
-<li class="chapter" data-level="18.2.13" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#how-many-films-are-in-each-film-rating"><i class="fa fa-check"></i><b>18.2.13</b> 13. How many films are in each film rating?</a></li>
-<li class="chapter" data-level="18.2.14" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#what-are-the-different-film-categories"><i class="fa fa-check"></i><b>18.2.14</b> 14. What are the different film categories?</a></li>
-<li class="chapter" data-level="18.2.15" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#rank-the-film-categeories-in-descending-order"><i class="fa fa-check"></i><b>18.2.15</b> 15. Rank the film categeories in descending order</a></li>
-<li class="chapter" data-level="18.2.16" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#which-films-are-listed-in-multiple-categories"><i class="fa fa-check"></i><b>18.2.16</b> 16. Which films are listed in multiple categories?</a></li>
-<li class="chapter" data-level="18.2.17" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#which-films-are-in-one-stores-inventory-but-not-the-other"><i class="fa fa-check"></i><b>18.2.17</b> 17. Which films are in one store’s inventory but not the other</a></li>
-<li class="chapter" data-level="18.2.18" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#which-films-are-not-tracked-in-inventory"><i class="fa fa-check"></i><b>18.2.18</b> 18 Which films are not tracked in inventory?</a></li>
-<li class="chapter" data-level="18.2.19" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#list-film-categories-in-descending-accounts-receivable."><i class="fa fa-check"></i><b>18.2.19</b> 19 List film categories in descending accounts receivable.</a></li>
-<li class="chapter" data-level="18.2.20" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#list-film-ratings-in-descending-accounts-receivable-order."><i class="fa fa-check"></i><b>18.2.20</b> 20. List film ratings in descending accounts receivable order.</a></li>
-<li class="chapter" data-level="18.2.21" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#how-many-rentals-were-returned-on-time-returned-late-never-returned"><i class="fa fa-check"></i><b>18.2.21</b> 21. How many rentals were returned on time, returned late, never returned?</a></li>
-<li class="chapter" data-level="18.2.22" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#are-there-duplicate-customers"><i class="fa fa-check"></i><b>18.2.22</b> 22. Are there duplicate customers?</a></li>
-<li class="chapter" data-level="18.2.23" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#which-customers-have-never-rented-a-movie"><i class="fa fa-check"></i><b>18.2.23</b> 23. Which customers have never rented a movie?</a></li>
-<li class="chapter" data-level="18.2.24" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#who-are-the-top-5-customers-with-the-most-rentals-and-associated-payments"><i class="fa fa-check"></i><b>18.2.24</b> 24 Who are the top 5 customers with the most rentals and associated payments?</a></li>
-<li class="chapter" data-level="18.2.25" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#combine-the-top-5-rental-customers-40-or-more-rentals-and-zero-rental-customers"><i class="fa fa-check"></i><b>18.2.25</b> 25 Combine the top 5 rental customers, (40 or more rentals), and zero rental customers</a></li>
-<li class="chapter" data-level="18.2.26" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#who-are-the-top-n1-and-bottom-n2-customers"><i class="fa fa-check"></i><b>18.2.26</b> 26. Who are the top-n1 and bottom-n2 customers?</a></li>
-<li class="chapter" data-level="18.2.27" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#how-much-has-each-store-collected"><i class="fa fa-check"></i><b>18.2.27</b> 27. How much has each store collected?</a></li>
-<li class="chapter" data-level="18.2.28" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#what-is-the-business-distribution-of-payments"><i class="fa fa-check"></i><b>18.2.28</b> 28. What is the business’ distribution of payments?</a></li>
-<li class="chapter" data-level="18.2.29" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#which-customers-have-the-highest-open-amounts"><i class="fa fa-check"></i><b>18.2.29</b> 29. Which customers have the highest open amounts?</a></li>
+<li class="chapter" data-level="16.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-templates-2"><i class="fa fa-check"></i><b>16.3</b> Join Templates</a></li>
+<li class="chapter" data-level="16.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#inner-joins-1"><i class="fa fa-check"></i><b>16.4</b> Inner Joins</a><ul>
+<li class="chapter" data-level="16.4.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-inner-join-details-example_inner-join-details-sql-1"><i class="fa fa-check"></i><b>16.4.1</b> SQL Inner Join Details {example_inner-join-details-sql}</a></li>
+<li class="chapter" data-level="16.4.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-inner-join-details-example_inner-join-details-dplyr-1"><i class="fa fa-check"></i><b>16.4.2</b> Dplyr Inner Join Details {example_inner-join-details-dplyr}</a></li>
+<li class="chapter" data-level="16.4.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-inner-join-summary-example_inner-join-summary-sql-1"><i class="fa fa-check"></i><b>16.4.3</b> SQL Inner Join Summary {example_inner-join-summary-sql}</a></li>
+<li class="chapter" data-level="16.4.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-inner-join-summary-example_inner-join-summary_dplyr-1"><i class="fa fa-check"></i><b>16.4.4</b> Dplyr Inner Join Summary {example_inner-join-summary_dplyr}</a></li>
 </ul></li>
-<li class="chapter" data-level="18.3" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#what-is-the-business-cash-flow"><i class="fa fa-check"></i><b>18.3</b> 30. What is the business cash flow?</a></li>
-<li class="chapter" data-level="18.4" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#different-strategies-for-interacting-with-the-database-1"><i class="fa fa-check"></i><b>18.4</b> Different strategies for interacting with the database</a><ul>
-<li class="chapter" data-level="18.4.1" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#use-dbgetquery-1"><i class="fa fa-check"></i><b>18.4.1</b> Use dbGetQuery</a></li>
+<li class="chapter" data-level="16.5" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#left-joins-1"><i class="fa fa-check"></i><b>16.5</b> Left Joins</a><ul>
+<li class="chapter" data-level="16.5.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-left-join-details-example_left-join-details-sql-1"><i class="fa fa-check"></i><b>16.5.1</b> SQL Left Join Details {example_left-join-details-sql}</a></li>
+<li class="chapter" data-level="16.5.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-left-join-details-example_left-join-details-dplyr-1"><i class="fa fa-check"></i><b>16.5.2</b> Dplyr Left Join Details {example_left-join-details-dplyr}</a></li>
+<li class="chapter" data-level="16.5.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-left-join-summary-example_left-join-summary-sql-1"><i class="fa fa-check"></i><b>16.5.3</b> SQL Left Join Summary {example_left-join-summary-sql}</a></li>
+<li class="chapter" data-level="16.5.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-left-join-summary-example_left-join-summary-dplyr-1"><i class="fa fa-check"></i><b>16.5.4</b> Dplyr Left Join Summary {example_left-join-summary-dplyr}</a></li>
 </ul></li>
+<li class="chapter" data-level="16.6" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#why-include-one-of-the-inner-join-key-columns-1"><i class="fa fa-check"></i><b>16.6</b> Why Include one of the Inner Join Key columns?</a></li>
+<li class="chapter" data-level="16.7" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#right-joins-1"><i class="fa fa-check"></i><b>16.7</b> Right Joins</a><ul>
+<li class="chapter" data-level="16.7.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-right-join-details-example_right-join-details-sql-1"><i class="fa fa-check"></i><b>16.7.1</b> SQL Right Join Details {example_right-join-details-sql}</a></li>
+<li class="chapter" data-level="16.7.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-right-join-details-example_right-join-details-dplyr-1"><i class="fa fa-check"></i><b>16.7.2</b> Dplyr Right Join Details {example_right-join-details-dplyr}</a></li>
+<li class="chapter" data-level="16.7.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-right-outer-join-summary-example_right-join-summary-sql-1"><i class="fa fa-check"></i><b>16.7.3</b> SQL Right Outer Join Summary {example_right-join-summary-sql}</a></li>
+<li class="chapter" data-level="16.7.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-right-join-summary-example_right-join-summary-dplyr-1"><i class="fa fa-check"></i><b>16.7.4</b> dplyr Right Join Summary {example_right-join-summary-dplyr}</a></li>
 </ul></li>
-<li class="chapter" data-level="19" data-path="chapter-anti-join-cost-comparisons.html"><a href="chapter-anti-join-cost-comparisons.html"><i class="fa fa-check"></i><b>19</b> Anti-join cost comparisons</a><ul>
-<li class="chapter" data-level="19.1" data-path="chapter-anti-join-cost-comparisons.html"><a href="chapter-anti-join-cost-comparisons.html#sql-anti-join-costs-1"><i class="fa fa-check"></i><b>19.1</b> SQL anti join Costs</a></li>
-<li class="chapter" data-level="19.2" data-path="chapter-anti-join-cost-comparisons.html"><a href="chapter-anti-join-cost-comparisons.html#dplyr-anti-joins-1"><i class="fa fa-check"></i><b>19.2</b> dplyr Anti joins</a></li>
+<li class="chapter" data-level="16.8" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#full-join-1"><i class="fa fa-check"></i><b>16.8</b> Full Join</a><ul>
+<li class="chapter" data-level="16.8.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-full-join-details-example_full-join-details-sql-1"><i class="fa fa-check"></i><b>16.8.1</b> SQL Full Join Details {example_full-join-details-sql}</a></li>
+<li class="chapter" data-level="16.8.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-full-join-details-example_full-join-details-sql-1"><i class="fa fa-check"></i><b>16.8.2</b> Dplyr Full Join Details {example_full-join-details-sql}</a></li>
+<li class="chapter" data-level="16.8.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-full-join-summary-example_full-join-summary-sql-1"><i class="fa fa-check"></i><b>16.8.3</b> SQL Full Join Summary {example_full-join-summary-sql}</a></li>
+<li class="chapter" data-level="16.8.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-full-join-summary-example_full-join-summary-dplyr-1"><i class="fa fa-check"></i><b>16.8.4</b> Dplyr Full Join Summary {example_full-join-summary-dplyr}</a></li>
 </ul></li>
-<li class="chapter" data-level="20" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html"><i class="fa fa-check"></i><b>20</b> SQL Quick start - simple retrieval</a><ul>
-<li class="chapter" data-level="20.1" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#intro"><i class="fa fa-check"></i><b>20.1</b> Intro</a></li>
-<li class="chapter" data-level="20.2" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#databases-and-third-normal-form---3nf"><i class="fa fa-check"></i><b>20.2</b> Databases and Third Normal Form - 3NF</a></li>
-<li class="chapter" data-level="20.3" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#sql-commands"><i class="fa fa-check"></i><b>20.3</b> SQL Commands</a></li>
-<li class="chapter" data-level="20.4" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#sql-select-quick-start"><i class="fa fa-check"></i><b>20.4</b> SQL SELECT Quick Start</a><ul>
-<li class="chapter" data-level="20.4.1" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#select-clause-column-selection-vertical-partioning-of-data"><i class="fa fa-check"></i><b>20.4.1</b> SELECT Clause: Column Selection – Vertical Partioning of Data</a></li>
-<li class="chapter" data-level="20.4.2" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#sql-comments"><i class="fa fa-check"></i><b>20.4.2</b> SQL Comments</a></li>
-<li class="chapter" data-level="20.4.3" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#from-clause"><i class="fa fa-check"></i><b>20.4.3</b> FROM Clause</a></li>
-<li class="chapter" data-level="20.4.4" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#where-clause-row-selection-horizontal-partitioning-of-data"><i class="fa fa-check"></i><b>20.4.4</b> WHERE Clause: Row Selection – Horizontal Partitioning of Data</a></li>
+<li class="chapter" data-level="16.9" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#semi-join-1"><i class="fa fa-check"></i><b>16.9</b> Semi Join</a><ul>
+<li class="chapter" data-level="16.9.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-semi-join-customer-to-store-example_semi-join-sql-1-1"><i class="fa fa-check"></i><b>16.9.1</b> SQL Semi Join Customer to Store {example_semi-join-sql-1}</a></li>
+<li class="chapter" data-level="16.9.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-semi-join-customer-to-store-example_semi-join-dplyr-1-1"><i class="fa fa-check"></i><b>16.9.2</b> Dplyr Semi Join Customer to Store {example_semi-join-dplyr-1}</a></li>
+<li class="chapter" data-level="16.9.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-semi-join-store-to-customer-example_semi-join-sql-2-1"><i class="fa fa-check"></i><b>16.9.3</b> SQL Semi Join Store to Customer {example_semi-join-sql-2}</a></li>
+<li class="chapter" data-level="16.9.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-semi-join-store-to-customer-example_semi-join-dplyr-2-1"><i class="fa fa-check"></i><b>16.9.4</b> Dplyr Semi Join Store to Customer {example_semi-join-dplyr-2}</a></li>
+<li class="chapter" data-level="16.9.5" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-semi-join-store-to-customer-take-2-example_semi-join-sql-3-1"><i class="fa fa-check"></i><b>16.9.5</b> SQL Semi Join Store to Customer Take 2 {example_semi-join-sql-3}</a></li>
 </ul></li>
-<li class="chapter" data-level="20.5" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#paradigm-shift-from-r-dplyr-to-sql"><i class="fa fa-check"></i><b>20.5</b> Paradigm Shift from R-Dplyr to SQL</a><ul>
-<li class="chapter" data-level="20.5.1" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#big-bang-versus-piped-incremental-steps."><i class="fa fa-check"></i><b>20.5.1</b> Big bang versus piped incremental steps.</a></li>
-<li class="chapter" data-level="20.5.2" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#sql-execution-order"><i class="fa fa-check"></i><b>20.5.2</b> SQL Execution Order</a></li>
+<li class="chapter" data-level="16.10" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#anti-joins-1"><i class="fa fa-check"></i><b>16.10</b> Anti Joins</a></li>
+<li class="chapter" data-level="16.11" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#non-equa-join-example-1"><i class="fa fa-check"></i><b>16.11</b> Non-Equa-Join Example</a><ul>
+<li class="chapter" data-level="16.11.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-non-equa-join-example_inner-join-dplyr-1"><i class="fa fa-check"></i><b>16.11.1</b> Dplyr Non-equa Join {example_inner-join-dplyr}</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="21" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html"><i class="fa fa-check"></i><b>21</b> Getting metadata about and from PostgreSQL</a><ul>
-<li class="chapter" data-level="21.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#database-contents-and-structure"><i class="fa fa-check"></i><b>21.1</b> Database contents and structure</a><ul>
-<li class="chapter" data-level="21.1.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#database-structure"><i class="fa fa-check"></i><b>21.1.1</b> Database structure</a></li>
-<li class="chapter" data-level="21.1.2" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#contents-of-the-information_schema"><i class="fa fa-check"></i><b>21.1.2</b> Contents of the <code>information_schema</code></a></li>
-<li class="chapter" data-level="21.1.3" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#what-tables-are-in-the-database"><i class="fa fa-check"></i><b>21.1.3</b> What tables are in the database?</a></li>
-<li class="chapter" data-level="21.1.4" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#digging-into-the-information_schema"><i class="fa fa-check"></i><b>21.1.4</b> Digging into the <code>information_schema</code></a></li>
+<li class="chapter" data-level="17" data-path="sql-metadata-exercises.html"><a href="sql-metadata-exercises.html"><i class="fa fa-check"></i><b>17</b> SQL Metadata exercises</a><ul>
+<li class="chapter" data-level="17.1" data-path="sql-metadata-exercises.html"><a href="sql-metadata-exercises.html#table-structures"><i class="fa fa-check"></i><b>17.1</b> Table Structures</a><ul>
+<li class="chapter" data-level="17.1.1" data-path="sql-metadata-exercises.html"><a href="sql-metadata-exercises.html#customer-columns"><i class="fa fa-check"></i><b>17.1.1</b> Customer Columns</a></li>
 </ul></li>
-<li class="chapter" data-level="21.2" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#what-columns-do-those-tables-contain"><i class="fa fa-check"></i><b>21.2</b> What columns do those tables contain?</a><ul>
-<li class="chapter" data-level="21.2.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#what-is-the-difference-between-a-view-and-a-base-table"><i class="fa fa-check"></i><b>21.2.1</b> What is the difference between a <code>VIEW</code> and a <code>BASE TABLE</code>?</a></li>
-<li class="chapter" data-level="21.2.2" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#what-data-types-are-found-in-the-database"><i class="fa fa-check"></i><b>21.2.2</b> What data types are found in the database?</a></li>
+<li class="chapter" data-level="17.2" data-path="sql-metadata-exercises.html"><a href="sql-metadata-exercises.html#table-column-metadata"><i class="fa fa-check"></i><b>17.2</b> Table Column Metadata</a><ul>
+<li class="chapter" data-level="17.2.1" data-path="sql-metadata-exercises.html"><a href="sql-metadata-exercises.html#sp_tbl_descr-parameterized-table-description-function"><i class="fa fa-check"></i><b>17.2.1</b> sp_tbl_descr – Parameterized Table Description Function</a></li>
 </ul></li>
-<li class="chapter" data-level="21.3" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#characterizing-how-things-are-named"><i class="fa fa-check"></i><b>21.3</b> Characterizing how things are named</a><ul>
-<li class="chapter" data-level="21.3.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#counting-columns-and-name-reuse"><i class="fa fa-check"></i><b>21.3.1</b> Counting columns and name reuse</a></li>
+<li class="chapter" data-level="17.3" data-path="sql-metadata-exercises.html"><a href="sql-metadata-exercises.html#primary-and-foreign-key-constraints"><i class="fa fa-check"></i><b>17.3</b> Primary and Foreign Key Constraints</a><ul>
+<li class="chapter" data-level="17.3.1" data-path="sql-metadata-exercises.html"><a href="sql-metadata-exercises.html#sp_tbl_pk_fk-parameterized-table-primary-foreign-keys-function"><i class="fa fa-check"></i><b>17.3.1</b> sp_tbl_pk_fk – Parameterized Table Primary Foreign Key(s) Function</a></li>
+<li class="chapter" data-level="17.3.2" data-path="sql-metadata-exercises.html"><a href="sql-metadata-exercises.html#customer-primary-and-foreign-key-constraints"><i class="fa fa-check"></i><b>17.3.2</b> Customer primary and foreign key constraints</a></li>
 </ul></li>
-<li class="chapter" data-level="21.4" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#database-keys"><i class="fa fa-check"></i><b>21.4</b> Database keys</a><ul>
-<li class="chapter" data-level="21.4.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#direct-sql"><i class="fa fa-check"></i><b>21.4.1</b> Direct SQL</a></li>
-<li class="chapter" data-level="21.4.2" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#database-keys-with-dplyr"><i class="fa fa-check"></i><b>21.4.2</b> Database keys with dplyr</a></li>
+<li class="chapter" data-level="17.4" data-path="sql-metadata-exercises.html"><a href="sql-metadata-exercises.html#we-need-documentation-andor-a-dba."><i class="fa fa-check"></i><b>17.4</b> We need documentation and/or a DBA.</a><ul>
+<li class="chapter" data-level="17.4.1" data-path="sql-metadata-exercises.html"><a href="sql-metadata-exercises.html#other-table-column-metadata"><i class="fa fa-check"></i><b>17.4.1</b> Other Table Column Metadata</a></li>
+<li class="chapter" data-level="17.4.2" data-path="sql-metadata-exercises.html"><a href="sql-metadata-exercises.html#other-table-pk-fk"><i class="fa fa-check"></i><b>17.4.2</b> Other Table PK FK</a></li>
 </ul></li>
-<li class="chapter" data-level="21.5" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#creating-your-own-data-dictionary"><i class="fa fa-check"></i><b>21.5</b> Creating your own data dictionary</a></li>
 </ul></li>
-<li class="chapter" data-level="22" data-path="chapter-dbms-environment.html"><a href="chapter-dbms-environment.html"><i class="fa fa-check"></i><b>22</b> Drilling into your DBMS environment</a><ul>
-<li class="chapter" data-level="22.1" data-path="chapter-dbms-environment.html"><a href="chapter-dbms-environment.html#which-database"><i class="fa fa-check"></i><b>22.1</b> Which database?</a></li>
-<li class="chapter" data-level="22.2" data-path="chapter-dbms-environment.html"><a href="chapter-dbms-environment.html#how-many-databases-reside-in-the-docker-container"><i class="fa fa-check"></i><b>22.2</b> How many databases reside in the Docker Container?</a></li>
-<li class="chapter" data-level="22.3" data-path="chapter-dbms-environment.html"><a href="chapter-dbms-environment.html#which-schema"><i class="fa fa-check"></i><b>22.3</b> Which Schema?</a></li>
-<li class="chapter" data-level="22.4" data-path="chapter-dbms-environment.html"><a href="chapter-dbms-environment.html#exercises-3"><i class="fa fa-check"></i><b>22.4</b> Exercises</a></li>
+<li class="chapter" data-level="18" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html"><i class="fa fa-check"></i><b>18</b> SQL Joins exercises</a></li>
+<li class="chapter" data-level="19" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html"><i class="fa fa-check"></i><b>19</b> SQL Union Exercise</a><ul>
+<li class="chapter" data-level="19.1" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#how-many-rows-are-in-each-table"><i class="fa fa-check"></i><b>19.1</b> 1. How many rows are in each table?</a></li>
+<li class="chapter" data-level="19.2" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#exercises-2"><i class="fa fa-check"></i><b>19.2</b> Exercises</a><ul>
+<li class="chapter" data-level="19.2.1" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#where-is-the-dvd-rental-business-located"><i class="fa fa-check"></i><b>19.2.1</b> 1. Where is the DVD Rental Business located?</a></li>
+<li class="chapter" data-level="19.2.2" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#list-each-store-and-the-staff-contact-information"><i class="fa fa-check"></i><b>19.2.2</b> 2. List Each Store and the Staff Contact Information?</a></li>
+<li class="chapter" data-level="19.2.3" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#how-many-active-inactive-and-total-customers-does-the-dvd-rental-business-have"><i class="fa fa-check"></i><b>19.2.3</b> 3. How Many Active, Inactive, and Total Customers Does the DVD Rental Business Have?</a></li>
+<li class="chapter" data-level="19.2.4" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#how-many-and-what-percent-of-customers-are-from-each-country"><i class="fa fa-check"></i><b>19.2.4</b> 4. How Many and What Percent of Customers Are From Each Country?</a></li>
+<li class="chapter" data-level="19.2.5" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#what-countries-constitute-the-top-25-of-the-customer-base"><i class="fa fa-check"></i><b>19.2.5</b> 5 What Countries Constitute the Top 25% of the Customer Base?</a></li>
+<li class="chapter" data-level="19.2.6" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#how-many-customers-are-in-australia-and-canada"><i class="fa fa-check"></i><b>19.2.6</b> 6. How many customers are in Australia and Canada?</a></li>
+<li class="chapter" data-level="19.2.7" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#how-many-languages"><i class="fa fa-check"></i><b>19.2.7</b> 7. How Many Languages?</a></li>
+<li class="chapter" data-level="19.2.8" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#what-is-the-distribution-of-dvds-by-language"><i class="fa fa-check"></i><b>19.2.8</b> 8. What is the distribution of DVD’s by Language</a></li>
+<li class="chapter" data-level="19.2.9" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#what-are-the-number-of-rentals-and-rented-amount-by-store-by-month"><i class="fa fa-check"></i><b>19.2.9</b> 9. What are the number of rentals and rented amount by store, by month?</a></li>
+<li class="chapter" data-level="19.2.10" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#rank-films-based-on-the-number-of-times-rented-and-associated-revenue"><i class="fa fa-check"></i><b>19.2.10</b> 10. Rank Films Based on the Number of Times Rented and Associated Revenue</a></li>
+<li class="chapter" data-level="19.2.11" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#what-is-the-rental-distributiondvd-for-the-top-two-rented-films"><i class="fa fa-check"></i><b>19.2.11</b> 11 What is the rental distribution/DVD for the top two rented films?</a></li>
+<li class="chapter" data-level="19.2.12" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#list-staffing-information-for-store-1-associated-with-the-bucket-brother-rentals"><i class="fa fa-check"></i><b>19.2.12</b> 12. List staffing information for store 1 associated with the <code>Bucket Brother</code> rentals?</a></li>
+<li class="chapter" data-level="19.2.13" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#how-many-films-are-in-each-film-rating"><i class="fa fa-check"></i><b>19.2.13</b> 13. How many films are in each film rating?</a></li>
+<li class="chapter" data-level="19.2.14" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#what-are-the-different-film-categories"><i class="fa fa-check"></i><b>19.2.14</b> 14. What are the different film categories?</a></li>
+<li class="chapter" data-level="19.2.15" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#rank-the-film-categeories-in-descending-order"><i class="fa fa-check"></i><b>19.2.15</b> 15. Rank the film categeories in descending order</a></li>
+<li class="chapter" data-level="19.2.16" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#which-films-are-listed-in-multiple-categories"><i class="fa fa-check"></i><b>19.2.16</b> 16. Which films are listed in multiple categories?</a></li>
+<li class="chapter" data-level="19.2.17" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#which-films-are-in-one-stores-inventory-but-not-the-other"><i class="fa fa-check"></i><b>19.2.17</b> 17. Which films are in one store’s inventory but not the other</a></li>
+<li class="chapter" data-level="19.2.18" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#which-films-are-not-tracked-in-inventory"><i class="fa fa-check"></i><b>19.2.18</b> 18 Which films are not tracked in inventory?</a></li>
+<li class="chapter" data-level="19.2.19" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#list-film-categories-in-descending-accounts-receivable."><i class="fa fa-check"></i><b>19.2.19</b> 19 List film categories in descending accounts receivable.</a></li>
+<li class="chapter" data-level="19.2.20" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#list-film-ratings-in-descending-accounts-receivable-order."><i class="fa fa-check"></i><b>19.2.20</b> 20. List film ratings in descending accounts receivable order.</a></li>
+<li class="chapter" data-level="19.2.21" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#how-many-rentals-were-returned-on-time-returned-late-never-returned"><i class="fa fa-check"></i><b>19.2.21</b> 21. How many rentals were returned on time, returned late, never returned?</a></li>
+<li class="chapter" data-level="19.2.22" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#are-there-duplicate-customers"><i class="fa fa-check"></i><b>19.2.22</b> 22. Are there duplicate customers?</a></li>
+<li class="chapter" data-level="19.2.23" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#which-customers-have-never-rented-a-movie"><i class="fa fa-check"></i><b>19.2.23</b> 23. Which customers have never rented a movie?</a></li>
+<li class="chapter" data-level="19.2.24" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#who-are-the-top-5-customers-with-the-most-rentals-and-associated-payments"><i class="fa fa-check"></i><b>19.2.24</b> 24 Who are the top 5 customers with the most rentals and associated payments?</a></li>
+<li class="chapter" data-level="19.2.25" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#combine-the-top-5-rental-customers-40-or-more-rentals-and-zero-rental-customers"><i class="fa fa-check"></i><b>19.2.25</b> 25 Combine the top 5 rental customers, (40 or more rentals), and zero rental customers</a></li>
+<li class="chapter" data-level="19.2.26" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#who-are-the-top-n1-and-bottom-n2-customers"><i class="fa fa-check"></i><b>19.2.26</b> 26. Who are the top-n1 and bottom-n2 customers?</a></li>
+<li class="chapter" data-level="19.2.27" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#how-much-has-each-store-collected"><i class="fa fa-check"></i><b>19.2.27</b> 27. How much has each store collected?</a></li>
+<li class="chapter" data-level="19.2.28" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#what-is-the-business-distribution-of-payments"><i class="fa fa-check"></i><b>19.2.28</b> 28. What is the business’ distribution of payments?</a></li>
+<li class="chapter" data-level="19.2.29" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#which-customers-have-the-highest-open-amounts"><i class="fa fa-check"></i><b>19.2.29</b> 29. Which customers have the highest open amounts?</a></li>
 </ul></li>
-<li class="chapter" data-level="23" data-path="chapter-explain-queries.html"><a href="chapter-explain-queries.html"><i class="fa fa-check"></i><b>23</b> Explain queries</a><ul>
-<li class="chapter" data-level="23.1" data-path="chapter-explain-queries.html"><a href="chapter-explain-queries.html#performance-considerations"><i class="fa fa-check"></i><b>23.1</b> Performance considerations</a></li>
-<li class="chapter" data-level="23.2" data-path="chapter-explain-queries.html"><a href="chapter-explain-queries.html#clean-up-2"><i class="fa fa-check"></i><b>23.2</b> Clean up</a></li>
+<li class="chapter" data-level="19.3" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#what-is-the-business-cash-flow"><i class="fa fa-check"></i><b>19.3</b> 30. What is the business cash flow?</a></li>
+<li class="chapter" data-level="19.4" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#different-strategies-for-interacting-with-the-database-1"><i class="fa fa-check"></i><b>19.4</b> Different strategies for interacting with the database</a><ul>
+<li class="chapter" data-level="19.4.1" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#use-dbgetquery-1"><i class="fa fa-check"></i><b>19.4.1</b> Use dbGetQuery</a></li>
 </ul></li>
-<li class="chapter" data-level="24" data-path="chapter-sql-queries-breakdown.html"><a href="chapter-sql-queries-breakdown.html"><i class="fa fa-check"></i><b>24</b> SQL queries broken down</a><ul>
-<li class="chapter" data-level="24.1" data-path="chapter-sql-queries-breakdown.html"><a href="chapter-sql-queries-breakdown.html#sql-execution-steps"><i class="fa fa-check"></i><b>24.1</b> SQL Execution Steps</a></li>
-<li class="chapter" data-level="24.2" data-path="chapter-sql-queries-breakdown.html"><a href="chapter-sql-queries-breakdown.html#passing-values-to-sql-statements"><i class="fa fa-check"></i><b>24.2</b> Passing values to SQL statements</a></li>
-<li class="chapter" data-level="24.3" data-path="chapter-sql-queries-breakdown.html"><a href="chapter-sql-queries-breakdown.html#pass-multiple-sets-of-values-with-dbbind"><i class="fa fa-check"></i><b>24.3</b> Pass multiple sets of values with dbBind():</a></li>
-<li class="chapter" data-level="24.4" data-path="chapter-sql-queries-breakdown.html"><a href="chapter-sql-queries-breakdown.html#clean-up-3"><i class="fa fa-check"></i><b>24.4</b> Clean up</a></li>
 </ul></li>
-<li class="chapter" data-level="25" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html"><i class="fa fa-check"></i><b>25</b> Writing to the DBMS</a><ul>
-<li class="chapter" data-level="25.1" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#set-up-a-cattle-container"><i class="fa fa-check"></i><b>25.1</b> Set up a <code>cattle</code> container</a><ul>
-<li class="chapter" data-level="25.1.1" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#remove-previous-containers-if-they-exist-1"><i class="fa fa-check"></i><b>25.1.1</b> Remove previous containers if they exist</a></li>
-<li class="chapter" data-level="25.1.2" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#connect-to-postgresql"><i class="fa fa-check"></i><b>25.1.2</b> Connect to PostgreSQL</a></li>
+<li class="chapter" data-level="20" data-path="chapter-anti-join-cost-comparisons.html"><a href="chapter-anti-join-cost-comparisons.html"><i class="fa fa-check"></i><b>20</b> Anti-join cost comparisons</a><ul>
+<li class="chapter" data-level="20.1" data-path="chapter-anti-join-cost-comparisons.html"><a href="chapter-anti-join-cost-comparisons.html#sql-anti-join-costs-1"><i class="fa fa-check"></i><b>20.1</b> SQL anti join Costs</a></li>
+<li class="chapter" data-level="20.2" data-path="chapter-anti-join-cost-comparisons.html"><a href="chapter-anti-join-cost-comparisons.html#dplyr-anti-joins-1"><i class="fa fa-check"></i><b>20.2</b> dplyr Anti joins</a></li>
 </ul></li>
-<li class="chapter" data-level="25.2" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#interact-with-postgresql-1"><i class="fa fa-check"></i><b>25.2</b> Interact with PostgreSQL</a><ul>
-<li class="chapter" data-level="25.2.1" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#create-a-new-table-in-the-database"><i class="fa fa-check"></i><b>25.2.1</b> Create a new table in the database</a></li>
-<li class="chapter" data-level="25.2.2" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#modify-an-existing-table"><i class="fa fa-check"></i><b>25.2.2</b> Modify an existing table</a></li>
-<li class="chapter" data-level="25.2.3" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#remove-the-table"><i class="fa fa-check"></i><b>25.2.3</b> Remove the table</a></li>
+<li class="chapter" data-level="21" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html"><i class="fa fa-check"></i><b>21</b> SQL Quick start - simple retrieval</a><ul>
+<li class="chapter" data-level="21.1" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#intro"><i class="fa fa-check"></i><b>21.1</b> Intro</a></li>
+<li class="chapter" data-level="21.2" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#databases-and-third-normal-form---3nf"><i class="fa fa-check"></i><b>21.2</b> Databases and Third Normal Form - 3NF</a></li>
+<li class="chapter" data-level="21.3" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#sql-commands"><i class="fa fa-check"></i><b>21.3</b> SQL Commands</a></li>
+<li class="chapter" data-level="21.4" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#sql-select-quick-start"><i class="fa fa-check"></i><b>21.4</b> SQL SELECT Quick Start</a><ul>
+<li class="chapter" data-level="21.4.1" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#select-clause-column-selection-vertical-partioning-of-data"><i class="fa fa-check"></i><b>21.4.1</b> SELECT Clause: Column Selection – Vertical Partioning of Data</a></li>
+<li class="chapter" data-level="21.4.2" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#sql-comments"><i class="fa fa-check"></i><b>21.4.2</b> SQL Comments</a></li>
+<li class="chapter" data-level="21.4.3" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#from-clause"><i class="fa fa-check"></i><b>21.4.3</b> FROM Clause</a></li>
+<li class="chapter" data-level="21.4.4" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#where-clause-row-selection-horizontal-partitioning-of-data"><i class="fa fa-check"></i><b>21.4.4</b> WHERE Clause: Row Selection – Horizontal Partitioning of Data</a></li>
 </ul></li>
-<li class="chapter" data-level="25.3" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#clean-up-4"><i class="fa fa-check"></i><b>25.3</b> Clean up</a></li>
+<li class="chapter" data-level="21.5" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#paradigm-shift-from-r-dplyr-to-sql"><i class="fa fa-check"></i><b>21.5</b> Paradigm Shift from R-Dplyr to SQL</a><ul>
+<li class="chapter" data-level="21.5.1" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#big-bang-versus-piped-incremental-steps."><i class="fa fa-check"></i><b>21.5.1</b> Big bang versus piped incremental steps.</a></li>
+<li class="chapter" data-level="21.5.2" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#sql-execution-order"><i class="fa fa-check"></i><b>21.5.2</b> SQL Execution Order</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="22" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html"><i class="fa fa-check"></i><b>22</b> Getting metadata about and from PostgreSQL</a><ul>
+<li class="chapter" data-level="22.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#database-contents-and-structure"><i class="fa fa-check"></i><b>22.1</b> Database contents and structure</a><ul>
+<li class="chapter" data-level="22.1.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#database-structure"><i class="fa fa-check"></i><b>22.1.1</b> Database structure</a></li>
+<li class="chapter" data-level="22.1.2" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#contents-of-the-information_schema"><i class="fa fa-check"></i><b>22.1.2</b> Contents of the <code>information_schema</code></a></li>
+<li class="chapter" data-level="22.1.3" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#what-tables-are-in-the-database"><i class="fa fa-check"></i><b>22.1.3</b> What tables are in the database?</a></li>
+<li class="chapter" data-level="22.1.4" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#digging-into-the-information_schema"><i class="fa fa-check"></i><b>22.1.4</b> Digging into the <code>information_schema</code></a></li>
+</ul></li>
+<li class="chapter" data-level="22.2" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#what-columns-do-those-tables-contain"><i class="fa fa-check"></i><b>22.2</b> What columns do those tables contain?</a><ul>
+<li class="chapter" data-level="22.2.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#what-is-the-difference-between-a-view-and-a-base-table"><i class="fa fa-check"></i><b>22.2.1</b> What is the difference between a <code>VIEW</code> and a <code>BASE TABLE</code>?</a></li>
+<li class="chapter" data-level="22.2.2" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#what-data-types-are-found-in-the-database"><i class="fa fa-check"></i><b>22.2.2</b> What data types are found in the database?</a></li>
+</ul></li>
+<li class="chapter" data-level="22.3" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#characterizing-how-things-are-named"><i class="fa fa-check"></i><b>22.3</b> Characterizing how things are named</a><ul>
+<li class="chapter" data-level="22.3.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#counting-columns-and-name-reuse"><i class="fa fa-check"></i><b>22.3.1</b> Counting columns and name reuse</a></li>
+</ul></li>
+<li class="chapter" data-level="22.4" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#database-keys"><i class="fa fa-check"></i><b>22.4</b> Database keys</a><ul>
+<li class="chapter" data-level="22.4.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#direct-sql"><i class="fa fa-check"></i><b>22.4.1</b> Direct SQL</a></li>
+<li class="chapter" data-level="22.4.2" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#database-keys-with-dplyr"><i class="fa fa-check"></i><b>22.4.2</b> Database keys with dplyr</a></li>
+</ul></li>
+<li class="chapter" data-level="22.5" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#creating-your-own-data-dictionary"><i class="fa fa-check"></i><b>22.5</b> Creating your own data dictionary</a></li>
+</ul></li>
+<li class="chapter" data-level="23" data-path="chapter-dbms-environment.html"><a href="chapter-dbms-environment.html"><i class="fa fa-check"></i><b>23</b> Drilling into your DBMS environment</a><ul>
+<li class="chapter" data-level="23.1" data-path="chapter-dbms-environment.html"><a href="chapter-dbms-environment.html#which-database"><i class="fa fa-check"></i><b>23.1</b> Which database?</a></li>
+<li class="chapter" data-level="23.2" data-path="chapter-dbms-environment.html"><a href="chapter-dbms-environment.html#how-many-databases-reside-in-the-docker-container"><i class="fa fa-check"></i><b>23.2</b> How many databases reside in the Docker Container?</a></li>
+<li class="chapter" data-level="23.3" data-path="chapter-dbms-environment.html"><a href="chapter-dbms-environment.html#which-schema"><i class="fa fa-check"></i><b>23.3</b> Which Schema?</a></li>
+<li class="chapter" data-level="23.4" data-path="chapter-dbms-environment.html"><a href="chapter-dbms-environment.html#exercises-3"><i class="fa fa-check"></i><b>23.4</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="24" data-path="chapter-explain-queries.html"><a href="chapter-explain-queries.html"><i class="fa fa-check"></i><b>24</b> Explain queries</a><ul>
+<li class="chapter" data-level="24.1" data-path="chapter-explain-queries.html"><a href="chapter-explain-queries.html#performance-considerations"><i class="fa fa-check"></i><b>24.1</b> Performance considerations</a></li>
+<li class="chapter" data-level="24.2" data-path="chapter-explain-queries.html"><a href="chapter-explain-queries.html#clean-up-2"><i class="fa fa-check"></i><b>24.2</b> Clean up</a></li>
+</ul></li>
+<li class="chapter" data-level="25" data-path="chapter-sql-queries-breakdown.html"><a href="chapter-sql-queries-breakdown.html"><i class="fa fa-check"></i><b>25</b> SQL queries broken down</a><ul>
+<li class="chapter" data-level="25.1" data-path="chapter-sql-queries-breakdown.html"><a href="chapter-sql-queries-breakdown.html#sql-execution-steps"><i class="fa fa-check"></i><b>25.1</b> SQL Execution Steps</a></li>
+<li class="chapter" data-level="25.2" data-path="chapter-sql-queries-breakdown.html"><a href="chapter-sql-queries-breakdown.html#passing-values-to-sql-statements"><i class="fa fa-check"></i><b>25.2</b> Passing values to SQL statements</a></li>
+<li class="chapter" data-level="25.3" data-path="chapter-sql-queries-breakdown.html"><a href="chapter-sql-queries-breakdown.html#pass-multiple-sets-of-values-with-dbbind"><i class="fa fa-check"></i><b>25.3</b> Pass multiple sets of values with dbBind():</a></li>
+<li class="chapter" data-level="25.4" data-path="chapter-sql-queries-breakdown.html"><a href="chapter-sql-queries-breakdown.html#clean-up-3"><i class="fa fa-check"></i><b>25.4</b> Clean up</a></li>
+</ul></li>
+<li class="chapter" data-level="26" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html"><i class="fa fa-check"></i><b>26</b> Writing to the DBMS</a><ul>
+<li class="chapter" data-level="26.1" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#set-up-a-cattle-container"><i class="fa fa-check"></i><b>26.1</b> Set up a <code>cattle</code> container</a><ul>
+<li class="chapter" data-level="26.1.1" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#remove-previous-containers-if-they-exist-1"><i class="fa fa-check"></i><b>26.1.1</b> Remove previous containers if they exist</a></li>
+<li class="chapter" data-level="26.1.2" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#connect-to-postgresql"><i class="fa fa-check"></i><b>26.1.2</b> Connect to PostgreSQL</a></li>
+</ul></li>
+<li class="chapter" data-level="26.2" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#interact-with-postgresql-1"><i class="fa fa-check"></i><b>26.2</b> Interact with PostgreSQL</a><ul>
+<li class="chapter" data-level="26.2.1" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#create-a-new-table-in-the-database"><i class="fa fa-check"></i><b>26.2.1</b> Create a new table in the database</a></li>
+<li class="chapter" data-level="26.2.2" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#modify-an-existing-table"><i class="fa fa-check"></i><b>26.2.2</b> Modify an existing table</a></li>
+<li class="chapter" data-level="26.2.3" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#remove-the-table"><i class="fa fa-check"></i><b>26.2.3</b> Remove the table</a></li>
+</ul></li>
+<li class="chapter" data-level="26.3" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#clean-up-4"><i class="fa fa-check"></i><b>26.3</b> Clean up</a></li>
 </ul></li>
 <li class="appendix"><span><b>Appendices</b></span></li>
 <li class="chapter" data-level="A" data-path="chapter-appendix-setup-instructions.html"><a href="chapter-appendix-setup-instructions.html"><i class="fa fa-check"></i><b>A</b> Appendix A - Setup instructions</a><ul>
@@ -678,7 +681,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
             <section class="normal" id="section-">
 <div id="chapter_sql-dplyr-joins" class="section level1">
-<h1><span class="header-section-number">Chapter 15</span> SQL &amp; dplyr joins</h1>
+<h1><span class="header-section-number">Chapter 16</span> SQL &amp; dplyr joins</h1>
 <blockquote>
 <p>This chapter demonstrates how to:</p>
 <ul>
@@ -695,7 +698,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Verify pet DB is available, it may be stopped.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_show_all_docker_containers</span>()</code></pre>
 <pre><code>## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                     PORTS               NAMES
-## 60a61f1e10f7        postgres-dvdrental   &quot;docker-entrypoint.s…&quot;   51 seconds ago      Exited (0) 2 seconds ago                       sql-pet</code></pre>
+## 7a2ede048f6c        postgres-dvdrental   &quot;docker-entrypoint.s…&quot;   55 seconds ago      Exited (0) 2 seconds ago                       sql-pet</code></pre>
 <p>Start up the <code>docker-pet</code> container</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_docker_start</span>(<span class="st">&quot;sql-pet&quot;</span>)</code></pre>
 <p>Now connect to the database with R</p>
@@ -754,11 +757,11 @@ con &lt;-<span class="st"> </span><span class="kw">sp_get_postgres_connection</s
 <span class="co">## &gt; dbExecute(con, &quot;insert into rental\n  (rental_id,rental_date,inventory_id,customer_id,return_date,staff_id,last_update)\n  values(16050,now()::date  ...&quot; ... [TRUNCATED] </span>
 <span class="co">## [1] 1</span></code></pre>
 <div id="joins-2" class="section level2">
-<h2><span class="header-section-number">15.1</span> Joins</h2>
+<h2><span class="header-section-number">16.1</span> Joins</h2>
 <p>In section ‘SQL Quick Start Simple Retrieval’, there is a brief discussion of databases and 3NF. One of the goals of normalization is to eliminate redundant data being kept in multiple tables and having each table contain a very granular level of detail. If a record then needs to be updated, it is updated in one table instead of multiple tables improving overall system performance. This also helps simplify and maintain referential integrity between tables.</p>
 <p>Normalization breaks data down and JOINs denormalizes the data and builds it back up. The tables are typically related via a primary key - foreign key relationship. The Postgres database enforces the primary and foreign key constraints in the DVD rental database.</p>
 <div id="join-types-2" class="section level3">
-<h3><span class="header-section-number">15.1.1</span> Join Types</h3>
+<h3><span class="header-section-number">16.1.1</span> Join Types</h3>
 <div id="htmlwidget-1d9f9b9fdca3023baa83" style="width:672px;height:480px;" class="grViz html-widget"></div>
 <script type="application/json" data-for="htmlwidget-1d9f9b9fdca3023baa83">{"x":{"diagram":"\ndigraph SQL_TYPES {\n\n  # a \"graph\" statement\n  graph [overlap = true, fontsize = 10]\n\n  node [shape = box,\n        fixedsize = false,\n        hegith = 1.5\n        width = 1.50]\n  0[label=\"0.  SQL Joins\"]\n  1[label=\"1.  Inner Join\nL.col1 {<,=,>} R.col2\"]\n  2[label=\"2.  Outer Join\nL.col1=R.col2\"]\n  3[label=\"3.  Self Join\nL.col1=tbl1.col2\"]\n  4[label=\"4.  Cross Join\nL.col1=R.col2\"]\n  5[label=\"5.  Equi Join\nL.col1=R.col2\"] \n  6[label=\"6.  Natural Join\nL.col1=R.col1\"]\n  7[label=\"7.  Left Join\nL.col1=R.col1\"]\n  8[label=\"8.  Right Join\nL.col1=R.col1\"]\n  9[label=\"9.  Full Join\nL.col1=tbl2.col1\"]\n  # several \"edge\" statements\n  0 -> {1,2,3,4} [arrowhead=none]\n  1 -> 5 [arrowhead=none]\n  5 -> 6 [arrowhead=none]\n  2 -> {7,8,9} [arrowhead=none]\n  #3 -> {7,8,9}\n}\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 <p>The diagram above shows the hierarchy of the different types of joins. In the boxes above:</p>
@@ -775,7 +778,7 @@ con &lt;-<span class="st"> </span><span class="kw">sp_get_postgres_connection</s
 <p>Instead of showing standard Venn diagrams showing the different JOINS, we use an analogy. For those interested though, the typical Venn diagrams can be found <a href="http://www.sql-join.com/sql-join-types/">here</a>.</p>
 </div>
 <div id="valentines-party-2" class="section level3">
-<h3><span class="header-section-number">15.1.2</span> Valentines Party</h3>
+<h3><span class="header-section-number">16.1.2</span> Valentines Party</h3>
 <p>Imagine you are at a large costume Valentine’s Day dance party. The hostess of the party, a data scientist, would like to learn more about the people attending her party. When the band takes a break, she lets everyone know it is time for the judges to evaluate the winners for best costumes and associated prizes.</p>
 <div class="figure">
 <img src="screenshots/ValentinesDay.PNG" alt="ValentinesDay" />
@@ -796,7 +799,7 @@ con &lt;-<span class="st"> </span><span class="kw">sp_get_postgres_connection</s
 <p>The hostess knows that there is usually some data anomalies. As she looks out she sees a small cluster of people who did not line up. Being the hostess with the mostest, she wants to get to know that small cluster better. Since they are far off and in costume, she cannot tell if they are men or women. More importantly, she does not know if they identify as a man or a woman, both – (kind of a stretch for a self join), neither, or something else. Ah, the inquisitive mind wants to know.</p>
 </div>
 <div id="join-syntax-2" class="section level3">
-<h3><span class="header-section-number">15.1.3</span> Join Syntax</h3>
+<h3><span class="header-section-number">16.1.3</span> Join Syntax</h3>
 <p>The table below shows the two R join function call formats, standalone function call and pipe function call and the corresponding SQL join format.</p>
 <table>
 <colgroup>
@@ -871,7 +874,7 @@ con &lt;-<span class="st"> </span><span class="kw">sp_get_postgres_connection</s
 </table>
 </div>
 <div id="join-tables-2" class="section level3">
-<h3><span class="header-section-number">15.1.4</span> Join Tables</h3>
+<h3><span class="header-section-number">16.1.4</span> Join Tables</h3>
 <p>The dplyr join documentation describes two different types of joins, <code>mutating</code> and <code>filtering</code> joins. For those coming to R with a SQL background, the mutating documentation is misleading in one respect. Here is the inner_join documentation.</p>
 <pre><code>    inner_join()
     
@@ -898,10 +901,10 @@ cartesian_join &lt;-<span class="st"> </span><span class="kw">inner_join</span>(
 </div>
 </div>
 <div id="natural-join-delayed-time-bomb-2" class="section level2">
-<h2><span class="header-section-number">15.2</span> Natural Join Delayed Time Bomb</h2>
+<h2><span class="header-section-number">16.2</span> Natural Join Delayed Time Bomb</h2>
 <p>The dplyr default join is a natural join, joining tables on common column names. One of many links why one should not use natural joins can be found <a href="http://gplivna.blogspot.com/2007/10/natural-joins-are-evil-motto-if-you.html">here</a>. If two tables are joined via a natural join on column <code>C1</code> the join continues to work as long as no additional common columns are added to either table. If a new new column <code>C2</code> is added to one of the tables and <code>C2</code> already exists in the other table, BOOM, the delayed time bomb goes off. The natural join still executes, doesn’t throw any errors, but the returned result set may be smaller, much smaller, than before the new <code>C2</code> column was added.</p>
 <div id="sql-customer-store_id-distribution-1" class="section level3">
-<h3><span class="header-section-number">15.2.1</span> SQL Customer store_id Distribution</h3>
+<h3><span class="header-section-number">16.2.1</span> SQL Customer store_id Distribution</h3>
 <p>The next code block calculates the <code>store_id</code> distribution in the <code>customer</code> and <code>store</code> tables across all their rows. The results will be used in following sections to validate different join result sets.</p>
 <pre class="sourceCode r"><code class="sourceCode r">store_distribution_sql &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con
           ,<span class="st">&quot;select &#39;customer&#39; tbl, store_id,count(*) count </span>
@@ -916,7 +919,7 @@ cartesian_join &lt;-<span class="st"> </span><span class="kw">inner_join</span>(
 <script type="application/json" data-for="htmlwidget-74434d812ec23342fdce">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9"],["customer","customer","customer","customer","customer","customer","store","store","store"],[1,2,3,4,5,6,1,2,10],[326,274,1,1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>tbl<\/th>\n      <th>store_id<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="sample-customer-and-store-join-data-1" class="section level3">
-<h3><span class="header-section-number">15.2.2</span> Sample Customer and Store Join Data</h3>
+<h3><span class="header-section-number">16.2.2</span> Sample Customer and Store Join Data</h3>
 <p>The following code block extracts sample customer and the store data. The customer data is restricted to 10 rows to illustrate the different joins. The 10 rows are used in the detail examples in order to perform a sanity check that the join is actually working. Each detail example is followed by an aggregated summary across all rows of <code>customer</code> and <code>store</code> table.</p>
 <pre class="sourceCode r"><code class="sourceCode r">sample_customers &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,<span class="st">&quot;select customer_id,first_name,last_name,store_id</span>
 <span class="st">                                      from customer </span>
@@ -927,10 +930,10 @@ stores &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,<spa
 <script type="application/json" data-for="htmlwidget-8da54f9f5480ad7c3ec3">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10"],[595,596,597,598,599,600,601,602,603,604],["Terrence","Enrique","Freddie","Wade","Austin","Sophie","Sophie","John","Ian","Ed"],["Gunderson","Forsythe","Duggan","Delvalle","Cintron","Yang","Yang","Smith","Frantz","Borasky"],[1,1,1,1,2,3,2,4,5,6]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>store_id<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_print_df</span>(stores)</code></pre>
 <div id="htmlwidget-124fb78127817ec02cd9" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-124fb78127817ec02cd9">{"x":{"filter":"none","data":[["1","2","3"],[1,2,10],[1,2,10],[1,2,10],["2006-02-15T17:57:12Z","2006-02-15T17:57:12Z","2019-02-18T02:43:56Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>store_id<\/th>\n      <th>manager_staff_id<\/th>\n      <th>address_id<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-124fb78127817ec02cd9">{"x":{"filter":"none","data":[["1","2","3"],[1,2,10],[1,2,10],[1,2,10],["2006-02-15T17:57:12Z","2006-02-15T17:57:12Z","2019-02-22T23:07:30Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>store_id<\/th>\n      <th>manager_staff_id<\/th>\n      <th>address_id<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="dplyr-store_id-distribution-exercise-1" class="section level3">
-<h3><span class="header-section-number">15.2.3</span> dplyr store_id distribution Exercise</h3>
+<h3><span class="header-section-number">16.2.3</span> dplyr store_id distribution Exercise</h3>
 <p>Execute and Review the output from the code block below. Union and arrange the output to match the SQL output in the previous code block.</p>
 <pre class="sourceCode r"><code class="sourceCode r">customer_table &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbReadTable</span>(con, <span class="st">&quot;customer&quot;</span>)
 store_table &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbReadTable</span>(con, <span class="st">&quot;store&quot;</span>)
@@ -957,7 +960,7 @@ store_summary &lt;-<span class="st"> </span>store_table <span class="op">%&gt;%<
 </div>
 </div>
 <div id="join-templates-2" class="section level2">
-<h2><span class="header-section-number">15.3</span> Join Templates</h2>
+<h2><span class="header-section-number">16.3</span> Join Templates</h2>
 <p>In this section we perform various joins using dplyr and SQL. Each dplyr code block has three purposes.</p>
 <ol style="list-style-type: decimal">
 <li>Show working detail/summary data join examples.<br />
@@ -972,9 +975,9 @@ store_summary &lt;-<span class="st"> </span>store_table <span class="op">%&gt;%<
 <p>The suffix parameter is a way to distinguish the same column name in the joined tables. The suffixes are usually an single letter to represent the name of the table.</p>
 </div>
 <div id="inner-joins-1" class="section level2">
-<h2><span class="header-section-number">15.4</span> Inner Joins</h2>
+<h2><span class="header-section-number">16.4</span> Inner Joins</h2>
 <div id="sql-inner-join-details-example_inner-join-details-sql-1" class="section level3">
-<h3><span class="header-section-number">15.4.1</span> SQL Inner Join Details {example_inner-join-details-sql}</h3>
+<h3><span class="header-section-number">16.4.1</span> SQL Inner Join Details {example_inner-join-details-sql}</h3>
 <p>For an inner join between two tables, it doesn’t matter which table is on the left, the first table, and which is on the right, the second table, because join conditions on both tables must be satisfied. Reviewing the table below shows the inner join on our 10 sample customers and 3 store records returned only 6 rows. The inner join detail shows only rows with matching store_id’s.</p>
 <pre class="sourceCode r"><code class="sourceCode r">customer_store_details_sij &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,
 <span class="st">&quot;select &#39;ij&#39; join_type,customer_id,first_name,last_name,c.store_id c_store_id</span>
@@ -986,7 +989,7 @@ store_summary &lt;-<span class="st"> </span>store_table <span class="op">%&gt;%<
 <script type="application/json" data-for="htmlwidget-ed78248b32e6634f28e5">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["ij","ij","ij","ij","ij","ij"],[595,596,597,598,599,601],["Terrence","Enrique","Freddie","Wade","Austin","Sophie"],["Gunderson","Forsythe","Duggan","Delvalle","Cintron","Yang"],[1,1,1,1,2,2],[1,1,1,1,2,2],[1,1,1,1,2,2],[1,1,1,1,2,2]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>join_type<\/th>\n      <th>customer_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>c_store_id<\/th>\n      <th>s_store_id<\/th>\n      <th>manager_staff_id<\/th>\n      <th>address_id<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,5,6,7,8]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="dplyr-inner-join-details-example_inner-join-details-dplyr-1" class="section level3">
-<h3><span class="header-section-number">15.4.2</span> Dplyr Inner Join Details {example_inner-join-details-dplyr}</h3>
+<h3><span class="header-section-number">16.4.2</span> Dplyr Inner Join Details {example_inner-join-details-dplyr}</h3>
 <pre class="sourceCode r"><code class="sourceCode r">customer_ij &lt;-<span class="st"> </span>customer_table <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">inner_join</span>(store_table, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;store_id&quot;</span> =<span class="st"> &quot;store_id&quot;</span>), <span class="kw">suffix</span>(<span class="kw">c</span>(<span class="st">&quot;.c&quot;</span>, <span class="st">&quot;.s&quot;</span>))) <span class="op">%&gt;%</span>
 <span class="st">    </span><span class="kw">filter</span>(customer_id <span class="op">&gt;=</span><span class="st"> </span><span class="dv">595</span> <span class="op">&amp;</span><span class="st"> </span>customer_id <span class="op">&lt;=</span><span class="st"> </span><span class="dv">604</span> ) <span class="op">%&gt;%</span>
@@ -1001,7 +1004,7 @@ store_summary &lt;-<span class="st"> </span>store_table <span class="op">%&gt;%<
 <p>Compare the output from the SQL and Dplyr version. The SQL output has a <code>c_store_id</code> and a <code>s_store_id</code> column and the Dplyr output only has <code>store_id</code>. In this case, because it is an inner join, it doesn’t matter because they will always the same.</p>
 </div>
 <div id="sql-inner-join-summary-example_inner-join-summary-sql-1" class="section level3">
-<h3><span class="header-section-number">15.4.3</span> SQL Inner Join Summary {example_inner-join-summary-sql}</h3>
+<h3><span class="header-section-number">16.4.3</span> SQL Inner Join Summary {example_inner-join-summary-sql}</h3>
 <p>Note that both the store_id is available from both the customer and store tables, c.store_id,s.store_id, in the select clause.</p>
 <pre class="sourceCode r"><code class="sourceCode r">customer_store_summay_sij &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(
   con,
@@ -1015,7 +1018,7 @@ store_summary &lt;-<span class="st"> </span>store_table <span class="op">%&gt;%<
 <script type="application/json" data-for="htmlwidget-09904734225327216f09">{"x":{"filter":"none","data":[["1","2"],[1,2],[1,2],[326,274]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>c_store_id<\/th>\n      <th>s_store_id<\/th>\n      <th>n<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="dplyr-inner-join-summary-example_inner-join-summary_dplyr-1" class="section level3">
-<h3><span class="header-section-number">15.4.4</span> Dplyr Inner Join Summary {example_inner-join-summary_dplyr}</h3>
+<h3><span class="header-section-number">16.4.4</span> Dplyr Inner Join Summary {example_inner-join-summary_dplyr}</h3>
 <p>In the previous SQL code block, <code>c.</code> and <code>s.</code> were used in the <code>inner join</code> as table aliases. The <code>dplyr</code> suffix is similar to the SQL table alias. The role of the dplyr suffix and the SQL alias is to disambiguate duplicate table and column names referenced.</p>
 <pre class="sourceCode r"><code class="sourceCode r">customer_store_summary_dij &lt;-<span class="st"> </span>customer_table <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">inner_join</span>(store_table, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;store_id&quot;</span> =<span class="st"> &quot;store_id&quot;</span>), <span class="kw">suffix</span>(<span class="kw">c</span>(<span class="st">&quot;.c&quot;</span>, <span class="st">&quot;.s&quot;</span>))) <span class="op">%&gt;%</span>
@@ -1031,9 +1034,9 @@ store_summary &lt;-<span class="st"> </span>store_table <span class="op">%&gt;%<
 </div>
 </div>
 <div id="left-joins-1" class="section level2">
-<h2><span class="header-section-number">15.5</span> Left Joins</h2>
+<h2><span class="header-section-number">16.5</span> Left Joins</h2>
 <div id="sql-left-join-details-example_left-join-details-sql-1" class="section level3">
-<h3><span class="header-section-number">15.5.1</span> SQL Left Join Details {example_left-join-details-sql}</h3>
+<h3><span class="header-section-number">16.5.1</span> SQL Left Join Details {example_left-join-details-sql}</h3>
 <p>The SQL block below shows all 10 sample customer rows, the customer table is on the left and is the driving table, in the detail output which join to 2 of the 3 rows in the store table. All the rows with customer store_id greater than 2 have null/blank store column values.</p>
 <pre class="sourceCode r"><code class="sourceCode r">customer_store_details_sloj &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,
 <span class="st">&quot;select &#39;loj&#39; join_type,customer_id,first_name,last_name,c.store_id c_store_id</span>
@@ -1045,7 +1048,7 @@ store_summary &lt;-<span class="st"> </span>store_table <span class="op">%&gt;%<
 <script type="application/json" data-for="htmlwidget-beeafef17c4840807f51">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10"],["loj","loj","loj","loj","loj","loj","loj","loj","loj","loj"],[595,596,597,598,599,600,601,602,603,604],["Terrence","Enrique","Freddie","Wade","Austin","Sophie","Sophie","John","Ian","Ed"],["Gunderson","Forsythe","Duggan","Delvalle","Cintron","Yang","Yang","Smith","Frantz","Borasky"],[1,1,1,1,2,3,2,4,5,6],[1,1,1,1,2,null,2,null,null,null],[1,1,1,1,2,null,2,null,null,null],[1,1,1,1,2,null,2,null,null,null]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>join_type<\/th>\n      <th>customer_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>c_store_id<\/th>\n      <th>s_store_id<\/th>\n      <th>manager_staff_id<\/th>\n      <th>address_id<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,5,6,7,8]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="dplyr-left-join-details-example_left-join-details-dplyr-1" class="section level3">
-<h3><span class="header-section-number">15.5.2</span> Dplyr Left Join Details {example_left-join-details-dplyr}</h3>
+<h3><span class="header-section-number">16.5.2</span> Dplyr Left Join Details {example_left-join-details-dplyr}</h3>
 <p>The next code block shows the left join details. Note that the s_store_id column is derived via the mutate function, but not shown in the output below. Without the s_store_id column, it might accidentally be assumed that the store.store_id = customer.store_id when the store.store_id values are actually NULL/NA based on the output without the s_store_id column.</p>
 <pre class="sourceCode r"><code class="sourceCode r">customer_store_detail_dloj &lt;-<span class="st"> </span>customer_table <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">left_join</span>(store_table, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;store_id&quot;</span> =<span class="st"> &quot;store_id&quot;</span>), <span class="kw">suffix</span>(<span class="kw">c</span>(<span class="st">&quot;.c&quot;</span>, <span class="st">&quot;.s&quot;</span>))) <span class="op">%&gt;%</span>
@@ -1098,7 +1101,7 @@ store_summary &lt;-<span class="st"> </span>store_table <span class="op">%&gt;%<
 <p>In the remaining examples, the <code>dplyr</code> code blocks will show both the customer and store store_id values with the either <code>c_</code> or <code>s_</code> store_id prefix . The sp_print_df function returns the SQL NULL and R NA values as blanks.</p>
 </div>
 <div id="sql-left-join-summary-example_left-join-summary-sql-1" class="section level3">
-<h3><span class="header-section-number">15.5.3</span> SQL Left Join Summary {example_left-join-summary-sql}</h3>
+<h3><span class="header-section-number">16.5.3</span> SQL Left Join Summary {example_left-join-summary-sql}</h3>
 <p>For a left outer join between two tables, it does matter which table is on the left and which is on the right, because every row in the left table is returned when there is no <code>where/filter</code> condition. The second table returns row column values if the join condition exists or null collumn values if the join condition does not exist. The left join is the most frequently used join type.</p>
 <p>Note that SQL returns the store_id from both the customer and store tables, c.store_id,s.store_id, in the select clause.</p>
 <pre class="sourceCode r"><code class="sourceCode r">customer_store_summary_sloj &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(
@@ -1122,7 +1125,7 @@ store_summary &lt;-<span class="st"> </span>store_table <span class="op">%&gt;%<
 </ol>
 </div>
 <div id="dplyr-left-join-summary-example_left-join-summary-dplyr-1" class="section level3">
-<h3><span class="header-section-number">15.5.4</span> Dplyr Left Join Summary {example_left-join-summary-dplyr}</h3>
+<h3><span class="header-section-number">16.5.4</span> Dplyr Left Join Summary {example_left-join-summary-dplyr}</h3>
 <p>The dplyr outer join verbs do not return the non-driving table join values. Compare the mutate verb s_store_id in the code block below with s.store_id in the equivalent SQL code block above.</p>
 <pre class="sourceCode r"><code class="sourceCode r">customer_store_summary_dloj &lt;-<span class="st"> </span>customer_table <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">left_join</span>(store_table, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;store_id&quot;</span>, <span class="st">&quot;store_id&quot;</span>), <span class="kw">suffix</span>(<span class="kw">c</span>(<span class="st">&quot;.c&quot;</span>, <span class="st">&quot;.s&quot;</span>))) <span class="op">%&gt;%</span>
@@ -1152,14 +1155,14 @@ store_summary &lt;-<span class="st"> </span>store_table <span class="op">%&gt;%<
 </div>
 </div>
 <div id="why-include-one-of-the-inner-join-key-columns-1" class="section level2">
-<h2><span class="header-section-number">15.6</span> Why Include one of the Inner Join Key columns?</h2>
+<h2><span class="header-section-number">16.6</span> Why Include one of the Inner Join Key columns?</h2>
 <p>It is not uncommon to have many many tables joined together as a series of left outer joins. If the inner join key column is included in the output, one knows that the inner join condition was met or not. If the key column is not shown and non-key columns are shown from the inner table, they may actually be null. It is often the case that a long series of left outer joins just join on the key column to get one value out of the table to join to the next table in the series.</p>
 <p>One can think of the two components of an inner join as a transaction is either in an open state, no matching rows in the inner table or a closed state with one or more matching rows in the inner table. Assume that we have a four DVD rental step process represented via table A, B, C, and D left outer joined together. Summing the null and non-null keys together across all four tables gives a quick snap shot of the business in the four different steps. We will review this concept in some detail in one of the future exercises.</p>
 </div>
 <div id="right-joins-1" class="section level2">
-<h2><span class="header-section-number">15.7</span> Right Joins</h2>
+<h2><span class="header-section-number">16.7</span> Right Joins</h2>
 <div id="sql-right-join-details-example_right-join-details-sql-1" class="section level3">
-<h3><span class="header-section-number">15.7.1</span> SQL Right Join Details {example_right-join-details-sql}</h3>
+<h3><span class="header-section-number">16.7.1</span> SQL Right Join Details {example_right-join-details-sql}</h3>
 <p>The SQL block below shows only our sample customer rows, (customer_id between 595 and 604). The driving table is on the right, the <code>store</code> table. Only six of the 10 sample customer rows appear which have store_id = {1, 2}. All three <code>store</code> rows appear, row_id = {1,2,10}. The right join is least frequently used join type.</p>
 <pre class="sourceCode r"><code class="sourceCode r">customer_store_detail_sroj &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,
 <span class="st">&quot;select &#39;roj&#39; join_type,customer_id,first_name,last_name,c.store_id c_store_id</span>
@@ -1179,7 +1182,7 @@ store_summary &lt;-<span class="st"> </span>store_table <span class="op">%&gt;%<
 <p>See the next dplyr code block to see the alternative where clause shown above.</p>
 </div>
 <div id="dplyr-right-join-details-example_right-join-details-dplyr-1" class="section level3">
-<h3><span class="header-section-number">15.7.2</span> Dplyr Right Join Details {example_right-join-details-dplyr}</h3>
+<h3><span class="header-section-number">16.7.2</span> Dplyr Right Join Details {example_right-join-details-dplyr}</h3>
 <pre class="sourceCode r"><code class="sourceCode r">customer_store_detail_droj &lt;-<span class="st"> </span>customer_table <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">right_join</span>(store_table, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;store_id&quot;</span> =<span class="st"> &quot;store_id&quot;</span>), <span class="kw">suffix</span>(<span class="kw">c</span>(<span class="st">&quot;.c&quot;</span>, <span class="st">&quot;.s&quot;</span>))) <span class="op">%&gt;%</span>
 <span class="st">    </span><span class="kw">filter</span>((customer_id <span class="op">&gt;=</span><span class="st"> </span><span class="dv">595</span> <span class="op">&amp;</span><span class="st"> </span>customer_id <span class="op">&lt;=</span><span class="st"> </span><span class="dv">604</span>) <span class="op">|</span><span class="st"> </span><span class="kw">is.na</span>(customer_id)) <span class="op">%&gt;%</span>
@@ -1196,7 +1199,7 @@ store_summary &lt;-<span class="st"> </span>store_table <span class="op">%&gt;%<
 <script type="application/json" data-for="htmlwidget-c195b56d57c26c8f1d4d">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7"],[595,596,597,598,599,601,null],["Terrence","Enrique","Freddie","Wade","Austin","Sophie",null],["Gunderson","Forsythe","Duggan","Delvalle","Cintron","Yang",null],[1,1,1,1,2,2,10],[1,1,1,1,2,2,null],[1,1,1,1,2,2,10],[1,1,1,1,2,2,10]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>s_store_id<\/th>\n      <th>c_store_id<\/th>\n      <th>manager_staff_id<\/th>\n      <th>s_address_id<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,4,5,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="sql-right-outer-join-summary-example_right-join-summary-sql-1" class="section level3">
-<h3><span class="header-section-number">15.7.3</span> SQL Right Outer Join Summary {example_right-join-summary-sql}</h3>
+<h3><span class="header-section-number">16.7.3</span> SQL Right Outer Join Summary {example_right-join-summary-sql}</h3>
 <pre class="sourceCode r"><code class="sourceCode r">customer_store_summary_sroj &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(
   con,
   <span class="st">&quot;select &#39;roj&#39; join_type,c.store_id c_store_id,s.store_id s_store_id,count(*) rojs</span>
@@ -1217,7 +1220,7 @@ store_summary &lt;-<span class="st"> </span>store_table <span class="op">%&gt;%<
 </ol>
 </div>
 <div id="dplyr-right-join-summary-example_right-join-summary-dplyr-1" class="section level3">
-<h3><span class="header-section-number">15.7.4</span> dplyr Right Join Summary {example_right-join-summary-dplyr}</h3>
+<h3><span class="header-section-number">16.7.4</span> dplyr Right Join Summary {example_right-join-summary-dplyr}</h3>
 <pre class="sourceCode r"><code class="sourceCode r">customer_store_summary_droj &lt;-<span class="st"> </span>customer_table <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">right_join</span>(store_table, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;store_id&quot;</span>, <span class="st">&quot;store_id&quot;</span>), <span class="kw">suffix</span>(<span class="kw">c</span>(<span class="st">&quot;.c&quot;</span>, <span class="st">&quot;.s&quot;</span>)), <span class="dt">all =</span> store_table) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(
@@ -1235,9 +1238,9 @@ store_summary &lt;-<span class="st"> </span>store_table <span class="op">%&gt;%<
 </div>
 </div>
 <div id="full-join-1" class="section level2">
-<h2><span class="header-section-number">15.8</span> Full Join</h2>
+<h2><span class="header-section-number">16.8</span> Full Join</h2>
 <div id="sql-full-join-details-example_full-join-details-sql-1" class="section level3">
-<h3><span class="header-section-number">15.8.1</span> SQL Full Join Details {example_full-join-details-sql}</h3>
+<h3><span class="header-section-number">16.8.1</span> SQL Full Join Details {example_full-join-details-sql}</h3>
 <p>The full outer join is a conbination of the left and right outer joins and returns all matched and unmatched rows from the <code>ON</code> clause. The matched rows return their table column values and the unmatched rows return NULL column values. This can result in a very large result set.</p>
 <p>The next SQL block implements a full outer join and returns 12 rows. Change the <code>Show entries</code> from 10 to 25 to see all the entries.</p>
 <pre class="sourceCode r"><code class="sourceCode r">customer_store_details_sfoj &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,
@@ -1250,7 +1253,7 @@ store_summary &lt;-<span class="st"> </span>store_table <span class="op">%&gt;%<
 <script type="application/json" data-for="htmlwidget-a98751c486bb4e6734fc">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11"],["foj","foj","foj","foj","foj","foj","foj","foj","foj","foj","foj"],[595,596,597,598,599,600,601,602,603,604,null],["Terrence","Enrique","Freddie","Wade","Austin","Sophie","Sophie","John","Ian","Ed",null],["Gunderson","Forsythe","Duggan","Delvalle","Cintron","Yang","Yang","Smith","Frantz","Borasky",null],[1,1,1,1,2,3,2,4,5,6,null],[1,1,1,1,2,null,2,null,null,null,10],[1,1,1,1,2,null,2,null,null,null,10],[1,1,1,1,2,null,2,null,null,null,10]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>join_type<\/th>\n      <th>customer_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>c_store_id<\/th>\n      <th>s_store_id<\/th>\n      <th>manager_staff_id<\/th>\n      <th>address_id<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,5,6,7,8]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="dplyr-full-join-details-example_full-join-details-sql-1" class="section level3">
-<h3><span class="header-section-number">15.8.2</span> Dplyr Full Join Details {example_full-join-details-sql}</h3>
+<h3><span class="header-section-number">16.8.2</span> Dplyr Full Join Details {example_full-join-details-sql}</h3>
 <pre class="sourceCode r"><code class="sourceCode r">customer_store_detail_dfoj &lt;-<span class="st"> </span>customer_table <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">full_join</span>(store_table, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;store_id&quot;</span> =<span class="st"> &quot;store_id&quot;</span>), <span class="kw">suffix</span>(<span class="kw">c</span>(<span class="st">&quot;.c&quot;</span>, <span class="st">&quot;.s&quot;</span>))) <span class="op">%&gt;%</span>
 <span class="st">    </span><span class="kw">filter</span>((customer_id <span class="op">&gt;=</span><span class="st"> </span><span class="dv">595</span> <span class="op">&amp;</span><span class="st"> </span>customer_id <span class="op">&lt;=</span><span class="st"> </span><span class="dv">604</span>) <span class="op">|</span><span class="st"> </span><span class="kw">is.na</span>(customer_id)) <span class="op">%&gt;%</span>
@@ -1267,7 +1270,7 @@ store_summary &lt;-<span class="st"> </span>store_table <span class="op">%&gt;%<
 <script type="application/json" data-for="htmlwidget-90472fc291eea3b37ad9">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11"],[595,596,597,598,599,600,601,602,603,604,null],["Terrence","Enrique","Freddie","Wade","Austin","Sophie","Sophie","John","Ian","Ed",null],["Gunderson","Forsythe","Duggan","Delvalle","Cintron","Yang","Yang","Smith","Frantz","Borasky",null],[1,1,1,1,2,3,2,4,5,6,10],[1,1,1,1,2,3,2,4,5,6,null],[1,1,1,1,2,null,2,null,null,null,10],[1,1,1,1,2,null,2,null,null,null,10]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>s_store_id<\/th>\n      <th>c_store_id<\/th>\n      <th>manager_staff_id<\/th>\n      <th>s_address_id<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,4,5,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="sql-full-join-summary-example_full-join-summary-sql-1" class="section level3">
-<h3><span class="header-section-number">15.8.3</span> SQL Full Join Summary {example_full-join-summary-sql}</h3>
+<h3><span class="header-section-number">16.8.3</span> SQL Full Join Summary {example_full-join-summary-sql}</h3>
 <p>The result set below is ordered by the store.store_id.</p>
 <pre class="sourceCode r"><code class="sourceCode r">customer_store_summary_sfoj &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(
   con,
@@ -1281,7 +1284,7 @@ store_summary &lt;-<span class="st"> </span>store_table <span class="op">%&gt;%<
 <script type="application/json" data-for="htmlwidget-6c084255227fcd56827e">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7"],["foj","foj","foj","foj","foj","foj","foj"],[1,2,null,3,4,5,6],[1,2,10,null,null,null,null],[326,274,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>join_type<\/th>\n      <th>c_store_id<\/th>\n      <th>s_store_id<\/th>\n      <th>fojs<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="dplyr-full-join-summary-example_full-join-summary-dplyr-1" class="section level3">
-<h3><span class="header-section-number">15.8.4</span> Dplyr Full Join Summary {example_full-join-summary-dplyr}</h3>
+<h3><span class="header-section-number">16.8.4</span> Dplyr Full Join Summary {example_full-join-summary-dplyr}</h3>
 <p>The full outer join summary seven rows. Store_id = {1,2} appear in both table tables. Store_id = {3 - 6} appear only in the customer table which is on the left. Store_id = 10 appears only in the <code>store</code> table which is on the right.</p>
 <pre class="sourceCode r"><code class="sourceCode r">customer_store_summary_dfoj &lt;-<span class="st"> </span>customer_table <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">full_join</span>(store_table, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;store_id&quot;</span>, <span class="st">&quot;store_id&quot;</span>), <span class="kw">suffix</span>(<span class="kw">c</span>(<span class="st">&quot;.c&quot;</span>, <span class="st">&quot;.s&quot;</span>))) <span class="op">%&gt;%</span>
@@ -1298,7 +1301,7 @@ store_summary &lt;-<span class="st"> </span>store_table <span class="op">%&gt;%<
 </div>
 </div>
 <div id="semi-join-1" class="section level2">
-<h2><span class="header-section-number">15.9</span> Semi Join</h2>
+<h2><span class="header-section-number">16.9</span> Semi Join</h2>
 <p>Below is the <code>dplyr</code> semi_join documentation.</p>
 <pre><code>semi_join()
 return all rows from x where there are matching values in y, keeping just columns from x.
@@ -1306,10 +1309,10 @@ return all rows from x where there are matching values in y, keeping just column
 A semi join differs from an inner join because an inner join will return one row of x for each matching row of y, where a semi join will never duplicate rows of x.</code></pre>
 <p>The semi join always returns one and only one row from the x table that satisfies the inner join condition. If we look at one key value on both x and y where the x table has 1 x.key row and y and n y.key rows, then the inner join returns n x.key rows, (1-to-n), and the semi-join returns just one x.key row, (1-to-1).</p>
 <div id="sql-semi-join-customer-to-store-example_semi-join-sql-1-1" class="section level3">
-<h3><span class="header-section-number">15.9.1</span> SQL Semi Join Customer to Store {example_semi-join-sql-1}</h3>
+<h3><span class="header-section-number">16.9.1</span> SQL Semi Join Customer to Store {example_semi-join-sql-1}</h3>
 <p>SQL does not have an explicity ‘semi join’ key word. The <code>semi join</code> reduces relationships from 1-to-n to 1-to-1. SQL uses an EXISTS - subquery syntax to implement the <code>semi join</code>.</p>
 <div id="sql-exists-and-correlated-subquery-syntax-1" class="section level4">
-<h4><span class="header-section-number">15.9.1.1</span> SQL EXISTS and Correlated SubQuery Syntax</h4>
+<h4><span class="header-section-number">16.9.1.1</span> SQL EXISTS and Correlated SubQuery Syntax</h4>
 <pre><code>select * 
   FROM table1 l
  WHERE EXISTS(SELECT 1 FROM table2 r where l.c = r.c)
@@ -1330,7 +1333,7 @@ The EXISTS keyword checks if one or more rows satsify the SELECT clause enclosed
 </div>
 </div>
 <div id="dplyr-semi-join-customer-to-store-example_semi-join-dplyr-1-1" class="section level3">
-<h3><span class="header-section-number">15.9.2</span> Dplyr Semi Join Customer to Store {example_semi-join-dplyr-1}</h3>
+<h3><span class="header-section-number">16.9.2</span> Dplyr Semi Join Customer to Store {example_semi-join-dplyr-1}</h3>
 <p>The corresponding Dplyr version is shown in the next code block.</p>
 <pre class="sourceCode r"><code class="sourceCode r">customer_store_dsj &lt;-<span class="st"> </span>customer_table <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">semi_join</span>(store_table, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;store_id&quot;</span> =<span class="st"> &quot;store_id&quot;</span>), <span class="kw">suffix</span>(<span class="kw">c</span>(<span class="st">&quot;.c&quot;</span>, <span class="st">&quot;.s&quot;</span>))) <span class="op">%&gt;%</span>
@@ -1343,7 +1346,7 @@ The EXISTS keyword checks if one or more rows satsify the SELECT clause enclosed
 <script type="application/json" data-for="htmlwidget-88984347109043009685">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["sj","sj","sj","sj","sj","sj"],[595,596,597,598,599,601],["Terrence","Enrique","Freddie","Wade","Austin","Sophie"],["Gunderson","Forsythe","Duggan","Delvalle","Cintron","Yang"],[1,1,1,1,2,2]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>join_type<\/th>\n      <th>customer_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>store_id<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="sql-semi-join-store-to-customer-example_semi-join-sql-2-1" class="section level3">
-<h3><span class="header-section-number">15.9.3</span> SQL Semi Join Store to Customer {example_semi-join-sql-2}</h3>
+<h3><span class="header-section-number">16.9.3</span> SQL Semi Join Store to Customer {example_semi-join-sql-2}</h3>
 <p>In the following Semi Join, the driving table is switched to the <code>store</code> table and our 10 sample customers as the right table.</p>
 <pre class="sourceCode r"><code class="sourceCode r">store_customer_detail_ssj &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,
 <span class="st">&quot;select &#39;sj&#39; join_type,s.store_id s_store_id,s.manager_staff_id, s.address_id</span>
@@ -1360,7 +1363,7 @@ The EXISTS keyword checks if one or more rows satsify the SELECT clause enclosed
 <p>Here we see that we get the two rows from the store table that satisfy the s.store_id = c.store_id, store_id = {1,2}. In this example the relationship between store and customer is 1-to-n, but we do not know that from the output.</p>
 </div>
 <div id="dplyr-semi-join-store-to-customer-example_semi-join-dplyr-2-1" class="section level3">
-<h3><span class="header-section-number">15.9.4</span> Dplyr Semi Join Store to Customer {example_semi-join-dplyr-2}</h3>
+<h3><span class="header-section-number">16.9.4</span> Dplyr Semi Join Store to Customer {example_semi-join-dplyr-2}</h3>
 <p>The corresponding Dplyr version is shown in the next code block. Note that the filter condition on the customer table has been removed because the semi_join does not return any customer columns.</p>
 <pre class="sourceCode r"><code class="sourceCode r">store_customer_dsj &lt;-<span class="st">  </span>store_table <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">semi_join</span>(customer_table, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;store_id&quot;</span> =<span class="st"> &quot;store_id&quot;</span>), <span class="kw">suffix</span>(<span class="kw">c</span>(<span class="st">&quot;.c&quot;</span>, <span class="st">&quot;.s&quot;</span>))) <span class="op">%&gt;%</span>
@@ -1371,7 +1374,7 @@ The EXISTS keyword checks if one or more rows satsify the SELECT clause enclosed
 <script type="application/json" data-for="htmlwidget-5bc260cc0681d28b4458">{"x":{"filter":"none","data":[["1","2"],["sj","sj"],[1,2],[1,2],[1,2]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>join_type<\/th>\n      <th>store_id<\/th>\n      <th>manager_staff_id<\/th>\n      <th>address_id<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="sql-semi-join-store-to-customer-take-2-example_semi-join-sql-3-1" class="section level3">
-<h3><span class="header-section-number">15.9.5</span> SQL Semi Join Store to Customer Take 2 {example_semi-join-sql-3}</h3>
+<h3><span class="header-section-number">16.9.5</span> SQL Semi Join Store to Customer Take 2 {example_semi-join-sql-3}</h3>
 <p>In the <code>Semi Join Customer to Store</code> examples, we saw four rows with store_id = 1 and two rows with store_id = 2. The EXISTS key word is replaced with a count of the matching rows.</p>
 <pre class="sourceCode r"><code class="sourceCode r">store_customer_detail_ssj2 &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con,
 <span class="st">&quot;select &#39;sj&#39; join_type,s.store_id s_store_id,s.manager_staff_id, s.address_id</span>
@@ -1389,10 +1392,10 @@ The EXISTS keyword checks if one or more rows satsify the SELECT clause enclosed
 </div>
 </div>
 <div id="anti-joins-1" class="section level2">
-<h2><span class="header-section-number">15.10</span> Anti Joins</h2>
+<h2><span class="header-section-number">16.10</span> Anti Joins</h2>
 <p>A <code>semi join</code> returns rows from one table that has one or more matching rows in the other table. The <code>anti join</code> returns rows from one table that has no matching rows in the other table.</p>
 <div id="dplyr-anti-join-example_anti-join-dplyr-1" class="section level4">
-<h4><span class="header-section-number">15.10.0.1</span> dplyr anti Join {example_anti-join-dplyr}</h4>
+<h4><span class="header-section-number">16.10.0.1</span> dplyr anti Join {example_anti-join-dplyr}</h4>
 <p>The anti join is an outer join without the inner joined rows. It only returns the rows from the driving table that do not have a matching row from the other table.</p>
 <pre class="sourceCode r"><code class="sourceCode r">customer_store_aj &lt;-<span class="st"> </span>customer_table <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">    </span><span class="kw">filter</span>(customer_id <span class="op">&gt;</span><span class="st"> </span><span class="dv">594</span>) <span class="op">%&gt;%</span>
@@ -1401,11 +1404,11 @@ The EXISTS keyword checks if one or more rows satsify the SELECT clause enclosed
 
 <span class="kw">sp_print_df</span>(customer_store_aj)</code></pre>
 <div id="htmlwidget-a769f33e9bc2b11da24f" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-a769f33e9bc2b11da24f">{"x":{"filter":"none","data":[["1","2","3","4"],[600,602,603,604],[3,4,5,6],["Sophie","John","Ian","Ed"],["Yang","Smith","Frantz","Borasky"],["sophie.yang@sakilacustomer.org","john.smith@sakilacustomer.org","ian.frantz@sakilacustomer.org","ed.borasky@sakilacustomer.org"],[1,2,3,4],[true,true,true,true],["2019-02-18","2019-02-18","2019-02-18","2019-02-18"],["2019-02-18T08:00:00Z","2019-02-18T08:00:00Z","2019-02-18T08:00:00Z","2019-02-18T08:00:00Z"],[1,1,1,1],["anti_join","anti_join","anti_join","anti_join"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>address_id<\/th>\n      <th>activebool<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n      <th>active<\/th>\n      <th>join_type<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,6,10]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-a769f33e9bc2b11da24f">{"x":{"filter":"none","data":[["1","2","3","4"],[600,602,603,604],[3,4,5,6],["Sophie","John","Ian","Ed"],["Yang","Smith","Frantz","Borasky"],["sophie.yang@sakilacustomer.org","john.smith@sakilacustomer.org","ian.frantz@sakilacustomer.org","ed.borasky@sakilacustomer.org"],[1,2,3,4],[true,true,true,true],["2019-02-22","2019-02-22","2019-02-22","2019-02-22"],["2019-02-22T08:00:00Z","2019-02-22T08:00:00Z","2019-02-22T08:00:00Z","2019-02-22T08:00:00Z"],[1,1,1,1],["anti_join","anti_join","anti_join","anti_join"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>address_id<\/th>\n      <th>activebool<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n      <th>active<\/th>\n      <th>join_type<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,6,10]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <p>All of the rows returned from the customer table have store_id = {3 - 6} which do not exist in the store_id.</p>
 </div>
 <div id="sql-anti-join-1-not-exists-and-correlated-subquery-example_anti-join-sql-1-1" class="section level4">
-<h4><span class="header-section-number">15.10.0.2</span> SQL anti Join 1, NOT EXISTS and Correlated subquery {example_anti-join-sql-1}</h4>
+<h4><span class="header-section-number">16.10.0.2</span> SQL anti Join 1, NOT EXISTS and Correlated subquery {example_anti-join-sql-1}</h4>
 <p>SQL doesn’t have an anti join key word. Here are three different ways to achieve the same result.</p>
 <p>This is the negation of the same construct used in the semi join discusion. The anit-join tests for 0 matches instead of 1 or more matches for the semi-join.</p>
 <pre class="sourceCode r"><code class="sourceCode r">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(
@@ -1421,7 +1424,7 @@ The EXISTS keyword checks if one or more rows satsify the SELECT clause enclosed
 <script type="application/json" data-for="htmlwidget-5afb8971f37330fd8cc4">{"x":{"filter":"none","data":[["1","2","3","4"],["aj","aj","aj","aj"],[600,602,603,604],["Sophie","John","Ian","Ed"],["Yang","Smith","Frantz","Borasky"],[3,4,5,6]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>join_type<\/th>\n      <th>customer_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>store_id<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="sql-anti-join-2-left-outer-join-where-null-on-right-example_anti-join-sql-1-1" class="section level4">
-<h4><span class="header-section-number">15.10.0.3</span> SQL anti Join 2, Left Outer Join where NULL on Right {example_anti-join-sql-1}</h4>
+<h4><span class="header-section-number">16.10.0.3</span> SQL anti Join 2, Left Outer Join where NULL on Right {example_anti-join-sql-1}</h4>
 <pre class="sourceCode r"><code class="sourceCode r">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(
   con,
   <span class="st">&quot;select &#39;aj&#39; join_type, customer_id, first_name, last_name, c.store_id ajs</span>
@@ -1434,7 +1437,7 @@ The EXISTS keyword checks if one or more rows satsify the SELECT clause enclosed
 <script type="application/json" data-for="htmlwidget-e9ae68682532316859d5">{"x":{"filter":"none","data":[["1","2","3","4"],["aj","aj","aj","aj"],[600,602,603,604],["Sophie","John","Ian","Ed"],["Yang","Smith","Frantz","Borasky"],[3,4,5,6]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>join_type<\/th>\n      <th>customer_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>ajs<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="sql-anti-join-3-id-in-driving-table-and-not-in-lookup-table-example_anti-join-sql-3-1" class="section level4">
-<h4><span class="header-section-number">15.10.0.4</span> SQL anti Join 3, ID in driving table and NOT IN lookup table {example_anti-join-sql-3}</h4>
+<h4><span class="header-section-number">16.10.0.4</span> SQL anti Join 3, ID in driving table and NOT IN lookup table {example_anti-join-sql-3}</h4>
 <pre class="sourceCode r"><code class="sourceCode r">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(
   con,
   <span class="st">&quot;select &#39;aj&#39; join_type, customer_id, first_name, last_name, c.store_id</span>
@@ -1484,7 +1487,7 @@ sp_print_df(customer_store_details_sij)
 </div>
 </div>
 <div id="non-equa-join-example-1" class="section level2">
-<h2><span class="header-section-number">15.11</span> Non-Equa-Join Example</h2>
+<h2><span class="header-section-number">16.11</span> Non-Equa-Join Example</h2>
 <p>All the previous examples are equa-joins and is the most common type of join. The next example is made up and shows a ‘&lt;=’ join. The <code>store</code> table is usd. Assume that the store_id actually represents some distance. The example shows all distances &lt;= to all other distances.</p>
 <pre class="sourceCode r"><code class="sourceCode r">store_store_slej &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(
   con,
@@ -1496,7 +1499,7 @@ sp_print_df(customer_store_details_sij)
 <div id="htmlwidget-33be21b5fff197bb7cc4" style="width:100%;height:auto;" class="datatables html-widget"></div>
 <script type="application/json" data-for="htmlwidget-33be21b5fff197bb7cc4">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["lej","lej","lej","lej","lej","lej"],[1,1,1,2,2,10],[1,2,10,2,10,10],[0,1,9,0,8,0]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>join_type<\/th>\n      <th>starts<\/th>\n      <th>stops<\/th>\n      <th>delta<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <div id="dplyr-non-equa-join-example_inner-join-dplyr-1" class="section level3">
-<h3><span class="header-section-number">15.11.1</span> Dplyr Non-equa Join {example_inner-join-dplyr}</h3>
+<h3><span class="header-section-number">16.11.1</span> Dplyr Non-equa Join {example_inner-join-dplyr}</h3>
 <p>Dplyr doesn’t currently support a non-equa join. In the by parameter, one can not change the ‘=’ to ‘&lt;=’ as shown below.</p>
 <pre><code>{r}
 
