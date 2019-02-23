@@ -31,7 +31,9 @@ sp_check_that_docker_is_up()
 ```
 
 ```
-## [1] "Docker is up but running no containers"
+## [1] "Docker is up, running these containers:"                                                                                                      
+## [2] "CONTAINER ID        IMAGE                COMMAND                  CREATED              STATUS              PORTS                    NAMES"    
+## [3] "a92fb82299c6        postgres-dvdrental   \"docker-entrypoint.s…\"   About a minute ago   Up 48 seconds       0.0.0.0:5432->5432/tcp   sql-pet"
 ```
 
 ## Clean up if appropriate
@@ -118,7 +120,7 @@ sp_docker_containers_tibble()
 ## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 7a2ede048f6c post… docker… 2019-02-2… Less t… 0.0.… Up Le… 0B (… sql-…
+## 1 73422e24c530 post… docker… 2019-02-2… 1 seco… 0.0.… Up Le… 0B (… sql-…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 
@@ -198,7 +200,7 @@ sp_docker_containers_tibble(list_all = TRUE)
 ## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 7a2ede048f6c post… docker… 2019-02-2… 4 seco… <NA>  Exite… 0B (… sql-…
+## 1 73422e24c530 post… docker… 2019-02-2… 5 seco… <NA>  Exite… 0B (… sql-…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 
@@ -214,7 +216,7 @@ sp_docker_containers_tibble()
 ## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 7a2ede048f6c post… docker… 2019-02-2… 5 seco… 0.0.… Up Le… 63B … sql-…
+## 1 73422e24c530 post… docker… 2019-02-2… 6 seco… 0.0.… Up Le… 63B … sql-…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 Connect to the `dvdrental` database in PostgreSQL:
@@ -263,7 +265,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## 7a2ede048f6c        postgres-dvdrental   "docker-entrypoint.s…"   6 seconds ago       Exited (0) Less than a second ago                       sql-pet
+## 73422e24c530        postgres-dvdrental   "docker-entrypoint.s…"   7 seconds ago       Exited (0) Less than a second ago                       sql-pet
 ```
 
 Next time, you can just use this command to start the container: 
