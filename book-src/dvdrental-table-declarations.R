@@ -1,0 +1,17 @@
+# Declare all the tables in the DVDRENTAL database that are used in dplyr exercises.
+
+actor_table <- tbl(con,"actor")
+address_table <- tbl(con, "address")
+category_table <- tbl(con,"category")
+city_table <- tbl(con, "city")
+country_table <- tbl(con, "country")
+customer_table <- tbl(con, "customer")
+film_table <- tbl(con, "film")
+film_actor_table <- tbl(con, "film_actor")
+film_category_table <- tbl(con, "film_category")
+inventory_table <- tbl(con, "inventory")
+language_table <- tbl(con, "language")
+rental_table <- tbl(con, "rental")
+payment_table <- tbl(con, "payment")
+staff_table <- tbl(con, "staff")
+store_table <- tbl(con, "store")
