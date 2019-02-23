@@ -1,0 +1,1732 @@
+---
+output:
+  html_document:
+    code_folding: "hide"
+---
+
+# SQL Joins exercises {#chapter_sql-joins-exercises}
+
+<!-- 
+When vendors implement such changes, their QA team performs rigorous testing before releasing the new functionality to their client base.  Their clients' IT departments also test the new functionality in their own DEV/QA environments before promoting the new functionality into their production environments.
+
+Sometimes the vendors application doesn't quite address a customers need or a new need arises say a new government regulation.  
+
+*  Many database vendor applictions recognize that they cannot address of all their custommers requirements and build in special user defined columns.  The business can activate a column and use it to address some business need not designed into the application.
+
+*  Sometimes business users will a column that doesn't make sense for their business and use it anyway to address a one time business need.  
+
+3.  The business re-purposes a column in a table and the column definition changes.  Again there is a break in the meaning of the new columns between the existing records and new records.
+-->
+
+> This chapter demonstrates how to:
+> 
+> * Use primary and foreign keys to retrieve specific rows of a table
+> * do different kinds of join queries
+> * Exercises
+> * Query the database to get basic information about each dvdrental story
+> * How to interact with the database using different strategies
+>   * Parameterized table description function
+>   * Parameterized table primary foreign keys function
+
+The DVD rental database data is too clean to demonstrate some join concepts.  To dirty the data, this chapter performs a number of database operations on tables that a data analyst is typically restricted from doing.  
+
+1.  Deleting records from tables.
+2.  Inserting records from tables.
+3.  Enabling and disabling table constraints.
+
+In your Docker environment, you have all database privledges.
+
+.
+```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
+# These packages are called in almost every chapter of the book:
+library(tidyverse)
+library(DBI)
+library(RPostgres)
+library(glue)
+library(here)
+require(knitr)
+library(dbplyr)
+library(sqlpetr)
+```
+
+```{r codeblock options,echo=FALSE}
+ECHO_CODE_BLOCK = FALSE
+HEAD_N = 10  #set to 0 for all rows or head(x,n=HEAD_N)
+INCLUDE_OUTPUT  = FALSE
+```
+
+
+```{r}
+blue <- function(x)
+{
+  # x string
+  # color
+  outputFormat = knitr::opts_knit$get("rmarkdown.pandoc.to")
+  if(outputFormat == 'html')
+    paste('<style>div.blue '
+         ,'{ background-color:#e6f0ff; border-radius: 5px; padding:20px;}'
+         ,'</style>'
+         ,'<div class = "blue">'
+         ,x
+         ,'</div>'
+         ,sep=''
+         )
+  else
+    x
+}
+```
+
+
+Verify Docker is up and running:
+```{r}
+sp_check_that_docker_is_up()
+```
+
+Verify pet DB is available, it may be stopped.
+
+```{r}
+sp_show_all_docker_containers()
+```
+
+Start up the `docker-pet` container
+
+```{r}
+sp_docker_start("sql-pet")
+```
+
+Now connect to the database with R
+
+```{r}
+# need to wait for Docker & Postgres to come up before connecting.
+
+con <- sp_get_postgres_connection(
+  user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
+  password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
+  dbname = "dvdrental",
+  seconds_to_test = 30
+)
+```
+
+The following code block deletes and inserts records into the different tables used in the exercises in this chpater.  The techniques used in this code block are discussed in detail in the appendix, ??add link here.??  
+
+```{r collapse=TRUE}
+# source(file=here('book-src/sql_pet_data.R'),echo=TRUE)
+dbExecute(con, "delete from film_category where film_id >= 1001;")
+dbExecute(con, "delete from rental where rental_id >= 16050;")
+dbExecute(con, "delete from inventory where film_id >= 1001;")
+dbExecute(con, "delete from film where film_id >= 1001;")
+dbExecute(con, "delete from customer where customer_id >= 600;")
+dbExecute(con, "delete from store where store_id > 2;")
+
+# Insert new customers
+dbExecute(
+  con,
+  "insert into customer
+  (customer_id,store_id,first_name,last_name,email,address_id,activebool
+  ,create_date,last_update,active)
+  values(600,3,'Sophie','Yang','sophie.yang@sakilacustomer.org',1,TRUE,now(),now()::date,1)
+  ,(601,2,'Sophie','Yang','sophie.yang@sakilacustomer.org',1,TRUE,now(),now()::date,1)
+  ,(602,4,'John','Smith','john.smith@sakilacustomer.org',2,TRUE,now()::date,now()::date,1)
+  ,(603,5,'Ian','Frantz','ian.frantz@sakilacustomer.org',3,TRUE,now()::date,now()::date,1)
+  ,(604,6,'Ed','Borasky','ed.borasky@sakilacustomer.org',4,TRUE,now()::date,now()::date,1)
+  ;"
+)
+
+# Insert new store record
+dbExecute(con, "ALTER TABLE store DISABLE TRIGGER ALL;")
+df <- data.frame(
+  store_id = 10
+  , manager_staff_id = 10
+  , address_id = 10
+  , last_update = Sys.time()
+)
+dbWriteTable(con, "store", value = df, append = TRUE, row.names = FALSE)
+dbExecute(con, "ALTER TABLE store ENABLE TRIGGER ALL;")
+
+# Insert new film row.
+dbExecute(
+  con,
+  "insert into film
+  (film_id,title,description,release_year,language_id
+  ,rental_duration,rental_rate,length,replacement_cost,rating
+  ,last_update,special_features,fulltext)
+  values(1001,'Sophie''s Choice','Bad Choices',2018,1
+  ,7,4.99,120,14.99,'PG'
+  ,now()::date,'{Trailers}','')
+  ;
+  ")
+
+# Insert Film Category
+dbExecute(
+  con,
+  "insert into film_category
+  (film_id,category_id,last_update)
+  values(1001,6,now()::date)
+  ,(1001,7,now()::date)
+  ;")
+
+# Insert new film into inventory.
+dbExecute(
+  con,
+  "insert into inventory
+  (inventory_id,film_id,store_id,last_update)
+  values(4582,1001,1,now()::date)
+  ,(4583,1001,2,now()::date)
+  ;")
+
+# Insert new film rental record.
+dbExecute(
+  con,
+  "insert into rental
+  (rental_id,rental_date,inventory_id,customer_id,return_date,staff_id,last_update)
+  values(16050,now()::date - interval '1 week',4582,600,now()::date,1,now()::date)
+  ;")
+```
+
+# SQL Union Exercise
+
+When joining many tables, it is helpful to have the number of rows from each table as an initial sanity check that the joins are returning a reasonable number of rows.
+
+## 1.  How many rows are in each table?
+
+```{r, code_folding='unhide'}
+table_rows_sql <- dbGetQuery(
+  con,
+  "select *
+                 from (      select 'actor' tbl_name,count(*) from actor 
+                       union select 'category' tbl_name,count(*) from category
+                       union select 'film' tbl_name,count(*) from film
+                       union select 'film_actor' tbl_name,count(*) from film_actor
+                       union select 'film_category' tbl_name,count(*) from film_category
+                       union select 'language' tbl_name,count(*) from language
+                       union select 'inventory' tbl_name,count(*) from inventory
+                       union select 'rental' tbl_name,count(*) from rental
+                       union select 'payment' tbl_name,count(*) from payment
+                       union select 'staff' tbl_name,count(*) from staff
+                       union select 'customer' tbl_name,count(*) from customer
+                       union select 'address' tbl_name,count(*) from address
+                       union select 'city' tbl_name,count(*) from city
+                       union select 'country' tbl_name,count(*) from country
+                       union select 'store' tbl_name,count(*) from store
+                       ) counts
+                  order by tbl_name
+                 ;
+                "
+)
+sp_print_df(table_rows_sql)
+```
+
+#### Replicate the output above using dplyr syntax.
+
+```{r, include=INCLUDE_OUTPUT}
+actor_table <- tbl(con,"actor")
+address_table <- tbl(con, "address")
+category_table <- tbl(con,"category")
+city_table <- tbl(con, "city")
+country_table <- tbl(con, "country")
+customer_table <- tbl(con, "customer")
+film_table <- tbl(con, "film")
+film_actor_table <- tbl(con, "film_actor")
+film_category_table <- tbl(con, "film_category")
+inventory_table <- tbl(con, "inventory")
+language_table <- tbl(con, "language")
+rental_table <- tbl(con, "rental")
+payment_table <- tbl(con, "payment")
+staff_table <- tbl(con, "staff")
+store_table <- tbl(con, "store")
+
+table_rows_dplyr <- 
+  as.data.frame(actor_table %>% mutate(name = "actor") %>% group_by(name) %>% 
+                  summarize(rows = n())) %>% 
+  union(as.data.frame(address_table %>% mutate(name = "address") %>% group_by(name) %>% 
+                        summarize(rows = n()))) %>% 
+  union (as.data.frame(category_table %>% mutate(name = "category") %>% group_by(name) %>% 
+                         summarize(rows = n()))) %>% 
+  union(as.data.frame(country_table %>% mutate(name = "country") %>% group_by(name) %>% 
+                        summarize(rows = n()))) %>% 
+  union(as.data.frame(customer_table %>% mutate(name = "customer") %>% group_by(name) %>% 
+                        summarize(rows = n()))) %>% 
+  union(as.data.frame(film_table %>% mutate(name = "film") %>% group_by(name) %>% 
+                      summarize(rows = n()))) %>% 
+  union(as.data.frame(film_actor_table %>% mutate(name = "film_actor") %>% group_by(name) %>% 
+                      summarize(rows = n()))) %>% 
+  union(as.data.frame(film_category_table %>% mutate(name = "film_category") %>% group_by(name) %>%
+                      summarize(rows = n()))) %>% 
+  union(as.data.frame(inventory_table %>% mutate(name = "inventory") %>% group_by(name) %>% 
+                      summarize(rows = n()))) %>% 
+  union(as.data.frame(language_table %>% mutate(name = "language") %>% group_by(name) %>% 
+                      summarize(rows = n()))) %>% 
+  union(as.data.frame(rental_table %>% mutate(name = "rental") %>% group_by(name) %>% 
+                      summarize(rows = n()))) %>% 
+  union(as.data.frame(payment_table %>% mutate(name = "payment") %>% group_by(name) %>% 
+                      summarize(rows = n()))) %>% 
+  union(as.data.frame(staff_table %>% mutate(name = "staff") %>% group_by(name) %>% 
+                      summarize(rows = n()))) %>% 
+  union(as.data.frame(store_table %>% mutate(name = "store") %>% group_by(name) %>% 
+                      summarize(rows = n()))) %>%
+  arrange(name)
+
+sp_print_df(table_rows_dplyr)
+```
+
+
+## Exercises
+
+### 1. Where is the DVD Rental Business located?
+
+To answer this question we look at the `store`, `address`, `city`, and `country` tables to answer this question.
+
+```{r, code_folding='unhide'}
+store_locations_sql <- dbGetQuery(con,
+"select s.store_id
+       ,a.address
+       ,c.city
+       ,a.district
+       ,a.postal_code
+       ,c2.country
+       ,s.last_update
+   from store s 
+         join address a on s.address_id = a.address_id
+         join city c on a.city_id = c.city_id
+         join country c2 on c.country_id = c2.country_id
+")
+sp_print_df(store_locations_sql)
+```
+
+Our DVD Rental business is international and operates in three countries, Canada, Austraila, and the United States.  Each country has one store. 
+
+#### Replicate the output above using dplyr syntax.
+
+```{r, include=INCLUDE_OUTPUT  ,tidy=TRUE}
+# sp_tbl_descr('store')
+# sp_tbl_pk_fk('table_name')
+# sp_print_df(table_rows_sql)
+
+store_table <- DBI::dbReadTable(con, "store")
+address_table <- DBI::dbReadTable(con, "address")
+city_table <- DBI::dbReadTable(con, "city")
+country_table <- DBI::dbReadTable(con,"country")
+
+store_locations_dplyr <- store_table %>%
+    inner_join(address_table, by = c("address_id" = "address_id"), suffix(c(".s", ".a"))) %>%
+    inner_join(city_table, by = c("city_id" = "city_id"), suffix(c(".a", ".c"))) %>%
+    inner_join(country_table, by = c("country_id" = "country_id"), suffix(c(".a", ".c"))) %>%
+    select (store_id,address,city,district,postal_code,country,last_update.x)
+sp_print_df(store_locations_dplyr)
+```
+
+### 2. List Each Store and the Staff Contact Information?
+
+To answer this question we look at the `store`, `staff`, `address`, `city`, and `country` tables.
+
+```{r, code_folding='unhide'}
+store_employees_sql <- dbGetQuery(con,
+"select st.store_id
+       ,s.first_name
+       ,s.last_name
+       ,s.email
+       ,a.phone
+       ,a.address
+       ,c.city
+       ,a.district
+       ,a.postal_code
+       ,c2.country
+   from store st left join staff s on st.manager_staff_id = s.staff_id 
+         left join address a on s.address_id = a.address_id
+         left join city c on a.city_id = c.city_id
+         left join country c2 on c.country_id = c2.country_id
+")
+sp_print_df(store_employees_sql)
+```
+
+Our DVD Rental business is international and operates in three countries, Canada, Austraila, and the United States.  Each country has one store.  The stores in Canada and Austrailia have one employee each, Mike Hillyer and Jon Stephens respectively.  The store in the United States has no employees yet.
+
+#### Replicate the output above using dplyr syntax.
+
+```{r include=INCLUDE_OUTPUT}
+store_table <- DBI::dbReadTable(con, "store")
+staff_table <- DBI::dbReadTable(con, "staff")
+address_table <- DBI::dbReadTable(con, "address")
+city_table <- DBI::dbReadTable(con, "city")
+country_table <- DBI::dbReadTable(con,"country")
+
+store_locations_dplyr <- store_table %>%
+  left_join (staff_table, by = c("manager_staff_id" = "staff_id"),suffix(c('sto','sta'))) %>%
+  left_join(address_table, by = c("address_id.y" = "address_id"), suffix(c(".sta", ".a"))) %>%
+  left_join(city_table, by = c("city_id" = "city_id"), suffix(c(".sta", ".city"))) %>%
+  left_join(country_table, by = c("country_id" = "country_id"), suffix(c(".city", ".cnt"))) %>%
+  select(store_id.x,first_name,last_name,email,phone,address,city,district,postal_code,country) 
+sp_print_df(store_locations_dplyr)
+
+```
+
+
+### 3. How Many Active, Inactive, and Total Customers Does the DVD Rental Business Have?
+
+To answer this question we look at the `customer` table.  In a previous chapter we observed that there are two columns, `activebool` and `active`.  We consider `active = 1` as active.
+
+```{r, code_folding='unhide'}
+customer_cnt_sql <- dbGetQuery(con,
+"SELECT sum(case when active = 1 then 1 else 0 end) active
+       ,sum(case when active = 0 then 1 else 0 end) inactive
+       ,count(*) total
+   from customer
+")
+
+sp_print_df(customer_cnt_sql)
+```
+
+`r sp_color_markdown_text('
+Our DVD Rental business is international and operates in three countries, Canada, Austraila, and the United States.  Each country has one store.  The stores in Canada and Austrailia have one employee each.  The store in the United States has no employees yet.  
+
+The business has 604 international customers, 589 are active and 15 inactive.','blue')`
+
+
+#### Replicate the output above using dplyr syntax.
+
+```{r include=INCLUDE_OUTPUT}
+customer_table <- DBI::dbReadTable(con, "customer")
+
+customer_cnt_dplyr <- customer_table %>% 
+  mutate(inactive = ifelse(active==0,1,0)) %>%
+    summarize(active   = sum(active)
+             ,inactive = sum(inactive)
+             ,total = n()
+             )
+sp_print_df(customer_cnt_dplyr)
+```
+
+### 4. How Many and What Percent of Customers Are From Each Country?
+
+To answer this question we look at the `customer`, `address`, `city`, and `country` tables. 
+
+```{r, code_folding='unhide'}
+customers_sql <- dbGetQuery(con,
+"select c.active,country.country,count(*) count
+              ,round(100 * count(*) / sum(count(*)) over(),4) as pct
+         from customer c
+              join address a on c.address_id = a.address_id
+              join city  on a.city_id = city.city_id
+              join country on city.country_id = country.country_id
+         group by c.active,country
+order by count(*) desc
+")
+sp_print_df(customers_sql)
+```
+
+`r sp_color_markdown_text('
+Based on the table above, the DVD Rental business has customers in 118 countries.  The DVD Rental business cannot have many walk in customers.  It may possibly use a mail order distribution model.
+
+For an international company, how are the different currencies converted to a standard currency?  Looking at the ERD, there is no currency conversion rate.','blue')`
+
+#### Replicate the output above using dplyr syntax.
+
+```{r include=INCLUDE_OUTPUT}
+customer_table <- DBI::dbReadTable(con, "customer")
+address_table <- DBI::dbReadTable(con, "address")
+city_table <- DBI::dbReadTable(con, "city")
+country_table <- DBI::dbReadTable(con,"country")
+
+customers_dplyr <- customer_table %>%
+    inner_join(address_table, by = c("address_id" = "address_id"), suffix(c(".s", ".a"))) %>%
+    inner_join(city_table, by = c("city_id" = "city_id"), suffix(c(".a", ".c"))) %>%
+    inner_join(country_table, by = c("country_id" = "country_id"), suffix(c(".a", ".c"))) %>%
+    group_by(active,country) %>%
+    summarize(count=n()) %>%
+    mutate(total=nrow(customer_table)
+          ,pct=round(100 * count/total,4)
+          ) %>%
+    arrange(desc(count)) %>%
+    select (active,country,count,pct) 
+sp_print_df(customers_dplyr)
+```
+
+### 5 What Countries Constitute the Top 25% of the Customer Base?
+
+Using the previous code, add two new columns.  One column shows a running total and the second column shows a running percentage.
+
+<!--
+The SQL block uses a nested SQL block.  The inner block is the same SQL used in the previous SQL code block.
+
+A subquery is a SELECT statement nested within another SELECT statement.  In the example below, the nested SQL block follows the `from` and enclosed in parenthesis.  The nested subquery is aliased as `ctry`.  The subquery returns intermediate results, country counts.
+
+```
+select ...
+  from (select ... from ...  where )
+ where ....  
+```
+-->
+
+To answer this question we look at the `customer`, `address`, `city`, and `country` tables again.
+
+```{r, code_folding='unhide'}
+customers_sql <- dbGetQuery(con,
+                            
+"select active,country,count
+       ,sum(count) over (order by count desc rows between unbounded preceding and current row) running_total
+       , pct
+       ,sum(pct) over (order by pct desc rows between unbounded preceding and current row) running_pct
+  from (-- Start of inner SQL Block
+        select c.active,country.country,count(*) count
+              ,round(100 * count(*) / sum(count(*)) over(),4) as pct
+         from customer c
+              join address a on c.address_id = a.address_id
+              join city  on a.city_id = city.city_id
+              join country on city.country_id = country.country_id
+         group by c.active,country
+       ) ctry  -- End of inner SQL Block
+ order by count desc
+")
+sp_print_df(customers_sql)
+```
+
+`r sp_color_markdown_text('
+The top 25% of the customer base are from India, China, the United States, and Japan.  The next six countries, the top 10, Mexico, Brazil, Russian Federation, Philipines, Indonesia, and Turkey round out the top 50% of the businesses customer base.','blue')`
+
+#### Replicate the output above using dplyr syntax.
+
+```{r include=INCLUDE_OUTPUT}
+customer_table <- DBI::dbReadTable(con, "customer")
+address_table <- DBI::dbReadTable(con, "address")
+city_table <- DBI::dbReadTable(con, "city")
+country_table <- DBI::dbReadTable(con,"country")
+
+customers_dplyr <- customer_table %>%
+    inner_join(address_table, by = c("address_id" = "address_id"), suffix(c(".s", ".a"))) %>%
+    inner_join(city_table, by = c("city_id" = "city_id"), suffix(c(".a", ".c"))) %>%
+    inner_join(country_table, by = c("country_id" = "country_id"), suffix(c(".a", ".c"))) %>%
+    group_by(active,country) %>%
+    summarize(count=n()) %>%
+    mutate(total=nrow(customer_table)
+          ,pct=round(100 * count/total,4)
+          ) %>%
+    arrange(desc(count)) %>%
+    mutate(running_pct=cumsum(pct)
+          ,running_total=cumsum(count)) %>%
+    select (country,count,running_total,pct,running_pct) 
+sp_print_df(customers_dplyr)
+```
+
+### 6. How many customers are in Australia and Canada?
+
+```{r, code_folding='unhide'}
+customers_sql %>% filter(country == 'Australia' | country == 'Canada')
+```
+
+`r sp_color_markdown_text("The two countries with a store with an employee have less the 2% of the business' customer base world wide.",'blue')`
+
+### 7. How Many Languages?
+
+With an international customer base, how many languages does the DVD Rental business distribute DVD's in.
+
+To answer this question we look at the `language` table.
+
+```{r, code_folding='unhide'}
+languages_sql <- dbGetQuery(con,
+"
+select * from language
+")
+
+sp_print_df(languages_sql)
+```
+
+DVD's are distributed in six languages.
+
+#### Replicate the output above using dplyr syntax.
+
+```{r include=INCLUDE_OUTPUT}
+language_table <- DBI::dbReadTable(con, "language")
+
+sp_print_df(language_table)
+```
+
+### 8.  What is the distribution of DVD's by Language 
+
+To answer this question we look at the `language` and `film` tables.
+
+```{r, code_folding='unhide'}
+language_distribution_sql <- dbGetQuery(con,
+'
+select l.language_id,name "language",count(f.film_id)
+  from language l left join film f on l.language_id = f.language_id
+group by l.language_id,name
+order by l.language_id
+')
+
+sp_print_df(language_distribution_sql)
+```
+
+`r sp_color_markdown_text("This is a surprise.  For an international customer base, the entire stock of 1001 DVD's are in English only.",'blue')`
+
+#### Replicate the output above using dplyr syntax.
+
+```{r include=INCLUDE_OUTPUT}
+language_table <- DBI::dbReadTable(con, "language")
+film_table <- DBI::dbReadTable(con, "film")
+
+language_distribution_dplyr <- language_table %>%
+    left_join(film_table, by = c("language_id" = "language_id"), suffix(c(".s", ".a"))) %>%
+    group_by(language_id,name) %>%
+    summarize(count = sum(!is.na(title)))
+sp_print_df(language_distribution_dplyr)
+```
+
+### 9.  What are the number of rentals and rented amount by store, by month?
+
+To answer this question we look at the `rental`, `inventory`, and `film` tables to answer this question. 
+
+```{r, code_folding='unhide'}
+film_rank_sql <- dbGetQuery(con,
+"select *
+       ,sum(rental_amt) over (order by yyyy_mm,store_id rows 
+                              between unbounded preceding and current row) running_rental_amt
+   from (select yyyy_mm,store_id,rentals,rental_amt
+               ,sum(rentals) over(partition by yyyy_mm order by store_id) mo_rentals
+               ,sum(rental_amt) over (partition by yyyy_mm order by store_id) mo_rental_amt
+           from (select to_char(rental_date,'yyyy-mm') yyyy_mm
+                       ,i.store_id,count(*) rentals, sum(f.rental_rate) rental_amt
+                   from rental r join inventory i on r.inventory_id = i.inventory_id 
+                        join film f on i.film_id = f.film_id
+                 group by to_char(rental_date,'yyyy-mm'),i.store_id
+                ) as details
+        ) as mo_running
+order by yyyy_mm,store_id
+")
+sp_print_df(film_rank_sql)
+```
+
+We have data for five periods.  The first four months from 2005-05 to 2005-08 the business is booming.  It started off with 1156 rentals with recievables of 3388.44.  The next month, 2005-06, the rentals doubled, 2311 rentals with recievables of 6775.89.  The third month, 2005-07, the rentals nearly tripled from the previous month, 6709 rentals with recievables of of 19775.91.  The fourth month, 2005-08, the rentals dropped 16% to 5686 with recievables of 16757.14.  The fifth period, is 6 months later and the business has dropped below the opening month.  In 2006-02 the business only had 182 rentals with recievables of 514.18.  It is unclear what currency the rental receivables are in.   
+The current entry is our new rental row we added to show the different joins in a previous chapter.
+
+### 10.  Rank Films Based on the Number of Times Rented and Associated Revenue
+
+To answer this question we look at the `rental`, `inventory`, and `film` tables.
+
+```{r, code_folding='unhide'}
+film_rank_sql <- dbGetQuery(con,
+"select f.film_id,f.title,f.rental_rate,count(*) count,f.rental_rate * count(*) rental_amt
+   from rental r join inventory i on r.inventory_id = i.inventory_id 
+        join film f on i.film_id = f.film_id
+ group by f.film_id,f.title,f.rental_rate
+ order by count(*) desc")
+  
+sp_print_df(film_rank_sql)
+```
+
+`r sp_color_markdown_text("The most frequently rented movie, 34 times, is 'Bucket Brotherhood' followed by Rocketeer Mother, 33 times.",'blue')`
+
+#### Replicate the output above using dplyr syntax.
+
+```{r include=INCLUDE_OUTPUT}
+rental_table <- DBI::dbReadTable(con, "rental")
+inventory_table <- DBI::dbReadTable(con, "inventory")
+film_table <- DBI::dbReadTable(con, "film")
+
+film_rank_dplyr <- rental_table %>%
+    inner_join(inventory_table, by = c("inventory_id" = "inventory_id"), suffix(c(".r", ".i"))) %>%
+    inner_join(film_table, by = c("film_id" = "film_id"), suffix(c(".f", ".i"))) %>%
+    group_by(film_id,title) %>%
+    summarize(count = n()) %>%
+    arrange(desc(count))
+sp_print_df(film_rank_dplyr)
+```
+
+### 11 What is the rental distribution/DVD for the top two rented films?
+
+From the previous exercise we know that the top two films are `Bucket Brotherhood` and `Rocketeer Mother`.  To answer this question we look at the `rental`, `inventory`, and `film` tables again.  Instead of looking at the film level, we need to drill down to the individual dvd's for each film to answer this question.
+
+
+```{r, code_folding='unhide'}
+film_rank_sql <- dbGetQuery(con,
+"select i.store_id,i.film_id,f.title,i.inventory_id,count(*) 
+   from rental r join inventory i on r.inventory_id = i.inventory_id 
+        join film f on i.film_id = f.film_id
+  where i.film_id in (103,738)
+group by i.store_id,i.film_id,f.title,i.inventory_id")
+
+sp_print_df(film_rank_sql)
+```
+
+`r sp_color_markdown_text("The 'Bucket Brotherhood' and 'Rocketeer Mother' DVD's are equally distributed between the two stores, 4 dvd's each per film.  The 'Bucket Brotherhood' was rented 17 times from both stores.  The 'Rocketeer Mother' was rented 15 times from store 1 and 18 times from store 2.",'blue')`
+
+#### Replicate the output above using dplyr syntax.
+
+```{r include=INCLUDE_OUTPUT}
+rental_table <- DBI::dbReadTable(con, "rental")
+inventory_table <- DBI::dbReadTable(con, "inventory")
+film_table <- DBI::dbReadTable(con, "film")
+
+film_rank_dplyr2 <- rental_table %>%
+    inner_join(inventory_table, by = c("inventory_id" = "inventory_id"), suffix(c(".r", ".i"))) %>%
+    inner_join(film_table, by = c("film_id" = "film_id"), suffix(c(".f", ".i"))) %>%
+    filter(film_id %in% c(103,738)) %>%
+    group_by(store_id,film_id,title,inventory_id) %>%
+    summarize(count = n()) %>%
+    arrange(film_id,store_id,inventory_id)
+sp_print_df(film_rank_dplyr2)
+```
+
+
+### 12.  List staffing information for store 1 associated with the `Bucket Brother` rentals? 
+
+To answer this question we look at the `rental`, `inventory`, `film`, `staff`, `address`, `city`, and `country` tables.  
+
+```{r}
+film_103_details_sql <- dbGetQuery(con,
+"select i.store_id,i.film_id,f.title,i.inventory_id inv_id
+       ,r.rental_date::date rented,r.return_date::date returned
+       ,s.staff_id,s.store_id staff_store_id,concat(s.first_name,' ',s.last_name) staff,ctry.country
+   from rental r join inventory i on r.inventory_id = i.inventory_id 
+        join film f on i.film_id = f.film_id
+        join staff s on r.staff_id = s.staff_id
+        join address a on s.address_id = a.address_id
+        join city c on a.city_id = c.city_id
+        join country ctry on c.country_id = ctry.country_id
+  where i.film_id in (103)
+    and r.rental_date::date between '2005-05-01'::date and '2005-06-01'::date
+order by r.rental_date
+")
+sp_print_df(film_103_details_sql)
+```
+
+In a previous exercise we saw that store 1 based in Canada and store 2 based in Austrailia each had one employee, staff_id 1 and 2 respectively.  We see that Mike from store 1, Canada, had transactions in store 1 and store 2 on 5/25/2005.  Similarly Jon from store 2, Australia, had transaction in store 2 and store 1 on 5/31/2005.  
+
+
+
+ ### 12.  Which film(s) have never been rented
+
+To answer this question we look at the `film`, `inventory` and `rental` tables.
+
+```{r, code_folding='unhide'}
+never_rented_dvds_sql <- dbGetQuery(con,
+'select i.store_id,f.film_id, f.title,f.description, i.inventory_id
+   from film f join inventory i on f.film_id = i.film_id
+        left join rental r on i.inventory_id = r.inventory_id 
+  where r.inventory_id is null 
+'
+)
+
+sp_print_df(never_rented_dvds_sql)
+```
+
+#### Replicate the output above using dplyr syntax.
+
+```{r include=INCLUDE_OUTPUT}
+inventory_table <- DBI::dbReadTable(con, "inventory")
+rental_table <- DBI::dbReadTable(con, "rental")
+film_table <- DBI::dbReadTable(con, "film")
+
+never_rented_dvds_dplyr <- film_table %>%
+    inner_join(inventory_table, by = c("film_id" = "film_id"), suffix(c(".f", ".i"))) %>%
+    anti_join(rental_table, by = c('inventory_id','inventory_id'), suffix(c('.i','.r'))) %>%
+    select(film_id,title,inventory_id,last_update.y)
+sp_print_df(never_rented_dvds_dplyr)
+```
+
+### 13.  How many films are in each film rating?
+
+To answer this question we look at the `film` table to answer this question.
+
+```{r, code_folding='unhide'}
+film_ratings_sql <- dbGetQuery(con,
+'select f.rating,count(*)
+   from film f 
+group by f.rating
+order by count(*) desc
+'
+)
+
+sp_print_df(film_ratings_sql)
+```
+
+
+### 14.  What are the different film categories?
+
+```{r, code_folding='unhide'}
+film_categories_sql <- dbGetQuery(con,
+'select * from category'
+)
+
+sp_print_df(film_categories_sql)
+```
+
+### 15.  Rank the film categeories in descending order
+
+```{r, code_folding='unhide'}
+film_categories_sql <- dbGetQuery(con,
+'select c.name,count(*) count
+   from category c join film_category fc on c.category_id = fc.category_id
+group by c.name
+order by count(*) desc
+'
+)
+
+sp_print_df(film_categories_sql)
+```
+
+`r sp_color_markdown_text('There are 16 film categories.  The highest category, Sports, has 77 films followed by the International category which has 76 film.  What is an example of an international category film where all films are currently in English?','blue')`
+
+
+### 16.  Which films are listed in multiple categories?
+
+To answer this question we look at the `film`, `film_category` and `category` tables.
+
+```{r, code_folding='unhide'}
+multiple_categories_sql <- dbGetQuery(con,
+'select f.film_id, f.title,c.name
+   from film_category fc join film f on fc.film_id = f.film_id
+        join category c on fc.category_id = c.category_id
+  where fc.film_id in (select fc.film_id
+                         from film f join film_category fc on f.film_id = fc.film_id
+                       group by fc.film_id
+                       having count(*) > 1
+                       ) 
+'
+)
+
+sp_print_df(multiple_categories_sql)
+```
+
+`r sp_color_markdown_text("There is only one film which has two categories, Sophie's Choice.",'blue')`
+
+
+
+
+### 17.  Which films are in one store's inventory but not the other
+
+In the table below we show the first `r HEAD_N` rows.  
+
+To answer this question we look at the `inventory` and `film` tables.
+
+```{r, code_folding='unhide'}
+
+rs <- dbGetQuery(
+  con,
+  "
+--   select store1,count(count1) not_in2,sum(count1) store1_dvds
+--         ,store2,count(count2) not_in1,sum(count2) store2_dvds
+--     from (
+             select coalesce(i1.film_id,i2.film_id) film_id,f.title,f.rental_rate
+                   ,i1.store_id store1,i1.count count1
+                   ,i2.store_id store2,i2.count count2
+               from     (select film_id,store_id,count(*) count 
+                               from inventory where store_id = 1 
+                             group by film_id,store_id) as i1
+                         full outer join 
+                            (select film_id,store_id,count(*) count
+                               from inventory where store_id = 2 
+                             group by film_id,store_id
+                            ) as i2
+                           on i1.film_id = i2.film_id 
+                         join film f 
+                           on coalesce(i1.film_id,i2.film_id) = f.film_id
+                  where i1.film_id is null or i2.film_id is null
+               order by f.title  ;
+--     ) as src
+--    group by store1,store2
+"
+)
+if(HEAD_N > 0) {
+    sp_print_df(head(rs,n=HEAD_N))
+} else {
+    sp_print_df(rs)
+}
+```
+
+
+`r sp_color_markdown_text("Store 1 has 196 films, 576 dvd's that are not in store 2 and store 2 has 199 films that are not in store1.",'blue')`
+
+
+### 18 Which films are not tracked in inventory?
+
+To answer this question we look at the `film` and `rental` tables.
+
+```{r, code_folding='unhide'}
+film_rank_sql <- dbGetQuery(con,
+"
+select f.film_id,title,rating,rental_rate,replacement_cost
+  from film f left outer join inventory i on f.film_id = i.film_id
+ where i.film_id is null;
+")
+
+if(HEAD_N > 0) {
+    sp_print_df(head(film_rank_sql,n=HEAD_N))
+} else {
+    sp_print_df(film_rank_sql)
+}
+
+```
+
+
+`r sp_color_markdown_text("There are 42 films that do not exist in inventory or in either store.  These may be DVD's that have been ordered but the business has not received them.  Looking at the price and the replacement cost, it doesn't look like there is any rhyme or reason to the setting of the price.",'blue')`
+
+
+### 19 List film categories in descending accounts receivable.
+
+To answer this question we look at the `rental`, `inventory`, `film`, `film_category` and `category`  tables.
+
+Column  | Mapping           | Definition
+--------|-------------------|-------------
+category|category.name      |
+ar      |film.rental_rate   |
+
+```{r, code_folding='unhide'}
+film_category_AR_rank_sql <- dbGetQuery(con,
+"
+select category,AR
+       ,sum(AR) over (order by AR desc rows between unbounded preceding and current row) running_AR
+       ,rentals
+       ,sum(rentals) over (order by AR desc rows between unbounded preceding and current row) running_rentals
+  from (select c.name category, sum(f.rental_rate) AR, count(*) rentals
+          from rental r join inventory i on r.inventory_id = i.inventory_id 
+               join film f on i.film_id = f.film_id
+               join film_category fc on f.film_id = fc.film_id
+               join category c on fc.category_id = c.category_id
+       group by c.name
+      ) src
+")
+  
+sp_print_df(film_category_AR_rank_sql)
+```
+
+`r sp_color_markdown_text('There are 16 film categories.  The top three categories based on highest AR amounts are Sports, Drama, and Sci-Fi.  The total number of rentals are 16046 with an AR amount of 47221.54.','blue')`
+
+### 20. List film ratings in descending accounts receivable order.
+
+To answer this question we look at the `rental`, `inventory`, and `film` tables.
+
+```{r, code_folding='unhide'}
+film_rating_rank_sql <- dbGetQuery(con,
+"select rating,AR
+       ,sum(AR) over (order by AR desc rows 
+        between unbounded preceding and current row) running_AR
+       ,rentals
+       ,sum(rentals) over (order by AR desc rows 
+        between unbounded preceding and current row) running_rentals
+from (select f.rating, sum(f.rental_rate) AR, count(*) rentals
+        from rental r join inventory i on r.inventory_id = i.inventory_id 
+        join film f on i.film_id = f.film_id
+      group by f.rating
+     ) as src 
+")
+  
+sp_print_df(film_rating_rank_sql)
+```
+
+`r sp_color_markdown_text('There are 5 film ratings.  The total number of rentals are 16045 with an AR amount of 47216.55.
+
+Why do the film categories revenue and film rating revenue amounts and counts differ?','blue')`  
+
+#### Replicate the output above using dplyr syntax.
+
+column         | mapping          |definition
+---------------|------------------|-----------
+rating         | film.rating      |
+ar             | f.rental_rate    |
+running_ar     |                  | accumulated ar amounts based on ratings
+rentals        |                  | number of rentals associated with the rating
+running_rentals|                  | running rating rentals
+
+
+```{r include=INCLUDE_OUTPUT}
+inventory_table <- DBI::dbReadTable(con, "inventory")
+rental_table <- DBI::dbReadTable(con, "rental")
+film_table <- DBI::dbReadTable(con, "film")
+
+x <- as.data.frame("code me")
+
+sp_print_df(x)
+```
+
+
+### 21.  How many rentals were returned on time, returned late, never returned?
+
+To answer this question we look at the `rental`, `inventory`, and `film` tables.
+
+```{r}
+rs <- dbGetQuery(con,
+"with details as
+    (select case when r.return_date is null
+                 then null
+                 else r.return_date::date  - (r.rental_date + INTERVAL '1 day'  * f.rental_duration)::date
+            end rtn_stat
+           ,case when r.return_date is null and r.rental_id is null
+                 then null
+                 when r.return_date is not null or r.return_date is null and r.rental_id is null
+                 then 0
+                 else 1
+            end not_rtn
+       from rental r join inventory i on r.inventory_id = i.inventory_id
+                left join film f on i.film_id = f.film_id
+    )
+ select sum(case when rtn_stat <= 0 then 1 else 0 end) on_time
+       ,sum(case when rtn_stat >  0 then 1 else 0 end) late
+       ,sum(not_rtn) not_rtn
+       ,count(*) rented
+       ,round(100. * sum(case when rtn_stat <= 0 then 1 else 0 end)/count(*),2) on_time_pct
+       ,round(100. * sum(case when rtn_stat >  0 then 1 else 0 end)/count(*),2) late_pct
+       ,round(100. * sum(not_rtn)/count(*),2)  not_rtn_pct
+   from details
+")
+
+sp_print_df(rs)
+```
+
+`r sp_color_markdown_text("To date 53.56% of the rented DVD's were returned on time, 45.30% were returned late, and 1.14% were never returned.",'blue')`
+
+#### Replicate the output above using dplyr syntax.
+
+column         | mapping          |definition
+---------------|------------------|-----------
+
+```{r include=INCLUDE_OUTPUT}
+inventory_table <- DBI::dbReadTable(con, "inventory")
+rental_table <- DBI::dbReadTable(con, "rental")
+film_table <- DBI::dbReadTable(con, "film")
+
+x <- as.data.frame("code me")
+
+sp_print_df(x)
+```
+
+### 22.  Are there duplicate customers?
+
+We assume that if the customer first and last name match in two different rows, then it is a duplicate customer. 
+
+```{r code_folding='unhide' }
+customer_dupes_sql <- dbGetQuery(
+  con,
+  "select cust.customer_id id
+         ,cust.store_id store
+         ,concat(cust.first_name,' ',cust.last_name) customer
+         ,cust.email
+--         ,a.phone
+         ,a.address
+         ,c.city
+         ,a.postal_code zip
+         ,a.district
+         ,ctry.country
+     from customer cust join address a on cust.address_id = a.address_id
+                     join city c on a.city_id = c.city_id
+                     join country ctry on c.country_id = ctry.country_id
+    where concat(cust.first_name,cust.last_name)
+          in (select concat(first_name,last_name)
+                from customer
+              group by concat(first_name,last_name)
+             having count(*) >1
+             )
+  ")
+sp_print_df(customer_dupes_sql)
+
+```
+
+`r sp_color_markdown_text('Sophie is the only duplicate customer.  The only difference between the two records is the store.  Record 600 is associated with store 3, which has no employees, and 601 is associated with store 2','blue')`
+
+#### Replicate the output above using dplyr syntax.
+
+column         | mapping          |definition
+---------------|------------------|-----------
+
+```{r include=INCLUDE_OUTPUT}
+inventory_table <- DBI::dbReadTable(con, "inventory")
+rental_table <- DBI::dbReadTable(con, "rental")
+film_table <- DBI::dbReadTable(con, "film")
+
+x <- as.data.frame("code me")
+
+sp_print_df(x)
+```
+
+
+### 23.  Which customers have never rented a movie?
+
+To answer this question we look at the `customer` and `rental` tables.
+
+```{r code_folding='unhide' }
+customer_rental_anti_join_sql <- dbGetQuery(
+  con,
+  "select c.customer_id id
+         ,c.first_name
+         ,c.last_name
+         ,c.email
+         ,a.phone
+         ,city.city
+         ,ctry.country
+         ,c.active 
+         ,c.create_date
+--         ,c.last_update
+     from customer c left join rental r on c.customer_id = r.customer_id
+                     left join address a on c.address_id = a.address_id
+                     left join city on a.city_id = city.city_id
+                     left join country ctry on city.country_id = ctry.country_id
+    where r.rental_id is null;
+  "
+)
+sp_print_df(customer_rental_anti_join_sql)
+```
+
+`r sp_color_markdown_text('We see that there are four new customers who have never rented a movie.  These four customers are in the countries that have a manned store.','blue')`
+
+#### Replicate the output above using dplyr syntax.
+
+```{r, include=INCLUDE_OUTPUT  ,tidy=TRUE}
+customer_table <- DBI::dbReadTable(con, "customer")
+rental_table   <- DBI::dbReadTable(con, "rental")
+
+customer_rental_anti_join_dplyr <- customer_table %>%
+    anti_join(rental_table, by = "customer_id" ) %>%
+    select(first_name,last_name,email,active,create_date) 
+
+sp_print_df(customer_rental_anti_join_dplyr)
+```
+
+
+### 24 Who are the top 5 customers with the most rentals and associated payments?
+
+This exercise uses the customer, rental, and payment tables.
+
+```{r, code_folding='unhide'}
+customer_rental_ij_sql <- dbGetQuery(
+  con,
+  "select c.customer_id id,c.store_id
+         ,concat(c.first_name,' ',c.last_name) customer
+         ,min(rental_date)::date mn_rental_dt
+         ,max(rental_date)::date mx_rental_dt
+         ,count(r.rental_id)
+         ,sum(COALESCE(p.amount,0.))
+     from customer c
+          left join rental r on c.customer_id = r.customer_id
+          left join payment p on r.rental_id = p.rental_id 
+   group by  c.customer_id
+            ,c.first_name
+            ,c.last_name
+            ,c.store_id
+   order by count(r.rental_id) desc
+limit 5
+  "
+)
+sp_print_df(customer_rental_ij_sql)
+```
+
+`r sp_color_markdown_text("The top 5 customers all rented between 41 to 46 DVD's.  Three of the top 5 rented about 14 DVD's per month over a three month period.  The other two customers 41 and 42 DVD's per 12 months.",'blue')`
+
+#### Replicate the output above using dplyr syntax.
+
+Use the dplyr inner_join verb to find the top 5 customers who have rented the most movies.
+
+```{r, include=INCLUDE_OUTPUT  ,tidy=TRUE}
+customer_table <- DBI::dbReadTable(con, "customer")
+rental_table   <- DBI::dbReadTable(con, "rental")
+payment_table   <- DBI::dbReadTable(con, "payment")
+
+customer_rental_ij_d <- customer_table %>%
+    left_join(rental_table, by = c("customer_id" = "customer_id"), suffix(c(".c", ".r"))) %>%
+    left_join(payment_table, by = c("rental_id" = "rental_id"), suffix(c('r','p'))) %>%
+    mutate(customer=paste(first_name,last_name,sep=' ')) %>%
+    group_by(customer_id.x,customer) %>%
+    summarize(rentals=n()
+             ,paid = sum(ifelse(is.na(amount),0,amount))
+             ) %>%
+    arrange(desc(rentals)) %>%
+    select(customer_id.x,customer,rentals,paid) %>%
+    head(n=5)
+
+sp_print_df(customer_rental_ij_d)
+```
+
+### 25 Combine the top 5 rental customers, (40 or more rentals), and zero rental customers
+
+The managers love the two reports, but they would like them combined into a single report.
+
+```{r, code_folding='unhide'}
+customer_rental_high_low_sql <- dbGetQuery(
+  con,
+  "select c.customer_id cust_id
+         ,concat(c.first_name,' ',c.last_name) customer
+         ,count(*) cust_cnt
+         ,count(r.rental_id) rentals
+         ,count(p.payment_id) payments
+         ,sum(coalesce(p.amount,0)) paid
+     from customer c
+          left outer join rental r on c.customer_id = r.customer_id
+          left outer join payment p on r.rental_id = p.rental_id
+   group by  c.customer_id
+            ,c.first_name
+            ,c.last_name
+   having count(r.rental_id) = 0 or count(r.rental_id) > 40
+   order by count(r.rental_id) desc
+  "
+)
+sp_print_df(customer_rental_high_low_sql)
+```
+
+#### Replicate the output above using dplyr syntax.
+
+```{r, include=INCLUDE_OUTPUT}
+
+customer_table <- DBI::dbReadTable(con, "customer")
+rental_table   <- DBI::dbReadTable(con, "rental")
+payment_table  <- DBI::dbReadTable(con, "payment")
+
+customer_rental_ij_d <- customer_table %>%
+    left_join(rental_table, by = c("customer_id" = "customer_id"), suffix(c(".c", ".r"))) %>%
+    left_join(payment_table, by = c("rental_id" = "rental_id"), suffix(c('r','p'))) %>%
+    mutate(customer=paste(first_name,last_name,sep=' ')
+          ,rented = if_else(is.na(rental_id),0, 1)
+          ,paid = if_else(is.na(payment_id),0,1)
+          ) %>%
+    group_by(customer_id.x,customer,rented) %>%
+    summarize(rentals=sum(rented)
+             ,payments = sum(paid)
+             ,paid_amt = sum(ifelse(is.na(amount),0,amount))
+            ) %>%
+    filter( rentals == 0 | rentals > 40) %>%
+    select(customer_id.x,customer,rentals,payments,paid_amt) %>%
+    arrange(desc(rentals))
+
+sp_print_df(customer_rental_ij_d)
+```
+
+### 26.  Who are the top-n1 and bottom-n2 customers?
+
+The issue with the two previous reports is that the top end is hardcoded, rentals  > 40.  Over time, the current customers will always be in the top section and new customers will get added.  Another way of looking at the previous report is to show just the top and bottom 5 customers.  
+
+Parmeterize the previous exercise to show the top 5 and bottom 5 customers. 
+
+```{r, code_folding='unhide'}
+customer_rentals_hi_low_sql <- function(high_n,low_n) {
+    customer_rental_high_low_sql <- dbGetQuery(con,
+        "select *
+           from (     select *
+                            ,ROW_NUMBER() OVER(ORDER BY rentals desc) rent_hi_low
+                            ,ROW_NUMBER() OVER(ORDER BY rentals ) rent_low_hi
+                       FROM (    
+                                 select c.customer_id id
+                                       ,concat(c.first_name,' ',c.last_name) customer
+                                       ,count(*) cust_cnt
+                                       ,count(r.rental_id) rentals
+                                       ,count(p.payment_id) payments
+                                       ,sum(coalesce(p.amount,0)) paid
+                                  from customer c 
+                                       left outer join rental r on c.customer_id = r.customer_id
+                                       left outer join payment p on r.rental_id = p.rental_id
+                                 group by c.customer_id
+                                        ,c.first_name
+                                        ,c.last_name
+                            ) as summary
+                ) row_nums
+           where rent_hi_low <= $1 or rent_low_hi <= $2
+          order by rent_hi_low
+        "
+           ,c(high_n,low_n)
+        )
+    return (customer_rental_high_low_sql)
+}
+```
+
+The next code block executes a sql version of such a function.  With top_n = 5 and bot_n = 5, it replicates the hard coded version of the previous exercise. With top_n = 5 and bot_n = 0, it gives a top 5 report.  With top_n = 0 and bot_n = 5, the report returns the bottom 5.  Change the two parameters to see the output from the different combinations.
+
+```{r}
+top_n = 5
+bot_n = 5
+sp_print_df(customer_rentals_hi_low_sql(top_n,bot_n))
+```
+
+#### Replicate the function above use dplyr syntax.
+
+```{r, include=INCLUDE_OUTPUT}
+customer_rentals_hi_low_dplr <- function(high_n,low_n) {
+    customer_table <- DBI::dbReadTable(con, "customer")
+    rental_table   <- DBI::dbReadTable(con, "rental")
+    
+    customer_rental_loj_hi_low_d <- customer_table %>%
+        left_join(rental_table, by = c("customer_id" = "customer_id")
+                  , suffix(c(".c", ".r"))) %>%
+      
+    left_join(payment_table, by = c("rental_id" = "rental_id"), suffix(c('r','p'))) %>%
+    mutate(customer=paste(first_name,last_name,sep=' ')
+          ,rented = if_else(is.na(rental_id),0, 1)
+          ,paid = if_else(is.na(payment_id),0,1)
+          ) %>%
+    group_by(customer_id.x,customer,rented) %>%
+    summarize(rentals=sum(rented)
+             ,payments = sum(paid)
+             ,paid_amt = sum(ifelse(is.na(amount),0,amount))
+            ) %>%
+    select(customer_id.x,customer,rentals,payments,paid_amt) %>%
+    arrange(desc(rentals))       
+#
+#   Add the rankings 
+#    
+    customer_rental_loj_hi_low_d <- cbind(customer_rental_loj_hi_low_d
+                                         ,rent_hi_low = 1:nrow(customer_rental_loj_hi_low_d)
+                                         ,rent_low_hi = nrow(customer_rental_loj_hi_low_d):1
+                                         )
+    customer_rental_loj_hi_low_d %>% 
+        filter(rent_hi_low <= high_n | rent_low_hi <= low_n) %>%
+        arrange(rent_hi_low)
+    
+}
+```
+
+```{r}
+top_n = 0
+bot_n = 0
+sp_print_df(customer_rentals_hi_low_dplr(top_n,bot_n))
+```
+
+
+
+### 27.  How much has each store collected?
+
+How are the stores performing?  The SQL code shows the payments made to each store in the business.
+
+```{r, code_folding='unhide'}
+rs <- dbGetQuery(
+  con,
+  "select store_id,sum(p.amount) amt,count(*) cnt 
+                   from payment p 
+                        join staff s 
+                          on p.staff_id = s.staff_id  
+                 group by store_id order by 2 desc
+                 ;
+                "
+)
+sp_print_df(head(rs))
+```
+
+```{r include=INCLUDE_OUTPUT}
+inventory_table <- DBI::dbReadTable(con, "inventory")
+rental_table <- DBI::dbReadTable(con, "rental")
+film_table <- DBI::dbReadTable(con, "film")
+
+x <- as.data.frame("code me")
+
+sp_print_df(x)
+```
+
+#### Exercise dplyr store revenue stream
+
+Complete the following code block to return the payments made to each store.
+
+```{r, include=INCLUDE_OUTPUT}
+payment_table <- tbl(con, "payment") # DBI::dbReadTable(con, "payment")
+staff_table <- tbl(con, "staff") # DBI::dbReadTable(con, "staff")
+
+store_revenue <- payment_table %>%
+  inner_join(staff_table, by = "staff_id", suffix = c(".p", ".s"))
+
+
+store_revenue
+```
+
+<!-- answer
+    # group_by(store_id) %>%
+    # summarize (amt=sum(amount,na.rm=TRUE),n=n()) %>%
+    # arrange (desc(amt))
+-->    
+
+
+### 28.  What is the business' distribution of payments?
+
+To answer this question we look at the `rental`, `payment`, `inventory`, and `film` tables to answer this question.
+
+As a sanity check, we first check the number of rental records.
+
+
+```{r, code_folding='unhide'}
+sp_print_df(dbGetQuery(con,"select count(*) Rentals from rental"))
+```
+This table describes the columns in the code block answer that follows.
+
+Column        | Mapping             | Definition
+--------------|---------------------|-------------
+no_pay_rec    |film.rental_rate     |aggregated DVD rental rates without an associated payment record.
+no_pay_rec_cnt|                     |number of DVD rentals without an associated payment record.
+paid_off      |payment.amount       |aggregated DVD payments that match the film rental rate.
+paid_off_cnt  |                     |number of DVD payments that match the film rental rate.
+over_paid     |payment.amount       |aggregated DVD payments greater than the film rental rate.
+over_paid_cnt |                     |number of DVD payments greater than the film rental rate.
+under_paid    |payment.amount       |aggregated DVD payments less than the film rental rate.
+under_paid_cnt|                     |number of DVD payments greater than the film rental rate.
+count         |                     |number of records analyzed
+
+
+
+```{r, code_folding='unhide'}
+business_payment_dist_sql <- dbGetQuery(
+  con,
+ "SELECT sum(case when p.rental_id is null then rental_rate else 0 end ) no_pay_rec
+        ,sum(case when p.rental_id is null then 1 else 0 end) no_pay_rec_cnt
+        ,round(100.*sum(case when p.rental_id is null then 1 else 0 end)
+              /count(*),2) no_pay_rec_pct
+        ,sum(case when f.rental_rate = p.amount then p.amount else 0 end) paid_off
+        ,round(100.*sum(case when f.rental_rate = p.amount then 1 else 0 end )
+              /count(*),2) paid_off_pct
+        ,sum(case when f.rental_rate < p.amount then p.amount - rental_rate else 0 end ) over_paid
+        ,sum(case when f.rental_rate < p.amount then 1 else 0 end ) over_paid_cnt
+        ,round(100.*sum(case when f.rental_rate < p.amount then 1 else 0 end )
+              /count(*),2) over_paid_pct
+        ,sum(case when f.rental_rate > p.amount then rental_rate - p.amount else 0 end ) under_paid
+        ,sum(case when f.rental_rate > p.amount then 1  else 0 end ) under_paid_cnt
+        ,round(100.*sum(case when f.rental_rate > p.amount then 1  else 0 end )
+              /count(*),2) under_paid_pct
+        ,count(*) count
+    FROM rental r
+         LEFT JOIN payment p ON r.rental_id = p.rental_id and r.customer_id = p.customer_id 
+        INNER JOIN inventory i ON r.inventory_id = i.inventory_id
+        INNER JOIN film f ON i.film_id = f.film_id
+
+;"
+)
+sp_print_df(business_payment_dist_sql)
+```
+
+`r sp_color_markdown_text('These are interesting results.  
+
+*  09.06% of the total records have no associated payment record in the amount of 4302.47  
+*  49.39% of the rentals have been fully paid in full, 23397.75.
+*  41.40% of the rentals have collected more than the rental amount by 18456.75
+*  00.15% of the rentals have collected less than the rental amount by 67.76.
+*  The no_pay_rec_cnt + under_paid_cnt, $1453 + 24 = 1477$ is the number of rentals which have not been paid in full.
+*  The total outstanding balance is $4302.47 + 67.76 = 4370.23$
+
+With over 40 percent over collection, someone needs to find out what is wrong with the collection process.  Many customers are owed credits or free rentals.
+','blue')`
+
+#### Replicate the output above using dplyr syntax.
+
+```{r, include=INCLUDE_OUTPUT}
+payment_table <- tbl(con, "payment")     # DBI::dbReadTable(con, "payment")
+rental_table <- tbl(con, "rental")       # DBI::dbReadTable(con, "rental")
+inventory_table <- tbl(con, "inventory") # DBI::dbReadTable(con, "inventory")
+film_table <- tbl(con, "film")           # DBI::dbReadTable(con, "film")
+
+act_bal <- rental_table %>%
+  left_join(payment_table
+           , by = c("rental_id", "rental_id"
+                   ,"customer_id","customer_id"
+                   )
+           , suffix = c(".r", ".p")) %>%
+  inner_join(inventory_table, by = c("inventory_id", "inventory_id"), suffix = c(".r", ".i")) %>%
+  inner_join(film_table, by = c("film_id", "film_id"), suffix = c(".i", ".f")) 
+
+act_bal <- as.data.frame("code me")
+sp_print_df(act_bal)
+```
+
+If you are not getting the incorrect count, use the following SQL and results to correct your joins.
+
+```{r}
+rs <- dbGetQuery(
+  con,
+ "SELECT  'correct join' hint,r.rental_id,r.customer_id,p.customer_id payment_customer_id,p.rental_id payment_rental_id
+    FROM rental r
+         LEFT JOIN payment p ON r.rental_id = p.rental_id and r.customer_id = p.customer_id
+   where r.rental_id = 4591
+  UNION 
+ SELECT  'incorrect join' hint,r.rental_id,r.customer_id,p.customer_id payment_customer_id,p.rental_id payment_rental_id
+    FROM rental r
+         LEFT JOIN payment p ON r.rental_id = p.rental_id
+   where r.rental_id = 4591;
+;")
+sp_print_df(head(rs))
+```
+
+### 29.  Which customers have the highest open amounts?
+
+From the previous exercise, we know that there are 1478 missing payment records or not fully paid payment records.  List the top 5 from each category base on balance due amounts.
+
+```{r, code_folding='unhide'}
+
+rs <- dbGetQuery(
+  con,
+"  select customer_id
+         ,concat(first_name,' ',last_name) customer
+         ,pay_record
+         ,rental_amt
+         ,paid_amt
+         ,due_amt
+         ,cnt
+         ,rn
+  from (select c.customer_id
+              ,c.first_name
+              ,c.last_name
+              ,case when p.amount is null then 'No' else 'Yes' end Pay_record
+              ,sum(f.rental_rate) rental_amt
+              ,sum(coalesce(p.amount,0))  paid_amt
+              ,sum(f.rental_rate - coalesce(p.amount,0)) due_amt
+              ,count(*) cnt
+              ,row_number() over (partition by case when p.amount is null then 'No' else 'Yes' end
+                                  order by sum(f.rental_rate - coalesce(p.amount,0)) desc,c.customer_id) rn
+          FROM rental r
+               LEFT JOIN payment p
+                 ON r.rental_id = p.rental_id and r.customer_id = p.customer_id
+               INNER JOIN inventory i
+                 ON r.inventory_id = i.inventory_id
+               INNER JOIN film f
+                 ON i.film_id = f.film_id
+               INNER JOIN customer c
+                 ON r.customer_id = c.customer_id
+        WHERE coalesce(p.amount,0) = 0 or f.rental_rate > coalesce(p.amount, 0)
+       group by c.customer_id,c.first_name,c.last_name,case when p.amount is null then 'No' else 'Yes' end
+       ) as src
+  where rn <= 5 -- and Pay_record = 'No' or Pay_record = 'Yes'
+  order by Pay_record,rn
+")
+sp_print_df(rs)
+```
+
+`r sp_color_markdown_text("From the previous exercise we see that the number of rentals that have not been paid in full is 1477.  There are 24 records that have a payment record, pay_record = 'Yes', all have a 0 paid amount.  There are 1453 DVD's rented out that have no payment record.   The top 3 customers have 10 DVD's that have not been paid.
+",'blue')`
+
+
+#### Replicate the output above using dplyr syntax.
+
+```{r include=INCLUDE_OUTPUT}
+inventory_table <- DBI::dbReadTable(con, "inventory")
+rental_table <- DBI::dbReadTable(con, "rental")
+payment_table <- DBI::dbReadTable(con, "payment")
+customer_table <- DBI::dbReadTable(con, "customer")
+film_table <- DBI::dbReadTable(con, "film")
+
+x <- as.data.frame("code me")
+
+sp_print_df(x)
+```
+
+## 30. What is the business cash flow?
+
+In the previous exercise we saw that about 50% of the rentals collected the correct amount and 40% of the rentals over collected.  The last 10% were never collected.
+
+Calculate the number of days it took before the payment was collected and the amount collected?
+
+To answer this question we look at the `rental`, `customer`, `payment`, `inventory`, `payment` and `film` tables to answer this question.
+
+```{r, code_folding='unhide'}
+rs <- dbGetQuery(
+  con,
+"with details as
+(
+select c.customer_id id,concat(first_name,' ',c.last_name) customer
+      ,c.email,a.phone,city.city,ctry.country
+      ,f.title
+      ,f.film_id
+      ,r.rental_date::date rented
+      ,r.return_date::date returned
+      ,(r.rental_date + INTERVAL '1 day'  * f.rental_duration)::date exp_rtn_dt
+      ,case when r.return_date is null
+            then null
+            else r.return_date::date  - (r.rental_date + INTERVAL '1 day'  * f.rental_duration)::date
+       end rtn_stat
+      ,case when r.return_date is null and r.rental_id is null
+            then null
+            when r.return_date is not null or r.return_date is null and r.rental_id is null
+            then 0
+            else 1
+       end not_rtn
+      ,payment_date::date pay_dt
+      ,f.rental_rate charges
+      ,p.amount paid
+      ,p.amount-f.rental_rate delta
+      ,p.staff_id
+      ,payment_date::date - rental_date::date pay_days
+      ,c.customer_id,f.film_id,r.rental_id,i.inventory_id,payment_id
+  from rental r left join customer c on c.customer_id = r.customer_id
+                  left join address a on c.address_id = a.address_id
+                  left join city on city.city_id = a.city_id
+                  left join country ctry on ctry.country_id = city.country_id
+                  left join inventory i on r.inventory_id = i.inventory_id
+                  left join payment p on c.customer_id = p.customer_id and p.rental_id = r.rental_id
+                  left join film f on i.film_id = f.film_id
+)
+select pay_dt - exp_rtn_dt payment_days
+      ,sum(coalesce(paid,charges)) paid_or_due
+--      ,min(pay_dt - exp_rtn_dt) mn_late_pay
+--      ,round(avg(pay_dt - exp_rtn_dt),1) avg_late_pay
+--      ,max(pay_dt - exp_rtn_dt) mx_late_pay
+      ,count(*) late_returns
+from details --where returned > exp_rtn_dt
+group by pay_dt - exp_rtn_dt
+order by pay_dt - exp_rtn_dt desc
+")
+
+sp_print_df(rs)
+```
+
+`r sp_color_markdown_text("Wow those are really generous terms.  Customers are paying 1.2 to 1.7 years after they returned the DVD.  This business is in serious financial trouble!
+",'blue')`
+
+
+
+## Different strategies for interacting with the database
+
+
+select examples
+    dbGetQuery returns the entire result set as a data frame.  
+        For large returned datasets, complex or inefficient SQL statements, this may take a 
+        long time.
+
+      dbSendQuery: parses, compiles, creates the optimized execution plan.  
+          dbFetch: Execute optimzed execution plan and return the dataset.
+    dbClearResult: remove pending query results from the database to your R environment
+
+### Use dbGetQuery
+
+How many customers are there in the DVD Rental System
+
+```{r, code_folding='unhide'}
+rs1 <- dbGetQuery(con, "select * from customer;")
+sp_print_df(head(rs1))
+
+pco <- dbSendQuery(con, "select * from customer;")
+rs2 <- dbFetch(pco)
+dbClearResult(pco)
+sp_print_df(head(rs2))
+```
+
+
+```{r}
+# diconnect from the db
+# dbDisconnect(con)
+
+# sp_docker_stop("sql-pet")
+```
+
+```{r}
+# knitr::knit_exit()
+```
+
+
+
+<!--
+```
+sum analytic
+
+SUM(quantity) OVER ({PARTITION BY partition column} {ORDER BY {order columns})
+```
+
+### Active SQL Analysis
+
+In this code block summarize the activebool and active value combinations as a count of the two values combinations, a percent, and a running total.
+
+```{r Active SQL Analysis, code_folding='unhide'}
+active_sql <- dbGetQuery(
+  con,
+  "select c.activebool
+         ,c.active,count(*), round(100 * count(*)/sum(count(*)) over (),2) as pct
+         ,sum(count(*)) over (order by activebool, active) running_total
+     from customer c
+   group by c.activebool,c.active
+  "
+)
+sp_print_df(active_sql)
+```
+
+The `activebool` column only takes on a single value, `true`.  The `active` column takes on only two values, {0,1}.  
+
+Dplyr order_by
+
+```
+Description
+
+This function makes it possible to control the ordering of window functions in R that don't have a specific ordering parameter. When translated to SQL it will modify the order clause of the OVER function.
+
+Usage
+
+order_by(order_by, call)
+Arguments
+
+order_by	
+a vector to order_by
+call	
+a function call to a window function, where the first argument is the vector being operated on
+```
+
+??? how to implement multi-column order by in example below???  If there were more than two combinations, I would like to see it ordered by all combinations
+
+```{r active dplyr analysis}
+customer_table <- DBI::dbReadTable(con, "customer")
+active_dplyr <- customer_table %>% group_by(activebool,active) %>% 
+    summarize(cnt=n()) %>% 
+    mutate(running=order_by(active,cumsum(cnt))
+          ,total=sum(cnt)
+          ,pct=round(100 * cnt/total,2)
+          ) %>%
+select(-running)    
+sp_print_df(active_dplyr)
+```
+
+
+### 12.  DVD rental distribution Running Totals.
+
+In exercise 'What Countries Constitute the Top 25% of the Customer Base?' you had a running total and running percent for each country.  Use the preceding exercise and add a running total by film-dvd within a store, film-dvd across stores, and a running total for each dvd.  To make validation easy, restrict the query to the top two DVD rentals.
+
+```{r, code_folding='unhide'}
+film_rank_sql <- dbGetQuery(con,
+"
+/*
+Analyzes inventory rentals details and summarize at store and business levels
+*/
+select *
+  from (
+          select store_id
+                ,film_id
+                ,title
+                ,inventory_id
+                ,inv_cnt
+                ,rt_store
+                ,rt_film
+--                ,film_store_cnt
+                ,film_cnt
+                ,sum(inv_cnt) over (partition by '' order by film_cnt desc,inventory_id ) rt
+                ,row_number() over (partition by film_id,store_id order by rt_store desc) rn_store
+                ,row_number() over (partition by film_id order by rt_store desc) rn_film
+            from (
+                    SELECT store_id
+                          ,f.film_id
+                          ,f.title
+                          ,i.inventory_id
+                          ,sum(1) over (partition by f.film_id,store_id,i.inventory_id) inv_cnt
+                          ,sum(1) over (partition by f.film_id,store_id order by i.inventory_id) rt_store
+                          ,sum(1) over (partition by f.film_id order by store_id,i.inventory_id) rt_film
+                          ,sum(1) over (partition by f.film_id,store_id ) film_store_cnt
+                          ,sum(1) over (partition by f.film_id ) film_cnt
+                      FROM rental r INNER JOIN inventory i ON r.inventory_id = i.inventory_id
+                           join film f on f.film_id = i.film_id
+                     WHERE f.film_id in (103,738)
+                 ) as src
+          GROUP BY store_id,film_id,title,inventory_id,inv_cnt,rt_store, rt_film, film_store_cnt,film_cnt
+        ) rn
+order by film_cnt desc,inventory_id
+")
+
+
+sp_print_df(film_rank_sql)
+
+
+```
+
+#### Replicate the output above using dplyr syntax.
+
+```{r include=INCLUDE_OUTPUT}
+rental_table <- DBI::dbReadTable(con, "rental")
+inventory_table <- DBI::dbReadTable(con, "inventory")
+film_table <- DBI::dbReadTable(con, "film")
+
+film_rank_dplyr3 <- film_rank_dplyr2 %>% 
+  mutate(rt_store = cumsum(count)) %>%
+  group_by(film_id) %>% 
+  mutate(rt_film_id = cumsum(count)
+        ,rt_label = 'dvd business')  %>%
+  group_by (rt_label) %>%
+  mutate(rt = cumsum(count) ) %>%
+  select (rt_label,store_id:rt_film_id,rt)
+
+                  
+
+sp_print_df(film_rank_dplyr3)
+```
+
+
+-->
