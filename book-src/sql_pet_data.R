@@ -1,3 +1,8 @@
+# This file gathers changes that need to be made to the DVDRENTAL database
+# in order for it to have complete examples of all possible joins.
+
+# First, delete the odd rows in case they have been inserted in a previous run:
+
 dbExecute(con, "delete from film_category where film_id >= 1001;")
 dbExecute(con, "delete from rental where rental_id >= 16050;")
 dbExecute(con, "delete from inventory where film_id >= 1001;")
