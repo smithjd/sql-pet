@@ -1,3 +1,6 @@
+# This file can be sourced to step through all the steps
+# in Chapter 6: "Create the dvdrental database in PostgreSQL in Docker".
+
 library(tidyverse)
 library(DBI)
 library(RPostgres)
@@ -8,8 +11,8 @@ library(sqlpetr)
 
 sp_check_that_docker_is_up()
 
-# Clean up if appropriate
-# Force-remove the `cattle` and `sql-pet` containers if they exist (e.g., from a prior runs):
+# Clean up if appropriate: Force-remove the `cattle` and `sql-pet`
+# containers if they exist (e.g., from a prior runs):
 
 sp_docker_remove_container("cattle")
 sp_docker_remove_container("sql-pet")
@@ -36,6 +39,6 @@ con <- sqlpetr::sp_get_postgres_connection(
   seconds_to_test = 30
 )
 
-# if desired, check that the DVDRENTAL tables are there with
+# if desired, check that the DVDRENTAL tables are there with:
 
 # db_list_tables(con)
