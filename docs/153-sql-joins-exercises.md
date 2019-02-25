@@ -71,7 +71,9 @@ sp_check_that_docker_is_up()
 ```
 
 ```
-## [1] "Docker is up but running no containers"
+## [1] "Docker is up, running these containers:"                                                                                                      
+## [2] "CONTAINER ID        IMAGE                COMMAND                  CREATED              STATUS              PORTS                    NAMES"    
+## [3] "d35fee2b3533        postgres-dvdrental   \"docker-entrypoint.s…\"   About a minute ago   Up 3 seconds        0.0.0.0:5432->5432/tcp   sql-pet"
 ```
 
 Verify pet DB is available, it may be stopped.
@@ -82,8 +84,8 @@ sp_show_all_docker_containers()
 ```
 
 ```
-## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                     PORTS               NAMES
-## 73422e24c530        postgres-dvdrental   "docker-entrypoint.s…"   2 minutes ago       Exited (0) 2 minutes ago                       sql-pet
+## CONTAINER ID        IMAGE                COMMAND                  CREATED              STATUS              PORTS                    NAMES
+## d35fee2b3533        postgres-dvdrental   "docker-entrypoint.s…"   About a minute ago   Up 3 seconds        0.0.0.0:5432->5432/tcp   sql-pet
 ```
 
 Start up the `docker-pet` container
@@ -111,52 +113,8 @@ The following code block deletes and inserts records into the different tables u
 
 
 ```r
-source(file = here('book-src/sql_pet_data.R'),echo = TRUE)
-## 
-## > dbExecute(con, "delete from film_category where film_id >= 1001;")
-## [1] 0
-## 
-## > dbExecute(con, "delete from rental where rental_id >= 16050;")
-## [1] 0
-## 
-## > dbExecute(con, "delete from inventory where film_id >= 1001;")
-## [1] 0
-## 
-## > dbExecute(con, "delete from film where film_id >= 1001;")
-## [1] 0
-## 
-## > dbExecute(con, "delete from customer where customer_id >= 600;")
-## [1] 0
-## 
-## > dbExecute(con, "delete from store where store_id > 2;")
-## [1] 0
-## 
-## > dbExecute(con, "insert into customer\n  (customer_id,store_id,first_name,last_name,email,address_id,activebool\n  ,create_date,last_update,active)\n ..." ... [TRUNCATED] 
-## [1] 5
-## 
-## > dbExecute(con, "ALTER TABLE store DISABLE TRIGGER ALL;")
-## [1] 0
-## 
-## > df <- data.frame(store_id = 10, manager_staff_id = 10, 
-## +     address_id = 10, last_update = Sys.time())
-## 
-## > dbWriteTable(con, "store", value = df, append = TRUE, 
-## +     row.names = FALSE)
-## 
-## > dbExecute(con, "ALTER TABLE store ENABLE TRIGGER ALL;")
-## [1] 0
-## 
-## > dbExecute(con, "insert into film\n  (film_id,title,description,release_year,language_id\n  ,rental_duration,rental_rate,length,replacement_cost,rati ..." ... [TRUNCATED] 
-## [1] 1
-## 
-## > dbExecute(con, "insert into film_category\n  (film_id,category_id,last_update)\n  values(1001,6,now()::date)\n  ,(1001,7,now()::date)\n  ;")
-## [1] 2
-## 
-## > dbExecute(con, "insert into inventory\n  (inventory_id,film_id,store_id,last_update)\n  values(4582,1001,1,now()::date)\n  ,(4583,1001,2,now()::date ..." ... [TRUNCATED] 
-## [1] 2
-## 
-## > dbExecute(con, "insert into rental\n  (rental_id,rental_date,inventory_id,customer_id,return_date,staff_id,last_update)\n  values(16050,now()::date  ..." ... [TRUNCATED] 
-## [1] 1
+source(file = here('book-src', 'sql_pet_data.R'), echo = FALSE)
+source(file = here('book-src', 'dvdrental-table-declarations.R'), echo = FALSE)
 ```
 # SQL Union Exercise
 
@@ -225,7 +183,7 @@ sp_print_df(store_locations_sql)
 ```
 
 <!--html_preserve--><div id="htmlwidget-514d280a38cf86ead40b" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-514d280a38cf86ead40b">{"x":{"filter":"none","data":[["1","2","3"],[1,2,10],["47 MySakila Drive","28 MySQL Boulevard","1795 Santiago de Compostela Way"],["Lethbridge","Woodridge","Laredo"],["Alberta","QLD","Texas"],["","","18743"],["Canada","Australia","United States"],["2006-02-15T17:57:12Z","2006-02-15T17:57:12Z","2019-02-23T21:34:44Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>store_id<\/th>\n      <th>address<\/th>\n      <th>city<\/th>\n      <th>district<\/th>\n      <th>postal_code<\/th>\n      <th>country<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":1},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<script type="application/json" data-for="htmlwidget-514d280a38cf86ead40b">{"x":{"filter":"none","data":[["1","2","3"],[1,2,10],["47 MySakila Drive","28 MySQL Boulevard","1795 Santiago de Compostela Way"],["Lethbridge","Woodridge","Laredo"],["Alberta","QLD","Texas"],["","","18743"],["Canada","Australia","United States"],["2006-02-15T17:57:12Z","2006-02-15T17:57:12Z","2019-02-25T00:49:26Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>store_id<\/th>\n      <th>address<\/th>\n      <th>city<\/th>\n      <th>district<\/th>\n      <th>postal_code<\/th>\n      <th>country<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":1},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 Our DVD Rental business is international and operates in three countries, Canada, Austraila, and the United States.  Each country has one store. 
 
@@ -436,7 +394,7 @@ sp_print_df(language_distribution_sql)
 ```
 
 <!--html_preserve--><div id="htmlwidget-80fb537b5ba0bd90fb93" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-80fb537b5ba0bd90fb93">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[1,2,3,4,5,6],["English             ","Italian             ","Japanese            ","Mandarin            ","French              ","German              "],[1001,0,0,0,0,0]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>language_id<\/th>\n      <th>language<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<script type="application/json" data-for="htmlwidget-80fb537b5ba0bd90fb93">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[1,2,3,4,5,6],["English             ","Italian             ","Japanese            ","Mandarin            ","French              ","German              "],[1000,0,0,0,0,0]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>language_id<\/th>\n      <th>language<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 <font color='blue'>This is a surprise.  For an international customer base, the entire stock of 1001 DVD's are in English only.</font>
 
@@ -938,7 +896,7 @@ sp_print_df(customer_rental_anti_join_sql)
 ```
 
 <!--html_preserve--><div id="htmlwidget-f943e07c4e65c2196ba8" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-f943e07c4e65c2196ba8">{"x":{"filter":"none","data":[["1","2","3","4"],[601,603,604,602],["Sophie","Ian","Ed","John"],["Yang","Frantz","Borasky","Smith"],["sophie.yang@sakilacustomer.org","ian.frantz@sakilacustomer.org","ed.borasky@sakilacustomer.org","john.smith@sakilacustomer.org"],["","14033335568","6172235589",""],["Lethbridge","Lethbridge","Woodridge","Woodridge"],["Canada","Canada","Australia","Australia"],[1,1,1,1],["2019-02-23","2019-02-23","2019-02-23","2019-02-23"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>phone<\/th>\n      <th>city<\/th>\n      <th>country<\/th>\n      <th>active<\/th>\n      <th>create_date<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,8]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<script type="application/json" data-for="htmlwidget-f943e07c4e65c2196ba8">{"x":{"filter":"none","data":[["1","2","3","4"],[601,603,604,602],["Sophie","Ian","Ed","John"],["Yang","Frantz","Borasky","Smith"],["sophie.yang@sakilacustomer.org","ian.frantz@sakilacustomer.org","ed.borasky@sakilacustomer.org","john.smith@sakilacustomer.org"],["","14033335568","6172235589",""],["Lethbridge","Lethbridge","Woodridge","Woodridge"],["Canada","Canada","Australia","Australia"],[1,1,1,1],["2019-02-25","2019-02-25","2019-02-25","2019-02-25"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>phone<\/th>\n      <th>city<\/th>\n      <th>country<\/th>\n      <th>active<\/th>\n      <th>create_date<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,8]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 <font color='blue'>We see that there are four new customers who have never rented a movie.  These four customers are in the countries that have a manned store.</font>
 
