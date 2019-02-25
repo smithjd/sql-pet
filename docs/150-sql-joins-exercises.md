@@ -1,4 +1,5 @@
-# SQL Metadata exercises 
+# SQL Metadata exercises {#chapter_sql-metadata-exercises}
+
 <!-- 
 When vendors implement such changes, their QA team performs rigorous testing before releasing the new functionality to their client base.  Their clients' IT departments also test the new functionality in their own DEV/QA environments before promoting the new functionality into their production environments.
 
@@ -41,7 +42,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE                COMMAND                  CREATED              STATUS                     PORTS               NAMES
-## 7a2ede048f6c        postgres-dvdrental   "docker-entrypoint.s…"   About a minute ago   Exited (0) 2 seconds ago                       sql-pet
+## d35fee2b3533        postgres-dvdrental   "docker-entrypoint.s…"   About a minute ago   Exited (0) 2 seconds ago                       sql-pet
 ```
 
 Start up the `docker-pet` container

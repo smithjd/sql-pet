@@ -1,5 +1,9 @@
 # Create the dvdrental database in PostgreSQL in Docker {#chapter_setup-dvdrental-db}
 
+> NOTE: This Chapter walks through the all steps needed to setup the dvdrental database in Docker.  All susequent chapters depend on this setup.  If for some reason you need to setup the Docker database but don't want to step through this *teaching version* of the setup, you can use:
+>
+> `source('book-src/setup-dvdrental-docker-container.R')`
+
 > This chapter demonstrates how to:
 >
 >  * Setup the `dvdrental` database in Docker
@@ -31,9 +35,7 @@ sp_check_that_docker_is_up()
 ```
 
 ```
-## [1] "Docker is up, running these containers:"                                                                                                      
-## [2] "CONTAINER ID        IMAGE                COMMAND                  CREATED              STATUS              PORTS                    NAMES"    
-## [3] "a92fb82299c6        postgres-dvdrental   \"docker-entrypoint.s…\"   About a minute ago   Up 48 seconds       0.0.0.0:5432->5432/tcp   sql-pet"
+## [1] "Docker is up but running no containers"
 ```
 
 ## Clean up if appropriate
@@ -75,7 +77,7 @@ sp_docker_images_tibble()
 ## # A tibble: 7 x 7
 ##   image_id  repository   tag    digest           created created_at   size 
 ##   <chr>     <chr>        <chr>  <chr>            <chr>   <chr>        <chr>
-## 1 d9449a1f… postgres-dv… latest <none>           7 days… 2019-02-15 … 251MB
+## 1 d9449a1f… postgres-dv… latest <none>           9 days… 2019-02-15 … 251MB
 ## 2 f5e93aa6… <none>       <none> <none>           5 mont… 2018-09-10 … 258MB
 ## 3 ac25c2ba… postgres     10     sha256:b5f07874… 5 mont… 2018-09-04 … 228MB
 ## 4 93ca3834… r-base       latest sha256:3801677d… 7 mont… 2018-07-16 … 678MB
@@ -120,7 +122,7 @@ sp_docker_containers_tibble()
 ## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 73422e24c530 post… docker… 2019-02-2… 1 seco… 0.0.… Up Le… 0B (… sql-…
+## 1 d35fee2b3533 post… docker… 2019-02-2… 1 seco… 0.0.… Up Le… 0B (… sql-…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 
@@ -200,7 +202,7 @@ sp_docker_containers_tibble(list_all = TRUE)
 ## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 73422e24c530 post… docker… 2019-02-2… 5 seco… <NA>  Exite… 0B (… sql-…
+## 1 d35fee2b3533 post… docker… 2019-02-2… 5 seco… <NA>  Exite… 0B (… sql-…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 
@@ -216,7 +218,7 @@ sp_docker_containers_tibble()
 ## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 73422e24c530 post… docker… 2019-02-2… 6 seco… 0.0.… Up Le… 63B … sql-…
+## 1 d35fee2b3533 post… docker… 2019-02-2… 6 seco… 0.0.… Up Le… 63B … sql-…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 Connect to the `dvdrental` database in PostgreSQL:
@@ -265,7 +267,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## 73422e24c530        postgres-dvdrental   "docker-entrypoint.s…"   7 seconds ago       Exited (0) Less than a second ago                       sql-pet
+## d35fee2b3533        postgres-dvdrental   "docker-entrypoint.s…"   7 seconds ago       Exited (0) Less than a second ago                       sql-pet
 ```
 
 Next time, you can just use this command to start the container: 
