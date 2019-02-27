@@ -30,7 +30,11 @@ library(sqlpetr)
 
 Docker commands can be run from a terminal (e.g., the Rstudio Terminal pane) or with a `system2()` command.  (We discuss the diffeent ways of interacting with Docker and other elements in your environment in a [separate chapter](#your-local-environment).)  The necessary functions to start, stop Docker containers and do other busy work are provided in the `sqlpetr` package.  As time permits and curiosity dictates, feel free to look at those functions to see how they work.
 
-Check that Docker is up and running:
+### Check that Docker is up and running
+
+> Note: The `sqlpetr` package is written to accompany this book.  The functions in the package are designed to help you focus on interacting with a dbms from R.  You can ignore how they work until you are ready to delve into the details.  They are all named to begin with `sp_`.  The first time a function is called in the book, we provide a note explaining its use.
+
+> The `sp_check_that_docker_is_up` function from the `sqlpetr` package checks whether Docker is up and running.  If it's not, then you need to install, launch or re-install Docker.
 
 
 ```r
@@ -43,6 +47,9 @@ sp_check_that_docker_is_up()
 
 ## Remove previous containers if they exist
 Force remove the `cattle` and `sql-pet` containers if they exist (e.g., from prior experiments).  
+
+> The `sp_docker_remove_container` function from the `sqlpetr` package forcibly removes a Docker container. If it is running it will be forcibly terminated and removed. If it doesn't exist you won't get an error message. Note that the `images` out of which a container is built will still exist on your system.
+
 
 ```r
 sp_docker_remove_container("cattle")
@@ -62,10 +69,14 @@ sp_docker_remove_container("sql-pet")
 
 We name containers `cattle` for "throw-aways" and `pet` for ones we treasure and keep around.  :-)
 
+> The `sp_docker_remove_container` function from the `sqlpetr` package creates a container and runs the PostgreSQL 10 image (`docker.io/postgres:10`) in it. The image will be downloaded if it doesn't exist locally.
+
+
 ```r
 sp_make_simple_pg("cattle")
 ```
-The first time you run this, Docker downloads the PostgreSQL image, which takes a bit of time. Did it work? The following command shows that a container named `cattle` is running `postgres:10`.
+The first time you run this, Docker downloads the PostgreSQL image, which takes a bit of time. Did it work? The following command should show that a container named `cattle` is running `postgres:10`.
+
 
 ```r
 sp_check_that_docker_is_up()
@@ -74,11 +85,10 @@ sp_check_that_docker_is_up()
 ```
 ## [1] "Docker is up, running these containers:"                                                                                                       
 ## [2] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES"   
-## [3] "38e699419cb6        postgres:10         \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
+## [3] "419d5a8cefa9        postgres:10         \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
 ```
 
-For more details, our package `sqlpetr` has a function
-[`sp_docker_containers_tibble`](https://smithjd.github.io/sqlpetr/reference/sp_docker_containers_tibble.html) that returns a tibble of the containers in the system:
+> The `sp_docker_containers_tibble` function from the `sqlpetr` package provides more on the containers that Docker is running.  Basically this function creates a tibble of containers using `docker ps`.
 
 
 ```r
@@ -89,18 +99,16 @@ sp_docker_containers_tibble()
 ## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 38e699419cb6 post… docker… 2019-02-2… 1 seco… 0.0.… Up Le… 0B (… catt…
+## 1 419d5a8cefa9 post… docker… 2019-02-2… 1 seco… 0.0.… Up Le… 0B (… catt…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
-
 
 ## Connecting, reading and writing to PostgreSQL from R
 
 
 ### Connecting to PostgreSQL
-The [`sp_make_simple_pg`](https://smithjd.github.io/sqlpetr/reference/sp_make_simple_pg.html) function we called above created a container from the
-`postgres:10` library image from Docker Hub. As part of the process, it set the
-password for the PostgreSQL database superuser `postgres` to the value 
+The `sp_make_simple_pg` function we called above created a container from the
+`postgres:10` library image downloaded from Docker Hub. As part of the process, it set the password for the PostgreSQL database superuser `postgres` to the value 
 "postgres".
 
 For simplicity, we are using a weak password at this point and it's shown here 
@@ -109,7 +117,7 @@ should not be shared in open code like that.  A [subsequent chapter](#dbms-login
 demonstrates how to store and use credentials to access the DBMS so that they 
 are kept private.
 
-We connect to PostgreSQL using the `sp_get_postgres_connection` function:
+> The `sp_get_postgres_connection` function from the `sqlpetr` package gets a DBI connection string to a PostgreSQL database, waiting if it is not ready. This function connects to an instance of PostgreSQL and we assign it to a symbol, `con`, for subsequent use.
 
 
 ```r
@@ -170,7 +178,10 @@ Download the table from the DBMS to a local data frame:
 mtcars_df <- DBI::dbReadTable(con, "mtcars")
 ```
 
-Show a few rows:
+> The `sp_print_df` function from the `sqlpetr` package shows (or print) a data frame depending on appropriate output type.  That is when running interactively or generating HTML it prints a `DT::datatable()` while it prints a `knitr::kable()` otherwise.
+
+Tell Docker to *remove* the `cattle` container from it's library of active containers:
+
 
 ```r
 sp_print_df(head(mtcars_df))
@@ -187,13 +198,18 @@ Afterwards, always disconnect from the dbms:
 DBI::dbDisconnect(con)
 ```
 
+> The `sp_docker_stop` function from the `sqlpetr` package stops the container given by the `container_name` parameter.
+
 Tell Docker to stop the `cattle` container:
 
 ```r
 sp_docker_stop("cattle")
 ```
 
+> The `sp_docker_remove_container` function from the `sqlpetr` package removes the container given by the `container_name` parameter.
+
 Tell Docker to *remove* the `cattle` container from it's library of active containers:
+
 
 ```r
 sp_docker_remove_container("cattle")
