@@ -73,7 +73,7 @@ sp_check_that_docker_is_up()
 ```
 ## [1] "Docker is up, running these containers:"                                                                                                      
 ## [2] "CONTAINER ID        IMAGE                COMMAND                  CREATED              STATUS              PORTS                    NAMES"    
-## [3] "d35fee2b3533        postgres-dvdrental   \"docker-entrypoint.s…\"   About a minute ago   Up 12 seconds       0.0.0.0:5432->5432/tcp   sql-pet"
+## [3] "d5942b6981f5        postgres-dvdrental   \"docker-entrypoint.s…\"   About a minute ago   Up 11 seconds       0.0.0.0:5432->5432/tcp   sql-pet"
 ```
 
 Verify pet DB is available, it may be stopped.
@@ -85,7 +85,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE                COMMAND                  CREATED              STATUS              PORTS                    NAMES
-## d35fee2b3533        postgres-dvdrental   "docker-entrypoint.s…"   About a minute ago   Up 12 seconds       0.0.0.0:5432->5432/tcp   sql-pet
+## d5942b6981f5        postgres-dvdrental   "docker-entrypoint.s…"   About a minute ago   Up 12 seconds       0.0.0.0:5432->5432/tcp   sql-pet
 ```
 
 Start up the `docker-pet` container
@@ -266,7 +266,7 @@ sp_print_df(store_locations_sql)
 ```
 
 <!--html_preserve--><div id="htmlwidget-514d280a38cf86ead40b" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-514d280a38cf86ead40b">{"x":{"filter":"none","data":[["1","2","3"],[1,2,10],["47 MySakila Drive","28 MySQL Boulevard","1795 Santiago de Compostela Way"],["Lethbridge","Woodridge","Laredo"],["Alberta","QLD","Texas"],["","","18743"],["Canada","Australia","United States"],["2006-02-15T17:57:12Z","2006-02-15T17:57:12Z","2019-02-25T00:49:35Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>store_id<\/th>\n      <th>address<\/th>\n      <th>city<\/th>\n      <th>district<\/th>\n      <th>postal_code<\/th>\n      <th>country<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":1},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<script type="application/json" data-for="htmlwidget-514d280a38cf86ead40b">{"x":{"filter":"none","data":[["1","2","3"],[1,2,10],["47 MySakila Drive","28 MySQL Boulevard","1795 Santiago de Compostela Way"],["Lethbridge","Woodridge","Laredo"],["Alberta","QLD","Texas"],["","","18743"],["Canada","Australia","United States"],["2006-02-15T17:57:12Z","2006-02-15T17:57:12Z","2019-03-01T01:09:03Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>store_id<\/th>\n      <th>address<\/th>\n      <th>city<\/th>\n      <th>district<\/th>\n      <th>postal_code<\/th>\n      <th>country<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":1},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 Our DVD Rental business is international and operates in three countries, Canada, Austraila, and the United States.  Each country has one store. 
 
@@ -979,7 +979,7 @@ sp_print_df(customer_rental_anti_join_sql)
 ```
 
 <!--html_preserve--><div id="htmlwidget-f943e07c4e65c2196ba8" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-f943e07c4e65c2196ba8">{"x":{"filter":"none","data":[["1","2","3","4"],[601,603,604,602],["Sophie","Ian","Ed","John"],["Yang","Frantz","Borasky","Smith"],["sophie.yang@sakilacustomer.org","ian.frantz@sakilacustomer.org","ed.borasky@sakilacustomer.org","john.smith@sakilacustomer.org"],["","14033335568","6172235589",""],["Lethbridge","Lethbridge","Woodridge","Woodridge"],["Canada","Canada","Australia","Australia"],[1,1,1,1],["2019-02-25","2019-02-25","2019-02-25","2019-02-25"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>phone<\/th>\n      <th>city<\/th>\n      <th>country<\/th>\n      <th>active<\/th>\n      <th>create_date<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,8]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<script type="application/json" data-for="htmlwidget-f943e07c4e65c2196ba8">{"x":{"filter":"none","data":[["1","2","3","4"],[601,603,604,602],["Sophie","Ian","Ed","John"],["Yang","Frantz","Borasky","Smith"],["sophie.yang@sakilacustomer.org","ian.frantz@sakilacustomer.org","ed.borasky@sakilacustomer.org","john.smith@sakilacustomer.org"],["","14033335568","6172235589",""],["Lethbridge","Lethbridge","Woodridge","Woodridge"],["Canada","Canada","Australia","Australia"],[1,1,1,1],["2019-03-01","2019-03-01","2019-03-01","2019-03-01"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>phone<\/th>\n      <th>city<\/th>\n      <th>country<\/th>\n      <th>active<\/th>\n      <th>create_date<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,8]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 <font color='blue'>We see that there are four new customers who have never rented a movie.  These four customers are in the countries that have a manned store.</font>
 
