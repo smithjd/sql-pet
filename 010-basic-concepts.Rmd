@@ -1,9 +1,12 @@
 # Basic Concepts{#chapter_basic-concepts}
 
+************
 > This chapter introduces:
 > 
 > * The overall structure of our Docker-based PostgreSQL sandbox
-> * Basic concepts around each of the elements that make up our sandbox: tidy data, pipes, Docker, PostgreSQL, and data representation.
+> * Basic concepts around each of the elements that make up our sandbox: tidy data, pipes, Docker, PostgreSQL, data representation, and our `petsqlr` package.
+
+*******
 
 ## The big picture: R and the Docker / PostgreSQL playground on your machine
 
@@ -26,6 +29,14 @@ This book is [Tidyverse-oriented](https://www.tidyverse.org), so we assume famil
 R connects to a database by means of a series of packages that work together.  The follwing diagram from a [big data workshop](https://github.com/rstudio/bigdataclass) at the 2019 RStudio conference shows the big picture. The biggest difference in terms of retrieval strategies is between writing `dplyr` and native `SQL` code.  Dplyr generates [SQL-92 standard](https://en.wikipedia.org/wiki/SQL-92) code; whereas you can write SQL code that leverages the specific language features of your dbms when you write SQL code yourself.
 
 ![Rstudio's DBMS architecture - slide # 33](./screenshots/rstudioconf-2019-big-data-architecture.png)
+
+## Our `sqlpetr` package
+
+The `sqlpetr` package is the companion R package for this database tutorial. It has two classes of functions:
+
+* Functions to install the dependencies needed to build the book and perform the operations covered in the tutorial, and
+* Utilities for dealing with Docker and the PostgreSQL Docker image we use.
+`sqlpetr` has a pkgdown site at https://smithjd.github.io/sqlpetr/.
 
 ## Docker
 
@@ -106,7 +117,18 @@ The following code shows how different elements of the R bestiary are translated
 
 ```{r DBI datatype example}
 library(DBI)
-example(dbDataType, package = "DBI")
+
+dbDataType(ANSI(), 1:5)
+dbDataType(ANSI(), 1)
+dbDataType(ANSI(), TRUE)
+dbDataType(ANSI(), Sys.Date())
+dbDataType(ANSI(), Sys.time())
+dbDataType(ANSI(), Sys.time() - as.POSIXct(Sys.Date()))
+dbDataType(ANSI(), c("x", "abc"))
+dbDataType(ANSI(), list(raw(10), raw(20)))
+dbDataType(ANSI(), I(3))
+
+dbDataType(ANSI(), iris)
 ```
 The [DBI specification](https://cran.r-project.org/web/packages/DBI/vignettes/spec.html) provides extensive documentation that is worth digesting if you intend to work with a dbms from R.  As you work through the examples in this book, you will also want to refer to the following resources:
 

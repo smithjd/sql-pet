@@ -83,9 +83,9 @@ sp_check_that_docker_is_up()
 ```
 
 ```
-## [1] "Docker is up, running these containers:"                                                                                                       
-## [2] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES"   
-## [3] "419d5a8cefa9        postgres:10         \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
+## [1] "Docker is up, running these containers:"                                                                                                            
+## [2] "CONTAINER ID        IMAGE               COMMAND                  CREATED                  STATUS                  PORTS                    NAMES"   
+## [3] "80f8d7273d1c        postgres:10         \"docker-entrypoint.s…\"   Less than a second ago   Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
 ```
 
 > The `sp_docker_containers_tibble` function from the `sqlpetr` package provides more on the containers that Docker is running.  Basically this function creates a tibble of containers using `docker ps`.
@@ -99,7 +99,7 @@ sp_docker_containers_tibble()
 ## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 419d5a8cefa9 post… docker… 2019-02-2… 1 seco… 0.0.… Up Le… 0B (… catt…
+## 1 80f8d7273d1c post… docker… 2019-02-2… Less t… 0.0.… Up Le… 0B (… catt…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 

@@ -1,9 +1,12 @@
 # Basic Concepts{#chapter_basic-concepts}
 
+************
 > This chapter introduces:
 > 
 > * The overall structure of our Docker-based PostgreSQL sandbox
-> * Basic concepts around each of the elements that make up our sandbox: tidy data, pipes, Docker, PostgreSQL, and data representation.
+> * Basic concepts around each of the elements that make up our sandbox: tidy data, pipes, Docker, PostgreSQL, data representation, and our `petsqlr` package.
+
+*******
 
 ## The big picture: R and the Docker / PostgreSQL playground on your machine
 
@@ -26,6 +29,14 @@ This book is [Tidyverse-oriented](https://www.tidyverse.org), so we assume famil
 R connects to a database by means of a series of packages that work together.  The follwing diagram from a [big data workshop](https://github.com/rstudio/bigdataclass) at the 2019 RStudio conference shows the big picture. The biggest difference in terms of retrieval strategies is between writing `dplyr` and native `SQL` code.  Dplyr generates [SQL-92 standard](https://en.wikipedia.org/wiki/SQL-92) code; whereas you can write SQL code that leverages the specific language features of your dbms when you write SQL code yourself.
 
 ![Rstudio's DBMS architecture - slide # 33](./screenshots/rstudioconf-2019-big-data-architecture.png)
+
+## Our `sqlpetr` package
+
+The `sqlpetr` package is the companion R package for this database tutorial. It has two classes of functions:
+
+* Functions to install the dependencies needed to build the book and perform the operations covered in the tutorial, and
+* Utilities for dealing with Docker and the PostgreSQL Docker image we use.
+`sqlpetr` has a pkgdown site at https://smithjd.github.io/sqlpetr/.
 
 ## Docker
 
@@ -107,76 +118,85 @@ The following code shows how different elements of the R bestiary are translated
 
 ```r
 library(DBI)
-example(dbDataType, package = "DBI")
+
+dbDataType(ANSI(), 1:5)
 ```
 
 ```
-## 
-## dbDtTy> dbDataType(ANSI(), 1:5)
 ## [1] "INT"
-## 
-## dbDtTy> dbDataType(ANSI(), 1)
+```
+
+```r
+dbDataType(ANSI(), 1)
+```
+
+```
 ## [1] "DOUBLE"
-## 
-## dbDtTy> dbDataType(ANSI(), TRUE)
+```
+
+```r
+dbDataType(ANSI(), TRUE)
+```
+
+```
 ## [1] "SMALLINT"
-## 
-## dbDtTy> dbDataType(ANSI(), Sys.Date())
+```
+
+```r
+dbDataType(ANSI(), Sys.Date())
+```
+
+```
 ## [1] "DATE"
-## 
-## dbDtTy> dbDataType(ANSI(), Sys.time())
+```
+
+```r
+dbDataType(ANSI(), Sys.time())
+```
+
+```
 ## [1] "TIMESTAMP"
-## 
-## dbDtTy> dbDataType(ANSI(), Sys.time() - as.POSIXct(Sys.Date()))
+```
+
+```r
+dbDataType(ANSI(), Sys.time() - as.POSIXct(Sys.Date()))
+```
+
+```
 ## [1] "TIME"
-## 
-## dbDtTy> dbDataType(ANSI(), c("x", "abc"))
+```
+
+```r
+dbDataType(ANSI(), c("x", "abc"))
+```
+
+```
 ## [1] "TEXT"
-## 
-## dbDtTy> dbDataType(ANSI(), list(raw(10), raw(20)))
+```
+
+```r
+dbDataType(ANSI(), list(raw(10), raw(20)))
+```
+
+```
 ## [1] "BLOB"
-## 
-## dbDtTy> dbDataType(ANSI(), I(3))
+```
+
+```r
+dbDataType(ANSI(), I(3))
+```
+
+```
 ## [1] "DOUBLE"
-## 
-## dbDtTy> dbDataType(ANSI(), iris)
+```
+
+```r
+dbDataType(ANSI(), iris)
+```
+
+```
 ## Sepal.Length  Sepal.Width Petal.Length  Petal.Width      Species 
-##     "DOUBLE"     "DOUBLE"     "DOUBLE"     "DOUBLE"       "TEXT" 
-## 
-## dbDtTy> con <- dbConnect(RSQLite::SQLite(), ":memory:")
-## 
-## dbDtTy> dbDataType(con, 1:5)
-## [1] "INTEGER"
-## 
-## dbDtTy> dbDataType(con, 1)
-## [1] "REAL"
-## 
-## dbDtTy> dbDataType(con, TRUE)
-## [1] "INTEGER"
-## 
-## dbDtTy> dbDataType(con, Sys.Date())
-## [1] "REAL"
-## 
-## dbDtTy> dbDataType(con, Sys.time())
-## [1] "REAL"
-## 
-## dbDtTy> dbDataType(con, Sys.time() - as.POSIXct(Sys.Date()))
-## [1] "REAL"
-## 
-## dbDtTy> dbDataType(con, c("x", "abc"))
-## [1] "TEXT"
-## 
-## dbDtTy> dbDataType(con, list(raw(10), raw(20)))
-## [1] "BLOB"
-## 
-## dbDtTy> dbDataType(con, I(3))
-## [1] "REAL"
-## 
-## dbDtTy> dbDataType(con, iris)
-## Sepal.Length  Sepal.Width Petal.Length  Petal.Width      Species 
-##     "DOUBLE"     "DOUBLE"     "DOUBLE"     "DOUBLE"       "TEXT" 
-## 
-## dbDtTy> dbDisconnect(con)
+##     "DOUBLE"     "DOUBLE"     "DOUBLE"     "DOUBLE"       "TEXT"
 ```
 The [DBI specification](https://cran.r-project.org/web/packages/DBI/vignettes/spec.html) provides extensive documentation that is worth digesting if you intend to work with a dbms from R.  As you work through the examples in this book, you will also want to refer to the following resources:
 
