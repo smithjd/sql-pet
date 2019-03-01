@@ -58,7 +58,7 @@ source('book-src/dvdrental-table-declarations.R')
 
 ## Joins
 
-In section 'SQL Quick Start Simple Retrieval', there is a brief discussion of databases and 3NF.  One of the goals of normalization is to eliminate redundant data being kept in multiple tables and having each table contain a very granular level of detail.  If a record then needs to be updated, it is updated in one table instead of multiple tables improving overall system performance.  This also helps simplify and maintain referential integrity between tables.
+In the [SQL Quick Start Simple Retrieval](#chapter_sql-quick-start) chapter, there is a brief discussion of databases and 3NF.  One of the goals of normalization is to eliminate redundant data being kept in multiple tables and having each table contain a very granular level of detail.  If a record then needs to be updated, it is updated in one table instead of multiple tables improving overall system performance.  This also helps simplify and maintain referential integrity between tables.
  
 Normalization breaks data down and JOINs denormalizes the data and builds it back up.  The tables are typically related via a primary key - foreign key relationship. The Postgres database enforces the primary and foreign key constraints in the DVD rental database.  
 
@@ -75,16 +75,16 @@ digraph SQL_TYPES {
         fixedsize = false,
         hegith = 1.5
         width = 1.50]
-  0[label='0.  SQL Joins']
-  1[label='1.  Inner Join\nL.col1 {<,=,>} R.col2']
-  2[label='2.  Outer Join\nL.col1=tbl1.col2']
-  3[label='3.  Self Join\nL.col1=tbl1.col2']
-  4[label='4.  Cross Join\nL.col1=R.col2']
-  5[label='5.  Equi Join\nL.col1=R.col2'] 
-  6[label='6.  Natural Join\nL.col1=R.col1']
-  7[label='7.  Left Join\nL.col1=R.col1']
-  8[label='8.  Right Join\nL.col1=R.col1']
-  9[label='9.  Full Join\nL.col1=tbl2.col1']
+  0[label='SQL Joins']
+  1[label='Inner \nL.col1 { <, =, >} R.col2']
+  2[label='Outer \nL.col1 = tbl1.col2']
+  3[label='Self \nL.col1 = tbl1.col2']
+  4[label='Cross \nL.col1 = R.col2']
+  5[label='Equi \nL.col1 = R.col2'] 
+  6[label='Natural \nL.col1 = R.col1']
+  7[label='Left \nL.col1 = R.col1']
+  8[label='Right \nL.col1 = R.col1']
+  9[label='Full \nL.col1 = R.col1']
   # several 'edge' statements
   0 -> {1,2,3,4} [arrowhead=none]
   1 -> 5 [arrowhead=none]
@@ -738,7 +738,7 @@ order by c.customer_id
 sp_print_df(rs)
 ```
 
-#### SQL anti Join 2, Left Outer Join where NULL on Right {#example_anti-join-sql-1}
+#### SQL anti Join 2, Left Outer Join where NULL on Right {#example_anti-join-sql-1-a}
 
 ```{r SQL anti Join 2}
 rs <- dbGetQuery(
