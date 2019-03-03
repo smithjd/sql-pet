@@ -605,12 +605,10 @@ sp_print_df(customer_store_summary_dfoj)
 
 Below is the `dplyr` semi_join documentation.
 
-```
-semi_join()
-return all rows from x where there are matching values in y, keeping just columns from x.
-
-A semi join differs from an inner join because an inner join will return one row of x for each matching row of y, where a semi join will never duplicate rows of x.
-```
+> semi_join()  
+> return all rows from x where there are matching values in y, keeping just columns from x.
+> 
+> A semi join differs from an inner join because an inner join will return one row of x for each matching row of y, where a semi join will never duplicate rows of x.
 
 The semi join always returns one and only one row from the x table that satisfies the inner join condition.  If we look at one key value on both x and y where the x table has 1 x.key row and y and n y.key rows, then the inner join returns n x.key rows, (1-to-n), and the semi-join returns just one x.key row, (1-to-1).
 
@@ -623,7 +621,7 @@ SQL does not have an explicity 'semi join' key word.  The `semi join` reduces re
 ```
 select * 
   FROM table1 l
- WHERE EXISTS(SELECT 1 FROM table2 r where l.c = r.c)
+  WHERE EXISTS(SELECT 1 FROM table2 r where l.c = r.c)
  
 The EXISTS keyword checks if one or more rows satsify the SELECT clause enclosed in parenthesis, the correlated subquery.  The r.c column from table2, the inner/right table, is correlated to the l.c column from table1, the outer/left table. 
 ```
