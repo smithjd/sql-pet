@@ -101,7 +101,7 @@ The diagram above shows the hierarchy of the different types of joins.  In the b
 *  The `L.` and `R.` are aliases for the left and right table names.  
 *  Often the joining columns have the same name as in the Natural Join, L.col1 = R.col1 
 *  However, the joining column names can be different L.col1 = R.col2.  
-*  All joins are based on equality between the table columns, L.col1 = R.col2, except the inner join which can use non-equality column conditions.  Non-equality column conditions are rare.  Equa Joins are subset of the Inner Join.
+*  All joins are based on equality between the table columns, L.col1 = R.col2, except the inner join which can use non-equality column conditions.  Non-equality column conditions are rare.  Equi Joins are subset of the Inner Join.
 
 
 For this tutorial, we can think of joins as either an Inner/eqau Join or an Outer Join.
@@ -622,11 +622,11 @@ SQL does not have an explicity 'semi join' key word.  The `semi join` reduces re
 select * 
   FROM table1 l
   WHERE EXISTS(SELECT 1 FROM table2 r where l.c = r.c)
+```
  
 The EXISTS keyword checks if one or more rows satsify the SELECT clause enclosed in parenthesis, the correlated subquery.  The r.c column from table2, the inner/right table, is correlated to the l.c column from table1, the outer/left table. 
-```
 
-For all the table1 rows where the  EXISTS clause returns TRUE, the table1 rows are returned.   There is no way to reference table2 columns in the outer select, hence the semi join. 
+For all the table1 rows where the EXISTS clause returns TRUE, the table1 rows are returned. There is no way to reference table2 columns in the outer select, hence the semi join. 
 
 All the previous joins were mutating joins, the joins resulted in a blending of columns from both tables.  A semi join only returns rows from a single table and is a filtering join. The mutating examples included a count column to show the 1-to-n relationships.  Filtering joins are 1-to-1 and the count column  is dropped in the following examples.
 
@@ -799,9 +799,9 @@ sp_print_df(customer_store_details_sij)
 
 --->
 
-## Non-Equa-Join Example
+## Non-Equi-Join Example
 
-All the previous examples are equa-joins and is the most common type of join.  The next example is made up and shows a '<=' join.  The `store` table is usd.  Assume that the store_id actually represents some distance.  The example shows all distances <= to all other distances.   
+All the previous examples are equi-joins and is the most common type of join.  The next example is made up and shows a '<=' join.  The `store` table is usd.  Assume that the store_id actually represents some distance.  The example shows all distances <= to all other distances.   
 
 ```{r}
 store_store_slej <- dbGetQuery(
@@ -813,9 +813,9 @@ order by s1.store_id;"
 sp_print_df(store_store_slej)
 ```
 
-### Dplyr Non-equa Join {#example_140_inner-join-dplyr}
+### Dplyr Non-equi Join {#example_140_inner-join-dplyr}
 
-Dplyr doesn't currently support a non-equa join.  In the by parameter, one can not change the '=' to '<=' as shown below.
+Dplyr doesn't currently support a non-equi join.  In the by parameter, one can not change the '=' to '<=' as shown below.
 
 
 ``` 
