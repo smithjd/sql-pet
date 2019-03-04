@@ -42,7 +42,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                     PORTS               NAMES
-## 5bda842389fb        postgres-dvdrental   "docker-entrypoint.s…"   48 seconds ago      Exited (0) 2 seconds ago                       sql-pet
+## 590ae14054f1        postgres-dvdrental   "docker-entrypoint.s…"   49 seconds ago      Exited (0) 2 seconds ago                       sql-pet
 ```
 
 Start up the `docker-pet` container
@@ -118,8 +118,8 @@ info_schema <- dbGetQuery(con
 sp_print_df(info_schema)
 ```
 
-<!--html_preserve--><div id="htmlwidget-48ec4ad649442f3b514d" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-48ec4ad649442f3b514d">{"x":{"filter":"none","data":[["1","2"],["dvdrental","dvdrental"],["information_schema","information_schema"],["columns","tables"],["VIEW","VIEW"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_catalog<\/th>\n      <th>table_schema<\/th>\n      <th>table_name<\/th>\n      <th>table_type<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-8d6d869a9a90dff1be26" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-8d6d869a9a90dff1be26">{"x":{"filter":"none","data":[["1","2"],["dvdrental","dvdrental"],["information_schema","information_schema"],["columns","tables"],["VIEW","VIEW"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_catalog<\/th>\n      <th>table_schema<\/th>\n      <th>table_name<\/th>\n      <th>table_type<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ## Table Column Metadata
 
