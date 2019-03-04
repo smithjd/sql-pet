@@ -1,4 +1,4 @@
-# SQL & dplyr joins {#chapter_sql-dplyr-joins}
+# SQL & `dplyr` joins {#chapter_sql-dplyr-joins}
 
 > This chapter demonstrates how to:
 > 
@@ -151,26 +151,24 @@ The table below shows the two R join function call formats, standalone function 
 |anti |anti_join(customer_tbl, rental_tbl, by = 'customer_id')    |     |     |customer_tbl %>% semi_join(rental_tbl, by = 'customer_id') |
 
 
-
-
 ### Join Tables
 
-The dplyr join documentation describes two different types of joins, `mutating` and `filtering` joins.  For those coming to R with a SQL background, the mutating documentation is misleading in one respect.  Here is the inner_join documentation.
+The `dplyr` join documentation describes two different types of joins, `mutating` and `filtering` joins.  For those coming to R with a SQL background, the mutating documentation is misleading in one respect.  Here is the inner_join documentation:
 
 > inner_join()
 >   
 > return all rows from x where there are matching values in y, and all columns from x and y. If there are multiple matches between x and y, all combination of the matches are returned.
 
-The misleading part is 'and all the columns from *x* and *y*.'  If the join column is `KEY`, SQL will return x.KEY and y.KEY.  Dplyr returns just KEY, the KEY from the driving table.  This is important if you are translating SQL to R because SQL developers will reference both columns x.KEY and y.KEY.  One needs to mutate the the y.KEY column.  This difference should become clear in the outer join examples.  
+The misleading part is 'and all the columns from *x* and *y*.'  If the join column is `KEY`, SQL will return x.KEY and y.KEY.  `dplyr` returns just KEY, the KEY from the driving table.  This is important if you are translating SQL to R because SQL developers will reference both columns x.KEY and y.KEY.  One needs to mutate the y.KEY column.  This difference should become clear in the outer join examples.  
 
-In the next couple of examples, we will use a small sample of the `customer` and `store` table data from the database to illustrate the diffent joins.  In the `dplyr::*_join` verbs, the `by` and `suffix` parameters are included because they help document the actual join and the source of join columns.  If the suffix parameter is excluded, it defaults to .x to refer to the first table and .y for the second table.  If the dplyr pipe has many joins, the suffix parameter makes it clearer which table the column came from.
+In the next couple of examples, we will use a small sample of the `customer` and `store` table data from the database to illustrate the diffent joins.  In the `dplyr::*_join` verbs, the `by` and `suffix` parameters are included because they help document the actual join and the source of join columns.  If the suffix parameter is excluded, it defaults to .x to refer to the first table and .y for the second table.  If the `dplyr` pipe has many joins, the suffix parameter makes it clearer which table the column came from.
 
 In the next code block, we perform a Cartesian join to illustrate the default suffix behavior.  Note that:
 
-* every column has a suffix of x or y except the key column; and
+* every column has a suffix of x or y except the key column; _and_
 * the column values may or may not be the same based on the column name without the suffix.
 
-If one has a lot of joins in the pipe with tables that have many duplicate column names, it is difficult to keep track of the source of the column.
+If one has a lot of joins in the pipeline with tables that have many duplicate column names, it is difficult to keep track of the source of the column.
 
 ```{r}
 store_table <- DBI::dbReadTable(con, "store")
@@ -197,9 +195,9 @@ cartesian_join2 <-
 sp_print_df(cartesian_join2)
 ```
 
-## Natural Join Delayed Time Bomb
+## Natural Join is a Delayed Time Bomb
 
-The dplyr default join is a natural join, joining tables on common column names.  One of many links why one should not use natural joins can be found [here](http://gplivna.blogspot.com/2007/10/natural-joins-are-evil-motto-if-you.html).  If two tables are joined via a natural join on column `C1` the join continues to work as long as no additional common columns are added to either table.  If a new column `C2` is added to one of the tables and `C2` already exists in the other table, BOOM!, the delayed time bomb goes off.  The natural join still executes, doesn't throw any errors, but the returned result set may be smaller, much smaller, than before the new `C2` column was added.
+The `dplyr` default join is a natural join, joining tables on common column names.  One of many links why one should not use natural joins can be found [here](http://gplivna.blogspot.com/2007/10/natural-joins-are-evil-motto-if-you.html).  If two tables are joined via a natural join on column `C1` the join continues to work as long as no additional common columns are added to either table.  If a new column `C2` is added to one of the tables and `C2` already exists in the other table, BOOM!, the delayed time bomb goes off.  The natural join still executes, doesn't throw any errors, but the returned result set may be smaller, much smaller, than before the new `C2` column was added.
 
 ### SQL Customer store_id Distribution
 
@@ -237,7 +235,7 @@ sp_print_df(stores)
 ```
  
 
-### dplyr store_id distribution Exercise
+### `dplyr` store_id distribution Exercise
 
 Execute and Review the output from the code block below.  Union and arrange the output to match the SQL output in the previous code block.  
 
@@ -262,22 +260,21 @@ sp_print_df(store_summary)
 
 ## UNION the two summary tables and ARRANGE the output to match the SQL output from the previouse code block
 
-
 ```
 
 ## Join Templates
 
-In this section we perform various joins using dplyr and SQL.  Each dplyr code block has three purposes.  
+In this section we perform various joins using `dplyr` and SQL.  Each `dplyr` code block has three purposes.  
 
 1.  Show working detail/summary data join examples.  
-2.  The code blocks can be used as templates for beginning more complex dplyr pipelines.
+2.  The code blocks can be used as templates for beginning more complex `dplyr` pipelines.
 3.  The code blocks show the number of joins performed.
 
-In these examples the 'customer' is always the left table and 'store' is always the right table. The join condition shown in the `by` parameter
-
+In these examples, the 'customer' is always the left table and 'store' is always the right table. The join condition shown in the `by` parameter
+```
     by = c('store_id'='store_id')
-
-is on the common foreign - primary key column store_id. This is technically an equi-join condition which makes our joins 1-to-1 and keeps the result set small.  
+```
+is on the common foreign - primary key column `store_id`. This is technically an equi-join condition which makes our joins 1-to-1 and keeps the result set small.  
 
 > In multi-column joins, each language_id would be replaced with a vector of column names used in the join by position. Note the column names do not need to be identical by position.
 
@@ -303,7 +300,7 @@ customer_store_details_sij <- dbGetQuery(
 sp_print_df(customer_store_details_sij)
 ```
 
-### Dplyr Inner Join Details {#example_140_inner-join-details-dplyr}
+### `dplyr` Inner Join Details {#example_140_inner-join-details-dplyr}
 
 ```{r dplyr inner join Details}
 customer_ij <- customer_table %>%
@@ -325,7 +322,7 @@ customer_ij <- customer_table %>%
 sp_print_df(customer_ij)
 ```
 
-Compare the output from the SQL and dplyr version.  The SQL output has a `c_store_id` and a `s_store_id` column and the dplyr output only has `store_id`.  In this case, because it is an inner join, it doesn't matter because the `store_id` in the `customer` table and the `store_id` in the `store` table will always be the same.
+Compare the output from the SQL and `dplyr` version.  The SQL output has a `c_store_id` and a `s_store_id` column and the `dplyr` output only has `store_id`.  In this case, because it is an inner join, it doesn't matter because the `store_id` in the `customer` table and the `store_id` in the `store` table will always be the same.
 
 ### SQL Inner Join Summary {#example_140_inner-join-summary-sql}
 
@@ -342,9 +339,9 @@ customer_store_summay_sij <- dbGetQuery(
 sp_print_df(customer_store_summay_sij)
 ```
 
-### dplyr Inner Join Summary {#example_140_inner-join-summary_dplyr}
+### `dplyr` Inner Join Summary {#example_140_inner-join-summary_dplyr}
 
-In the previous SQL code block, `c.` and `s.` were used in the `inner join` as table aliases.  The `dplyr` suffix is similar to the SQL table alias. The role of the dplyr suffix and the SQL alias is to disambiguate duplicate table and column names referenced.    
+In the previous SQL code block, `c.` and `s.` were used in the `inner join` as table aliases.  The `dplyr` suffix is similar to the SQL table alias. The role of the `dplyr` suffix and the SQL alias is to disambiguate duplicate table and column names referenced.    
 
 ```{r dplyr inner join summary}
 customer_store_summary_dij <- customer_table %>%
@@ -379,7 +376,7 @@ customer_store_details_sloj <- dbGetQuery(
 sp_print_df(customer_store_details_sloj)
 ```
 
-### dplyr Left Join Details {#example_140_left-join-details-dplyr}
+### `dplyr` Left Join Details {#example_140_left-join-details-dplyr}
 
 The next code block shows the left join details.  Note that the `s_store_id` column is derived via the mutate function, but not shown in the output below.  Without the `s_store_id` column, it might accidentally be assumed that the `store.store_id = customer.store_id` when the `store.store_id` values are actually NULL/NA based on the output without the `s_store_id` column.
 
@@ -453,9 +450,9 @@ The lojs column returns the number of rows found on the `store_id`, from the `cu
 2.  All inner join rows can reference all columns/derived columns specified in the select clause from both the left and right tables.  
 3.  All rows from the left table, the outer table, without a matching row on the right returns all the columns/derived column values specified in the select clause from the left, but the values from right table have all values of NA. 
 
-### dplyr Left Join Summary {#example_140_left-join-summary-dplyr}
+### `dplyr` Left Join Summary {#example_140_left-join-summary-dplyr}
 
-The dplyr outer join verbs do not return the non-driving table join values.  Compare the mutate verb `s_store_id` in the code block below with `s.store_id` in the equivalent SQL code block above.
+The `dplyr` outer join verbs do not return the non-driving table join values.  Compare the `mutate` verb parameter, `s_store_id`, in the code block below with `s.store_id` in the equivalent SQL code block above.
 
 ```{r dplyr left outer join}
 customer_store_summary_dloj <- customer_table %>%
@@ -484,7 +481,7 @@ It is not uncommon to have many many tables joined together as a series of left 
 
 One can think of the two components of an inner join as a transaction that is either in:
 
-1. an open state with no matching rows in the inner table; or
+1. an open state with no matching rows in the inner table; _or_
 2. a closed state with one or more matching rows in the inner table. 
 
 Assume that we have a four DVD rental step process represented via table A, B, C, and D left outer joined together.  Summing the null and non-null keys together across all four tables gives a quick snap shot of the business in the four different steps.  We will review this concept in some detail in one of the future exercises.
@@ -493,7 +490,7 @@ Assume that we have a four DVD rental step process represented via table A, B, C
 
 ### SQL Right Join Details {#example_140_right-join-details-sql}
 
-The SQL block below shows only our sample customer rows, (`customer_id` between 595 and 604). The driving table is on the right, the `store` table.  Only six of the 10 sample customer rows appear which have `store_id` = {1, 2}.  All three `store` rows appear, `row_id` = {1,2,10}.  The right join is the least frequently used join type.
+The SQL block below shows only our sample customer rows, (`customer_id` between 595 and 604). The driving table is on the right, the `store` table.  Only six of the 10 sample customer rows appear which have `store_id` = {1, 2}.  All three `store` rows appear, `row_id` = {1, 2, 10}.  The right join is the least frequently used join type.
 
 ```{r SQL right join details}
 customer_store_detail_sroj <- dbGetQuery(
@@ -510,23 +507,23 @@ sp_print_df(customer_store_detail_sroj)
 
 Compare the SQL left join where clause
 ```
-    where customer_id between 595 and 604;")
+    where customer_id between 595 and 604
 ```
 with the SQL right join where clause 
 ```
-    where coalesce(customer_id,595) between 595 and 604;")
+    where coalesce(customer_id,595) between 595 and 604
 ```
 
-The `customer` table is the driving table in the left join and always returns all rows from the `customer` table on the left that match the join and satisfy the where clause.  The `store` table is the driving table in the right join and always returns all rows from the `store` table on the right that match the join and satisfy the where clause.  The right outer join condition shown always returns the `store.store_id=10` row.  Since the `custome` table does not have the corresponding row to join to, the right outer join returns a customer row with all null column values.  The `coalesce` is a NULL if-then-else test.  If the `customer_id` is null, it returns 595 to prevent the store_id = 10 row from being dropped from the result set.
+The `customer` table is the driving table in the left join and always returns all rows from the `customer` table on the left that match the join and satisfy the where clause.  The `store` table is the driving table in the right join and always returns all rows from the `store` table on the right that match the join and satisfy the where clause.  The right outer join condition shown always returns the `store.store_id=10` row.  Since the `customer` table does not have the corresponding row to join to, the right outer join returns a customer row with all null column values.  The `coalesce` is a NULL if-then-else test.  If the `customer_id` is null, it returns 595 to prevent the store_id = 10 row from being dropped from the result set.
 
 The right outer join clause can be rewritten as
 ```
      where customer_id between 595 and 604 or customer_id is null;
 ```
 
-See the next dplyr code block to see the alternative `where` clause shown above.
+See the next `dplyr` code block to see the alternative `where` clause shown above.
 
-### dplyr Right Join Details {#example_140_right-join-details-dplyr}
+### `dplyr` Right Join Details {#example_140_right-join-details-dplyr}
 
 ```{r dplyr Right outer join Details}
 
@@ -542,8 +539,14 @@ customer_store_detail_droj <- customer_table %>%
     s_address_id = address_id.y
   ) %>%
   select(
-    customer_id, first_name, last_name, s_store_id, c_store_id,
-    manager_staff_id, s_address_id) 
+    customer_id, 
+    first_name, 
+    last_name, 
+    s_store_id, 
+    c_store_id,
+    manager_staff_id, 
+    s_address_id
+  ) 
 
 sp_print_df(customer_store_detail_droj)
 ```
@@ -568,7 +571,7 @@ The rojs column returns the number of rows found on the keys from the right tabl
 2.  Right outer join returns all the columns/derived columns specified in the select clause from both the left and right tables.  
 3.  All rows from the right table, the outer table, without a matching row on the left returns all the columns/derived column values specified in the select clause from the right, but the values from left table have all values of NA. For example, see the row above where `store.store_id = 10` and `c_store_id` is NULL. 
 
-### dplyr Right Join Summary {#example_140_right-join-summary-dplyr}
+### `dplyr` Right Join Summary {#example_140_right-join-summary-dplyr}
 
 ```{r right outer join summary}
 customer_store_summary_droj <- customer_table %>%
@@ -606,7 +609,7 @@ customer_store_details_sfoj <- dbGetQuery(
 sp_print_df(customer_store_details_sfoj)
 ```
 
-### dplyr Full Join Details {#example_140_full-join-details-sql-b}
+### `dplyr` Full Join Details {#example_140_full-join-details-sql-b}
 
 ```{r dplyr Full Join Details}
 
@@ -621,8 +624,7 @@ customer_store_detail_dfoj <- customer_table %>%
     s_store_id = store_id,
     s_address_id = address_id.y
   ) %>%
-  select(customer_id, first_name, last_name, 
-         s_store_id, c_store_id, manager_staff_id, s_address_id) 
+  select(customer_id, first_name, last_name, s_store_id, c_store_id, manager_staff_id, s_address_id) 
 
 sp_print_df(customer_store_detail_dfoj)
 ```
@@ -643,9 +645,9 @@ customer_store_summary_sfoj <- dbGetQuery(
 sp_print_df(customer_store_summary_sfoj)
 ```
 
-### dplyr Full Join Summary {#example_140_full-join-summary-dplyr}
+### `dplyr` Full Join Summary {#example_140_full-join-summary-dplyr}
 
-The full outer join summary has seven rows.  Store_id = {1,2} values appear in both tables.  Store_id = {3 - 6} appear only in the `customer` table which is on the left.  Store_id = 10 appears only in the `store` table which is on the right.
+The full outer join summary has seven rows.  Store_id = {1, 2} values appear in both tables.  Store_id = {3 - 6} appear only in the `customer` table which is on the left.  Store_id = 10 appears only in the `store` table which is on the right.
 
 ```{r dplyr full outer join}
 
@@ -665,7 +667,7 @@ sp_print_df(customer_store_summary_dfoj)
 
 ## Semi Join 
 
-Below is the `dplyr` semi_join documentation.
+Below is the `dplyr` semi_join documentation:
 
 > semi_join()  
 > return all rows from x where there are matching values in y, keeping just columns from x.
@@ -690,7 +692,7 @@ SELECT *
 
 For all the table1 rows where the EXISTS clause returns TRUE, the table1 rows are returned. There is no way to reference table2 columns in the outer select, hence the semi join. 
 
-All the previous joins were mutating joins, the joins resulted in a blending of columns from both tables.  A semi join only returns rows from a single table and is a filtering join. The mutating examples included a count column to show the 1-to-n relationships.  Filtering joins are 1-to-1 and the count column is dropped in the following examples.
+All the previous joins were _mutating joins_, meaning the joins resulted in a blending of columns from both tables.  A semi join only returns rows from a single table and is a filtering join. The mutating examples included a count column to show the 1-to-n relationships.  Filtering joins are 1-to-1 and the count column is dropped in the following examples.
 
 ```{r SQL Semi Join 1}
 customer_store_ssj <- dbGetQuery(
@@ -706,11 +708,11 @@ customer_store_ssj <- dbGetQuery(
 sp_print_df(customer_store_ssj)
 ```
 
-Note that this returned the six rows from the customer table that satisfied the c.store_id = s.store_id join condition.  It is the same as the SQL Inner Join example earlier, but without the store columns.  All the relationships are 1-to-1.
+Note that this returned the six rows from the customer table that satisfied the `c.store_id = s.store_id` join condition.  It is the same as the SQL Inner Join example earlier, but without the store columns.  All the relationships are 1-to-1.
 
-### dplyr Semi Join Customer to Store {#example_140_semi-join-dplyr-1}
+### `dplyr` Semi Join Customer to Store {#example_140_semi-join-dplyr-1}
 
-The corresponding dplyr version is shown in the next code block.
+The corresponding `dplyr` version is shown in the next code block.
 
 ```{r Dplyer semi join Customer to Store}
 customer_store_dsj <- customer_table %>% 
@@ -742,11 +744,11 @@ store_customer_detail_ssj <- dbGetQuery(
 sp_print_df(store_customer_detail_ssj)
 ```
 
-Here we see that we get the two rows from the store table that satisfy the `s.store_id = c.store_id` condition,  where `store_id` = {1,2}.  In this example the relationship between store and customer is 1-to-n, but we do not know that from the output.
+Here we see that we get the two rows from the store table that satisfy the `s.store_id = c.store_id` condition,  where `store_id` = {1, 2}.  In this example the relationship between store and customer is 1-to-n, but we do not know that from the output.
 
-### dplyr Semi Join Store to Customer {#example_140_semi-join-dplyr-2}
+### `dplyr` Semi Join Store to Customer {#example_140_semi-join-dplyr-2}
 
-The corresponding dplyr version is shown in the next code block.  Note that the filter condition on the `customer` table has been removed because the semi_join does not return any customer columns.
+The corresponding `dplyr` version is shown in the next code block.  Note that the filter condition on the `customer` table has been removed because the semi_join does not return any customer columns.
 
 ```{r dplyer semi join Store to Customer}
 store_customer_dsj <-  store_table %>%
@@ -771,19 +773,19 @@ store_customer_detail_ssj2 <- dbGetQuery(
         from customer c 
         where c.store_id = s.store_id 
           and c.customer_id between 595 and 604
-      ) in (2,4)
+      ) in (2, 4)
 ;")
 
 sp_print_df(store_customer_detail_ssj2)
 ```
 
-To generalize the test above, replace `in {2,4}` with `> 0`.  
+To generalize the test above, replace `in (2, 4)` with `> 0`.  
 
 ## Anti Joins
 
 A `semi join` returns rows from one table that has one or more matching rows in the other table.  The `anti join` returns rows from one table that has no matching rows in the other table.    
 
-#### dplyr `anti_join` {#example_140_anti-join-dplyr}
+#### `dplyr::anti_join` {#example_140_anti-join-dplyr}
 
 The anti join is an outer join without the inner joined rows.  It only returns the rows from the driving table that do not have a matching row from the other table.  
 
@@ -891,9 +893,9 @@ store_store_slej <- dbGetQuery(
 sp_print_df(store_store_slej)
 ```
 
-### dplyr Non-equi Join {#example_140_inner-join-dplyr}
+### `dplyr` Non-equi Join {#example_140_inner-join-dplyr}
 
-dplyr doesn't currently support a non-equi join.  In the `by` parameter, one can not change the '=' to '<=' as shown below.
+`dplyr` doesn't currently support a non-equi join.  In the `by` parameter, one can not change the '=' to '<=' as shown below.
 
 ``` 
 {r}
@@ -912,7 +914,7 @@ recommended in production code), not logical Call `rlang::last_error()` to see a
 
 The explanation below is from [here](https://stackoverflow.com/questions/47485779/dplyr-joins-how-do-you-do-a-non-standard-join-col1-col2-when-working-with), a Stack Overflow discussion that was posted Nov 25, 2017.
 
-In `by = c("col1" = "col2")`,  `=` is _not_ the equality operator, but an assignment operator (the equality operator in R is `==`). The expression inside `c(...)` creates a _named character vector_ (name: col1 value: col2) that dplyr uses for the join. Nowhere do you define the kind of comparison that is made during the join. The comparison is hard-coded in dplyr. I don't think dplyr supports non-equi joins (yet).
+In `by = c("col1" = "col2")`,  `=` is _not_ the equality operator, but an assignment operator (the equality operator in R is `==`). The expression inside `c(...)` creates a _named character vector_ (name: col1 value: col2) that `dplyr` uses for the join. Nowhere do you define the kind of comparison that is made during the join. The comparison is hard-coded in `dplyr`. I don't think `dplyr` supports non-equi joins (yet).
 
 ```{r}
 # disconnect from the db
