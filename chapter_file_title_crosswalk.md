@@ -1,7 +1,7 @@
 |Ch # | Chapter Title | File Name | Link Tag|
 |----|---------------------|---------------------|---------|
 |1|Introduction|index.Rmd|chapter_introduction|
-|2|Basic Concepts|010-basic-concepts.Rmd|chapter_basic-concepts|
+|2|Basic Concepts||chapter_basic-concepts|
 |3|How to use this book |020-using-this-book.Rmd|chapter_how-to-use-this-book|
 |4|Learning Goals and Use Cases |030-learning-goals-use-cases.Rmd|chapter_learning-goals|
 |5|Connecting Docker, PostgreSQL, and R |040-docker-setup-postgres-connect-with-r.Rmd|chapter_connect-docker-postgresql-r|
