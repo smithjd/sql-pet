@@ -13,7 +13,7 @@
 |11|DBI package and SQL |100-dbi-and-sql.Rmd|chapter_dbi-package-sql|
 |12|Inserting rows into the DVDRENTAL database |107-sql-insert-rows.Rmd|chapter_sql-inserting-rows|
 |13|SQL & dplyr joins additional data |130-sql-dplyr-joins-data.Rmd|chapter_sql-dplyr-data|
-|14|SQL & dplyr joins |140-sql-dplyr-joins.Rmd|chapter_sql-dplyr-joins|
+|14|SQL & `dplyr` joins |140-sql-dplyr-joins.Rmd|chapter_sql-dplyr-joins|
 |15|SQL Metadata exercises |150-sql-joins-exercises.Rmd|chapter_sql-metadata-exercises|
 |16|NA|153-sql-joins-exercises.Rmd|NA|
 |17|NA|155-sql-joins-exercises-with-answers.Rmd|NA|
