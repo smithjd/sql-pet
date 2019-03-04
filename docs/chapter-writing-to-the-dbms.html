@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Chapter 32 Writing to the DBMS | R, Databases, and Docker</title>
+  <meta name="description" content="An introduction to Docker and PostgreSQL for R users to simulate use cases behind corporate walls.">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+
+  <meta property="og:title" content="Chapter 32 Writing to the DBMS | R, Databases, and Docker" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="An introduction to Docker and PostgreSQL for R users to simulate use cases behind corporate walls." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 32 Writing to the DBMS | R, Databases, and Docker" />
+  
+  <meta name="twitter:description" content="An introduction to Docker and PostgreSQL for R users to simulate use cases behind corporate walls." />
+  
+
+<meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
+
+
+<meta name="date" content="2019-03-04">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="chapter-sql-queries-breakdown.html">
+<link rel="next" href="chapter-appendix-setup-instructions.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+<script src="libs/htmlwidgets-1.3/htmlwidgets.js"></script>
+<link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="libs/datatables-binding-0.5/datatables.js"></script>
+<link href="libs/dt-core-1.10.16/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.10.16/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.10.16/js/jquery.dataTables.min.js"></script>
+<link href="libs/crosstalk-1.0.0/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
+<script src="libs/viz-0.3/viz.js"></script>
+<link href="libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
+<script src="libs/grViz-binding-1.0.0/grViz.js"></script>
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">R, Databases and Docker</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#using-r-to-query-a-dbms-in-your-organization"><i class="fa fa-check"></i><b>1.1</b> Using R to query a DBMS in your organization</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#docker-as-a-tool-for-users"><i class="fa fa-check"></i><b>1.2</b> Docker as a tool for UseRs</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#who-are-we"><i class="fa fa-check"></i><b>1.3</b> Who are we?</a></li>
+<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#how-did-this-project-come-about"><i class="fa fa-check"></i><b>1.4</b> How did this project come about?</a></li>
+<li class="chapter" data-level="1.5" data-path="index.html"><a href="index.html#navigation"><i class="fa fa-check"></i><b>1.5</b> Navigation</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html"><i class="fa fa-check"></i><b>2</b> Basic Concepts</a><ul>
+<li class="chapter" data-level="2.1" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#the-big-picture-r-and-the-docker-postgresql-playground-on-your-machine"><i class="fa fa-check"></i><b>2.1</b> The big picture: R and the Docker / PostgreSQL playground on your machine</a></li>
+<li class="chapter" data-level="2.2" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#your-computer-and-its-operating-system"><i class="fa fa-check"></i><b>2.2</b> Your computer and its operating system</a></li>
+<li class="chapter" data-level="2.3" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#r"><i class="fa fa-check"></i><b>2.3</b> R</a></li>
+<li class="chapter" data-level="2.4" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#our-sqlpetr-package"><i class="fa fa-check"></i><b>2.4</b> Our <code>sqlpetr</code> package</a></li>
+<li class="chapter" data-level="2.5" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#docker"><i class="fa fa-check"></i><b>2.5</b> Docker</a><ul>
+<li class="chapter" data-level="2.5.1" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#virtual-machines-and-hypervisors"><i class="fa fa-check"></i><b>2.5.1</b> Virtual machines and hypervisors</a></li>
+<li class="chapter" data-level="2.5.2" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#containers"><i class="fa fa-check"></i><b>2.5.2</b> Containers</a></li>
+<li class="chapter" data-level="2.5.3" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#docker-itself"><i class="fa fa-check"></i><b>2.5.3</b> Docker itself</a></li>
+<li class="chapter" data-level="2.5.4" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#docker-objects"><i class="fa fa-check"></i><b>2.5.4</b> Docker objects</a></li>
+<li class="chapter" data-level="2.5.5" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#hosting-docker-on-windows-machines"><i class="fa fa-check"></i><b>2.5.5</b> Hosting Docker on Windows machines</a></li>
+<li class="chapter" data-level="2.5.6" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#hosting-docker-on-macos-machines"><i class="fa fa-check"></i><b>2.5.6</b> Hosting Docker on macOS machines</a></li>
+<li class="chapter" data-level="2.5.7" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#hosting-docker-on-unix-machines"><i class="fa fa-check"></i><b>2.5.7</b> Hosting Docker on UNIX machines</a></li>
+</ul></li>
+<li class="chapter" data-level="2.6" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#normal-and-normalized-data"><i class="fa fa-check"></i><b>2.6</b> ‘Normal’ and ‘normalized’ data</a><ul>
+<li class="chapter" data-level="2.6.1" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#tidy-data"><i class="fa fa-check"></i><b>2.6.1</b> Tidy data</a></li>
+<li class="chapter" data-level="2.6.2" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#design-of-normal-data"><i class="fa fa-check"></i><b>2.6.2</b> Design of “normal data”</a></li>
+</ul></li>
+<li class="chapter" data-level="2.7" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#organizational-dbms"><i class="fa fa-check"></i><b>2.7</b> Organizational dbms</a></li>
+<li class="chapter" data-level="2.8" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#sql"><i class="fa fa-check"></i><b>2.8</b> SQL</a><ul>
+<li class="chapter" data-level="2.8.1" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#data-mapping-between-r-vs-sql-data-types"><i class="fa fa-check"></i><b>2.8.1</b> Data mapping between R vs SQL data types</a></li>
+<li class="chapter" data-level="2.8.2" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#postgresql-and-connection-parameters"><i class="fa fa-check"></i><b>2.8.2</b> PostgreSQL and connection parameters</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="chapter-how-to-use-this-book.html"><a href="chapter-how-to-use-this-book.html"><i class="fa fa-check"></i><b>3</b> How to use this book</a><ul>
+<li class="chapter" data-level="3.1" data-path="chapter-how-to-use-this-book.html"><a href="chapter-how-to-use-this-book.html#retrieve-the-code-from-github"><i class="fa fa-check"></i><b>3.1</b> Retrieve the code from GitHub</a></li>
+<li class="chapter" data-level="3.2" data-path="chapter-how-to-use-this-book.html"><a href="chapter-how-to-use-this-book.html#read-along-experiment-as-you-go"><i class="fa fa-check"></i><b>3.2</b> Read along, experiment as you go</a></li>
+<li class="chapter" data-level="3.3" data-path="chapter-how-to-use-this-book.html"><a href="chapter-how-to-use-this-book.html#participating"><i class="fa fa-check"></i><b>3.3</b> Participating</a><ul>
+<li class="chapter" data-level="3.3.1" data-path="chapter-how-to-use-this-book.html"><a href="chapter-how-to-use-this-book.html#browsing-the-book"><i class="fa fa-check"></i><b>3.3.1</b> Browsing the book</a></li>
+<li class="chapter" data-level="3.3.2" data-path="chapter-how-to-use-this-book.html"><a href="chapter-how-to-use-this-book.html#diving-in"><i class="fa fa-check"></i><b>3.3.2</b> Diving in</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html"><i class="fa fa-check"></i><b>4</b> Learning Goals and Use Cases</a><ul>
+<li class="chapter" data-level="4.1" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html#ask-yourself-what-are-you-aiming-for"><i class="fa fa-check"></i><b>4.1</b> Ask yourself, what are you aiming for?</a></li>
+<li class="chapter" data-level="4.2" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html#learning-goals"><i class="fa fa-check"></i><b>4.2</b> Learning Goals</a></li>
+<li class="chapter" data-level="4.3" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html#imagining-a-dvd-rental-business"><i class="fa fa-check"></i><b>4.3</b> Imagining a DVD rental business</a></li>
+<li class="chapter" data-level="4.4" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html#use-cases"><i class="fa fa-check"></i><b>4.4</b> Use cases</a></li>
+<li class="chapter" data-level="4.5" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html#investigating-a-question-using-an-organizations-database"><i class="fa fa-check"></i><b>4.5</b> Investigating a question using an organization’s database</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html"><i class="fa fa-check"></i><b>5</b> Connecting Docker, PostgreSQL, and R</a><ul>
+<li class="chapter" data-level="5.1" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#verify-that-docker-is-running"><i class="fa fa-check"></i><b>5.1</b> Verify that Docker is running</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#check-that-docker-is-up-and-running"><i class="fa fa-check"></i><b>5.1.1</b> Check that Docker is up and running</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#remove-previous-containers-if-they-exist"><i class="fa fa-check"></i><b>5.2</b> Remove previous containers if they exist</a></li>
+<li class="chapter" data-level="5.3" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#connecting-reading-and-writing-to-postgresql-from-r"><i class="fa fa-check"></i><b>5.3</b> Connecting, reading and writing to PostgreSQL from R</a><ul>
+<li class="chapter" data-level="5.3.1" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#connecting-to-postgresql"><i class="fa fa-check"></i><b>5.3.1</b> Connecting to PostgreSQL</a></li>
+<li class="chapter" data-level="5.3.2" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#interact-with-postgresql"><i class="fa fa-check"></i><b>5.3.2</b> Interact with PostgreSQL</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#clean-up"><i class="fa fa-check"></i><b>5.4</b> Clean up</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html"><i class="fa fa-check"></i><b>6</b> Create the dvdrental database in PostgreSQL in Docker</a><ul>
+<li class="chapter" data-level="6.1" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html#overview"><i class="fa fa-check"></i><b>6.1</b> Overview</a></li>
+<li class="chapter" data-level="6.2" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html#verify-that-docker-is-up-and-running"><i class="fa fa-check"></i><b>6.2</b> Verify that Docker is up and running</a></li>
+<li class="chapter" data-level="6.3" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html#clean-up-if-appropriate"><i class="fa fa-check"></i><b>6.3</b> Clean up if appropriate</a></li>
+<li class="chapter" data-level="6.4" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html#build-the-pet-sql-docker-image"><i class="fa fa-check"></i><b>6.4</b> Build the pet-sql Docker image</a></li>
+<li class="chapter" data-level="6.5" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html#run-the-pet-sql-docker-image"><i class="fa fa-check"></i><b>6.5</b> Run the pet-sql Docker Image</a></li>
+<li class="chapter" data-level="6.6" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html#connect-to-postgresql-with-r"><i class="fa fa-check"></i><b>6.6</b> Connect to PostgreSQL with R</a></li>
+<li class="chapter" data-level="6.7" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html#stop-and-start-to-demonstrate-persistence"><i class="fa fa-check"></i><b>6.7</b> Stop and start to demonstrate persistence</a></li>
+<li class="chapter" data-level="6.8" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html#cleaning-up"><i class="fa fa-check"></i><b>6.8</b> Cleaning up</a></li>
+<li class="chapter" data-level="6.9" data-path="chapter-setup-dvdrental-db.html"><a href="chapter-setup-dvdrental-db.html#using-the-sql-pet-container-in-the-rest-of-the-book"><i class="fa fa-check"></i><b>6.9</b> Using the <code>sql-pet</code> container in the rest of the book</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="chapter-dbms-login-credentials.html"><a href="chapter-dbms-login-credentials.html"><i class="fa fa-check"></i><b>7</b> Securing and using your dbms log-in credentials</a><ul>
+<li class="chapter" data-level="7.1" data-path="chapter-dbms-login-credentials.html"><a href="chapter-dbms-login-credentials.html#set-up-the-sql-pet-docker-container"><i class="fa fa-check"></i><b>7.1</b> Set up the sql-pet Docker container</a><ul>
+<li class="chapter" data-level="7.1.1" data-path="chapter-dbms-login-credentials.html"><a href="chapter-dbms-login-credentials.html#verify-that-docker-is-running-1"><i class="fa fa-check"></i><b>7.1.1</b> Verify that Docker is running</a></li>
+<li class="chapter" data-level="7.1.2" data-path="chapter-dbms-login-credentials.html"><a href="chapter-dbms-login-credentials.html#start-the-docker-container"><i class="fa fa-check"></i><b>7.1.2</b> Start the Docker container:</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="chapter-dbms-login-credentials.html"><a href="chapter-dbms-login-credentials.html#storing-your-dbms-credentials"><i class="fa fa-check"></i><b>7.2</b> Storing your dbms credentials</a><ul>
+<li class="chapter" data-level="7.2.1" data-path="chapter-dbms-login-credentials.html"><a href="chapter-dbms-login-credentials.html#connect-with-postgres-using-the-sys.getenv-function"><i class="fa fa-check"></i><b>7.2.1</b> Connect with Postgres using the Sys.getenv function</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="chapter-dbms-login-credentials.html"><a href="chapter-dbms-login-credentials.html#clean-up-1"><i class="fa fa-check"></i><b>7.3</b> Clean up</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="chapter-your-local-environment.html"><a href="chapter-your-local-environment.html"><i class="fa fa-check"></i><b>8</b> Mapping your local environment</a><ul>
+<li class="chapter" data-level="8.1" data-path="chapter-your-local-environment.html"><a href="chapter-your-local-environment.html#set-up-our-standard-pet-sql-environment"><i class="fa fa-check"></i><b>8.1</b> Set up our standard pet-sql environment</a></li>
+<li class="chapter" data-level="8.2" data-path="chapter-your-local-environment.html"><a href="chapter-your-local-environment.html#sandbox-environment"><i class="fa fa-check"></i><b>8.2</b> Sandbox Environment</a><ul>
+<li class="chapter" data-level="8.2.1" data-path="chapter-your-local-environment.html"><a href="chapter-your-local-environment.html#sandbox-entities-and-their-roles"><i class="fa fa-check"></i><b>8.2.1</b> Sandbox entities and their roles</a></li>
+<li class="chapter" data-level="8.2.2" data-path="chapter-your-local-environment.html"><a href="chapter-your-local-environment.html#rstudio"><i class="fa fa-check"></i><b>8.2.2</b> RStudio</a></li>
+<li class="chapter" data-level="8.2.3" data-path="chapter-your-local-environment.html"><a href="chapter-your-local-environment.html#os-local-command-line-interface"><i class="fa fa-check"></i><b>8.2.3</b> OS / local command line interface</a></li>
+<li class="chapter" data-level="8.2.4" data-path="chapter-your-local-environment.html"><a href="chapter-your-local-environment.html#r-1"><i class="fa fa-check"></i><b>8.2.4</b> R</a></li>
+<li class="chapter" data-level="8.2.5" data-path="chapter-your-local-environment.html"><a href="chapter-your-local-environment.html#docker-client"><i class="fa fa-check"></i><b>8.2.5</b> Docker client</a></li>
+<li class="chapter" data-level="8.2.6" data-path="chapter-your-local-environment.html"><a href="chapter-your-local-environment.html#in-docker-linux"><i class="fa fa-check"></i><b>8.2.6</b> In Docker: Linux</a></li>
+<li class="chapter" data-level="8.2.7" data-path="chapter-your-local-environment.html"><a href="chapter-your-local-environment.html#in-docker-psql"><i class="fa fa-check"></i><b>8.2.7</b> In Docker: <code>psql</code></a></li>
+<li class="chapter" data-level="8.2.8" data-path="chapter-your-local-environment.html"><a href="chapter-your-local-environment.html#in-docker-postgresql"><i class="fa fa-check"></i><b>8.2.8</b> In Docker: <code>PostgreSQL</code></a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="chapter-your-local-environment.html"><a href="chapter-your-local-environment.html#getting-there-from-here-entity-connections-equivalence-and-commands"><i class="fa fa-check"></i><b>8.3</b> Getting there from here: entity connections, equivalence, and commands</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="chapter-your-local-environment.html"><a href="chapter-your-local-environment.html#get-info-on-a-local-file-from-r-code"><i class="fa fa-check"></i><b>8.3.1</b> Get info on a local file from R code</a></li>
+<li class="chapter" data-level="8.3.2" data-path="chapter-your-local-environment.html"><a href="chapter-your-local-environment.html#get-info-on-the-same-os-file-inside-docker-from-r-code"><i class="fa fa-check"></i><b>8.3.2</b> Get info on the same OS file inside Docker from R Code</a></li>
+<li class="chapter" data-level="8.3.3" data-path="chapter-your-local-environment.html"><a href="chapter-your-local-environment.html#docker-and-psql-together-from-r-or-your-cli"><i class="fa fa-check"></i><b>8.3.3</b> Docker and psql together from R or your CLI</a></li>
+<li class="chapter" data-level="8.3.4" data-path="chapter-your-local-environment.html"><a href="chapter-your-local-environment.html#nesting-commands-illustrates-how-entities-are-connected"><i class="fa fa-check"></i><b>8.3.4</b> Nesting commands illustrates how entities are connected</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="chapter-your-local-environment.html"><a href="chapter-your-local-environment.html#exercises"><i class="fa fa-check"></i><b>8.4</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html"><i class="fa fa-check"></i><b>9</b> Introduction to DBMS queries</a><ul>
+<li class="chapter" data-level="9.1" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#setup"><i class="fa fa-check"></i><b>9.1</b> Setup</a></li>
+<li class="chapter" data-level="9.2" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#getting-data-from-the-database"><i class="fa fa-check"></i><b>9.2</b> Getting data from the database</a><ul>
+<li class="chapter" data-level="9.2.1" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#finding-out-whats-there"><i class="fa fa-check"></i><b>9.2.1</b> Finding out what’s there</a></li>
+<li class="chapter" data-level="9.2.2" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#listing-all-the-fields-for-all-the-tables"><i class="fa fa-check"></i><b>9.2.2</b> Listing all the fields for all the tables</a></li>
+<li class="chapter" data-level="9.2.3" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#downloading-an-entire-table"><i class="fa fa-check"></i><b>9.2.3</b> Downloading an entire table</a></li>
+<li class="chapter" data-level="9.2.4" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#a-table-object-that-can-be-reused"><i class="fa fa-check"></i><b>9.2.4</b> A table object that can be reused</a></li>
+<li class="chapter" data-level="9.2.5" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#controlling-the-number-of-rows-returned"><i class="fa fa-check"></i><b>9.2.5</b> Controlling the number of rows returned</a></li>
+<li class="chapter" data-level="9.2.6" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#random-rows-from-the-dbms"><i class="fa fa-check"></i><b>9.2.6</b> Random rows from the dbms</a></li>
+<li class="chapter" data-level="9.2.7" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#sub-setting-variables"><i class="fa fa-check"></i><b>9.2.7</b> Sub-setting variables</a></li>
+<li class="chapter" data-level="9.2.8" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#translating-dplyr-code-to-sql-queries"><i class="fa fa-check"></i><b>9.2.8</b> Translating <code>dplyr</code> code to <code>SQL</code> queries</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#mixing-dplyr-and-sql"><i class="fa fa-check"></i><b>9.3</b> Mixing dplyr and SQL</a></li>
+<li class="chapter" data-level="9.4" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#examining-a-single-table-with-r"><i class="fa fa-check"></i><b>9.4</b> Examining a single table with R</a><ul>
+<li class="chapter" data-level="9.4.1" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#str---a-base-package-workhorse"><i class="fa fa-check"></i><b>9.4.1</b> <code>str</code> - a base package workhorse</a></li>
+<li class="chapter" data-level="9.4.2" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#always-look-at-your-data-with-head-view-or-kable"><i class="fa fa-check"></i><b>9.4.2</b> Always <strong>look</strong> at your data with <code>head</code>, <code>View</code>, or <code>kable</code></a></li>
+<li class="chapter" data-level="9.4.3" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#the-summary-function-in-base"><i class="fa fa-check"></i><b>9.4.3</b> The <code>summary</code> function in <code>base</code></a></li>
+<li class="chapter" data-level="9.4.4" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#the-glimpse-function-in-the-tibble-package"><i class="fa fa-check"></i><b>9.4.4</b> The <code>glimpse</code> function in the <code>tibble</code> package</a></li>
+<li class="chapter" data-level="9.4.5" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#the-skim-function-in-the-skimr-package"><i class="fa fa-check"></i><b>9.4.5</b> The <code>skim</code> function in the <code>skimr</code> package</a></li>
+<li class="chapter" data-level="9.4.6" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#close-the-connection-and-shut-down-sql-pet"><i class="fa fa-check"></i><b>9.4.6</b> Close the connection and shut down sql-pet</a></li>
+</ul></li>
+<li class="chapter" data-level="9.5" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#additional-reading"><i class="fa fa-check"></i><b>9.5</b> Additional reading</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html"><i class="fa fa-check"></i><b>10</b> Lazy Evaluation and Lazy Queries</a><ul>
+<li class="chapter" data-level="10.1" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#setup-1"><i class="fa fa-check"></i><b>10.1</b> Setup</a></li>
+<li class="chapter" data-level="10.2" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#r-is-lazy-and-comes-with-guardrails"><i class="fa fa-check"></i><b>10.2</b> R is lazy and comes with guardrails</a><ul>
+<li class="chapter" data-level="10.2.1" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy-loading"><i class="fa fa-check"></i><b>10.2.1</b> Lazy loading</a></li>
+<li class="chapter" data-level="10.2.2" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy-evaluation"><i class="fa fa-check"></i><b>10.2.2</b> Lazy evaluation</a></li>
+<li class="chapter" data-level="10.2.3" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy-queries"><i class="fa fa-check"></i><b>10.2.3</b> Lazy Queries</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy-evaluation-and-lazy-queries"><i class="fa fa-check"></i><b>10.3</b> Lazy evaluation and lazy queries</a><ul>
+<li class="chapter" data-level="10.3.1" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#dplyr-connection-objects"><i class="fa fa-check"></i><b>10.3.1</b> <code>dplyr</code> connection objects</a></li>
+</ul></li>
+<li class="chapter" data-level="10.4" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#when-does-a-lazy-query-trigger-data-retrieval"><i class="fa fa-check"></i><b>10.4</b> When does a lazy query trigger data retrieval?</a><ul>
+<li class="chapter" data-level="10.4.1" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#create-a-black-box-query-for-experimentation"><i class="fa fa-check"></i><b>10.4.1</b> Create a black box query for experimentation</a></li>
+<li class="chapter" data-level="10.4.2" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#experiment-overview"><i class="fa fa-check"></i><b>10.4.2</b> Experiment overview</a></li>
+<li class="chapter" data-level="10.4.3" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_print"><i class="fa fa-check"></i><b>10.4.3</b> Q %&gt;% print()</a></li>
+<li class="chapter" data-level="10.4.4" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_as-tibble"><i class="fa fa-check"></i><b>10.4.4</b> Q %&gt;% dplyr::as_tibble()</a></li>
+<li class="chapter" data-level="10.4.5" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_head"><i class="fa fa-check"></i><b>10.4.5</b> Q %&gt;% head()</a></li>
+<li class="chapter" data-level="10.4.6" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_tail"><i class="fa fa-check"></i><b>10.4.6</b> Q %&gt;% tail()</a></li>
+<li class="chapter" data-level="10.4.7" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_length"><i class="fa fa-check"></i><b>10.4.7</b> Q %&gt;% length()</a></li>
+<li class="chapter" data-level="10.4.8" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_str"><i class="fa fa-check"></i><b>10.4.8</b> Q %&gt;% str()</a></li>
+<li class="chapter" data-level="10.4.9" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_nrow"><i class="fa fa-check"></i><b>10.4.9</b> Q %&gt;% nrow()</a></li>
+<li class="chapter" data-level="10.4.10" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_tally"><i class="fa fa-check"></i><b>10.4.10</b> Q %&gt;% dplyr::tally()</a></li>
+<li class="chapter" data-level="10.4.11" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_collect"><i class="fa fa-check"></i><b>10.4.11</b> Q %&gt;% dplyr::collect()</a></li>
+<li class="chapter" data-level="10.4.12" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_show-query"><i class="fa fa-check"></i><b>10.4.12</b> Q %&gt;% dplyr::show_query()</a></li>
+<li class="chapter" data-level="10.4.13" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_build"><i class="fa fa-check"></i><b>10.4.13</b> Qc &lt;- Q %&gt;% dplyr::count(customer_email)</a></li>
+</ul></li>
+<li class="chapter" data-level="10.5" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#other-resources"><i class="fa fa-check"></i><b>10.5</b> Other resources</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="chapter-dbi-package-sql.html"><a href="chapter-dbi-package-sql.html"><i class="fa fa-check"></i><b>11</b> DBI package and SQL</a><ul>
+<li class="chapter" data-level="11.1" data-path="chapter-dbi-package-sql.html"><a href="chapter-dbi-package-sql.html#setup-2"><i class="fa fa-check"></i><b>11.1</b> Setup</a></li>
+<li class="chapter" data-level="11.2" data-path="chapter-dbi-package-sql.html"><a href="chapter-dbi-package-sql.html#sql-in-r-markdown"><i class="fa fa-check"></i><b>11.2</b> SQL in R Markdown</a></li>
+<li class="chapter" data-level="11.3" data-path="chapter-dbi-package-sql.html"><a href="chapter-dbi-package-sql.html#dbi-package"><i class="fa fa-check"></i><b>11.3</b> DBI Package</a><ul>
+<li class="chapter" data-level="11.3.1" data-path="chapter-dbi-package-sql.html"><a href="chapter-dbi-package-sql.html#retrieve-the-whole-table"><i class="fa fa-check"></i><b>11.3.1</b> Retrieve the whole table</a></li>
+<li class="chapter" data-level="11.3.2" data-path="chapter-dbi-package-sql.html"><a href="chapter-dbi-package-sql.html#or-a-chunk-at-a-time"><i class="fa fa-check"></i><b>11.3.2</b> Or a chunk at a time</a></li>
+</ul></li>
+<li class="chapter" data-level="11.4" data-path="chapter-dbi-package-sql.html"><a href="chapter-dbi-package-sql.html#dividing-the-work-between-r-on-your-machine-and-the-dbms"><i class="fa fa-check"></i><b>11.4</b> Dividing the work between R on your machine and the DBMS</a><ul>
+<li class="chapter" data-level="11.4.1" data-path="chapter-dbi-package-sql.html"><a href="chapter-dbi-package-sql.html#make-the-server-do-as-much-work-as-you-can"><i class="fa fa-check"></i><b>11.4.1</b> Make the server do as much work as you can</a></li>
+<li class="chapter" data-level="11.4.2" data-path="chapter-dbi-package-sql.html"><a href="chapter-dbi-package-sql.html#criteria-for-choosing-between-dplyr-and-native-sql"><i class="fa fa-check"></i><b>11.4.2</b> Criteria for choosing between <code>dplyr</code> and native SQL</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="chapter-sql-inserting-rows.html"><a href="chapter-sql-inserting-rows.html"><i class="fa fa-check"></i><b>12</b> Inserting rows into the DVDRENTAL database</a><ul>
+<li class="chapter" data-level="12.1" data-path="chapter-sql-inserting-rows.html"><a href="chapter-sql-inserting-rows.html#setup-3"><i class="fa fa-check"></i><b>12.1</b> Setup</a></li>
+<li class="chapter" data-level="12.2" data-path="chapter-sql-inserting-rows.html"><a href="chapter-sql-inserting-rows.html#making-up-data-for-join-examples"><i class="fa fa-check"></i><b>12.2</b> Making up data for Join Examples</a><ul>
+<li class="chapter" data-level="12.2.1" data-path="chapter-sql-inserting-rows.html"><a href="chapter-sql-inserting-rows.html#sql-delete-data-syntax"><i class="fa fa-check"></i><b>12.2.1</b> SQL Delete Data Syntax</a></li>
+<li class="chapter" data-level="12.2.2" data-path="chapter-sql-inserting-rows.html"><a href="chapter-sql-inserting-rows.html#delete-new-practice-customers-from-the-customer-table."><i class="fa fa-check"></i><b>12.2.2</b> Delete New Practice Customers from the Customer table.</a></li>
+<li class="chapter" data-level="12.2.3" data-path="chapter-sql-inserting-rows.html"><a href="chapter-sql-inserting-rows.html#delete-new-practice-store-from-the-store-table."><i class="fa fa-check"></i><b>12.2.3</b> Delete New Practice Store from the Store Table.</a></li>
+<li class="chapter" data-level="12.2.4" data-path="chapter-sql-inserting-rows.html"><a href="chapter-sql-inserting-rows.html#sql-single-row-insert-data-syntax"><i class="fa fa-check"></i><b>12.2.4</b> SQL Single Row Insert Data Syntax</a></li>
+<li class="chapter" data-level="12.2.5" data-path="chapter-sql-inserting-rows.html"><a href="chapter-sql-inserting-rows.html#primary-key-constraint-error-message"><i class="fa fa-check"></i><b>12.2.5</b> Primary Key Constraint Error Message</a></li>
+<li class="chapter" data-level="12.2.6" data-path="chapter-sql-inserting-rows.html"><a href="chapter-sql-inserting-rows.html#r-exercise-inserting-a-single-row-via-a-dataframe"><i class="fa fa-check"></i><b>12.2.6</b> R Exercise: Inserting a Single Row via a Dataframe</a></li>
+</ul></li>
+<li class="chapter" data-level="12.3" data-path="chapter-sql-inserting-rows.html"><a href="chapter-sql-inserting-rows.html#sql-multi-row-insert-data-syntax"><i class="fa fa-check"></i><b>12.3</b> SQL Multi-Row Insert Data Syntax</a></li>
+<li class="chapter" data-level="12.4" data-path="chapter-sql-inserting-rows.html"><a href="chapter-sql-inserting-rows.html#sql-multi-row-insert-data-example"><i class="fa fa-check"></i><b>12.4</b> SQL Multi-Row Insert Data Example</a></li>
+<li class="chapter" data-level="12.5" data-path="chapter-sql-inserting-rows.html"><a href="chapter-sql-inserting-rows.html#dplyr-multi-row-insert-data-example"><i class="fa fa-check"></i><b>12.5</b> DPLYR Multi-Row Insert Data Example</a><ul>
+<li class="chapter" data-level="12.5.1" data-path="chapter-sql-inserting-rows.html"><a href="chapter-sql-inserting-rows.html#r-exercise-inserting-multiple-rows-via-a-dataframe"><i class="fa fa-check"></i><b>12.5.1</b> R Exercise: Inserting Multiple Rows via a Dataframe</a></li>
+<li class="chapter" data-level="12.5.2" data-path="chapter-sql-inserting-rows.html"><a href="chapter-sql-inserting-rows.html#creating-a-messy-store-row"><i class="fa fa-check"></i><b>12.5.2</b> Creating a Messy Store Row</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html"><i class="fa fa-check"></i><b>13</b> SQL &amp; dplyr joins additional data</a><ul>
+<li class="chapter" data-level="13.1" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#making-up-data-for-join-examples-1"><i class="fa fa-check"></i><b>13.1</b> Making up data for Join Examples</a><ul>
+<li class="chapter" data-level="13.1.1" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#sql-delete-data-syntax-1"><i class="fa fa-check"></i><b>13.1.1</b> SQL Delete Data Syntax</a></li>
+<li class="chapter" data-level="13.1.2" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#delete-new-practice-store-from-the-store-table.-1"><i class="fa fa-check"></i><b>13.1.2</b> Delete New Practice Store from the Store Table.</a></li>
+<li class="chapter" data-level="13.1.3" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#delete-film-1001-sophies-choice-records-in-film_category-rental-inventory-and-film"><i class="fa fa-check"></i><b>13.1.3</b> Delete film 1001, Sophie’s Choice, records in film_category, rental, inventory, and film</a></li>
+<li class="chapter" data-level="13.1.4" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#delete-new-practice-customers-from-the-customer-table.-1"><i class="fa fa-check"></i><b>13.1.4</b> Delete New Practice Customers from the Customer table.</a></li>
+<li class="chapter" data-level="13.1.5" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#delete-new-practice-customers-from-the-customer-table.-2"><i class="fa fa-check"></i><b>13.1.5</b> Delete New Practice Customers from the Customer table.</a></li>
+<li class="chapter" data-level="13.1.6" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#sql-single-row-insert-data-syntax-1"><i class="fa fa-check"></i><b>13.1.6</b> SQL Single Row Insert Data Syntax</a></li>
+<li class="chapter" data-level="13.1.7" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#primary-key-constraint-error-message-1"><i class="fa fa-check"></i><b>13.1.7</b> Primary Key Constraint Error Message</a></li>
+<li class="chapter" data-level="13.1.8" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#r-exercise-inserting-a-single-row-via-a-dataframe-1"><i class="fa fa-check"></i><b>13.1.8</b> R Exercise: Inserting a Single Row via a Dataframe</a></li>
+</ul></li>
+<li class="chapter" data-level="13.2" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#sql-multi-row-insert-data-syntax-1"><i class="fa fa-check"></i><b>13.2</b> SQL Multi-Row Insert Data Syntax</a></li>
+<li class="chapter" data-level="13.3" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#sql-multi-row-insert-data-example-1"><i class="fa fa-check"></i><b>13.3</b> SQL Multi-Row Insert Data Example</a></li>
+<li class="chapter" data-level="13.4" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#dplyr-multi-row-insert-data-example-1"><i class="fa fa-check"></i><b>13.4</b> DPLYR Multi-Row Insert Data Example</a><ul>
+<li class="chapter" data-level="13.4.1" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#r-exercise-inserting-multiple-rows-via-a-dataframe-1"><i class="fa fa-check"></i><b>13.4.1</b> R Exercise: Inserting Multiple Rows via a Dataframe</a></li>
+<li class="chapter" data-level="13.4.2" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#creating-a-messy-store-row-1"><i class="fa fa-check"></i><b>13.4.2</b> Creating a Messy Store Row</a></li>
+</ul></li>
+<li class="chapter" data-level="13.5" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#create-a-film-record"><i class="fa fa-check"></i><b>13.5</b> Create a film record</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html"><i class="fa fa-check"></i><b>14</b> SQL &amp; dplyr joins</a><ul>
+<li class="chapter" data-level="14.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#joins"><i class="fa fa-check"></i><b>14.1</b> Joins</a><ul>
+<li class="chapter" data-level="14.1.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-types"><i class="fa fa-check"></i><b>14.1.1</b> Join Types</a></li>
+<li class="chapter" data-level="14.1.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#valentines-party"><i class="fa fa-check"></i><b>14.1.2</b> Valentines Party</a></li>
+<li class="chapter" data-level="14.1.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-syntax"><i class="fa fa-check"></i><b>14.1.3</b> Join Syntax</a></li>
+<li class="chapter" data-level="14.1.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-tables"><i class="fa fa-check"></i><b>14.1.4</b> Join Tables</a></li>
+</ul></li>
+<li class="chapter" data-level="14.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#natural-join-delayed-time-bomb"><i class="fa fa-check"></i><b>14.2</b> Natural Join Delayed Time Bomb</a><ul>
+<li class="chapter" data-level="14.2.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-customer-store_id-distribution"><i class="fa fa-check"></i><b>14.2.1</b> SQL Customer store_id Distribution</a></li>
+<li class="chapter" data-level="14.2.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sample-customer-and-store-join-data"><i class="fa fa-check"></i><b>14.2.2</b> Sample Customer and Store Join Data</a></li>
+<li class="chapter" data-level="14.2.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#dplyr-store_id-distribution-exercise"><i class="fa fa-check"></i><b>14.2.3</b> dplyr store_id distribution Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="14.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-templates"><i class="fa fa-check"></i><b>14.3</b> Join Templates</a></li>
+<li class="chapter" data-level="14.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#inner-joins"><i class="fa fa-check"></i><b>14.4</b> Inner Joins</a><ul>
+<li class="chapter" data-level="14.4.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#example_140_inner-join-details-sql"><i class="fa fa-check"></i><b>14.4.1</b> SQL Inner Join Details</a></li>
+<li class="chapter" data-level="14.4.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#example_140_inner-join-details-dplyr"><i class="fa fa-check"></i><b>14.4.2</b> Dplyr Inner Join Details</a></li>
+<li class="chapter" data-level="14.4.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#example_140_inner-join-summary-sql"><i class="fa fa-check"></i><b>14.4.3</b> SQL Inner Join Summary</a></li>
+<li class="chapter" data-level="14.4.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#example_140_inner-join-summary_dplyr"><i class="fa fa-check"></i><b>14.4.4</b> Dplyr Inner Join Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="14.5" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#left-joins"><i class="fa fa-check"></i><b>14.5</b> Left Joins</a><ul>
+<li class="chapter" data-level="14.5.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#example_140_left-join-details-sql"><i class="fa fa-check"></i><b>14.5.1</b> SQL Left Join Details</a></li>
+<li class="chapter" data-level="14.5.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#example_140_left-join-details-dplyr"><i class="fa fa-check"></i><b>14.5.2</b> Dplyr Left Join Details</a></li>
+<li class="chapter" data-level="14.5.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#example_140_left-join-summary-sql"><i class="fa fa-check"></i><b>14.5.3</b> SQL Left Join Summary</a></li>
+<li class="chapter" data-level="14.5.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#example_140_left-join-summary-dplyr"><i class="fa fa-check"></i><b>14.5.4</b> Dplyr Left Join Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="14.6" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#why-include-one-of-the-inner-join-key-columns"><i class="fa fa-check"></i><b>14.6</b> Why Include one of the Inner Join Key columns?</a></li>
+<li class="chapter" data-level="14.7" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#right-joins"><i class="fa fa-check"></i><b>14.7</b> Right Joins</a><ul>
+<li class="chapter" data-level="14.7.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#example_140_right-join-details-sql"><i class="fa fa-check"></i><b>14.7.1</b> SQL Right Join Details</a></li>
+<li class="chapter" data-level="14.7.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#example_140_right-join-details-dplyr"><i class="fa fa-check"></i><b>14.7.2</b> Dplyr Right Join Details</a></li>
+<li class="chapter" data-level="14.7.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#example_140_right-join-summary-sql"><i class="fa fa-check"></i><b>14.7.3</b> SQL Right Outer Join Summary</a></li>
+<li class="chapter" data-level="14.7.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#example_140_right-join-summary-dplyr"><i class="fa fa-check"></i><b>14.7.4</b> dplyr Right Join Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="14.8" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#full-join"><i class="fa fa-check"></i><b>14.8</b> Full Join</a><ul>
+<li class="chapter" data-level="14.8.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#example_140_full-join-details-sql-a"><i class="fa fa-check"></i><b>14.8.1</b> SQL Full Join Details</a></li>
+<li class="chapter" data-level="14.8.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#example_140_full-join-details-sql-b"><i class="fa fa-check"></i><b>14.8.2</b> Dplyr Full Join Details</a></li>
+<li class="chapter" data-level="14.8.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#example_140_full-join-summary-sql"><i class="fa fa-check"></i><b>14.8.3</b> SQL Full Join Summary</a></li>
+<li class="chapter" data-level="14.8.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#example_140_full-join-summary-dplyr"><i class="fa fa-check"></i><b>14.8.4</b> Dplyr Full Join Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="14.9" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#semi-join"><i class="fa fa-check"></i><b>14.9</b> Semi Join</a><ul>
+<li class="chapter" data-level="14.9.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#example_140_semi-join-sql-1"><i class="fa fa-check"></i><b>14.9.1</b> SQL Semi Join Customer to Store</a></li>
+<li class="chapter" data-level="14.9.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#example_140_semi-join-dplyr-1"><i class="fa fa-check"></i><b>14.9.2</b> Dplyr Semi Join Customer to Store</a></li>
+<li class="chapter" data-level="14.9.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#example_140_semi-join-sql-2"><i class="fa fa-check"></i><b>14.9.3</b> SQL Semi Join Store to Customer</a></li>
+<li class="chapter" data-level="14.9.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#example_140_semi-join-dplyr-2"><i class="fa fa-check"></i><b>14.9.4</b> Dplyr Semi Join Store to Customer</a></li>
+<li class="chapter" data-level="14.9.5" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#example_140_semi-join-sql-3"><i class="fa fa-check"></i><b>14.9.5</b> SQL Semi Join Store to Customer Take 2</a></li>
+</ul></li>
+<li class="chapter" data-level="14.10" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#anti-joins"><i class="fa fa-check"></i><b>14.10</b> Anti Joins</a></li>
+<li class="chapter" data-level="14.11" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#non-equa-join-example"><i class="fa fa-check"></i><b>14.11</b> Non-Equa-Join Example</a><ul>
+<li class="chapter" data-level="14.11.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#example_140_inner-join-dplyr"><i class="fa fa-check"></i><b>14.11.1</b> Dplyr Non-equa Join</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="chapter-sql-metadata-exercises.html"><a href="chapter-sql-metadata-exercises.html"><i class="fa fa-check"></i><b>15</b> SQL Metadata exercises</a><ul>
+<li class="chapter" data-level="15.1" data-path="chapter-sql-metadata-exercises.html"><a href="chapter-sql-metadata-exercises.html#table-structures"><i class="fa fa-check"></i><b>15.1</b> Table Structures</a><ul>
+<li class="chapter" data-level="15.1.1" data-path="chapter-sql-metadata-exercises.html"><a href="chapter-sql-metadata-exercises.html#customer-columns"><i class="fa fa-check"></i><b>15.1.1</b> Customer Columns</a></li>
+</ul></li>
+<li class="chapter" data-level="15.2" data-path="chapter-sql-metadata-exercises.html"><a href="chapter-sql-metadata-exercises.html#table-column-metadata"><i class="fa fa-check"></i><b>15.2</b> Table Column Metadata</a><ul>
+<li class="chapter" data-level="15.2.1" data-path="chapter-sql-metadata-exercises.html"><a href="chapter-sql-metadata-exercises.html#sp_tbl_descr-parameterized-table-description-function"><i class="fa fa-check"></i><b>15.2.1</b> sp_tbl_descr – Parameterized Table Description Function</a></li>
+</ul></li>
+<li class="chapter" data-level="15.3" data-path="chapter-sql-metadata-exercises.html"><a href="chapter-sql-metadata-exercises.html#primary-and-foreign-key-constraints"><i class="fa fa-check"></i><b>15.3</b> Primary and Foreign Key Constraints</a><ul>
+<li class="chapter" data-level="15.3.1" data-path="chapter-sql-metadata-exercises.html"><a href="chapter-sql-metadata-exercises.html#sp_tbl_pk_fk-parameterized-table-primary-foreign-keys-function"><i class="fa fa-check"></i><b>15.3.1</b> sp_tbl_pk_fk – Parameterized Table Primary Foreign Key(s) Function</a></li>
+<li class="chapter" data-level="15.3.2" data-path="chapter-sql-metadata-exercises.html"><a href="chapter-sql-metadata-exercises.html#customer-primary-and-foreign-key-constraints"><i class="fa fa-check"></i><b>15.3.2</b> Customer primary and foreign key constraints</a></li>
+</ul></li>
+<li class="chapter" data-level="15.4" data-path="chapter-sql-metadata-exercises.html"><a href="chapter-sql-metadata-exercises.html#we-need-documentation-andor-a-dba."><i class="fa fa-check"></i><b>15.4</b> We need documentation and/or a DBA.</a><ul>
+<li class="chapter" data-level="15.4.1" data-path="chapter-sql-metadata-exercises.html"><a href="chapter-sql-metadata-exercises.html#other-table-column-metadata"><i class="fa fa-check"></i><b>15.4.1</b> Other Table Column Metadata</a></li>
+<li class="chapter" data-level="15.4.2" data-path="chapter-sql-metadata-exercises.html"><a href="chapter-sql-metadata-exercises.html#other-table-pk-fk"><i class="fa fa-check"></i><b>15.4.2</b> Other Table PK FK</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html"><i class="fa fa-check"></i><b>16</b> SQL Joins exercises</a></li>
+<li class="chapter" data-level="17" data-path="exercise-instructions.html"><a href="exercise-instructions.html"><i class="fa fa-check"></i><b>17</b> Exercise Instructions</a></li>
+<li class="chapter" data-level="18" data-path="dplyr-tables.html"><a href="dplyr-tables.html"><i class="fa fa-check"></i><b>18</b> Dplyr tables</a></li>
+<li class="chapter" data-level="19" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html"><i class="fa fa-check"></i><b>19</b> SQL Union Exercise</a><ul>
+<li class="chapter" data-level="19.1" data-path="sql-union-exercise.html"><a href="sql-union-exercise.html#how-many-rows-are-in-each-table"><i class="fa fa-check"></i><b>19.1</b> 1. How many rows are in each table?</a></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="exercises-1.html"><a href="exercises-1.html"><i class="fa fa-check"></i><b>20</b> Exercises</a><ul>
+<li class="chapter" data-level="20.1" data-path="exercises-1.html"><a href="exercises-1.html#where-is-the-dvd-rental-business-located"><i class="fa fa-check"></i><b>20.1</b> 1. Where is the DVD Rental Business located?</a><ul>
+<li class="chapter" data-level="20.1.1" data-path="exercises-1.html"><a href="exercises-1.html#list-each-store-and-the-staff-contact-information"><i class="fa fa-check"></i><b>20.1.1</b> 2. List Each Store and the Staff Contact Information?</a></li>
+<li class="chapter" data-level="20.1.2" data-path="exercises-1.html"><a href="exercises-1.html#how-many-active-inactive-and-total-customers-does-the-dvd-rental-business-have"><i class="fa fa-check"></i><b>20.1.2</b> 3. How Many Active, Inactive, and Total Customers Does the DVD Rental Business Have?</a></li>
+<li class="chapter" data-level="20.1.3" data-path="exercises-1.html"><a href="exercises-1.html#how-many-and-what-percent-of-customers-are-from-each-country"><i class="fa fa-check"></i><b>20.1.3</b> 4. How Many and What Percent of Customers Are From Each Country?</a></li>
+<li class="chapter" data-level="20.1.4" data-path="exercises-1.html"><a href="exercises-1.html#what-countries-constitute-the-top-25-of-the-customer-base"><i class="fa fa-check"></i><b>20.1.4</b> 5 What Countries Constitute the Top 25% of the Customer Base?</a></li>
+<li class="chapter" data-level="20.1.5" data-path="exercises-1.html"><a href="exercises-1.html#how-many-customers-are-in-australia-and-canada"><i class="fa fa-check"></i><b>20.1.5</b> 6. How many customers are in Australia and Canada?</a></li>
+<li class="chapter" data-level="20.1.6" data-path="exercises-1.html"><a href="exercises-1.html#how-many-languages"><i class="fa fa-check"></i><b>20.1.6</b> 7. How Many Languages?</a></li>
+<li class="chapter" data-level="20.1.7" data-path="exercises-1.html"><a href="exercises-1.html#what-is-the-distribution-of-dvds-by-language"><i class="fa fa-check"></i><b>20.1.7</b> 8. What is the distribution of DVD’s by Language</a></li>
+<li class="chapter" data-level="20.1.8" data-path="exercises-1.html"><a href="exercises-1.html#what-are-the-number-of-rentals-and-rented-amount-by-store-by-month"><i class="fa fa-check"></i><b>20.1.8</b> 9. What are the number of rentals and rented amount by store, by month?</a></li>
+<li class="chapter" data-level="20.1.9" data-path="exercises-1.html"><a href="exercises-1.html#rank-films-based-on-the-number-of-times-rented-and-associated-revenue"><i class="fa fa-check"></i><b>20.1.9</b> 10. Rank Films Based on the Number of Times Rented and Associated Revenue</a></li>
+<li class="chapter" data-level="20.1.10" data-path="exercises-1.html"><a href="exercises-1.html#what-is-the-rental-distributiondvd-for-the-top-two-rented-films"><i class="fa fa-check"></i><b>20.1.10</b> 11 What is the rental distribution/DVD for the top two rented films?</a></li>
+<li class="chapter" data-level="20.1.11" data-path="exercises-1.html"><a href="exercises-1.html#list-staffing-information-for-store-1-associated-with-the-bucket-brother-rentals"><i class="fa fa-check"></i><b>20.1.11</b> 12. List staffing information for store 1 associated with the <code>Bucket Brother</code> rentals?</a></li>
+<li class="chapter" data-level="20.1.12" data-path="exercises-1.html"><a href="exercises-1.html#which-films-have-never-been-rented"><i class="fa fa-check"></i><b>20.1.12</b> 13. Which film(s) have never been rented</a></li>
+<li class="chapter" data-level="20.1.13" data-path="exercises-1.html"><a href="exercises-1.html#how-many-films-are-in-each-film-rating"><i class="fa fa-check"></i><b>20.1.13</b> 14. How many films are in each film rating?</a></li>
+<li class="chapter" data-level="20.1.14" data-path="exercises-1.html"><a href="exercises-1.html#what-are-the-different-film-categories"><i class="fa fa-check"></i><b>20.1.14</b> 15. What are the different film categories?</a></li>
+<li class="chapter" data-level="20.1.15" data-path="exercises-1.html"><a href="exercises-1.html#how-many-dvds-are-in-each-film-categeory"><i class="fa fa-check"></i><b>20.1.15</b> 16. How many DVD’s are in each film categeory?</a></li>
+<li class="chapter" data-level="20.1.16" data-path="exercises-1.html"><a href="exercises-1.html#which-films-are-listed-in-multiple-categories"><i class="fa fa-check"></i><b>20.1.16</b> 17. Which films are listed in multiple categories?</a></li>
+<li class="chapter" data-level="20.1.17" data-path="exercises-1.html"><a href="exercises-1.html#which-dvds-are-in-one-stores-inventory-but-not-the-other"><i class="fa fa-check"></i><b>20.1.17</b> 18. Which DVD’s are in one store’s inventory but not the other</a></li>
+<li class="chapter" data-level="20.1.18" data-path="exercises-1.html"><a href="exercises-1.html#which-films-are-not-tracked-in-inventory"><i class="fa fa-check"></i><b>20.1.18</b> 19. Which films are not tracked in inventory?</a></li>
+<li class="chapter" data-level="20.1.19" data-path="exercises-1.html"><a href="exercises-1.html#list-film-categories-in-descending-accounts-receivable."><i class="fa fa-check"></i><b>20.1.19</b> 20 List film categories in descending accounts receivable.</a></li>
+<li class="chapter" data-level="20.1.20" data-path="exercises-1.html"><a href="exercises-1.html#list-film-ratings-in-descending-accounts-receivable-order."><i class="fa fa-check"></i><b>20.1.20</b> 21. List film ratings in descending accounts receivable order.</a></li>
+<li class="chapter" data-level="20.1.21" data-path="exercises-1.html"><a href="exercises-1.html#how-many-rentals-were-returned-on-time-returned-late-never-returned"><i class="fa fa-check"></i><b>20.1.21</b> 22. How many rentals were returned on time, returned late, never returned?</a></li>
+<li class="chapter" data-level="20.1.22" data-path="exercises-1.html"><a href="exercises-1.html#are-there-duplicate-customers"><i class="fa fa-check"></i><b>20.1.22</b> 23. Are there duplicate customers?</a></li>
+<li class="chapter" data-level="20.1.23" data-path="exercises-1.html"><a href="exercises-1.html#which-customers-have-never-rented-a-movie"><i class="fa fa-check"></i><b>20.1.23</b> 24. Which customers have never rented a movie?</a></li>
+<li class="chapter" data-level="20.1.24" data-path="exercises-1.html"><a href="exercises-1.html#who-are-the-top-5-customers-with-the-most-rentals-and-associated-payments"><i class="fa fa-check"></i><b>20.1.24</b> 25. Who are the top 5 customers with the most rentals and associated payments?</a></li>
+<li class="chapter" data-level="20.1.25" data-path="exercises-1.html"><a href="exercises-1.html#combine-the-top-5-rental-customers-40-or-more-rentals-and-zero-rental-customers"><i class="fa fa-check"></i><b>20.1.25</b> 26. Combine the top 5 rental customers, (40 or more rentals), and zero rental customers</a></li>
+<li class="chapter" data-level="20.1.26" data-path="exercises-1.html"><a href="exercises-1.html#who-are-the-top-n1-and-bottom-n2-customers"><i class="fa fa-check"></i><b>20.1.26</b> 27. Who are the top-n1 and bottom-n2 customers?</a></li>
+<li class="chapter" data-level="20.1.27" data-path="exercises-1.html"><a href="exercises-1.html#how-much-has-each-store-collected"><i class="fa fa-check"></i><b>20.1.27</b> 28. How much has each store collected?</a></li>
+<li class="chapter" data-level="20.1.28" data-path="exercises-1.html"><a href="exercises-1.html#what-is-the-business-distribution-of-payments"><i class="fa fa-check"></i><b>20.1.28</b> 29. What is the business’ distribution of payments?</a></li>
+<li class="chapter" data-level="20.1.29" data-path="exercises-1.html"><a href="exercises-1.html#which-customers-have-the-highest-open-amounts"><i class="fa fa-check"></i><b>20.1.29</b> 30. Which customers have the highest open amounts?</a></li>
+<li class="chapter" data-level="20.1.30" data-path="exercises-1.html"><a href="exercises-1.html#what-is-the-business-cash-flow"><i class="fa fa-check"></i><b>20.1.30</b> 31. What is the business cash flow?</a></li>
+<li class="chapter" data-level="20.1.31" data-path="exercises-1.html"><a href="exercises-1.html#customer-information"><i class="fa fa-check"></i><b>20.1.31</b> 32. Customer information</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="chapter-sql-joins-exercises-answered.html"><a href="chapter-sql-joins-exercises-answered.html"><i class="fa fa-check"></i><b>21</b> SQL Joins exercises</a></li>
+<li class="chapter" data-level="22" data-path="exercise-instructions-1.html"><a href="exercise-instructions-1.html"><i class="fa fa-check"></i><b>22</b> Exercise Instructions</a></li>
+<li class="chapter" data-level="23" data-path="dplyr-tables-1.html"><a href="dplyr-tables-1.html"><i class="fa fa-check"></i><b>23</b> Dplyr tables</a></li>
+<li class="chapter" data-level="24" data-path="sql-union-exercise-1.html"><a href="sql-union-exercise-1.html"><i class="fa fa-check"></i><b>24</b> SQL Union Exercise</a><ul>
+<li class="chapter" data-level="24.1" data-path="sql-union-exercise-1.html"><a href="sql-union-exercise-1.html#how-many-rows-are-in-each-table-1"><i class="fa fa-check"></i><b>24.1</b> 1. How many rows are in each table?</a></li>
+</ul></li>
+<li class="chapter" data-level="25" data-path="exercises-2.html"><a href="exercises-2.html"><i class="fa fa-check"></i><b>25</b> Exercises</a><ul>
+<li class="chapter" data-level="25.1" data-path="exercises-2.html"><a href="exercises-2.html#where-is-the-dvd-rental-business-located-1"><i class="fa fa-check"></i><b>25.1</b> 1. Where is the DVD Rental Business located?</a><ul>
+<li class="chapter" data-level="25.1.1" data-path="exercises-2.html"><a href="exercises-2.html#list-each-store-and-the-staff-contact-information-1"><i class="fa fa-check"></i><b>25.1.1</b> 2. List Each Store and the Staff Contact Information?</a></li>
+<li class="chapter" data-level="25.1.2" data-path="exercises-2.html"><a href="exercises-2.html#how-many-active-inactive-and-total-customers-does-the-dvd-rental-business-have-1"><i class="fa fa-check"></i><b>25.1.2</b> 3. How Many Active, Inactive, and Total Customers Does the DVD Rental Business Have?</a></li>
+<li class="chapter" data-level="25.1.3" data-path="exercises-2.html"><a href="exercises-2.html#how-many-and-what-percent-of-customers-are-from-each-country-1"><i class="fa fa-check"></i><b>25.1.3</b> 4. How Many and What Percent of Customers Are From Each Country?</a></li>
+<li class="chapter" data-level="25.1.4" data-path="exercises-2.html"><a href="exercises-2.html#what-countries-constitute-the-top-25-of-the-customer-base-1"><i class="fa fa-check"></i><b>25.1.4</b> 5 What Countries Constitute the Top 25% of the Customer Base?</a></li>
+<li class="chapter" data-level="25.1.5" data-path="exercises-2.html"><a href="exercises-2.html#how-many-customers-are-in-australia-and-canada-1"><i class="fa fa-check"></i><b>25.1.5</b> 6. How many customers are in Australia and Canada?</a></li>
+<li class="chapter" data-level="25.1.6" data-path="exercises-2.html"><a href="exercises-2.html#how-many-languages-1"><i class="fa fa-check"></i><b>25.1.6</b> 7. How Many Languages?</a></li>
+<li class="chapter" data-level="25.1.7" data-path="exercises-2.html"><a href="exercises-2.html#what-is-the-distribution-of-dvds-by-language-1"><i class="fa fa-check"></i><b>25.1.7</b> 8. What is the distribution of DVD’s by Language</a></li>
+<li class="chapter" data-level="25.1.8" data-path="exercises-2.html"><a href="exercises-2.html#what-are-the-number-of-rentals-and-rented-amount-by-store-by-month-1"><i class="fa fa-check"></i><b>25.1.8</b> 9. What are the number of rentals and rented amount by store, by month?</a></li>
+<li class="chapter" data-level="25.1.9" data-path="exercises-2.html"><a href="exercises-2.html#rank-films-based-on-the-number-of-times-rented-and-associated-revenue-1"><i class="fa fa-check"></i><b>25.1.9</b> 10. Rank Films Based on the Number of Times Rented and Associated Revenue</a></li>
+<li class="chapter" data-level="25.1.10" data-path="exercises-2.html"><a href="exercises-2.html#what-is-the-rental-distributiondvd-for-the-top-two-rented-films-1"><i class="fa fa-check"></i><b>25.1.10</b> 11 What is the rental distribution/DVD for the top two rented films?</a></li>
+<li class="chapter" data-level="25.1.11" data-path="exercises-2.html"><a href="exercises-2.html#list-staffing-information-for-store-1-associated-with-the-bucket-brother-rentals-1"><i class="fa fa-check"></i><b>25.1.11</b> 12. List staffing information for store 1 associated with the <code>Bucket Brother</code> rentals?</a></li>
+<li class="chapter" data-level="25.1.12" data-path="exercises-2.html"><a href="exercises-2.html#which-films-have-never-been-rented-1"><i class="fa fa-check"></i><b>25.1.12</b> 13. Which film(s) have never been rented</a></li>
+<li class="chapter" data-level="25.1.13" data-path="exercises-2.html"><a href="exercises-2.html#how-many-films-are-in-each-film-rating-1"><i class="fa fa-check"></i><b>25.1.13</b> 14. How many films are in each film rating?</a></li>
+<li class="chapter" data-level="25.1.14" data-path="exercises-2.html"><a href="exercises-2.html#what-are-the-different-film-categories-1"><i class="fa fa-check"></i><b>25.1.14</b> 15. What are the different film categories?</a></li>
+<li class="chapter" data-level="25.1.15" data-path="exercises-2.html"><a href="exercises-2.html#how-many-dvds-are-in-each-film-categeory-1"><i class="fa fa-check"></i><b>25.1.15</b> 16. How many DVD’s are in each film categeory?</a></li>
+<li class="chapter" data-level="25.1.16" data-path="exercises-2.html"><a href="exercises-2.html#which-films-are-listed-in-multiple-categories-1"><i class="fa fa-check"></i><b>25.1.16</b> 17. Which films are listed in multiple categories?</a></li>
+<li class="chapter" data-level="25.1.17" data-path="exercises-2.html"><a href="exercises-2.html#which-dvds-are-in-one-stores-inventory-but-not-the-other-1"><i class="fa fa-check"></i><b>25.1.17</b> 18. Which DVD’s are in one store’s inventory but not the other</a></li>
+<li class="chapter" data-level="25.1.18" data-path="exercises-2.html"><a href="exercises-2.html#which-films-are-not-tracked-in-inventory-1"><i class="fa fa-check"></i><b>25.1.18</b> 19. Which films are not tracked in inventory?</a></li>
+<li class="chapter" data-level="25.1.19" data-path="exercises-2.html"><a href="exercises-2.html#list-film-categories-in-descending-accounts-receivable.-1"><i class="fa fa-check"></i><b>25.1.19</b> 20 List film categories in descending accounts receivable.</a></li>
+<li class="chapter" data-level="25.1.20" data-path="exercises-2.html"><a href="exercises-2.html#list-film-ratings-in-descending-accounts-receivable-order.-1"><i class="fa fa-check"></i><b>25.1.20</b> 21. List film ratings in descending accounts receivable order.</a></li>
+<li class="chapter" data-level="25.1.21" data-path="exercises-2.html"><a href="exercises-2.html#how-many-rentals-were-returned-on-time-returned-late-never-returned-1"><i class="fa fa-check"></i><b>25.1.21</b> 22. How many rentals were returned on time, returned late, never returned?</a></li>
+<li class="chapter" data-level="25.1.22" data-path="exercises-2.html"><a href="exercises-2.html#are-there-duplicate-customers-1"><i class="fa fa-check"></i><b>25.1.22</b> 23. Are there duplicate customers?</a></li>
+<li class="chapter" data-level="25.1.23" data-path="exercises-2.html"><a href="exercises-2.html#which-customers-have-never-rented-a-movie-1"><i class="fa fa-check"></i><b>25.1.23</b> 24. Which customers have never rented a movie?</a></li>
+<li class="chapter" data-level="25.1.24" data-path="exercises-2.html"><a href="exercises-2.html#who-are-the-top-5-customers-with-the-most-rentals-and-associated-payments-1"><i class="fa fa-check"></i><b>25.1.24</b> 25. Who are the top 5 customers with the most rentals and associated payments?</a></li>
+<li class="chapter" data-level="25.1.25" data-path="exercises-2.html"><a href="exercises-2.html#combine-the-top-5-rental-customers-40-or-more-rentals-and-zero-rental-customers-1"><i class="fa fa-check"></i><b>25.1.25</b> 26. Combine the top 5 rental customers, (40 or more rentals), and zero rental customers</a></li>
+<li class="chapter" data-level="25.1.26" data-path="exercises-2.html"><a href="exercises-2.html#who-are-the-top-n1-and-bottom-n2-customers-1"><i class="fa fa-check"></i><b>25.1.26</b> 27. Who are the top-n1 and bottom-n2 customers?</a></li>
+<li class="chapter" data-level="25.1.27" data-path="exercises-2.html"><a href="exercises-2.html#how-much-has-each-store-collected-1"><i class="fa fa-check"></i><b>25.1.27</b> 28. How much has each store collected?</a></li>
+<li class="chapter" data-level="25.1.28" data-path="exercises-2.html"><a href="exercises-2.html#what-is-the-business-distribution-of-payments-1"><i class="fa fa-check"></i><b>25.1.28</b> 29. What is the business’ distribution of payments?</a></li>
+<li class="chapter" data-level="25.1.29" data-path="exercises-2.html"><a href="exercises-2.html#which-customers-have-the-highest-open-amounts-1"><i class="fa fa-check"></i><b>25.1.29</b> 30. Which customers have the highest open amounts?</a></li>
+<li class="chapter" data-level="25.1.30" data-path="exercises-2.html"><a href="exercises-2.html#what-is-the-business-cash-flow-1"><i class="fa fa-check"></i><b>25.1.30</b> 31. What is the business cash flow?</a></li>
+<li class="chapter" data-level="25.1.31" data-path="exercises-2.html"><a href="exercises-2.html#customer-information-1"><i class="fa fa-check"></i><b>25.1.31</b> 32. Customer information</a></li>
+</ul></li>
+<li class="chapter" data-level="25.2" data-path="exercises-2.html"><a href="exercises-2.html#different-strategies-for-interacting-with-the-database"><i class="fa fa-check"></i><b>25.2</b> Different strategies for interacting with the database</a><ul>
+<li class="chapter" data-level="25.2.1" data-path="exercises-2.html"><a href="exercises-2.html#dbgetquery-versus-dbsendquerydbfetchdbclearresult"><i class="fa fa-check"></i><b>25.2.1</b> dbGetQuery Versus dbSendQuery+dbFetch+dbClearResult</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="26" data-path="chapter-anti-join-cost-comparisons.html"><a href="chapter-anti-join-cost-comparisons.html"><i class="fa fa-check"></i><b>26</b> Anti-join cost comparisons</a><ul>
+<li class="chapter" data-level="26.1" data-path="chapter-anti-join-cost-comparisons.html"><a href="chapter-anti-join-cost-comparisons.html#sql-anti-join-costs"><i class="fa fa-check"></i><b>26.1</b> SQL anti join Costs</a></li>
+<li class="chapter" data-level="26.2" data-path="chapter-anti-join-cost-comparisons.html"><a href="chapter-anti-join-cost-comparisons.html#dplyr-anti-joins"><i class="fa fa-check"></i><b>26.2</b> dplyr Anti joins</a></li>
+</ul></li>
+<li class="chapter" data-level="27" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html"><i class="fa fa-check"></i><b>27</b> SQL Quick start - simple retrieval</a><ul>
+<li class="chapter" data-level="27.1" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#intro"><i class="fa fa-check"></i><b>27.1</b> Intro</a></li>
+<li class="chapter" data-level="27.2" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#databases-and-third-normal-form---3nf"><i class="fa fa-check"></i><b>27.2</b> Databases and Third Normal Form - 3NF</a></li>
+<li class="chapter" data-level="27.3" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#sql-commands"><i class="fa fa-check"></i><b>27.3</b> SQL Commands</a></li>
+<li class="chapter" data-level="27.4" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#sql-select-quick-start"><i class="fa fa-check"></i><b>27.4</b> SQL SELECT Quick Start</a><ul>
+<li class="chapter" data-level="27.4.1" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#select-clause-column-selection-vertical-partioning-of-data"><i class="fa fa-check"></i><b>27.4.1</b> SELECT Clause: Column Selection – Vertical Partioning of Data</a></li>
+<li class="chapter" data-level="27.4.2" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#sql-comments"><i class="fa fa-check"></i><b>27.4.2</b> SQL Comments</a></li>
+<li class="chapter" data-level="27.4.3" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#from-clause"><i class="fa fa-check"></i><b>27.4.3</b> FROM Clause</a></li>
+<li class="chapter" data-level="27.4.4" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#where-clause-row-selection-horizontal-partitioning-of-data"><i class="fa fa-check"></i><b>27.4.4</b> WHERE Clause: Row Selection – Horizontal Partitioning of Data</a></li>
+</ul></li>
+<li class="chapter" data-level="27.5" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#paradigm-shift-from-r-dplyr-to-sql"><i class="fa fa-check"></i><b>27.5</b> Paradigm Shift from R-Dplyr to SQL</a><ul>
+<li class="chapter" data-level="27.5.1" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#big-bang-versus-piped-incremental-steps."><i class="fa fa-check"></i><b>27.5.1</b> Big bang versus piped incremental steps.</a></li>
+<li class="chapter" data-level="27.5.2" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#sql-execution-order"><i class="fa fa-check"></i><b>27.5.2</b> SQL Execution Order</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="28" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html"><i class="fa fa-check"></i><b>28</b> Getting metadata about and from PostgreSQL</a><ul>
+<li class="chapter" data-level="28.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#database-contents-and-structure"><i class="fa fa-check"></i><b>28.1</b> Database contents and structure</a><ul>
+<li class="chapter" data-level="28.1.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#database-structure"><i class="fa fa-check"></i><b>28.1.1</b> Database structure</a></li>
+<li class="chapter" data-level="28.1.2" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#contents-of-the-information_schema"><i class="fa fa-check"></i><b>28.1.2</b> Contents of the <code>information_schema</code></a></li>
+<li class="chapter" data-level="28.1.3" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#what-tables-are-in-the-database"><i class="fa fa-check"></i><b>28.1.3</b> What tables are in the database?</a></li>
+<li class="chapter" data-level="28.1.4" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#digging-into-the-information_schema"><i class="fa fa-check"></i><b>28.1.4</b> Digging into the <code>information_schema</code></a></li>
+</ul></li>
+<li class="chapter" data-level="28.2" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#what-columns-do-those-tables-contain"><i class="fa fa-check"></i><b>28.2</b> What columns do those tables contain?</a><ul>
+<li class="chapter" data-level="28.2.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#what-is-the-difference-between-a-view-and-a-base-table"><i class="fa fa-check"></i><b>28.2.1</b> What is the difference between a <code>VIEW</code> and a <code>BASE TABLE</code>?</a></li>
+<li class="chapter" data-level="28.2.2" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#what-data-types-are-found-in-the-database"><i class="fa fa-check"></i><b>28.2.2</b> What data types are found in the database?</a></li>
+</ul></li>
+<li class="chapter" data-level="28.3" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#characterizing-how-things-are-named"><i class="fa fa-check"></i><b>28.3</b> Characterizing how things are named</a><ul>
+<li class="chapter" data-level="28.3.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#counting-columns-and-name-reuse"><i class="fa fa-check"></i><b>28.3.1</b> Counting columns and name reuse</a></li>
+</ul></li>
+<li class="chapter" data-level="28.4" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#database-keys"><i class="fa fa-check"></i><b>28.4</b> Database keys</a><ul>
+<li class="chapter" data-level="28.4.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#direct-sql"><i class="fa fa-check"></i><b>28.4.1</b> Direct SQL</a></li>
+<li class="chapter" data-level="28.4.2" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#database-keys-with-dplyr"><i class="fa fa-check"></i><b>28.4.2</b> Database keys with dplyr</a></li>
+</ul></li>
+<li class="chapter" data-level="28.5" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#creating-your-own-data-dictionary"><i class="fa fa-check"></i><b>28.5</b> Creating your own data dictionary</a></li>
+</ul></li>
+<li class="chapter" data-level="29" data-path="chapter-dbms-environment.html"><a href="chapter-dbms-environment.html"><i class="fa fa-check"></i><b>29</b> Drilling into your DBMS environment</a><ul>
+<li class="chapter" data-level="29.1" data-path="chapter-dbms-environment.html"><a href="chapter-dbms-environment.html#which-database"><i class="fa fa-check"></i><b>29.1</b> Which database?</a></li>
+<li class="chapter" data-level="29.2" data-path="chapter-dbms-environment.html"><a href="chapter-dbms-environment.html#how-many-databases-reside-in-the-docker-container"><i class="fa fa-check"></i><b>29.2</b> How many databases reside in the Docker Container?</a></li>
+<li class="chapter" data-level="29.3" data-path="chapter-dbms-environment.html"><a href="chapter-dbms-environment.html#which-schema"><i class="fa fa-check"></i><b>29.3</b> Which Schema?</a></li>
+<li class="chapter" data-level="29.4" data-path="chapter-dbms-environment.html"><a href="chapter-dbms-environment.html#exercises-3"><i class="fa fa-check"></i><b>29.4</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="30" data-path="chapter-explain-queries.html"><a href="chapter-explain-queries.html"><i class="fa fa-check"></i><b>30</b> Explain queries</a><ul>
+<li class="chapter" data-level="30.1" data-path="chapter-explain-queries.html"><a href="chapter-explain-queries.html#performance-considerations"><i class="fa fa-check"></i><b>30.1</b> Performance considerations</a></li>
+<li class="chapter" data-level="30.2" data-path="chapter-explain-queries.html"><a href="chapter-explain-queries.html#clean-up-2"><i class="fa fa-check"></i><b>30.2</b> Clean up</a></li>
+</ul></li>
+<li class="chapter" data-level="31" data-path="chapter-sql-queries-breakdown.html"><a href="chapter-sql-queries-breakdown.html"><i class="fa fa-check"></i><b>31</b> SQL queries broken down</a><ul>
+<li class="chapter" data-level="31.1" data-path="chapter-sql-queries-breakdown.html"><a href="chapter-sql-queries-breakdown.html#sql-execution-steps"><i class="fa fa-check"></i><b>31.1</b> SQL Execution Steps</a></li>
+<li class="chapter" data-level="31.2" data-path="chapter-sql-queries-breakdown.html"><a href="chapter-sql-queries-breakdown.html#passing-values-to-sql-statements"><i class="fa fa-check"></i><b>31.2</b> Passing values to SQL statements</a></li>
+<li class="chapter" data-level="31.3" data-path="chapter-sql-queries-breakdown.html"><a href="chapter-sql-queries-breakdown.html#pass-multiple-sets-of-values-with-dbbind"><i class="fa fa-check"></i><b>31.3</b> Pass multiple sets of values with dbBind():</a></li>
+<li class="chapter" data-level="31.4" data-path="chapter-sql-queries-breakdown.html"><a href="chapter-sql-queries-breakdown.html#clean-up-3"><i class="fa fa-check"></i><b>31.4</b> Clean up</a></li>
+</ul></li>
+<li class="chapter" data-level="32" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html"><i class="fa fa-check"></i><b>32</b> Writing to the DBMS</a><ul>
+<li class="chapter" data-level="32.1" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#set-up-a-cattle-container"><i class="fa fa-check"></i><b>32.1</b> Set up a <code>cattle</code> container</a><ul>
+<li class="chapter" data-level="32.1.1" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#remove-previous-containers-if-they-exist-1"><i class="fa fa-check"></i><b>32.1.1</b> Remove previous containers if they exist</a></li>
+<li class="chapter" data-level="32.1.2" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#connect-to-postgresql"><i class="fa fa-check"></i><b>32.1.2</b> Connect to PostgreSQL</a></li>
+</ul></li>
+<li class="chapter" data-level="32.2" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#interact-with-postgresql-1"><i class="fa fa-check"></i><b>32.2</b> Interact with PostgreSQL</a><ul>
+<li class="chapter" data-level="32.2.1" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#create-a-new-table-in-the-database"><i class="fa fa-check"></i><b>32.2.1</b> Create a new table in the database</a></li>
+<li class="chapter" data-level="32.2.2" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#modify-an-existing-table"><i class="fa fa-check"></i><b>32.2.2</b> Modify an existing table</a></li>
+<li class="chapter" data-level="32.2.3" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#remove-the-table"><i class="fa fa-check"></i><b>32.2.3</b> Remove the table</a></li>
+</ul></li>
+<li class="chapter" data-level="32.3" data-path="chapter-writing-to-the-dbms.html"><a href="chapter-writing-to-the-dbms.html#clean-up-4"><i class="fa fa-check"></i><b>32.3</b> Clean up</a></li>
+</ul></li>
+<li class="appendix"><span><b>Appendices</b></span></li>
+<li class="chapter" data-level="A" data-path="chapter-appendix-setup-instructions.html"><a href="chapter-appendix-setup-instructions.html"><i class="fa fa-check"></i><b>A</b> Appendix A - Setup instructions</a><ul>
+<li class="chapter" data-level="A.1" data-path="chapter-appendix-setup-instructions.html"><a href="chapter-appendix-setup-instructions.html#sandbox-prerequisites"><i class="fa fa-check"></i><b>A.1</b> Sandbox prerequisites</a></li>
+<li class="chapter" data-level="A.2" data-path="chapter-appendix-setup-instructions.html"><a href="chapter-appendix-setup-instructions.html#r-rstudio-and-git"><i class="fa fa-check"></i><b>A.2</b> R, RStudio and Git</a></li>
+<li class="chapter" data-level="A.3" data-path="chapter-appendix-setup-instructions.html"><a href="chapter-appendix-setup-instructions.html#install-docker"><i class="fa fa-check"></i><b>A.3</b> Install Docker</a></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html"><i class="fa fa-check"></i><b>B</b> Appendix B - Additional technical details for Windows users</a><ul>
+<li class="chapter" data-level="B.1" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#hardware-requirements"><i class="fa fa-check"></i><b>B.1</b> Hardware requirements</a></li>
+<li class="chapter" data-level="B.2" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#software-requirements"><i class="fa fa-check"></i><b>B.2</b> Software requirements</a><ul>
+<li class="chapter" data-level="B.2.1" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#windows-7-8-8.1-and-windows-10-home-64-bit"><i class="fa fa-check"></i><b>B.2.1</b> Windows 7, 8, 8.1 and Windows 10 Home (64 bit)</a></li>
+<li class="chapter" data-level="B.2.2" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#windows-10-pro"><i class="fa fa-check"></i><b>B.2.2</b> Windows 10 Pro</a></li>
+</ul></li>
+<li class="chapter" data-level="B.3" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#docker-for-windows-settings"><i class="fa fa-check"></i><b>B.3</b> Docker for Windows settings</a><ul>
+<li class="chapter" data-level="B.3.1" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#shared-drives"><i class="fa fa-check"></i><b>B.3.1</b> Shared drives</a></li>
+<li class="chapter" data-level="B.3.2" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#kubernetes"><i class="fa fa-check"></i><b>B.3.2</b> Kubernetes</a></li>
+</ul></li>
+<li class="chapter" data-level="B.4" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#git-github-and-line-endings"><i class="fa fa-check"></i><b>B.4</b> Git, GitHub and line endings</a></li>
+</ul></li>
+<li class="chapter" data-level="C" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html"><i class="fa fa-check"></i><b>C</b> Appendix C - PostgreSQL Authentication</a><ul>
+<li class="chapter" data-level="C.1" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#introduction"><i class="fa fa-check"></i><b>C.1</b> Introduction</a></li>
+<li class="chapter" data-level="C.2" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#password-authentication-on-the-postgresql-docker-image"><i class="fa fa-check"></i><b>C.2</b> Password authentication on the PostgreSQL Docker image</a></li>
+<li class="chapter" data-level="C.3" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#adding-roles"><i class="fa fa-check"></i><b>C.3</b> Adding roles</a><ul>
+<li class="chapter" data-level="C.3.1" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#setting-up-docker"><i class="fa fa-check"></i><b>C.3.1</b> Setting up Docker</a></li>
+<li class="chapter" data-level="C.3.2" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#creating-a-new-container"><i class="fa fa-check"></i><b>C.3.2</b> Creating a new container</a></li>
+<li class="chapter" data-level="C.3.3" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#adding-a-role"><i class="fa fa-check"></i><b>C.3.3</b> Adding a role</a></li>
+<li class="chapter" data-level="C.3.4" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#did-it-work"><i class="fa fa-check"></i><b>C.3.4</b> Did it work?</a></li>
+<li class="chapter" data-level="C.3.5" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#remove-the-container"><i class="fa fa-check"></i><b>C.3.5</b> Remove the container</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="D" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html"><i class="fa fa-check"></i><b>D</b> APPENDIX D - Quick Guide to SQL</a><ul>
+<li class="chapter" data-level="D.1" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html#data-manipulation-langauge-dml"><i class="fa fa-check"></i><b>D.1</b> Data Manipulation Langauge (DML)</a></li>
+<li class="chapter" data-level="D.2" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html#data-definition-langauge-ddl"><i class="fa fa-check"></i><b>D.2</b> Data Definition Langauge (DDL)</a></li>
+<li class="chapter" data-level="D.3" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html#data-control-language-dcl"><i class="fa fa-check"></i><b>D.3</b> Data Control Language (DCL)</a></li>
+<li class="chapter" data-level="D.4" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html#transaction-control-language-tcl"><i class="fa fa-check"></i><b>D.4</b> Transaction Control Language (TCL)</a></li>
+</ul></li>
+<li class="chapter" data-level="E" data-path="chapter-appendix-dplyr-functions.html"><a href="chapter-appendix-dplyr-functions.html"><i class="fa fa-check"></i><b>E</b> Dplyr functions and SQL cross-walk</a></li>
+<li class="chapter" data-level="F" data-path="chapter-appendix-dbi-functions.html"><a href="chapter-appendix-dbi-functions.html"><i class="fa fa-check"></i><b>F</b> DBI package functions - coverage</a></li>
+<li class="chapter" data-level="G" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html"><i class="fa fa-check"></i><b>G</b> Appendix Additional resources</a><ul>
+<li class="chapter" data-level="G.1" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#editing-this-book"><i class="fa fa-check"></i><b>G.1</b> Editing this book</a></li>
+<li class="chapter" data-level="G.2" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-alternatives"><i class="fa fa-check"></i><b>G.2</b> Docker alternatives</a></li>
+<li class="chapter" data-level="G.3" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-and-r"><i class="fa fa-check"></i><b>G.3</b> Docker and R</a></li>
+<li class="chapter" data-level="G.4" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#documentation-for-docker-and-postgresql"><i class="fa fa-check"></i><b>G.4</b> Documentation for Docker and PostgreSQL</a></li>
+<li class="chapter" data-level="G.5" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#sql-and-dplyr"><i class="fa fa-check"></i><b>G.5</b> SQL and dplyr</a></li>
+<li class="chapter" data-level="G.6" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#more-resources"><i class="fa fa-check"></i><b>G.6</b> More Resources</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">R, Databases, and Docker</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="chapter_writing-to-the-dbms" class="section level1">
+<h1><span class="header-section-number">Chapter 32</span> Writing to the DBMS</h1>
+<p>This chapter demonstrates how to:</p>
+<blockquote>
+<ul>
+<li>Set up and connect to a <code>cattle</code> database</li>
+<li>Create, modify, and remove a database table</li>
+</ul>
+</blockquote>
+<p>In a corporate setting, you may be creating your own tables or modifying existing tables less frequently than retrieving data. Nevertheless, in our sandbox you can easily do so.</p>
+<p>The following packages are used in this chapter:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)
+<span class="kw">library</span>(DBI)
+<span class="kw">library</span>(RPostgres)
+<span class="kw">require</span>(knitr)
+<span class="kw">library</span>(sqlpetr)</code></pre>
+<div id="set-up-a-cattle-container" class="section level2">
+<h2><span class="header-section-number">32.1</span> Set up a <code>cattle</code> container</h2>
+<p>Check that Docker is up and running:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_check_that_docker_is_up</span>()</code></pre>
+<pre><code>## [1] &quot;Docker is up but running no containers&quot;</code></pre>
+<div id="remove-previous-containers-if-they-exist-1" class="section level3">
+<h3><span class="header-section-number">32.1.1</span> Remove previous containers if they exist</h3>
+<p>Remove the <code>cattle</code> and <code>sql-pet</code> containers if they exist (e.g., from prior experiments).</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_docker_remove_container</span>(<span class="st">&quot;cattle&quot;</span>)</code></pre>
+<pre><code>## [1] 0</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_docker_remove_container</span>(<span class="st">&quot;sql-pet&quot;</span>)</code></pre>
+<pre><code>## [1] 0</code></pre>
+<p>Create a new <code>cattle</code> container:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_make_simple_pg</span>(<span class="st">&quot;cattle&quot;</span>)</code></pre>
+<p>Show that we’re ready to connect:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_check_that_docker_is_up</span>()</code></pre>
+<pre><code>## [1] &quot;Docker is up, running these containers:&quot;                                                                                                       
+## [2] &quot;CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES&quot;   
+## [3] &quot;f2ea89acd447        postgres:10         \&quot;docker-entrypoint.s…\&quot;   1 second ago        Up Less than a second   0.0.0.0:5432-&gt;5432/tcp   cattle&quot;</code></pre>
+</div>
+<div id="connect-to-postgresql" class="section level3">
+<h3><span class="header-section-number">32.1.2</span> Connect to PostgreSQL</h3>
+<p>Connect to PostgreSQL using the <code>sp_get_postgres_connection</code> function:</p>
+<pre class="sourceCode r"><code class="sourceCode r">con &lt;-<span class="st"> </span><span class="kw">sp_get_postgres_connection</span>(<span class="dt">user =</span> <span class="st">&quot;postgres&quot;</span>,
+                         <span class="dt">password =</span> <span class="st">&quot;postgres&quot;</span>,
+                         <span class="dt">dbname =</span> <span class="st">&quot;postgres&quot;</span>,
+                         <span class="dt">seconds_to_test =</span> <span class="dv">30</span>)</code></pre>
+</div>
+</div>
+<div id="interact-with-postgresql-1" class="section level2">
+<h2><span class="header-section-number">32.2</span> Interact with PostgreSQL</h2>
+<p>Check on the contents of the database.</p>
+<pre class="sourceCode r"><code class="sourceCode r">DBI<span class="op">::</span><span class="kw">dbListTables</span>(con)</code></pre>
+<pre><code>## character(0)</code></pre>
+<p>It does not contain any tables yet.</p>
+<div id="create-a-new-table-in-the-database" class="section level3">
+<h3><span class="header-section-number">32.2.1</span> Create a new table in the database</h3>
+<p>This is an example from the DBI help file using the “cars” built-in dataset, not to be confused with mtcars:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dbWriteTable</span>(con, <span class="st">&quot;cars&quot;</span>, <span class="kw">head</span>(cars, <span class="dv">3</span>)) <span class="co">#</span></code></pre>
+<p>The <code>cars</code> table has 3 rows:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dbReadTable</span>(con, <span class="st">&quot;cars&quot;</span>)  </code></pre>
+<pre><code>##   speed dist
+## 1     4    2
+## 2     4   10
+## 3     7    4</code></pre>
+</div>
+<div id="modify-an-existing-table" class="section level3">
+<h3><span class="header-section-number">32.2.2</span> Modify an existing table</h3>
+<p>To add additional rows or instances to the “cars” table, we will use INSERT command with their values.</p>
+<p>There are two different ways of adding values: list them or pass values using the param argument.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dbExecute</span>(
+  con,
+  <span class="st">&quot;INSERT INTO cars (speed, dist) VALUES (1, 1), (2, 2), (3, 3)&quot;</span>
+)</code></pre>
+<pre><code>## [1] 3</code></pre>
+<p>Now it has 6 rows:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dbReadTable</span>(con, <span class="st">&quot;cars&quot;</span>)</code></pre>
+<pre><code>##   speed dist
+## 1     4    2
+## 2     4   10
+## 3     7    4
+## 4     1    1
+## 5     2    2
+## 6     3    3</code></pre>
+<p>Pass values using the param argument:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dbExecute</span>(
+  con,
+  <span class="st">&quot;INSERT INTO cars (speed, dist) VALUES ($1, $2)&quot;</span>,
+  <span class="dt">param =</span> <span class="kw">list</span>(<span class="dv">4</span><span class="op">:</span><span class="dv">7</span>, <span class="dv">5</span><span class="op">:</span><span class="dv">8</span>)
+)</code></pre>
+<pre><code>## [1] 4</code></pre>
+<p>Now there are 10 rows:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dbReadTable</span>(con, <span class="st">&quot;cars&quot;</span>)</code></pre>
+<pre><code>##    speed dist
+## 1      4    2
+## 2      4   10
+## 3      7    4
+## 4      1    1
+## 5      2    2
+## 6      3    3
+## 7      4    5
+## 8      5    6
+## 9      6    7
+## 10     7    8</code></pre>
+</div>
+<div id="remove-the-table" class="section level3">
+<h3><span class="header-section-number">32.2.3</span> Remove the table</h3>
+<p>Remove the “cars” table.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dbRemoveTable</span>(con, <span class="st">&quot;cars&quot;</span>)</code></pre>
+</div>
+</div>
+<div id="clean-up-4" class="section level2">
+<h2><span class="header-section-number">32.3</span> Clean up</h2>
+<p>Disconnect from the database:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dbDisconnect</span>(con)</code></pre>
+<p>Stop the <code>cattle</code> container, but leave it around for future use.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_docker_stop</span>(<span class="st">&quot;cattle&quot;</span>)</code></pre>
+
+</div>
+</div>
+
+
+
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="chapter-sql-queries-breakdown.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="chapter-appendix-setup-instructions.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/smithjd/sql-pet/edit/master/220-write-to-the-database.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
