@@ -196,7 +196,7 @@ Table: (\#tab:unnamed-chunk-5)select all columns
 ---------  -----------------  -----------  --------------------
         1                  1            1  2006-02-15 09:57:12 
         2                  2            2  2006-02-15 09:57:12 
-       10                 10           10  2019-03-03 19:46:16 
+       10                 10           10  2019-03-04 09:06:44 
                 
 #### 2.  Same Query as 1, but only show first two columns; 
 
@@ -305,9 +305,9 @@ Table: (\#tab:unnamed-chunk-9)Adding Meta Data Columns
 
 showing           store_id   manager_staff_id   address_id  last_update           db          user       dtts                
 ---------------  ---------  -----------------  -----------  --------------------  ----------  ---------  --------------------
-derived column           1                  1            1  2006-02-15 09:57:12   dvdrental   postgres   2019/03/04 03:46:19 
-derived column           2                  2            2  2006-02-15 09:57:12   dvdrental   postgres   2019/03/04 03:46:19 
-derived column          10                 10           10  2019-03-03 19:46:16   dvdrental   postgres   2019/03/04 03:46:19 
+derived column           1                  1            1  2006-02-15 09:57:12   dvdrental   postgres   2019/03/04 17:06:47 
+derived column           2                  2            2  2006-02-15 09:57:12   dvdrental   postgres   2019/03/04 17:06:47 
+derived column          10                 10           10  2019-03-04 09:06:44   dvdrental   postgres   2019/03/04 17:06:47 
  
     All the previous examples easily fit on a single line.  This one is longer.  Each column is entered on its own line, indented past the select keyword, and preceeded by a comma.  
     
@@ -345,7 +345,7 @@ showing                      store_id   manager_staff_id   address_id  last_upda
 --------------------------  ---------  -----------------  -----------  --------------------  ----------  ---------
 single line comment, dtts           1                  1            1  2006-02-15 09:57:12   dvdrental   postgres 
 single line comment, dtts           2                  2            2  2006-02-15 09:57:12   dvdrental   postgres 
-single line comment, dtts          10                 10           10  2019-03-03 19:46:16   dvdrental   postgres 
+single line comment, dtts          10                 10           10  2019-03-04 09:06:44   dvdrental   postgres 
 
     The dtts  line is commented out with the two dashes and is dropped from the end of the result set columns.
     
@@ -377,7 +377,7 @@ showing                                  store_id   manager_staff_id   address_i
 --------------------------------------  ---------  -----------------  -----------  --------------------
 block comment drop db, user, and dtts           1                  1            1  2006-02-15 09:57:12 
 block comment drop db, user, and dtts           2                  2            2  2006-02-15 09:57:12 
-block comment drop db, user, and dtts          10                 10           10  2019-03-03 19:46:16 
+block comment drop db, user, and dtts          10                 10           10  2019-03-04 09:06:44 
 
     The three columns db, user, and dtts, between the /\* and \*/ have been commented and no longer appear as the end columns of the result set.
     
@@ -456,7 +456,7 @@ Table: (\#tab:unnamed-chunk-12)select all columns
 ---------  -----------------  -----------  --------------------
         1                  1            1  2006-02-15 09:57:12 
         2                  2            2  2006-02-15 09:57:12 
-       10                 10           10  2019-03-03 19:46:16 
+       10                 10           10  2019-03-04 09:06:44 
 
 #### 8 WHERE condition logically never TRUE.
 
@@ -501,7 +501,7 @@ Table: (\#tab:unnamed-chunk-14)WHERE always TRUE
 ---------  -----------------  -----------  --------------------
         1                  1            1  2006-02-15 09:57:12 
         2                  2            2  2006-02-15 09:57:12 
-       10                 10           10  2019-03-03 19:46:16 
+       10                 10           10  2019-03-04 09:06:44 
     
     Since 1 = 1 is always true, all rows are always returned.  Initially this construct seems useless, but actually is also quite handy when debugging large scripts and creating a backup of table.
     
@@ -548,7 +548,7 @@ Table: (\#tab:unnamed-chunk-16)WHERE NOT EQUAL
  store_id   manager_staff_id   address_id  last_update         
 ---------  -----------------  -----------  --------------------
         1                  1            1  2006-02-15 09:57:12 
-       10                 10           10  2019-03-03 19:46:16 
+       10                 10           10  2019-03-04 09:06:44 
 
     <> is syntactically the same as !=
         
