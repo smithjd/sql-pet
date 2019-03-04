@@ -87,13 +87,13 @@ All the tables defined in the DVD Rental System will fit into memory which is ra
 *  actor_table <- DBI::dbReadTable(con,"actor")
 
 ```{r Declare Dplyr Tables}
-source(file=here('book-src/dvdrental_tables_declarations.R'),echo=FALSE)
+source(here('book-src', 'dvdrental-table-declarations.R'),echo=FALSE)
 ```
 
 The following code block deletes and inserts records into the different tables used in the exercises in this chpater.  The techniques used in this code block are discussed in detail in the appendix, ??add link here.??  
 
 ```{r collapse=TRUE}
-source(file=here('book-src/sql_pet_data.R'),echo=FALSE)
+source(file=here('book-src', 'sql_pet_data.R'),echo=FALSE)
 ```
 
 # SQL Union Exercise
@@ -376,9 +376,10 @@ sp_print_df(languages_sql)
 # sp_tbl_pk_fk('table_name')
 # sp_print_df(table_rows_sql)
 
-languages_dplyr <- as.data.frame("code me")
+# languages_dplyr <- as.data.frame("code me")
+# 
+# sp_print_df(language_table)
 
-sp_print_df(language_table)
 ```
 
 ### 8.  What is the distribution of DVD's by Language 
