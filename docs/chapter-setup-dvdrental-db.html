@@ -673,8 +673,8 @@ in <code>sqlpetr</code> to build this image, called <a href="https://smithjd.git
 <pre><code>## # A tibble: 7 x 7
 ##   image_id  repository   tag    digest           created created_at   size 
 ##   &lt;chr&gt;     &lt;chr&gt;        &lt;chr&gt;  &lt;chr&gt;            &lt;chr&gt;   &lt;chr&gt;        &lt;chr&gt;
-## 1 22e0c193… test-dvdren… latest &lt;none&gt;           3 days… 2019-02-28 … 251MB
-## 2 22e0c193… postgres-dv… latest &lt;none&gt;           3 days… 2019-02-28 … 251MB
+## 1 22e0c193… postgres-dv… latest &lt;none&gt;           3 days… 2019-02-28 … 251MB
+## 2 22e0c193… test-dvdren… latest &lt;none&gt;           3 days… 2019-02-28 … 251MB
 ## 3 ac25c2ba… postgres     10     sha256:b5f07874… 6 mont… 2018-09-04 … 228MB
 ## 4 93ca3834… r-base       latest sha256:3801677d… 7 mont… 2018-07-16 … 678MB
 ## 5 23e8b4b8… postgres     latest sha256:d8011033… 7 mont… 2018-07-16 … 236MB
@@ -707,7 +707,7 @@ The name should contain only slashes, letters, numbers and underscores. Other ch
 <pre><code>## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;
-## 1 0cf954c06f01 post… docker… 2019-03-0… 1 seco… 0.0.… Up Le… 0B (… sql-…
+## 1 5bda842389fb post… docker… 2019-03-0… 1 seco… 0.0.… Up Le… 0B (… sql-…
 ## # … with 3 more variables: labels &lt;chr&gt;, mounts &lt;chr&gt;, networks &lt;chr&gt;</code></pre>
 </div>
 <div id="connect-to-postgresql-with-r" class="section level2">
@@ -753,7 +753,7 @@ the <em>running</em> containers. But we can use the <code>list_all</code> option
 <pre><code>## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;
-## 1 0cf954c06f01 post… docker… 2019-03-0… 5 seco… &lt;NA&gt;  Exite… 0B (… sql-…
+## 1 5bda842389fb post… docker… 2019-03-0… 5 seco… &lt;NA&gt;  Exite… 0B (… sql-…
 ## # … with 3 more variables: labels &lt;chr&gt;, mounts &lt;chr&gt;, networks &lt;chr&gt;</code></pre>
 <p>Restart the container and verify that the dvdrental tables are still there:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_docker_start</span>(<span class="st">&quot;sql-pet&quot;</span>)
@@ -761,7 +761,7 @@ the <em>running</em> containers. But we can use the <code>list_all</code> option
 <pre><code>## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;
-## 1 0cf954c06f01 post… docker… 2019-03-0… 6 seco… 0.0.… Up Le… 63B … sql-…
+## 1 5bda842389fb post… docker… 2019-03-0… 6 seco… 0.0.… Up Le… 63B … sql-…
 ## # … with 3 more variables: labels &lt;chr&gt;, mounts &lt;chr&gt;, networks &lt;chr&gt;</code></pre>
 <p>Connect to the <code>dvdrental</code> database in PostgreSQL:</p>
 <pre class="sourceCode r"><code class="sourceCode r">con &lt;-<span class="st"> </span><span class="kw">sp_get_postgres_connection</span>(
@@ -786,7 +786,7 @@ the <em>running</em> containers. But we can use the <code>list_all</code> option
 <p>Show that the container still exists even though it’s not running</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_show_all_docker_containers</span>()</code></pre>
 <pre><code>## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## 0cf954c06f01        postgres-dvdrental   &quot;docker-entrypoint.s…&quot;   7 seconds ago       Exited (0) Less than a second ago                       sql-pet</code></pre>
+## 5bda842389fb        postgres-dvdrental   &quot;docker-entrypoint.s…&quot;   7 seconds ago       Exited (0) Less than a second ago                       sql-pet</code></pre>
 <p>Next time, you can just use this command to start the container:</p>
 <blockquote>
 <p><code>sp_docker_start(&quot;sql-pet&quot;)</code></p>
