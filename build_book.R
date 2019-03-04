@@ -16,4 +16,4 @@ bookdown::render_book(
 file.create("docs/.nojekyll")
 
 # IMPORTANT: if the file structure has changed, remember to run:
-# chapter_file_title_crosswalk.R
+source('chapter_file_title_crosswalk.R')
