@@ -74,15 +74,14 @@ sp_docker_images_tibble()
 ```
 
 ```
-## # A tibble: 6 x 7
+## # A tibble: 5 x 7
 ##   image_id  repository   tag    digest           created created_at   size 
 ##   <chr>     <chr>        <chr>  <chr>            <chr>   <chr>        <chr>
-## 1 22e0c193… postgres-dv… latest <none>           3 days… 2019-02-28 … 251MB
-## 2 ac25c2ba… postgres     10     sha256:b5f07874… 6 mont… 2018-09-04 … 228MB
-## 3 93ca3834… r-base       latest sha256:3801677d… 7 mont… 2018-07-16 … 678MB
-## 4 23e8b4b8… postgres     latest sha256:d8011033… 7 mont… 2018-07-16 … 236MB
-## 5 74f8760a… ubuntu       latest sha256:30e04dda… 7 mont… 2018-07-16 … 82.4…
-## 6 11cd0b38… alpine       latest sha256:70430763… 8 mont… 2018-07-06 … 4.41…
+## 1 88af3461… postgres-dv… latest <none>           2 week… 2019-02-15 … 252MB
+## 2 2fd32ba1… dpage/pgadm… 4.2    sha256:409e55fb… 3 week… 2019-02-04 … 261MB
+## 3 e1b4d4e5… <none>       <none> <none>           7 week… 2019-01-08 … 259MB
+## 4 7520ebe7… postgres     10     sha256:9971f429… 2 mont… 2018-12-31 … 230MB
+## 5 e81eb098… nginx        latest sha256:31b8e90a… 3 mont… 2018-11-16 … 109MB
 ```
 
 ## Run the pet-sql Docker Image
@@ -121,7 +120,7 @@ sp_docker_containers_tibble()
 ## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 ce3accea3583 post… docker… 2019-03-0… 1 seco… 0.0.… Up Le… 0B (… sql-…
+## 1 b8af8b691519 post… docker… 2019-03-0… 1 seco… 0.0.… Up Le… 0B (… sql-…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 
@@ -201,7 +200,7 @@ sp_docker_containers_tibble(list_all = TRUE)
 ## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 ce3accea3583 post… docker… 2019-03-0… 5 seco… <NA>  Exite… 0B (… sql-…
+## 1 b8af8b691519 post… docker… 2019-03-0… 5 seco… <NA>  Exite… 0B (… sql-…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 
@@ -217,7 +216,7 @@ sp_docker_containers_tibble()
 ## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 ce3accea3583 post… docker… 2019-03-0… 6 seco… 0.0.… Up Le… 63B … sql-…
+## 1 b8af8b691519 post… docker… 2019-03-0… 6 seco… 0.0.… Up Le… 63B … sql-…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 Connect to the `dvdrental` database in PostgreSQL:
@@ -266,7 +265,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## ce3accea3583        postgres-dvdrental   "docker-entrypoint.s…"   7 seconds ago       Exited (0) Less than a second ago                       sql-pet
+## b8af8b691519        postgres-dvdrental   "docker-entrypoint.s…"   7 seconds ago       Exited (0) Less than a second ago                       sql-pet
 ```
 
 Next time, you can just use this command to start the container: 
