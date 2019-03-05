@@ -1,34 +1,10 @@
 ---
 output:
   html_document:
-    code_folding: "hide"
+    code_folding: "show"
 ---
 
 # SQL Joins exercises {#chapter_sql-joins-exercises}
-
-```
-> This chapter contains questions one may be curious about or asked about the DVD Rental business.  
-> The goal of the exercises is extracting useful or questionable insights from one or more tables.   Each exercise has has some or all of the following parts.
-```
->  1.  The question.
->  2.  The tables used to answer the question.
->  3.  A hidden SQL code block showing the desired output. Click the code button to see the SQL code.   
->  4.  A table of derived values or renamed columns shown in the SQL block to facilitate replicating the desired dplyr solution.  Abbreviated column names are used to squeeze in more columns into the answer to reduce scrolling across the screen.
->  5.  A replication section where you recreate the desired output using dplyr syntax.  Most columns come directly out of the tables.  Each replication code block has three commented function calls 
->    *  sp_tbl_descr('store')        --describes a table, store
->    *  sp_tbl_pk_fk('table_name')   --shows a table's primary and foreign keys
->    *  sp_print_df(table_rows_sql)  --shows table row counts.
->    
-> 6. To keep the exercises concentrated on the joins, all derived dates drop their timestamp.
->    *  SQL syntax:   date_column::DATE
->    *  Dplyr syntax: as.date(date_colun)
-
-#  Exercise Instructions
-
-1.  Manually execute all the code blocks up-to the "SQL Union Exercise."  
-2.  Most of the exercises can be performed in any order.  
-*  There are function exercises that create a function followed by another code block to call the function in the previous exercise.
-3.  Use the Show Document Outline, CTL-Shift-O, to navigate to the different exercises.
 
 ```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
 # These packages are called in almost every chapter of the book:
@@ -41,6 +17,29 @@ require(knitr)
 library(dbplyr)
 library(sqlpetr)
 ```
+
+> This chapter contains questions one may be curious about or asked about the DVD Rental business.  
+> The goal of the exercises is extracting useful or questionable insights from one or more tables.   Each exercise has has some or all of the following parts.
+>
+>  1.  The question.
+>  2.  The tables used to answer the question.
+>  3.  A hidden SQL code block showing the desired output. Click the code button to see the SQL code.   
+>  4.  A table of derived values or renamed columns shown in the SQL block to facilitate replicating the desired dplyr solution.  Abbreviated column names are used to squeeze in more columns into the answer to reduce scrolling across the screen.
+>  5.  A replication section where you recreate the desired output using dplyr syntax.  Most columns come directly out of the tables.  Each replication code block has three commented function calls 
+>    *  sp_tbl_descr('store')        --describes a table, store
+>    *  sp_tbl_pk_fk('table_name')   --shows a table's primary and foreign keys
+>    *  sp_print_df(table_rows_sql)  --shows table row counts.
+>    
+> 6. To keep the exercises concentrated on the joins, all derived dates drop their timestamp.
+>    *  SQL syntax:   date_column::DATE
+>    *  Dplyr syntax: as.date(date_column)
+
+##  Exercise Instructions
+
+1.  Manually execute all the code blocks up-to the "SQL Union Exercise."  
+2.  Most of the exercises can be performed in any order.  
+*  There are function exercises that create a function followed by another code block to call the function in the previous exercise.
+3.  Use the Show Document Outline, CTL-Shift-O, to navigate to the different exercises.
 
 ```{r codeblock options,echo=FALSE}
 ECHO_CODE_BLOCK = TRUE
@@ -80,14 +79,14 @@ con <- sp_get_postgres_connection(
 )
 ```
 
-# Dplyr tables
+## Dplyr tables
 
 All the tables defined in the DVD Rental System will fit into memory which is rarely the case when working with a database.  Each table is loaded into an R object named TableName_table, via a DBI::dbReadTable call.
 
 *  actor_table <- DBI::dbReadTable(con,"actor")
 
 ```{r Declare Dplyr Tables}
-source(here::here('book-src','dvdrental_table_declarations.R'),echo=FALSE)
+source(here::here('book-src','dvdrental-table-declarations.R'),echo=FALSE)
 ```
 
 The following code block deletes and inserts records into the different tables used in the exercises in this chpater.  The techniques used in this code block are discussed in detail in the appendix, ??add link here.??  
@@ -96,11 +95,11 @@ The following code block deletes and inserts records into the different tables u
 source(file=here('book-src/sql_pet_data.R'),echo=FALSE)
 ```
 
-# SQL Union Exercise
+## Overview Exercise
 
 When joining many tables, it is helpful to have the number of rows from each table as an initial sanity check that the joins are returning a reasonable number of rows.
 
-## 1.  How many rows are in each table?
+### 1.  How many rows are in each table?
 
 ```{r, code_folding='unhide',echo=ECHO_CODE_BLOCK}
 table_rows_sql <- dbGetQuery(
@@ -131,20 +130,33 @@ sp_print_df(table_rows_sql)
 
 #### Replicate the output above using dplyr syntax.
 
-```{r, include=INCLUDE_OUTPUT,echo=ECHO_CODE_BLOCK}
+Deoes not do a `union` but gets the same information...
+
+```{r}
 # sp_tbl_descr('store')
 # sp_tbl_pk_fk('table_name')
 # sp_print_df(table_rows_sql)
+actor_table %>% tally()
+address_table %>% tally()
+category_table %>% tally()
+city_table %>% tally()
+country_table %>% tally()
+customer_table %>% tally()
+film_table %>% tally()
+film_actor_table %>% tally()
+film_category_table %>% tally()
+inventory_table %>% tally()
+language_table %>% tally()
+rental_table %>% tally()
+payment_table %>% tally()
+staff_table %>% tally()
+store_table %>% tally()
 
-table_rows_dplyr <- as.data.frame("code me")
-
-sp_print_df(table_rows_dplyr)
 ```
 
+## Exercises
 
-# Exercises
-
-## 1. Where is the DVD Rental Business located?
+### 1. Where is the DVD Rental Business located?
 
 To answer this question we look at the `store`, `address`, `city`, and `country` tables to answer this question.
 
@@ -376,9 +388,9 @@ sp_print_df(languages_sql)
 # sp_tbl_pk_fk('table_name')
 # sp_print_df(table_rows_sql)
 
-languages_dplyr <- as.data.frame("code me")
-
-sp_print_df(language_table)
+# languages_dplyr <- as.data.frame("code me")
+# 
+# sp_print_df(language_table)
 ```
 
 ### 8.  What is the distribution of DVD's by Language 
@@ -1678,9 +1690,8 @@ cust_id <- 601
 sp_print_df(customer_details_fn_dplyr(cust_id))
 ```
 
-
+## Diconnect from the db and clean up
 ```{r}
-# diconnect from the db
 dbDisconnect(con)
 
 sp_docker_stop("sql-pet")
