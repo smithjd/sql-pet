@@ -79,7 +79,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(title);
+  { content: attr(data-line-number);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -679,7 +679,7 @@ tables</code></pre>
 </div>
 <div id="listing-all-the-fields-for-all-the-tables" class="section level3">
 <h3><span class="header-section-number">9.2.2</span> Listing all the fields for all the tables</h3>
-<p>The first example, <code>DBI::dbListTables(con)</code> returned 22 tables and the second example, <code>DBI::dbListFields(con, "rental")</code> returns 7 fields. Here we combine the two calls to return a list of tables which has a list of all the fields in the table. The code block just shows the first two tables.</p>
+<p>The first example, <code>DBI::dbListTables(con)</code> returned 22 tables and the second example, <code>DBI::dbListFields(con, &quot;rental&quot;)</code> returns 7 fields. Here we combine the two calls to return a list of tables which has a list of all the fields in the table. The code block just shows the first two tables.</p>
 <pre class="sourceCode r"><code class="sourceCode r">table_columns &lt;-<span class="st"> </span><span class="kw">lapply</span>(tables, dbListFields, <span class="dt">conn =</span> con)</code></pre>
 <p>Or, using purr:</p>
 <pre class="sourceCode r"><code class="sourceCode r">table_columns &lt;-<span class="st"> </span>purrr<span class="op">::</span><span class="kw">map</span>(tables, <span class="op">~</span><span class="st"> </span><span class="kw">dbListFields</span>(.,<span class="dt">conn =</span> con) )</code></pre>
@@ -756,26 +756,26 @@ tables</code></pre>
 
 one_percent_sample</code></pre>
 <pre><code>##    rental_id         rental_date inventory_id customer_id
-## 1         76 2005-05-25 11:30:37         3021           1
-## 2        188 2005-05-26 05:47:12         3342         243
-## 3        189 2005-05-26 06:01:41          984         247
-## 4        213 2005-05-26 08:44:08         1505         394
-## 5        240 2005-05-26 12:40:23         3420         103
-## 6        286 2005-05-26 19:44:51          314         371
-## 7        298 2005-05-26 20:52:26         1083         460
-## 8        323 2005-05-27 00:49:27         2362         144
-## 9        354 2005-05-27 06:12:26         2058         452
-## 10       359 2005-05-27 06:48:33         1156         152
-## 11       485 2005-05-27 23:40:52         2392         105
-## 12       630 2005-05-28 17:24:51         1254         417
-## 13       793 2005-05-29 16:44:08          379         528
-## 14       874 2005-05-30 05:36:21          363          52
-## 15       965 2005-05-30 19:00:14         3363         502
-## 16       992 2005-05-30 23:47:56         3572         123
-## 17      1077 2005-05-31 10:22:54         1986          24
-## 18      1095 2005-05-31 13:15:41         4546         252
-## 19      1222 2005-06-15 03:38:49         2799         168
-## 20      1487 2005-06-15 21:27:42         3791          76</code></pre>
+## 1        172 2005-05-26 03:17:42         2873         176
+## 2        248 2005-05-26 14:07:58         1913         545
+## 3        276 2005-05-26 17:16:07         1221          58
+## 4        328 2005-05-27 01:29:31         2524         451
+## 5        347 2005-05-27 04:40:33         1625         378
+## 6        496 2005-05-28 00:43:41         1785          56
+## 7        824 2005-05-29 21:45:32         3518         357
+## 8        828 2005-05-29 22:14:55         2468         217
+## 9        983 2005-05-30 22:15:51           63         115
+## 10      1005 2005-05-31 00:53:25         4006         551
+## 11      1206 2005-06-15 02:27:07         1097         264
+## 12      1302 2005-06-15 09:48:37          324         285
+## 13      1305 2005-06-15 09:59:16          187           8
+## 14      1382 2005-06-15 15:18:08         3133         455
+## 15      1422 2005-06-15 18:02:53         1021           1
+## 16      1527 2005-06-16 00:31:40          296         188
+## 17      1611 2005-06-16 06:41:35         1739         393
+## 18      1696 2005-06-16 12:50:01         3928         502
+## 19      1703 2005-06-16 13:28:44         2346         589
+## 20      1749 2005-06-16 16:56:00         1554         283</code></pre>
 <p><strong>Exact sample of 100 records</strong></p>
 <p>This technique depends on knowing the range of a record index, such as the <code>rental_id</code> in the <code>rental</code> table of our <code>dvdrental</code> database.</p>
 <p>Start by finding the min and max values.</p>
@@ -896,8 +896,8 @@ rental_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span 
 ## 1        2 8004
 ## 2        1 8040</code></pre>
 <p>When you create a report to run repeatedly, you might want to put that query into R markdown. That way you can also execute that SQL code in a chunk with the following header:</p>
-<p>{<code>sql, connection=con, output.var = "query_results"</code>}</p>
-<pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> <span class="ot">&quot;staff_id&quot;</span>, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> <span class="ot">&quot;n&quot;</span>
+<p>{<code>sql, connection=con, output.var = &quot;query_results&quot;</code>}</p>
+<pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> <span class="ot">&quot;staff_id&quot;</span>, <span class="fu">COUNT</span>(*) <span class="kw">AS</span> <span class="ot">&quot;n&quot;</span>
 <span class="kw">FROM</span> <span class="ot">&quot;rental&quot;</span>
 <span class="kw">GROUP</span> <span class="kw">BY</span> <span class="ot">&quot;staff_id&quot;</span>;</code></pre>
 <p>Rmarkdown stores that query result in a tibble which can be printed by referring to it:</p>
@@ -1029,7 +1029,7 @@ rental_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span 
 ##  n obs: 16044 
 ##  n variables: 7 
 ## 
-## ── Variable type:integer ──────────────────────────────────────────────────
+## ── Variable type:integer ──────────────────────────────────────────────────────
 ##      variable missing complete     n    mean      sd p0     p25    p50
 ##   customer_id       0    16044 16044  297.14  172.45  1  148     296  
 ##  inventory_id       0    16044 16044 2291.84 1322.21  1 1154    2291  
@@ -1041,7 +1041,7 @@ rental_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span 
 ##  12037.25 16049 ▇▇▇▇▇▇▇▇
 ##      2        2 ▇▁▁▁▁▁▁▇
 ## 
-## ── Variable type:POSIXct ──────────────────────────────────────────────────
+## ── Variable type:POSIXct ──────────────────────────────────────────────────────
 ##     variable missing complete     n        min        max     median
 ##  last_update       0    16044 16044 2006-02-15 2006-02-23 2006-02-16
 ##  rental_date       0    16044 16044 2005-05-24 2006-02-14 2005-07-28
@@ -1077,7 +1077,7 @@ sqlpetr<span class="op">::</span><span class="kw">sp_docker_stop</span>(<span cl
 <p>Wickham, Hadley. 2018. “A Grammar of Data Manipulation • Dplyr.” <a href=""></a>. <a href="https://dplyr.tidyverse.org/">https://dplyr.tidyverse.org/</a>.</p>
 </div>
 <div id="ref-Baumer2018">
-<p>Baumer, Benjamin S. 2018. “A Grammar for Reproducible and Painless Extract-Transform-Load Operations on Medium Data.” <em>Journal of Computational and Graphical Statistics</em>, August, 1–9. <a href="https://doi.org/10.1080/10618600.2018.1512867">https://doi.org/10.1080/10618600.2018.1512867</a>.</p>
+<p>Baumer, Benjamin S. 2018. “A Grammar for Reproducible and Painless Extract-Transform-Load Operations on Medium Data.” <em>Journal of Computational and Graphical Statistics</em>, August. Informa UK Limited, 1–9. <a href="https://doi.org/10.1080/10618600.2018.1512867">https://doi.org/10.1080/10618600.2018.1512867</a>.</p>
 </div>
 </div>
             </section>

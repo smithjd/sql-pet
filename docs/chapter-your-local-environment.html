@@ -79,7 +79,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(title);
+  { content: attr(data-line-number);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -698,7 +698,7 @@ display_rows &lt;-<span class="st"> </span><span class="dv">5</span></code></pre
 <div id="r-1" class="section level3">
 <h3><span class="header-section-number">8.2.4</span> R</h3>
 <p>R processes instructions from Rstudio. It can send instructions to your OS via the <code>system2</code> function. R can also talk directly to PostgreSQL through the DBI package.</p>
-<p>R functions like <code>file.info("file.typ")</code> communicate with your operating system, but do not visibly issue a command to your CLI. That’s an example of an equivalence that can be useful or confusing (as in our environment diagram): you can get the same information from <code>ls -ql README.md</code> on a Unix command line as <code>file.info("README.md")</code> on the R console.</p>
+<p>R functions like <code>file.info(&quot;file.typ&quot;)</code> communicate with your operating system, but do not visibly issue a command to your CLI. That’s an example of an equivalence that can be useful or confusing (as in our environment diagram): you can get the same information from <code>ls -ql README.md</code> on a Unix command line as <code>file.info(&quot;README.md&quot;)</code> on the R console.</p>
 <p>Although this sandbox seeks to make it easy, connecting to the database often involves technical and organizational hurdles like getting authorization. The main purpose of this book is to provide a sandbox for database queries to experiment with sending commands with one of the <em>DBI</em> functions to the dbms directly from R. However, Docker and PostreSQL commands are useful to know and may be necessary in extending the book’s examples.</p>
 <p>To check on the version of R that you are using, enter this on your R Console command line:</p>
 <blockquote>
@@ -777,16 +777,16 @@ display_rows &lt;-<span class="st"> </span><span class="dv">5</span></code></pre
 <h3><span class="header-section-number">8.3.1</span> Get info on a local file from R code</h3>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">file.info</span>(<span class="st">&quot;README.md&quot;</span>)</code></pre>
 <pre><code>##           size isdir mode               mtime               ctime
-## README.md 4493 FALSE  644 2019-02-15 19:24:52 2019-02-15 19:24:52
-##                         atime uid gid      uname grname
-## README.md 2019-02-15 19:24:53 501  20 jimtyhurst  staff</code></pre>
+## README.md 4493 FALSE  644 2019-02-17 13:04:05 2019-02-17 13:04:05
+##                         atime uid gid uname grname
+## README.md 2019-02-17 13:04:05 502  80   jds  admin</code></pre>
 <p>The equivalent information from executing a command on the CLI or Terminal would be</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system2</span>(<span class="st">&quot;ls&quot;</span>,  <span class="st">&quot;-l README.md&quot;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">FALSE</span>)</code></pre>
 </div>
 <div id="get-info-on-the-same-os-file-inside-docker-from-r-code" class="section level3">
 <h3><span class="header-section-number">8.3.2</span> Get info on the same OS file inside Docker from R Code</h3>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system2</span>(<span class="st">&quot;docker&quot;</span>, <span class="st">&quot;exec sql-pet ls -l petdir/README.md&quot;</span>, <span class="dt">stdout =</span> <span class="ot">TRUE</span>, <span class="dt">stderr =</span> <span class="ot">FALSE</span>)</code></pre>
-<pre><code>## [1] &quot;-rw-r--r-- 1 root root 4493 Feb 16 03:24 petdir/README.md&quot;</code></pre>
+<pre><code>## [1] &quot;-rw-r--r-- 1 root root 4493 Feb 17 21:04 petdir/README.md&quot;</code></pre>
 </div>
 <div id="docker-and-psql-together-from-r-or-your-cli" class="section level3">
 <h3><span class="header-section-number">8.3.3</span> Docker and psql together from R or your CLI</h3>
@@ -807,7 +807,7 @@ display_rows &lt;-<span class="st"> </span><span class="dv">5</span></code></pre
 <h3><span class="header-section-number">8.3.4</span> Nesting commands illustrates how entities are connected</h3>
 <p>The following table illustrates how the different entities communicate with each other by decomposing a command from the chapter on <a href="#step-at-a-time-docker">creating a Docker container one step at a time</a>:</p>
 <blockquote>
-<p><code>system2("docker", "exec sql-pet pg_restore -U postgres -d dvdrental petdir/dvdrental.tar", stdout = TRUE, stderr = TRUE)</code></p>
+<p><code>system2(&quot;docker&quot;, &quot;exec sql-pet pg_restore -U postgres -d dvdrental petdir/dvdrental.tar&quot;, stdout = TRUE, stderr = TRUE)</code></p>
 </blockquote>
 <table>
 <colgroup>
@@ -826,11 +826,11 @@ display_rows &lt;-<span class="st"> </span><span class="dv">5</span></code></pre
 <td>R command to send instructions to your computer’s CLI.</td>
 </tr>
 <tr class="even">
-<td><code>"docker",</code></td>
+<td><code>&quot;docker&quot;,</code></td>
 <td>The program (docker) on your computer that will interpret the commands passed from the <code>system2</code> function.</td>
 </tr>
 <tr class="odd">
-<td><code>"</code></td>
+<td><code>&quot;</code></td>
 <td>The entire string within the quotes is passed to docker</td>
 </tr>
 <tr class="even">
@@ -846,7 +846,7 @@ display_rows &lt;-<span class="st"> </span><span class="dv">5</span></code></pre
 <td>The <code>pg_restore</code> program requires a username, a database and a backup file to be restored.</td>
 </tr>
 <tr class="odd">
-<td><code>",</code></td>
+<td><code>&quot;,</code></td>
 <td>End of the docker commands passed to the <code>system2</code> function in R.</td>
 </tr>
 <tr class="even">

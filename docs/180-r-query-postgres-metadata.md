@@ -712,7 +712,7 @@ glimpse(all_meta)
 ## $ q_25       <chr> "4013", "2005-07-07 00:58:00", "1154", "148", "2005-0…
 ## $ q_50       <chr> "8025", "2005-07-28 16:03:27", "2291", "296", "2005-0…
 ## $ q_75       <chr> "12037", "2005-08-17 21:13:35", "3433", "446", "2005-…
-## $ max        <chr> "16050", "2019-02-25", "4582", "600", "2019-03-04", "…
+## $ max        <chr> "16050", "2019-02-26", "4582", "600", "2019-03-05", "…
 ```
 
 ```r
@@ -724,10 +724,10 @@ kable(head(all_meta))
 table_name   var_name       var_type    num_rows   num_blank   num_unique  min                   q_25                  q_50                  q_75                  max        
 -----------  -------------  ---------  ---------  ----------  -----------  --------------------  --------------------  --------------------  --------------------  -----------
 rental       rental_id      integer        16045           0        16045  1                     4013                  8025                  12037                 16050      
-rental       rental_date    double         16045           0        15816  2005-05-24 22:53:30   2005-07-07 00:58:00   2005-07-28 16:03:27   2005-08-17 21:13:35   2019-02-25 
+rental       rental_date    double         16045           0        15816  2005-05-24 22:53:30   2005-07-07 00:58:00   2005-07-28 16:03:27   2005-08-17 21:13:35   2019-02-26 
 rental       inventory_id   integer        16045           0         4581  1                     1154                  2291                  3433                  4582       
 rental       customer_id    integer        16045           0          600  1                     148                   296                   446                   600        
-rental       return_date    double         16045         183        15837  2005-05-25 23:55:21   2005-07-10 15:48:58   2005-08-01 19:45:29   2005-08-20 23:49:25   2019-03-04 
+rental       return_date    double         16045         183        15837  2005-05-25 23:55:21   2005-07-10 15:48:58   2005-08-01 19:45:29   2005-08-20 23:49:25   2019-03-05 
 rental       staff_id       integer        16045           0            2  1                     1                     1                     2                     2          
 ## Save your work!
 
@@ -740,12 +740,13 @@ ls()
 ```
 ##  [1] "all_meta"                  "columns_info_schema_info" 
 ##  [3] "columns_info_schema_table" "con"                      
-##  [5] "constraint_column_usage"   "key_column_usage"         
-##  [7] "keys"                      "public_tables"            
-##  [9] "referential_constraints"   "rs"                       
-## [11] "some_tables"               "table_constraints"        
-## [13] "table_info"                "table_info_schema_table"  
-## [15] "table_list"                "tables"
+##  [5] "constraint_column_usage"   "cranex"                   
+##  [7] "key_column_usage"          "keys"                     
+##  [9] "public_tables"             "referential_constraints"  
+## [11] "rs"                        "some_tables"              
+## [13] "table_constraints"         "table_info"               
+## [15] "table_info_schema_table"   "table_list"               
+## [17] "tables"
 ```
 
 

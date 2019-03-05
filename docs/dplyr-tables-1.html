@@ -79,7 +79,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(title);
+  { content: attr(data-line-number);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -627,37 +627,37 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li>actor_table &lt;- DBI::dbReadTable(con,“actor”)</li>
 </ul>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="kw">here</span>(<span class="st">&#39;book-src&#39;</span>,<span class="st">&#39;dvdrental_table_declarations.R&#39;</span>),<span class="dt">echo=</span><span class="ot">TRUE</span>)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="kw">here</span>(<span class="st">&#39;book-src&#39;</span>,<span class="st">&#39;dvdrental-table-declarations.R&#39;</span>), <span class="dt">echo =</span> <span class="ot">TRUE</span>)</code></pre>
 <pre><code>## 
-## &gt; actor_table &lt;- DBI::dbReadTable(con, &quot;actor&quot;)
+## &gt; actor_table &lt;- tbl(con, &quot;actor&quot;)
 ## 
-## &gt; address_table &lt;- DBI::dbReadTable(con, &quot;address&quot;)
+## &gt; address_table &lt;- tbl(con, &quot;address&quot;)
 ## 
-## &gt; category_table &lt;- DBI::dbReadTable(con, &quot;category&quot;)
+## &gt; category_table &lt;- tbl(con, &quot;category&quot;)
 ## 
-## &gt; city_table &lt;- DBI::dbReadTable(con, &quot;city&quot;)
+## &gt; city_table &lt;- tbl(con, &quot;city&quot;)
 ## 
-## &gt; country_table &lt;- DBI::dbReadTable(con, &quot;country&quot;)
+## &gt; country_table &lt;- tbl(con, &quot;country&quot;)
 ## 
-## &gt; customer_table &lt;- DBI::dbReadTable(con, &quot;customer&quot;)
+## &gt; customer_table &lt;- tbl(con, &quot;customer&quot;)
 ## 
-## &gt; film_table &lt;- DBI::dbReadTable(con, &quot;film&quot;)
+## &gt; film_table &lt;- tbl(con, &quot;film&quot;)
 ## 
-## &gt; film_actor_table &lt;- DBI::dbReadTable(con, &quot;film_actor&quot;)
+## &gt; film_actor_table &lt;- tbl(con, &quot;film_actor&quot;)
 ## 
-## &gt; film_category_table &lt;- DBI::dbReadTable(con, &quot;film_category&quot;)
+## &gt; film_category_table &lt;- tbl(con, &quot;film_category&quot;)
 ## 
-## &gt; inventory_table &lt;- DBI::dbReadTable(con, &quot;inventory&quot;)
+## &gt; inventory_table &lt;- tbl(con, &quot;inventory&quot;)
 ## 
-## &gt; language_table &lt;- DBI::dbReadTable(con, &quot;language&quot;)
+## &gt; language_table &lt;- tbl(con, &quot;language&quot;)
 ## 
-## &gt; rental_table &lt;- DBI::dbReadTable(con, &quot;rental&quot;)
+## &gt; rental_table &lt;- tbl(con, &quot;rental&quot;)
 ## 
-## &gt; payment_table &lt;- DBI::dbReadTable(con, &quot;payment&quot;)
+## &gt; payment_table &lt;- tbl(con, &quot;payment&quot;)
 ## 
-## &gt; staff_table &lt;- DBI::dbReadTable(con, &quot;staff&quot;)
+## &gt; staff_table &lt;- tbl(con, &quot;staff&quot;)
 ## 
-## &gt; store_table &lt;- DBI::dbReadTable(con, &quot;store&quot;)</code></pre>
+## &gt; store_table &lt;- tbl(con, &quot;store&quot;)</code></pre>
 <p>The following code block deletes and inserts records into the different tables used in the exercises in this chpater. The techniques used in this code block are discussed in detail in the appendix, ??add link here.??</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="dt">file=</span>here<span class="op">::</span><span class="kw">here</span>(<span class="st">&#39;book-src&#39;</span>,<span class="st">&#39;sql_pet_data.R&#39;</span>),<span class="dt">echo=</span><span class="ot">TRUE</span>)
 <span class="co">## </span>

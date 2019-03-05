@@ -389,11 +389,11 @@ Q %>% str(max.level = 3)
 ##   .. ..- attr(*, "class")= chr [1:3] "op_rename" "op_single" "op"
 ##   ..$ dots:List of 3
 ##   .. ..$ : language ~rental_date
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fa214e4ad28> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x7f8a52951850> 
 ##   .. ..$ : language ~staff_email
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fa214e4ad28> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x7f8a52951850> 
 ##   .. ..$ : language ~customer_email
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fa214e4ad28> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x7f8a52951850> 
 ##   .. ..- attr(*, "class")= chr "quosures"
 ##   ..$ args: list()
 ##   ..- attr(*, "class")= chr [1:3] "op_select" "op_single" "op"
@@ -499,10 +499,10 @@ Q %>% dplyr::show_query()
 ##   FROM "rental" AS "TBL_LEFT"
 ##   LEFT JOIN "staff" AS "TBL_RIGHT"
 ##   ON ("TBL_LEFT"."staff_id" = "TBL_RIGHT"."staff_id")
-## ) "nxlicaolab") "TBL_LEFT"
+## ) "qzdwvvvtzq") "TBL_LEFT"
 ##   LEFT JOIN "customer" AS "TBL_RIGHT"
 ##   ON ("TBL_LEFT"."customer_id" = "TBL_RIGHT"."customer_id")
-## ) "ylfurzoqvr") "hgtemnudei"
+## ) "rnitnthkfz") "ohetoyqsmw"
 ```
 Hand-written SQL code to do the same job will probably look a lot nicer and could be more efficient, but functionally `dplyr` does the job.
 
