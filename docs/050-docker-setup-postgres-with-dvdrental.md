@@ -122,7 +122,7 @@ sp_docker_containers_tibble()
 ## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 40d1461e33af post… docker… 2019-03-0… Less t… 0.0.… Up Le… 0B (… sql-…
+## 1 989fc890b5f4 post… docker… 2019-03-0… 1 seco… 0.0.… Up Le… 0B (… sql-…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 
@@ -202,7 +202,7 @@ sp_docker_containers_tibble(list_all = TRUE)
 ## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 40d1461e33af post… docker… 2019-03-0… 4 seco… <NA>  Exite… 0B (… sql-…
+## 1 989fc890b5f4 post… docker… 2019-03-0… 5 seco… <NA>  Exite… 0B (… sql-…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 
@@ -218,7 +218,7 @@ sp_docker_containers_tibble()
 ## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 40d1461e33af post… docker… 2019-03-0… 5 seco… 0.0.… Up Le… 63B … sql-…
+## 1 989fc890b5f4 post… docker… 2019-03-0… 6 seco… 0.0.… Up Le… 63B … sql-…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 Connect to the `dvdrental` database in PostgreSQL:
@@ -267,7 +267,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## 40d1461e33af        postgres-dvdrental   "docker-entrypoint.s…"   6 seconds ago       Exited (0) Less than a second ago                       sql-pet
+## 989fc890b5f4        postgres-dvdrental   "docker-entrypoint.s…"   7 seconds ago       Exited (0) Less than a second ago                       sql-pet
 ```
 
 Next time, you can just use this command to start the container: 
