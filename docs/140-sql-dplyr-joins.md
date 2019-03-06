@@ -29,7 +29,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                     PORTS               NAMES
-## 586b96643364        postgres-dvdrental   "docker-entrypoint.s…"   40 seconds ago      Exited (0) 2 seconds ago                       sql-pet
+## 243231d4b1ee        postgres-dvdrental   "docker-entrypoint.s…"   41 seconds ago      Exited (0) 2 seconds ago                       sql-pet
 ```
 
 Start up the `docker-pet` container
@@ -127,6 +127,10 @@ The diagram above shows the hierarchy of the different types of joins.  In the b
 For this tutorial, we can think of joins as either an Inner/Equi Join or an Outer Join.
 
 Instead of showing standard Venn diagrams showing the different JOINS, we use an analogy. For those interested though, the typical Venn diagrams can be found [here](http://www.sql-join.com/sql-join-types/).
+
+### Graphic illustration of Join types
+
+This book is focused on data retrieval from a dbms such as is found inside an organiztion, and the discussion and examples are built around the `dvdrental` database.  However, it's always helpful to remember the basic SQL concepts.  For this we refer to Jenny Bryan's [Join Cheat Sheet](http://stat545.com/bit001_dplyr-cheatsheet.html), which is part of a UBC STAT 545A and 547M course on [Data wrangling, exploration, and analysis with R](http://stat545.com/index.html).
 
 ### Valentines Party
 
@@ -274,7 +278,7 @@ sp_print_df(stores)
 ```
 
 <!--html_preserve--><div id="htmlwidget-124fb78127817ec02cd9" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-124fb78127817ec02cd9">{"x":{"filter":"none","data":[["1","2","3"],[1,2,10],[1,2,10],[1,2,10],["2006-02-15T17:57:12Z","2006-02-15T17:57:12Z","2019-03-05T00:44:55Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>store_id<\/th>\n      <th>manager_staff_id<\/th>\n      <th>address_id<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<script type="application/json" data-for="htmlwidget-124fb78127817ec02cd9">{"x":{"filter":"none","data":[["1","2","3"],[1,2,10],[1,2,10],[1,2,10],["2006-02-15T17:57:12Z","2006-02-15T17:57:12Z","2019-03-06T20:22:37Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>store_id<\/th>\n      <th>manager_staff_id<\/th>\n      <th>address_id<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
  
 
 ### `dplyr` store_id distribution Exercise
@@ -335,10 +339,15 @@ The suffix parameter is a way to distinguish the same column name in the joined 
 
 ## Inner Joins
 
+> For a conceptual refresher see: 
+> 
+> * [inner_join(superheroes, publishers)](http://stat545.com/bit001_dplyr-cheatsheet.html#inner_joinsuperheroes-publishers) 
+> * [inner_join(publishers, superheroes)](http://stat545.com/bit001_dplyr-cheatsheet.html#inner_joinpublishers-superheroes) 
+
+
 ### SQL Inner Join Details {#example_140_inner-join-details-sql}
 
 For an inner join between two tables, it doesn't matter which table is on the left, the first table, and which is on the right, the second table, because join conditions on both tables must be satisfied.  Reviewing the table below shows the inner join on our 10 sample customers and 3 store records returned only 6 rows.  The inner join detail shows only rows with matching store_id's.  
-
 
 
 ```r
@@ -427,6 +436,12 @@ sp_print_df(customer_store_summary_dij)
 <script type="application/json" data-for="htmlwidget-b619f31f38e9f2471fcc">{"x":{"filter":"none","data":[["1","2"],["ij","ij"],[1,2],[1,2],[326,274]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>join_type<\/th>\n      <th>c_store_id<\/th>\n      <th>s_store_id<\/th>\n      <th>n<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ## Left Joins
+
+> For a conceptual refresher see: 
+> 
+> * [left_join(superheroes, publishers)](http://stat545.com/bit001_dplyr-cheatsheet.html#left_joinsuperheroes-publishers)
+> * [left_join(publishers, superheroes)](http://stat545.com/bit001_dplyr-cheatsheet.html#left_joinpublishers-superheroes)  
+
 
 ### SQL Left Join Details {#example_140_left-join-details-sql}
 
@@ -729,6 +744,10 @@ sp_print_df(customer_store_summary_droj)
 
 ## Full Join
 
+> For a conceptual refresher see: 
+> 
+> * [full_join(superheroes, publishers)](http://stat545.com/bit001_dplyr-cheatsheet.html#full_joinsuperheroes-publishers)  
+
 ### SQL Full Join Details {#example_140_full-join-details-sql-a}
 
 The full outer join is a combination of the left and right outer joins and returns all matched and unmatched rows from the `ON` clause.  The matched rows return their table column values and the unmatched rows return NULL column values.  This can result in a very large result set.
@@ -819,6 +838,10 @@ sp_print_df(customer_store_summary_dfoj)
 <script type="application/json" data-for="htmlwidget-cc911bce9136bf4e7dfd">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7"],["fojs","fojs","fojs","fojs","fojs","fojs","fojs"],[1,2,null,3,4,5,6],[1,2,10,null,null,null,null],[326,274,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>join_type<\/th>\n      <th>c_store_id<\/th>\n      <th>s_store_id<\/th>\n      <th>n<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[2,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ## Semi Join 
+
+> For a conceptual refresher see: 
+> 
+> * [semi_join(publishers, superheroes)](http://stat545.com/bit001_dplyr-cheatsheet.html#semi_joinpublishers-superheroes)  
 
 Below is the `dplyr` semi_join documentation:
 
@@ -956,6 +979,13 @@ To generalize the test above, replace `in (2, 4)` with `> 0`.
 
 ## Anti Joins
 
+> For a conceptual refresher see: 
+> 
+> * [anti_join(superheroes, publishers)](http://stat545.com/bit001_dplyr-cheatsheet.html#anti_joinsuperheroes-publishers) 
+> * [anti_join(publishers, superheroes)](http://stat545.com/bit001_dplyr-cheatsheet.html#anti_joinpublishers-superheroes)  
+
+
+
 A `semi join` returns rows from one table that has one or more matching rows in the other table.  The `anti join` returns rows from one table that has no matching rows in the other table.    
 
 #### `dplyr::anti_join` {#example_140_anti-join-dplyr}
@@ -973,7 +1003,7 @@ sp_print_df(customer_store_aj)
 ```
 
 <!--html_preserve--><div id="htmlwidget-a769f33e9bc2b11da24f" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-a769f33e9bc2b11da24f">{"x":{"filter":"none","data":[["1","2","3","4"],[600,602,603,604],[3,4,5,6],["Sophie","John","Ian","Ed"],["Yang","Smith","Frantz","Borasky"],["sophie.yang@sakilacustomer.org","john.smith@sakilacustomer.org","ian.frantz@sakilacustomer.org","ed.borasky@sakilacustomer.org"],[1,2,3,4],[true,true,true,true],["2019-03-05","2019-03-05","2019-03-05","2019-03-05"],["2019-03-05T08:00:00Z","2019-03-05T08:00:00Z","2019-03-05T08:00:00Z","2019-03-05T08:00:00Z"],[1,1,1,1],["anti_join","anti_join","anti_join","anti_join"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>address_id<\/th>\n      <th>activebool<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n      <th>active<\/th>\n      <th>join_type<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,6,10]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<script type="application/json" data-for="htmlwidget-a769f33e9bc2b11da24f">{"x":{"filter":"none","data":[["1","2","3","4"],[600,602,603,604],[3,4,5,6],["Sophie","John","Ian","Ed"],["Yang","Smith","Frantz","Borasky"],["sophie.yang@sakilacustomer.org","john.smith@sakilacustomer.org","ian.frantz@sakilacustomer.org","ed.borasky@sakilacustomer.org"],[1,2,3,4],[true,true,true,true],["2019-03-06","2019-03-06","2019-03-06","2019-03-06"],["2019-03-06T08:00:00Z","2019-03-06T08:00:00Z","2019-03-06T08:00:00Z","2019-03-06T08:00:00Z"],[1,1,1,1],["anti_join","anti_join","anti_join","anti_join"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>address_id<\/th>\n      <th>activebool<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n      <th>active<\/th>\n      <th>join_type<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,6,10]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 All of the rows returned from the customer table have store_id = {3 - 6} which do not exist in the store_id.
 
