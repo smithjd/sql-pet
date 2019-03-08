@@ -323,19 +323,25 @@ For an international company, how are the different currencies converted to a st
 # sp_tbl_pk_fk('table_name')
 # sp_print_df(table_rows_sql)
 
-# customers_dplyr <- customer_table %>%
-#     inner_join(address_table, by = c("address_id" = "address_id"), suffix(c(".s", ".a"))) %>%
-#     inner_join(city_table, by = c("city_id" = "city_id"), suffix(c(".a", ".c"))) %>%
-#     inner_join(country_table, by = c("country_id" = "country_id"), suffix(c(".a", ".c"))) %>%
-#     group_by(active,country) %>%
-#     summarize(count=n()) %>%
-#     mutate(total=nrow(customer_table)
-#           ,pct=round(100 * count/total,4)
-#           ) %>%
-#     arrange(desc(count)) %>%
-#     select (active,country,count,pct) 
-# 
-# sp_print_df(customers_dplyr)
+cust_cnt <- customer_table %>% summarize(rows=n()) %>% collect()
+
+customers_dplyr <- customer_table %>%
+    inner_join(address_table, by = c("address_id" = "address_id"), suffix(c(".s", ".a"))) %>%
+    inner_join(city_table, by = c("city_id" = "city_id"), suffix(c(".a", ".c"))) %>%
+    inner_join(country_table, by = c("country_id" = "country_id"), suffix(c(".a", ".c"))) %>%
+    group_by(active,country) %>%
+    summarize(count=n()) %>%
+   
+    mutate(total=cust_cnt$rows #  nrow(customer_table)
+          ,pct=round(100 * count/total,4)
+          ) %>%
+    arrange(desc(count)) %>% 
+    select (active,country,count,pct) %>%
+  collect()
+
+
+sp_print_df(customers_dplyr)
+
 ```
 
 ### 5 What Countries Constitute the Top 25% of the Customer Base?
@@ -375,25 +381,28 @@ The top 25% of the customer base are from India, China, the United States, and J
 # sp_tbl_pk_fk('table_name')
 # sp_print_df(table_rows_sql)
 
-# country_dplyr <- customer_table %>%
-#     inner_join(address_table, by = c("address_id" = "address_id"), suffix(c(".s", ".a"))) %>%
-#     inner_join(city_table, by = c("city_id" = "city_id"), suffix(c(".a", ".c"))) %>%
-#     inner_join(country_table, by = c("country_id" = "country_id"), suffix(c(".a", ".c"))) %>%
-#     group_by(active,country) %>%
-#     summarize(count=n()) %>% 
-#     mutate(total=nrow(customer_table)
-#           ,pct=round(100 * count/total,4)
-#           ,csp=1
-#           ) %>%
-#     arrange(desc(count)) %>%
-#     
-#     group_by(csp) %>%
-#     
-#     mutate(running_pct=cumsum(pct)
-#           ,running_total=cumsum(count)) %>%
-#     select (csp,active,country,count,running_total,pct,running_pct) 
-# 
-# sp_print_df(country_dplyr)
+cust_cnt <- customer_table %>% summarize(rows=n()) %>% collect()
+
+country_dplyr <- customer_table %>%
+    inner_join(address_table, by = c("address_id" = "address_id"), suffix(c(".s", ".a"))) %>%
+    inner_join(city_table, by = c("city_id" = "city_id"), suffix(c(".a", ".c"))) %>%
+    inner_join(country_table, by = c("country_id" = "country_id"), suffix(c(".a", ".c"))) %>%
+    group_by(active,country) %>%
+    summarize(count=n()) %>%  
+    mutate(total=cust_cnt$rows
+          ,pct=round(100 * count/total,4)
+          ,csp=1
+          ) %>% 
+    arrange(desc(count)) %>%
+
+    group_by(csp) %>%
+
+    mutate(running_pct=cumsum(pct)
+          ,running_total=cumsum(count)) %>% 
+    select (csp,active,country,count,running_total,pct,running_pct) %>%  
+    collect()  
+
+sp_print_df(country_dplyr)
 ```
 
 ### 6. How many customers are in Australia and Canada?
@@ -414,8 +423,9 @@ sp_print_df(country_au_ca_sql)
 # sp_tbl_pk_fk('table_name')
 # sp_print_df(table_rows_sql)
 
-# country_au_ca_dplyr <- country_dplyr %>% filter(country == 'Australia' | country == 'Canada')
-# sp_print_df(country_au_ca_dplyr)
+country_au_ca_dplyr <- country_dplyr %>% filter(country == 'Australia' | country == 'Canada')
+sp_print_df(country_au_ca_dplyr)
+
 ```
 
 ### 7. How Many Languages?
@@ -515,22 +525,35 @@ sp_print_df(store_rentals_by_mth_sql)
 # sp_tbl_pk_fk('table_name')
 # sp_print_df(table_rows_sql)
 
+# dummy dplyr function passed to postgres to_char date function
+# dt : date
+# fmt: desired date formet.
+to_char <- function(dt, fmt) {
+  return(fmt)
+}
+
 store_rentals_by_mth_dplyr <- rental_table %>%
     inner_join(inventory_table, by = c("inventory_id" = "inventory_id"), suffix(c(".r", ".i"))) %>%
     inner_join(film_table, by = c("film_id" = "film_id"), suffix(c(".i", ".f"))) %>%
-  collect() %>% # format functions not allowed in dbplyr code!
-    mutate(YYYY_MM = format(rental_date,"%Y-%m")
+#  The collect function is needed to use the dplyr format function.  Instead of using format we can
+#  use the postgres function to_char.  This allows us to move the collect to the end.  
+#  collect() %>% # format functions not ?allowed in dbplyr code!
+#    mutate(YYYY_MM = format(rental_date,"%Y-%m")
+     mutate(YYYY_MM = to_char(rental_date,"YYYY-MM")
           ,running_total = 'running_total'
           ) %>%
     group_by(running_total,YYYY_MM,store_id) %>%
     summarise(rentals = n()
-             ,rental_amt = sum(rental_rate)
+             ,rental_amt = sum(rental_rate,na.rm = TRUE)
              ) %>%
     mutate(mo_rentals=order_by(store_id,cumsum(rentals))
           ,mo_rental_amt=order_by(store_id,cumsum(rental_amt))
           ) %>%
-    group_by(running_total) %>% mutate(running_rental_amt = cumsum(rental_amt)) %>%
-    select(-running_total)
+    group_by(running_total) %>% 
+    arrange(YYYY_MM,store_id) %>%
+    mutate(running_rental_amt = cumsum(rental_amt)) %>%
+    select(-running_total) %>% 
+    collect()
     
 sp_print_df(head(store_rentals_by_mth_dplyr, n=25))
 ```
@@ -665,9 +688,8 @@ film_103_details_dplyr <- inventory_table %>% filter(film_id == 103) %>%
   inner_join(address_table, by=c('address_id' = 'address_id'),suffix(c('.a','r'))) %>%
   inner_join(city_table, by=c('city_id' = 'city_id'),suffix(c('.c','a'))) %>%
   inner_join(country_table, by=c('country_id' = 'country_id'),suffix(c('.ctry','city'))) %>%
-  collect() %>% # as.Date function can't be translated by dbplyr
-  mutate(rented = as.Date(rental_date)
-        ,returned = as.Date(return_date)
+  mutate(rented = Date(rental_date)
+        ,returned = Date(return_date)
         ,staff = paste0(first_name,' ',last_name)
         ) %>%
   rename(inv_store = store_id.x
@@ -676,7 +698,8 @@ film_103_details_dplyr <- inventory_table %>% filter(film_id == 103) %>%
         ) %>%
   select(inv_store,film_id,title,inv_id,rented,returned,staff_id,staff_store_id
          ,staff,country) %>%
-  arrange(rented)
+  arrange(rented) %>%
+  collect() 
 
 sp_print_df(film_103_details_dplyr)
 ```
@@ -922,14 +945,12 @@ if(HEAD_N > 0) {
 inv_tbl1 <- inventory_table %>% 
     filter(store_id == 1 ) %>% 
     group_by(film_id) %>% 
-    summarise(count=n()) %>% 
-  collect()
+    summarise(count=n()) 
 
 inv_tbl2 <- inventory_table %>% 
     filter(store_id == 2 ) %>% 
     group_by(film_id) %>% 
-    summarise(count=n()) %>% 
-  collect()
+    summarise(count=n()) 
 
 dvd_in_1_store_dplyr <- inv_tbl1 %>% 
     full_join(inv_tbl2, by=c('film_id','film_id'),suffix(c('.i1','.i2'))) %>%
@@ -1167,8 +1188,8 @@ not_rtn_pct    |                  |Percent of DVD's not returned.
 returned_dplyr <- rental_table %>%
     inner_join(inventory_table, by=c('inventory_id'='inventory_id')) %>%
     inner_join(film_table, by=c('film_id'='film_id')) %>%
-  collect() %>% # lubrdiate functions can't be translated by dplyr
-    mutate(rtn_days= lubridate::date(return_date) - (lubridate::date(rental_date) + rental_duration)
+#  collect() %>% # lubrdiate functions can't be translated by dplyr
+    mutate(rtn_days= date(return_date) - (date(rental_date) + rental_duration)
           ,not_returned=ifelse(is.na(return_date),1,0)
           ) %>%
     summarize(on_time = sum(ifelse(rtn_days <= 0,1,0),na.rm = TRUE)
@@ -1179,7 +1200,8 @@ returned_dplyr <- rental_table %>%
     mutate(on_time_pct = round(100.0 * on_time/rented,2)
           ,late_pct    = round(100.0 * late/rented,2)
           ,not_rtn_pct = round(100.0 * not_rtn/rented,2)
-          ) 
+          ) %>%
+    collect()
 
 sp_print_df(returned_dplyr)
 ```
@@ -1362,15 +1384,15 @@ customer_top_rentals_dplyr <- customer_table %>%
     mutate(customer=paste(first_name,last_name,sep=' ')
           ) %>%
     group_by(customer_id.x,customer,store_id) %>%
-  collect() %>% 
     summarize(rentals=n()
-             ,paid = sum(ifelse(is.na(amount),0,amount))
-             ,mn_rental_dt = as.Date(min(rental_date))
-             ,mx_rental_dt = as.Date(max(rental_date))
+             ,paid = sum(ifelse(is.na(amount),0,amount),na.rm=TRUE)
+             ,mn_rental_dt = Date(min(rental_date,na.rm=TRUE))
+             ,mx_rental_dt = Date(max(rental_date,na.rm=TRUE))
              ) %>%
     arrange(desc(rentals)) %>%
     rename(id = customer_id.x) %>%
-    select(id,store_id,customer,mn_rental_dt,mx_rental_dt,paid,rentals)    
+    select(id,store_id,customer,mn_rental_dt,mx_rental_dt,paid,rentals) %>%
+  collect()
 
 sp_print_df(head(customer_top_rentals_dplyr,n=5))
 ```        
@@ -1436,7 +1458,8 @@ customer_rental_high_low_dplyr <- customer_table %>%
     filter( rentals == 0 | rentals > 40) %>%
     rename(id = customer_id.x) %>%
     select(id,customer,cust_cnt,rentals,payments,paid_amt) %>%
-    arrange(desc(rentals)) %>% collect()
+    arrange(desc(rentals)) %>% 
+    collect()
 
 sp_print_df(customer_rental_high_low_dplyr)
 ```
@@ -1506,28 +1529,39 @@ rent_low_hi     |                     |sequence with 1 = customer with the lowes
 # sp_tbl_pk_fk('table_name')
 # sp_print_df(table_rows_sql)
 
-customer_rentals_hi_low_dplr <- function(high_n,low_n) {
-    customer_table <- DBI::dbReadTable(con, "customer")
-    rental_table   <- DBI::dbReadTable(con, "rental")
-    
+# Parameters
+#   con: database connection
+#   high_n: top n customers
+#   low_n: bottom n customers
+
+customer_rentals_hi_low_dplr <- function(con,high_n,low_n) {
+   customer_table <- tbl(con, "customer")
+   rental_table   <- tbl(con, "rental")
+   payment_table   <- tbl(con, "payment")
+
     customer_rental_loj_hi_low_d <- customer_table %>%
         left_join(rental_table, by = c("customer_id" = "customer_id")
                   , suffix(c(".c", ".r"))) %>%
       
     left_join(payment_table, by = c("rental_id" = "rental_id"), suffix(c('r','p'))) %>%
+
+
     mutate(customer=paste(first_name,last_name,sep=' ')
           ,rented = if_else(is.na(rental_id),0, 1)
           ,paid = if_else(is.na(payment_id),0,1)
           ) %>%
+       
     group_by(customer_id.x,customer,rented) %>%
     summarize(cust_cnt = n()
-             ,rentals=sum(rented)
-             ,payments = sum(paid)
-             ,paid_amt = sum(ifelse(is.na(amount),0,amount))
+             ,rentals=sum(rented,na.rm = TRUE)
+             ,payments = sum(paid,na.rm = TRUE)
+             ,paid_amt = sum(ifelse(is.na(amount),0,amount),na.rm = TRUE)
             ) %>%
+      
     rename(id=customer_id.x) %>%
     select(id,customer,cust_cnt,rentals,payments,paid_amt) %>%
-    arrange(desc(rentals))       
+    arrange(desc(rentals)) %>%
+      collect()
 #
 #   Add the rankings 
 #    
@@ -1537,16 +1571,19 @@ customer_rentals_hi_low_dplr <- function(high_n,low_n) {
                                          )
     customer_rental_loj_hi_low_d %>% 
         filter(rent_hi_low <= high_n | rent_low_hi <= low_n) %>%
-        arrange(rent_hi_low)
+        arrange(rent_hi_low) 
+      
     
 }
 ```
 
-The following doesn't run, so commenting it out:
+The next code block executes your dplyr version of such a function.  With top_n = 5 and bot_n = 5, it replicates the hard coded version of the previous exercise. With top_n = 5 and bot_n = 0, it gives a top 5 report.  With top_n = 0 and bot_n = 5, the report returns the bottom 5.  Change the two parameters to see the output from the different combinations.
+
 ```{r}
-# top_n = 5
-# bot_n = 5
-# sp_print_df(customer_rentals_hi_low_dplr(top_n,bot_n))
+# con is the connection string opened at the top of the file.
+top_n = 5
+bot_n = 5
+sp_print_df(customer_rentals_hi_low_dplr(con,top_n,bot_n))
 ```
 
 ### 28.  How much has each store collected?
@@ -1944,19 +1981,28 @@ cash_flow_dplyr <- rental_table %>%
     left_join(payment_table, by=c('rental_id'='rental_id','customer_id'='customer_id')) %>%
     left_join(inventory_table, by=('inventory_id'='inventory_id')) %>%
     left_join(film_table, by=('film_id'='film_id')) %>%
-  collect() %>% 
-    mutate(pay_dt = lubridate::date(payment_date)
-          ,exp_rtn_dt = lubridate::date(rental_date) + rental_duration
-          ,rdate=lubridate::date(rental_date)
-          ,payment_days = lubridate::date(payment_date) - (lubridate::date(rental_date) + rental_duration)
+#  collect() %>% 
+    # mutate(pay_dt = lubridate::date(payment_date)
+    #       ,exp_rtn_dt = lubridate::date(rental_date) + rental_duration
+    #       ,rdate=lubridate::date(rental_date)
+    #       ,payment_days = lubridate::date(payment_date) - (lubridate::date(rental_date) + rental_duration)
+  
+  #        ) %>%
+  
+    mutate(pay_dt = date(payment_date)
+          ,exp_rtn_dt = date(rental_date) + rental_duration
+          ,rdate=date(rental_date)
+          ,payment_days = date(payment_date) - (date(rental_date) + rental_duration)
           ) %>%
+  
+  
     filter(return_date > exp_rtn_dt) %>%
     group_by(payment_days) %>%
-    summarize(paid_or_due=sum(ifelse(is.na(amount),rental_rate,amount))
+    summarize(paid_or_due=sum(ifelse(is.na(amount),rental_rate,amount), na.rm = TRUE)
              ,late_returns=n()
              ) %>%
     arrange(desc(payment_days)) %>%
-    select(payment_days,paid_or_due,late_returns)
+    select(payment_days,paid_or_due,late_returns) %>% collect()
 
 sp_print_df(cash_flow_dplyr)
 ```
@@ -2058,15 +2104,14 @@ customer_details_dplyr <- customer_table %>%
     left_join(payment_table,by=c('customer_id'='customer_id','rental_id'='rental_id'))  %>%
     left_join(film_table,by=c('film_id'='film_id')) %>%
     filter(customer_id == cust_id ) %>% 
-  collect() %>% # lubridate functions can't be translated by dbplyr
     mutate(customer=paste0(first_name,' ',last_name)
-          ,exp_rtn_dt = lubridate::date(rental_date) + rental_duration
-          ,rtn_days= lubridate::date(return_date) - (lubridate::date(rental_date) + rental_duration)
-          ,rented = as.Date(rental_date)
-          ,returned = as.Date(return_date)
+          ,exp_rtn_dt = date(rental_date) + rental_duration
+          ,rtn_days= date(return_date) - (date(rental_date) + rental_duration)
+          ,rented = Date(rental_date)
+          ,returned = Date(return_date)
           ,not_rtn=ifelse(is.na(rental_id),rental_id,ifelse(is.na(return_date),1,0))
           ,delta = amount-rental_rate
-          ,pay_days = lubridate::date(payment_date) - (lubridate::date(rental_date) + rental_duration)
+          ,pay_days = date(payment_date) - (date(rental_date) + rental_duration)
           ) %>%
     rename(id = customer_id
           ,cust_store_id = store_id.x
@@ -2083,7 +2128,8 @@ customer_details_dplyr <- customer_table %>%
           ,pay_dt
           ,charges,paid,delta,pay_staff_id
           ,pay_days,film_id,rental_id,inventory_id,payment_id
-          )
+          ) %>% 
+  collect()
 
 return(customer_details_dplyr)
 }
@@ -2106,7 +2152,7 @@ select examples
           dbFetch: Execute optimzed execution plan and return the dataset.
     dbClearResult: remove pending query results from the database to your R environment
 
-### dbGetQuery Versus dbSendQuery+dbFetch+dbClearResult
+### 1.  dbGetQuery Versus dbSendQuery+dbFetch+dbClearResult
 
 How many customers are there in the DVD Rental System?
 
@@ -2128,6 +2174,52 @@ dbClearResult(pco)
 sp_print_df(head(rs2))
 ```
 
+### 2. dplyr write results to the database example
+
+```{r}
+x <- customer_table %>%
+    left_join(rental_table, by=c('customer_id'='customer_id')) %>%    
+    left_join(address_table, by=c('address_id'='address_id')) %>%
+    left_join(city_table,by=c('city_id'='city_id'))  %>%
+    left_join(country_table,by=c('country_id'='country_id'))  %>%
+    left_join(inventory_table,by=c('inventory_id'='inventory_id')) %>% 
+    mutate(inv_store_id = store_id.y) %>%    
+    left_join(payment_table,by=c('customer_id'='customer_id','rental_id'='rental_id'))  %>%
+    left_join(film_table,by=c('film_id'='film_id')) %>%
+
+    mutate(customer=paste0(first_name,' ',last_name)
+          ,exp_rtn_dt = date(rental_date) + rental_duration
+          ,rtn_days= date(return_date) - (date(rental_date) + rental_duration)
+          ,rented = Date(rental_date)
+          ,returned = Date(return_date)
+          ,not_rtn=ifelse(is.na(rental_id),rental_id,ifelse(is.na(return_date),1,0))
+          ,delta = amount-rental_rate
+          ,pay_days = date(payment_date) - (date(rental_date) + rental_duration)
+          ) %>%
+    rename(id = customer_id
+          ,cust_store_id = store_id.x
+          ,charges = rental_rate
+          ,paid = amount
+          ,pay_dt = payment_date
+          ,pay_staff_id = staff_id.y
+          ) %>%
+    select(id,customer,email,phone,address,address2,city,postal_code,country
+          ,cust_store_id
+          ,inv_store_id
+          ,film_id,title,rented,returned
+          ,exp_rtn_dt,rtn_days,not_rtn
+          ,pay_dt
+          ,charges,paid,delta,pay_staff_id
+          ,pay_days,film_id,rental_id,inventory_id,payment_id
+          ) 
+
+compute(x,name='smy_test1',temporary = FALSE)
+#collapse(x)
+#smy_compute_exercise
+  
+
+
+```
 
 ```{r}
 # diconnect from the db
