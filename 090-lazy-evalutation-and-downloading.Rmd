@@ -2,8 +2,8 @@
 
 > This chapter:
 > 
-> * Reviews lazy evaluation and discusses its interaction with remote query execution on a dbms 
-> * Demonstrates how `dplyr` queries behave in connection with several different functions
+> * Reviews lazy loading, lazy evaluation and lazy query execution
+> * Demonstrates how `dplyr` code gets executed (and how R determines what is translated to SQL and what is processed locally by R)
 > * Offers some further resources on lazy loading, evaluation, execution, etc.
 
 ## Setup
@@ -89,7 +89,7 @@ whereas the output for a normal `tbl` of this rental data would say:
     ... with 16,034 more rows, and 3 more variables
 ```
 
-So even though `rental_table` is a `tbl`:
+So even though `rental_table` is a `tbl`, it's **also** a `tbl_PqConnection`:
 ```{r}
 class(rental_table)
 ```
@@ -136,13 +136,14 @@ Q <- rental_table %>%
 ```
 
 ### Experiment overview
-Think of `Q` as a black box for the moment.  The following examples will show how `Q` is interpreted differently by different functions. 
+Think of `Q` as a black box for the moment.  The following examples will show how `Q` is interpreted differently by different functions. It's important to remember in the following discussion that the "**and then**" operator (`%>%`) actually wraps the subsequent code inside the preceding code so that `Q %>% print()` is equivalent to `print(Q)`.
 
 **Notation**
 
-* ![](screenshots/green-check.png): A single green check indicates that some rows are returned.
-* ![](screenshots/green-check.png) ![](screenshots/green-check.png): Two green checks indicate that all the rows are returned.
-* ![](screenshots/red-x.png): The red X indicates that no rows are returned.
+> ![](screenshots/green-check.png) A single green check indicates that some rows are returned. <br>
+> ![](screenshots/green-check.png) ![](screenshots/green-check.png) Two green checks indicate that all the rows are returned. <br>
+> ![](screenshots/red-x.png) The red X indicates that no rows are returned.
+>
 
 > R code | Result 
 > -------| --------------
@@ -156,9 +157,10 @@ Think of `Q` as a black box for the moment.  The following examples will show ho
 > [`Q %>% dplyr::tally()`](#lazy_q_tally) | ![](screenshots/green-check.png) ![](screenshots/green-check.png) Counts all the rows -- on the dbms side
 > [`Q %>% dplyr::collect(n = 20)`](#lazy_q_collect) | ![](screenshots/green-check.png) Prints 20 rows  
 > [`Q %>% dplyr::collect(n = 20) %>% head()`](#lazy_q_collect) | ![](screenshots/green-check.png) Prints 6 rows  
-> [`Q %>% dplyr::show_query()`](#lazy-q-show-query) | ![](screenshots/red-x.png) **Translates** the lazy query object into SQL  
-> [`Qc <- Q %>% dplyr::count(customer_email, sort = TRUE)` <br /> `Qc`](#lazy_q_build) | ![](screenshots/red-x.png) **Extends** the lazy query object
->
+> [`Q %>% dplyr::show_query()`](#lazy-q-show-query) | ![](screenshots/red-x.png) **Translates** the lazy query object into SQL 
+> **Time-based, execution environment issues** | 
+> [`Qc <- Q %>% count(customer_email, sort = TRUE)`](#lazy_q_build) | ![](screenshots/red-x.png) **Extends** the lazy query object
+> 
 > 
 
 The next chapter will discuss how to build queries and how to explore intermediate steps. But first, the following subsections provide a more detailed discussion of each row in the preceding table.
@@ -253,17 +255,44 @@ Q %>% dplyr::show_query()
 ```
 Hand-written SQL code to do the same job will probably look a lot nicer and could be more efficient, but functionally `dplyr` does the job.
 
-### Qc <- Q %>% dplyr::count(customer_email) {#lazy_q_build}
+### Time-based, execution environment issues
 
-![](screenshots/red-x.png) Until `Q` is executed, we can add to it.  This behavior is the basis for a useful debugging and development process where queries are built up incrementally.
+Remember that if the expression is assigned to an object, it is not executed.  If not, a `print()` function is implied. This behavior is the basis for a useful debugging and development process where queries are built up incrementally.
+
+> *These two are different:*
+> Q %>% count(customer_email) 
+> Q_query <- Q %>% count(customer_email) 
+>
+
+### Q %>% `more dplyr` {#lazy_q_build}
+
+![](screenshots/green-check.png) Because the following statement implies a `print()` function at the end, we can run it repeatedly, adding dplyr expressions, and only get 10 rows back.  Every time we add a dplyr expression to a chain, R will rewrite the SQL code.  For example:
 ```{r}
-Qc <- Q %>% dplyr::count(customer_email, sort = TRUE)
+Q %>% count(customer_email) 
+```
+As we understand more about the data, we simply add dplyr expressions to pinpoint what we are looking for:
+```{r}
+Q %>% count(customer_email) %>% 
+  filter(n > 40) %>% 
+  arrange(customer_email)
 ```
 
 ![](screenshots/green-check.png) When all the accumulated `dplyr` verbs are executed, they are submitted to the dbms and the number of rows that are returned follow the same rules as discussed above.
+
+### Many handy R functions can't be translated to SQL
+
+![](screenshots/green-check.png) It just so happens that PostgreSQL has a `date` function that does the same thing as the `date` function in the `lubridate` package.  In the following code the `date` function is executed by PostreSQL.
 ```{r}
-Qc
+rental_table %>% mutate(rental_date = date(rental_date))
 ```
+![](screenshots/green-check.png) ![](screenshots/green-check.png) If we specify that we want to use the `lubridate` version (or any number of other R functions) they are passed to the dbms unless we explicitly tell `dplyr` to stop translating and bring the results back to the R environment for local processing.
+```{r}
+rental_table %>% collect() %>% 
+  mutate(rental_date = lubridate::date(rental_date))
+```
+
+
+### More lazy execution examples
 
 See more examples of lazy execution [here](https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html).
 
