@@ -25,7 +25,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
 
 
-<meta name="date" content="2019-03-06">
+<meta name="date" content="2019-03-09">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -285,7 +285,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="10.4.10" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_tally"><i class="fa fa-check"></i><b>10.4.10</b> Q %&gt;% dplyr::tally()</a></li>
 <li class="chapter" data-level="10.4.11" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_collect"><i class="fa fa-check"></i><b>10.4.11</b> Q %&gt;% dplyr::collect()</a></li>
 <li class="chapter" data-level="10.4.12" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_show-query"><i class="fa fa-check"></i><b>10.4.12</b> Q %&gt;% dplyr::show_query()</a></li>
-<li class="chapter" data-level="10.4.13" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_build"><i class="fa fa-check"></i><b>10.4.13</b> Qc &lt;- Q %&gt;% dplyr::count(customer_email)</a></li>
+<li class="chapter" data-level="10.4.13" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#time-based-execution-environment-issues"><i class="fa fa-check"></i><b>10.4.13</b> Time-based, execution environment issues</a></li>
+<li class="chapter" data-level="10.4.14" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_build"><i class="fa fa-check"></i><b>10.4.14</b> Q %&gt;% <code>more dplyr</code></a></li>
+<li class="chapter" data-level="10.4.15" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#many-handy-r-functions-cant-be-translated-to-sql"><i class="fa fa-check"></i><b>10.4.15</b> Many handy R functions can’t be translated to SQL</a></li>
+<li class="chapter" data-level="10.4.16" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#more-lazy-execution-examples"><i class="fa fa-check"></i><b>10.4.16</b> More lazy execution examples</a></li>
 </ul></li>
 <li class="chapter" data-level="10.5" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#other-resources"><i class="fa fa-check"></i><b>10.5</b> Other resources</a></li>
 </ul></li>
@@ -757,26 +760,26 @@ tables</code></pre>
 
 one_percent_sample</code></pre>
 <pre><code>##    rental_id         rental_date inventory_id customer_id
-## 1          7 2005-05-24 23:11:53         3995         269
-## 2        345 2005-05-27 04:32:25         1396         144
-## 3        385 2005-05-27 10:23:25         1565         213
-## 4        426 2005-05-27 15:56:57         1103         522
-## 5        458 2005-05-27 19:58:36         3350         565
-## 6        500 2005-05-28 01:05:25         4500         145
-## 7        536 2005-05-28 06:17:33         2962         514
-## 8        576 2005-05-28 10:56:10         1866         588
-## 9        599 2005-05-28 14:05:57         4136         393
-## 10       768 2005-05-29 12:30:46         2895         566
-## 11       822 2005-05-29 21:36:00         2634         480
-## 12      1036 2005-05-31 05:21:10         2164         438
-## 13      1106 2005-05-31 14:36:52         4185         109
-## 14      1427 2005-06-15 18:17:28           14         100
-## 15      1526 2005-06-16 00:27:51         1940         499
-## 16      1572 2005-06-16 03:23:22         4179         560
-## 17      1598 2005-06-16 06:02:39         4171         314
-## 18      1879 2005-06-17 02:57:34         3983         343
-## 19      2199 2005-06-18 01:57:56           99         171
-## 20      2224 2005-06-18 03:33:58         1336         153</code></pre>
+## 1        139 2005-05-25 23:00:21          327         257
+## 2        351 2005-05-27 05:39:03         3371         118
+## 3        453 2005-05-27 19:31:16         4425         529
+## 4        500 2005-05-28 01:05:25         4500         145
+## 5        649 2005-05-28 19:35:45         1781         197
+## 6        652 2005-05-28 20:08:47         1201          43
+## 7        719 2005-05-29 05:16:05          267         245
+## 8        849 2005-05-30 01:23:07         2424         449
+## 9       1087 2005-05-31 11:18:08          431         169
+## 10      1092 2005-05-31 12:15:57         4412         278
+## 11      1259 2005-06-15 06:37:55         4460         570
+## 12      1300 2005-06-15 09:36:19         2524         186
+## 13      1383 2005-06-15 15:20:06         1281         379
+## 14      1415 2005-06-15 17:31:57         1885         331
+## 15      1416 2005-06-15 17:44:57         3816         167
+## 16      1494 2005-06-15 21:54:20          244         575
+## 17      1655 2005-06-16 09:51:39         3693         488
+## 18      1937 2005-06-17 07:16:46         1266         385
+## 19      2134 2005-06-17 21:13:44         1699         378
+## 20      2214 2005-06-18 02:44:37         2430         366</code></pre>
 <p><strong>Exact sample of 100 records</strong></p>
 <p>This technique depends on knowing the range of a record index, such as the <code>rental_id</code> in the <code>rental</code> table of our <code>dvdrental</code> database.</p>
 <p>Start by finding the min and max values.</p>
@@ -1030,7 +1033,7 @@ rental_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span 
 ##  n obs: 16044 
 ##  n variables: 7 
 ## 
-## ── Variable type:integer ──────────────────────────────────────────────────────
+## ── Variable type:integer ─────────────────────────────────────────────────────────────────────────────────────────
 ##      variable missing complete     n    mean      sd p0     p25    p50
 ##   customer_id       0    16044 16044  297.14  172.45  1  148     296  
 ##  inventory_id       0    16044 16044 2291.84 1322.21  1 1154    2291  
@@ -1042,7 +1045,7 @@ rental_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span 
 ##  12037.25 16049 ▇▇▇▇▇▇▇▇
 ##      2        2 ▇▁▁▁▁▁▁▇
 ## 
-## ── Variable type:POSIXct ──────────────────────────────────────────────────────
+## ── Variable type:POSIXct ─────────────────────────────────────────────────────────────────────────────────────────
 ##     variable missing complete     n        min        max     median
 ##  last_update       0    16044 16044 2006-02-15 2006-02-23 2006-02-16
 ##  rental_date       0    16044 16044 2005-05-24 2006-02-14 2005-07-28

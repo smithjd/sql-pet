@@ -25,7 +25,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
 
 
-<meta name="date" content="2019-03-06">
+<meta name="date" content="2019-03-09">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -285,7 +285,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="10.4.10" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_tally"><i class="fa fa-check"></i><b>10.4.10</b> Q %&gt;% dplyr::tally()</a></li>
 <li class="chapter" data-level="10.4.11" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_collect"><i class="fa fa-check"></i><b>10.4.11</b> Q %&gt;% dplyr::collect()</a></li>
 <li class="chapter" data-level="10.4.12" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_show-query"><i class="fa fa-check"></i><b>10.4.12</b> Q %&gt;% dplyr::show_query()</a></li>
-<li class="chapter" data-level="10.4.13" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_build"><i class="fa fa-check"></i><b>10.4.13</b> Qc &lt;- Q %&gt;% dplyr::count(customer_email)</a></li>
+<li class="chapter" data-level="10.4.13" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#time-based-execution-environment-issues"><i class="fa fa-check"></i><b>10.4.13</b> Time-based, execution environment issues</a></li>
+<li class="chapter" data-level="10.4.14" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_build"><i class="fa fa-check"></i><b>10.4.14</b> Q %&gt;% <code>more dplyr</code></a></li>
+<li class="chapter" data-level="10.4.15" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#many-handy-r-functions-cant-be-translated-to-sql"><i class="fa fa-check"></i><b>10.4.15</b> Many handy R functions can’t be translated to SQL</a></li>
+<li class="chapter" data-level="10.4.16" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#more-lazy-execution-examples"><i class="fa fa-check"></i><b>10.4.16</b> More lazy execution examples</a></li>
 </ul></li>
 <li class="chapter" data-level="10.5" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#other-resources"><i class="fa fa-check"></i><b>10.5</b> Other resources</a></li>
 </ul></li>
@@ -674,8 +677,8 @@ in <code>sqlpetr</code> to build this image, called <a href="https://smithjd.git
 <pre><code>## # A tibble: 7 x 7
 ##   image_id  repository   tag    digest           created created_at   size 
 ##   &lt;chr&gt;     &lt;chr&gt;        &lt;chr&gt;  &lt;chr&gt;            &lt;chr&gt;   &lt;chr&gt;        &lt;chr&gt;
-## 1 22e0c193… postgres-dv… latest &lt;none&gt;           5 days… 2019-02-28 … 251MB
-## 2 22e0c193… test-dvdren… latest &lt;none&gt;           5 days… 2019-02-28 … 251MB
+## 1 22e0c193… postgres-dv… latest &lt;none&gt;           8 days… 2019-02-28 … 251MB
+## 2 22e0c193… test-dvdren… latest &lt;none&gt;           8 days… 2019-02-28 … 251MB
 ## 3 ac25c2ba… postgres     10     sha256:b5f07874… 6 mont… 2018-09-04 … 228MB
 ## 4 93ca3834… r-base       latest sha256:3801677d… 7 mont… 2018-07-16 … 678MB
 ## 5 23e8b4b8… postgres     latest sha256:d8011033… 7 mont… 2018-07-16 … 236MB
@@ -708,7 +711,7 @@ The name should contain only slashes, letters, numbers and underscores. Other ch
 <pre><code>## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;
-## 1 243231d4b1ee post… docker… 2019-03-0… 1 seco… 0.0.… Up Le… 0B (… sql-…
+## 1 af4203620bd8 post… docker… 2019-03-0… 1 seco… 0.0.… Up Le… 0B (… sql-…
 ## # … with 3 more variables: labels &lt;chr&gt;, mounts &lt;chr&gt;, networks &lt;chr&gt;</code></pre>
 </div>
 <div id="connect-to-postgresql-with-r" class="section level2">
@@ -751,10 +754,11 @@ The name should contain only slashes, letters, numbers and underscores. Other ch
 container is still there. <code>sp_docker_containers_tibble</code> by default only lists
 the <em>running</em> containers. But we can use the <code>list_all</code> option and see it:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_docker_containers_tibble</span>(<span class="dt">list_all =</span> <span class="ot">TRUE</span>)</code></pre>
-<pre><code>## # A tibble: 1 x 12
+<pre><code>## # A tibble: 2 x 12
 ##   container_id image command created_at created ports status size  names
 ##   &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;
-## 1 243231d4b1ee post… docker… 2019-03-0… 5 seco… &lt;NA&gt;  Exite… 0B (… sql-…
+## 1 af4203620bd8 post… docker… 2019-03-0… 5 seco… &lt;NA&gt;  Exite… 0B (… sql-…
+## 2 33bb2a6578b7 post… docker… 2019-03-0… About … &lt;NA&gt;  Exite… 0B (… eage…
 ## # … with 3 more variables: labels &lt;chr&gt;, mounts &lt;chr&gt;, networks &lt;chr&gt;</code></pre>
 <p>Restart the container and verify that the dvdrental tables are still there:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_docker_start</span>(<span class="st">&quot;sql-pet&quot;</span>)
@@ -762,7 +766,7 @@ the <em>running</em> containers. But we can use the <code>list_all</code> option
 <pre><code>## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;
-## 1 243231d4b1ee post… docker… 2019-03-0… 6 seco… 0.0.… Up Le… 63B … sql-…
+## 1 af4203620bd8 post… docker… 2019-03-0… 6 seco… 0.0.… Up Le… 63B … sql-…
 ## # … with 3 more variables: labels &lt;chr&gt;, mounts &lt;chr&gt;, networks &lt;chr&gt;</code></pre>
 <p>Connect to the <code>dvdrental</code> database in PostgreSQL:</p>
 <pre class="sourceCode r"><code class="sourceCode r">con &lt;-<span class="st"> </span><span class="kw">sp_get_postgres_connection</span>(
@@ -787,7 +791,8 @@ the <em>running</em> containers. But we can use the <code>list_all</code> option
 <p>Show that the container still exists even though it’s not running</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_show_all_docker_containers</span>()</code></pre>
 <pre><code>## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## 243231d4b1ee        postgres-dvdrental   &quot;docker-entrypoint.s…&quot;   7 seconds ago       Exited (0) Less than a second ago                       sql-pet</code></pre>
+## af4203620bd8        postgres-dvdrental   &quot;docker-entrypoint.s…&quot;   7 seconds ago       Exited (0) Less than a second ago                       sql-pet
+## 33bb2a6578b7        postgres-dvdrental   &quot;docker-entrypoint.s…&quot;   About an hour ago   Exited (0) About an hour ago                            eager_feistel</code></pre>
 <p>Next time, you can just use this command to start the container:</p>
 <blockquote>
 <p><code>sp_docker_start(&quot;sql-pet&quot;)</code></p>

@@ -25,7 +25,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
 
 
-<meta name="date" content="2019-03-06">
+<meta name="date" content="2019-03-09">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -285,7 +285,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="10.4.10" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_tally"><i class="fa fa-check"></i><b>10.4.10</b> Q %&gt;% dplyr::tally()</a></li>
 <li class="chapter" data-level="10.4.11" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_collect"><i class="fa fa-check"></i><b>10.4.11</b> Q %&gt;% dplyr::collect()</a></li>
 <li class="chapter" data-level="10.4.12" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_show-query"><i class="fa fa-check"></i><b>10.4.12</b> Q %&gt;% dplyr::show_query()</a></li>
-<li class="chapter" data-level="10.4.13" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_build"><i class="fa fa-check"></i><b>10.4.13</b> Qc &lt;- Q %&gt;% dplyr::count(customer_email)</a></li>
+<li class="chapter" data-level="10.4.13" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#time-based-execution-environment-issues"><i class="fa fa-check"></i><b>10.4.13</b> Time-based, execution environment issues</a></li>
+<li class="chapter" data-level="10.4.14" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_build"><i class="fa fa-check"></i><b>10.4.14</b> Q %&gt;% <code>more dplyr</code></a></li>
+<li class="chapter" data-level="10.4.15" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#many-handy-r-functions-cant-be-translated-to-sql"><i class="fa fa-check"></i><b>10.4.15</b> Many handy R functions can’t be translated to SQL</a></li>
+<li class="chapter" data-level="10.4.16" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#more-lazy-execution-examples"><i class="fa fa-check"></i><b>10.4.16</b> More lazy execution examples</a></li>
 </ul></li>
 <li class="chapter" data-level="10.5" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#other-resources"><i class="fa fa-check"></i><b>10.5</b> Other resources</a></li>
 </ul></li>
@@ -317,6 +320,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="12.5.1" data-path="chapter-sql-inserting-rows.html"><a href="chapter-sql-inserting-rows.html#r-exercise-inserting-multiple-rows-via-a-dataframe"><i class="fa fa-check"></i><b>12.5.1</b> R Exercise: Inserting Multiple Rows via a Dataframe</a></li>
 <li class="chapter" data-level="12.5.2" data-path="chapter-sql-inserting-rows.html"><a href="chapter-sql-inserting-rows.html#creating-a-messy-store-row"><i class="fa fa-check"></i><b>12.5.2</b> Creating a Messy Store Row</a></li>
 </ul></li>
+<li class="chapter" data-level="12.6" data-path="chapter-sql-inserting-rows.html"><a href="chapter-sql-inserting-rows.html#creating-duplicate-customer-rows"><i class="fa fa-check"></i><b>12.6</b> Creating Duplicate Customer Rows</a></li>
 </ul></li>
 <li class="chapter" data-level="13" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html"><i class="fa fa-check"></i><b>13</b> SQL &amp; dplyr joins additional data</a><ul>
 <li class="chapter" data-level="13.1" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#making-up-data-for-join-examples-1"><i class="fa fa-check"></i><b>13.1</b> Making up data for Join Examples</a><ul>
@@ -336,6 +340,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="13.4.2" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#creating-a-messy-store-row-1"><i class="fa fa-check"></i><b>13.4.2</b> Creating a Messy Store Row</a></li>
 </ul></li>
 <li class="chapter" data-level="13.5" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#create-a-film-record"><i class="fa fa-check"></i><b>13.5</b> Create a film record</a></li>
+<li class="chapter" data-level="13.6" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#creating-duplicate-customer-rows-1"><i class="fa fa-check"></i><b>13.6</b> Creating Duplicate Customer Rows</a></li>
 </ul></li>
 <li class="chapter" data-level="14" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html"><i class="fa fa-check"></i><b>14</b> SQL &amp; <code>dplyr</code> joins</a><ul>
 <li class="chapter" data-level="14.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#joins"><i class="fa fa-check"></i><b>14.1</b> Joins</a><ul>
@@ -491,7 +496,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="18" data-path="chapter-anti-join-cost-comparisons.html"><a href="chapter-anti-join-cost-comparisons.html"><i class="fa fa-check"></i><b>18</b> Anti-join cost comparisons</a><ul>
 <li class="chapter" data-level="18.1" data-path="chapter-anti-join-cost-comparisons.html"><a href="chapter-anti-join-cost-comparisons.html#sql-anti-join-costs"><i class="fa fa-check"></i><b>18.1</b> SQL anti join Costs</a></li>
-<li class="chapter" data-level="18.2" data-path="chapter-anti-join-cost-comparisons.html"><a href="chapter-anti-join-cost-comparisons.html#dplyr-anti-joins"><i class="fa fa-check"></i><b>18.2</b> dplyr Anti joins</a></li>
+<li class="chapter" data-level="18.2" data-path="chapter-anti-join-cost-comparisons.html"><a href="chapter-anti-join-cost-comparisons.html#dplyr-anti-joins"><i class="fa fa-check"></i><b>18.2</b> dplyr Anti joins</a><ul>
+<li class="chapter" data-level="18.2.1" data-path="chapter-anti-join-cost-comparisons.html"><a href="chapter-anti-join-cost-comparisons.html#dplyr-costs"><i class="fa fa-check"></i><b>18.2.1</b> dplyr Costs</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="19" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html"><i class="fa fa-check"></i><b>19</b> SQL Quick start - simple retrieval</a><ul>
 <li class="chapter" data-level="19.1" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#intro"><i class="fa fa-check"></i><b>19.1</b> Intro</a></li>
@@ -527,6 +534,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="20.4.2" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#database-keys-with-dplyr"><i class="fa fa-check"></i><b>20.4.2</b> Database keys with dplyr</a></li>
 </ul></li>
 <li class="chapter" data-level="20.5" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#creating-your-own-data-dictionary"><i class="fa fa-check"></i><b>20.5</b> Creating your own data dictionary</a></li>
+<li class="chapter" data-level="20.6" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#save-your-work"><i class="fa fa-check"></i><b>20.6</b> Save your work!</a></li>
 </ul></li>
 <li class="chapter" data-level="21" data-path="chapter-dbms-environment.html"><a href="chapter-dbms-environment.html"><i class="fa fa-check"></i><b>21</b> Drilling into your DBMS environment</a><ul>
 <li class="chapter" data-level="21.1" data-path="chapter-dbms-environment.html"><a href="chapter-dbms-environment.html#which-database"><i class="fa fa-check"></i><b>21.1</b> Which database?</a></li>
@@ -627,8 +635,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <blockquote>
 <p>This chapter:</p>
 <ul>
-<li>Reviews lazy evaluation and discusses its interaction with remote query execution on a dbms</li>
-<li>Demonstrates how <code>dplyr</code> queries behave in connection with several different functions</li>
+<li>Reviews lazy loading, lazy evaluation and lazy query execution</li>
+<li>Demonstrates how <code>dplyr</code> code gets executed (and how R determines what is translated to SQL and what is processed locally by R)</li>
 <li>Offers some further resources on lazy loading, evaluation, execution, etc.</li>
 </ul>
 </blockquote>
@@ -711,7 +719,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>    ... with more rows, and 3 more variables</code></pre>
 <p>whereas the output for a normal <code>tbl</code> of this rental data would say:</p>
 <pre><code>    ... with 16,034 more rows, and 3 more variables</code></pre>
-<p>So even though <code>rental_table</code> is a <code>tbl</code>:</p>
+<p>So even though <code>rental_table</code> is a <code>tbl</code>, it’s <strong>also</strong> a <code>tbl_PqConnection</code>:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(rental_table)</code></pre>
 <pre><code>## [1] &quot;tbl_PqConnection&quot; &quot;tbl_dbi&quot;          &quot;tbl_sql&quot;         
 ## [4] &quot;tbl_lazy&quot;         &quot;tbl&quot;</code></pre>
@@ -789,13 +797,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="experiment-overview" class="section level3">
 <h3><span class="header-section-number">10.4.2</span> Experiment overview</h3>
-<p>Think of <code>Q</code> as a black box for the moment. The following examples will show how <code>Q</code> is interpreted differently by different functions.</p>
+<p>Think of <code>Q</code> as a black box for the moment. The following examples will show how <code>Q</code> is interpreted differently by different functions. It’s important to remember in the following discussion that the “<strong>and then</strong>” operator (<code>%&gt;%</code>) actually wraps the subsequent code inside the preceding code so that <code>Q %&gt;% print()</code> is equivalent to <code>print(Q)</code>.</p>
 <p><strong>Notation</strong></p>
-<ul>
-<li><img src="screenshots/green-check.png" />: A single green check indicates that some rows are returned.</li>
-<li><img src="screenshots/green-check.png" /> <img src="screenshots/green-check.png" />: Two green checks indicate that all the rows are returned.</li>
-<li><img src="screenshots/red-x.png" />: The red X indicates that no rows are returned.</li>
-</ul>
+<blockquote>
+<p><img src="screenshots/green-check.png" /> A single green check indicates that some rows are returned. <br>
+<img src="screenshots/green-check.png" /> <img src="screenshots/green-check.png" /> Two green checks indicate that all the rows are returned. <br>
+<img src="screenshots/red-x.png" /> The red X indicates that no rows are returned.</p>
+</blockquote>
 <blockquote>
 <table>
 <colgroup>
@@ -854,7 +862,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <td><img src="screenshots/red-x.png" /> <strong>Translates</strong> the lazy query object into SQL</td>
 </tr>
 <tr class="even">
-<td><a href="chapter-lazy-evaluation-queries.html#lazy_q_build"><code>Qc &lt;- Q %&gt;% dplyr::count(customer_email, sort = TRUE)</code> <br /> <code>Qc</code></a></td>
+<td><strong>Time-based, execution environment issues</strong></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><a href="chapter-lazy-evaluation-queries.html#lazy_q_build"><code>Qc &lt;- Q %&gt;% count(customer_email, sort = TRUE)</code></a></td>
 <td><img src="screenshots/red-x.png" /> <strong>Extends</strong> the lazy query object</td>
 </tr>
 </tbody>
@@ -960,11 +972,11 @@ rental_date staff_email customer_email
 ##   .. ..- attr(*, &quot;class&quot;)= chr [1:3] &quot;op_rename&quot; &quot;op_single&quot; &quot;op&quot;
 ##   ..$ dots:List of 3
 ##   .. ..$ : language ~rental_date
-##   .. .. ..- attr(*, &quot;.Environment&quot;)=&lt;environment: 0x7fbe09688828&gt; 
+##   .. .. ..- attr(*, &quot;.Environment&quot;)=&lt;environment: 0x7fb55e050820&gt; 
 ##   .. ..$ : language ~staff_email
-##   .. .. ..- attr(*, &quot;.Environment&quot;)=&lt;environment: 0x7fbe09688828&gt; 
+##   .. .. ..- attr(*, &quot;.Environment&quot;)=&lt;environment: 0x7fb55e050820&gt; 
 ##   .. ..$ : language ~customer_email
-##   .. .. ..- attr(*, &quot;.Environment&quot;)=&lt;environment: 0x7fbe09688828&gt; 
+##   .. .. ..- attr(*, &quot;.Environment&quot;)=&lt;environment: 0x7fb55e050820&gt; 
 ##   .. ..- attr(*, &quot;class&quot;)= chr &quot;quosures&quot;
 ##   ..$ args: list()
 ##   ..- attr(*, &quot;class&quot;)= chr [1:3] &quot;op_select&quot; &quot;op_single&quot; &quot;op&quot;
@@ -1045,28 +1057,91 @@ rental_date staff_email customer_email
 ## ) &quot;rnitnthkfz&quot;) &quot;ohetoyqsmw&quot;</code></pre>
 <p>Hand-written SQL code to do the same job will probably look a lot nicer and could be more efficient, but functionally <code>dplyr</code> does the job.</p>
 </div>
+<div id="time-based-execution-environment-issues" class="section level3">
+<h3><span class="header-section-number">10.4.13</span> Time-based, execution environment issues</h3>
+<p>Remember that if the expression is assigned to an object, it is not executed. If not, a <code>print()</code> function is implied. This behavior is the basis for a useful debugging and development process where queries are built up incrementally.</p>
+<blockquote>
+<p><em>These two are different:</em>
+Q %&gt;% count(customer_email)
+Q_query &lt;- Q %&gt;% count(customer_email)</p>
+</blockquote>
+</div>
 <div id="lazy_q_build" class="section level3">
-<h3><span class="header-section-number">10.4.13</span> Qc &lt;- Q %&gt;% dplyr::count(customer_email)</h3>
-<p><img src="screenshots/red-x.png" /> Until <code>Q</code> is executed, we can add to it. This behavior is the basis for a useful debugging and development process where queries are built up incrementally.</p>
-<pre class="sourceCode r"><code class="sourceCode r">Qc &lt;-<span class="st"> </span>Q <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">count</span>(customer_email, <span class="dt">sort =</span> <span class="ot">TRUE</span>)</code></pre>
-<p><img src="screenshots/green-check.png" /> When all the accumulated <code>dplyr</code> verbs are executed, they are submitted to the dbms and the number of rows that are returned follow the same rules as discussed above.</p>
-<pre class="sourceCode r"><code class="sourceCode r">Qc</code></pre>
-<pre><code>## # Source:     lazy query [?? x 2]
-## # Database:   postgres [postgres@localhost:5432/dvdrental]
-## # Ordered by: desc(n)
+<h3><span class="header-section-number">10.4.14</span> Q %&gt;% <code>more dplyr</code></h3>
+<p><img src="screenshots/green-check.png" /> Because the following statement implies a <code>print()</code> function at the end, we can run it repeatedly, adding dplyr expressions, and only get 10 rows back. Every time we add a dplyr expression to a chain, R will rewrite the SQL code. For example:</p>
+<pre class="sourceCode r"><code class="sourceCode r">Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(customer_email) </code></pre>
+<pre><code>## # Source:   lazy query [?? x 2]
+## # Database: postgres [postgres@localhost:5432/dvdrental]
 ##    customer_email                    n              
 ##    &lt;chr&gt;                             &lt;S3: integer64&gt;
-##  1 eleanor.hunt@sakilacustomer.org   46             
-##  2 karl.seal@sakilacustomer.org      45             
-##  3 clara.shaw@sakilacustomer.org     42             
-##  4 marcia.dean@sakilacustomer.org    42             
-##  5 tammy.sanders@sakilacustomer.org  41             
-##  6 wesley.bull@sakilacustomer.org    40             
-##  7 sue.peters@sakilacustomer.org     40             
-##  8 marion.snyder@sakilacustomer.org  39             
-##  9 rhonda.kennedy@sakilacustomer.org 39             
-## 10 tim.cary@sakilacustomer.org       39             
+##  1 harold.martino@sakilacustomer.org 32             
+##  2 sean.douglass@sakilacustomer.org  23             
+##  3 bob.pfeiffer@sakilacustomer.org   24             
+##  4 jo.fowler@sakilacustomer.org      20             
+##  5 raul.fortier@sakilacustomer.org   20             
+##  6 annette.olson@sakilacustomer.org  24             
+##  7 jeanne.lawson@sakilacustomer.org  27             
+##  8 diane.collins@sakilacustomer.org  35             
+##  9 cindy.fisher@sakilacustomer.org   29             
+## 10 shelly.watts@sakilacustomer.org   26             
 ## # … with more rows</code></pre>
+<p>As we understand more about the data, we simply add dplyr expressions to pinpoint what we are looking for:</p>
+<pre class="sourceCode r"><code class="sourceCode r">Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(customer_email) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(n <span class="op">&gt;</span><span class="st"> </span><span class="dv">40</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">arrange</span>(customer_email)</code></pre>
+<pre><code>## # Source:     lazy query [?? x 2]
+## # Database:   postgres [postgres@localhost:5432/dvdrental]
+## # Ordered by: customer_email
+##   customer_email                   n              
+##   &lt;chr&gt;                            &lt;S3: integer64&gt;
+## 1 clara.shaw@sakilacustomer.org    42             
+## 2 eleanor.hunt@sakilacustomer.org  46             
+## 3 karl.seal@sakilacustomer.org     45             
+## 4 marcia.dean@sakilacustomer.org   42             
+## 5 tammy.sanders@sakilacustomer.org 41</code></pre>
+<p><img src="screenshots/green-check.png" /> When all the accumulated <code>dplyr</code> verbs are executed, they are submitted to the dbms and the number of rows that are returned follow the same rules as discussed above.</p>
+</div>
+<div id="many-handy-r-functions-cant-be-translated-to-sql" class="section level3">
+<h3><span class="header-section-number">10.4.15</span> Many handy R functions can’t be translated to SQL</h3>
+<p><img src="screenshots/green-check.png" /> It just so happens that PostgreSQL has a <code>date</code> function that does the same thing as the <code>date</code> function in the <code>lubridate</code> package. In the following code the <code>date</code> function is executed by PostreSQL.</p>
+<pre class="sourceCode r"><code class="sourceCode r">rental_table <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">rental_date =</span> <span class="kw">date</span>(rental_date))</code></pre>
+<pre><code>## # Source:   lazy query [?? x 7]
+## # Database: postgres [postgres@localhost:5432/dvdrental]
+##    rental_id rental_date inventory_id customer_id return_date        
+##        &lt;int&gt; &lt;date&gt;             &lt;int&gt;       &lt;int&gt; &lt;dttm&gt;             
+##  1         2 2005-05-24          1525         459 2005-05-28 19:40:33
+##  2         3 2005-05-24          1711         408 2005-06-01 22:12:39
+##  3         4 2005-05-24          2452         333 2005-06-03 01:43:41
+##  4         5 2005-05-24          2079         222 2005-06-02 04:33:21
+##  5         6 2005-05-24          2792         549 2005-05-27 01:32:07
+##  6         7 2005-05-24          3995         269 2005-05-29 20:34:53
+##  7         8 2005-05-24          2346         239 2005-05-27 23:33:46
+##  8         9 2005-05-25          2580         126 2005-05-28 00:22:40
+##  9        10 2005-05-25          1824         399 2005-05-31 22:44:21
+## 10        11 2005-05-25          4443         142 2005-06-02 20:56:02
+## # … with more rows, and 2 more variables: staff_id &lt;int&gt;,
+## #   last_update &lt;dttm&gt;</code></pre>
+<p><img src="screenshots/green-check.png" /> <img src="screenshots/green-check.png" /> If we specify that we want to use the <code>lubridate</code> version (or any number of other R functions) they are passed to the dbms unless we explicitly tell <code>dplyr</code> to stop translating and bring the results back to the R environment for local processing.</p>
+<pre class="sourceCode r"><code class="sourceCode r">rental_table <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">collect</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">rental_date =</span> lubridate<span class="op">::</span><span class="kw">date</span>(rental_date))</code></pre>
+<pre><code>## # A tibble: 16,044 x 7
+##    rental_id rental_date inventory_id customer_id return_date        
+##        &lt;int&gt; &lt;date&gt;             &lt;int&gt;       &lt;int&gt; &lt;dttm&gt;             
+##  1         2 2005-05-24          1525         459 2005-05-28 19:40:33
+##  2         3 2005-05-24          1711         408 2005-06-01 22:12:39
+##  3         4 2005-05-24          2452         333 2005-06-03 01:43:41
+##  4         5 2005-05-24          2079         222 2005-06-02 04:33:21
+##  5         6 2005-05-24          2792         549 2005-05-27 01:32:07
+##  6         7 2005-05-24          3995         269 2005-05-29 20:34:53
+##  7         8 2005-05-24          2346         239 2005-05-27 23:33:46
+##  8         9 2005-05-25          2580         126 2005-05-28 00:22:40
+##  9        10 2005-05-25          1824         399 2005-05-31 22:44:21
+## 10        11 2005-05-25          4443         142 2005-06-02 20:56:02
+## # … with 16,034 more rows, and 2 more variables: staff_id &lt;int&gt;,
+## #   last_update &lt;dttm&gt;</code></pre>
+</div>
+<div id="more-lazy-execution-examples" class="section level3">
+<h3><span class="header-section-number">10.4.16</span> More lazy execution examples</h3>
 <p>See more examples of lazy execution <a href="https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html">here</a>.</p>
 <pre class="sourceCode r"><code class="sourceCode r">DBI<span class="op">::</span><span class="kw">dbDisconnect</span>(con)
 sqlpetr<span class="op">::</span><span class="kw">sp_docker_stop</span>(<span class="st">&quot;sql-pet&quot;</span>)</code></pre>
@@ -1144,19 +1219,6 @@ gitbook.start({
 });
 </script>
 
-<!-- dynamically load mathjax for compatibility with self-contained -->
-<script>
-  (function () {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    var src = "true";
-    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:" && /^https?:/.test(src))
-      src = src.replace(/^https?:/, '');
-    script.src = src;
-    document.getElementsByTagName("head")[0].appendChild(script);
-  })();
-</script>
 </body>
 
 </html>
