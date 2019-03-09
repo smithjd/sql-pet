@@ -2,8 +2,8 @@
 
 > This chapter:
 > 
-> * Reviews lazy evaluation and discusses its interaction with remote query execution on a dbms 
-> * Demonstrates how `dplyr` queries behave in connection with several different functions
+> * Reviews lazy loading, lazy evaluation and lazy query execution
+> * Demonstrates how `dplyr` code gets executed (and how R determines what is translated to SQL and what is processed locally by R)
 > * Offers some further resources on lazy loading, evaluation, execution, etc.
 
 ## Setup
@@ -113,7 +113,7 @@ whereas the output for a normal `tbl` of this rental data would say:
     ... with 16,034 more rows, and 3 more variables
 ```
 
-So even though `rental_table` is a `tbl`:
+So even though `rental_table` is a `tbl`, it's **also** a `tbl_PqConnection`:
 
 ```r
 class(rental_table)
@@ -227,13 +227,14 @@ Q <- rental_table %>%
 ```
 
 ### Experiment overview
-Think of `Q` as a black box for the moment.  The following examples will show how `Q` is interpreted differently by different functions. 
+Think of `Q` as a black box for the moment.  The following examples will show how `Q` is interpreted differently by different functions. It's important to remember in the following discussion that the "**and then**" operator (`%>%`) actually wraps the subsequent code inside the preceding code so that `Q %>% print()` is equivalent to `print(Q)`.
 
 **Notation**
 
-* ![](screenshots/green-check.png): A single green check indicates that some rows are returned.
-* ![](screenshots/green-check.png) ![](screenshots/green-check.png): Two green checks indicate that all the rows are returned.
-* ![](screenshots/red-x.png): The red X indicates that no rows are returned.
+> ![](screenshots/green-check.png) A single green check indicates that some rows are returned. <br>
+> ![](screenshots/green-check.png) ![](screenshots/green-check.png) Two green checks indicate that all the rows are returned. <br>
+> ![](screenshots/red-x.png) The red X indicates that no rows are returned.
+>
 
 > R code | Result 
 > -------| --------------
@@ -247,9 +248,10 @@ Think of `Q` as a black box for the moment.  The following examples will show ho
 > [`Q %>% dplyr::tally()`](#lazy_q_tally) | ![](screenshots/green-check.png) ![](screenshots/green-check.png) Counts all the rows -- on the dbms side
 > [`Q %>% dplyr::collect(n = 20)`](#lazy_q_collect) | ![](screenshots/green-check.png) Prints 20 rows  
 > [`Q %>% dplyr::collect(n = 20) %>% head()`](#lazy_q_collect) | ![](screenshots/green-check.png) Prints 6 rows  
-> [`Q %>% dplyr::show_query()`](#lazy-q-show-query) | ![](screenshots/red-x.png) **Translates** the lazy query object into SQL  
-> [`Qc <- Q %>% dplyr::count(customer_email, sort = TRUE)` <br /> `Qc`](#lazy_q_build) | ![](screenshots/red-x.png) **Extends** the lazy query object
->
+> [`Q %>% dplyr::show_query()`](#lazy-q-show-query) | ![](screenshots/red-x.png) **Translates** the lazy query object into SQL 
+> **Time-based, execution environment issues** | 
+> [`Qc <- Q %>% count(customer_email, sort = TRUE)`](#lazy_q_build) | ![](screenshots/red-x.png) **Extends** the lazy query object
+> 
 > 
 
 The next chapter will discuss how to build queries and how to explore intermediate steps. But first, the following subsections provide a more detailed discussion of each row in the preceding table.
@@ -389,11 +391,11 @@ Q %>% str(max.level = 3)
 ##   .. ..- attr(*, "class")= chr [1:3] "op_rename" "op_single" "op"
 ##   ..$ dots:List of 3
 ##   .. ..$ : language ~rental_date
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fbe09688828> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fb55e050820> 
 ##   .. ..$ : language ~staff_email
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fbe09688828> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fb55e050820> 
 ##   .. ..$ : language ~customer_email
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fbe09688828> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fb55e050820> 
 ##   .. ..- attr(*, "class")= chr "quosures"
 ##   ..$ args: list()
 ##   ..- attr(*, "class")= chr [1:3] "op_select" "op_single" "op"
@@ -506,38 +508,116 @@ Q %>% dplyr::show_query()
 ```
 Hand-written SQL code to do the same job will probably look a lot nicer and could be more efficient, but functionally `dplyr` does the job.
 
-### Qc <- Q %>% dplyr::count(customer_email) {#lazy_q_build}
+### Time-based, execution environment issues
 
-![](screenshots/red-x.png) Until `Q` is executed, we can add to it.  This behavior is the basis for a useful debugging and development process where queries are built up incrementally.
+Remember that if the expression is assigned to an object, it is not executed.  If not, a `print()` function is implied. This behavior is the basis for a useful debugging and development process where queries are built up incrementally.
+
+> *These two are different:*
+> Q %>% count(customer_email) 
+> Q_query <- Q %>% count(customer_email) 
+>
+
+### Q %>% `more dplyr` {#lazy_q_build}
+
+![](screenshots/green-check.png) Because the following statement implies a `print()` function at the end, we can run it repeatedly, adding dplyr expressions, and only get 10 rows back.  Every time we add a dplyr expression to a chain, R will rewrite the SQL code.  For example:
 
 ```r
-Qc <- Q %>% dplyr::count(customer_email, sort = TRUE)
+Q %>% count(customer_email) 
 ```
 
-![](screenshots/green-check.png) When all the accumulated `dplyr` verbs are executed, they are submitted to the dbms and the number of rows that are returned follow the same rules as discussed above.
+```
+## # Source:   lazy query [?? x 2]
+## # Database: postgres [postgres@localhost:5432/dvdrental]
+##    customer_email                    n              
+##    <chr>                             <S3: integer64>
+##  1 harold.martino@sakilacustomer.org 32             
+##  2 sean.douglass@sakilacustomer.org  23             
+##  3 bob.pfeiffer@sakilacustomer.org   24             
+##  4 jo.fowler@sakilacustomer.org      20             
+##  5 raul.fortier@sakilacustomer.org   20             
+##  6 annette.olson@sakilacustomer.org  24             
+##  7 jeanne.lawson@sakilacustomer.org  27             
+##  8 diane.collins@sakilacustomer.org  35             
+##  9 cindy.fisher@sakilacustomer.org   29             
+## 10 shelly.watts@sakilacustomer.org   26             
+## # … with more rows
+```
+As we understand more about the data, we simply add dplyr expressions to pinpoint what we are looking for:
 
 ```r
-Qc
+Q %>% count(customer_email) %>% 
+  filter(n > 40) %>% 
+  arrange(customer_email)
 ```
 
 ```
 ## # Source:     lazy query [?? x 2]
 ## # Database:   postgres [postgres@localhost:5432/dvdrental]
-## # Ordered by: desc(n)
-##    customer_email                    n              
-##    <chr>                             <S3: integer64>
-##  1 eleanor.hunt@sakilacustomer.org   46             
-##  2 karl.seal@sakilacustomer.org      45             
-##  3 clara.shaw@sakilacustomer.org     42             
-##  4 marcia.dean@sakilacustomer.org    42             
-##  5 tammy.sanders@sakilacustomer.org  41             
-##  6 wesley.bull@sakilacustomer.org    40             
-##  7 sue.peters@sakilacustomer.org     40             
-##  8 marion.snyder@sakilacustomer.org  39             
-##  9 rhonda.kennedy@sakilacustomer.org 39             
-## 10 tim.cary@sakilacustomer.org       39             
-## # … with more rows
+## # Ordered by: customer_email
+##   customer_email                   n              
+##   <chr>                            <S3: integer64>
+## 1 clara.shaw@sakilacustomer.org    42             
+## 2 eleanor.hunt@sakilacustomer.org  46             
+## 3 karl.seal@sakilacustomer.org     45             
+## 4 marcia.dean@sakilacustomer.org   42             
+## 5 tammy.sanders@sakilacustomer.org 41
 ```
+
+![](screenshots/green-check.png) When all the accumulated `dplyr` verbs are executed, they are submitted to the dbms and the number of rows that are returned follow the same rules as discussed above.
+
+### Many handy R functions can't be translated to SQL
+
+![](screenshots/green-check.png) It just so happens that PostgreSQL has a `date` function that does the same thing as the `date` function in the `lubridate` package.  In the following code the `date` function is executed by PostreSQL.
+
+```r
+rental_table %>% mutate(rental_date = date(rental_date))
+```
+
+```
+## # Source:   lazy query [?? x 7]
+## # Database: postgres [postgres@localhost:5432/dvdrental]
+##    rental_id rental_date inventory_id customer_id return_date        
+##        <int> <date>             <int>       <int> <dttm>             
+##  1         2 2005-05-24          1525         459 2005-05-28 19:40:33
+##  2         3 2005-05-24          1711         408 2005-06-01 22:12:39
+##  3         4 2005-05-24          2452         333 2005-06-03 01:43:41
+##  4         5 2005-05-24          2079         222 2005-06-02 04:33:21
+##  5         6 2005-05-24          2792         549 2005-05-27 01:32:07
+##  6         7 2005-05-24          3995         269 2005-05-29 20:34:53
+##  7         8 2005-05-24          2346         239 2005-05-27 23:33:46
+##  8         9 2005-05-25          2580         126 2005-05-28 00:22:40
+##  9        10 2005-05-25          1824         399 2005-05-31 22:44:21
+## 10        11 2005-05-25          4443         142 2005-06-02 20:56:02
+## # … with more rows, and 2 more variables: staff_id <int>,
+## #   last_update <dttm>
+```
+![](screenshots/green-check.png) ![](screenshots/green-check.png) If we specify that we want to use the `lubridate` version (or any number of other R functions) they are passed to the dbms unless we explicitly tell `dplyr` to stop translating and bring the results back to the R environment for local processing.
+
+```r
+rental_table %>% collect() %>% 
+  mutate(rental_date = lubridate::date(rental_date))
+```
+
+```
+## # A tibble: 16,044 x 7
+##    rental_id rental_date inventory_id customer_id return_date        
+##        <int> <date>             <int>       <int> <dttm>             
+##  1         2 2005-05-24          1525         459 2005-05-28 19:40:33
+##  2         3 2005-05-24          1711         408 2005-06-01 22:12:39
+##  3         4 2005-05-24          2452         333 2005-06-03 01:43:41
+##  4         5 2005-05-24          2079         222 2005-06-02 04:33:21
+##  5         6 2005-05-24          2792         549 2005-05-27 01:32:07
+##  6         7 2005-05-24          3995         269 2005-05-29 20:34:53
+##  7         8 2005-05-24          2346         239 2005-05-27 23:33:46
+##  8         9 2005-05-25          2580         126 2005-05-28 00:22:40
+##  9        10 2005-05-25          1824         399 2005-05-31 22:44:21
+## 10        11 2005-05-25          4443         142 2005-06-02 20:56:02
+## # … with 16,034 more rows, and 2 more variables: staff_id <int>,
+## #   last_update <dttm>
+```
+
+
+### More lazy execution examples
 
 See more examples of lazy execution [here](https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html).
 
