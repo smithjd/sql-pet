@@ -108,6 +108,10 @@ For this tutorial, we can think of joins as either an Inner/Equi Join or an Oute
 
 Instead of showing standard Venn diagrams showing the different JOINS, we use an analogy. For those interested though, the typical Venn diagrams can be found [here](http://www.sql-join.com/sql-join-types/).
 
+### Graphic illustration of Join types
+
+This book is focused on data retrieval from a dbms such as is found inside an organiztion, and the discussion and examples are built around the `dvdrental` database.  However, it's always helpful to remember the basic SQL concepts.  For this we refer to Jenny Bryan's [Join Cheat Sheet](http://stat545.com/bit001_dplyr-cheatsheet.html), which is part of a UBC STAT 545A and 547M course on [Data wrangling, exploration, and analysis with R](http://stat545.com/index.html).
+
 ### Valentines Party
 
 Imagine you are at a large costume Valentine's Day dance party.  The hostess of the party, a data scientist, would like to learn more about the people attending her party.  When the band takes a break, she lets everyone know it is time for the judges to evaluate the winners for best costumes and associated prizes.
@@ -282,10 +286,15 @@ The suffix parameter is a way to distinguish the same column name in the joined 
 
 ## Inner Joins
 
+> For a conceptual refresher see: 
+> 
+> * [inner_join(superheroes, publishers)](http://stat545.com/bit001_dplyr-cheatsheet.html#inner_joinsuperheroes-publishers) 
+> * [inner_join(publishers, superheroes)](http://stat545.com/bit001_dplyr-cheatsheet.html#inner_joinpublishers-superheroes) 
+
+
 ### SQL Inner Join Details {#example_140_inner-join-details-sql}
 
 For an inner join between two tables, it doesn't matter which table is on the left, the first table, and which is on the right, the second table, because join conditions on both tables must be satisfied.  Reviewing the table below shows the inner join on our 10 sample customers and 3 store records returned only 6 rows.  The inner join detail shows only rows with matching store_id's.  
-
 
 ```{r SQL inner join details}
 customer_store_details_sij <- dbGetQuery(
@@ -358,6 +367,12 @@ sp_print_df(customer_store_summary_dij)
 ```
 
 ## Left Joins
+
+> For a conceptual refresher see: 
+> 
+> * [left_join(superheroes, publishers)](http://stat545.com/bit001_dplyr-cheatsheet.html#left_joinsuperheroes-publishers)
+> * [left_join(publishers, superheroes)](http://stat545.com/bit001_dplyr-cheatsheet.html#left_joinpublishers-superheroes)  
+
 
 ### SQL Left Join Details {#example_140_left-join-details-sql}
 
@@ -590,6 +605,10 @@ sp_print_df(customer_store_summary_droj)
 
 ## Full Join
 
+> For a conceptual refresher see: 
+> 
+> * [full_join(superheroes, publishers)](http://stat545.com/bit001_dplyr-cheatsheet.html#full_joinsuperheroes-publishers)  
+
 ### SQL Full Join Details {#example_140_full-join-details-sql-a}
 
 The full outer join is a combination of the left and right outer joins and returns all matched and unmatched rows from the `ON` clause.  The matched rows return their table column values and the unmatched rows return NULL column values.  This can result in a very large result set.
@@ -666,6 +685,10 @@ sp_print_df(customer_store_summary_dfoj)
 ```
 
 ## Semi Join 
+
+> For a conceptual refresher see: 
+> 
+> * [semi_join(publishers, superheroes)](http://stat545.com/bit001_dplyr-cheatsheet.html#semi_joinpublishers-superheroes)  
 
 Below is the `dplyr` semi_join documentation:
 
@@ -782,6 +805,13 @@ sp_print_df(store_customer_detail_ssj2)
 To generalize the test above, replace `in (2, 4)` with `> 0`.  
 
 ## Anti Joins
+
+> For a conceptual refresher see: 
+> 
+> * [anti_join(superheroes, publishers)](http://stat545.com/bit001_dplyr-cheatsheet.html#anti_joinsuperheroes-publishers) 
+> * [anti_join(publishers, superheroes)](http://stat545.com/bit001_dplyr-cheatsheet.html#anti_joinpublishers-superheroes)  
+
+
 
 A `semi join` returns rows from one table that has one or more matching rows in the other table.  The `anti join` returns rows from one table that has no matching rows in the other table.    
 
