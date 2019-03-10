@@ -1,0 +1,124 @@
+---
+title: "dbReadTable not lazy Versus tbl lazy"
+author: "Sophie Yang"
+date: "March 8, 2019"
+output: html_document
+---
+
+
+
+```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
+# These packages are called in almost every chapter of the book:
+library(tidyverse)
+library(DBI)
+library(RPostgres)
+library(glue)
+library(here)
+require(knitr)
+library(dbplyr)
+library(sqlpetr)
+```
+
+Verify Docker is up and running:
+
+```{r}
+sp_check_that_docker_is_up()
+```
+
+Verify pet DB is available, it may be stopped.
+
+```{r}
+sp_show_all_docker_containers()
+```
+
+Start up the `docker-pet` container
+
+```{r}
+sp_docker_start("sql-pet")
+```
+
+Now connect to the database with R
+
+```{r}
+
+# need to wait for Docker & Postgres to come up before connecting.
+
+con <- sp_get_postgres_connection(
+  user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
+  password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
+  dbname = "dvdrental",
+  seconds_to_test = 30
+)
+```
+
+
+
+|Local Processing                   | Remote Processing
+|-----------------------------------|---------------------------------------
+|Desktops/laptops have fewer resources than the database server.|computer under powered compared to database server|Databaseserver are high powered machines.
+|Query result must fit into memory. |Servers have a lot of memory
+|Data must be pulled over the network.|Data moved locally over the server backbone.
+|Result set can be saved locally.   |With proper privileges one can save results in the database
+|R packages availabe                |May require creating R pseudo functions to call a database functions
+|
+
+|Operation    |dplyr<br>Local-Only|dplyr<br>Local-Lazy|SQL
+|-------------|-------------------|-------------------|----------------
+|connection|DBI::dbConnect|DBI::dbConnect|DBI::dbConnect
+|Single Read joining one or more tables<br>and fits into memory|DBI::dbReadTable, (returns a df)<br>R package calls always available|tbl() + collect()<br>tbl:Returns two lists<br> collect(): returns tbl_df<br>R package calls available only after collect() call.  Ideally push everything to DB.<br>May require R placeholder functions to mimick DB functions.|dbGetQuery
+|Multiple Reads|Not Applicable|Not Applicable|dbSendQuery + dbFetch + dbClearResult
+|Fetch Data locally|DBI::dbReadTable fetches data|collect()|dbGetQuery or dbSendQuery+dbFetch+dbClearResult|dbGetQuery or dbSendQuery + dbFetch
+|Write Results Local|write family of functions|write family of functions|write family of functions
+|Write Results to DB|compute() or copy_to|compute() or copy_to|compute() or copy_to
+
+                     
+## Dplyr Local-Only
+
+```{r}
+rental_table <- tbl(con,'rental')
+inventory_table <- tbl(con,'inventory')
+film_table <- tbl(con,'film')
+rental_table %>% collect(n=10) %>% mutate(YYYY_MM = format(rental_date,"%Y-%m")) %>% select(rental_date,YYYY_MM)
+```
+
+Without the collect(), the processing is performed remotely on the database server and the `format(rental_date,"%Y-%m")` fails with the following error message.
+
+<pre>
+Error in result_create(conn@ptr, statement) : 
+  Failed to prepare query: ERROR:  function format(timestamp without time zone, unknown) does not exist
+LINE 1: ...", "last_update", "special_features", "fulltext", FORMAT("re...
+                                                             ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+</pre>
+
+## Dplyr Local-Lazy Approach
+
+<pre>
+to_char</b> <- function(dt, fmt) {return(fmt)}
+
+rental_table %>% inner_join(inventory_table, by = c("inventory_id" = "inventory_id"), suffix(c(".r", ".i"))) %>% inner_join(film_table, by = c("film_id" = "film_id"), suffix(c(".i", ".f"))) %>% mutate(YYYY_MM = to_char(rental_date,"YYYY-MM"))
+</pre>
+
+```{r}
+## to_char <- function(dt, fmt) {return(fmt)}
+rental_table <- tbl(con,'rental')
+rental_table  %>% mutate(YYYY_MM = to_char(rental_date,"YYYY-MM"))%>%select(rental_date,YYYY_MM)
+```
+
+Now I cannot get the error message I thought I got in the past and got in today's phone call.  The function has been commented out.
+ 
+When the code blocks are executed one at a time, the above code block returns 1000 rows, not LAZY.   However, when knitted, it is LAZY.
+
+```{r}
+#to_char <- function(dt, fmt) {return(fmt)}
+rental_table <- tbl(con,'rental')
+inventory_table <- tbl(con,'inventory')
+film_table <- tbl(con,'film')
+rental_table %>% inner_join(inventory_table, by = c("inventory_id" = "inventory_id"), suffix(c(".r", ".i"))) %>% inner_join(film_table, by = c("film_id" = "film_id"), suffix(c(".i", ".f"))) %>% mutate(YYYY_MM = to_char(rental_date,"YYYY-MM")) %>% select(rental_date,YYYY_MM)
+```
+ 
+Without the declared `to_char` function, the above code block returns the following error.
+
+<pre>
+Error in eval(lhs, parent, parent) : object 'rental_table' not found
+</pre>
