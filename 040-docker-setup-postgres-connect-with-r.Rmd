@@ -10,8 +10,12 @@
 Please install the `sqlpetr` package if not already installed:
 ```{r sqlpetr, echo = TRUE, message=FALSE, warning=FALSE}
 library(devtools)
-if (!require(sqlpetr)) devtools::install_github("smithjd/sqlpetr", 
-                                                build_opts = "")
+if (!require(sqlpetr)) {
+    remotes::install_github(
+      "smithjd/sqlpetr",
+      force = TRUE, build = TRUE, build_opts = "", quiet = TRUE)
+}
+
 ```
 Note that when you install the package the first time, it will ask you to update the packages it uses and that can take some time.
 
