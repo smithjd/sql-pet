@@ -33,7 +33,7 @@ con <- sqlpetr::sp_get_postgres_connection(
   user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
   password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
   dbname = "dvdrental",
-  seconds_to_test = 30
+  seconds_to_test = 30, connection_tab = TRUE
 )
 ```
 
@@ -78,12 +78,6 @@ DBI::dbListFields(con, "rental")
 
 The first example, `DBI::dbListTables(con)` returned 22 tables and the second example, `DBI::dbListFields(con, "rental")` returns 7 fields.  Here we combine the two calls to return a list of tables which has a list of all the fields in the table.  The code block just shows the first two tables.
 
-
-```r
-table_columns <- lapply(tables, dbListFields, conn = con)
-```
-
-Or, using purr:
 
 ```r
 table_columns <- purrr::map(tables, ~ dbListFields(.,conn = con) )
@@ -168,7 +162,7 @@ class(rental_table)
 
 ### Controlling the number of rows returned
 
-The `collect` function triggers the creation of a tibble and controls the number of rows that the DBMS sends to R.  
+The `collect` function triggers the creation of a tibble and controls the number of rows that the DBMS sends to R.  For more complex queries, the `dplyr::collect()` function provides a mechanism to indicate what's processed on on the dbms server and what's processed by R on the local machine. The chapter on [Lazy Evaluation and Execution Environment](#chapter_lazy-evaluation-and-timing) discusses this issue in detail.
 
 ```r
 rental_table %>% dplyr::collect(n = 3) %>% dim
@@ -203,26 +197,26 @@ one_percent_sample
 
 ```
 ##    rental_id         rental_date inventory_id customer_id
-## 1        139 2005-05-25 23:00:21          327         257
-## 2        351 2005-05-27 05:39:03         3371         118
-## 3        453 2005-05-27 19:31:16         4425         529
-## 4        500 2005-05-28 01:05:25         4500         145
-## 5        649 2005-05-28 19:35:45         1781         197
-## 6        652 2005-05-28 20:08:47         1201          43
-## 7        719 2005-05-29 05:16:05          267         245
-## 8        849 2005-05-30 01:23:07         2424         449
-## 9       1087 2005-05-31 11:18:08          431         169
-## 10      1092 2005-05-31 12:15:57         4412         278
-## 11      1259 2005-06-15 06:37:55         4460         570
-## 12      1300 2005-06-15 09:36:19         2524         186
-## 13      1383 2005-06-15 15:20:06         1281         379
-## 14      1415 2005-06-15 17:31:57         1885         331
-## 15      1416 2005-06-15 17:44:57         3816         167
-## 16      1494 2005-06-15 21:54:20          244         575
-## 17      1655 2005-06-16 09:51:39         3693         488
-## 18      1937 2005-06-17 07:16:46         1266         385
-## 19      2134 2005-06-17 21:13:44         1699         378
-## 20      2214 2005-06-18 02:44:37         2430         366
+## 1         41 2005-05-25 05:12:29         1761         174
+## 2        124 2005-05-25 20:46:11          212         246
+## 3        160 2005-05-26 01:46:20         1885         290
+## 4        271 2005-05-26 16:22:01         2388          92
+## 5        349 2005-05-27 04:53:11         2920          36
+## 6        394 2005-05-27 11:26:11         1890         274
+## 7        782 2005-05-29 14:38:57         2255         596
+## 8        830 2005-05-29 22:43:55         3464           3
+## 9        898 2005-05-30 09:26:19         3497         384
+## 10      1038 2005-05-31 05:23:47         1253         385
+## 11      1061 2005-05-31 08:27:58          965         109
+## 12      1170 2005-06-14 23:47:35         2444         595
+## 13      1175 2005-06-15 00:15:15         3255         197
+## 14      1240 2005-06-15 04:58:07         3841          28
+## 15      1310 2005-06-15 10:11:42         2045          27
+## 16      1315 2005-06-15 10:23:08         3844         405
+## 17      1326 2005-06-15 11:07:39           59         548
+## 18      1564 2005-06-16 02:47:07          145         343
+## 19      1621 2005-06-16 07:24:12         3677         177
+## 20      1678 2005-06-16 11:08:28         1856         352
 ```
 **Exact sample of 100 records**
 
@@ -615,7 +609,7 @@ skimr::skim(rental_tibble)
 ##  n obs: 16044 
 ##  n variables: 7 
 ## 
-## ── Variable type:integer ─────────────────────────────────────────────────────────────────────────────────────────
+## ── Variable type:integer ────────────────────────────────────────────────────────────────────────────────────────────
 ##      variable missing complete     n    mean      sd p0     p25    p50
 ##   customer_id       0    16044 16044  297.14  172.45  1  148     296  
 ##  inventory_id       0    16044 16044 2291.84 1322.21  1 1154    2291  
@@ -627,7 +621,7 @@ skimr::skim(rental_tibble)
 ##  12037.25 16049 ▇▇▇▇▇▇▇▇
 ##      2        2 ▇▁▁▁▁▁▁▇
 ## 
-## ── Variable type:POSIXct ─────────────────────────────────────────────────────────────────────────────────────────
+## ── Variable type:POSIXct ────────────────────────────────────────────────────────────────────────────────────────────
 ##     variable missing complete     n        min        max     median
 ##  last_update       0    16044 16044 2006-02-15 2006-02-23 2006-02-16
 ##  rental_date       0    16044 16044 2005-05-24 2006-02-14 2005-07-28

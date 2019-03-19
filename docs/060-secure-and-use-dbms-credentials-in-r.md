@@ -73,7 +73,7 @@ Connect to the postgrSQL using the `sp_get_postgres_connection` function:
 con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
                          password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
                          dbname = "dvdrental",
-                         seconds_to_test = 30)
+                         seconds_to_test = 30, connection_tab = TRUE)
 ```
 Once the connection object has been created, you can list all of the tables in the database:
 

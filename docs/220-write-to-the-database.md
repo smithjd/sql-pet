@@ -66,7 +66,7 @@ sp_check_that_docker_is_up()
 ```
 ## [1] "Docker is up, running these containers:"                                                                                                       
 ## [2] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES"   
-## [3] "01743bbec4d2        postgres:10         \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
+## [3] "e15b1ceab88d        postgres:10         \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
 ```
 
 ### Connect to PostgreSQL
@@ -77,7 +77,8 @@ Connect to PostgreSQL using the `sp_get_postgres_connection` function:
 con <- sp_get_postgres_connection(user = "postgres",
                          password = "postgres",
                          dbname = "postgres",
-                         seconds_to_test = 30)
+                         seconds_to_test = 30, connection_tab = TRUE
+                         )
 ```
 
 ## Interact with PostgreSQL

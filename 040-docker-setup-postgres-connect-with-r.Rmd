@@ -88,7 +88,7 @@ should not be shared in open code like that.  A [subsequent chapter](#dbms-login
 demonstrates how to store and use credentials to access the DBMS so that they 
 are kept private.
 
-> The `sp_get_postgres_connection` function from the `sqlpetr` package gets a DBI connection string to a PostgreSQL database, waiting if it is not ready. This function connects to an instance of PostgreSQL and we assign it to a symbol, `con`, for subsequent use.
+> The `sp_get_postgres_connection` function from the `sqlpetr` package gets a DBI connection string to a PostgreSQL database, waiting if it is not ready. This function connects to an instance of PostgreSQL and we assign it to a symbol, `con`, for subsequent use. The `connctions_tab = TRUE` parameter opens a connections tab that's useful for navigating a database.
 
 ```{r}
 con <- sp_get_postgres_connection(
@@ -97,16 +97,20 @@ con <- sp_get_postgres_connection(
   user = "postgres",
   password = "postgres",
   dbname = "postgres",
-  seconds_to_test = 30
+  seconds_to_test = 30, 
+  connection_tab = TRUE
 )
 
 ```
 
-Make sure that you can connect to the PostgreSQL database that you have just started. If you have been executing the code from this tutorial, the database will not contain any tables yet:
+If you have been executing the code from this tutorial, the database will not contain any tables yet, but you will be connected to the database:
 
 ```{r}
 DBI::dbListTables(con)
 ```
+The Connections tab shows that you are connected but that the database has no tables in it:
+
+![Connections tab - no tables](screenshots/connections-tab-no-tables.png)
 
 ### Interact with PostgreSQL
 
@@ -120,11 +124,29 @@ List the tables in the PostgreSQL database to show that `mtcars` is now there:
 ```{r}
 DBI::dbListTables(con)
 ```
+The Connections tab has not been updated, so it still shows no tables.  When the code to connect to the database is executed again, the connections tab is updated.
+```{r}
+con <- sp_get_postgres_connection(
+  host = "localhost",
+  port = 5432,
+  user = "postgres",
+  password = "postgres",
+  dbname = "postgres",
+  seconds_to_test = 30, 
+  connection_tab = TRUE
+)
+
+```
+The Connections tab now shows:
+
+![Connections tab showing mtcars](screenshots/connections-tab-with-mtcars-table.png)
 
 List the fields in mtcars:
 ```{r}
 DBI::dbListFields(con, "mtcars")
 ```
+That's equivalent to clicking on mtcars in the Connections tab:
+![mtcars columns](screenshots/connections-tab-with-mtcars-columns.png)
 
 Download the table from the DBMS to a local data frame:
 ```{r}
@@ -139,6 +161,9 @@ Tell Docker to *remove* the `cattle` container from it's library of active conta
 sp_print_df(head(mtcars_df))
 
 ```
+Interactively, you can also click on the mtcars table in the Connections tab to see:
+![View of mtcars](screenshots/View-window-mtcars-from-postgresql.png)
+The number of rows and columns shown in the View pane depends on the size of the window.
 
 ## Clean up
 
