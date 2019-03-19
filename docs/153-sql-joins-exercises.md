@@ -45,7 +45,7 @@ sp_check_that_docker_is_up()
 ```
 ## [1] "Docker is up, running these containers:"                                                                                                     
 ## [2] "CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS              PORTS                    NAMES"    
-## [3] "af4203620bd8        postgres-dvdrental   \"docker-entrypoint.s…\"   53 seconds ago      Up 3 seconds        0.0.0.0:5432->5432/tcp   sql-pet"
+## [3] "feaa939a9f51        postgres-dvdrental   \"docker-entrypoint.s…\"   47 seconds ago      Up 2 seconds        0.0.0.0:5432->5432/tcp   sql-pet"
 ```
 
 Verify pet DB is available, it may be stopped.
@@ -56,9 +56,8 @@ sp_show_all_docker_containers()
 ```
 
 ```
-## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                         PORTS                    NAMES
-## af4203620bd8        postgres-dvdrental   "docker-entrypoint.s…"   53 seconds ago      Up 3 seconds                   0.0.0.0:5432->5432/tcp   sql-pet
-## 33bb2a6578b7        postgres-dvdrental   "docker-entrypoint.s…"   About an hour ago   Exited (0) About an hour ago                            eager_feistel
+## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS              PORTS                    NAMES
+## feaa939a9f51        postgres-dvdrental   "docker-entrypoint.s…"   47 seconds ago      Up 2 seconds        0.0.0.0:5432->5432/tcp   sql-pet
 ```
 
 Start up the `docker-pet` container
@@ -78,7 +77,7 @@ con <- sp_get_postgres_connection(
   user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
   password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
   dbname = "dvdrental",
-  seconds_to_test = 30
+  seconds_to_test = 30, connection_tab = TRUE
 )
 ```
 
@@ -350,7 +349,7 @@ sp_print_df(store_locations_sql)
 ```
 
 <!--html_preserve--><div id="htmlwidget-b18b48ec4ad649442f3b" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-b18b48ec4ad649442f3b">{"x":{"filter":"none","data":[["1","2","3"],[1,2,10],["47 MySakila Drive","28 MySQL Boulevard","1795 Santiago de Compostela Way"],["Lethbridge","Woodridge","Laredo"],["Alberta","QLD","Texas"],["","","18743"],["Canada","Australia","United States"],["2006-02-15T17:57:12Z","2006-02-15T17:57:12Z","2019-03-09T20:25:47Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>store_id<\/th>\n      <th>address<\/th>\n      <th>city<\/th>\n      <th>district<\/th>\n      <th>postal_code<\/th>\n      <th>country<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":1},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<script type="application/json" data-for="htmlwidget-b18b48ec4ad649442f3b">{"x":{"filter":"none","data":[["1","2","3"],[1,2,10],["47 MySakila Drive","28 MySQL Boulevard","1795 Santiago de Compostela Way"],["Lethbridge","Woodridge","Laredo"],["Alberta","QLD","Texas"],["","","18743"],["Canada","Australia","United States"],["2006-02-15T17:57:12Z","2006-02-15T17:57:12Z","2019-03-19T20:34:46Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>store_id<\/th>\n      <th>address<\/th>\n      <th>city<\/th>\n      <th>district<\/th>\n      <th>postal_code<\/th>\n      <th>country<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":1},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 <font color='blue'>Our DVD Rental business is international and operates in three countries, Canada, Austraila, and the United States.  Each country has one store.</font> 
 
@@ -1420,7 +1419,7 @@ sp_print_df(customer_no_rentals_sql)
 ```
 
 <!--html_preserve--><div id="htmlwidget-5fe564842c318b64a092" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-5fe564842c318b64a092">{"x":{"filter":"none","data":[["1","2","3","4"],[601,602,603,604],["Sophie","John","Ian","Ed"],["Yang","Smith","Frantz","Borasky"],["sophie.yang@sakilacustomer.org","john.smith@sakilacustomer.org","ian.frantz@sakilacustomer.org","ed.borasky@sakilacustomer.org"],["","","14033335568","6172235589"],["Lethbridge","Woodridge","Lethbridge","Woodridge"],["Canada","Australia","Canada","Australia"],[1,1,1,1],["2019-03-09","2019-03-09","2019-03-09","2019-03-09"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>phone<\/th>\n      <th>city<\/th>\n      <th>country<\/th>\n      <th>active<\/th>\n      <th>create_date<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,8]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<script type="application/json" data-for="htmlwidget-5fe564842c318b64a092">{"x":{"filter":"none","data":[["1","2","3","4"],[601,602,603,604],["Sophie","John","Ian","Ed"],["Yang","Smith","Frantz","Borasky"],["sophie.yang@sakilacustomer.org","john.smith@sakilacustomer.org","ian.frantz@sakilacustomer.org","ed.borasky@sakilacustomer.org"],["","","14033335568","6172235589"],["Lethbridge","Woodridge","Lethbridge","Woodridge"],["Canada","Australia","Canada","Australia"],[1,1,1,1],["2019-03-19","2019-03-19","2019-03-19","2019-03-19"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>phone<\/th>\n      <th>city<\/th>\n      <th>country<\/th>\n      <th>active<\/th>\n      <th>create_date<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,8]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 <font color='blue'>We see that there are four new customers who have never rented a movie.  These four customers are in the countries that have a manned store.</font>
 
@@ -2092,7 +2091,7 @@ sp_print_df( customer_details_fn_sql(cust_id))
 ```
 
 <!--html_preserve--><div id="htmlwidget-20ef643ff2d76ae434f3" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-20ef643ff2d76ae434f3">{"x":{"filter":"none","data":[["1"],[600],["Sophie Yang"],["sophie.yang@sakilacustomer.org"],[""],["47 MySakila Drive"],[null],["Lethbridge"],[""],["Canada"],[3],[1],[1001],["Sophie's Choice"],["2019-03-02"],["2019-03-09"],["2019-03-09"],[0],[0],[null],[4.99],[null],[null],[null],[null],[16050],[4582],[null]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>id<\/th>\n      <th>customer<\/th>\n      <th>email<\/th>\n      <th>phone<\/th>\n      <th>address<\/th>\n      <th>address2<\/th>\n      <th>city<\/th>\n      <th>postal_code<\/th>\n      <th>country<\/th>\n      <th>cust_store_id<\/th>\n      <th>inv_store_id<\/th>\n      <th>film_id<\/th>\n      <th>title<\/th>\n      <th>rented<\/th>\n      <th>returned<\/th>\n      <th>exp_rtn_dt<\/th>\n      <th>rtn_stat<\/th>\n      <th>not_rtn<\/th>\n      <th>pay_dt<\/th>\n      <th>charges<\/th>\n      <th>paid<\/th>\n      <th>delta<\/th>\n      <th>pay_staff_id<\/th>\n      <th>pay_days<\/th>\n      <th>rental_id<\/th>\n      <th>inventory_id<\/th>\n      <th>payment_id<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,10,11,12,17,18,20,21,22,23,24,25,26,27]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<script type="application/json" data-for="htmlwidget-20ef643ff2d76ae434f3">{"x":{"filter":"none","data":[["1"],[600],["Sophie Yang"],["sophie.yang@sakilacustomer.org"],[""],["47 MySakila Drive"],[null],["Lethbridge"],[""],["Canada"],[3],[1],[1001],["Sophie's Choice"],["2019-03-12"],["2019-03-19"],["2019-03-19"],[0],[0],[null],[4.99],[null],[null],[null],[null],[16050],[4582],[null]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>id<\/th>\n      <th>customer<\/th>\n      <th>email<\/th>\n      <th>phone<\/th>\n      <th>address<\/th>\n      <th>address2<\/th>\n      <th>city<\/th>\n      <th>postal_code<\/th>\n      <th>country<\/th>\n      <th>cust_store_id<\/th>\n      <th>inv_store_id<\/th>\n      <th>film_id<\/th>\n      <th>title<\/th>\n      <th>rented<\/th>\n      <th>returned<\/th>\n      <th>exp_rtn_dt<\/th>\n      <th>rtn_stat<\/th>\n      <th>not_rtn<\/th>\n      <th>pay_dt<\/th>\n      <th>charges<\/th>\n      <th>paid<\/th>\n      <th>delta<\/th>\n      <th>pay_staff_id<\/th>\n      <th>pay_days<\/th>\n      <th>rental_id<\/th>\n      <th>inventory_id<\/th>\n      <th>payment_id<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,10,11,12,17,18,20,21,22,23,24,25,26,27]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 #### Replicate the output above using dplyr syntax.
 

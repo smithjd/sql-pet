@@ -68,7 +68,7 @@ cattle_conn <- sqlpetr::sp_get_postgres_connection(
   dbname = "postgres",
   user = "postgres",
   password = "postgres",
-  seconds_to_test = 30
+  seconds_to_test = 30, connection_tab = TRUE
 )
 ```
 
@@ -98,7 +98,7 @@ cattle_conn <- sqlpetr::sp_get_postgres_connection(
   dbname = "charlie",
   user = "charlie",
   password = "chaplin",
-  seconds_to_test = 30
+  seconds_to_test = 30, connection_tab = TRUE
 )
 print(cattle_conn)
 ```

@@ -30,7 +30,7 @@ con <- sp_get_postgres_connection(
   user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
   password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
   dbname = "dvdrental",
-  seconds_to_test = 30
+  seconds_to_test = 30, connection_tab = TRUE
 )
 ```
 
@@ -85,6 +85,7 @@ kable(table_list)
 |film_actor                 |
 |customer                   |
 |smy_customer               |
+|smy_compute_exercise       |
 ### Digging into the `information_schema`
 
 We usually need more detail than just a list of tables. Most SQL databases have an `information_schema` that has a standard structure to describe and control the database.
@@ -94,7 +95,7 @@ The `information_schema` is in a different schema from the default, so to connec
 ```r
 table_info_schema_table <- tbl(con, dbplyr::in_schema("information_schema", "tables"))
 ```
-The `information_schema` is large and complex and contains 211 tables.  So it's easy to get lost in it.
+The `information_schema` is large and complex and contains 212 tables.  So it's easy to get lost in it.
 
 This query retrieves a list of the tables in the database that includes additional detail, not just the name of the table.
 
@@ -125,6 +126,7 @@ dvdrental       public         inventory                    BASE TABLE
 dvdrental       public         language                     BASE TABLE 
 dvdrental       public         payment                      BASE TABLE 
 dvdrental       public         rental                       BASE TABLE 
+dvdrental       public         smy_compute_exercise         BASE TABLE 
 dvdrental       public         smy_customer                 BASE TABLE 
 dvdrental       public         staff                        BASE TABLE 
 dvdrental       public         store                        BASE TABLE 
@@ -170,6 +172,7 @@ dvdrental       public         inventory                    BASE TABLE
 dvdrental       public         language                     BASE TABLE 
 dvdrental       public         payment                      BASE TABLE 
 dvdrental       public         rental                       BASE TABLE 
+dvdrental       public         smy_compute_exercise         BASE TABLE 
 dvdrental       public         smy_customer                 BASE TABLE 
 dvdrental       public         staff                        BASE TABLE 
 dvdrental       public         store                        BASE TABLE 
@@ -200,7 +203,7 @@ But the `information_schema` has a lot more useful information that we can use.
 columns_info_schema_table <- tbl(con, dbplyr::in_schema("information_schema", "columns"))
 ```
 
-Since the `information_schema` contains 1865 columns, we are narrowing our focus to just one table.  This query retrieves more information about the `rental` table:
+Since the `information_schema` contains 1892 columns, we are narrowing our focus to just one table.  This query retrieves more information about the `rental` table:
 
 ```r
 columns_info_schema_info <- columns_info_schema_table %>%
@@ -359,6 +362,7 @@ public_tables %>%
 
 table_name                     n
 ---------------------------  ---
+smy_compute_exercise          27
 film                          13
 staff                         11
 customer                      10
@@ -373,7 +377,6 @@ payment                        6
 actor                          4
 actor_info                     4
 city                           4
-inventory                      4
 
 How many *column names* are shared across tables (or duplicated)?
 
@@ -382,20 +385,20 @@ public_tables %>% count(column_name, sort = TRUE) %>% filter(n > 1)
 ```
 
 ```
-## # A tibble: 36 x 2
+## # A tibble: 39 x 2
 ##    column_name     n
 ##    <chr>       <int>
 ##  1 last_update    15
 ##  2 address_id      5
-##  3 first_name      5
-##  4 last_name       5
-##  5 store_id        5
-##  6 customer_id     4
-##  7 film_id         4
-##  8 name            4
-##  9 active          3
-## 10 actor_id        3
-## # … with 26 more rows
+##  3 film_id         5
+##  4 first_name      5
+##  5 last_name       5
+##  6 store_id        5
+##  7 address         4
+##  8 city            4
+##  9 country         4
+## 10 customer_id     4
+## # … with 29 more rows
 ```
 
 How many column names are unique?
@@ -408,7 +411,7 @@ public_tables %>% count(column_name) %>% filter(n == 1) %>% count()
 ## # A tibble: 1 x 1
 ##       n
 ##   <int>
-## 1    22
+## 1    33
 ```
 
 ## Database keys
@@ -433,7 +436,7 @@ glimpse(rs)
 ```
 
 ```
-## Observations: 61,545
+## Observations: 62,436
 ## Variables: 3
 ## $ table_name <chr> "dvdrental.information_schema.administrable_role_auth…
 ## $ conname    <chr> "actor_pkey", "actor_pkey", "actor_pkey", "country_pk…
@@ -712,7 +715,7 @@ glimpse(all_meta)
 ## $ q_25       <chr> "4013", "2005-07-07 00:58:00", "1154", "148", "2005-0…
 ## $ q_50       <chr> "8025", "2005-07-28 16:03:27", "2291", "296", "2005-0…
 ## $ q_75       <chr> "12037", "2005-08-17 21:13:35", "3433", "446", "2005-…
-## $ max        <chr> "16050", "2019-03-02", "4582", "600", "2019-03-09", "…
+## $ max        <chr> "16050", "2019-03-12", "4582", "600", "2019-03-19", "…
 ```
 
 ```r
@@ -724,10 +727,10 @@ kable(head(all_meta))
 table_name   var_name       var_type    num_rows   num_blank   num_unique  min                   q_25                  q_50                  q_75                  max        
 -----------  -------------  ---------  ---------  ----------  -----------  --------------------  --------------------  --------------------  --------------------  -----------
 rental       rental_id      integer        16045           0        16045  1                     4013                  8025                  12037                 16050      
-rental       rental_date    double         16045           0        15816  2005-05-24 22:53:30   2005-07-07 00:58:00   2005-07-28 16:03:27   2005-08-17 21:13:35   2019-03-02 
+rental       rental_date    double         16045           0        15816  2005-05-24 22:53:30   2005-07-07 00:58:00   2005-07-28 16:03:27   2005-08-17 21:13:35   2019-03-12 
 rental       inventory_id   integer        16045           0         4581  1                     1154                  2291                  3433                  4582       
 rental       customer_id    integer        16045           0          600  1                     148                   296                   446                   600        
-rental       return_date    double         16045         183        15837  2005-05-25 23:55:21   2005-07-10 15:48:58   2005-08-01 19:45:29   2005-08-20 23:49:25   2019-03-09 
+rental       return_date    double         16045         183        15837  2005-05-25 23:55:21   2005-07-10 15:48:58   2005-08-01 19:45:29   2005-08-20 23:49:25   2019-03-19 
 rental       staff_id       integer        16045           0            2  1                     1                     1                     2                     2          
 ## Save your work!
 

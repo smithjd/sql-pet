@@ -1,4 +1,4 @@
-# Mapping your local environment {#chapter_your-local-environment}
+# Fx Mapping your local environment {#chapter_appendix-your-local-environment}
 
 > This chapter explores:
 > 
@@ -7,9 +7,10 @@
 > * How those entities are connected and how communication between those entities happens
 > * Pointers to the commands that go with each entity
 
-These packages are used in this chapter:
+> **Explain that closing Docker down is like stopping / closing dbms. normally you can't do that.**
 
-```r
+These packages are used in this chapter:
+```{r setup, echo=TRUE, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(DBI)
 library(RPostgres)
@@ -24,15 +25,13 @@ display_rows <- 5
 
 Assume that the Docker container with PostgreSQL and the dvdrental database are ready to go.  Start up the `docker-pet` container:
 
-
-```r
+```{r}
 sp_docker_start("sql-pet")
 ```
 
 Connect to the `dvdrental` database with R.  
 
-
-```r
+```{r}
 con <- sp_get_postgres_connection(
   user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
   password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
@@ -173,50 +172,27 @@ Your OS and the OS inside Docker may be looking at the same file but they are in
 
 ### Get info on a local file from R code
 
-
-```r
+```{r}
 file.info("README.md")
-```
-
-```
-##           size isdir mode               mtime               ctime
-## README.md 4493 FALSE  644 2019-02-17 13:04:05 2019-02-17 13:04:05
-##                         atime uid gid uname grname
-## README.md 2019-02-17 13:04:05 502  80   jds  admin
 ```
 The equivalent information from executing a command on the CLI or Terminal would be
 
-
-```r
+```{r eval=FALSE}
 system2("ls",  "-l README.md", stdout = TRUE, stderr = FALSE)
 ```
 ### Get info on the same OS file inside Docker from R Code
 
-
-```r
+```{r}
 system2("docker", "exec sql-pet ls -l petdir/README.md", stdout = TRUE, stderr = FALSE)
-```
-
-```
-## [1] "-rw-r--r-- 1 root root 4493 Feb 17 21:04 petdir/README.md"
 ```
 
 ### Docker and psql together from R or your CLI
 
 As you become familiar with using Docker, you'll see that there are various ways to do any given task.  Here's an illustration of how to get a list of users who have access to the PostegreSQL database.
 
-
-```r
+```{r}
 system2("docker", "exec sql-pet psql -U postgres -c '\\du' ", 
         stdout = TRUE, stderr = FALSE)
-```
-
-```
-## [1] "                                   List of roles"                                    
-## [2] " Role name |                         Attributes                         | Member of "
-## [3] "-----------+------------------------------------------------------------+-----------"
-## [4] " postgres  | Superuser, Create role, Create DB, Replication, Bypass RLS | {}"        
-## [5] ""
 ```
 From the RStudio Terminal window, the equivalent would be a matter of dropping off some of the R code:
 

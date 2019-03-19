@@ -41,9 +41,8 @@ sp_show_all_docker_containers()
 ```
 
 ```
-## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                         PORTS               NAMES
-## af4203620bd8        postgres-dvdrental   "docker-entrypoint.s…"   49 seconds ago      Exited (0) 2 seconds ago                           sql-pet
-## 33bb2a6578b7        postgres-dvdrental   "docker-entrypoint.s…"   About an hour ago   Exited (0) About an hour ago                       eager_feistel
+## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                     PORTS               NAMES
+## feaa939a9f51        postgres-dvdrental   "docker-entrypoint.s…"   44 seconds ago      Exited (0) 2 seconds ago                       sql-pet
 ```
 
 Start up the `docker-pet` container
@@ -63,7 +62,7 @@ con <- sp_get_postgres_connection(
   user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
   password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
   dbname = "dvdrental",
-  seconds_to_test = 30
+  seconds_to_test = 30, connection_tab = TRUE
 )
 ```
 
