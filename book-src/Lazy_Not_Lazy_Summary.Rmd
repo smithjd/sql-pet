@@ -93,32 +93,42 @@ HINT:  No function matches the given name and argument types. You might need to 
 
 ## Dplyr Local-Lazy Approach
 
-<pre>
-to_char</b> <- function(dt, fmt) {return(fmt)}
-
-rental_table %>% inner_join(inventory_table, by = c("inventory_id" = "inventory_id"), suffix(c(".r", ".i"))) %>% inner_join(film_table, by = c("film_id" = "film_id"), suffix(c(".i", ".f"))) %>% mutate(YYYY_MM = to_char(rental_date,"YYYY-MM"))
-</pre>
-
 ```{r}
-## to_char <- function(dt, fmt) {return(fmt)}
 rental_table <- tbl(con,'rental')
-rental_table  %>% mutate(YYYY_MM = to_char(rental_date,"YYYY-MM"))%>%select(rental_date,YYYY_MM)
+# this returns 1000 rows
+rs1000 <- rental_table  %>% mutate(YYYY_MM = to_char(rental_date,"YYYY-MM"))%>%select(rental_date,YYYY_MM) 
+rs1000
 ```
 
-Now I cannot get the error message I thought I got in the past and got in today's phone call.  The function has been commented out.
- 
-When the code blocks are executed one at a time, the above code block returns 1000 rows, not LAZY.   However, when knitted, it is LAZY.
+When the code blocks are executed one at a time, the above code block returns 1000 rows.  Based on the output, it is unclear that the result set is lazy or not.  When knitted, it is LAZY and only returns 10 rows.  When collect() is added, the block returns 16045 rows.
 
-```{r}
-#to_char <- function(dt, fmt) {return(fmt)}
-rental_table <- tbl(con,'rental')
-inventory_table <- tbl(con,'inventory')
-film_table <- tbl(con,'film')
-rental_table %>% inner_join(inventory_table, by = c("inventory_id" = "inventory_id"), suffix(c(".r", ".i"))) %>% inner_join(film_table, by = c("film_id" = "film_id"), suffix(c(".i", ".f"))) %>% mutate(YYYY_MM = to_char(rental_date,"YYYY-MM")) %>% select(rental_date,YYYY_MM)
-```
- 
-Without the declared `to_char` function, the above code block returns the following error.
+Note that the following comes from the knit output of the code block above and the first line explicitly tells us that the output is lazy.
 
 <pre>
-Error in eval(lhs, parent, parent) : object 'rental_table' not found
+## # Source:   lazy query [?? x 2]
+## # Database: postgres [postgres@localhost:5432/dvdrental]
+##    rental_date         YYYY_MM
+##    <dttm>              <chr> 
+##  1 2005-05-24 22:54:33 2005-05
+##  2 2005-05-24 23:03:39 2005-05
+##  3 2005-05-24 23:04:41 2005-05
+##  4 2005-05-24 23:05:21 2005-05
+##  5 2005-05-24 23:08:07 2005-05
+##  6 2005-05-24 23:11:53 2005-05
+##  7 2005-05-24 23:31:46 2005-05
+##  8 2005-05-25 00:00:40 2005-05
+##  9 2005-05-25 00:02:21 2005-05
+## 10 2005-05-25 00:09:02 2005-05
+## # ... with more rows
 </pre>
+
+
+
+|function type|dplyr function |Postgres function
+|-------------|---------------|------------------
+|string       |paste()        |concat()
+|string       |substr()       |substr()
+|string       |strsplit()     |split_part()
+|string       |toupper()      |upper()/initcap()
+|string       |tolower()      |lower()
+|string       |toTitleCase    |initcap()
