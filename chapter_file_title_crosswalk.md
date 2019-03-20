@@ -7,9 +7,9 @@
 |5|Connecting Docker, PostgreSQL, and R |040-docker-setup-postgres-connect-with-r.Rmd|chapter_connect-docker-postgresql-r|
 |6|Create the dvdrental database in PostgreSQL in Docker |050-docker-setup-postgres-with-dvdrental.Rmd|chapter_setup-dvdrental-db|
 |7|Securing and using your dbms log-in credentials |060-secure-and-use-dbms-credentials-in-r.Rmd|chapter_dbms-login-credentials|
-|8|Mapping your local environment |070-environment-diagram.Rmd|chapter_your-local-environment|
-|9|Introduction to DBMS queries |080-elementary-queries.Rmd|chapter_dbms-queries-intro|
-|10|Lazy Evaluation and Lazy Queries |090-lazy-evalutation-and-downloading.Rmd|chapter_lazy-evaluation-queries|
+|8|Introduction to DBMS queries |080-elementary-queries.Rmd|chapter_dbms-queries-intro|
+|9|Lazy Evaluation and Lazy Queries |090-lazy-evalutation-intro.Rmd|chapter_lazy-evaluation-queries|
+|10|Lazy Evaluation and Execution Environment |095-lazy-evalutation-and-timing.Rmd|chapter_lazy-evaluation-and-timing|
 |11|DBI package and SQL |100-dbi-and-sql.Rmd|chapter_dbi-package-sql|
 |12|Inserting rows into the DVDRENTAL database |107-sql-insert-rows.Rmd|chapter_sql-inserting-rows|
 |13|SQL & dplyr joins additional data |130-sql-dplyr-joins-data.Rmd|chapter_sql-dplyr-data|

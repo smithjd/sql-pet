@@ -5,6 +5,7 @@
 > * Reviews lazy loading, lazy evaluation and lazy query execution
 > * Demonstrates how `dplyr` code gets executed (and how R determines what is translated to SQL and what is processed locally by R)
 > * Offers some further resources on lazy loading, evaluation, execution, etc.
+>
 
 ## Setup
 
@@ -28,7 +29,7 @@ con <- sqlpetr::sp_get_postgres_connection(
   user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
   password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
   dbname = "dvdrental",
-  seconds_to_test = 30
+  seconds_to_test = 30, connection_tab = TRUE
 )
 ```
 
@@ -158,9 +159,6 @@ Think of `Q` as a black box for the moment.  The following examples will show ho
 > [`Q %>% dplyr::collect(n = 20)`](#lazy_q_collect) | ![](screenshots/green-check.png) Prints 20 rows  
 > [`Q %>% dplyr::collect(n = 20) %>% head()`](#lazy_q_collect) | ![](screenshots/green-check.png) Prints 6 rows  
 > [`Q %>% dplyr::show_query()`](#lazy-q-show-query) | ![](screenshots/red-x.png) **Translates** the lazy query object into SQL 
-> **Time-based, execution environment issues** | 
-> [`Qc <- Q %>% count(customer_email, sort = TRUE)`](#lazy_q_build) | ![](screenshots/red-x.png) **Extends** the lazy query object
-> 
 > 
 
 The next chapter will discuss how to build queries and how to explore intermediate steps. But first, the following subsections provide a more detailed discussion of each row in the preceding table.
@@ -254,43 +252,6 @@ Q %>% dplyr::show_query()
 
 ```
 Hand-written SQL code to do the same job will probably look a lot nicer and could be more efficient, but functionally `dplyr` does the job.
-
-### Time-based, execution environment issues
-
-Remember that if the expression is assigned to an object, it is not executed.  If not, a `print()` function is implied. This behavior is the basis for a useful debugging and development process where queries are built up incrementally.
-
-> *These two are different:*
-> Q %>% count(customer_email) 
-> Q_query <- Q %>% count(customer_email) 
->
-
-### Q %>% `more dplyr` {#lazy_q_build}
-
-![](screenshots/green-check.png) Because the following statement implies a `print()` function at the end, we can run it repeatedly, adding dplyr expressions, and only get 10 rows back.  Every time we add a dplyr expression to a chain, R will rewrite the SQL code.  For example:
-```{r}
-Q %>% count(customer_email) 
-```
-As we understand more about the data, we simply add dplyr expressions to pinpoint what we are looking for:
-```{r}
-Q %>% count(customer_email) %>% 
-  filter(n > 40) %>% 
-  arrange(customer_email)
-```
-
-![](screenshots/green-check.png) When all the accumulated `dplyr` verbs are executed, they are submitted to the dbms and the number of rows that are returned follow the same rules as discussed above.
-
-### Many handy R functions can't be translated to SQL
-
-![](screenshots/green-check.png) It just so happens that PostgreSQL has a `date` function that does the same thing as the `date` function in the `lubridate` package.  In the following code the `date` function is executed by PostreSQL.
-```{r}
-rental_table %>% mutate(rental_date = date(rental_date))
-```
-![](screenshots/green-check.png) ![](screenshots/green-check.png) If we specify that we want to use the `lubridate` version (or any number of other R functions) they are passed to the dbms unless we explicitly tell `dplyr` to stop translating and bring the results back to the R environment for local processing.
-```{r}
-rental_table %>% collect() %>% 
-  mutate(rental_date = lubridate::date(rental_date))
-```
-
 
 ### More lazy execution examples
 

@@ -1,4 +1,4 @@
-# Mapping your local environment {#chapter_your-local-environment}
+# Fx Mapping your local environment {#chapter_appendix-your-local-environment}
 
 > This chapter explores:
 > 
@@ -6,6 +6,8 @@
 > * The different roles that each entity plays in the sandbox
 > * How those entities are connected and how communication between those entities happens
 > * Pointers to the commands that go with each entity
+
+> **Explain that closing Docker down is like stopping / closing dbms. normally you can't do that.**
 
 These packages are used in this chapter:
 ```{r setup, echo=TRUE, message=FALSE, warning=FALSE}
@@ -177,11 +179,6 @@ The equivalent information from executing a command on the CLI or Terminal would
 
 ```{r eval=FALSE}
 system2("ls",  "-l README.md", stdout = TRUE, stderr = FALSE)
-```
-### Get info on the same OS file inside Docker from R Code
-
-```{r}
-system2("docker", "exec sql-pet ls -l petdir/README.md", stdout = TRUE, stderr = FALSE)
 ```
 
 ### Docker and psql together from R or your CLI
