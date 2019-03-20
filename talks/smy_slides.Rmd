@@ -1,0 +1,613 @@
+---
+title: "Joins"
+author: "Sophie Yang"
+date: "`r format(Sys.time(), '%d %B, %Y')`" 
+output:
+  ioslides_presentation:
+    incremental: true
+---
+```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
+# These packages are called in almost every chapter of the book:
+library(tidyverse)
+library(DBI)
+library(DiagrammeR)
+library(RPostgres)
+library(glue)
+library(here)
+require(knitr)
+library(dbplyr)
+library(sqlpetr)
+
+#sp_check_that_docker_is_up()
+#sp_show_all_docker_containers()
+sp_docker_start("sql-pet")
+con <- sp_get_postgres_connection(
+  user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
+  password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
+  dbname = "dvdrental",
+  seconds_to_test = 30
+)
+
+source(file=here::here('book-src','sql_pet_data.R'),echo=FALSE)
+
+```
+
+## Join Types
+
+```{r Mutable Join Types2,echo = FALSE}
+grViz("
+digraph JOINS {
+
+  # a 'graph' statement
+  graph [overlap = true, fontsize = 10]
+
+  node [shape = box,
+        fixedsize = false,
+        hegith = 1.5
+        width = 1.50]
+  0[label='0.  Mutable Joins']
+  1[label='1.  Inner Join\nL.col1 {<,=,>} R.col2']
+  2[label='2.  Outer Join\nL.col1=R.col2']
+  3[label='3.  Self Join\nL.col1=tbl1.col2']
+  4[label='4.  Cross (Cartesian) Join\nL.col1=R.col2']
+  5[label='5.  Equi Join\nL.col1=R.col2'] 
+  6[label='6.  Natural Join\nL.col1=R.col1']
+  7[label='7.  Left Join\nL.col1=R.col1']
+  8[label='8.  Right Join\nL.col1=R.col1']
+  9[label='9.  Full Join\nL.col1=tbl2.col1']
+ 10[label='10.  NonMutable Joins']
+ 11[label='11.  Semi Join\nL.col1=R.col2\ncondition true']
+ 12[label='12.  Anti Join\nL.col1=R.col2\ncondition false']
+
+  # several 'edge' statements
+  0 -> {1,2,3,4} [arrowhead=none]
+  1 -> 5 [arrowhead=none]
+  5 -> 6 [arrowhead=none]
+  2 -> {7,8,9} [arrowhead=none]
+  10 -> {11,12} [arrowhead=none]
+
+  #3 -> {7,8,9}
+}
+")
+```  
+
+
+
+
+##  Mutable Versus Non-Mutable Joins
+
+- Mutable Joins -- returns rows and columns from both tables
+    *  inner join
+    *  outer joins - (left, right, full)
+
+- Non Mutable Joins -- returns rows and columns from the driving table only
+    *  semi join
+    *  anti join
+
+##  Mutable Joins - Driving Table 
+
+- Mutable joins have a driving table, DT, whose rows always satisfies the join condition. 
+    - inner join, either table can be the driving table.
+    - left join, the first table, the left table is the driving table.
+    - right join, the second table, the right table is the driving table.
+    - full join, both tables behave as the driving table.
+- The other table in a mutable join is the non-driving table, NDT.  
+    -  Zero or more rows from the NDT table will satisify the join condition.  
+    -  Zero or more rows from the NDT table will not satisify the join condition.  
+- Driving table delivers the goods
+    - [DT Driving Tesla 2:00](https://video.search.yahoo.com/search/video?fr=mcafee&p=rocketman+tesla#id=4&vid=acbe7eaee58e021df490ef615d6a7333&action=view)
+
+## Mutable Joins
+
+inner join 
+
+- join condition valid on both tables, 
+- data column values from both tables returned.  
+ 
+outer join 
+
+- join condition valid on second table, (inner join) 
+    *    DT semi-join rows/columns and matched NDT rows/columns
+- join condition invalid on second table, (outer join)
+    *    DT anti-join rows/columns 
+    *    NDT anti-join rows/columns are null
+- $$IJ \subset (LJ or RJ) \subset (FOJ) \subset (XJ)$$
+
+
+## Non Mutable Joins 
+
+- Non Mutable joins returns rows from the driving table, DT, just once that satisfy the join condition(s).  
+    - Semi-Join returns the DT rows which satisfy the join condition.
+    - Anti-Join returns the DT rows which do not satisfy the join conditon.
+
+- $$DT = (DT \cap NDT) \cup (DT \cap NDT^{'}) \\
+     DT =  SemiJoin \cup AntiJoin
+  $$
+ 
+
+# Cardinality
+
+## ERD Cardinality Symbols
+
+- [ERD Cardinality Symbols](https://cdn-lucidchart-com.s3.amazonaws.com/how-to-page/ERD_notation.PNG) 
+
+- What is the cardinality between customer and rental?
+- Does this make sense?
+
+## Postgres questionable relationships
+
+- Check all the zero or one relationships
+- Check address - store relationship
+
+- [ERD Postgres DVD Rental Handout](http://www.postgresqltutorial.com/postgresql-sample-database/)
+
+- [Movie DVD ERD](https://circle.visual-paradigm.com/movie-rental/)
+
+- ERD Functions Chapter "SQL & `dplyr` joins"
+    - sp_tbl_descr -- Parameterized Table Description Function
+    - sp_tbl_pk_fk -- Parameterized Table PK-FK Function
+    
+- Useful Tables
+    - information_schema.tables
+    - information_schema.columns
+
+# Joining is not rocket science!
+
+## Docking 
+
+[Docking](https://p.motionelements.com/stock-video/science-technology/me8359778-docking-spacecraft-space-station-hd-a0478.jpg), [Docking Video](https://www.motionelements.com/stock-video-8958852-spacecraft-docking-to-space-station)
+
+[ISS Food](https://www.quora.com/What-types-of-foods-do-the-astronauts-eat-on-the-International-Space-Station-and-how-is-the-food-heated-and-prepared-for-consumption-on-it), [Coffee Ice Cream](https://www.yahoo.com/news/spacex-dragon-delivers-apos-world-195100373.html)
+
+[Outer Join](https://en.wikipedia.org/wiki/Extravehicular_activity#/media/File:Sts114_033.jpg), [full outer joins](https://cdn.zmescience.com/wp-content/uploads/2011/11/soyuz-iss-moon-docking-wallpaper.jpg)
+
+[Docking Right](https://p.motionelements.com/stock-video/science-technology/me8729918-spacecraft-docking-to-space-station-hd-a0349.jpg), [Docking Right Video](https://www.motionelements.com/stock-video-8729918-spacecraft-docking-to-space-station)
+
+[multiple Joins](http://www.wallpapers13.com/space_planet_shuttle_station_docking_2880x1800_desktop-hd-wallpaper/)
+
+[tesla1](https://video.search.yahoo.com/search/video?fr=mcafee&p=rocketman+tesla#id=58&vid=86b52c305f730e0b83580696c4a4a581&action=view), [tesla2](https://video.search.yahoo.com/search/video?fr=mcafee&p=rocketman+tesla#id=56&vid=86b52c305f730e0b83580696c4a4a581&action=view), [ripley](https://www.businessinsider.com/spacex-nasa-crew-dragon-woman-dummy-mannequin-launch-2019-2)
+
+[Land it 2](https://video.search.yahoo.com/search/video?fr=mcafee&p=space+x+rocket+landing#id=1&vid=b53c7f00e1a601f3d2ecf11e36b32c98&action=view)
+[Land it 5](https://video.search.yahoo.com/search/video?fr=mcafee&p=space+x+rocket+landing#id=2&vid=23002d0963a29871ca10fe87932277db&action=view)
+
+
+[space-x 62 slides](https://www.space.com/spacex-crew-dragon-demo-1-test-flight-photos.html)
+
+* ISS needs to be resupplied with food.  ISS food comes in three forms: natural form, rehydratable, and thermostabilized.  
+
+## Docker (NF + R + T)
+
+1.  Natural Form (NF) refers to food that does not need to be processed
+    +  Examples: Crackers, tortillas, nuts, granola bars, condiments, candy, and cookies.
+
+2.  Rehydrated (R) foods have had the water removed from them.  Once the crew are ready to eat, hot water is injected into the pouch to restore the food to its normal form.
+    +  Examples: Cottage cheese, shrimp cocktail, scrambled eggs, noodles, mashed potatoes, quiche, borsch, milk.
+
+3.  Thermostabilized (T) foods are heated to a level sufficient to kill harmful microorganisms and enzymes and then packaged in cans, cups, or pouches.
+    +  Examples: Chopped pork with eggs, beef with vegetables, split pea soup, pike perch in Baltika sauce.
+    
+## Inner Join Exercise 1.
+
+Assume that the ISS only has the following food items in its pantry:
+NF: Crackers, tortillas, R: Milk and sausage patties, T: Chopped pork with eggs
+
+Assume that Space X has all the food discussed above in the examples.
+
+What is the inner join?
+
+*  The inner join is the Space-X cargo bay NF: Crackers, tortillas, R: Milk and sausage patties, T: Chopped pork with eggs and corresponding items in the ISS food bins.
+    +  Space_x %>% inner_join(ISS, by=c('food_item' = 'food_item'), suffix('.s','.i)
+    +  ISS %>% inner_join(Space_x, by=c('food_item' = 'food_item'), suffix('.s','.i)
+
+
+## Inner Join Exercise 2.
+
+Assume that Space X has all the example food items in its cargo bay and the ISS has everything in the example food list, but the food bins are nearly empty.
+
+What is the inner join?
+
+-  The inner join is what is common in the Space-X cargo bay and the ISS pantry:  Everything in the Space-X cargo bay and the ISS pantry.
+
+## Inner Join Exercise 3.
+
+Assume that the cosmonauts have not been in the ISS for a while and there is only one serving of `borsh` and `pike perch in Baltika sauce` in the ISS food bins.  Space-x is sent up with all the example food items shown previously except `borsh` and `pike perch in Baltika sauce`.
+
+What is the inner join?
+
+-  The inner join is what is common in the Space-X cargo bay and the ISS pantry:  All food items in the example lists in the Space-X cargo bay and ISS pantry bins except for borsh and pike perch.
+
+## Inner Join Exercise 4.
+
+Assume that the NF food items include fresh fruit and vegetables.  Fresh fruits and vegetables are sent up in limited quantities because there is no refrigeration on board the ISS.  
+
+Assume that ISS has all the foods listed in the three categories and Space-X is resupplying all these food items plus fresh fruits and vegetables.
+
+What is the inner join?
+
+All the food items listed in the three categories are in the Space-X cargo bay and ISS pantry bins.  
+
+- The fresh fruits and vegetables in the Space-X cargo bay are not part of the inner join.
+
+## Left Join Exercise 5.  
+
+Assume that the NF food items include fresh fruit and vegetables.  Fresh fruits and vegetables are sent up in limited quantities because there is no refrigeration on board the ISS.  
+
+Assume that ISS has all the foods listed in the three categories and Space-X is resupplying all these food items plus fresh fruits and vegetables.
+
+What is the left join?
+
+All the food items listed in the three categories are in the Space-X cargo bay and ISS pantry bins.  
+
+- The fresh fruits and vegetables in the Space-X cargo bay are part of the inner join.
+
+
+## Right Join Exercise 6.  
+
+Assume that the NF food items include fresh fruit and vegetables.  Fresh fruits and vegetables are sent up in limited quantities because there is no refrigeration on board the ISS.  Space-X is resupplying all the example food items plus fresh fruits and vegetables, without the `borsh` and `pike perch in Baltika sauce`.  ISS only has all the example food items originally listed in stock.
+
+What is the Right join?
+
+- Everything in Space-x cargo bay excluding the fresh fruits and vegetables.
+- Everything in the ISS food pantry including the `borsh` and `pike perch in Baltika sauce`.
+
+## Full Join Exercise 7.  
+
+Assume that the NF food items include fresh fruit and vegetables.  Fresh fruits and vegetables are sent up in limited quantities because there is no refrigeration on board the ISS.  Space-X is resupplying all the example food items plus fresh fruits and vegetables, without the `borsh` and `pike perch in Baltika sauce`.
+
+What is the Full join?
+
+- Everything in Space-x cargo bay including the fresh fruits and vegetables.
+- Everything in the ISS food pantry including the `borsh` and `pike perch in Baltika sauce`.
+
+## Semi Join Exercise 8.  
+
+Assume that the NF food items include fresh fruit and vegetables.  Fresh fruits and vegetables are sent up in limited quantities because there is no refrigeration on board the ISS.  Space-X is resupplying all the example food items, fresh fruits and vegetables, without the `borsh` and `pike perch in Baltika sauce`.
+
+What is the Semi join assuming Space-X is the driver?
+
+- All the food items in the Space-x cargo excluding the fresh fruits and vegetables.
+
+What is the Semi join assiming ISS is the driver?
+
+- All the food items in the ISS food pantry excluding the the `borsh` and `pike perch in Baltika sauce`.
+
+## Anti Join Exercise 9.  
+
+Assume that the NF food items include fresh fruit and vegetables.  Fresh fruits and vegetables are sent up in limited quantities because there is no refrigeration on board the ISS.  Space-X is resupplying all the example food items, fresh fruits and vegetables, without the `borsh` and `pike perch in Baltika sauce`.
+
+What is the anti join assuming Space-X is the driver?
+
+- Fresh fruits and vegetables
+
+What is the anti join assuming ISS is the driver?
+
+- The `borsh` and `pike perch in Baltika sauce`.
+
+
+
+## Join Syntax - 1 of 3
+
+|Join|dplyr                                                                            |sql
+|-----|--------------------------------------------------------------------------------|------------------------------------------------------
+|inner|inner_join(customer_tbl, rental_tbl, by = 'customer_id', suffix = c(".c", ".r"))|from customer c join rental r on c.customer_id = r.customer_id
+|     |customer_tbl %>% inner_join(rental_tbl, by = 'customer_id', suffix = c(".c", ".r"))|
+|left |left_join(customer_tbl, rental_tbl, by = 'customer_id', suffix = c(".c", ".r")) |from customer c left outer join rental r on c.customer_id = r.customer_id
+|     |customer_tbl %>% left_join(rental_tbl, by = 'customer_id', suffix = c(".c", ".r"))|
+
+## Join Syntax - 2 of 3
+
+|Join|dplyr                                                                            |sql
+|-----|--------------------------------------------------------------------------------|------------------------------------------------------
+|right|right_join(customer_tbl, rental_tbl, by = 'customer_id', suffix = c(".c", ".r"))|from customer c right outer join rental r on c.customer_id = r.customer_id
+|     |customer_tbl %>% right_join(rental_tbl, by = 'customer_id', suffix = c(".c", ".r"))|
+|full |full_join(customer_tbl, rental_tbl, by = 'customer_id', suffix = c(".c", ".r")) |from customer c full outer join rental r on c.customer_id = r.customer_id
+|     |customer_tbl %>% full_join(rental_tbl, by = 'customer_id', suffix = c(".c", ".r"))|
+
+## Join Syntax - 3 of 3
+
+|Join|dplyr                                                                            |sql
+|-----|--------------------------------------------------------------------------------|------------------------------------------------------
+|semi |semi_join(customer_tbl, rental_tbl, by = 'customer_id')    |
+|     |customer_tbl %>% semi_join(rental_tbl, by = 'customer_id') |
+|anti |anti_join(customer_tbl, rental_tbl, by = 'customer_id')    |     |     |customer_tbl %>% semi_join(rental_tbl, by = 'customer_id') |
+
+## Join Parameters 1 of 5
+
+https://dplyr.tidyverse.org/reference/join.html
+
+|clause|desription
+|------|----------------------------------------------------------------------------------------------------------------------------------
+|x, y	 |tbls to join
+|by|a character vector of variables to join by. If NULL, the default, *_join() will do a natural join, using all variables with common names across the two tables. A message lists the variables so that you can check they're right (to suppress the message, simply explicitly list the variables that you want to join).<br><br>To join by different variables on x and y use a named vector. For example, by = c("a" = "b") will match x.a to y.b.
+
+
+- inner_join(customer_tbl, rental_tbl) %>% summarize(n=n())
+- inner_join(customer_tbl, rental_tbl, by='customer') %>% summarize(n=n())
+- Natural joins are dangerous!
+
+## Join Parameters 2 of 5
+
+|clause|desription
+|------|----------------------------------------------------------------------------------------------------------------------------------
+|suffix|If there are non-joined duplicate variables in x and y, these suffixes will be added to the output to disambiguate them. Should be a character vector of length 2.
+|na_matches|Use "never" to always treat two NA or NaN values as different, like joins for database sources, similarly to merge(incomparables = FALSE). The default, "na", always treats two NA or NaN values as equal, like merge(). Users and package authors can change the default behavior by calling pkgconfig::set_config("dplyr::na_matches" = "never").
+
+- na_matches="na", default, versus na_matches="never"  It is unclear, but this refers to joining on null columns.  The default dplyr setting is opposite of SQL behavior as shown below.  Null/NA values never ever match in SQL.
+
+## Join Parameters 3 of 5
+
+```{r}
+dbGetQuery(con
+, "select case when null = null then 'true' else 'false' end")
+```
+
+## Join Parameters 4 of 5  Dplyr null date join
+
+```{r}
+rental_table <- DBI::dbReadTable(con,'rental')
+rental_table$key <- 1
+x <- rental_table %>% filter(rental_id %in% c(11496,11541)) %>% select(key,rental_id,return_date)
+rt11496 <- x %>% filter(rental_id == 11496)
+rt11541 <- x %>% filter(rental_id == 11541)
+rt11496
+rt11541
+```
+
+## Join Parameters 5 of 5  Dplyr null date join
+
+```{r}
+na <- rt11496 %>% inner_join(rt11541,by='return_date',na_matches='na')
+never <- rt11496 %>% inner_join(rt11541,by='return_date',na_matches='never') 
+na
+never
+```
+
+
+## Dplyr defaults to a Natural Join
+
+```{r}
+customer_tbl <- tbl(con,'customer')
+rental_tbl <- tbl(con,'rental')
+inner_join(customer_tbl, rental_tbl) %>% summarize(n=n())
+```
+
+## What is the join between customer and rental?
+
+- Use ERD diagram
+- sp_tbl_pk_fk
+
+## Correct customer rental join 
+```{r}
+customer_tbl <- tbl(con,'customer')
+rental_tbl <- tbl(con,'rental')
+inner_join(customer_tbl, rental_tbl
+          , by = c('customer_id' = 'customer_id')) %>% 
+  summarize(n=n())
+```
+
+## customer store inner join
+
+```{r dplyr inner join Details}
+
+customer_table <- DBI::dbReadTable(con, "customer") %>%
+  mutate(c_store_id = store_id)
+store_table <- DBI::dbReadTable(con, "store") %>% 
+  mutate(s_store_id = store_id)
+
+customer_ij <- customer_table %>%
+  inner_join(store_table, by = c("store_id" = "store_id")
+             , suffix(c(".c", ".s"))) %>%
+  filter(customer_id >= 597) %>%
+  mutate(jt = 'ij') %>%
+  rename(s_addr_id = address_id.y, c_id = customer_id
+        ,s_mgr_id=manager_staff_id) %>%
+  select(jt,c_id,first_name,last_name,c_store_id
+        ,s_store_id,s_mgr_id,s_addr_id)
+
+```
+
+## customer store inner join results
+
+```{r echo=FALSE}
+kable(customer_ij)
+```
+
+## customer store left join
+
+```{r dplyr left join Details}
+
+customer_table <- DBI::dbReadTable(con, "customer") %>%
+  mutate(c_store_id = store_id)
+store_table <- DBI::dbReadTable(con, "store") %>% 
+  mutate(s_store_id = store_id)
+
+customer_lj <- customer_table %>%
+  left_join(store_table, by = c("store_id" = "store_id")
+             , suffix(c(".c", ".s"))) %>%
+  filter(customer_id >= 597) %>%
+  mutate(jt = 'ij') %>%
+  rename(s_addr_id = address_id.y, c_id = customer_id
+        ,s_mgr_id=manager_staff_id) %>%
+  select(jt,c_id,first_name,last_name,c_store_id
+        ,s_store_id,s_mgr_id,s_addr_id)
+
+```
+
+## customer store left join results
+
+```{r echo=FALSE}
+kable(customer_lj)
+```
+
+## Store Table
+
+```{r}
+kable(store_table)
+```
+
+## Customer Store Right Join
+
+```{r dplyr right join Details}
+
+customer_rj <- customer_table %>%
+  right_join(store_table, by = c("store_id" = "store_id")
+             , suffix(c(".c", ".s"))) %>%
+  filter(customer_id >= 597) %>%
+  mutate(jt = 'rj') %>%
+  rename(s_addr_id = address_id.y, c_id = customer_id
+        ,s_mgr_id=manager_staff_id) %>%
+  select(jt,c_id,first_name,last_name,c_store_id
+        ,s_store_id,s_mgr_id,s_addr_id)
+```
+
+## customer store right join results
+
+```{r echo=FALSE}
+kable(customer_rj)
+```
+
+- How many stores are shown?
+
+- What happened?
+
+- How many customers have a store_id = 10;
+
+## Customer Store Right Join Fixed
+
+```{r dplyr right join Details fixed}
+
+customer_rj2 <- customer_table %>%
+  right_join(store_table, by = c("store_id" = "store_id")
+             , suffix(c(".c", ".s"))) %>%
+  filter(customer_id >= 597 | is.na(customer_id)) %>%
+  mutate(jt = 'rj') %>%
+  rename(s_addr_id = address_id.y, c_id = customer_id
+        ,s_mgr_id=manager_staff_id) %>%
+  select(jt,c_id,first_name,last_name,c_store_id
+        ,s_store_id,s_mgr_id,s_addr_id)
+```
+
+```{r echo=FALSE}
+kable(customer_rj2)
+```
+
+
+## customer store full join
+
+```{r dplyr full join Details}
+
+customer_table <- DBI::dbReadTable(con, "customer") %>%
+  mutate(c_store_id = store_id)
+store_table <- DBI::dbReadTable(con, "store") %>% 
+  mutate(s_store_id = store_id)
+
+customer_fj <- customer_table %>%
+  full_join(store_table, by = c("store_id" = "store_id")
+             , suffix(c(".c", ".s"))) %>%
+  filter(customer_id >= 597 | is.na(customer_id) ) %>%
+  mutate(jt = 'fj') %>%
+  rename(s_addr_id = address_id.y, c_id = customer_id
+        ,s_mgr_id=manager_staff_id) %>%
+  select(jt,c_id,first_name,last_name,c_store_id
+        ,s_store_id,s_mgr_id,s_addr_id)
+```
+
+## customer store inner join results
+
+```{r echo=FALSE}
+kable(customer_fj)
+```
+
+## Customer Store semi join
+
+```{r}
+customer_sj <- customer_table %>%
+  semi_join(store_table, by = c("store_id" = "store_id")
+             , suffix(c(".c", ".s"))) %>%
+  filter(customer_id >= 597 & customer_id <= 604) %>%
+  mutate(jt = 'sj') %>%
+  rename(c_id = customer_id) %>%
+  select(jt,c_id,first_name,last_name,c_store_id)
+
+kable (customer_sj)
+```
+
+## Customer Store Anti Join
+
+```{r}
+customer_aj <- customer_table %>%
+  anti_join(store_table, by = c("store_id" = "store_id")
+             , suffix(c(".c", ".s"))) %>%
+  filter(customer_id >= 597 & customer_id <= 604) %>%
+  mutate(jt = 'aj') %>%
+  rename(c_id = customer_id) %>%
+  select(jt,c_id,first_name,last_name,c_store_id)
+
+kable (customer_aj)
+```
+
+```{r}
+kable (customer_sj)
+kable (customer_aj)
+```
+
+## Store Customer Semi Join
+
+```{r}
+store_sj <- store_table %>%
+  semi_join(customer_table, by = c("store_id" = "store_id")
+             , suffix(c(".c", ".s"))) %>%
+    mutate(jt = 'sj')
+
+kable(store_sj)
+```
+
+## Store Customer Anti Join
+
+```{r}
+store_aj <- store_table %>%
+  anti_join(customer_table, by = c("store_id" = "store_id")
+             , suffix(c(".c", ".s"))) %>%
+    mutate(jt = 'sj')
+
+kable(store_aj)
+```
+
+## 
+
+1.  How many rows are in each table?
+
+1.  Where is the DVD Rental Business located?
+2.  List each store and the staff contact information?
+3.  How many active, inactive, and total customers does the DVD rental business have?
+4.  How many and what percent of customers are from each country?
+5.  What countries constitute the top 25% of the customer base?
+6.  How many customers are in Australia and Canada?
+7.  How many languages?
+8.  What is the distribution of DVD's by Language
+9.  What are the number of rentals and rented amount by store, by month?
+10.  Rank films based on the number of times rented and associated revenue
+11.  What is the rental distribution/DVD for the top two rented films?
+12.  List staffing information for store 1 associated with the `Bucket Brother` rentals?
+13.  Which film(s) have never been rented
+14.  How many films are in each film rating?
+15.  What are the different film categories?
+16.  How many DVD's are in each film categeory?
+17.  Which films are listed in multiple categories?
+18.  Which DVD's are in one store's inventory but not the other
+19.  Which films are not tracked in inventory?
+20.  List film categories in descending accounts receivable.
+21.  List film ratings in descending accounts receivable order.
+22.  How many rentals were returned on time, returned late, never returned?
+23.  Are there duplicate customers?
+24.  Which customers have never rented a movie?
+25.  Who are the top 5 customers with the most rentals and associated payments?
+26.  Combine the top 5 rental customers, (40 or more rentals), and zero rental customers
+27.  Who are the top-n1 and bottom-n2 customers?
+28.  How much has each store collected?
+29.  What is the business' distribution of payments?
+30.  Which customers have the highest open amounts?
+31.  What is the business' cash flow?
+32.  Customer information
+1.  dbGetQuery Versus dbSendQuery+dbFetch+dbClearResult
+2.  Dplyr write results to the database example
