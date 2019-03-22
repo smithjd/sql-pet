@@ -81,18 +81,20 @@ con <- sp_get_postgres_connection(
 
 ## Dplyr tables
 
-All the tables defined in the DVD Rental System will fit into memory which is rarely the case when working with a database.  Each table is loaded into an R object named TableName_table, via a DBI::dbReadTable call.
+All the tables defined in the DVD Rental System will fit into memory which is rarely the case when working with a database.  Instead of loading all the DVD Rental System tables into memory via a DBI::dbReadTable, each table is loaded into an R object named TableName_table, via a dplyr::tbl call.
 
-*  actor_table <- DBI::dbReadTable(con,"actor")
+*  actor_table <- dplyr::tbl(con,"actor")
 
 ```{r Declare Dplyr Tables}
-source(here('book-src','dvdrental-table-declarations.R'), echo = TRUE)
+source(here('book-src','dvdrental-table-declarations.R'), echo = FALSE)
 ```
+
+The key difference between the DBI::dbTableRead and the dplyr::tbl reference is the first is `not lazy` and the second one is `lazy`.  
 
 The following code block deletes and inserts records into the different tables used in the exercises in this chpater.  The techniques used in this code block are discussed in detail in the appendix, ??add link here.??  
 
 ```{r collapse=TRUE}
-source(file=here::here('book-src','sql_pet_data.R'),echo=TRUE)
+source(file=here::here('book-src','sql_pet_data.R'),echo=FALSE)
 ```
 
 ## Oveview Exercise
@@ -2200,7 +2202,7 @@ sp_docker_stop("sql-pet")
 ```
 
 ```{r}
- knitr::knit_exit()
+knitr::knit_exit()
 ```
 
 
