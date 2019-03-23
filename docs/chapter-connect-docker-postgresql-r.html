@@ -25,7 +25,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
 
 
-<meta name="date" content="2019-03-19">
+<meta name="date" content="2019-03-23">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -166,10 +166,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.6.1" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#tidy-data"><i class="fa fa-check"></i><b>2.6.1</b> Tidy data</a></li>
 <li class="chapter" data-level="2.6.2" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#design-of-normal-data"><i class="fa fa-check"></i><b>2.6.2</b> Design of “normal data”</a></li>
 </ul></li>
-<li class="chapter" data-level="2.7" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#organizational-dbms"><i class="fa fa-check"></i><b>2.7</b> Organizational dbms</a></li>
+<li class="chapter" data-level="2.7" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#organizational-dbms"><i class="fa fa-check"></i><b>2.7</b> Organizational DBMS</a></li>
 <li class="chapter" data-level="2.8" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#sql"><i class="fa fa-check"></i><b>2.8</b> SQL</a><ul>
 <li class="chapter" data-level="2.8.1" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#data-mapping-between-r-vs-sql-data-types"><i class="fa fa-check"></i><b>2.8.1</b> Data mapping between R vs SQL data types</a></li>
 <li class="chapter" data-level="2.8.2" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#postgresql-and-connection-parameters"><i class="fa fa-check"></i><b>2.8.2</b> PostgreSQL and connection parameters</a></li>
+<li class="chapter" data-level="2.8.3" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#connecting-the-r-and-dbms-environments"><i class="fa fa-check"></i><b>2.8.3</b> Connecting the R and DBMS environments</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="chapter-how-to-use-this-book.html"><a href="chapter-how-to-use-this-book.html"><i class="fa fa-check"></i><b>3</b> How to use this book</a><ul>
@@ -271,12 +272,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="10" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html"><i class="fa fa-check"></i><b>10</b> Lazy Evaluation and Execution Environment</a><ul>
 <li class="chapter" data-level="10.1" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#setup-2"><i class="fa fa-check"></i><b>10.1</b> Setup</a><ul>
-<li class="chapter" data-level="10.1.1" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#characteristics-of-local-vs.server-processing"><i class="fa fa-check"></i><b>10.1.1</b> Characteristics of local vs. server processing</a></li>
-<li class="chapter" data-level="10.1.2" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#experiment-overview-1"><i class="fa fa-check"></i><b>10.1.2</b> Experiment overview</a></li>
-<li class="chapter" data-level="10.1.3" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#time-based-execution-environment-issues"><i class="fa fa-check"></i><b>10.1.3</b> Time-based, execution environment issues</a></li>
-<li class="chapter" data-level="10.1.4" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#lazy_q_build"><i class="fa fa-check"></i><b>10.1.4</b> Q %&gt;% <code>more dplyr</code></a></li>
-<li class="chapter" data-level="10.1.5" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#many-handy-r-functions-cant-be-translated-to-sql"><i class="fa fa-check"></i><b>10.1.5</b> Many handy R functions can’t be translated to SQL</a></li>
-<li class="chapter" data-level="10.1.6" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#more-lazy-execution-examples-1"><i class="fa fa-check"></i><b>10.1.6</b> More lazy execution examples</a></li>
+<li class="chapter" data-level="10.1.1" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#experiment-overview-1"><i class="fa fa-check"></i><b>10.1.1</b> Experiment overview</a></li>
+<li class="chapter" data-level="10.1.2" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#time-based-execution-environment-issues"><i class="fa fa-check"></i><b>10.1.2</b> Time-based, execution environment issues</a></li>
+<li class="chapter" data-level="10.1.3" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#lazy_q_build"><i class="fa fa-check"></i><b>10.1.3</b> Q %&gt;% <code>more dplyr</code></a></li>
+<li class="chapter" data-level="10.1.4" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#many-handy-r-functions-cant-be-translated-to-sql"><i class="fa fa-check"></i><b>10.1.4</b> Many handy R functions can’t be translated to SQL</a></li>
+<li class="chapter" data-level="10.1.5" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#more-lazy-execution-examples-1"><i class="fa fa-check"></i><b>10.1.5</b> More lazy execution examples</a></li>
 </ul></li>
 <li class="chapter" data-level="10.2" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#other-resources-1"><i class="fa fa-check"></i><b>10.2</b> Other resources</a></li>
 <li class="chapter" data-level="10.3" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#parking-lot"><i class="fa fa-check"></i><b>10.3</b> Parking lot</a></li>
@@ -333,9 +333,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="14.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#joins"><i class="fa fa-check"></i><b>14.1</b> Joins</a><ul>
 <li class="chapter" data-level="14.1.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-types"><i class="fa fa-check"></i><b>14.1.1</b> Join Types</a></li>
 <li class="chapter" data-level="14.1.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#graphic-illustration-of-join-types"><i class="fa fa-check"></i><b>14.1.2</b> Graphic illustration of Join types</a></li>
-<li class="chapter" data-level="14.1.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#valentines-party"><i class="fa fa-check"></i><b>14.1.3</b> Valentines Party</a></li>
-<li class="chapter" data-level="14.1.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-syntax"><i class="fa fa-check"></i><b>14.1.4</b> Join Syntax</a></li>
-<li class="chapter" data-level="14.1.5" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-tables"><i class="fa fa-check"></i><b>14.1.5</b> Join Tables</a></li>
+<li class="chapter" data-level="14.1.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-syntax"><i class="fa fa-check"></i><b>14.1.3</b> Join Syntax</a></li>
+<li class="chapter" data-level="14.1.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-tables"><i class="fa fa-check"></i><b>14.1.4</b> Join Tables</a></li>
 </ul></li>
 <li class="chapter" data-level="14.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#natural-join-is-a-delayed-time-bomb"><i class="fa fa-check"></i><b>14.2</b> Natural Join is a Delayed Time Bomb</a><ul>
 <li class="chapter" data-level="14.2.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-customer-store_id-distribution"><i class="fa fa-check"></i><b>14.2.1</b> SQL Customer store_id Distribution</a></li>
@@ -652,7 +651,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>The <code>sp_check_that_docker_is_up</code> function from the <code>sqlpetr</code> package checks whether Docker is up and running. If it’s not, then you need to install, launch or re-install Docker.</p>
 </blockquote>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_check_that_docker_is_up</span>()</code></pre>
-<pre><code>## [1] &quot;Docker is up but running no containers&quot;</code></pre>
+<pre><code>## [1] &quot;Docker is up, running these containers:&quot;                                                                                                     
+## [2] &quot;CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS              PORTS                    NAMES&quot;    
+## [3] &quot;d108544b71ec        postgres-dvdrental   \&quot;docker-entrypoint.s…\&quot;   16 hours ago        Up 16 hours         0.0.0.0:5432-&gt;5432/tcp   sql-pet&quot;</code></pre>
 </div>
 </div>
 <div id="remove-previous-containers-if-they-exist" class="section level2">
@@ -674,7 +675,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_check_that_docker_is_up</span>()</code></pre>
 <pre><code>## [1] &quot;Docker is up, running these containers:&quot;                                                                                                       
 ## [2] &quot;CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES&quot;   
-## [3] &quot;b79fa0b0e99b        postgres:10         \&quot;docker-entrypoint.s…\&quot;   1 second ago        Up Less than a second   0.0.0.0:5432-&gt;5432/tcp   cattle&quot;</code></pre>
+## [3] &quot;5acd4328f84e        postgres:10         \&quot;docker-entrypoint.s…\&quot;   2 seconds ago       Up Less than a second   0.0.0.0:5432-&gt;5432/tcp   cattle&quot;</code></pre>
 <blockquote>
 <p>The <code>sp_docker_containers_tibble</code> function from the <code>sqlpetr</code> package provides more on the containers that Docker is running. Basically this function creates a tibble of containers using <code>docker ps</code>.</p>
 </blockquote>
@@ -682,7 +683,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;
-## 1 b79fa0b0e99b post… docker… 2019-03-1… 1 seco… 0.0.… Up Le… 0B (… catt…
+## 1 5acd4328f84e post… docker… 2019-03-2… 2 seco… 0.0.… Up Le… 0B (… catt…
 ## # … with 3 more variables: labels &lt;chr&gt;, mounts &lt;chr&gt;, networks &lt;chr&gt;</code></pre>
 </div>
 <div id="connecting-reading-and-writing-to-postgresql-from-r" class="section level2">
@@ -736,22 +737,18 @@ are kept private.</p>
   <span class="dt">connection_tab =</span> <span class="ot">TRUE</span>
 )</code></pre>
 <p>The Connections tab now shows:</p>
-<div class="figure">
-<img src="screenshots/connections-tab-with-mtcars-table.png" alt="Connections tab showing mtcars" />
-<p class="caption">Connections tab showing mtcars</p>
-</div>
-<p>List the fields in mtcars:</p>
+<p><img src="screenshots/connections-tab-with-mtcars-table.png" alt="Connections tab showing mtcars" />
+Clicking on the triangle on the left next to <code>mtcars</code> will list the table’s fields. That’s equivalent to listing the fields with:</p>
 <pre class="sourceCode r"><code class="sourceCode r">DBI<span class="op">::</span><span class="kw">dbListFields</span>(con, <span class="st">&quot;mtcars&quot;</span>)</code></pre>
 <pre><code>##  [1] &quot;mpg&quot;  &quot;cyl&quot;  &quot;disp&quot; &quot;hp&quot;   &quot;drat&quot; &quot;wt&quot;   &quot;qsec&quot; &quot;vs&quot;   &quot;am&quot;   &quot;gear&quot;
 ## [11] &quot;carb&quot;</code></pre>
-<p>That’s equivalent to clicking on mtcars in the Connections tab:
-<img src="screenshots/connections-tab-with-mtcars-columns.png" alt="mtcars columns" /></p>
-<p>Download the table from the DBMS to a local data frame:</p>
+<p>Here is the same information on the Connections tab:
+<img src="screenshots/connections-tab-with-mtcars-columns.png" alt="mtcars columns" />
+Clicking on the rectangle on the right of <code>mtcars</code> opens a <code>View</code> tab on the first 1,000 rows of a table. That’s equivalent to excuting this code to download the table from the DBMS to a local data frame:</p>
 <pre class="sourceCode r"><code class="sourceCode r">mtcars_df &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbReadTable</span>(con, <span class="st">&quot;mtcars&quot;</span>)</code></pre>
 <blockquote>
 <p>The <code>sp_print_df</code> function from the <code>sqlpetr</code> package shows (or print) a data frame depending on appropriate output type. That is when running interactively or generating HTML it prints a <code>DT::datatable()</code> while it prints a <code>knitr::kable()</code> otherwise.</p>
 </blockquote>
-<p>Tell Docker to <em>remove</em> the <code>cattle</code> container from it’s library of active containers:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(mtcars_df))</code></pre>
 <p><div id="htmlwidget-1d9f9b9fdca3023baa83" style="width:100%;height:auto;" class="datatables html-widget"></div>
 <script type="application/json" data-for="htmlwidget-1d9f9b9fdca3023baa83">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[21,21,22.8,21.4,18.7,18.1],[6,6,4,6,8,6],[160,160,108,258,360,225],[110,110,93,110,175,105],[3.9,3.9,3.85,3.08,3.15,2.76],[2.62,2.875,2.32,3.215,3.44,3.46],[16.46,17.02,18.61,19.44,17.02,20.22],[0,0,1,1,0,1],[1,1,1,0,0,0],[4,4,4,3,3,3],[4,4,1,1,2,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>mpg<\/th>\n      <th>cyl<\/th>\n      <th>disp<\/th>\n      <th>hp<\/th>\n      <th>drat<\/th>\n      <th>wt<\/th>\n      <th>qsec<\/th>\n      <th>vs<\/th>\n      <th>am<\/th>\n      <th>gear<\/th>\n      <th>carb<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6,7,8,9,10,11]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
@@ -764,6 +761,7 @@ The number of rows and columns shown in the View pane depends on the size of the
 <h2><span class="header-section-number">5.4</span> Clean up</h2>
 <p>Afterwards, always disconnect from the dbms:</p>
 <pre class="sourceCode r"><code class="sourceCode r">DBI<span class="op">::</span><span class="kw">dbDisconnect</span>(con)</code></pre>
+<p>The Connection tab equivalent is to click on the connection icon next to <code>Help</code> on the Connctions tab.</p>
 <blockquote>
 <p>The <code>sp_docker_stop</code> function from the <code>sqlpetr</code> package stops the container given by the <code>container_name</code> parameter.</p>
 </blockquote>

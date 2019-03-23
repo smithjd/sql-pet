@@ -140,22 +140,19 @@ con <- sp_get_postgres_connection(
 The Connections tab now shows:
 
 ![Connections tab showing mtcars](screenshots/connections-tab-with-mtcars-table.png)
+Clicking on the triangle on the left next to `mtcars` will list the table's fields.  That's equivalent to listing the fields with:
 
-List the fields in mtcars:
 ```{r}
 DBI::dbListFields(con, "mtcars")
 ```
-That's equivalent to clicking on mtcars in the Connections tab:
+Here is the same information on the Connections tab:
 ![mtcars columns](screenshots/connections-tab-with-mtcars-columns.png)
-
-Download the table from the DBMS to a local data frame:
+Clicking on the rectangle on the right of `mtcars` opens a `View` tab on the first 1,000 rows of a table.  That's equivalent to excuting this code to download the table from the DBMS to a local data frame:
 ```{r}
 mtcars_df <- DBI::dbReadTable(con, "mtcars")
 ```
 
 > The `sp_print_df` function from the `sqlpetr` package shows (or print) a data frame depending on appropriate output type.  That is when running interactively or generating HTML it prints a `DT::datatable()` while it prints a `knitr::kable()` otherwise.
-
-Tell Docker to *remove* the `cattle` container from it's library of active containers:
 
 ```{r}
 sp_print_df(head(mtcars_df))
@@ -171,6 +168,7 @@ Afterwards, always disconnect from the dbms:
 ```{r}
 DBI::dbDisconnect(con)
 ```
+The Connection tab equivalent is to click on the connection icon next to `Help` on the Connctions tab.
 
 > The `sp_docker_stop` function from the `sqlpetr` package stops the container given by the `container_name` parameter.
 

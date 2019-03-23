@@ -25,7 +25,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
 
 
-<meta name="date" content="2019-03-19">
+<meta name="date" content="2019-03-23">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -166,10 +166,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.6.1" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#tidy-data"><i class="fa fa-check"></i><b>2.6.1</b> Tidy data</a></li>
 <li class="chapter" data-level="2.6.2" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#design-of-normal-data"><i class="fa fa-check"></i><b>2.6.2</b> Design of “normal data”</a></li>
 </ul></li>
-<li class="chapter" data-level="2.7" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#organizational-dbms"><i class="fa fa-check"></i><b>2.7</b> Organizational dbms</a></li>
+<li class="chapter" data-level="2.7" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#organizational-dbms"><i class="fa fa-check"></i><b>2.7</b> Organizational DBMS</a></li>
 <li class="chapter" data-level="2.8" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#sql"><i class="fa fa-check"></i><b>2.8</b> SQL</a><ul>
 <li class="chapter" data-level="2.8.1" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#data-mapping-between-r-vs-sql-data-types"><i class="fa fa-check"></i><b>2.8.1</b> Data mapping between R vs SQL data types</a></li>
 <li class="chapter" data-level="2.8.2" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#postgresql-and-connection-parameters"><i class="fa fa-check"></i><b>2.8.2</b> PostgreSQL and connection parameters</a></li>
+<li class="chapter" data-level="2.8.3" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#connecting-the-r-and-dbms-environments"><i class="fa fa-check"></i><b>2.8.3</b> Connecting the R and DBMS environments</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="chapter-how-to-use-this-book.html"><a href="chapter-how-to-use-this-book.html"><i class="fa fa-check"></i><b>3</b> How to use this book</a><ul>
@@ -271,12 +272,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="10" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html"><i class="fa fa-check"></i><b>10</b> Lazy Evaluation and Execution Environment</a><ul>
 <li class="chapter" data-level="10.1" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#setup-2"><i class="fa fa-check"></i><b>10.1</b> Setup</a><ul>
-<li class="chapter" data-level="10.1.1" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#characteristics-of-local-vs.server-processing"><i class="fa fa-check"></i><b>10.1.1</b> Characteristics of local vs. server processing</a></li>
-<li class="chapter" data-level="10.1.2" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#experiment-overview-1"><i class="fa fa-check"></i><b>10.1.2</b> Experiment overview</a></li>
-<li class="chapter" data-level="10.1.3" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#time-based-execution-environment-issues"><i class="fa fa-check"></i><b>10.1.3</b> Time-based, execution environment issues</a></li>
-<li class="chapter" data-level="10.1.4" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#lazy_q_build"><i class="fa fa-check"></i><b>10.1.4</b> Q %&gt;% <code>more dplyr</code></a></li>
-<li class="chapter" data-level="10.1.5" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#many-handy-r-functions-cant-be-translated-to-sql"><i class="fa fa-check"></i><b>10.1.5</b> Many handy R functions can’t be translated to SQL</a></li>
-<li class="chapter" data-level="10.1.6" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#more-lazy-execution-examples-1"><i class="fa fa-check"></i><b>10.1.6</b> More lazy execution examples</a></li>
+<li class="chapter" data-level="10.1.1" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#experiment-overview-1"><i class="fa fa-check"></i><b>10.1.1</b> Experiment overview</a></li>
+<li class="chapter" data-level="10.1.2" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#time-based-execution-environment-issues"><i class="fa fa-check"></i><b>10.1.2</b> Time-based, execution environment issues</a></li>
+<li class="chapter" data-level="10.1.3" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#lazy_q_build"><i class="fa fa-check"></i><b>10.1.3</b> Q %&gt;% <code>more dplyr</code></a></li>
+<li class="chapter" data-level="10.1.4" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#many-handy-r-functions-cant-be-translated-to-sql"><i class="fa fa-check"></i><b>10.1.4</b> Many handy R functions can’t be translated to SQL</a></li>
+<li class="chapter" data-level="10.1.5" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#more-lazy-execution-examples-1"><i class="fa fa-check"></i><b>10.1.5</b> More lazy execution examples</a></li>
 </ul></li>
 <li class="chapter" data-level="10.2" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#other-resources-1"><i class="fa fa-check"></i><b>10.2</b> Other resources</a></li>
 <li class="chapter" data-level="10.3" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#parking-lot"><i class="fa fa-check"></i><b>10.3</b> Parking lot</a></li>
@@ -333,9 +333,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="14.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#joins"><i class="fa fa-check"></i><b>14.1</b> Joins</a><ul>
 <li class="chapter" data-level="14.1.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-types"><i class="fa fa-check"></i><b>14.1.1</b> Join Types</a></li>
 <li class="chapter" data-level="14.1.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#graphic-illustration-of-join-types"><i class="fa fa-check"></i><b>14.1.2</b> Graphic illustration of Join types</a></li>
-<li class="chapter" data-level="14.1.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#valentines-party"><i class="fa fa-check"></i><b>14.1.3</b> Valentines Party</a></li>
-<li class="chapter" data-level="14.1.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-syntax"><i class="fa fa-check"></i><b>14.1.4</b> Join Syntax</a></li>
-<li class="chapter" data-level="14.1.5" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-tables"><i class="fa fa-check"></i><b>14.1.5</b> Join Tables</a></li>
+<li class="chapter" data-level="14.1.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-syntax"><i class="fa fa-check"></i><b>14.1.3</b> Join Syntax</a></li>
+<li class="chapter" data-level="14.1.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-tables"><i class="fa fa-check"></i><b>14.1.4</b> Join Tables</a></li>
 </ul></li>
 <li class="chapter" data-level="14.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#natural-join-is-a-delayed-time-bomb"><i class="fa fa-check"></i><b>14.2</b> Natural Join is a Delayed Time Bomb</a><ul>
 <li class="chapter" data-level="14.2.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-customer-store_id-distribution"><i class="fa fa-check"></i><b>14.2.1</b> SQL Customer store_id Distribution</a></li>
@@ -633,7 +632,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Verify pet DB is available, it may be stopped.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_show_all_docker_containers</span>()</code></pre>
 <pre><code>## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                     PORTS               NAMES
-## feaa939a9f51        postgres-dvdrental   &quot;docker-entrypoint.s…&quot;   39 seconds ago      Exited (0) 2 seconds ago                       sql-pet</code></pre>
+## fc0ebc0b8f0e        postgres-dvdrental   &quot;docker-entrypoint.s…&quot;   37 seconds ago      Exited (0) 2 seconds ago                       sql-pet</code></pre>
 <p>Start up the <code>docker-pet</code> container</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_docker_start</span>(<span class="st">&quot;sql-pet&quot;</span>)</code></pre>
 <p>Now connect to the database with R</p>
@@ -698,7 +697,7 @@ con &lt;-<span class="st"> </span><span class="kw">sp_get_postgres_connection</s
 <div id="join-types" class="section level3">
 <h3><span class="header-section-number">14.1.1</span> Join Types</h3>
 <div id="htmlwidget-1d9f9b9fdca3023baa83" style="width:672px;height:480px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-1d9f9b9fdca3023baa83">{"x":{"diagram":"\ndigraph SQL_TYPES {\n\n  # a \"graph\" statement\n  graph [overlap = true, fontsize = 10]\n\n  node [shape = box,\n        fixedsize = false,\n        hegith = 1.5\n        width = 1.50]\n  0[label=\"0.  SQL Joins\"]\n  1[label=\"1.  Inner Join\nL.col1 {<,=,>} R.col2\"]\n  2[label=\"2.  Outer Join\nL.col1=R.col2\"]\n  3[label=\"3.  Self Join\nL.col1=tbl1.col2\"]\n  4[label=\"4.  Cross Join\nL.col1=R.col2\"]\n  5[label=\"5.  Equi Join\nL.col1=R.col2\"] \n  6[label=\"6.  Natural Join\nL.col1=R.col1\"]\n  7[label=\"7.  Left Join\nL.col1=R.col1\"]\n  8[label=\"8.  Right Join\nL.col1=R.col1\"]\n  9[label=\"9.  Full Join\nL.col1=tbl2.col1\"]\n  # several \"edge\" statements\n  0 -> {1,2,3,4} [arrowhead=none]\n  1 -> 5 [arrowhead=none]\n  5 -> 6 [arrowhead=none]\n  2 -> {7,8,9} [arrowhead=none]\n  #3 -> {7,8,9}\n}\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-1d9f9b9fdca3023baa83">{"x":{"diagram":"\ndigraph JOINS {\n\n  # a \"graph\" statement\n  graph [overlap = true, fontsize = 10]\n\n  node [shape = box,\n        fixedsize = false,\n        hegith = 1.5\n        width = 1.50]\n  0[label=\"0.  Mutable Joins\"]\n  1[label=\"1.  Inner Join\nL.col1 {<,=,>} R.col2\"]\n  2[label=\"2.  Outer Join\nL.col1=R.col2\"]\n  3[label=\"3.  Self Join\nL.col1=tbl1.col2\"]\n  4[label=\"4.  Cross (Cartesian) Join\nL.col1=R.col2\"]\n  5[label=\"5.  Equi Join\nL.col1=R.col2\"] \n  6[label=\"6.  Natural Join\nL.col1=R.col1\"]\n  7[label=\"7.  Left Join\nL.col1=R.col1\"]\n  8[label=\"8.  Right Join\nL.col1=R.col1\"]\n  9[label=\"9.  Full Join\nL.col1=tbl2.col1\"]\n 10[label=\"10.  NonMutable Joins\"]\n 11[label=\"11.  Semi Join\nL.col1=R.col2\ncondition true\"]\n 12[label=\"12.  Anti Join\nL.col1=R.col2\ncondition false\"]\n\n  # several \"edge\" statements\n  0 -> {1,2,3,4} [arrowhead=none]\n  1 -> 5 [arrowhead=none]\n  5 -> 6 [arrowhead=none]\n  2 -> {7,8,9} [arrowhead=none]\n  10 -> {11,12} [arrowhead=none]\n\n  #3 -> {7,8,9}\n}\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 <p>The diagram above shows the hierarchy of the different types of joins. In the boxes above:</p>
 <ul>
 <li>The joins are based on a single column from the two tables, the left and right tables. Joins can be based on multiple columns from both tables.</li>
@@ -707,38 +706,19 @@ con &lt;-<span class="st"> </span><span class="kw">sp_get_postgres_connection</s
 <li>Often the joining columns have the same name as in the Natural Join, L.col1 = R.col1</li>
 <li>However, the joining column names can be different L.col1 = R.col2.<br />
 </li>
-<li>All joins are based on equality between the table columns, L.col1 = R.col2, except the inner join which can use non-equality column conditions. Non-equality column conditions are rare. Equi Joins are a subset of the Inner Join.</li>
+<li>All dplyr joins are based on equality between the table columns, L.col1 = R.col2. See the <code>fuzzyjoin</code> package for non-equality column conditions. SQL supports non-equality column conditions. Non-equality column conditions are rare.<br />
+</li>
+<li>Equi Joins are a subset of the Inner Join.</li>
 </ul>
 <p>For this tutorial, we can think of joins as either an Inner/Equi Join or an Outer Join.</p>
-<p>Instead of showing standard Venn diagrams showing the different JOINS, we use an analogy. For those interested though, the typical Venn diagrams can be found <a href="http://www.sql-join.com/sql-join-types/">here</a>.</p>
+<p>For those interested though, the typical Venn diagrams can be found <a href="http://www.sql-join.com/sql-join-types/">here</a>.</p>
 </div>
 <div id="graphic-illustration-of-join-types" class="section level3">
 <h3><span class="header-section-number">14.1.2</span> Graphic illustration of Join types</h3>
 <p>This book is focused on data retrieval from a dbms such as is found inside an organiztion, and the discussion and examples are built around the <code>dvdrental</code> database. However, it’s always helpful to remember the basic SQL concepts. For this we refer to Jenny Bryan’s <a href="http://stat545.com/bit001_dplyr-cheatsheet.html">Join Cheat Sheet</a>, which is part of a UBC STAT 545A and 547M course on <a href="http://stat545.com/index.html">Data wrangling, exploration, and analysis with R</a>.</p>
 </div>
-<div id="valentines-party" class="section level3">
-<h3><span class="header-section-number">14.1.3</span> Valentines Party</h3>
-<p>Imagine you are at a large costume Valentine’s Day dance party. The hostess of the party, a data scientist, would like to learn more about the people attending her party. When the band takes a break, she lets everyone know it is time for the judges to evaluate the winners for best costumes and associated prizes.</p>
-<div class="figure">
-<img src="screenshots/ValentinesDay.PNG" alt="ValentinesDay" />
-<p class="caption">ValentinesDay</p>
-</div>
-<p>She requests the following:</p>
-<ol style="list-style-type: decimal">
-<li><p>All the couples at the party line up in front of her in a single line with the men on her left and the women on her right, (inner join)</p></li>
-<li><p>All the remaining men to form a second line two feet behind the married men, (left outer join, all couples + unattached men)</p></li>
-<li><p>All the remaining women to form a third line two feet in front of the married women, (right outer join, all couples + unattached women)</p></li>
-</ol>
-<p>As our data scientist looks out, she can clearly see the three distinct lines, the single men, the man woman couples, and the single women, a full outer join.</p>
-<p>As the three judges start walking down the lines, she makes one more announcement.</p>
-<ol start="4" style="list-style-type: decimal">
-<li>There is a special prize for the man and woman who can guess the average age of the members of the opposite sex. To give everyone a chance to come up with an average age, she asks the men to stay in line and the women to move down the men’s line in order circling back around until they get back to their starting point in line, (Cartesian join, every man seen by every woman and vice versa).</li>
-</ol>
-<p>It is hard enough to tell someone’s age when they don’t have a mask, how do you get the average age when people have masks?</p>
-<p>The hostess knows that there is usually some data anomalies. As she looks out she sees a small cluster of people who did not line up. Being the hostess with the mostest, she wants to get to know that small cluster better. Since they are far off and in costume, she cannot tell if they are men or women. More importantly, she does not know if they identify as a man or a woman, both – (kind of a stretch for a self join), neither, or something else. Ah, the inquisitive mind wants to know.</p>
-</div>
 <div id="join-syntax" class="section level3">
-<h3><span class="header-section-number">14.1.4</span> Join Syntax</h3>
+<h3><span class="header-section-number">14.1.3</span> Join Syntax</h3>
 <p>The table below shows the two R join function call formats, standalone function call and pipe function call and the corresponding SQL join format.</p>
 <table>
 <colgroup>
@@ -813,7 +793,7 @@ con &lt;-<span class="st"> </span><span class="kw">sp_get_postgres_connection</s
 </table>
 </div>
 <div id="join-tables" class="section level3">
-<h3><span class="header-section-number">14.1.5</span> Join Tables</h3>
+<h3><span class="header-section-number">14.1.4</span> Join Tables</h3>
 <p>The <code>dplyr</code> join documentation describes two different types of joins, <code>mutating</code> and <code>filtering</code> joins. For those coming to R with a SQL background, the mutating documentation is misleading in one respect. Here is the inner_join documentation:</p>
 <blockquote>
 <p>inner_join()</p>
@@ -887,7 +867,7 @@ stores &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con, <sp
 <script type="application/json" data-for="htmlwidget-8da54f9f5480ad7c3ec3">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10"],[595,596,597,598,599,600,601,602,603,604],["Terrence","Enrique","Freddie","Wade","Austin","Sophie","Sophie","John","Ian","Ed"],["Gunderson","Forsythe","Duggan","Delvalle","Cintron","Yang","Yang","Smith","Frantz","Borasky"],[1,1,1,1,2,3,2,4,5,6]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>store_id<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_print_df</span>(stores)</code></pre>
 <div id="htmlwidget-124fb78127817ec02cd9" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-124fb78127817ec02cd9">{"x":{"filter":"none","data":[["1","2","3"],[1,2,10],[1,2,10],[1,2,10],["2006-02-15T17:57:12Z","2006-02-15T17:57:12Z","2019-03-19T20:34:39Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>store_id<\/th>\n      <th>manager_staff_id<\/th>\n      <th>address_id<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-124fb78127817ec02cd9">{"x":{"filter":"none","data":[["1","2","3"],[1,2,10],[1,2,10],[1,2,10],["2006-02-15T17:57:12Z","2006-02-15T17:57:12Z","2019-03-23T16:21:04Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>store_id<\/th>\n      <th>manager_staff_id<\/th>\n      <th>address_id<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="dplyr-store_id-distribution-exercise" class="section level3">
 <h3><span class="header-section-number">14.2.3</span> <code>dplyr</code> store_id distribution Exercise</h3>
@@ -1468,7 +1448,7 @@ return all rows from x where there are matching values in y, keeping just column
 
 <span class="kw">sp_print_df</span>(customer_store_aj)</code></pre>
 <div id="htmlwidget-a769f33e9bc2b11da24f" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-a769f33e9bc2b11da24f">{"x":{"filter":"none","data":[["1","2","3","4"],[600,602,603,604],[3,4,5,6],["Sophie","John","Ian","Ed"],["Yang","Smith","Frantz","Borasky"],["sophie.yang@sakilacustomer.org","john.smith@sakilacustomer.org","ian.frantz@sakilacustomer.org","ed.borasky@sakilacustomer.org"],[1,2,3,4],[true,true,true,true],["2019-03-19","2019-03-19","2019-03-19","2019-03-19"],["2019-03-19T07:00:00Z","2019-03-19T07:00:00Z","2019-03-19T07:00:00Z","2019-03-19T07:00:00Z"],[1,1,1,1],["anti_join","anti_join","anti_join","anti_join"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>address_id<\/th>\n      <th>activebool<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n      <th>active<\/th>\n      <th>join_type<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,6,10]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-a769f33e9bc2b11da24f">{"x":{"filter":"none","data":[["1","2","3","4"],[600,602,603,604],[3,4,5,6],["Sophie","John","Ian","Ed"],["Yang","Smith","Frantz","Borasky"],["sophie.yang@sakilacustomer.org","john.smith@sakilacustomer.org","ian.frantz@sakilacustomer.org","ed.borasky@sakilacustomer.org"],[1,2,3,4],[true,true,true,true],["2019-03-23","2019-03-23","2019-03-23","2019-03-23"],["2019-03-23T07:00:00Z","2019-03-23T07:00:00Z","2019-03-23T07:00:00Z","2019-03-23T07:00:00Z"],[1,1,1,1],["anti_join","anti_join","anti_join","anti_join"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>customer_id<\/th>\n      <th>store_id<\/th>\n      <th>first_name<\/th>\n      <th>last_name<\/th>\n      <th>email<\/th>\n      <th>address_id<\/th>\n      <th>activebool<\/th>\n      <th>create_date<\/th>\n      <th>last_update<\/th>\n      <th>active<\/th>\n      <th>join_type<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,6,10]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <p>All of the rows returned from the customer table have store_id = {3 - 6} which do not exist in the store_id.</p>
 </div>
 <div id="example_140_anti-join-sql-1-a" class="section level4">

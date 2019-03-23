@@ -1,0 +1,91 @@
+---
+title: "dplyr, Rstudio and lazy execution"
+author: "John D. Smith"
+date: "3/6/2019"
+output:
+  ioslides_presentation:
+    incremental: true
+---
+
+```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
+# These packages are called in almost every chapter of the book:
+library(tidyverse)
+library(DBI)
+library(DiagrammeR)
+library(RPostgres)
+library(glue)
+library(here)
+require(knitr)
+library(dbplyr)
+library(sqlpetr)
+
+#sp_check_that_docker_is_up()
+#sp_show_all_docker_containers()
+sp_docker_start("sql-pet")
+
+# source(file = here::here('book-src','sql_pet_data.R'), echo = FALSE)
+```
+
+## Log in to PostgreSQL
+
+Store DBMS login credentials in your `.Renviron` file:
+
+![](../screenshots/locate-renviron-file.png)
+
+
+Your **.Renviron** file should contain lines as follows:
+
+```
+DEFAULT_POSTGRES_PASSWORD=postgres
+DEFAULT_POSTGRES_USER_NAME=postgres
+```
+
+## Connection parameters
+
+Connect to the postgrSQL using the `sp_get_postgres_connection` function:
+
+```{r}
+con <- sp_get_postgres_connection(
+  user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
+  password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
+  dbname = "dvdrental",
+  seconds_to_test = 30, 
+  connection_tab = TRUE)
+```
+
+## What tables are in the database
+
+```{r}
+DBI::dbListTables(con)
+```
+
+Store the list in a vector:
+```{r}
+table_list <- DBI::dbListTables(con) 
+```
+## What columns are in a table
+
+All the fields (or columns or variables) in one specific table with:
+```{r}
+DBI::dbListFields(con, "rental")
+```
+
+## Reusing table information
+
+## Constructing queries with dplyr
+
+## Introduction to Lazy Queries
+
+* Different from 
+
+  * Lazy Loading
+
+  * Lazy Evaluation
+
+  * Lazy Retrieval 
+  
+## Evaluating lazy symbols 
+
+## Environment is the key
+
+## 

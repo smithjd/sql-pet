@@ -2,7 +2,7 @@
 
 > NOTE: This Chapter walks through the all steps needed to setup the dvdrental database in Docker.  All susequent chapters depend on this setup.  If for some reason you need to setup the Docker database but don't want to step through this *teaching version* of the setup, you can use:
 >
-> `source('book-src/setup-dvdrental-docker-container.R')`
+> ` source('book-src/setup-dvdrental-docker-container.R') `
 
 > This chapter demonstrates how to:
 >
@@ -75,35 +75,22 @@ sp_docker_images_tibble()
 
 ```
 ## # A tibble: 2 x 7
-##   image_id  repository   tag    digest           created created_at   size 
-##   <chr>     <chr>        <chr>  <chr>            <chr>   <chr>        <chr>
-## 1 c149455a… postgres-dv… latest <none>           27 hou… 2019-03-18 … 252MB
-## 2 3e016ba4… postgres     10     sha256:5c702997… 2 week… 2019-03-04 … 230MB
+##   image_id  repository   tag   digest           created created_at    size 
+##   <chr>     <chr>        <chr> <chr>            <chr>   <chr>         <chr>
+## 1 c149455a… postgres-dv… late… <none>           4 days… 2019-03-18 1… 252MB
+## 2 3e016ba4… postgres     10    sha256:5c702997… 2 week… 2019-03-04 2… 230MB
 ```
 
 ## Run the pet-sql Docker Image
 Now we can run the image in a container and connect to the database. To run the
 image we use an `sqlpetr` function called [`sp_pg_docker_run`](https://smithjd.github.io/sqlpetr/reference/sp_pg_docker_run.html)
 
-When the image runs in the container, we can mount the current working directory
-into a path in the container. You'll see this in action in a future chapter. 
-Docker will create this path if it doesn't exist.
-
-To specify the path, set the parameter `mount_here_as` to the name you want.
-Rules for the name:
-
-* If you don't want to mount into the container, specify `NULL`. This is the 
-default!
-* The name must start with a `/` and be a valid absolute path.
-The name should contain only slashes, letters, numbers and underscores. Other characters may or may not work. The `snakecase` package is your friend.
-
 
 ```r
 sp_pg_docker_run(
   container_name = "sql-pet",
   image_tag = "postgres-dvdrental",
-  postgres_password = "postgres",
-  mount_here_as = "/petdir"
+  postgres_password = "postgres"
 )
 ```
 
@@ -117,7 +104,7 @@ sp_docker_containers_tibble()
 ## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 feaa939a9f51 post… docker… 2019-03-1… 1 seco… 0.0.… Up Le… 0B (… sql-…
+## 1 fc0ebc0b8f0e post… docker… 2019-03-2… Less t… 0.0.… Up Le… 0B (… sql-…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 
@@ -197,7 +184,7 @@ sp_docker_containers_tibble(list_all = TRUE)
 ## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 feaa939a9f51 post… docker… 2019-03-1… 4 seco… <NA>  Exite… 0B (… sql-…
+## 1 fc0ebc0b8f0e post… docker… 2019-03-2… 3 seco… <NA>  Exite… 0B (… sql-…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 
@@ -213,7 +200,7 @@ sp_docker_containers_tibble()
 ## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 feaa939a9f51 post… docker… 2019-03-1… 5 seco… 0.0.… Up Le… 63B … sql-…
+## 1 fc0ebc0b8f0e post… docker… 2019-03-2… 4 seco… 0.0.… Up Le… 63B … sql-…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 Connect to the `dvdrental` database in PostgreSQL:
@@ -262,7 +249,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## feaa939a9f51        postgres-dvdrental   "docker-entrypoint.s…"   6 seconds ago       Exited (0) Less than a second ago                       sql-pet
+## fc0ebc0b8f0e        postgres-dvdrental   "docker-entrypoint.s…"   5 seconds ago       Exited (0) Less than a second ago                       sql-pet
 ```
 
 Next time, you can just use this command to start the container: 

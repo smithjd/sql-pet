@@ -25,7 +25,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
 
 
-<meta name="date" content="2019-03-19">
+<meta name="date" content="2019-03-23">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -166,10 +166,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.6.1" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#tidy-data"><i class="fa fa-check"></i><b>2.6.1</b> Tidy data</a></li>
 <li class="chapter" data-level="2.6.2" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#design-of-normal-data"><i class="fa fa-check"></i><b>2.6.2</b> Design of “normal data”</a></li>
 </ul></li>
-<li class="chapter" data-level="2.7" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#organizational-dbms"><i class="fa fa-check"></i><b>2.7</b> Organizational dbms</a></li>
+<li class="chapter" data-level="2.7" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#organizational-dbms"><i class="fa fa-check"></i><b>2.7</b> Organizational DBMS</a></li>
 <li class="chapter" data-level="2.8" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#sql"><i class="fa fa-check"></i><b>2.8</b> SQL</a><ul>
 <li class="chapter" data-level="2.8.1" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#data-mapping-between-r-vs-sql-data-types"><i class="fa fa-check"></i><b>2.8.1</b> Data mapping between R vs SQL data types</a></li>
 <li class="chapter" data-level="2.8.2" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#postgresql-and-connection-parameters"><i class="fa fa-check"></i><b>2.8.2</b> PostgreSQL and connection parameters</a></li>
+<li class="chapter" data-level="2.8.3" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#connecting-the-r-and-dbms-environments"><i class="fa fa-check"></i><b>2.8.3</b> Connecting the R and DBMS environments</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="chapter-how-to-use-this-book.html"><a href="chapter-how-to-use-this-book.html"><i class="fa fa-check"></i><b>3</b> How to use this book</a><ul>
@@ -271,12 +272,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="10" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html"><i class="fa fa-check"></i><b>10</b> Lazy Evaluation and Execution Environment</a><ul>
 <li class="chapter" data-level="10.1" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#setup-2"><i class="fa fa-check"></i><b>10.1</b> Setup</a><ul>
-<li class="chapter" data-level="10.1.1" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#characteristics-of-local-vs.server-processing"><i class="fa fa-check"></i><b>10.1.1</b> Characteristics of local vs. server processing</a></li>
-<li class="chapter" data-level="10.1.2" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#experiment-overview-1"><i class="fa fa-check"></i><b>10.1.2</b> Experiment overview</a></li>
-<li class="chapter" data-level="10.1.3" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#time-based-execution-environment-issues"><i class="fa fa-check"></i><b>10.1.3</b> Time-based, execution environment issues</a></li>
-<li class="chapter" data-level="10.1.4" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#lazy_q_build"><i class="fa fa-check"></i><b>10.1.4</b> Q %&gt;% <code>more dplyr</code></a></li>
-<li class="chapter" data-level="10.1.5" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#many-handy-r-functions-cant-be-translated-to-sql"><i class="fa fa-check"></i><b>10.1.5</b> Many handy R functions can’t be translated to SQL</a></li>
-<li class="chapter" data-level="10.1.6" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#more-lazy-execution-examples-1"><i class="fa fa-check"></i><b>10.1.6</b> More lazy execution examples</a></li>
+<li class="chapter" data-level="10.1.1" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#experiment-overview-1"><i class="fa fa-check"></i><b>10.1.1</b> Experiment overview</a></li>
+<li class="chapter" data-level="10.1.2" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#time-based-execution-environment-issues"><i class="fa fa-check"></i><b>10.1.2</b> Time-based, execution environment issues</a></li>
+<li class="chapter" data-level="10.1.3" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#lazy_q_build"><i class="fa fa-check"></i><b>10.1.3</b> Q %&gt;% <code>more dplyr</code></a></li>
+<li class="chapter" data-level="10.1.4" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#many-handy-r-functions-cant-be-translated-to-sql"><i class="fa fa-check"></i><b>10.1.4</b> Many handy R functions can’t be translated to SQL</a></li>
+<li class="chapter" data-level="10.1.5" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#more-lazy-execution-examples-1"><i class="fa fa-check"></i><b>10.1.5</b> More lazy execution examples</a></li>
 </ul></li>
 <li class="chapter" data-level="10.2" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#other-resources-1"><i class="fa fa-check"></i><b>10.2</b> Other resources</a></li>
 <li class="chapter" data-level="10.3" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#parking-lot"><i class="fa fa-check"></i><b>10.3</b> Parking lot</a></li>
@@ -333,9 +333,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="14.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#joins"><i class="fa fa-check"></i><b>14.1</b> Joins</a><ul>
 <li class="chapter" data-level="14.1.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-types"><i class="fa fa-check"></i><b>14.1.1</b> Join Types</a></li>
 <li class="chapter" data-level="14.1.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#graphic-illustration-of-join-types"><i class="fa fa-check"></i><b>14.1.2</b> Graphic illustration of Join types</a></li>
-<li class="chapter" data-level="14.1.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#valentines-party"><i class="fa fa-check"></i><b>14.1.3</b> Valentines Party</a></li>
-<li class="chapter" data-level="14.1.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-syntax"><i class="fa fa-check"></i><b>14.1.4</b> Join Syntax</a></li>
-<li class="chapter" data-level="14.1.5" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-tables"><i class="fa fa-check"></i><b>14.1.5</b> Join Tables</a></li>
+<li class="chapter" data-level="14.1.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-syntax"><i class="fa fa-check"></i><b>14.1.3</b> Join Syntax</a></li>
+<li class="chapter" data-level="14.1.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-tables"><i class="fa fa-check"></i><b>14.1.4</b> Join Tables</a></li>
 </ul></li>
 <li class="chapter" data-level="14.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#natural-join-is-a-delayed-time-bomb"><i class="fa fa-check"></i><b>14.2</b> Natural Join is a Delayed Time Bomb</a><ul>
 <li class="chapter" data-level="14.2.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-customer-store_id-distribution"><i class="fa fa-check"></i><b>14.2.1</b> SQL Customer store_id Distribution</a></li>
@@ -665,38 +664,26 @@ in <code>sqlpetr</code> to build this image, called <a href="https://smithjd.git
 <p>Did it work? We have a function that lists the images into a tibble!</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_docker_images_tibble</span>()</code></pre>
 <pre><code>## # A tibble: 2 x 7
-##   image_id  repository   tag    digest           created created_at   size 
-##   &lt;chr&gt;     &lt;chr&gt;        &lt;chr&gt;  &lt;chr&gt;            &lt;chr&gt;   &lt;chr&gt;        &lt;chr&gt;
-## 1 c149455a… postgres-dv… latest &lt;none&gt;           27 hou… 2019-03-18 … 252MB
-## 2 3e016ba4… postgres     10     sha256:5c702997… 2 week… 2019-03-04 … 230MB</code></pre>
+##   image_id  repository   tag   digest           created created_at    size 
+##   &lt;chr&gt;     &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt;            &lt;chr&gt;   &lt;chr&gt;         &lt;chr&gt;
+## 1 c149455a… postgres-dv… late… &lt;none&gt;           4 days… 2019-03-18 1… 252MB
+## 2 3e016ba4… postgres     10    sha256:5c702997… 2 week… 2019-03-04 2… 230MB</code></pre>
 </div>
 <div id="run-the-pet-sql-docker-image" class="section level2">
 <h2><span class="header-section-number">6.5</span> Run the pet-sql Docker Image</h2>
 <p>Now we can run the image in a container and connect to the database. To run the
 image we use an <code>sqlpetr</code> function called <a href="https://smithjd.github.io/sqlpetr/reference/sp_pg_docker_run.html"><code>sp_pg_docker_run</code></a></p>
-<p>When the image runs in the container, we can mount the current working directory
-into a path in the container. You’ll see this in action in a future chapter.
-Docker will create this path if it doesn’t exist.</p>
-<p>To specify the path, set the parameter <code>mount_here_as</code> to the name you want.
-Rules for the name:</p>
-<ul>
-<li>If you don’t want to mount into the container, specify <code>NULL</code>. This is the
-default!</li>
-<li>The name must start with a <code>/</code> and be a valid absolute path.
-The name should contain only slashes, letters, numbers and underscores. Other characters may or may not work. The <code>snakecase</code> package is your friend.</li>
-</ul>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_pg_docker_run</span>(
   <span class="dt">container_name =</span> <span class="st">&quot;sql-pet&quot;</span>,
   <span class="dt">image_tag =</span> <span class="st">&quot;postgres-dvdrental&quot;</span>,
-  <span class="dt">postgres_password =</span> <span class="st">&quot;postgres&quot;</span>,
-  <span class="dt">mount_here_as =</span> <span class="st">&quot;/petdir&quot;</span>
+  <span class="dt">postgres_password =</span> <span class="st">&quot;postgres&quot;</span>
 )</code></pre>
 <p>Did it work?</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_docker_containers_tibble</span>()</code></pre>
 <pre><code>## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;
-## 1 feaa939a9f51 post… docker… 2019-03-1… 1 seco… 0.0.… Up Le… 0B (… sql-…
+## 1 fc0ebc0b8f0e post… docker… 2019-03-2… Less t… 0.0.… Up Le… 0B (… sql-…
 ## # … with 3 more variables: labels &lt;chr&gt;, mounts &lt;chr&gt;, networks &lt;chr&gt;</code></pre>
 </div>
 <div id="connect-to-postgresql-with-r" class="section level2">
@@ -742,7 +729,7 @@ the <em>running</em> containers. But we can use the <code>list_all</code> option
 <pre><code>## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;
-## 1 feaa939a9f51 post… docker… 2019-03-1… 4 seco… &lt;NA&gt;  Exite… 0B (… sql-…
+## 1 fc0ebc0b8f0e post… docker… 2019-03-2… 3 seco… &lt;NA&gt;  Exite… 0B (… sql-…
 ## # … with 3 more variables: labels &lt;chr&gt;, mounts &lt;chr&gt;, networks &lt;chr&gt;</code></pre>
 <p>Restart the container and verify that the dvdrental tables are still there:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_docker_start</span>(<span class="st">&quot;sql-pet&quot;</span>)
@@ -750,7 +737,7 @@ the <em>running</em> containers. But we can use the <code>list_all</code> option
 <pre><code>## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;
-## 1 feaa939a9f51 post… docker… 2019-03-1… 5 seco… 0.0.… Up Le… 63B … sql-…
+## 1 fc0ebc0b8f0e post… docker… 2019-03-2… 4 seco… 0.0.… Up Le… 63B … sql-…
 ## # … with 3 more variables: labels &lt;chr&gt;, mounts &lt;chr&gt;, networks &lt;chr&gt;</code></pre>
 <p>Connect to the <code>dvdrental</code> database in PostgreSQL:</p>
 <pre class="sourceCode r"><code class="sourceCode r">con &lt;-<span class="st"> </span><span class="kw">sp_get_postgres_connection</span>(
@@ -775,7 +762,7 @@ the <em>running</em> containers. But we can use the <code>list_all</code> option
 <p>Show that the container still exists even though it’s not running</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_show_all_docker_containers</span>()</code></pre>
 <pre><code>## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## feaa939a9f51        postgres-dvdrental   &quot;docker-entrypoint.s…&quot;   6 seconds ago       Exited (0) Less than a second ago                       sql-pet</code></pre>
+## fc0ebc0b8f0e        postgres-dvdrental   &quot;docker-entrypoint.s…&quot;   5 seconds ago       Exited (0) Less than a second ago                       sql-pet</code></pre>
 <p>Next time, you can just use this command to start the container:</p>
 <blockquote>
 <p><code>sp_docker_start(&quot;sql-pet&quot;)</code></p>

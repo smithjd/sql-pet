@@ -25,7 +25,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
 
 
-<meta name="date" content="2019-03-19">
+<meta name="date" content="2019-03-23">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -166,10 +166,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.6.1" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#tidy-data"><i class="fa fa-check"></i><b>2.6.1</b> Tidy data</a></li>
 <li class="chapter" data-level="2.6.2" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#design-of-normal-data"><i class="fa fa-check"></i><b>2.6.2</b> Design of “normal data”</a></li>
 </ul></li>
-<li class="chapter" data-level="2.7" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#organizational-dbms"><i class="fa fa-check"></i><b>2.7</b> Organizational dbms</a></li>
+<li class="chapter" data-level="2.7" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#organizational-dbms"><i class="fa fa-check"></i><b>2.7</b> Organizational DBMS</a></li>
 <li class="chapter" data-level="2.8" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#sql"><i class="fa fa-check"></i><b>2.8</b> SQL</a><ul>
 <li class="chapter" data-level="2.8.1" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#data-mapping-between-r-vs-sql-data-types"><i class="fa fa-check"></i><b>2.8.1</b> Data mapping between R vs SQL data types</a></li>
 <li class="chapter" data-level="2.8.2" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#postgresql-and-connection-parameters"><i class="fa fa-check"></i><b>2.8.2</b> PostgreSQL and connection parameters</a></li>
+<li class="chapter" data-level="2.8.3" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#connecting-the-r-and-dbms-environments"><i class="fa fa-check"></i><b>2.8.3</b> Connecting the R and DBMS environments</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="chapter-how-to-use-this-book.html"><a href="chapter-how-to-use-this-book.html"><i class="fa fa-check"></i><b>3</b> How to use this book</a><ul>
@@ -271,12 +272,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="10" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html"><i class="fa fa-check"></i><b>10</b> Lazy Evaluation and Execution Environment</a><ul>
 <li class="chapter" data-level="10.1" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#setup-2"><i class="fa fa-check"></i><b>10.1</b> Setup</a><ul>
-<li class="chapter" data-level="10.1.1" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#characteristics-of-local-vs.server-processing"><i class="fa fa-check"></i><b>10.1.1</b> Characteristics of local vs. server processing</a></li>
-<li class="chapter" data-level="10.1.2" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#experiment-overview-1"><i class="fa fa-check"></i><b>10.1.2</b> Experiment overview</a></li>
-<li class="chapter" data-level="10.1.3" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#time-based-execution-environment-issues"><i class="fa fa-check"></i><b>10.1.3</b> Time-based, execution environment issues</a></li>
-<li class="chapter" data-level="10.1.4" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#lazy_q_build"><i class="fa fa-check"></i><b>10.1.4</b> Q %&gt;% <code>more dplyr</code></a></li>
-<li class="chapter" data-level="10.1.5" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#many-handy-r-functions-cant-be-translated-to-sql"><i class="fa fa-check"></i><b>10.1.5</b> Many handy R functions can’t be translated to SQL</a></li>
-<li class="chapter" data-level="10.1.6" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#more-lazy-execution-examples-1"><i class="fa fa-check"></i><b>10.1.6</b> More lazy execution examples</a></li>
+<li class="chapter" data-level="10.1.1" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#experiment-overview-1"><i class="fa fa-check"></i><b>10.1.1</b> Experiment overview</a></li>
+<li class="chapter" data-level="10.1.2" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#time-based-execution-environment-issues"><i class="fa fa-check"></i><b>10.1.2</b> Time-based, execution environment issues</a></li>
+<li class="chapter" data-level="10.1.3" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#lazy_q_build"><i class="fa fa-check"></i><b>10.1.3</b> Q %&gt;% <code>more dplyr</code></a></li>
+<li class="chapter" data-level="10.1.4" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#many-handy-r-functions-cant-be-translated-to-sql"><i class="fa fa-check"></i><b>10.1.4</b> Many handy R functions can’t be translated to SQL</a></li>
+<li class="chapter" data-level="10.1.5" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#more-lazy-execution-examples-1"><i class="fa fa-check"></i><b>10.1.5</b> More lazy execution examples</a></li>
 </ul></li>
 <li class="chapter" data-level="10.2" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#other-resources-1"><i class="fa fa-check"></i><b>10.2</b> Other resources</a></li>
 <li class="chapter" data-level="10.3" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#parking-lot"><i class="fa fa-check"></i><b>10.3</b> Parking lot</a></li>
@@ -333,9 +333,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="14.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#joins"><i class="fa fa-check"></i><b>14.1</b> Joins</a><ul>
 <li class="chapter" data-level="14.1.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-types"><i class="fa fa-check"></i><b>14.1.1</b> Join Types</a></li>
 <li class="chapter" data-level="14.1.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#graphic-illustration-of-join-types"><i class="fa fa-check"></i><b>14.1.2</b> Graphic illustration of Join types</a></li>
-<li class="chapter" data-level="14.1.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#valentines-party"><i class="fa fa-check"></i><b>14.1.3</b> Valentines Party</a></li>
-<li class="chapter" data-level="14.1.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-syntax"><i class="fa fa-check"></i><b>14.1.4</b> Join Syntax</a></li>
-<li class="chapter" data-level="14.1.5" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-tables"><i class="fa fa-check"></i><b>14.1.5</b> Join Tables</a></li>
+<li class="chapter" data-level="14.1.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-syntax"><i class="fa fa-check"></i><b>14.1.3</b> Join Syntax</a></li>
+<li class="chapter" data-level="14.1.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-tables"><i class="fa fa-check"></i><b>14.1.4</b> Join Tables</a></li>
 </ul></li>
 <li class="chapter" data-level="14.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#natural-join-is-a-delayed-time-bomb"><i class="fa fa-check"></i><b>14.2</b> Natural Join is a Delayed Time Bomb</a><ul>
 <li class="chapter" data-level="14.2.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-customer-store_id-distribution"><i class="fa fa-check"></i><b>14.2.1</b> SQL Customer store_id Distribution</a></li>
@@ -863,7 +862,7 @@ but not necessarily in the same order. However, in practice, the result set is u
 <td align="right">10</td>
 <td align="right">10</td>
 <td align="right">10</td>
-<td align="left">2019-03-19 13:35:03</td>
+<td align="left">2019-03-23 09:21:27</td>
 </tr>
 </tbody>
 </table>
@@ -1016,7 +1015,7 @@ Some motivations for aliasing the result set column names are
 <td align="left">2006-02-15 09:57:12</td>
 <td align="left">dvdrental</td>
 <td align="left">postgres</td>
-<td align="left">2019/03/19 20:35:05</td>
+<td align="left">2019/03/23 16:21:29</td>
 </tr>
 <tr class="even">
 <td align="left">derived column</td>
@@ -1026,17 +1025,17 @@ Some motivations for aliasing the result set column names are
 <td align="left">2006-02-15 09:57:12</td>
 <td align="left">dvdrental</td>
 <td align="left">postgres</td>
-<td align="left">2019/03/19 20:35:05</td>
+<td align="left">2019/03/23 16:21:29</td>
 </tr>
 <tr class="odd">
 <td align="left">derived column</td>
 <td align="right">10</td>
 <td align="right">10</td>
 <td align="right">10</td>
-<td align="left">2019-03-19 13:35:03</td>
+<td align="left">2019-03-23 09:21:27</td>
 <td align="left">dvdrental</td>
 <td align="left">postgres</td>
-<td align="left">2019/03/19 20:35:05</td>
+<td align="left">2019/03/23 16:21:29</td>
 </tr>
 </tbody>
 </table>
@@ -1101,7 +1100,7 @@ Some motivations for aliasing the result set column names are
 <td align="right">10</td>
 <td align="right">10</td>
 <td align="right">10</td>
-<td align="left">2019-03-19 13:35:03</td>
+<td align="left">2019-03-23 09:21:27</td>
 <td align="left">dvdrental</td>
 <td align="left">postgres</td>
 </tr>
@@ -1156,7 +1155,7 @@ Some motivations for aliasing the result set column names are
 <td align="right">10</td>
 <td align="right">10</td>
 <td align="right">10</td>
-<td align="left">2019-03-19 13:35:03</td>
+<td align="left">2019-03-23 09:21:27</td>
 </tr>
 </tbody>
 </table>
@@ -1280,7 +1279,7 @@ Some motivations for aliasing the result set column names are
 <td align="right">10</td>
 <td align="right">10</td>
 <td align="right">10</td>
-<td align="left">2019-03-19 13:35:03</td>
+<td align="left">2019-03-23 09:21:27</td>
 </tr>
 </tbody>
 </table>
@@ -1294,9 +1293,19 @@ Some motivations for aliasing the result set column names are
 <span class="st">  select * from store where 1 = 0;</span>
 <span class="st">  &quot;</span>)
 <span class="kw">kable</span>(rs,<span class="dt">caption =</span> <span class="st">&#39;WHERE always FALSE&#39;</span>)  </code></pre>
-<p>Table: (#tab:unnamed-chunk-13)WHERE always FALSE</p>
-<p>store_id manager_staff_id address_id last_update
-——— —————– ———– ————</p>
+<table>
+<caption><span id="tab:unnamed-chunk-13">Table 19.9: </span>WHERE always FALSE</caption>
+<thead>
+<tr class="header">
+<th align="right">store_id</th>
+<th align="right">manager_staff_id</th>
+<th align="right">address_id</th>
+<th align="left">last_update</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
 <pre><code>Since 1 = 0 is always false, no rows are ever returned.  Initially this construct seems useless, but actually is quite handy when debugging large scripts where a portion of the script needs to be turned off or when creating an empty table with the exact same column names and types as the FROM table(s).  </code></pre>
 </div>
 <div id="where-condition-logically-always-true." class="section level4">
@@ -1335,7 +1344,7 @@ Some motivations for aliasing the result set column names are
 <td align="right">10</td>
 <td align="right">10</td>
 <td align="right">10</td>
-<td align="left">2019-03-19 13:35:03</td>
+<td align="left">2019-03-23 09:21:27</td>
 </tr>
 </tbody>
 </table>
@@ -1402,7 +1411,7 @@ Some motivations for aliasing the result set column names are
 <td align="right">10</td>
 <td align="right">10</td>
 <td align="right">10</td>
-<td align="left">2019-03-19 13:35:03</td>
+<td align="left">2019-03-23 09:21:27</td>
 </tr>
 </tbody>
 </table>

@@ -188,7 +188,8 @@ When the dbms contains many rows, a sample of the data may be plenty for your pu
 ```r
 one_percent_sample <- DBI::dbGetQuery(
   con,
-  "SELECT rental_id, rental_date, inventory_id, customer_id FROM rental TABLESAMPLE BERNOULLI(1) LIMIT 20;
+  "SELECT rental_id, rental_date, inventory_id, 
+  customer_id FROM rental TABLESAMPLE BERNOULLI(1) LIMIT 20;
   "
 )
 
@@ -197,26 +198,26 @@ one_percent_sample
 
 ```
 ##    rental_id         rental_date inventory_id customer_id
-## 1         41 2005-05-25 05:12:29         1761         174
-## 2        124 2005-05-25 20:46:11          212         246
-## 3        160 2005-05-26 01:46:20         1885         290
-## 4        271 2005-05-26 16:22:01         2388          92
-## 5        349 2005-05-27 04:53:11         2920          36
-## 6        394 2005-05-27 11:26:11         1890         274
-## 7        782 2005-05-29 14:38:57         2255         596
-## 8        830 2005-05-29 22:43:55         3464           3
-## 9        898 2005-05-30 09:26:19         3497         384
-## 10      1038 2005-05-31 05:23:47         1253         385
-## 11      1061 2005-05-31 08:27:58          965         109
-## 12      1170 2005-06-14 23:47:35         2444         595
-## 13      1175 2005-06-15 00:15:15         3255         197
-## 14      1240 2005-06-15 04:58:07         3841          28
-## 15      1310 2005-06-15 10:11:42         2045          27
-## 16      1315 2005-06-15 10:23:08         3844         405
-## 17      1326 2005-06-15 11:07:39           59         548
-## 18      1564 2005-06-16 02:47:07          145         343
-## 19      1621 2005-06-16 07:24:12         3677         177
-## 20      1678 2005-06-16 11:08:28         1856         352
+## 1         10 2005-05-25 00:02:21         1824         399
+## 2         17 2005-05-25 01:06:36          830         575
+## 3         98 2005-05-25 16:48:24         2970         269
+## 4        169 2005-05-26 03:09:30         1758         381
+## 5        226 2005-05-26 10:44:04         4181         221
+## 6        243 2005-05-26 13:06:05         1721         543
+## 7        285 2005-05-26 19:41:40         2486         162
+## 8        585 2005-05-28 11:50:45         3544         490
+## 9        619 2005-05-28 15:52:26         2482         407
+## 10       628 2005-05-28 17:05:46         2513         173
+## 11       645 2005-05-28 19:14:09         3128         505
+## 12       703 2005-05-29 02:29:36         1123         269
+## 13       732 2005-05-29 07:32:51         2530         447
+## 14       925 2005-05-30 12:13:52         3203         137
+## 15       942 2005-05-30 15:05:47         4279         473
+## 16       946 2005-05-30 15:35:08         1264         486
+## 17      1001 2005-05-31 00:46:31         1498          64
+## 18      1035 2005-05-31 05:01:09          949         362
+## 19      1134 2005-05-31 19:14:15          143         191
+## 20      1137 2005-05-31 19:20:14         3259         351
 ```
 **Exact sample of 100 records**
 
@@ -332,8 +333,10 @@ In practice we find that, **renaming variables** is often quite important becaus
 
 ```r
 tbl(con, "rental") %>%
-  dplyr::rename(rental_id_number = rental_id, inventory_id_number = inventory_id) %>% 
-  dplyr::select(rental_id_number, rental_date, inventory_id_number) %>%
+  dplyr::rename(rental_id_number = rental_id, 
+                inventory_id_number = inventory_id) %>% 
+  dplyr::select(rental_id_number, rental_date, 
+                inventory_id_number) %>%
   head()
 ```
 
@@ -355,7 +358,9 @@ That's equivalent to the following SQL code:
 DBI::dbGetQuery(
   con,
   'SELECT "rental_id_number", "rental_date", "inventory_id_number"
-FROM (SELECT "rental_id" AS "rental_id_number", "rental_date", "inventory_id" AS "inventory_id_number", "customer_id", "return_date", "staff_id", "last_update"
+FROM (SELECT "rental_id" AS "rental_id_number", 
+  "rental_date", "inventory_id" AS "inventory_id_number", "customer_id",
+  "return_date", "staff_id", "last_update"
 FROM "rental") "ihebfvnxvb"
 LIMIT 6' )
 ```
@@ -609,7 +614,7 @@ skimr::skim(rental_tibble)
 ##  n obs: 16044 
 ##  n variables: 7 
 ## 
-## ── Variable type:integer ────────────────────────────────────────────────────────────────────────────────────────────
+## ── Variable type:integer ─────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ##      variable missing complete     n    mean      sd p0     p25    p50
 ##   customer_id       0    16044 16044  297.14  172.45  1  148     296  
 ##  inventory_id       0    16044 16044 2291.84 1322.21  1 1154    2291  
@@ -621,7 +626,7 @@ skimr::skim(rental_tibble)
 ##  12037.25 16049 ▇▇▇▇▇▇▇▇
 ##      2        2 ▇▁▁▁▁▁▁▇
 ## 
-## ── Variable type:POSIXct ────────────────────────────────────────────────────────────────────────────────────────────
+## ── Variable type:POSIXct ─────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ##     variable missing complete     n        min        max     median
 ##  last_update       0    16044 16044 2006-02-15 2006-02-23 2006-02-16
 ##  rental_date       0    16044 16044 2005-05-24 2006-02-14 2005-07-28
