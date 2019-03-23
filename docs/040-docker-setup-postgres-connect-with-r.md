@@ -45,7 +45,9 @@ sp_check_that_docker_is_up()
 ```
 
 ```
-## [1] "Docker is up but running no containers"
+## [1] "Docker is up, running these containers:"                                                                                                     
+## [2] "CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS              PORTS                    NAMES"    
+## [3] "d108544b71ec        postgres-dvdrental   \"docker-entrypoint.s…\"   16 hours ago        Up 16 hours         0.0.0.0:5432->5432/tcp   sql-pet"
 ```
 
 ## Remove previous containers if they exist
@@ -88,7 +90,7 @@ sp_check_that_docker_is_up()
 ```
 ## [1] "Docker is up, running these containers:"                                                                                                       
 ## [2] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES"   
-## [3] "b79fa0b0e99b        postgres:10         \"docker-entrypoint.s…\"   1 second ago        Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
+## [3] "5acd4328f84e        postgres:10         \"docker-entrypoint.s…\"   2 seconds ago       Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
 ```
 
 > The `sp_docker_containers_tibble` function from the `sqlpetr` package provides more on the containers that Docker is running.  Basically this function creates a tibble of containers using `docker ps`.
@@ -102,7 +104,7 @@ sp_docker_containers_tibble()
 ## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 b79fa0b0e99b post… docker… 2019-03-1… 1 seco… 0.0.… Up Le… 0B (… catt…
+## 1 5acd4328f84e post… docker… 2019-03-2… 2 seco… 0.0.… Up Le… 0B (… catt…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 
@@ -183,8 +185,8 @@ con <- sp_get_postgres_connection(
 The Connections tab now shows:
 
 ![Connections tab showing mtcars](screenshots/connections-tab-with-mtcars-table.png)
+Clicking on the triangle on the left next to `mtcars` will list the table's fields.  That's equivalent to listing the fields with:
 
-List the fields in mtcars:
 
 ```r
 DBI::dbListFields(con, "mtcars")
@@ -194,18 +196,15 @@ DBI::dbListFields(con, "mtcars")
 ##  [1] "mpg"  "cyl"  "disp" "hp"   "drat" "wt"   "qsec" "vs"   "am"   "gear"
 ## [11] "carb"
 ```
-That's equivalent to clicking on mtcars in the Connections tab:
+Here is the same information on the Connections tab:
 ![mtcars columns](screenshots/connections-tab-with-mtcars-columns.png)
-
-Download the table from the DBMS to a local data frame:
+Clicking on the rectangle on the right of `mtcars` opens a `View` tab on the first 1,000 rows of a table.  That's equivalent to excuting this code to download the table from the DBMS to a local data frame:
 
 ```r
 mtcars_df <- DBI::dbReadTable(con, "mtcars")
 ```
 
 > The `sp_print_df` function from the `sqlpetr` package shows (or print) a data frame depending on appropriate output type.  That is when running interactively or generating HTML it prints a `DT::datatable()` while it prints a `knitr::kable()` otherwise.
-
-Tell Docker to *remove* the `cattle` container from it's library of active containers:
 
 
 ```r
@@ -225,6 +224,7 @@ Afterwards, always disconnect from the dbms:
 ```r
 DBI::dbDisconnect(con)
 ```
+The Connection tab equivalent is to click on the connection icon next to `Help` on the Connctions tab.
 
 > The `sp_docker_stop` function from the `sqlpetr` package stops the container given by the `container_name` parameter.
 

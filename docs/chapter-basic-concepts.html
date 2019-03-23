@@ -25,7 +25,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
 
 
-<meta name="date" content="2019-03-19">
+<meta name="date" content="2019-03-23">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -166,10 +166,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.6.1" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#tidy-data"><i class="fa fa-check"></i><b>2.6.1</b> Tidy data</a></li>
 <li class="chapter" data-level="2.6.2" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#design-of-normal-data"><i class="fa fa-check"></i><b>2.6.2</b> Design of “normal data”</a></li>
 </ul></li>
-<li class="chapter" data-level="2.7" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#organizational-dbms"><i class="fa fa-check"></i><b>2.7</b> Organizational dbms</a></li>
+<li class="chapter" data-level="2.7" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#organizational-dbms"><i class="fa fa-check"></i><b>2.7</b> Organizational DBMS</a></li>
 <li class="chapter" data-level="2.8" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#sql"><i class="fa fa-check"></i><b>2.8</b> SQL</a><ul>
 <li class="chapter" data-level="2.8.1" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#data-mapping-between-r-vs-sql-data-types"><i class="fa fa-check"></i><b>2.8.1</b> Data mapping between R vs SQL data types</a></li>
 <li class="chapter" data-level="2.8.2" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#postgresql-and-connection-parameters"><i class="fa fa-check"></i><b>2.8.2</b> PostgreSQL and connection parameters</a></li>
+<li class="chapter" data-level="2.8.3" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#connecting-the-r-and-dbms-environments"><i class="fa fa-check"></i><b>2.8.3</b> Connecting the R and DBMS environments</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="chapter-how-to-use-this-book.html"><a href="chapter-how-to-use-this-book.html"><i class="fa fa-check"></i><b>3</b> How to use this book</a><ul>
@@ -271,12 +272,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="10" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html"><i class="fa fa-check"></i><b>10</b> Lazy Evaluation and Execution Environment</a><ul>
 <li class="chapter" data-level="10.1" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#setup-2"><i class="fa fa-check"></i><b>10.1</b> Setup</a><ul>
-<li class="chapter" data-level="10.1.1" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#characteristics-of-local-vs.server-processing"><i class="fa fa-check"></i><b>10.1.1</b> Characteristics of local vs. server processing</a></li>
-<li class="chapter" data-level="10.1.2" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#experiment-overview-1"><i class="fa fa-check"></i><b>10.1.2</b> Experiment overview</a></li>
-<li class="chapter" data-level="10.1.3" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#time-based-execution-environment-issues"><i class="fa fa-check"></i><b>10.1.3</b> Time-based, execution environment issues</a></li>
-<li class="chapter" data-level="10.1.4" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#lazy_q_build"><i class="fa fa-check"></i><b>10.1.4</b> Q %&gt;% <code>more dplyr</code></a></li>
-<li class="chapter" data-level="10.1.5" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#many-handy-r-functions-cant-be-translated-to-sql"><i class="fa fa-check"></i><b>10.1.5</b> Many handy R functions can’t be translated to SQL</a></li>
-<li class="chapter" data-level="10.1.6" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#more-lazy-execution-examples-1"><i class="fa fa-check"></i><b>10.1.6</b> More lazy execution examples</a></li>
+<li class="chapter" data-level="10.1.1" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#experiment-overview-1"><i class="fa fa-check"></i><b>10.1.1</b> Experiment overview</a></li>
+<li class="chapter" data-level="10.1.2" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#time-based-execution-environment-issues"><i class="fa fa-check"></i><b>10.1.2</b> Time-based, execution environment issues</a></li>
+<li class="chapter" data-level="10.1.3" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#lazy_q_build"><i class="fa fa-check"></i><b>10.1.3</b> Q %&gt;% <code>more dplyr</code></a></li>
+<li class="chapter" data-level="10.1.4" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#many-handy-r-functions-cant-be-translated-to-sql"><i class="fa fa-check"></i><b>10.1.4</b> Many handy R functions can’t be translated to SQL</a></li>
+<li class="chapter" data-level="10.1.5" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#more-lazy-execution-examples-1"><i class="fa fa-check"></i><b>10.1.5</b> More lazy execution examples</a></li>
 </ul></li>
 <li class="chapter" data-level="10.2" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#other-resources-1"><i class="fa fa-check"></i><b>10.2</b> Other resources</a></li>
 <li class="chapter" data-level="10.3" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#parking-lot"><i class="fa fa-check"></i><b>10.3</b> Parking lot</a></li>
@@ -333,9 +333,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="14.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#joins"><i class="fa fa-check"></i><b>14.1</b> Joins</a><ul>
 <li class="chapter" data-level="14.1.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-types"><i class="fa fa-check"></i><b>14.1.1</b> Join Types</a></li>
 <li class="chapter" data-level="14.1.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#graphic-illustration-of-join-types"><i class="fa fa-check"></i><b>14.1.2</b> Graphic illustration of Join types</a></li>
-<li class="chapter" data-level="14.1.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#valentines-party"><i class="fa fa-check"></i><b>14.1.3</b> Valentines Party</a></li>
-<li class="chapter" data-level="14.1.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-syntax"><i class="fa fa-check"></i><b>14.1.4</b> Join Syntax</a></li>
-<li class="chapter" data-level="14.1.5" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-tables"><i class="fa fa-check"></i><b>14.1.5</b> Join Tables</a></li>
+<li class="chapter" data-level="14.1.3" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-syntax"><i class="fa fa-check"></i><b>14.1.3</b> Join Syntax</a></li>
+<li class="chapter" data-level="14.1.4" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#join-tables"><i class="fa fa-check"></i><b>14.1.4</b> Join Tables</a></li>
 </ul></li>
 <li class="chapter" data-level="14.2" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#natural-join-is-a-delayed-time-bomb"><i class="fa fa-check"></i><b>14.2</b> Natural Join is a Delayed Time Bomb</a><ul>
 <li class="chapter" data-level="14.2.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#sql-customer-store_id-distribution"><i class="fa fa-check"></i><b>14.2.1</b> SQL Customer store_id Distribution</a></li>
@@ -637,13 +636,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="your-computer-and-its-operating-system" class="section level2">
 <h2><span class="header-section-number">2.2</span> Your computer and its operating system</h2>
-<p>The playground that we construct in this book is designed so that some of the mysteries of accessing a corporate database are more visible – it’s all happenning on <em>your computer</em>. The challenge, however, is that we know very little about your computer and its operating system. In the workshops we’ve given about this book, the details of individual computers have turned out to be diverse and difficult to pin down in advance. So there can be many issues, but not many basic concepts that we can highlight in advance.</p>
+<p>The playground that we construct in this book is designed so that some of the mysteries of accessing a corporate database are more visible – it’s all happening on <em>your computer</em>. The challenge, however, is that we know very little about your computer and its operating system. In the workshops we’ve given about this book, the details of individual computers have turned out to be diverse and difficult to pin down in advance. So there can be many issues, but not many basic concepts that we can highlight in advance.</p>
 </div>
 <div id="r" class="section level2">
 <h2><span class="header-section-number">2.3</span> R</h2>
 <p>We assume a general familiarity with R and RStudio. RStudio’s Big Data workshop at the 2019 RStudio has an abundance of introductory material <span class="citation">(Ruiz <a href="#ref-Ruiz2019">2019</a>)</span>.</p>
 <p>This book is <a href="https://www.tidyverse.org">Tidyverse-oriented</a>, so we assume familiarity with the pipe operator, tidy data <span class="citation">(Wickham <a href="#ref-Wickham2014">2014</a>)</span>, dplyr, and techniques for tidying data <span class="citation">(Wickham <a href="#ref-Wickham2018">2018</a>)</span>.</p>
-<p>R connects to a database by means of a series of packages that work together. The follwing diagram from a <a href="https://github.com/rstudio/bigdataclass">big data workshop</a> at the 2019 RStudio conference shows the big picture. The biggest difference in terms of retrieval strategies is between writing <code>dplyr</code> and native <code>SQL</code> code. Dplyr generates <a href="https://en.wikipedia.org/wiki/SQL-92">SQL-92 standard</a> code; whereas you can write SQL code that leverages the specific language features of your dbms when you write SQL code yourself.</p>
+<p>R connects to a database by means of a series of packages that work together. The following diagram from a <a href="https://github.com/rstudio/bigdataclass">big data workshop</a> at the 2019 RStudio conference shows the big picture. The biggest difference in terms of retrieval strategies is between writing <code>dplyr</code> and native <code>SQL</code> code. Dplyr generates <a href="https://en.wikipedia.org/wiki/SQL-92">SQL-92 standard</a> code; whereas you can write SQL code that leverages the specific language features of your DBMS when you write SQL code yourself.</p>
 <div class="figure">
 <img src="screenshots/rstudioconf-2019-big-data-architecture.png" alt="Rstudio’s DBMS architecture - slide # 33" />
 <p class="caption">Rstudio’s DBMS architecture - slide # 33</p>
@@ -673,7 +672,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3><span class="header-section-number">2.5.2</span> Containers</h3>
 <p>A <em>container</em> is a set of processes running in an operating system. The host operating system is usually Linux, but other operating systems also can host containers.</p>
 <p>Unlike a virtual machine, the container has no operating system kernel of its own. If the host is running the Linux kernel, so is the container. And since the container OS is the same as the host OS, there’s no need for a hypervisor or hardware to support the hypervisor. So a container is more efficient than a virtual machine.</p>
-<p>A container <strong>does</strong> have its own filesystem. From inside the container, this filesystem looks like a Linux filesystem, but it can use any Linux distro. For example, you can have an Ubuntu 18.04 LTS host running Ubuntu 14.04 LTS or Fedora 28 or CentOS 7 containers. The kernel will always be the host kernel, but the utilities and applications will be those from the container.</p>
+<p>A container <strong>does</strong> have its own file system. From inside the container, this file system looks like a Linux file system, but it can use any Linux distro. For example, you can have an Ubuntu 18.04 LTS host running Ubuntu 14.04 LTS or Fedora 28 or CentOS 7 containers. The kernel will always be the host kernel, but the utilities and applications will be those from the container.</p>
 </div>
 <div id="docker-itself" class="section level3">
 <h3><span class="header-section-number">2.5.3</span> Docker itself</h3>
@@ -683,7 +682,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="docker-objects" class="section level3">
 <h3><span class="header-section-number">2.5.4</span> Docker objects</h3>
 <p>The Docker subsystem manages several kinds of objects - containers, images, volumes and networks. In this book, we are only using the basic command line tools to manage containers, images and volumes.</p>
-<p>Docker <code>images</code> are files that define a container’s initial filesystem. You can find pre-built images on Docker Hub and the Docker Store - the base PostgreSQL image we use comes from Docker Hub (<a href="https://hub.docker.com/_/postgres/" class="uri">https://hub.docker.com/_/postgres/</a>). If there isn’t a Docker image that does exactly what you want, you can build your own by creating a Dockerfile and running <code>docker build</code>. We do this in <a href="chapter-setup-dvdrental-db.html#build-the-pet-sql-docker-image">Build the pet-sql Docker Image</a>.</p>
+<p>Docker <code>images</code> are files that define a container’s initial file system. You can find pre-built images on Docker Hub and the Docker Store - the base PostgreSQL image we use comes from Docker Hub (<a href="https://hub.docker.com/_/postgres/" class="uri">https://hub.docker.com/_/postgres/</a>). If there isn’t a Docker image that does exactly what you want, you can build your own by creating a Dockerfile and running <code>docker build</code>. We do this in <a href="chapter-setup-dvdrental-db.html#build-the-pet-sql-docker-image">Build the pet-sql Docker Image</a>.</p>
 <p>Docker <code>volumes</code> – explain <code>mount</code>.</p>
 </div>
 <div id="hosting-docker-on-windows-machines" class="section level3">
@@ -712,15 +711,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 <div id="organizational-dbms" class="section level2">
-<h2><span class="header-section-number">2.7</span> Organizational dbms</h2>
-<p>The organizational context of a database matters just as much as its design characteristics. The design of a database (or <em>data model</em>) may have been purchased from an external vendor or developed in-house. In either case time has a tendency to erode the original design concept so that the data you find in a dbms may not quite match the original design specification. And the original design may or may not be well reflected in the current naming of tables, columns and other objects.</p>
-<p>It’s a naive misconception to think that the data you are analyzing “comes from the database” even though you are retrieving it from your organization’s dbms. In fact it comes from the people who design, enter, manage, protect, and use your organization’s data. In practice, a <a href="https://en.wikipedia.org/wiki/Database_administrator">database administrator</a> (DBA) is often a key point of contact in terms of access and may have stringent criteria for query performance. Make friends with your DBA.</p>
+<h2><span class="header-section-number">2.7</span> Organizational DBMS</h2>
+<p>The organizational context of a database matters just as much as its design characteristics. The design of a database (or <em>data model</em>) may have been purchased from an external vendor or developed in-house. In either case time has a tendency to erode the original design concept so that the data you find in a DBMS may not quite match the original design specification. And the original design may or may not be well reflected in the current naming of tables, columns and other objects.</p>
+<p>It’s a naive misconception to think that the data you are analyzing “comes from the database” even though you are retrieving it from your organization’s DBMS. In fact it comes from the people who design, enter, manage, protect, and use your organization’s data. In practice, a <a href="https://en.wikipedia.org/wiki/Database_administrator">database administrator</a> (DBA) is often a key point of contact in terms of access and may have stringent criteria for query performance. Make friends with your DBA.</p>
 </div>
 <div id="sql" class="section level2">
 <h2><span class="header-section-number">2.8</span> SQL</h2>
 <p>Although there are <a href="https://en.wikipedia.org/wiki/SQL#Interoperability_and_standardization">ANSI standards</a> for <a href="https://en.wikipedia.org/wiki/SQL_syntax">SQL syntax</a>, different implementations vary in enough details that R’s ability to customize queries for those implementations is very helpful.</p>
-<p>The tables in a dbms correspond to a data frame in R, so interaction with a dbms is fairly natural for useRs.</p>
-<p>SQL code is characterized by the fact that it describes <em>what</em> to retrieve, leaving the dbms back end to determine how to do it. Therefore it has a <em>batch</em> feel. The pipe operator (<code>%&gt;%</code>, which is read as <em>and then</em>) is inherently procedural when it’s used with dplyr: it can be used to construct queries step-by-step. Once a test dplyr query has been executed, it is easy to inspect the results and add steps with the pipe operator to refine or expand the query.</p>
+<p>The tables in a DBMS correspond to a data frame in R, so interaction with a DBMS is fairly natural for useRs.</p>
+<p>SQL code is characterized by the fact that it describes <em>what</em> to retrieve, leaving the DBMS back end to determine how to do it. Therefore it has a <em>batch</em> feel. The pipe operator (<code>%&gt;%</code>, which is read as <em>and then</em>) is inherently procedural when it’s used with dplyr: it can be used to construct queries step-by-step. Once a test dplyr query has been executed, it is easy to inspect the results and add steps with the pipe operator to refine or expand the query.</p>
 <p><a href="chapter-appendix-sql-quick-guide.html#chapter_appendix-sql-quick-guide">APPENDIX D - Quick Guide to SQL</a> lists the different elements of the SQL language.</p>
 <div id="data-mapping-between-r-vs-sql-data-types" class="section level3">
 <h3><span class="header-section-number">2.8.1</span> Data mapping between R vs SQL data types</h3>
@@ -748,7 +747,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dbDataType</span>(<span class="kw">ANSI</span>(), iris)</code></pre>
 <pre><code>## Sepal.Length  Sepal.Width Petal.Length  Petal.Width      Species 
 ##     &quot;DOUBLE&quot;     &quot;DOUBLE&quot;     &quot;DOUBLE&quot;     &quot;DOUBLE&quot;       &quot;TEXT&quot;</code></pre>
-<p>The <a href="https://cran.r-project.org/web/packages/DBI/vignettes/spec.html">DBI specification</a> provides extensive documentation that is worth digesting if you intend to work with a dbms from R. As you work through the examples in this book, you will also want to refer to the following resources:</p>
+<p>The <a href="https://cran.r-project.org/web/packages/DBI/vignettes/spec.html">DBI specification</a> provides extensive documentation that is worth digesting if you intend to work with a DBMS from R. As you work through the examples in this book, you will also want to refer to the following resources:</p>
 <ul>
 <li>RStudio’s <a href="https://db.rstudio.com">Databases using R</a> site describes many of the technical details involved.</li>
 <li>The <a href="https://community.rstudio.com/tags/database">RStudio community</a> is an excellent place to ask questions or study what has been discussed previously.</li>
@@ -762,6 +761,62 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>Whenever we connect to the database, we need to specify them to authenticate.</li>
 </ol>
 <p>We define the parameters in an environment file that R reads when starting up. The file is called <code>.Renviron</code>, and is located in your home directory. See the discussion of <a href="chapter-appendix-postresql-authentication.html#chapter_appendix-postresql-authentication">securing and using dbms credentials</a>.</p>
+</div>
+<div id="connecting-the-r-and-dbms-environments" class="section level3">
+<h3><span class="header-section-number">2.8.3</span> Connecting the R and DBMS environments</h3>
+<p>Although everything happens on one machine in our Docker / PostgreSQL playground, in real life R and PostgreSQL (or other DBMS) will be in different environments on separate machines. How R connects them gives you control over where the work happens. You need to be aware of the differences beween the R and DBMS environments as well as how you can leverage the strengths of each one.</p>
+<p><strong>Characteristics of local vs. server processing</strong></p>
+<table>
+<colgroup>
+<col width="3%" />
+<col width="45%" />
+<col width="50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Dimension</th>
+<th>Local</th>
+<th>Remote</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Design purpose</td>
+<td>The R environment on your local machine is designed to be flexible and easy to use; ideal for data investigation.</td>
+<td>The DBMS environment is designed for large and complex databases where data integrity is more important than flexibility or ease of use.</td>
+</tr>
+<tr class="even">
+<td>Processor power</td>
+<td>Your local machine has less memory, speed, and storage than the typical database server.</td>
+<td>Database servers are specialized, more expensive, and have more power.</td>
+</tr>
+<tr class="odd">
+<td>Memory constraint</td>
+<td>In R, query results must fit into memory.</td>
+<td>Servers have a lot of memory and write intermediate results to disk if needed without you knowing about it.</td>
+</tr>
+<tr class="even">
+<td>Data crunching</td>
+<td>Data lives in the DBMS so crunching it down locally requires you to pull it over the network.</td>
+<td>A DBMS has powerful data crunching capabilities once you know what you want and moves data over the server backbone to crunch it.</td>
+</tr>
+<tr class="odd">
+<td>Security</td>
+<td>Local control (whether it’s good or not depends on you).</td>
+<td>Responsibility of database administrators who set the rules. You play by their rules.</td>
+</tr>
+<tr class="even">
+<td>Storage of intermediate results</td>
+<td>Very easy to save a data frame with intermediate results locally.</td>
+<td>May require extra privileges to save results in the database.</td>
+</tr>
+<tr class="odd">
+<td>Analytical resources</td>
+<td>Ecosystem of available R packages</td>
+<td>Extending SQL instruction set involves dbms-specific functions or R pseudo functions</td>
+</tr>
+</tbody>
+</table>
 
 </div>
 </div>

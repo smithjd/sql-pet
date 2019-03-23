@@ -150,7 +150,7 @@ kable(rs1)
 
 db          current_date   current_timestamp     showing                  session_user   host          port
 ----------  -------------  --------------------  -----------------------  -------------  -----------  -----
-dvdrental   2019-03-19     2019-03-19 13:35:10   result set description   postgres       172.17.0.2    5432
+dvdrental   2019-03-23     2019-03-23 09:21:34   result set description   postgres       172.17.0.2    5432
 
 Since we will only be working in the `dvdrental` database in this tutorial and reduce the number of output columns shown, only the 'result set description' will be used. 
 
