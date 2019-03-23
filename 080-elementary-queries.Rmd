@@ -107,7 +107,8 @@ When the dbms contains many rows, a sample of the data may be plenty for your pu
 ```{r}
 one_percent_sample <- DBI::dbGetQuery(
   con,
-  "SELECT rental_id, rental_date, inventory_id, customer_id FROM rental TABLESAMPLE BERNOULLI(1) LIMIT 20;
+  "SELECT rental_id, rental_date, inventory_id, 
+  customer_id FROM rental TABLESAMPLE BERNOULLI(1) LIMIT 20;
   "
 )
 
@@ -169,8 +170,10 @@ In practice we find that, **renaming variables** is often quite important becaus
 
 ```{r}
 tbl(con, "rental") %>%
-  dplyr::rename(rental_id_number = rental_id, inventory_id_number = inventory_id) %>% 
-  dplyr::select(rental_id_number, rental_date, inventory_id_number) %>%
+  dplyr::rename(rental_id_number = rental_id, 
+                inventory_id_number = inventory_id) %>% 
+  dplyr::select(rental_id_number, rental_date, 
+                inventory_id_number) %>%
   head()
 ```
 That's equivalent to the following SQL code:
@@ -178,7 +181,9 @@ That's equivalent to the following SQL code:
 DBI::dbGetQuery(
   con,
   'SELECT "rental_id_number", "rental_date", "inventory_id_number"
-FROM (SELECT "rental_id" AS "rental_id_number", "rental_date", "inventory_id" AS "inventory_id_number", "customer_id", "return_date", "staff_id", "last_update"
+FROM (SELECT "rental_id" AS "rental_id_number", 
+  "rental_date", "inventory_id" AS "inventory_id_number", "customer_id",
+  "return_date", "staff_id", "last_update"
 FROM "rental") "ihebfvnxvb"
 LIMIT 6' )
 ```

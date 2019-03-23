@@ -54,20 +54,6 @@ Q <- tbl(con, "rental") %>%
 Q
 ```
 
-### Characteristics of local vs. server processing
-
-
-
-| Dimension|Local                    | Remote 
-|---|-----------------------------------|---------------------------------------
-|Processor power |Desktops/laptops have less memory, speed, and storage than the database server. |Database server are high powered machines.
-|Memory constraint |Query result must fit into memory. |Servers have a lot of memory
-|Data access |Data must be pulled over the network.|Data moved locally over the server backbone.
-|Security|Local control (good or bad) |Responsibility of database administrators
-|Storage of intermediate results |Easy to save locally.   |May require extra privileges to save results in the database
-|Analytical resources |Ecosystem of available R packages  |Extending SQL instruction set involves dbms-specific functions or R pseudo functions
-
-
 ### Experiment overview
 Think of `Q` as a black box for the moment.  The following examples will show how `Q` is interpreted differently by different functions. It's important to remember in the following discussion that the "**and then**" operator (`%>%`) actually wraps the subsequent code inside the preceding code so that `Q %>% print()` is equivalent to `print(Q)`.
 
