@@ -3,17 +3,16 @@ title: "Basic Concepts"
 author: "[Jim Tyhurst, Ph.D.](https://www.jimtyhurst.com/)"
 date: "`r Sys.Date()`"
 output:
+  ioslides_presentation:
+    theme: readable
+  slidy_presentation: default
   beamer_presentation: 
     theme: EastLansing
-  ioslides_presentation: default
-  slidy_presentation: default
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
-
-# Architecture
 
 ## Outline
 * R
@@ -22,7 +21,7 @@ knitr::opts_chunk$set(echo = FALSE)
 * PostgreSQL
 * R and Docker
 
-## Tools we will use
+## Tools we will use {.flexbox .vcenter}
 
 ![R and Docker](../../screenshots/environment_overview.png)
 
@@ -30,57 +29,62 @@ knitr::opts_chunk$set(echo = FALSE)
 
 Focus is R code accessing data in a SQL database
 
-* Use RStudio to facilitate:
-    * R development
-    * Browsing the database
-* Use Docker to simplify:
-    * Installating PostgreSQL
-    * Managing PostgreSQL (starting, stopping, re-initializing, ...)
-* Most of this R code does _not_ depend on:
-    * Location of database
-    * Native installation vs Docker installation for the database
-* So this R code generalizes to:
-    * Native installation of RDBMS, rather than Docker
-    * Other RDBMSs
+> * Use **RStudio** to facilitate:
+>    * R development
+>    * Browsing the database
+> * Use **Docker** to simplify:
+>    * Installing PostgreSQL
+>    * Managing PostgreSQL (starting, stopping, re-initializing, ...)
+
+## ... Using a SQL database from R
+
+> * Most of this R code does _not_ depend on:
+>     * Location of database: local _or_ remote
+>     * Installation strategy: Docker _or_ native
+> * So this R code generalizes to:
+>     * PostgreSQL running local in Docker
+>     * PostgreSQL running from local native install
+>     * PostgreSQL running remotely
+>     * Other RDBMS
 
 ## R
 We assume a general familiarity with:
 
 * R
-* RStudio
+* [RStudio](https://www.rstudio.com/)
 * [tidyverse](https://www.tidyverse.org)
+    * [`dplyr`](https://dplyr.tidyverse.org/) verbs
+    * pipe operator ([`%>%`](https://magrittr.tidyverse.org/))
     * [tidy data](https://www.jstatsoft.org/v059/i10)
-    * pipe operator (`%>%`)
-    * `dplyr`
-    * [techniques for tidying data](https://dplyr.tidyverse.org/)
+    * techniques for [tidying](https://tidyr.tidyverse.org/) data
 
 ## RStudio
 
-Using R code, we will:
+Using R code, we will interact with:
 
-* Docker
-    * Set up a Docker image with PostgreSQL
-    * Launch PostgreSQL inside a Docker container
-* PostgreSQL
-    * Write `dplyr` commands that operate on a PostgreSQL database
-    * Write `DBI` commands that send SQL queries directly to a PostgreSQL database
+> * **Docker**
+>     * Set up a Docker image with PostgreSQL
+>     * Launch PostgreSQL inside a Docker container
+> * **PostgreSQL**
+>     * Write `dplyr` commands that operate on a PostgreSQL database
+>     * Write `DBI` commands that send SQL queries directly to a PostgreSQL database
 
-## Connecting to a database
+## Connecting to a database {.flexbox .vcenter}
 
 ![Rstudio's DBMS architecture - slide # 33](../../screenshots/rstudioconf-2019-big-data-architecture.png)
 
 ## Accessing a relational database
 
-* [`dplyr`](https://dbplyr.tidyverse.org/) library
+* [`dplyr`](https://dplyr.tidyverse.org/) library
     * `inner_join`, `left_join`, ...
     * Generates [SQL-92 standard](https://en.wikipedia.org/wiki/SQL-92) code
-* [`DBI` library](http://r-dbi.github.io/DBI/)
-    * `dbExecute`, `dbGetQuery`, ...
+* [`DBI`](http://r-dbi.github.io/DBI/) library
+    * `dbListTables`, `dbListFields`, `dbReadTable`, `dbExecute`, `dbGetQuery`, ...
     * Accepts embedded native `SQL` code
     * Specific language features of your DBMS
 * Dependencies
-    * [RPostgres](https://github.com/tomoakin/RPostgreSQL)
-        * PostgreSQL driver for R
+    * [`dbplyr`](https://dbplyr.tidyverse.org/) library: a `dplyr` back-end for databases
+    * [`RPostgres`](https://github.com/tomoakin/RPostgreSQL) library: PostgreSQL driver for R
 
 ## Tidy data
 
@@ -96,13 +100,30 @@ _To Do_
 
 Data in a database is most often optimized to minimize storage space and increase performance while preserving integrity when adding, changing, or deleting data.  The Wikipedia article on  Database Normalization has a good introduction to the characteristics of "normal" data and the process of re-organizing it to meet those desirable criteria [@Wikipedia2019].  The bottom line is that "data normalization is practical" although there are mathematical arguments for normalization based on the preservation of data integrity.
 
+## Local vs Remote
+
+| Dimension|Local                    | Remote 
+|---|-----------------------------------|---------------------------------------
+|Design purpose|The R environment on your local machine is designed to be flexible and easy to use; ideal for data investigation.|The DBMS environment is designed for large and complex databases where data integrity is more important than flexibility or ease of use.
+|Processor power |Your local machine has less memory, speed, and storage than the typical database server. |Database servers are specialized, more expensive, and have more power.
+|Memory constraint |In R, query results must fit into memory. |Servers have a lot of memory and write intermediate results to disk if needed without you knowing about it.
+|Data crunching |Data lives in the DBMS, so crunching it down locally requires you to pull it over the network.|A DBMS has powerful data crunching capabilities once you know what you want and moves data over the server backbone to crunch it.
+
+## ... Local vs Remote
+
+| Dimension|Local                    | Remote 
+|---|-----------------------------------|---------------------------------------
+|Security|Local control. Whether it is good or not depends on you. |Responsibility of database administrators who set the rules. You play by their rules.
+|Storage of intermediate results |Very easy to save a data frame with intermediate results locally. |May require extra privileges to save results in the database.
+|Analytical resources |Ecosystem of available R packages  |Extending SQL instruction set involves dbms-specific functions or R pseudo functions
+|Collaboration |One person working on a few data.frames. |Many people collaborating on _many_ tables.
+
 ## Additional resources
 
 * "[R, Databases, and Docker](https://smithjd.github.io/sql-pet/)" is the book version of this workshop
-* RStudio's "[Big Data](https://github.com/rstudio/bigdataclass)" two-day workshop has an abundance of introductory material. For example,
+* RStudio's "[Big Data](https://github.com/rstudio/bigdataclass)" two-day workshop has good introductory material, such as:
     * [connecting to a database](file:///Users/jimtyhurst/src/r/rstudio_bigdataclass/book/access-a-database.html)
     * [accessing a database through `dplyr` functions](file:///Users/jimtyhurst/src/r/rstudio_bigdataclass/book/dplyr-basics.html)
-* https://www.rstudio.com/
 * https://www.postgresql.org/
 * https://www.docker.com/
 * https://www.tidyverse.org/

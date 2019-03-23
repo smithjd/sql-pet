@@ -155,7 +155,8 @@ Although everything happens on one machine in our Docker / PostgreSQL playground
 |Design purpose|The R environment on your local machine is designed to be flexible and easy to use; ideal for data investigation.|The DBMS environment is designed for large and complex databases where data integrity is more important than flexibility or ease of use.
 |Processor power |Your local machine has less memory, speed, and storage than the typical database server. |Database servers are specialized, more expensive, and have more power.
 |Memory constraint |In R, query results must fit into memory. |Servers have a lot of memory and write intermediate results to disk if needed without you knowing about it.
-|Data crunching |Data lives in the DBMS so crunching it down locally requires you to pull it over the network.|A DBMS has powerful data crunching capabilities once you know what you want and moves data over the server backbone to crunch it.
-|Security|Local control (whether it's good or not depends on you). |Responsibility of database administrators who set the rules. You play by their rules.
+|Data crunching |Data lives in the DBMS, so crunching it down locally requires you to pull it over the network.|A DBMS has powerful data crunching capabilities once you know what you want and moves data over the server backbone to crunch it.
+|Security|Local control. Whether it is good or not depends on you. |Responsibility of database administrators who set the rules. You play by their rules.
 |Storage of intermediate results |Very easy to save a data frame with intermediate results locally. |May require extra privileges to save results in the database.
 |Analytical resources |Ecosystem of available R packages  |Extending SQL instruction set involves dbms-specific functions or R pseudo functions
+|Collaboration |One person working on a few data.frames. |Many people collaborating on _many_ tables.
