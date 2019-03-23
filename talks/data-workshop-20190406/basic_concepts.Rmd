@@ -1,0 +1,111 @@
+---
+title: "Basic Concepts"
+author: "[Jim Tyhurst, Ph.D.](https://www.jimtyhurst.com/)"
+date: "`r Sys.Date()`"
+output:
+  beamer_presentation: 
+    theme: EastLansing
+  ioslides_presentation: default
+  slidy_presentation: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# Architecture
+
+## Outline
+* R
+* RStudio
+* Docker
+* PostgreSQL
+* R and Docker
+
+## Tools we will use
+
+![R and Docker](../../screenshots/environment_overview.png)
+
+## Using a SQL database from R
+
+Focus is R code accessing data in a SQL database
+
+* Use RStudio to facilitate:
+    * R development
+    * Browsing the database
+* Use Docker to simplify:
+    * Installating PostgreSQL
+    * Managing PostgreSQL (starting, stopping, re-initializing, ...)
+* Most of this R code does _not_ depend on:
+    * Location of database
+    * Native installation vs Docker installation for the database
+* So this R code generalizes to:
+    * Native installation of RDBMS, rather than Docker
+    * Other RDBMSs
+
+## R
+We assume a general familiarity with:
+
+* R
+* RStudio
+* [tidyverse](https://www.tidyverse.org)
+    * [tidy data](https://www.jstatsoft.org/v059/i10)
+    * pipe operator (`%>%`)
+    * `dplyr`
+    * [techniques for tidying data](https://dplyr.tidyverse.org/)
+
+## RStudio
+
+Using R code, we will:
+
+* Docker
+    * Set up a Docker image with PostgreSQL
+    * Launch PostgreSQL inside a Docker container
+* PostgreSQL
+    * Write `dplyr` commands that operate on a PostgreSQL database
+    * Write `DBI` commands that send SQL queries directly to a PostgreSQL database
+
+## Connecting to a database
+
+![Rstudio's DBMS architecture - slide # 33](../../screenshots/rstudioconf-2019-big-data-architecture.png)
+
+## Accessing a relational database
+
+* [`dplyr`](https://dbplyr.tidyverse.org/) library
+    * `inner_join`, `left_join`, ...
+    * Generates [SQL-92 standard](https://en.wikipedia.org/wiki/SQL-92) code
+* [`DBI` library](http://r-dbi.github.io/DBI/)
+    * `dbExecute`, `dbGetQuery`, ...
+    * Accepts embedded native `SQL` code
+    * Specific language features of your DBMS
+* Dependencies
+    * [RPostgres](https://github.com/tomoakin/RPostgreSQL)
+        * PostgreSQL driver for R
+
+## Tidy data
+
+_To Do_
+
+Tidy data [@Wickham2014] is:
+
+Well-behaved from the point of view of analysis and tools in the Tidyverse [@RStudio2019].  Tidy data is easier to think about and it is usually worthwhile to make the data tidy [@Wickham2018].  Tidy data is roughly equivalent to _third normal form_ as discussed below.
+
+## Design of "normal data"
+
+_To Do_
+
+Data in a database is most often optimized to minimize storage space and increase performance while preserving integrity when adding, changing, or deleting data.  The Wikipedia article on  Database Normalization has a good introduction to the characteristics of "normal" data and the process of re-organizing it to meet those desirable criteria [@Wikipedia2019].  The bottom line is that "data normalization is practical" although there are mathematical arguments for normalization based on the preservation of data integrity.
+
+## Additional resources
+
+* "[R, Databases, and Docker](https://smithjd.github.io/sql-pet/)" is the book version of this workshop
+* RStudio's "[Big Data](https://github.com/rstudio/bigdataclass)" two-day workshop has an abundance of introductory material. For example,
+    * [connecting to a database](file:///Users/jimtyhurst/src/r/rstudio_bigdataclass/book/access-a-database.html)
+    * [accessing a database through `dplyr` functions](file:///Users/jimtyhurst/src/r/rstudio_bigdataclass/book/dplyr-basics.html)
+* https://www.rstudio.com/
+* https://www.postgresql.org/
+* https://www.docker.com/
+* https://www.tidyverse.org/
+* https://dplyr.tidyverse.org/
+* http://r-dbi.github.io/DBI/
+* https://github.com/tomoakin/RPostgreSQL
