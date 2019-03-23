@@ -89,7 +89,7 @@ Unix was the original host for both R and Docker.  Unix-like commands show up.
 
 ### Tidy data
 
-Tidy data [@Wickham2014] is well behaved from the point of view of analysis and tools in the Tidyverse [@RStudio2019].  Tidy data is easier to think about and it is usually worthwhile to make the data tidy [@Wickham2018].  Tidy data is roughly equivalent to _third normal form_ as discussed below.
+Tidy data [@Wickham2014] is well-behaved from the point of view of analysis and tools in the Tidyverse [@RStudio2019].  Tidy data is easier to think about and it is usually worthwhile to make the data tidy [@Wickham2018].  Tidy data is roughly equivalent to _third normal form_ as discussed below.
 
 ### Design of "normal data"
 
