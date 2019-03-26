@@ -25,7 +25,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
 
 
-<meta name="date" content="2019-03-23">
+<meta name="date" content="2019-03-25">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -265,8 +265,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="9.4.9" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_nrow"><i class="fa fa-check"></i><b>9.4.9</b> Q %&gt;% nrow()</a></li>
 <li class="chapter" data-level="9.4.10" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_tally"><i class="fa fa-check"></i><b>9.4.10</b> Q %&gt;% dplyr::tally()</a></li>
 <li class="chapter" data-level="9.4.11" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_collect"><i class="fa fa-check"></i><b>9.4.11</b> Q %&gt;% dplyr::collect()</a></li>
-<li class="chapter" data-level="9.4.12" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_show-query"><i class="fa fa-check"></i><b>9.4.12</b> Q %&gt;% dplyr::show_query()</a></li>
-<li class="chapter" data-level="9.4.13" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#more-lazy-execution-examples"><i class="fa fa-check"></i><b>9.4.13</b> More lazy execution examples</a></li>
+<li class="chapter" data-level="9.4.12" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_plot-categories"><i class="fa fa-check"></i><b>9.4.12</b> Q %&gt;% ggplot</a></li>
+<li class="chapter" data-level="9.4.13" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_show-query"><i class="fa fa-check"></i><b>9.4.13</b> Q %&gt;% dplyr::show_query()</a></li>
 </ul></li>
 <li class="chapter" data-level="9.5" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#other-resources"><i class="fa fa-check"></i><b>9.5</b> Other resources</a></li>
 </ul></li>
@@ -276,10 +276,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="10.1.2" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#time-based-execution-environment-issues"><i class="fa fa-check"></i><b>10.1.2</b> Time-based, execution environment issues</a></li>
 <li class="chapter" data-level="10.1.3" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#lazy_q_build"><i class="fa fa-check"></i><b>10.1.3</b> Q %&gt;% <code>more dplyr</code></a></li>
 <li class="chapter" data-level="10.1.4" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#many-handy-r-functions-cant-be-translated-to-sql"><i class="fa fa-check"></i><b>10.1.4</b> Many handy R functions can’t be translated to SQL</a></li>
-<li class="chapter" data-level="10.1.5" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#more-lazy-execution-examples-1"><i class="fa fa-check"></i><b>10.1.5</b> More lazy execution examples</a></li>
+<li class="chapter" data-level="10.1.5" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#further-lazy-execution-examples"><i class="fa fa-check"></i><b>10.1.5</b> Further lazy execution examples</a></li>
 </ul></li>
 <li class="chapter" data-level="10.2" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#other-resources-1"><i class="fa fa-check"></i><b>10.2</b> Other resources</a></li>
-<li class="chapter" data-level="10.3" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#parking-lot"><i class="fa fa-check"></i><b>10.3</b> Parking lot</a></li>
 </ul></li>
 <li class="chapter" data-level="11" data-path="chapter-dbi-package-sql.html"><a href="chapter-dbi-package-sql.html"><i class="fa fa-check"></i><b>11</b> DBI package and SQL</a><ul>
 <li class="chapter" data-level="11.1" data-path="chapter-dbi-package-sql.html"><a href="chapter-dbi-package-sql.html#setup-3"><i class="fa fa-check"></i><b>11.1</b> Setup</a></li>
@@ -666,13 +665,16 @@ tables</code></pre>
 ## [19] &quot;film&quot;                       &quot;address&quot;                   
 ## [21] &quot;film_actor&quot;                 &quot;customer&quot;</code></pre>
 <p>Print a vector with all the fields (or columns or variables) in one specific table:</p>
-<pre class="sourceCode r"><code class="sourceCode r">DBI<span class="op">::</span><span class="kw">dbListFields</span>(con, <span class="st">&quot;rental&quot;</span>)</code></pre>
-<pre><code>## [1] &quot;rental_id&quot;    &quot;rental_date&quot;  &quot;inventory_id&quot; &quot;customer_id&quot; 
-## [5] &quot;return_date&quot;  &quot;staff_id&quot;     &quot;last_update&quot;</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">DBI<span class="op">::</span><span class="kw">dbListFields</span>(con, <span class="st">&quot;film&quot;</span>)</code></pre>
+<pre><code>##  [1] &quot;film_id&quot;          &quot;title&quot;            &quot;description&quot;     
+##  [4] &quot;release_year&quot;     &quot;language_id&quot;      &quot;rental_duration&quot; 
+##  [7] &quot;rental_rate&quot;      &quot;length&quot;           &quot;replacement_cost&quot;
+## [10] &quot;rating&quot;           &quot;last_update&quot;      &quot;special_features&quot;
+## [13] &quot;fulltext&quot;</code></pre>
 </div>
 <div id="listing-all-the-fields-for-all-the-tables" class="section level3">
 <h3><span class="header-section-number">8.2.2</span> Listing all the fields for all the tables</h3>
-<p>The first example, <code>DBI::dbListTables(con)</code> returned 22 tables and the second example, <code>DBI::dbListFields(con, &quot;rental&quot;)</code> returns 7 fields. Here we combine the two calls to return a list of tables which has a list of all the fields in the table. The code block just shows the first two tables.</p>
+<p>The first example, <code>DBI::dbListTables(con)</code> returned 22 tables and the second example, <code>DBI::dbListFields(con, &quot;film&quot;)</code> returns 7 fields. Here we combine the two calls to return a list of tables which has a list of all the fields in the table. The code block just shows the first two tables.</p>
 <pre class="sourceCode r"><code class="sourceCode r">table_columns &lt;-<span class="st"> </span>purrr<span class="op">::</span><span class="kw">map</span>(tables, <span class="op">~</span><span class="st"> </span><span class="kw">dbListFields</span>(.,<span class="dt">conn =</span> con) )</code></pre>
 <p>Rename each list [[1]] … [[22]] to meaningful table name</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">names</span>(table_columns) &lt;-<span class="st"> </span>tables
@@ -708,174 +710,175 @@ tables</code></pre>
 <h3><span class="header-section-number">8.2.3</span> Downloading an entire table</h3>
 <p>There are many different methods of getting data from a DBMS, and we’ll explore the different ways of controlling each one of them.</p>
 <p><code>DBI::dbReadTable</code> will download an entire table into an R <a href="https://tibble.tidyverse.org/">tibble</a>.</p>
-<pre class="sourceCode r"><code class="sourceCode r">rental_tibble &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbReadTable</span>(con, <span class="st">&quot;rental&quot;</span>)
-<span class="kw">str</span>(rental_tibble)</code></pre>
-<pre><code>## &#39;data.frame&#39;:    16044 obs. of  7 variables:
-##  $ rental_id   : int  2 3 4 5 6 7 8 9 10 11 ...
-##  $ rental_date : POSIXct, format: &quot;2005-05-24 22:54:33&quot; &quot;2005-05-24 23:03:39&quot; ...
-##  $ inventory_id: int  1525 1711 2452 2079 2792 3995 2346 2580 1824 4443 ...
-##  $ customer_id : int  459 408 333 222 549 269 239 126 399 142 ...
-##  $ return_date : POSIXct, format: &quot;2005-05-28 19:40:33&quot; &quot;2005-06-01 22:12:39&quot; ...
-##  $ staff_id    : int  1 1 2 1 1 2 2 1 2 2 ...
-##  $ last_update : POSIXct, format: &quot;2006-02-16 02:30:53&quot; &quot;2006-02-16 02:30:53&quot; ...</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">film_tibble &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbReadTable</span>(con, <span class="st">&quot;film&quot;</span>)
+<span class="kw">str</span>(film_tibble)</code></pre>
+<pre><code>## &#39;data.frame&#39;:    1000 obs. of  13 variables:
+##  $ film_id         : int  133 384 8 98 1 2 3 4 5 6 ...
+##  $ title           : chr  &quot;Chamber Italian&quot; &quot;Grosse Wonderful&quot; &quot;Airport Pollock&quot; &quot;Bright Encounters&quot; ...
+##  $ description     : chr  &quot;A Fateful Reflection of a Moose And a Husband who must Overcome a Monkey in Nigeria&quot; &quot;A Epic Drama of a Cat And a Explorer who must Redeem a Moose in Australia&quot; &quot;A Epic Tale of a Moose And a Girl who must Confront a Monkey in Ancient India&quot; &quot;A Fateful Yarn of a Lumberjack And a Feminist who must Conquer a Student in A Jet Boat&quot; ...
+##  $ release_year    : int  2006 2006 2006 2006 2006 2006 2006 2006 2006 2006 ...
+##  $ language_id     : int  1 1 1 1 1 1 1 1 1 1 ...
+##  $ rental_duration : int  7 5 6 4 6 3 7 5 6 3 ...
+##  $ rental_rate     : num  4.99 4.99 4.99 4.99 0.99 4.99 2.99 2.99 2.99 2.99 ...
+##  $ length          : int  117 49 54 73 86 48 50 117 130 169 ...
+##  $ replacement_cost: num  15 20 16 13 21 ...
+##  $ rating          : &#39;pq_mpaa_rating&#39; chr  &quot;NC-17&quot; &quot;R&quot; &quot;R&quot; &quot;PG-13&quot; ...
+##  $ last_update     : POSIXct, format: &quot;2013-05-26 14:50:58&quot; &quot;2013-05-26 14:50:58&quot; ...
+##  $ special_features: &#39;pq__text&#39; chr  &quot;{Trailers}&quot; &quot;{\&quot;Behind the Scenes\&quot;}&quot; &quot;{Trailers}&quot; &quot;{Trailers}&quot; ...
+##  $ fulltext        : &#39;pq_tsvector&#39; chr  &quot;&#39;chamber&#39;:1 &#39;fate&#39;:4 &#39;husband&#39;:11 &#39;italian&#39;:2 &#39;monkey&#39;:16 &#39;moos&#39;:8 &#39;must&#39;:13 &#39;nigeria&#39;:18 &#39;overcom&#39;:14 &#39;reflect&#39;:5&quot; &quot;&#39;australia&#39;:18 &#39;cat&#39;:8 &#39;drama&#39;:5 &#39;epic&#39;:4 &#39;explor&#39;:11 &#39;gross&#39;:1 &#39;moos&#39;:16 &#39;must&#39;:13 &#39;redeem&#39;:14 &#39;wonder&#39;:2&quot; &quot;&#39;airport&#39;:1 &#39;ancient&#39;:18 &#39;confront&#39;:14 &#39;epic&#39;:4 &#39;girl&#39;:11 &#39;india&#39;:19 &#39;monkey&#39;:16 &#39;moos&#39;:8 &#39;must&#39;:13 &#39;pollock&#39;:2 &#39;tale&#39;:5&quot; &quot;&#39;boat&#39;:20 &#39;bright&#39;:1 &#39;conquer&#39;:14 &#39;encount&#39;:2 &#39;fate&#39;:4 &#39;feminist&#39;:11 &#39;jet&#39;:19 &#39;lumberjack&#39;:8 &#39;must&#39;:13 &#39;student&#39;:16 &#39;yarn&#39;:5&quot; ...</code></pre>
 <p>That’s very simple, but if the table is large it may not be a good idea, since R is designed to keep the entire table in memory. Note that the first line of the str() output reports the total number of observations.</p>
 </div>
 <div id="a-table-object-that-can-be-reused" class="section level3">
 <h3><span class="header-section-number">8.2.4</span> A table object that can be reused</h3>
 <p>The <code>dplyr::tbl</code> function gives us more control over access to a table by enabling control over which columns and rows to download. It creates an object that might <strong>look</strong> like a data frame, but it’s actually a list object that <code>dplyr</code> uses for constructing queries and retrieving data from the DBMS.</p>
-<pre class="sourceCode r"><code class="sourceCode r">rental_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">tbl</span>(con, <span class="st">&quot;rental&quot;</span>)
-<span class="kw">class</span>(rental_table)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">film_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">tbl</span>(con, <span class="st">&quot;film&quot;</span>)
+<span class="kw">class</span>(film_table)</code></pre>
 <pre><code>## [1] &quot;tbl_PqConnection&quot; &quot;tbl_dbi&quot;          &quot;tbl_sql&quot;         
 ## [4] &quot;tbl_lazy&quot;         &quot;tbl&quot;</code></pre>
 </div>
 <div id="controlling-the-number-of-rows-returned" class="section level3">
 <h3><span class="header-section-number">8.2.5</span> Controlling the number of rows returned</h3>
 <p>The <code>collect</code> function triggers the creation of a tibble and controls the number of rows that the DBMS sends to R. For more complex queries, the <code>dplyr::collect()</code> function provides a mechanism to indicate what’s processed on on the dbms server and what’s processed by R on the local machine. The chapter on <a href="chapter-lazy-evaluation-and-timing.html#chapter_lazy-evaluation-and-timing">Lazy Evaluation and Execution Environment</a> discusses this issue in detail.</p>
-<pre class="sourceCode r"><code class="sourceCode r">rental_table <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="dv">3</span>) <span class="op">%&gt;%</span><span class="st"> </span>dim</code></pre>
-<pre><code>## [1] 3 7</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r">rental_table <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="dv">500</span>) <span class="op">%&gt;%</span><span class="st"> </span>dim</code></pre>
-<pre><code>## [1] 500   7</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">film_table <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="dv">3</span>) <span class="op">%&gt;%</span><span class="st"> </span>dim</code></pre>
+<pre><code>## [1]  3 13</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">film_table <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="dv">500</span>) <span class="op">%&gt;%</span><span class="st"> </span>dim</code></pre>
+<pre><code>## [1] 500  13</code></pre>
 </div>
 <div id="random-rows-from-the-dbms" class="section level3">
 <h3><span class="header-section-number">8.2.6</span> Random rows from the dbms</h3>
 <p>When the dbms contains many rows, a sample of the data may be plenty for your purposes. Although <code>dplyr</code> has nice functions to sample a data frame that’s already in R (e.g., the <code>sample_n</code> and <code>sample_frac</code> functions), to get a sample from the dbms we have to use <code>dbGetQuery</code> to send native SQL to the database. To peek ahead, here is one example of a query that retrieves 20 rows from a 1% sample:</p>
 <pre class="sourceCode r"><code class="sourceCode r">one_percent_sample &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbGetQuery</span>(
   con,
-  <span class="st">&quot;SELECT rental_id, rental_date, inventory_id, </span>
-<span class="st">  customer_id FROM rental TABLESAMPLE BERNOULLI(1) LIMIT 20;</span>
+  <span class="st">&quot;SELECT film_id, title, rating</span>
+<span class="st">  FROM film TABLESAMPLE BERNOULLI(1) LIMIT 20;</span>
 <span class="st">  &quot;</span>
 )
 
 one_percent_sample</code></pre>
-<pre><code>##    rental_id         rental_date inventory_id customer_id
-## 1         10 2005-05-25 00:02:21         1824         399
-## 2         17 2005-05-25 01:06:36          830         575
-## 3         98 2005-05-25 16:48:24         2970         269
-## 4        169 2005-05-26 03:09:30         1758         381
-## 5        226 2005-05-26 10:44:04         4181         221
-## 6        243 2005-05-26 13:06:05         1721         543
-## 7        285 2005-05-26 19:41:40         2486         162
-## 8        585 2005-05-28 11:50:45         3544         490
-## 9        619 2005-05-28 15:52:26         2482         407
-## 10       628 2005-05-28 17:05:46         2513         173
-## 11       645 2005-05-28 19:14:09         3128         505
-## 12       703 2005-05-29 02:29:36         1123         269
-## 13       732 2005-05-29 07:32:51         2530         447
-## 14       925 2005-05-30 12:13:52         3203         137
-## 15       942 2005-05-30 15:05:47         4279         473
-## 16       946 2005-05-30 15:35:08         1264         486
-## 17      1001 2005-05-31 00:46:31         1498          64
-## 18      1035 2005-05-31 05:01:09          949         362
-## 19      1134 2005-05-31 19:14:15          143         191
-## 20      1137 2005-05-31 19:20:14         3259         351</code></pre>
+<pre><code>##    film_id                title rating
+## 1       23 Anaconda Confessions      R
+## 2       66         Beneath Rush  NC-17
+## 3      176   Congeniality Quest  PG-13
+## 4      434         Horror Reign      R
+## 5      471      Island Exorcist  NC-17
+## 6      524           Lion Uncut     PG
+## 7      633    October Submarine  PG-13
+## 8      648         Outlaw Hanky  PG-13
+## 9      875    Talented Homicide     PG
+## 10     882   Tenenbaums Command  PG-13</code></pre>
 <p><strong>Exact sample of 100 records</strong></p>
-<p>This technique depends on knowing the range of a record index, such as the <code>rental_id</code> in the <code>rental</code> table of our <code>dvdrental</code> database.</p>
+<p>This technique depends on knowing the range of a record index, such as the <code>film_id</code> in the <code>film</code> table of our <code>dvdrental</code> database.</p>
 <p>Start by finding the min and max values.</p>
-<pre class="sourceCode r"><code class="sourceCode r">DBI<span class="op">::</span><span class="kw">dbListFields</span>(con, <span class="st">&quot;rental&quot;</span>)</code></pre>
-<pre><code>## [1] &quot;rental_id&quot;    &quot;rental_date&quot;  &quot;inventory_id&quot; &quot;customer_id&quot; 
-## [5] &quot;return_date&quot;  &quot;staff_id&quot;     &quot;last_update&quot;</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r">rental_df &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbReadTable</span>(con, <span class="st">&quot;rental&quot;</span>)
+<pre class="sourceCode r"><code class="sourceCode r">DBI<span class="op">::</span><span class="kw">dbListFields</span>(con, <span class="st">&quot;film&quot;</span>)</code></pre>
+<pre><code>##  [1] &quot;film_id&quot;          &quot;title&quot;            &quot;description&quot;     
+##  [4] &quot;release_year&quot;     &quot;language_id&quot;      &quot;rental_duration&quot; 
+##  [7] &quot;rental_rate&quot;      &quot;length&quot;           &quot;replacement_cost&quot;
+## [10] &quot;rating&quot;           &quot;last_update&quot;      &quot;special_features&quot;
+## [13] &quot;fulltext&quot;</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">film_df &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbReadTable</span>(con, <span class="st">&quot;film&quot;</span>)
 
-<span class="kw">max</span>(rental_df<span class="op">$</span>rental_id)</code></pre>
-<pre><code>## [1] 16049</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">min</span>(rental_df<span class="op">$</span>rental_id)</code></pre>
+<span class="kw">max</span>(film_df<span class="op">$</span>film_id)</code></pre>
+<pre><code>## [1] 1000</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">min</span>(film_df<span class="op">$</span>film_id)</code></pre>
 <pre><code>## [1] 1</code></pre>
 <p>Set the random number seed and draw the sample.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">123</span>)
-sample_rows &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">16049</span>, <span class="dv">100</span>)
-rental_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">tbl</span>(con, <span class="st">&quot;rental&quot;</span>)</code></pre>
+sample_rows &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">1000</span>, <span class="dv">100</span>)
+film_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">tbl</span>(con, <span class="st">&quot;film&quot;</span>)</code></pre>
 <p>Run query with the filter verb listing the randomly sampled rows to be retrieved:</p>
-<pre class="sourceCode r"><code class="sourceCode r">rental_sample &lt;-<span class="st"> </span>rental_table <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(rental_id <span class="op">%in%</span><span class="st"> </span>sample_rows) <span class="op">%&gt;%</span><span class="st"> </span>
+<pre class="sourceCode r"><code class="sourceCode r">film_sample &lt;-<span class="st"> </span>film_table <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(film_id <span class="op">%in%</span><span class="st"> </span>sample_rows) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">collect</span>()
 
-<span class="kw">str</span>(rental_sample)</code></pre>
-<pre><code>## Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    100 obs. of  7 variables:
-##  $ rental_id   : int  10 395 675 731 734 1494 1517 1643 1651 1775 ...
-##  $ rental_date : POSIXct, format: &quot;2005-05-25 00:02:21&quot; &quot;2005-05-27 11:45:49&quot; ...
-##  $ inventory_id: int  1824 752 1273 4124 3084 244 3728 1352 4444 1922 ...
-##  $ customer_id : int  399 575 338 5 538 575 148 484 524 123 ...
-##  $ return_date : POSIXct, format: &quot;2005-05-31 22:44:21&quot; &quot;2005-05-31 13:42:49&quot; ...
-##  $ staff_id    : int  2 1 2 1 2 1 1 2 2 2 ...
-##  $ last_update : POSIXct, format: &quot;2006-02-16 02:30:53&quot; &quot;2006-02-16 02:30:53&quot; ...</code></pre>
+<span class="kw">str</span>(film_sample)</code></pre>
+<pre><code>## Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    100 obs. of  13 variables:
+##  $ film_id         : int  133 384 1 24 42 44 46 85 90 95 ...
+##  $ title           : chr  &quot;Chamber Italian&quot; &quot;Grosse Wonderful&quot; &quot;Academy Dinosaur&quot; &quot;Analyze Hoosiers&quot; ...
+##  $ description     : chr  &quot;A Fateful Reflection of a Moose And a Husband who must Overcome a Monkey in Nigeria&quot; &quot;A Epic Drama of a Cat And a Explorer who must Redeem a Moose in Australia&quot; &quot;A Epic Drama of a Feminist And a Mad Scientist who must Battle a Teacher in The Canadian Rockies&quot; &quot;A Thoughtful Display of a Explorer And a Pastry Chef who must Overcome a Feminist in The Sahara Desert&quot; ...
+##  $ release_year    : int  2006 2006 2006 2006 2006 2006 2006 2006 2006 2006 ...
+##  $ language_id     : int  1 1 1 1 1 1 1 1 1 1 ...
+##  $ rental_duration : int  7 5 6 6 5 5 3 4 3 5 ...
+##  $ rental_rate     : num  4.99 4.99 0.99 2.99 2.99 4.99 4.99 0.99 0.99 4.99 ...
+##  $ length          : int  117 49 86 181 170 113 108 63 63 123 ...
+##  $ replacement_cost: num  15 20 21 20 11 ...
+##  $ rating          : &#39;pq_mpaa_rating&#39; chr  &quot;NC-17&quot; &quot;R&quot; &quot;PG&quot; &quot;R&quot; ...
+##  $ last_update     : POSIXct, format: &quot;2013-05-26 14:50:58&quot; &quot;2013-05-26 14:50:58&quot; ...
+##  $ special_features: &#39;pq__text&#39; chr  &quot;{Trailers}&quot; &quot;{\&quot;Behind the Scenes\&quot;}&quot; &quot;{\&quot;Deleted Scenes\&quot;,\&quot;Behind the Scenes\&quot;}&quot; &quot;{Trailers,\&quot;Behind the Scenes\&quot;}&quot; ...
+##  $ fulltext        : &#39;pq_tsvector&#39; chr  &quot;&#39;chamber&#39;:1 &#39;fate&#39;:4 &#39;husband&#39;:11 &#39;italian&#39;:2 &#39;monkey&#39;:16 &#39;moos&#39;:8 &#39;must&#39;:13 &#39;nigeria&#39;:18 &#39;overcom&#39;:14 &#39;reflect&#39;:5&quot; &quot;&#39;australia&#39;:18 &#39;cat&#39;:8 &#39;drama&#39;:5 &#39;epic&#39;:4 &#39;explor&#39;:11 &#39;gross&#39;:1 &#39;moos&#39;:16 &#39;must&#39;:13 &#39;redeem&#39;:14 &#39;wonder&#39;:2&quot; &quot;&#39;academi&#39;:1 &#39;battl&#39;:15 &#39;canadian&#39;:20 &#39;dinosaur&#39;:2 &#39;drama&#39;:5 &#39;epic&#39;:4 &#39;feminist&#39;:8 &#39;mad&#39;:11 &#39;must&#39;:14 &#39;rocki&#39;:21&quot;| __truncated__ &quot;&#39;analyz&#39;:1 &#39;chef&#39;:12 &#39;desert&#39;:21 &#39;display&#39;:5 &#39;explor&#39;:8 &#39;feminist&#39;:17 &#39;hoosier&#39;:2 &#39;must&#39;:14 &#39;overcom&#39;:15 &#39;pastr&quot;| __truncated__ ...</code></pre>
 </div>
 <div id="sub-setting-variables" class="section level3">
 <h3><span class="header-section-number">8.2.7</span> Sub-setting variables</h3>
 <p>A table in the dbms may not only have many more rows than you want, but also many more columns. The <code>select</code> command controls which columns are retrieved.</p>
-<pre class="sourceCode r"><code class="sourceCode r">rental_table <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(rental_date, return_date) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>()</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">film_table <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(title, rating) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>()</code></pre>
 <pre><code>## # Source:   lazy query [?? x 2]
 ## # Database: postgres [postgres@localhost:5432/dvdrental]
-##   rental_date         return_date        
-##   &lt;dttm&gt;              &lt;dttm&gt;             
-## 1 2005-05-24 22:54:33 2005-05-28 19:40:33
-## 2 2005-05-24 23:03:39 2005-06-01 22:12:39
-## 3 2005-05-24 23:04:41 2005-06-03 01:43:41
-## 4 2005-05-24 23:05:21 2005-06-02 04:33:21
-## 5 2005-05-24 23:08:07 2005-05-27 01:32:07
-## 6 2005-05-24 23:11:53 2005-05-29 20:34:53</code></pre>
+##   title             rating              
+##   &lt;chr&gt;             &lt;S3: pq_mpaa_rating&gt;
+## 1 Chamber Italian   NC-17               
+## 2 Grosse Wonderful  R                   
+## 3 Airport Pollock   R                   
+## 4 Bright Encounters PG-13               
+## 5 Academy Dinosaur  PG                  
+## 6 Ace Goldfinger    G</code></pre>
 <p>That’s exactly equivalent to submitting the following SQL commands dirctly:</p>
 <pre class="sourceCode r"><code class="sourceCode r">DBI<span class="op">::</span><span class="kw">dbGetQuery</span>(
   con,
-  <span class="st">&#39;SELECT &quot;rental_date&quot;, &quot;return_date&quot;</span>
-<span class="st">FROM &quot;rental&quot;</span>
+  <span class="st">&#39;SELECT &quot;title&quot;, &quot;rating&quot;</span>
+<span class="st">FROM &quot;film&quot;</span>
 <span class="st">LIMIT 6&#39;</span>) </code></pre>
-<pre><code>##           rental_date         return_date
-## 1 2005-05-24 22:54:33 2005-05-28 19:40:33
-## 2 2005-05-24 23:03:39 2005-06-01 22:12:39
-## 3 2005-05-24 23:04:41 2005-06-03 01:43:41
-## 4 2005-05-24 23:05:21 2005-06-02 04:33:21
-## 5 2005-05-24 23:08:07 2005-05-27 01:32:07
-## 6 2005-05-24 23:11:53 2005-05-29 20:34:53</code></pre>
+<pre><code>##               title rating
+## 1   Chamber Italian  NC-17
+## 2  Grosse Wonderful      R
+## 3   Airport Pollock      R
+## 4 Bright Encounters  PG-13
+## 5  Academy Dinosaur     PG
+## 6    Ace Goldfinger      G</code></pre>
 <p>We won’t discuss <code>dplyr</code> methods for sub-setting variables, deriving new ones, or sub-setting rows based on the values found in the table, because they are covered well in other places, including:</p>
 <ul>
 <li>Comprehensive reference: <a href="https://dplyr.tidyverse.org/">https://dplyr.tidyverse.org/</a></li>
 <li>Good tutorial: <a href="https://suzan.rbind.io/tags/dplyr/">https://suzan.rbind.io/tags/dplyr/</a></li>
 </ul>
 <p>In practice we find that, <strong>renaming variables</strong> is often quite important because the names in an SQL database might not meet your needs as an analyst. In “the wild”, you will find names that are ambiguous or overly specified, with spaces in them, and other problems that will make them difficult to use in R. It is good practice to do whatever renaming you are going to do in a predictable place like at the top of your code. The names in the <code>dvdrental</code> database are simple and clear, but if they were not, you might rename them for subsequent use in this way:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tbl</span>(con, <span class="st">&quot;rental&quot;</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">rename</span>(<span class="dt">rental_id_number =</span> rental_id, 
-                <span class="dt">inventory_id_number =</span> inventory_id) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(rental_id_number, rental_date, 
-                inventory_id_number) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">head</span>()</code></pre>
-<pre><code>## # Source:   lazy query [?? x 3]
-## # Database: postgres [postgres@localhost:5432/dvdrental]
-##   rental_id_number rental_date         inventory_id_number
-##              &lt;int&gt; &lt;dttm&gt;                            &lt;int&gt;
-## 1                2 2005-05-24 22:54:33                1525
-## 2                3 2005-05-24 23:03:39                1711
-## 3                4 2005-05-24 23:04:41                2452
-## 4                5 2005-05-24 23:05:21                2079
-## 5                6 2005-05-24 23:08:07                2792
-## 6                7 2005-05-24 23:11:53                3995</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tbl</span>(con, <span class="st">&quot;film&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="co">## CHANGE STUFF</span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">rename</span>(<span class="dt">film_id_number =</span> film_id, 
+                <span class="dt">language_id_number =</span> language_id) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(film_id_number, title, 
+                language_id_number) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="co"># head()</span>
+<span class="kw">show_query</span>()</code></pre>
+<pre><code>## &lt;SQL&gt;
+## SELECT &quot;film_id_number&quot;, &quot;title&quot;, &quot;language_id_number&quot;
+## FROM (SELECT &quot;film_id&quot; AS &quot;film_id_number&quot;, &quot;title&quot;, &quot;description&quot;, &quot;release_year&quot;, &quot;language_id&quot; AS &quot;language_id_number&quot;, &quot;rental_duration&quot;, &quot;rental_rate&quot;, &quot;length&quot;, &quot;replacement_cost&quot;, &quot;rating&quot;, &quot;last_update&quot;, &quot;special_features&quot;, &quot;fulltext&quot;
+## FROM &quot;film&quot;) &quot;pimymxxpkd&quot;</code></pre>
 <p>That’s equivalent to the following SQL code:</p>
 <pre class="sourceCode r"><code class="sourceCode r">DBI<span class="op">::</span><span class="kw">dbGetQuery</span>(
   con,
-  <span class="st">&#39;SELECT &quot;rental_id_number&quot;, &quot;rental_date&quot;, &quot;inventory_id_number&quot;</span>
-<span class="st">FROM (SELECT &quot;rental_id&quot; AS &quot;rental_id_number&quot;, </span>
-<span class="st">  &quot;rental_date&quot;, &quot;inventory_id&quot; AS &quot;inventory_id_number&quot;, &quot;customer_id&quot;,</span>
-<span class="st">  &quot;return_date&quot;, &quot;staff_id&quot;, &quot;last_update&quot;</span>
-<span class="st">FROM &quot;rental&quot;) &quot;ihebfvnxvb&quot;</span>
+  <span class="st">&#39;SELECT &quot;film_id_number&quot;, &quot;title&quot;, &quot;language_id_number&quot;</span>
+<span class="st">FROM (SELECT &quot;film_id&quot; AS &quot;film_id_number&quot;, &quot;title&quot;, &quot;description&quot;,</span>
+<span class="st">  &quot;release_year&quot;, &quot;language_id&quot; AS &quot;language_id_number&quot;, </span>
+<span class="st">  &quot;rental_duration&quot;, &quot;rental_rate&quot;, &quot;length&quot;, &quot;replacement_cost&quot;, </span>
+<span class="st">  &quot;rating&quot;, &quot;last_update&quot;, &quot;special_features&quot;, &quot;fulltext&quot;</span>
+<span class="st">FROM &quot;film&quot;) &quot;yhbysdoypk&quot;</span>
 <span class="st">LIMIT 6&#39;</span> )</code></pre>
-<pre><code>##   rental_id_number         rental_date inventory_id_number
-## 1                2 2005-05-24 22:54:33                1525
-## 2                3 2005-05-24 23:03:39                1711
-## 3                4 2005-05-24 23:04:41                2452
-## 4                5 2005-05-24 23:05:21                2079
-## 5                6 2005-05-24 23:08:07                2792
-## 6                7 2005-05-24 23:11:53                3995</code></pre>
+<pre><code>##   film_id_number             title language_id_number
+## 1            133   Chamber Italian                  1
+## 2            384  Grosse Wonderful                  1
+## 3              8   Airport Pollock                  1
+## 4             98 Bright Encounters                  1
+## 5              1  Academy Dinosaur                  1
+## 6              2    Ace Goldfinger                  1</code></pre>
 <p>The one difference is that the <code>SQL</code> code returns a regular data frame and the <code>dplyr</code> code returns a <code>tibble</code>. Notice that the seconds are greyed out in the <code>tibble</code> display.</p>
 </div>
 <div id="translating-dplyr-code-to-sql-queries" class="section level3">
 <h3><span class="header-section-number">8.2.8</span> Translating <code>dplyr</code> code to <code>SQL</code> queries</h3>
 <p>Where did the translations we’ve shown above come from? The <code>show_query</code> function shows how <code>dplyr</code> is translating your query to the dialect of the target dbms:</p>
-<pre class="sourceCode r"><code class="sourceCode r">rental_table <span class="op">%&gt;%</span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">count</span>(staff_id) <span class="op">%&gt;%</span>
+<pre class="sourceCode r"><code class="sourceCode r">film_table <span class="op">%&gt;%</span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">tally</span>() <span class="op">%&gt;%</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">show_query</span>()</code></pre>
 <pre><code>## &lt;SQL&gt;
-## SELECT &quot;staff_id&quot;, COUNT(*) AS &quot;n&quot;
-## FROM &quot;rental&quot;
-## GROUP BY &quot;staff_id&quot;</code></pre>
+## SELECT COUNT(*) AS &quot;n&quot;
+## FROM &quot;film&quot;</code></pre>
 <p>Here is an extensive discussion of how <code>dplyr</code> code is translated into SQL:</p>
 <ul>
 <li><a href="https://dbplyr.tidyverse.org/articles/sql-translation.html">https://dbplyr.tidyverse.org/articles/sql-translation.html</a></li>
@@ -883,54 +886,51 @@ rental_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span 
 <p>If you prefer to use SQL directly, rather than <code>dplyr</code>, you can submit SQL code to the DBMS through the <code>DBI::dbGetQuery</code> function:</p>
 <pre class="sourceCode r"><code class="sourceCode r">DBI<span class="op">::</span><span class="kw">dbGetQuery</span>(
   con,
-  <span class="st">&#39;SELECT &quot;staff_id&quot;, COUNT(*) AS &quot;n&quot;</span>
-<span class="st">   FROM &quot;rental&quot;</span>
-<span class="st">   GROUP BY &quot;staff_id&quot;;</span>
-<span class="st">  &#39;</span>
+  <span class="st">&#39;SELECT COUNT(*) AS &quot;n&quot;</span>
+<span class="st">     FROM &quot;film&quot;   &#39;</span>
 )</code></pre>
-<pre><code>##   staff_id    n
-## 1        2 8004
-## 2        1 8040</code></pre>
+<pre><code>##      n
+## 1 1000</code></pre>
 <p>When you create a report to run repeatedly, you might want to put that query into R markdown. That way you can also execute that SQL code in a chunk with the following header:</p>
 <p>{<code>sql, connection=con, output.var = &quot;query_results&quot;</code>}</p>
-<pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> <span class="ot">&quot;staff_id&quot;</span>, <span class="fu">COUNT</span>(*) <span class="kw">AS</span> <span class="ot">&quot;n&quot;</span>
-<span class="kw">FROM</span> <span class="ot">&quot;rental&quot;</span>
-<span class="kw">GROUP</span> <span class="kw">BY</span> <span class="ot">&quot;staff_id&quot;</span>;</code></pre>
+<pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> <span class="fu">COUNT</span>(*) <span class="kw">AS</span> <span class="ot">&quot;n&quot;</span>
+     <span class="kw">FROM</span> <span class="ot">&quot;film&quot;</span>;</code></pre>
 <p>Rmarkdown stores that query result in a tibble which can be printed by referring to it:</p>
 <pre class="sourceCode r"><code class="sourceCode r">query_results</code></pre>
-<pre><code>##   staff_id    n
-## 1        2 8004
-## 2        1 8040</code></pre>
+<pre><code>##      n
+## 1 1000</code></pre>
 </div>
 </div>
 <div id="mixing-dplyr-and-sql" class="section level2">
 <h2><span class="header-section-number">8.3</span> Mixing dplyr and SQL</h2>
 <p>When dplyr finds code that it does not know how to translate into SQL, it will simply pass it along to the dbms. Therefore you can interleave native commands that your dbms will understand in the middle of dplyr code. Consider this example that’s derived from <span class="citation">(Ruiz <a href="#ref-Ruiz2019">2019</a>)</span>:</p>
-<pre class="sourceCode r"><code class="sourceCode r">rental_table <span class="op">%&gt;%</span>
+<pre class="sourceCode r"><code class="sourceCode r">film_table <span class="op">%&gt;%</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select_at</span>(<span class="kw">vars</span>( <span class="op">-</span><span class="kw">contains</span>(<span class="st">&quot;_id&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">today =</span> <span class="kw">now</span>()) <span class="op">%&gt;%</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">show_query</span>()</code></pre>
 <pre><code>## &lt;SQL&gt;
-## SELECT &quot;rental_date&quot;, &quot;return_date&quot;, &quot;last_update&quot;, NOW() AS &quot;today&quot;
-## FROM (SELECT &quot;rental_date&quot;, &quot;return_date&quot;, &quot;last_update&quot;
-## FROM &quot;rental&quot;) &quot;yhbysdoypk&quot;</code></pre>
+## SELECT &quot;title&quot;, &quot;description&quot;, &quot;release_year&quot;, &quot;rental_duration&quot;, &quot;rental_rate&quot;, &quot;length&quot;, &quot;replacement_cost&quot;, &quot;rating&quot;, &quot;last_update&quot;, &quot;special_features&quot;, &quot;fulltext&quot;, NOW() AS &quot;today&quot;
+## FROM (SELECT &quot;title&quot;, &quot;description&quot;, &quot;release_year&quot;, &quot;rental_duration&quot;, &quot;rental_rate&quot;, &quot;length&quot;, &quot;replacement_cost&quot;, &quot;rating&quot;, &quot;last_update&quot;, &quot;special_features&quot;, &quot;fulltext&quot;
+## FROM &quot;film&quot;) &quot;yhbysdoypk&quot;</code></pre>
 <p>That is native to PostgreSQL, not <a href="https://en.wikipedia.org/wiki/SQL#Interoperability_and_standardization">ANSI standard</a> SQL.</p>
 <p>Verify that it works:</p>
-<pre class="sourceCode r"><code class="sourceCode r">rental_table <span class="op">%&gt;%</span>
+<pre class="sourceCode r"><code class="sourceCode r">film_table <span class="op">%&gt;%</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select_at</span>(<span class="kw">vars</span>( <span class="op">-</span><span class="kw">contains</span>(<span class="st">&quot;_id&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">head</span>() <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">today =</span> <span class="kw">now</span>()) <span class="op">%&gt;%</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">collect</span>()</code></pre>
-<pre><code>## # A tibble: 6 x 4
-##   rental_date         return_date         last_update        
-##   &lt;dttm&gt;              &lt;dttm&gt;              &lt;dttm&gt;             
-## 1 2005-05-24 22:54:33 2005-05-28 19:40:33 2006-02-16 02:30:53
-## 2 2005-05-24 23:03:39 2005-06-01 22:12:39 2006-02-16 02:30:53
-## 3 2005-05-24 23:04:41 2005-06-03 01:43:41 2006-02-16 02:30:53
-## 4 2005-05-24 23:05:21 2005-06-02 04:33:21 2006-02-16 02:30:53
-## 5 2005-05-24 23:08:07 2005-05-27 01:32:07 2006-02-16 02:30:53
-## 6 2005-05-24 23:11:53 2005-05-29 20:34:53 2006-02-16 02:30:53
-## # … with 1 more variable: today &lt;dttm&gt;</code></pre>
+<pre><code>## # A tibble: 6 x 12
+##   title description release_year rental_duration rental_rate length
+##   &lt;chr&gt; &lt;chr&gt;              &lt;int&gt;           &lt;int&gt;       &lt;dbl&gt;  &lt;int&gt;
+## 1 Cham… A Fateful …         2006               7        4.99    117
+## 2 Gros… A Epic Dra…         2006               5        4.99     49
+## 3 Airp… A Epic Tal…         2006               6        4.99     54
+## 4 Brig… A Fateful …         2006               4        4.99     73
+## 5 Acad… A Epic Dra…         2006               6        0.99     86
+## 6 Ace … A Astoundi…         2006               3        4.99     48
+## # … with 6 more variables: replacement_cost &lt;dbl&gt;, rating &lt;chr&gt;,
+## #   last_update &lt;dttm&gt;, special_features &lt;chr&gt;, fulltext &lt;chr&gt;,
+## #   today &lt;dttm&gt;</code></pre>
 </div>
 <div id="examining-a-single-table-with-r" class="section level2">
 <h2><span class="header-section-number">8.4</span> Examining a single table with R</h2>
@@ -945,68 +945,84 @@ rental_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span 
 <div id="str---a-base-package-workhorse" class="section level3">
 <h3><span class="header-section-number">8.4.1</span> <code>str</code> - a base package workhorse</h3>
 <p><code>str</code> is a workhorse function that lists variables, their type and a sample of the first few variable values.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(rental_tibble)</code></pre>
-<pre><code>## &#39;data.frame&#39;:    16044 obs. of  7 variables:
-##  $ rental_id   : int  2 3 4 5 6 7 8 9 10 11 ...
-##  $ rental_date : POSIXct, format: &quot;2005-05-24 22:54:33&quot; &quot;2005-05-24 23:03:39&quot; ...
-##  $ inventory_id: int  1525 1711 2452 2079 2792 3995 2346 2580 1824 4443 ...
-##  $ customer_id : int  459 408 333 222 549 269 239 126 399 142 ...
-##  $ return_date : POSIXct, format: &quot;2005-05-28 19:40:33&quot; &quot;2005-06-01 22:12:39&quot; ...
-##  $ staff_id    : int  1 1 2 1 1 2 2 1 2 2 ...
-##  $ last_update : POSIXct, format: &quot;2006-02-16 02:30:53&quot; &quot;2006-02-16 02:30:53&quot; ...</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(film_tibble)</code></pre>
+<pre><code>## &#39;data.frame&#39;:    1000 obs. of  13 variables:
+##  $ film_id         : int  133 384 8 98 1 2 3 4 5 6 ...
+##  $ title           : chr  &quot;Chamber Italian&quot; &quot;Grosse Wonderful&quot; &quot;Airport Pollock&quot; &quot;Bright Encounters&quot; ...
+##  $ description     : chr  &quot;A Fateful Reflection of a Moose And a Husband who must Overcome a Monkey in Nigeria&quot; &quot;A Epic Drama of a Cat And a Explorer who must Redeem a Moose in Australia&quot; &quot;A Epic Tale of a Moose And a Girl who must Confront a Monkey in Ancient India&quot; &quot;A Fateful Yarn of a Lumberjack And a Feminist who must Conquer a Student in A Jet Boat&quot; ...
+##  $ release_year    : int  2006 2006 2006 2006 2006 2006 2006 2006 2006 2006 ...
+##  $ language_id     : int  1 1 1 1 1 1 1 1 1 1 ...
+##  $ rental_duration : int  7 5 6 4 6 3 7 5 6 3 ...
+##  $ rental_rate     : num  4.99 4.99 4.99 4.99 0.99 4.99 2.99 2.99 2.99 2.99 ...
+##  $ length          : int  117 49 54 73 86 48 50 117 130 169 ...
+##  $ replacement_cost: num  15 20 16 13 21 ...
+##  $ rating          : &#39;pq_mpaa_rating&#39; chr  &quot;NC-17&quot; &quot;R&quot; &quot;R&quot; &quot;PG-13&quot; ...
+##  $ last_update     : POSIXct, format: &quot;2013-05-26 14:50:58&quot; &quot;2013-05-26 14:50:58&quot; ...
+##  $ special_features: &#39;pq__text&#39; chr  &quot;{Trailers}&quot; &quot;{\&quot;Behind the Scenes\&quot;}&quot; &quot;{Trailers}&quot; &quot;{Trailers}&quot; ...
+##  $ fulltext        : &#39;pq_tsvector&#39; chr  &quot;&#39;chamber&#39;:1 &#39;fate&#39;:4 &#39;husband&#39;:11 &#39;italian&#39;:2 &#39;monkey&#39;:16 &#39;moos&#39;:8 &#39;must&#39;:13 &#39;nigeria&#39;:18 &#39;overcom&#39;:14 &#39;reflect&#39;:5&quot; &quot;&#39;australia&#39;:18 &#39;cat&#39;:8 &#39;drama&#39;:5 &#39;epic&#39;:4 &#39;explor&#39;:11 &#39;gross&#39;:1 &#39;moos&#39;:16 &#39;must&#39;:13 &#39;redeem&#39;:14 &#39;wonder&#39;:2&quot; &quot;&#39;airport&#39;:1 &#39;ancient&#39;:18 &#39;confront&#39;:14 &#39;epic&#39;:4 &#39;girl&#39;:11 &#39;india&#39;:19 &#39;monkey&#39;:16 &#39;moos&#39;:8 &#39;must&#39;:13 &#39;pollock&#39;:2 &#39;tale&#39;:5&quot; &quot;&#39;boat&#39;:20 &#39;bright&#39;:1 &#39;conquer&#39;:14 &#39;encount&#39;:2 &#39;fate&#39;:4 &#39;feminist&#39;:11 &#39;jet&#39;:19 &#39;lumberjack&#39;:8 &#39;must&#39;:13 &#39;student&#39;:16 &#39;yarn&#39;:5&quot; ...</code></pre>
 </div>
 <div id="always-look-at-your-data-with-head-view-or-kable" class="section level3">
 <h3><span class="header-section-number">8.4.2</span> Always <strong>look</strong> at your data with <code>head</code>, <code>View</code>, or <code>kable</code></h3>
 <p>There is no substitute for looking at your data and R provides several ways to just browse it. The <code>head</code> function controls the number of rows that are displayed. Note that tail does not work against a database object. In every-day practice you would look at more than the default 6 rows, but here we wrap <code>head</code> around the data frame:</p>
-<pre class="sourceCode r"><code class="sourceCode r">sqlpetr<span class="op">::</span><span class="kw">sp_print_df</span>(<span class="kw">head</span>(rental_tibble))</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">sqlpetr<span class="op">::</span><span class="kw">sp_print_df</span>(<span class="kw">head</span>(film_tibble))</code></pre>
 <div id="htmlwidget-4f68022fd73b3d133ebb" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-4f68022fd73b3d133ebb">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[2,3,4,5,6,7],["2005-05-25T05:54:33Z","2005-05-25T06:03:39Z","2005-05-25T06:04:41Z","2005-05-25T06:05:21Z","2005-05-25T06:08:07Z","2005-05-25T06:11:53Z"],[1525,1711,2452,2079,2792,3995],[459,408,333,222,549,269],["2005-05-29T02:40:33Z","2005-06-02T05:12:39Z","2005-06-03T08:43:41Z","2005-06-02T11:33:21Z","2005-05-27T08:32:07Z","2005-05-30T03:34:53Z"],[1,1,2,1,1,2],["2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>rental_id<\/th>\n      <th>rental_date<\/th>\n      <th>inventory_id<\/th>\n      <th>customer_id<\/th>\n      <th>return_date<\/th>\n      <th>staff_id<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-4f68022fd73b3d133ebb">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[133,384,8,98,1,2],["Chamber Italian","Grosse Wonderful","Airport Pollock","Bright Encounters","Academy Dinosaur","Ace Goldfinger"],["A Fateful Reflection of a Moose And a Husband who must Overcome a Monkey in Nigeria","A Epic Drama of a Cat And a Explorer who must Redeem a Moose in Australia","A Epic Tale of a Moose And a Girl who must Confront a Monkey in Ancient India","A Fateful Yarn of a Lumberjack And a Feminist who must Conquer a Student in A Jet Boat","A Epic Drama of a Feminist And a Mad Scientist who must Battle a Teacher in The Canadian Rockies","A Astounding Epistle of a Database Administrator And a Explorer who must Find a Car in Ancient China"],[2006,2006,2006,2006,2006,2006],[1,1,1,1,1,1],[7,5,6,4,6,3],[4.99,4.99,4.99,4.99,0.99,4.99],[117,49,54,73,86,48],[14.99,19.99,15.99,12.99,20.99,12.99],["NC-17","R","R","PG-13","PG","G"],["2013-05-26T21:50:58Z","2013-05-26T21:50:58Z","2013-05-26T21:50:58Z","2013-05-26T21:50:58Z","2013-05-26T21:50:58Z","2013-05-26T21:50:58Z"],["{Trailers}","{\"Behind the Scenes\"}","{Trailers}","{Trailers}","{\"Deleted Scenes\",\"Behind the Scenes\"}","{Trailers,\"Deleted Scenes\"}"],["'chamber':1 'fate':4 'husband':11 'italian':2 'monkey':16 'moos':8 'must':13 'nigeria':18 'overcom':14 'reflect':5","'australia':18 'cat':8 'drama':5 'epic':4 'explor':11 'gross':1 'moos':16 'must':13 'redeem':14 'wonder':2","'airport':1 'ancient':18 'confront':14 'epic':4 'girl':11 'india':19 'monkey':16 'moos':8 'must':13 'pollock':2 'tale':5","'boat':20 'bright':1 'conquer':14 'encount':2 'fate':4 'feminist':11 'jet':19 'lumberjack':8 'must':13 'student':16 'yarn':5","'academi':1 'battl':15 'canadian':20 'dinosaur':2 'drama':5 'epic':4 'feminist':8 'mad':11 'must':14 'rocki':21 'scientist':12 'teacher':17","'ace':1 'administr':9 'ancient':19 'astound':4 'car':17 'china':20 'databas':8 'epistl':5 'explor':12 'find':15 'goldfing':2 'must':14"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>film_id<\/th>\n      <th>title<\/th>\n      <th>description<\/th>\n      <th>release_year<\/th>\n      <th>language_id<\/th>\n      <th>rental_duration<\/th>\n      <th>rental_rate<\/th>\n      <th>length<\/th>\n      <th>replacement_cost<\/th>\n      <th>rating<\/th>\n      <th>last_update<\/th>\n      <th>special_features<\/th>\n      <th>fulltext<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,4,5,6,7,8,9]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="the-summary-function-in-base" class="section level3">
 <h3><span class="header-section-number">8.4.3</span> The <code>summary</code> function in <code>base</code></h3>
 <p>The <code>base</code> package’s <code>summary</code> function provides basic statistics that serve a unique diagnostic purpose in this context. For example, the following output shows that:</p>
-<pre><code>* `rental_id` is a number from 1 to 16,049. In a previous section, we ran the `str` function and saw that there are 16,044 observations in this table. Therefore, the `rental_id` seems to be sequential from 1:16049, but there are 5 values missing from that sequence. _Exercise for the Reader_: Which 5 values from 1:16049 are missing from `rental_id` values in the `rental` table? (_Hint_: In the chapter on SQL Joins, you will learn the functions needed to answer this question.)
+<pre><code>* `film_id` is a number from 1 to 16,049. In a previous section, we ran the `str` function and saw that there are 16,044 observations in this table. Therefore, the `film_id` seems to be sequential from 1:16049, but there are 5 values missing from that sequence. _Exercise for the Reader_: Which 5 values from 1:16049 are missing from `film_id` values in the `film` table? (_Hint_: In the chapter on SQL Joins, you will learn the functions needed to answer this question.)
 * The number of NA&#39;s in the `return_date` column is a good first guess as to the number of DVDs rented out or lost as of 2005-09-02 02:35:22.</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(rental_tibble)</code></pre>
-<pre><code>##    rental_id      rental_date                   inventory_id 
-##  Min.   :    1   Min.   :2005-05-24 22:53:30   Min.   :   1  
-##  1st Qu.: 4014   1st Qu.:2005-07-07 00:58:40   1st Qu.:1154  
-##  Median : 8026   Median :2005-07-28 16:04:32   Median :2291  
-##  Mean   : 8025   Mean   :2005-07-23 08:13:34   Mean   :2292  
-##  3rd Qu.:12037   3rd Qu.:2005-08-17 21:16:23   3rd Qu.:3433  
-##  Max.   :16049   Max.   :2006-02-14 15:16:03   Max.   :4581  
-##                                                              
-##   customer_id     return_date                     staff_id    
-##  Min.   :  1.0   Min.   :2005-05-25 23:55:21   Min.   :1.000  
-##  1st Qu.:148.0   1st Qu.:2005-07-10 15:49:36   1st Qu.:1.000  
-##  Median :296.0   Median :2005-08-01 19:45:29   Median :1.000  
-##  Mean   :297.1   Mean   :2005-07-25 23:58:03   Mean   :1.499  
-##  3rd Qu.:446.0   3rd Qu.:2005-08-20 23:35:55   3rd Qu.:2.000  
-##  Max.   :599.0   Max.   :2005-09-02 02:35:22   Max.   :2.000  
-##                  NA&#39;s   :183                                  
-##   last_update                 
-##  Min.   :2006-02-15 21:30:53  
-##  1st Qu.:2006-02-16 02:30:53  
-##  Median :2006-02-16 02:30:53  
-##  Mean   :2006-02-16 02:31:31  
-##  3rd Qu.:2006-02-16 02:30:53  
-##  Max.   :2006-02-23 09:12:08  
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(film_tibble)</code></pre>
+<pre><code>##     film_id          title           description         release_year 
+##  Min.   :   1.0   Length:1000        Length:1000        Min.   :2006  
+##  1st Qu.: 250.8   Class :character   Class :character   1st Qu.:2006  
+##  Median : 500.5   Mode  :character   Mode  :character   Median :2006  
+##  Mean   : 500.5                                         Mean   :2006  
+##  3rd Qu.: 750.2                                         3rd Qu.:2006  
+##  Max.   :1000.0                                         Max.   :2006  
+##   language_id rental_duration  rental_rate       length     
+##  Min.   :1    Min.   :3.000   Min.   :0.99   Min.   : 46.0  
+##  1st Qu.:1    1st Qu.:4.000   1st Qu.:0.99   1st Qu.: 80.0  
+##  Median :1    Median :5.000   Median :2.99   Median :114.0  
+##  Mean   :1    Mean   :4.985   Mean   :2.98   Mean   :115.3  
+##  3rd Qu.:1    3rd Qu.:6.000   3rd Qu.:4.99   3rd Qu.:149.2  
+##  Max.   :1    Max.   :7.000   Max.   :4.99   Max.   :185.0  
+##  replacement_cost    rating                last_update                 
+##  Min.   : 9.99    Length:1000             Min.   :2013-05-26 14:50:58  
+##  1st Qu.:14.99    Class :pq_mpaa_rating   1st Qu.:2013-05-26 14:50:58  
+##  Median :19.99    Mode  :character        Median :2013-05-26 14:50:58  
+##  Mean   :19.98                            Mean   :2013-05-26 14:50:58  
+##  3rd Qu.:24.99                            3rd Qu.:2013-05-26 14:50:58  
+##  Max.   :29.99                            Max.   :2013-05-26 14:50:58  
+##  special_features     fulltext          
+##  Length:1000        Length:1000         
+##  Class :pq__text    Class :pq_tsvector  
+##  Mode  :character   Mode  :character    
+##                                         
+##                                         
 ## </code></pre>
 <p>So the <code>summary</code> function is surprisingly useful as we first start to look at the table contents.</p>
 </div>
 <div id="the-glimpse-function-in-the-tibble-package" class="section level3">
 <h3><span class="header-section-number">8.4.4</span> The <code>glimpse</code> function in the <code>tibble</code> package</h3>
 <p>The <code>tibble</code> package’s <code>glimpse</code> function is a more compact version of <code>str</code>:</p>
-<pre class="sourceCode r"><code class="sourceCode r">tibble<span class="op">::</span><span class="kw">glimpse</span>(rental_tibble)</code></pre>
-<pre><code>## Observations: 16,044
-## Variables: 7
-## $ rental_id    &lt;int&gt; 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,…
-## $ rental_date  &lt;dttm&gt; 2005-05-24 22:54:33, 2005-05-24 23:03:39, 2005-05-…
-## $ inventory_id &lt;int&gt; 1525, 1711, 2452, 2079, 2792, 3995, 2346, 2580, 182…
-## $ customer_id  &lt;int&gt; 459, 408, 333, 222, 549, 269, 239, 126, 399, 142, 2…
-## $ return_date  &lt;dttm&gt; 2005-05-28 19:40:33, 2005-06-01 22:12:39, 2005-06-…
-## $ staff_id     &lt;int&gt; 1, 1, 2, 1, 1, 2, 2, 1, 2, 2, 2, 1, 1, 1, 2, 1, 2, …
-## $ last_update  &lt;dttm&gt; 2006-02-16 02:30:53, 2006-02-16 02:30:53, 2006-02-…</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">tibble<span class="op">::</span><span class="kw">glimpse</span>(film_tibble)</code></pre>
+<pre><code>## Observations: 1,000
+## Variables: 13
+## $ film_id          &lt;int&gt; 133, 384, 8, 98, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11…
+## $ title            &lt;chr&gt; &quot;Chamber Italian&quot;, &quot;Grosse Wonderful&quot;, &quot;Airport…
+## $ description      &lt;chr&gt; &quot;A Fateful Reflection of a Moose And a Husband …
+## $ release_year     &lt;int&gt; 2006, 2006, 2006, 2006, 2006, 2006, 2006, 2006,…
+## $ language_id      &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,…
+## $ rental_duration  &lt;int&gt; 7, 5, 6, 4, 6, 3, 7, 5, 6, 3, 6, 3, 6, 6, 6, 4,…
+## $ rental_rate      &lt;dbl&gt; 4.99, 4.99, 4.99, 4.99, 0.99, 4.99, 2.99, 2.99,…
+## $ length           &lt;int&gt; 117, 49, 54, 73, 86, 48, 50, 117, 130, 169, 62,…
+## $ replacement_cost &lt;dbl&gt; 14.99, 19.99, 15.99, 12.99, 20.99, 12.99, 18.99…
+## $ rating           &lt;chr&gt; &quot;NC-17&quot;, &quot;R&quot;, &quot;R&quot;, &quot;PG-13&quot;, &quot;PG&quot;, &quot;G&quot;, &quot;NC-17&quot;,…
+## $ last_update      &lt;dttm&gt; 2013-05-26 14:50:58, 2013-05-26 14:50:58, 2013…
+## $ special_features &lt;chr&gt; &quot;{Trailers}&quot;, &quot;{\&quot;Behind the Scenes\&quot;}&quot;, &quot;{Trai…
+## $ fulltext         &lt;chr&gt; &quot;&#39;chamber&#39;:1 &#39;fate&#39;:4 &#39;husband&#39;:11 &#39;italian&#39;:2 …</code></pre>
 </div>
 <div id="the-skim-function-in-the-skimr-package" class="section level3">
 <h3><span class="header-section-number">8.4.5</span> The <code>skim</code> function in the <code>skimr</code> package</h3>
@@ -1020,33 +1036,65 @@ rental_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span 
 <pre><code>## The following object is masked from &#39;package:stats&#39;:
 ## 
 ##     filter</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r">skimr<span class="op">::</span><span class="kw">skim</span>(rental_tibble)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">skimr<span class="op">::</span><span class="kw">skim</span>(film_tibble)</code></pre>
+<pre><code>## Warning: No summary functions for vectors of class: pq_mpaa_rating.
+## Coercing to character</code></pre>
+<pre><code>## Warning: No summary functions for vectors of class: pq__text.
+## Coercing to character</code></pre>
+<pre><code>## Warning: No summary functions for vectors of class: pq_tsvector.
+## Coercing to character</code></pre>
 <pre><code>## Skim summary statistics
-##  n obs: 16044 
-##  n variables: 7 
+##  n obs: 1000 
+##  n variables: 13 
 ## 
-## ── Variable type:integer ─────────────────────────────────────────────────────────────────────────────────────────────────────────────
-##      variable missing complete     n    mean      sd p0     p25    p50
-##   customer_id       0    16044 16044  297.14  172.45  1  148     296  
-##  inventory_id       0    16044 16044 2291.84 1322.21  1 1154    2291  
-##     rental_id       0    16044 16044 8025.37 4632.78  1 4013.75 8025.5
-##      staff_id       0    16044 16044    1.5     0.5   1    1       1  
-##       p75  p100     hist
-##    446      599 ▇▇▇▇▇▇▇▇
-##   3433     4581 ▇▇▇▇▇▇▇▇
-##  12037.25 16049 ▇▇▇▇▇▇▇▇
-##      2        2 ▇▁▁▁▁▁▁▇
+## ── Variable type:character ──────────────────────────────────────────────────────────────────────────────
+##          variable missing complete    n min max empty n_unique
+##       description       0     1000 1000  70 130     0     1000
+##          fulltext       0     1000 1000  98 205     0     1000
+##            rating       0     1000 1000   1   5     0        5
+##  special_features       0     1000 1000  10  60     0       15
+##             title       0     1000 1000   8  27     0     1000
 ## 
-## ── Variable type:POSIXct ─────────────────────────────────────────────────────────────────────────────────────────────────────────────
-##     variable missing complete     n        min        max     median
-##  last_update       0    16044 16044 2006-02-15 2006-02-23 2006-02-16
-##  rental_date       0    16044 16044 2005-05-24 2006-02-14 2005-07-28
-##  return_date     183    15861 16044 2005-05-25 2005-09-02 2005-08-01
+## ── Variable type:integer ────────────────────────────────────────────────────────────────────────────────
+##         variable missing complete    n    mean     sd   p0     p25    p50
+##          film_id       0     1000 1000  500.5  288.82    1  250.75  500.5
+##      language_id       0     1000 1000    1      0       1    1       1  
+##           length       0     1000 1000  115.27  40.43   46   80     114  
+##     release_year       0     1000 1000 2006      0    2006 2006    2006  
+##  rental_duration       0     1000 1000    4.99   1.41    3    4       5  
+##      p75 p100     hist
+##   750.25 1000 ▇▇▇▇▇▇▇▇
+##     1       1 ▁▁▁▇▁▁▁▁
+##   149.25  185 ▇▇▆▇▆▇▆▇
+##  2006    2006 ▁▁▁▇▁▁▁▁
+##     6       7 ▇▇▁▇▁▇▁▇
+## 
+## ── Variable type:numeric ────────────────────────────────────────────────────────────────────────────────
+##          variable missing complete    n  mean   sd    p0   p25   p50   p75
+##       rental_rate       0     1000 1000  2.98 1.65  0.99  0.99  2.99  4.99
+##  replacement_cost       0     1000 1000 19.98 6.05  9.99 14.99 19.99 24.99
+##   p100     hist
+##   4.99 ▇▁▁▇▁▁▁▇
+##  29.99 ▇▇▃▇▆▇▅▇
+## 
+## ── Variable type:POSIXct ────────────────────────────────────────────────────────────────────────────────
+##     variable missing complete    n        min        max     median
+##  last_update       0     1000 1000 2013-05-26 2013-05-26 2013-05-26
 ##  n_unique
-##         3
-##     15815
-##     15836</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r">wide_rental_skim &lt;-<span class="st"> </span>skimr<span class="op">::</span><span class="kw">skim_to_wide</span>(rental_tibble)</code></pre>
+##         1</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">skimr<span class="op">::</span><span class="kw">skim_to_wide</span>(film_tibble[,<span class="dv">1</span><span class="op">:</span><span class="dv">7</span>]) <span class="co">#skimr doesn&#39;t like certain kinds of columns</span></code></pre>
+<pre><code>## # A tibble: 7 x 17
+##   type  variable missing complete n     min   max   empty n_unique mean 
+##   &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;   &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;
+## 1 char… descrip… 0       1000     1000  70    130   0     1000     &lt;NA&gt; 
+## 2 char… title    0       1000     1000  8     27    0     1000     &lt;NA&gt; 
+## 3 inte… film_id  0       1000     1000  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;     &quot; 50…
+## 4 inte… languag… 0       1000     1000  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;     &quot;   …
+## 5 inte… release… 0       1000     1000  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;     &quot;200…
+## 6 inte… rental_… 0       1000     1000  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;     &quot;   …
+## 7 nume… rental_… 0       1000     1000  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;     2.98 
+## # … with 7 more variables: sd &lt;chr&gt;, p0 &lt;chr&gt;, p25 &lt;chr&gt;, p50 &lt;chr&gt;,
+## #   p75 &lt;chr&gt;, p100 &lt;chr&gt;, hist &lt;chr&gt;</code></pre>
 </div>
 <div id="close-the-connection-and-shut-down-sql-pet" class="section level3">
 <h3><span class="header-section-number">8.4.6</span> Close the connection and shut down sql-pet</h3>

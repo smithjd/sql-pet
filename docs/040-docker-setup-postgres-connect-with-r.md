@@ -45,9 +45,7 @@ sp_check_that_docker_is_up()
 ```
 
 ```
-## [1] "Docker is up, running these containers:"                                                                                                     
-## [2] "CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS              PORTS                    NAMES"    
-## [3] "d108544b71ec        postgres-dvdrental   \"docker-entrypoint.s…\"   16 hours ago        Up 16 hours         0.0.0.0:5432->5432/tcp   sql-pet"
+## [1] "Docker is up but running no containers"
 ```
 
 ## Remove previous containers if they exist
@@ -88,9 +86,9 @@ sp_check_that_docker_is_up()
 ```
 
 ```
-## [1] "Docker is up, running these containers:"                                                                                                       
-## [2] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                    NAMES"   
-## [3] "5acd4328f84e        postgres:10         \"docker-entrypoint.s…\"   2 seconds ago       Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
+## [1] "Docker is up, running these containers:"                                                                                                            
+## [2] "CONTAINER ID        IMAGE               COMMAND                  CREATED                  STATUS                  PORTS                    NAMES"   
+## [3] "3f4b9dac8b6d        postgres:10         \"docker-entrypoint.s…\"   Less than a second ago   Up Less than a second   0.0.0.0:5432->5432/tcp   cattle"
 ```
 
 > The `sp_docker_containers_tibble` function from the `sqlpetr` package provides more on the containers that Docker is running.  Basically this function creates a tibble of containers using `docker ps`.
@@ -104,7 +102,7 @@ sp_docker_containers_tibble()
 ## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 5acd4328f84e post… docker… 2019-03-2… 2 seco… 0.0.… Up Le… 0B (… catt…
+## 1 3f4b9dac8b6d post… docker… 2019-03-2… Less t… 0.0.… Up Le… 0B (… catt…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 

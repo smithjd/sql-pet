@@ -31,22 +31,22 @@ con <- sqlpetr::sp_get_postgres_connection(
 )
 ```
 Define two tables to use in a simple query to use in the following discussion.
-```{r}
+```{r connect to two tables}
 rental_table <- dplyr::tbl(con, "rental")
 customer_table <- dplyr::tbl(con, "customer")
 ```
 
 Here is a simple string of `dplyr` verbs similar to the query used to illustrate issues in the last chapter:
 
-```{r}
+```{r create simple join}
 Q <- rental_table %>%
   dplyr::left_join(customer_table, by = c("customer_id" = "customer_id")) %>%
   dplyr::select(rental_date, email)
 
 Q
 ```
-Note that in the previous example we follow this book's convention of fully qualifying function names (e.g., specifying the package).  In practice, it's possible and convenient to use more abbreviated notation.
-```{r}
+Note that in the previous example we follow this book's convention of creating a connection object to each table and fully qualifying function names (e.g., specifying the package).  In practice, it's possible and convenient to use more abbreviated notation.
+```{r simplify the simpe join}
 Q <- tbl(con, "rental") %>%
   left_join(tbl(con, "customer"), by = c("customer_id" = "customer_id")) %>%
   select(rental_date, email)
@@ -76,45 +76,77 @@ Think of `Q` as a black box for the moment.  The following examples will show ho
 
 The next chapter will discuss how to build queries and how to explore intermediate steps. But first, the following subsections provide a more detailed discussion of each row in the preceding table.
 
-
 ### Time-based, execution environment issues
 
-Remember that if the expression is assigned to an object, it is not executed.  If not, a `print()` function is implied. This behavior is the basis for a useful debugging and development process where queries are built up incrementally.
+Remember that if the expression is assigned to an object, it is not executed.  If an expression is entered on the command line or appears in your script by itself, a `print()` function is implied. 
 
 > *These two are different:*
 > Q %>% count(email) 
 > Q_query <- Q %>% count(email) 
 >
 
+This behavior is the basis of a useful debugging and development process where queries are built up incrementally.
+
 ### Q %>% `more dplyr` {#lazy_q_build}
 
 ![](screenshots/green-check.png) Because the following statement implies a `print()` function at the end, we can run it repeatedly, adding dplyr expressions, and only get 10 rows back.  Every time we add a dplyr expression to a chain, R will rewrite the SQL code.  For example:
-```{r}
+```{r one more dplyr}
 Q %>% count(email) 
 ```
 As we understand more about the data, we simply add dplyr expressions to pinpoint what we are looking for:
-```{r}
+```{r three more dplyr}
 Q %>% count(email) %>% 
   filter(n > 40) %>% 
   arrange(email)
 ```
 
 ![](screenshots/green-check.png) When all the accumulated `dplyr` verbs are executed, they are submitted to the dbms and the number of rows that are returned follow the same rules as discussed above.
+### Interspersing SQL and dplyr
+
+```{r date in both}
+rental_table %>% 
+  mutate(rental_date = date(rental_date)) %>% 
+  show_query()
+
+rental_table %>% 
+  mutate(rental_date = date(rental_date))
+
+try(rental_table %>% 
+  mutate(rental_date = lubridate::date(rental_date))
+)
+
+rental_table %>% collect() %>% 
+  mutate(rental_date = lubridate::date(rental_date)) 
+
+```
+
+
+```{r}
+to_char <- function(date, fmt) {return(fmt)}
+
+rental_table %>% 
+  mutate(rental_date = to_char(rental_date, "YYYY-MM")) %>% 
+  show_query()
+
+rental_table %>% 
+  mutate(rental_date = to_char(rental_date, "YYYY-MM")) 
+```
+
+
 
 ### Many handy R functions can't be translated to SQL
 
 ![](screenshots/green-check.png) It just so happens that PostgreSQL has a `date` function that does the same thing as the `date` function in the `lubridate` package.  In the following code the `date` function is executed by PostreSQL.
-```{r}
+```{r postgresql homonym}
 rental_table %>% mutate(rental_date = date(rental_date))
 ```
 ![](screenshots/green-check.png) ![](screenshots/green-check.png) If we specify that we want to use the `lubridate` version (or any number of other R functions) they are passed to the dbms unless we explicitly tell `dplyr` to stop translating and bring the results back to the R environment for local processing.
-```{r}
+```{r collect as delimiter}
 try(rental_table %>% collect() %>% 
   mutate(rental_date = lubridate::date(rental_date)))
 ```
 
-
-### More lazy execution examples
+### Further lazy execution examples
 
 See more examples of lazy execution [here](https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html).
 
@@ -130,16 +162,4 @@ sqlpetr::sp_docker_stop("sql-pet")
 * dplyr Reference documentation: Remote tables. [https://dplyr.tidyverse.org/reference/index.html#section-remote-tables](https://dplyr.tidyverse.org/reference/index.html#section-remote-tables)
 * Data Carpentry. SQL Databases and R. [https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html](https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html)
 
-## Parking lot
-
-> Although the material in the following table looks like it's *good to know* it's not clear why a run-of-the-mill R user would be concerned with it.  It looks like a draft; not completley clear...
-
-|Operation    |dplyr<br>Local-Only|dplyr<br>Local-Lazy|SQL
-|-------------|-------------------|-------------------|----------------
-|connection|DBI::dbConnect|DBI::dbConnect|DBI::dbConnect
-|Single Read joining one or more tables<br>and fits into memory|DBI::dbReadTable, (returns a df)<br>R package calls always available|tbl() + collect()<br>tbl:Returns two lists<br> collect(): returns tbl_df<br>R package calls available only after collect() call.  Ideally push everything to DB.<br>May require R placeholder functions to mimick DB functions.|dbGetQuery
-|Multiple Reads|Not Applicable|Not Applicable|dbSendQuery + dbFetch + dbClearResult
-|Fetch Data locally|DBI::dbReadTable fetches data|collect()|dbGetQuery or dbSendQuery+dbFetch+dbClearResult|dbGetQuery or dbSendQuery + dbFetch
-|Write Results Local|write family of functions|write family of functions|write family of functions
-|Write Results to DB|compute() or copy_to|compute() or copy_to|compute() or copy_to
 

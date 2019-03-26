@@ -71,69 +71,77 @@ Essentially "Lazy evaluation is a programming strategy that allows a symbol to b
 ### `dplyr` connection objects
 As introduced in the previous chapter, the `dplyr::tbl` function creates an object that might **look** like a data frame in that when you enter it on the command line, it prints a bunch of rows from the dbms table.  But it is actually a **list** object that `dplyr` uses for constructing queries and retrieving data from the DBMS.  
 
-The following code illustrates these issues.  The `dplyr::tbl` function creates the connection object that we store in an object named `rental_table`:
+The following code illustrates these issues.  The `dplyr::tbl` function creates the connection object that we store in an object named `film_table`:
 ```{r}
-rental_table <- dplyr::tbl(con, "rental")
+film_table <- dplyr::tbl(con, "film")
 ```
 
-At first glance, it _acts_ like a data frame when you print it, although it only prints 10 of the table's 16,044 rows:
+At first glance, it _acts_ like a data frame when you print it, although it only prints 10 of the table's 1,000 rows:
 ```{r}
-rental_table
+film_table
 ```
 
 However, notice that the first output line shows `??`, rather than providing the number of rows in the table. Similarly, the next to last line shows:
 ```
-    ... with more rows, and 3 more variables
+    … with more rows, and 7 more variables
 ```
-whereas the output for a normal `tbl` of this rental data would say:
+whereas the output for a normal `tbl` of this film data would say:
 ```
-    ... with 16,034 more rows, and 3 more variables
-```
-
-So even though `rental_table` is a `tbl`, it's **also** a `tbl_PqConnection`:
-```{r}
-class(rental_table)
+    … with more 1,000, and 7 more variables
 ```
 
-It is not just a normal `tbl` of data. We can see that from the structure of `rental_table`:
+So even though `film_table` is a `tbl`, it's **also** a `tbl_PqConnection`:
 ```{r}
-str(rental_table)
+class(film_table)
+```
+
+It is not just a normal `tbl` of data. We can see that from the structure of `film_table`:
+```{r}
+str(film_table)
 ```
 
 It has only _two_ rows!  The first row contains all the information in the `con` object, which contains information about all the tables and objects in the database:
 ```{r}
-rental_table$src$con@typnames$typname[380:437]
+film_table$src$con@typnames$typname[380:437]
 ```
-The second row contains a list of the columns in the `rental` table, among other things:
+The second row contains a list of the columns in the `film` table, among other things:
 ```{r}
-rental_table$ops$vars
+film_table$ops$vars
 ```
-`rental_table` holds information needed to get the data from the 'rental' table, but `rental_table` does not hold the data itself. In the following sections, we will examine more closely this relationship between the `rental_table` object and the data in the database's 'rental' table.
+`film_table` holds information needed to get the data from the 'film' table, but `film_table` does not hold the data itself. In the following sections, we will examine more closely this relationship between the `film_table` object and the data in the database's 'film' table.
 
 ## When does a lazy query trigger data retrieval?
 
 ### Create a black box query for experimentation
 
 To illustrate the different issues involved in data retrieval, we create more connection objects to link to two other tables.  
-```{r}
-staff_table <- dplyr::tbl(con, "staff") 
+```{r define connections to more tables}
+film_category_table <- tbl(con, "film_category") %>% 
+  select(-last_update)
+
 ```
-The 'staff' table has 2 rows.
+The 'film_category' table has 1,000 rows and 2 columns because we dropped `last_update` which is a column name that appears in more than one table and will just mess things up (and we don't really care when the category was updated).
 
 ```{r}
-customer_table <- dplyr::tbl(con, "customer") 
+category_table <- tbl(con, "category") %>% 
+  select(-last_update) %>% rename(category = name)
+
 ```
-The 'customer' table has 599 rows.
+The 'category_table' table has 16 rows.
 
 Here is a typical string of `dplyr` verbs strung together with the magrittr `%>%` pipe command that will be used to tease out the several different behaviors that a lazy query has when passed to different R functions.  This query joins three connection objects into a query we'll call `Q`:
 
 ```{r}
-Q <- rental_table %>%
-  dplyr::left_join(staff_table, by = c("staff_id" = "staff_id")) %>%
-  dplyr::rename(staff_email = email) %>%
-  dplyr::left_join(customer_table, by = c("customer_id" = "customer_id")) %>%
-  dplyr::rename(customer_email = email) %>%
-  dplyr::select(rental_date, staff_email, customer_email)
+film_table <- tbl(con, "film")
+Q <- film_table %>%
+  dplyr::left_join(film_category_table, by = c("film_id" = "film_id")) %>%
+  dplyr::left_join(category_table, by = c("category_id" = "category_id")) %>% 
+  dplyr::select(title, length, rating, category)
+```
+The `str` function gives us a hint at how R is collecting information that can be used to construct and execute a query later on:
+```{r}
+str(Q, max.level = 2)
+
 ```
 
 ### Experiment overview
@@ -158,6 +166,7 @@ Think of `Q` as a black box for the moment.  The following examples will show ho
 > [`Q %>% dplyr::tally()`](#lazy_q_tally) | ![](screenshots/green-check.png) ![](screenshots/green-check.png) Counts all the rows -- on the dbms side
 > [`Q %>% dplyr::collect(n = 20)`](#lazy_q_collect) | ![](screenshots/green-check.png) Prints 20 rows  
 > [`Q %>% dplyr::collect(n = 20) %>% head()`](#lazy_q_collect) | ![](screenshots/green-check.png) Prints 6 rows  
+> [`Q %>% ggplot`](#lazy_q_plot-categories) | ![](screenshots/green-check.png) ![](screenshots/green-check.png) Plots a barchart
 > [`Q %>% dplyr::show_query()`](#lazy-q-show-query) | ![](screenshots/red-x.png) **Translates** the lazy query object into SQL 
 > 
 
@@ -171,14 +180,14 @@ Q %>% print()
 ```
 ![](screenshots/green-check.png) R retrieves 10 observations and 3 columns.  In its role as IDE, R has provided nicely formatted output that is similar to what it prints for a tibble, with descriptive information about the dataset and each column:
 
->
-> \# Source:   lazy query [?? x 3] </br >
-> \# Database: postgres [postgres@localhost:5432/dvdrental] </br >
->   rental_date         staff_email                  customer_email 
->   \<dttm\>              \<chr\>                        \<chr\>
->
+> 
+> ## # Source:   lazy query [?? x 4]
+> ## # Database: postgres [postgres@localhost:5432/dvdrental]
+> ##    title            length rating category   
+> ##    <chr>             <int> <chr>  <chr>      
+> 
 
-R has not determined how many rows are left to retrieve as it shows with `[?? x 3]` and `... with more rows` in the data summary. 
+R has not determined how many rows are left to retrieve as it shows with `[?? x 4]` and `... with more rows` in the data summary. 
 
 ### Q %>% dplyr::as_tibble() {#lazy_q_as-tibble}
 
@@ -245,6 +254,17 @@ The `dplyr::collect` function triggers the creation of a tibble and controls the
 
 If you do not provide a value for the `n` argument, _all_ of the rows will be retrieved into your R workspace.
 
+### Q %>% ggplot {#lazy_q_plot-categories}
+
+Passing the `Q` object to `ggplot` executes the query and plots the result.
+```{r}
+
+Q %>% ggplot2::ggplot(aes(category)) + geom_bar() + coord_flip()
+
+```
+
+It's obvious that when creating our phony `dvdrental` datbase, phony films were assigned to a category pretty randomly.
+
 ### Q %>% dplyr::show_query() {#lazy_q_show-query}
 
 ```{r}
@@ -253,11 +273,7 @@ Q %>% dplyr::show_query()
 ```
 Hand-written SQL code to do the same job will probably look a lot nicer and could be more efficient, but functionally `dplyr` does the job.
 
-### More lazy execution examples
-
-See more examples of lazy execution [here](https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html).
-
-```{r}
+```{r disconnect and close down}
 DBI::dbDisconnect(con)
 sqlpetr::sp_docker_stop("sql-pet")
 ```
@@ -268,3 +284,5 @@ sqlpetr::sp_docker_stop("sql-pet")
 * Benjamin S. Baumer. 2017. A Grammar for Reproducible and Painless Extract-Transform-Load Operations on Medium Data. [https://arxiv.org/abs/1708.07073](https://arxiv.org/abs/1708.07073) 
 * dplyr Reference documentation: Remote tables. [https://dplyr.tidyverse.org/reference/index.html#section-remote-tables](https://dplyr.tidyverse.org/reference/index.html#section-remote-tables)
 * Data Carpentry. SQL Databases and R. [https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html](https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html)
+
+

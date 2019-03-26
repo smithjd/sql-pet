@@ -68,7 +68,7 @@ Q
 ## 10 2005-05-25 00:09:02 april.burns@sakilacustomer.org       
 ## # … with more rows
 ```
-Note that in the previous example we follow this book's convention of fully qualifying function names (e.g., specifying the package).  In practice, it's possible and convenient to use more abbreviated notation.
+Note that in the previous example we follow this book's convention of creating a connection object to each table and fully qualifying function names (e.g., specifying the package).  In practice, it's possible and convenient to use more abbreviated notation.
 
 ```r
 Q <- tbl(con, "rental") %>%
@@ -118,15 +118,16 @@ Think of `Q` as a black box for the moment.  The following examples will show ho
 
 The next chapter will discuss how to build queries and how to explore intermediate steps. But first, the following subsections provide a more detailed discussion of each row in the preceding table.
 
-
 ### Time-based, execution environment issues
 
-Remember that if the expression is assigned to an object, it is not executed.  If not, a `print()` function is implied. This behavior is the basis for a useful debugging and development process where queries are built up incrementally.
+Remember that if the expression is assigned to an object, it is not executed.  If an expression is entered on the command line or appears in your script by itself, a `print()` function is implied. 
 
 > *These two are different:*
 > Q %>% count(email) 
 > Q_query <- Q %>% count(email) 
 >
+
+This behavior is the basis of a useful debugging and development process where queries are built up incrementally.
 
 ### Q %>% `more dplyr` {#lazy_q_build}
 
@@ -175,6 +176,119 @@ Q %>% count(email) %>%
 ```
 
 ![](screenshots/green-check.png) When all the accumulated `dplyr` verbs are executed, they are submitted to the dbms and the number of rows that are returned follow the same rules as discussed above.
+### Interspersing SQL and dplyr
+
+
+```r
+rental_table %>% 
+  mutate(rental_date = date(rental_date)) %>% 
+  show_query()
+```
+
+```
+## <SQL>
+## SELECT "rental_id", DATE("rental_date") AS "rental_date", "inventory_id", "customer_id", "return_date", "staff_id", "last_update"
+## FROM "rental"
+```
+
+```r
+rental_table %>% 
+  mutate(rental_date = date(rental_date))
+```
+
+```
+## # Source:   lazy query [?? x 7]
+## # Database: postgres [postgres@localhost:5432/dvdrental]
+##    rental_id rental_date inventory_id customer_id return_date        
+##        <int> <date>             <int>       <int> <dttm>             
+##  1         2 2005-05-24          1525         459 2005-05-28 19:40:33
+##  2         3 2005-05-24          1711         408 2005-06-01 22:12:39
+##  3         4 2005-05-24          2452         333 2005-06-03 01:43:41
+##  4         5 2005-05-24          2079         222 2005-06-02 04:33:21
+##  5         6 2005-05-24          2792         549 2005-05-27 01:32:07
+##  6         7 2005-05-24          3995         269 2005-05-29 20:34:53
+##  7         8 2005-05-24          2346         239 2005-05-27 23:33:46
+##  8         9 2005-05-25          2580         126 2005-05-28 00:22:40
+##  9        10 2005-05-25          1824         399 2005-05-31 22:44:21
+## 10        11 2005-05-25          4443         142 2005-06-02 20:56:02
+## # … with more rows, and 2 more variables: staff_id <int>,
+## #   last_update <dttm>
+```
+
+```r
+try(rental_table %>% 
+  mutate(rental_date = lubridate::date(rental_date))
+)
+```
+
+```
+## Error in lubridate::date(rental_date) : object 'rental_date' not found
+```
+
+```r
+rental_table %>% collect() %>% 
+  mutate(rental_date = lubridate::date(rental_date)) 
+```
+
+```
+## # A tibble: 16,044 x 7
+##    rental_id rental_date inventory_id customer_id return_date        
+##        <int> <date>             <int>       <int> <dttm>             
+##  1         2 2005-05-24          1525         459 2005-05-28 19:40:33
+##  2         3 2005-05-24          1711         408 2005-06-01 22:12:39
+##  3         4 2005-05-24          2452         333 2005-06-03 01:43:41
+##  4         5 2005-05-24          2079         222 2005-06-02 04:33:21
+##  5         6 2005-05-24          2792         549 2005-05-27 01:32:07
+##  6         7 2005-05-24          3995         269 2005-05-29 20:34:53
+##  7         8 2005-05-24          2346         239 2005-05-27 23:33:46
+##  8         9 2005-05-25          2580         126 2005-05-28 00:22:40
+##  9        10 2005-05-25          1824         399 2005-05-31 22:44:21
+## 10        11 2005-05-25          4443         142 2005-06-02 20:56:02
+## # … with 16,034 more rows, and 2 more variables: staff_id <int>,
+## #   last_update <dttm>
+```
+
+
+
+```r
+to_char <- function(date, fmt) {return(fmt)}
+
+rental_table %>% 
+  mutate(rental_date = to_char(rental_date, "YYYY-MM")) %>% 
+  show_query()
+```
+
+```
+## <SQL>
+## SELECT "rental_id", TO_CHAR("rental_date", 'YYYY-MM') AS "rental_date", "inventory_id", "customer_id", "return_date", "staff_id", "last_update"
+## FROM "rental"
+```
+
+```r
+rental_table %>% 
+  mutate(rental_date = to_char(rental_date, "YYYY-MM")) 
+```
+
+```
+## # Source:   lazy query [?? x 7]
+## # Database: postgres [postgres@localhost:5432/dvdrental]
+##    rental_id rental_date inventory_id customer_id return_date        
+##        <int> <chr>              <int>       <int> <dttm>             
+##  1         2 2005-05             1525         459 2005-05-28 19:40:33
+##  2         3 2005-05             1711         408 2005-06-01 22:12:39
+##  3         4 2005-05             2452         333 2005-06-03 01:43:41
+##  4         5 2005-05             2079         222 2005-06-02 04:33:21
+##  5         6 2005-05             2792         549 2005-05-27 01:32:07
+##  6         7 2005-05             3995         269 2005-05-29 20:34:53
+##  7         8 2005-05             2346         239 2005-05-27 23:33:46
+##  8         9 2005-05             2580         126 2005-05-28 00:22:40
+##  9        10 2005-05             1824         399 2005-05-31 22:44:21
+## 10        11 2005-05             4443         142 2005-06-02 20:56:02
+## # … with more rows, and 2 more variables: staff_id <int>,
+## #   last_update <dttm>
+```
+
+
 
 ### Many handy R functions can't be translated to SQL
 
@@ -227,8 +341,7 @@ try(rental_table %>% collect() %>%
 ## #   last_update <dttm>
 ```
 
-
-### More lazy execution examples
+### Further lazy execution examples
 
 See more examples of lazy execution [here](https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html).
 
@@ -245,16 +358,4 @@ sqlpetr::sp_docker_stop("sql-pet")
 * dplyr Reference documentation: Remote tables. [https://dplyr.tidyverse.org/reference/index.html#section-remote-tables](https://dplyr.tidyverse.org/reference/index.html#section-remote-tables)
 * Data Carpentry. SQL Databases and R. [https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html](https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html)
 
-## Parking lot
-
-> Although the material in the following table looks like it's *good to know* it's not clear why a run-of-the-mill R user would be concerned with it.  It looks like a draft; not completley clear...
-
-|Operation    |dplyr<br>Local-Only|dplyr<br>Local-Lazy|SQL
-|-------------|-------------------|-------------------|----------------
-|connection|DBI::dbConnect|DBI::dbConnect|DBI::dbConnect
-|Single Read joining one or more tables<br>and fits into memory|DBI::dbReadTable, (returns a df)<br>R package calls always available|tbl() + collect()<br>tbl:Returns two lists<br> collect(): returns tbl_df<br>R package calls available only after collect() call.  Ideally push everything to DB.<br>May require R placeholder functions to mimick DB functions.|dbGetQuery
-|Multiple Reads|Not Applicable|Not Applicable|dbSendQuery + dbFetch + dbClearResult
-|Fetch Data locally|DBI::dbReadTable fetches data|collect()|dbGetQuery or dbSendQuery+dbFetch+dbClearResult|dbGetQuery or dbSendQuery + dbFetch
-|Write Results Local|write family of functions|write family of functions|write family of functions
-|Write Results to DB|compute() or copy_to|compute() or copy_to|compute() or copy_to
 
