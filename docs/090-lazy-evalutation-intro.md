@@ -74,50 +74,51 @@ Essentially "Lazy evaluation is a programming strategy that allows a symbol to b
 ### `dplyr` connection objects
 As introduced in the previous chapter, the `dplyr::tbl` function creates an object that might **look** like a data frame in that when you enter it on the command line, it prints a bunch of rows from the dbms table.  But it is actually a **list** object that `dplyr` uses for constructing queries and retrieving data from the DBMS.  
 
-The following code illustrates these issues.  The `dplyr::tbl` function creates the connection object that we store in an object named `rental_table`:
+The following code illustrates these issues.  The `dplyr::tbl` function creates the connection object that we store in an object named `film_table`:
 
 ```r
-rental_table <- dplyr::tbl(con, "rental")
+film_table <- dplyr::tbl(con, "film")
 ```
 
-At first glance, it _acts_ like a data frame when you print it, although it only prints 10 of the table's 16,044 rows:
+At first glance, it _acts_ like a data frame when you print it, although it only prints 10 of the table's 1,000 rows:
 
 ```r
-rental_table
+film_table
 ```
 
 ```
-## # Source:   table<rental> [?? x 7]
+## # Source:   table<film> [?? x 13]
 ## # Database: postgres [postgres@localhost:5432/dvdrental]
-##    rental_id rental_date         inventory_id customer_id
-##        <int> <dttm>                     <int>       <int>
-##  1         2 2005-05-24 22:54:33         1525         459
-##  2         3 2005-05-24 23:03:39         1711         408
-##  3         4 2005-05-24 23:04:41         2452         333
-##  4         5 2005-05-24 23:05:21         2079         222
-##  5         6 2005-05-24 23:08:07         2792         549
-##  6         7 2005-05-24 23:11:53         3995         269
-##  7         8 2005-05-24 23:31:46         2346         239
-##  8         9 2005-05-25 00:00:40         2580         126
-##  9        10 2005-05-25 00:02:21         1824         399
-## 10        11 2005-05-25 00:09:02         4443         142
-## # … with more rows, and 3 more variables: return_date <dttm>,
-## #   staff_id <int>, last_update <dttm>
+##    film_id title description release_year language_id rental_duration
+##      <int> <chr> <chr>              <int>       <int>           <int>
+##  1     133 Cham… A Fateful …         2006           1               7
+##  2     384 Gros… A Epic Dra…         2006           1               5
+##  3       8 Airp… A Epic Tal…         2006           1               6
+##  4      98 Brig… A Fateful …         2006           1               4
+##  5       1 Acad… A Epic Dra…         2006           1               6
+##  6       2 Ace … A Astoundi…         2006           1               3
+##  7       3 Adap… A Astoundi…         2006           1               7
+##  8       4 Affa… A Fanciful…         2006           1               5
+##  9       5 Afri… A Fast-Pac…         2006           1               6
+## 10       6 Agen… A Intrepid…         2006           1               3
+## # … with more rows, and 7 more variables: rental_rate <dbl>, length <int>,
+## #   replacement_cost <dbl>, rating <chr>, last_update <dttm>,
+## #   special_features <chr>, fulltext <chr>
 ```
 
 However, notice that the first output line shows `??`, rather than providing the number of rows in the table. Similarly, the next to last line shows:
 ```
-    ... with more rows, and 3 more variables
+    … with more rows, and 7 more variables
 ```
-whereas the output for a normal `tbl` of this rental data would say:
+whereas the output for a normal `tbl` of this film data would say:
 ```
-    ... with 16,034 more rows, and 3 more variables
+    … with more 1,000, and 7 more variables
 ```
 
-So even though `rental_table` is a `tbl`, it's **also** a `tbl_PqConnection`:
+So even though `film_table` is a `tbl`, it's **also** a `tbl_PqConnection`:
 
 ```r
-class(rental_table)
+class(film_table)
 ```
 
 ```
@@ -125,10 +126,10 @@ class(rental_table)
 ## [4] "tbl_lazy"         "tbl"
 ```
 
-It is not just a normal `tbl` of data. We can see that from the structure of `rental_table`:
+It is not just a normal `tbl` of data. We can see that from the structure of `film_table`:
 
 ```r
-str(rental_table)
+str(film_table)
 ```
 
 ```
@@ -143,8 +144,8 @@ str(rental_table)
 ##   ..$ disco: NULL
 ##   ..- attr(*, "class")= chr [1:4] "src_PqConnection" "src_dbi" "src_sql" "src"
 ##  $ ops:List of 2
-##   ..$ x   : 'ident' chr "rental"
-##   ..$ vars: chr [1:7] "rental_id" "rental_date" "inventory_id" "customer_id" ...
+##   ..$ x   : 'ident' chr "film"
+##   ..$ vars: chr [1:13] "film_id" "title" "description" "release_year" ...
 ##   ..- attr(*, "class")= chr [1:3] "op_base_remote" "op_base" "op"
 ##  - attr(*, "class")= chr [1:5] "tbl_PqConnection" "tbl_dbi" "tbl_sql" "tbl_lazy" ...
 ```
@@ -152,7 +153,7 @@ str(rental_table)
 It has only _two_ rows!  The first row contains all the information in the `con` object, which contains information about all the tables and objects in the database:
 
 ```r
-rental_table$src$con@typnames$typname[380:437]
+film_table$src$con@typnames$typname[380:437]
 ```
 
 ```
@@ -186,17 +187,20 @@ rental_table$src$con@typnames$typname[380:437]
 ## [55] "sales_by_store"              "_sales_by_store"            
 ## [57] "staff_list"                  "_staff_list"
 ```
-The second row contains a list of the columns in the `rental` table, among other things:
+The second row contains a list of the columns in the `film` table, among other things:
 
 ```r
-rental_table$ops$vars
+film_table$ops$vars
 ```
 
 ```
-## [1] "rental_id"    "rental_date"  "inventory_id" "customer_id" 
-## [5] "return_date"  "staff_id"     "last_update"
+##  [1] "film_id"          "title"            "description"     
+##  [4] "release_year"     "language_id"      "rental_duration" 
+##  [7] "rental_rate"      "length"           "replacement_cost"
+## [10] "rating"           "last_update"      "special_features"
+## [13] "fulltext"
 ```
-`rental_table` holds information needed to get the data from the 'rental' table, but `rental_table` does not hold the data itself. In the following sections, we will examine more closely this relationship between the `rental_table` object and the data in the database's 'rental' table.
+`film_table` holds information needed to get the data from the 'film' table, but `film_table` does not hold the data itself. In the following sections, we will examine more closely this relationship between the `film_table` object and the data in the database's 'film' table.
 
 ## When does a lazy query trigger data retrieval?
 
@@ -205,26 +209,49 @@ rental_table$ops$vars
 To illustrate the different issues involved in data retrieval, we create more connection objects to link to two other tables.  
 
 ```r
-staff_table <- dplyr::tbl(con, "staff") 
+film_category_table <- tbl(con, "film_category") %>% 
+  select(-last_update)
 ```
-The 'staff' table has 2 rows.
+The 'film_category' table has 1,000 rows and 2 columns because we dropped `last_update` which is a column name that appears in more than one table and will just mess things up (and we don't really care when the category was updated).
 
 
 ```r
-customer_table <- dplyr::tbl(con, "customer") 
+category_table <- tbl(con, "category") %>% 
+  select(-last_update) %>% rename(category = name)
 ```
-The 'customer' table has 599 rows.
+The 'category_table' table has 16 rows.
 
 Here is a typical string of `dplyr` verbs strung together with the magrittr `%>%` pipe command that will be used to tease out the several different behaviors that a lazy query has when passed to different R functions.  This query joins three connection objects into a query we'll call `Q`:
 
 
 ```r
-Q <- rental_table %>%
-  dplyr::left_join(staff_table, by = c("staff_id" = "staff_id")) %>%
-  dplyr::rename(staff_email = email) %>%
-  dplyr::left_join(customer_table, by = c("customer_id" = "customer_id")) %>%
-  dplyr::rename(customer_email = email) %>%
-  dplyr::select(rental_date, staff_email, customer_email)
+film_table <- tbl(con, "film")
+Q <- film_table %>%
+  dplyr::left_join(film_category_table, by = c("film_id" = "film_id")) %>%
+  dplyr::left_join(category_table, by = c("category_id" = "category_id")) %>% 
+  dplyr::select(title, length, rating, category)
+```
+The `str` function gives us a hint at how R is collecting information that can be used to construct and execute a query later on:
+
+```r
+str(Q, max.level = 2)
+```
+
+```
+## List of 2
+##  $ src:List of 2
+##   ..$ con  :Formal class 'PqConnection' [package "RPostgres"] with 3 slots
+##   ..$ disco: NULL
+##   ..- attr(*, "class")= chr [1:4] "src_PqConnection" "src_dbi" "src_sql" "src"
+##  $ ops:List of 4
+##   ..$ name: chr "select"
+##   ..$ x   :List of 4
+##   .. ..- attr(*, "class")= chr [1:3] "op_join" "op_double" "op"
+##   ..$ dots:List of 4
+##   .. ..- attr(*, "class")= chr "quosures"
+##   ..$ args: list()
+##   ..- attr(*, "class")= chr [1:3] "op_select" "op_single" "op"
+##  - attr(*, "class")= chr [1:5] "tbl_PqConnection" "tbl_dbi" "tbl_sql" "tbl_lazy" ...
 ```
 
 ### Experiment overview
@@ -249,6 +276,7 @@ Think of `Q` as a black box for the moment.  The following examples will show ho
 > [`Q %>% dplyr::tally()`](#lazy_q_tally) | ![](screenshots/green-check.png) ![](screenshots/green-check.png) Counts all the rows -- on the dbms side
 > [`Q %>% dplyr::collect(n = 20)`](#lazy_q_collect) | ![](screenshots/green-check.png) Prints 20 rows  
 > [`Q %>% dplyr::collect(n = 20) %>% head()`](#lazy_q_collect) | ![](screenshots/green-check.png) Prints 6 rows  
+> [`Q %>% ggplot`](#lazy_q_plot-categories) | ![](screenshots/green-check.png) ![](screenshots/green-check.png) Plots a barchart
 > [`Q %>% dplyr::show_query()`](#lazy-q-show-query) | ![](screenshots/red-x.png) **Translates** the lazy query object into SQL 
 > 
 
@@ -263,32 +291,32 @@ Q %>% print()
 ```
 
 ```
-## # Source:   lazy query [?? x 3]
+## # Source:   lazy query [?? x 4]
 ## # Database: postgres [postgres@localhost:5432/dvdrental]
-##    rental_date         staff_email             customer_email              
-##    <dttm>              <chr>                   <chr>                       
-##  1 2005-05-24 22:54:33 Mike.Hillyer@sakilasta… tommy.collazo@sakilacustome…
-##  2 2005-05-24 23:03:39 Mike.Hillyer@sakilasta… manuel.murrell@sakilacustom…
-##  3 2005-05-24 23:04:41 Jon.Stephens@sakilasta… andrew.purdy@sakilacustomer…
-##  4 2005-05-24 23:05:21 Mike.Hillyer@sakilasta… delores.hansen@sakilacustom…
-##  5 2005-05-24 23:08:07 Mike.Hillyer@sakilasta… nelson.christenson@sakilacu…
-##  6 2005-05-24 23:11:53 Jon.Stephens@sakilasta… cassandra.walters@sakilacus…
-##  7 2005-05-24 23:31:46 Jon.Stephens@sakilasta… minnie.romero@sakilacustome…
-##  8 2005-05-25 00:00:40 Mike.Hillyer@sakilasta… ellen.simpson@sakilacustome…
-##  9 2005-05-25 00:02:21 Jon.Stephens@sakilasta… danny.isom@sakilacustomer.o…
-## 10 2005-05-25 00:09:02 Jon.Stephens@sakilasta… april.burns@sakilacustomer.…
+##    title            length rating category   
+##    <chr>             <int> <chr>  <chr>      
+##  1 Academy Dinosaur     86 PG     Documentary
+##  2 Ace Goldfinger       48 G      Horror     
+##  3 Adaptation Holes     50 NC-17  Documentary
+##  4 Affair Prejudice    117 G      Horror     
+##  5 African Egg         130 G      Family     
+##  6 Agent Truman        169 PG     Foreign    
+##  7 Airplane Sierra      62 PG-13  Comedy     
+##  8 Airport Pollock      54 R      Horror     
+##  9 Alabama Devil       114 PG-13  Horror     
+## 10 Aladdin Calendar     63 NC-17  Sports     
 ## # … with more rows
 ```
 ![](screenshots/green-check.png) R retrieves 10 observations and 3 columns.  In its role as IDE, R has provided nicely formatted output that is similar to what it prints for a tibble, with descriptive information about the dataset and each column:
 
->
-> \# Source:   lazy query [?? x 3] </br >
-> \# Database: postgres [postgres@localhost:5432/dvdrental] </br >
->   rental_date         staff_email                  customer_email 
->   \<dttm\>              \<chr\>                        \<chr\>
->
+> 
+> ## # Source:   lazy query [?? x 4]
+> ## # Database: postgres [postgres@localhost:5432/dvdrental]
+> ##    title            length rating category   
+> ##    <chr>             <int> <chr>  <chr>      
+> 
 
-R has not determined how many rows are left to retrieve as it shows with `[?? x 3]` and `... with more rows` in the data summary. 
+R has not determined how many rows are left to retrieve as it shows with `[?? x 4]` and `... with more rows` in the data summary. 
 
 ### Q %>% dplyr::as_tibble() {#lazy_q_as-tibble}
 
@@ -299,20 +327,20 @@ Q %>% dplyr::as_tibble()
 ```
 
 ```
-## # A tibble: 16,044 x 3
-##    rental_date         staff_email             customer_email              
-##    <dttm>              <chr>                   <chr>                       
-##  1 2005-05-24 22:54:33 Mike.Hillyer@sakilasta… tommy.collazo@sakilacustome…
-##  2 2005-05-24 23:03:39 Mike.Hillyer@sakilasta… manuel.murrell@sakilacustom…
-##  3 2005-05-24 23:04:41 Jon.Stephens@sakilasta… andrew.purdy@sakilacustomer…
-##  4 2005-05-24 23:05:21 Mike.Hillyer@sakilasta… delores.hansen@sakilacustom…
-##  5 2005-05-24 23:08:07 Mike.Hillyer@sakilasta… nelson.christenson@sakilacu…
-##  6 2005-05-24 23:11:53 Jon.Stephens@sakilasta… cassandra.walters@sakilacus…
-##  7 2005-05-24 23:31:46 Jon.Stephens@sakilasta… minnie.romero@sakilacustome…
-##  8 2005-05-25 00:00:40 Mike.Hillyer@sakilasta… ellen.simpson@sakilacustome…
-##  9 2005-05-25 00:02:21 Jon.Stephens@sakilasta… danny.isom@sakilacustomer.o…
-## 10 2005-05-25 00:09:02 Jon.Stephens@sakilasta… april.burns@sakilacustomer.…
-## # … with 16,034 more rows
+## # A tibble: 1,000 x 4
+##    title            length rating category   
+##    <chr>             <int> <chr>  <chr>      
+##  1 Academy Dinosaur     86 PG     Documentary
+##  2 Ace Goldfinger       48 G      Horror     
+##  3 Adaptation Holes     50 NC-17  Documentary
+##  4 Affair Prejudice    117 G      Horror     
+##  5 African Egg         130 G      Family     
+##  6 Agent Truman        169 PG     Foreign    
+##  7 Airplane Sierra      62 PG-13  Comedy     
+##  8 Airport Pollock      54 R      Horror     
+##  9 Alabama Devil       114 PG-13  Horror     
+## 10 Aladdin Calendar     63 NC-17  Sports     
+## # … with 990 more rows
 ```
 
 ### Q %>% head() {#lazy_q_head}
@@ -324,16 +352,16 @@ Q %>% head()
 ```
 
 ```
-## # Source:   lazy query [?? x 3]
+## # Source:   lazy query [?? x 4]
 ## # Database: postgres [postgres@localhost:5432/dvdrental]
-##   rental_date         staff_email             customer_email               
-##   <dttm>              <chr>                   <chr>                        
-## 1 2005-05-24 22:54:33 Mike.Hillyer@sakilasta… tommy.collazo@sakilacustomer…
-## 2 2005-05-24 23:03:39 Mike.Hillyer@sakilasta… manuel.murrell@sakilacustome…
-## 3 2005-05-24 23:04:41 Jon.Stephens@sakilasta… andrew.purdy@sakilacustomer.…
-## 4 2005-05-24 23:05:21 Mike.Hillyer@sakilasta… delores.hansen@sakilacustome…
-## 5 2005-05-24 23:08:07 Mike.Hillyer@sakilasta… nelson.christenson@sakilacus…
-## 6 2005-05-24 23:11:53 Jon.Stephens@sakilasta… cassandra.walters@sakilacust…
+##   title            length rating               category   
+##   <chr>             <int> <S3: pq_mpaa_rating> <chr>      
+## 1 Academy Dinosaur     86 PG                   Documentary
+## 2 Ace Goldfinger       48 G                    Horror     
+## 3 Adaptation Holes     50 NC-17                Documentary
+## 4 Affair Prejudice    117 G                    Horror     
+## 5 African Egg         130 G                    Family     
+## 6 Agent Truman        169 PG                   Foreign
 ```
 
 ### Q %>% tail() {#lazy_q_tail}
@@ -381,19 +409,22 @@ Q %>% str(max.level = 3)
 ##  $ ops:List of 4
 ##   ..$ name: chr "select"
 ##   ..$ x   :List of 4
-##   .. ..$ name: chr "rename"
-##   .. ..$ x   :List of 4
-##   .. .. ..- attr(*, "class")= chr [1:3] "op_join" "op_double" "op"
-##   .. ..$ dots:List of 1
-##   .. ..$ args: list()
-##   .. ..- attr(*, "class")= chr [1:3] "op_rename" "op_single" "op"
-##   ..$ dots:List of 3
-##   .. ..$ : language ~rental_date
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fd409683aa0> 
-##   .. ..$ : language ~staff_email
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fd409683aa0> 
-##   .. ..$ : language ~customer_email
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fd409683aa0> 
+##   .. ..$ name: chr "join"
+##   .. ..$ x   :List of 2
+##   .. .. ..- attr(*, "class")= chr [1:5] "tbl_PqConnection" "tbl_dbi" "tbl_sql" "tbl_lazy" ...
+##   .. ..$ y   :List of 2
+##   .. .. ..- attr(*, "class")= chr [1:5] "tbl_PqConnection" "tbl_dbi" "tbl_sql" "tbl_lazy" ...
+##   .. ..$ args:List of 4
+##   .. ..- attr(*, "class")= chr [1:3] "op_join" "op_double" "op"
+##   ..$ dots:List of 4
+##   .. ..$ : language ~title
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fb8eaee42a8> 
+##   .. ..$ : language ~length
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fb8eaee42a8> 
+##   .. ..$ : language ~rating
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fb8eaee42a8> 
+##   .. ..$ : language ~category
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fb8eaee42a8> 
 ##   .. ..- attr(*, "class")= chr "quosures"
 ##   ..$ args: list()
 ##   ..- attr(*, "class")= chr [1:3] "op_select" "op_single" "op"
@@ -425,7 +456,7 @@ Q %>% dplyr::tally()
 ## # Database: postgres [postgres@localhost:5432/dvdrental]
 ##   n              
 ##   <S3: integer64>
-## 1 16044
+## 1 1000
 ```
 The `nrow()` function knows that `Q` is a list.  On the other hand, the `tally()` function tells SQL to go count all the rows. Notice that `Q` results in 16,044 rows -- the same number of rows as `rental`.
 
@@ -438,29 +469,29 @@ Q %>% dplyr::collect(n = 20)
 ```
 
 ```
-## # A tibble: 20 x 3
-##    rental_date         staff_email             customer_email              
-##    <dttm>              <chr>                   <chr>                       
-##  1 2005-05-24 22:54:33 Mike.Hillyer@sakilasta… tommy.collazo@sakilacustome…
-##  2 2005-05-24 23:03:39 Mike.Hillyer@sakilasta… manuel.murrell@sakilacustom…
-##  3 2005-05-24 23:04:41 Jon.Stephens@sakilasta… andrew.purdy@sakilacustomer…
-##  4 2005-05-24 23:05:21 Mike.Hillyer@sakilasta… delores.hansen@sakilacustom…
-##  5 2005-05-24 23:08:07 Mike.Hillyer@sakilasta… nelson.christenson@sakilacu…
-##  6 2005-05-24 23:11:53 Jon.Stephens@sakilasta… cassandra.walters@sakilacus…
-##  7 2005-05-24 23:31:46 Jon.Stephens@sakilasta… minnie.romero@sakilacustome…
-##  8 2005-05-25 00:00:40 Mike.Hillyer@sakilasta… ellen.simpson@sakilacustome…
-##  9 2005-05-25 00:02:21 Jon.Stephens@sakilasta… danny.isom@sakilacustomer.o…
-## 10 2005-05-25 00:09:02 Jon.Stephens@sakilasta… april.burns@sakilacustomer.…
-## 11 2005-05-25 00:19:27 Jon.Stephens@sakilasta… deanna.byrd@sakilacustomer.…
-## 12 2005-05-25 00:22:55 Mike.Hillyer@sakilasta… raymond.mcwhorter@sakilacus…
-## 13 2005-05-25 00:31:15 Mike.Hillyer@sakilasta… theodore.culp@sakilacustome…
-## 14 2005-05-25 00:39:22 Mike.Hillyer@sakilasta… ronald.weiner@sakilacustome…
-## 15 2005-05-25 00:43:11 Jon.Stephens@sakilasta… steven.curley@sakilacustome…
-## 16 2005-05-25 01:06:36 Mike.Hillyer@sakilasta… isaac.oglesby@sakilacustome…
-## 17 2005-05-25 01:10:47 Jon.Stephens@sakilasta… ruth.martinez@sakilacustome…
-## 18 2005-05-25 01:17:24 Mike.Hillyer@sakilasta… ronnie.ricketts@sakilacusto…
-## 19 2005-05-25 01:48:41 Jon.Stephens@sakilasta… roberta.harper@sakilacustom…
-## 20 2005-05-25 01:59:46 Jon.Stephens@sakilasta… craig.morrell@sakilacustome…
+## # A tibble: 20 x 4
+##    title               length rating category   
+##    <chr>                <int> <chr>  <chr>      
+##  1 Academy Dinosaur        86 PG     Documentary
+##  2 Ace Goldfinger          48 G      Horror     
+##  3 Adaptation Holes        50 NC-17  Documentary
+##  4 Affair Prejudice       117 G      Horror     
+##  5 African Egg            130 G      Family     
+##  6 Agent Truman           169 PG     Foreign    
+##  7 Airplane Sierra         62 PG-13  Comedy     
+##  8 Airport Pollock         54 R      Horror     
+##  9 Alabama Devil          114 PG-13  Horror     
+## 10 Aladdin Calendar        63 NC-17  Sports     
+## 11 Alamo Videotape        126 G      Foreign    
+## 12 Alaska Phantom         136 PG     Music      
+## 13 Ali Forever            150 PG     Horror     
+## 14 Alice Fantasia          94 NC-17  Classics   
+## 15 Alien Center            46 NC-17  Foreign    
+## 16 Alley Evolution        180 NC-17  Foreign    
+## 17 Alone Trip              82 R      Music      
+## 18 Alter Victory           57 PG-13  Animation  
+## 19 Amadeus Holy           113 PG     Action     
+## 20 Amelie Hellfighters     79 R      Music
 ```
 
 ```r
@@ -468,19 +499,31 @@ Q %>% dplyr::collect(n = 20) %>% head()
 ```
 
 ```
-## # A tibble: 6 x 3
-##   rental_date         staff_email             customer_email               
-##   <dttm>              <chr>                   <chr>                        
-## 1 2005-05-24 22:54:33 Mike.Hillyer@sakilasta… tommy.collazo@sakilacustomer…
-## 2 2005-05-24 23:03:39 Mike.Hillyer@sakilasta… manuel.murrell@sakilacustome…
-## 3 2005-05-24 23:04:41 Jon.Stephens@sakilasta… andrew.purdy@sakilacustomer.…
-## 4 2005-05-24 23:05:21 Mike.Hillyer@sakilasta… delores.hansen@sakilacustome…
-## 5 2005-05-24 23:08:07 Mike.Hillyer@sakilasta… nelson.christenson@sakilacus…
-## 6 2005-05-24 23:11:53 Jon.Stephens@sakilasta… cassandra.walters@sakilacust…
+## # A tibble: 6 x 4
+##   title            length rating category   
+##   <chr>             <int> <chr>  <chr>      
+## 1 Academy Dinosaur     86 PG     Documentary
+## 2 Ace Goldfinger       48 G      Horror     
+## 3 Adaptation Holes     50 NC-17  Documentary
+## 4 Affair Prejudice    117 G      Horror     
+## 5 African Egg         130 G      Family     
+## 6 Agent Truman        169 PG     Foreign
 ```
 The `dplyr::collect` function triggers the creation of a tibble and controls the number of rows that the DBMS sends to R.  Notice that `head` only prints 6 of the 20 rows that R has retrieved.
 
 If you do not provide a value for the `n` argument, _all_ of the rows will be retrieved into your R workspace.
+
+### Q %>% ggplot {#lazy_q_plot-categories}
+
+Passing the `Q` object to `ggplot` executes the query and plots the result.
+
+```r
+Q %>% ggplot2::ggplot(aes(category)) + geom_bar() + coord_flip()
+```
+
+<img src="090-lazy-evalutation-intro_files/figure-html/unnamed-chunk-19-1.png" width="672" />
+
+It's obvious that when creating our phony `dvdrental` datbase, phony films were assigned to a category pretty randomly.
 
 ### Q %>% dplyr::show_query() {#lazy_q_show-query}
 
@@ -491,24 +534,21 @@ Q %>% dplyr::show_query()
 
 ```
 ## <SQL>
-## SELECT "rental_date", "staff_email", "customer_email"
-## FROM (SELECT "rental_id", "rental_date", "inventory_id", "customer_id", "return_date", "staff_id", "last_update.x", "first_name.x", "last_name.x", "address_id.x", "staff_email", "store_id.x", "active.x", "username", "password", "last_update.y", "picture", "store_id.y", "first_name.y", "last_name.y", "email" AS "customer_email", "address_id.y", "activebool", "create_date", "last_update", "active.y"
-## FROM (SELECT "TBL_LEFT"."rental_id" AS "rental_id", "TBL_LEFT"."rental_date" AS "rental_date", "TBL_LEFT"."inventory_id" AS "inventory_id", "TBL_LEFT"."customer_id" AS "customer_id", "TBL_LEFT"."return_date" AS "return_date", "TBL_LEFT"."staff_id" AS "staff_id", "TBL_LEFT"."last_update.x" AS "last_update.x", "TBL_LEFT"."first_name" AS "first_name.x", "TBL_LEFT"."last_name" AS "last_name.x", "TBL_LEFT"."address_id" AS "address_id.x", "TBL_LEFT"."staff_email" AS "staff_email", "TBL_LEFT"."store_id" AS "store_id.x", "TBL_LEFT"."active" AS "active.x", "TBL_LEFT"."username" AS "username", "TBL_LEFT"."password" AS "password", "TBL_LEFT"."last_update.y" AS "last_update.y", "TBL_LEFT"."picture" AS "picture", "TBL_RIGHT"."store_id" AS "store_id.y", "TBL_RIGHT"."first_name" AS "first_name.y", "TBL_RIGHT"."last_name" AS "last_name.y", "TBL_RIGHT"."email" AS "email", "TBL_RIGHT"."address_id" AS "address_id.y", "TBL_RIGHT"."activebool" AS "activebool", "TBL_RIGHT"."create_date" AS "create_date", "TBL_RIGHT"."last_update" AS "last_update", "TBL_RIGHT"."active" AS "active.y"
-##   FROM (SELECT "rental_id", "rental_date", "inventory_id", "customer_id", "return_date", "staff_id", "last_update.x", "first_name", "last_name", "address_id", "email" AS "staff_email", "store_id", "active", "username", "password", "last_update.y", "picture"
-## FROM (SELECT "TBL_LEFT"."rental_id" AS "rental_id", "TBL_LEFT"."rental_date" AS "rental_date", "TBL_LEFT"."inventory_id" AS "inventory_id", "TBL_LEFT"."customer_id" AS "customer_id", "TBL_LEFT"."return_date" AS "return_date", "TBL_LEFT"."staff_id" AS "staff_id", "TBL_LEFT"."last_update" AS "last_update.x", "TBL_RIGHT"."first_name" AS "first_name", "TBL_RIGHT"."last_name" AS "last_name", "TBL_RIGHT"."address_id" AS "address_id", "TBL_RIGHT"."email" AS "email", "TBL_RIGHT"."store_id" AS "store_id", "TBL_RIGHT"."active" AS "active", "TBL_RIGHT"."username" AS "username", "TBL_RIGHT"."password" AS "password", "TBL_RIGHT"."last_update" AS "last_update.y", "TBL_RIGHT"."picture" AS "picture"
-##   FROM "rental" AS "TBL_LEFT"
-##   LEFT JOIN "staff" AS "TBL_RIGHT"
-##   ON ("TBL_LEFT"."staff_id" = "TBL_RIGHT"."staff_id")
-## ) "qzdwvvvtzq") "TBL_LEFT"
-##   LEFT JOIN "customer" AS "TBL_RIGHT"
-##   ON ("TBL_LEFT"."customer_id" = "TBL_RIGHT"."customer_id")
-## ) "rnitnthkfz") "ohetoyqsmw"
+## SELECT "title", "length", "rating", "category"
+## FROM (SELECT "TBL_LEFT"."film_id" AS "film_id", "TBL_LEFT"."title" AS "title", "TBL_LEFT"."description" AS "description", "TBL_LEFT"."release_year" AS "release_year", "TBL_LEFT"."language_id" AS "language_id", "TBL_LEFT"."rental_duration" AS "rental_duration", "TBL_LEFT"."rental_rate" AS "rental_rate", "TBL_LEFT"."length" AS "length", "TBL_LEFT"."replacement_cost" AS "replacement_cost", "TBL_LEFT"."rating" AS "rating", "TBL_LEFT"."last_update" AS "last_update", "TBL_LEFT"."special_features" AS "special_features", "TBL_LEFT"."fulltext" AS "fulltext", "TBL_LEFT"."category_id" AS "category_id", "TBL_RIGHT"."category" AS "category"
+##   FROM (SELECT "TBL_LEFT"."film_id" AS "film_id", "TBL_LEFT"."title" AS "title", "TBL_LEFT"."description" AS "description", "TBL_LEFT"."release_year" AS "release_year", "TBL_LEFT"."language_id" AS "language_id", "TBL_LEFT"."rental_duration" AS "rental_duration", "TBL_LEFT"."rental_rate" AS "rental_rate", "TBL_LEFT"."length" AS "length", "TBL_LEFT"."replacement_cost" AS "replacement_cost", "TBL_LEFT"."rating" AS "rating", "TBL_LEFT"."last_update" AS "last_update", "TBL_LEFT"."special_features" AS "special_features", "TBL_LEFT"."fulltext" AS "fulltext", "TBL_RIGHT"."category_id" AS "category_id"
+##   FROM "film" AS "TBL_LEFT"
+##   LEFT JOIN (SELECT "film_id", "category_id"
+## FROM "film_category") "TBL_RIGHT"
+##   ON ("TBL_LEFT"."film_id" = "TBL_RIGHT"."film_id")
+## ) "TBL_LEFT"
+##   LEFT JOIN (SELECT "category_id", "name" AS "category"
+## FROM (SELECT "category_id", "name"
+## FROM "category") "lfcwgzpzjo") "TBL_RIGHT"
+##   ON ("TBL_LEFT"."category_id" = "TBL_RIGHT"."category_id")
+## ) "lolfcqlbui"
 ```
 Hand-written SQL code to do the same job will probably look a lot nicer and could be more efficient, but functionally `dplyr` does the job.
-
-### More lazy execution examples
-
-See more examples of lazy execution [here](https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html).
 
 
 ```r
@@ -522,3 +562,5 @@ sqlpetr::sp_docker_stop("sql-pet")
 * Benjamin S. Baumer. 2017. A Grammar for Reproducible and Painless Extract-Transform-Load Operations on Medium Data. [https://arxiv.org/abs/1708.07073](https://arxiv.org/abs/1708.07073) 
 * dplyr Reference documentation: Remote tables. [https://dplyr.tidyverse.org/reference/index.html#section-remote-tables](https://dplyr.tidyverse.org/reference/index.html#section-remote-tables)
 * Data Carpentry. SQL Databases and R. [https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html](https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html)
+
+

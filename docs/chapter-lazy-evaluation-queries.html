@@ -25,7 +25,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
 
 
-<meta name="date" content="2019-03-23">
+<meta name="date" content="2019-03-25">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -265,8 +265,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="9.4.9" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_nrow"><i class="fa fa-check"></i><b>9.4.9</b> Q %&gt;% nrow()</a></li>
 <li class="chapter" data-level="9.4.10" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_tally"><i class="fa fa-check"></i><b>9.4.10</b> Q %&gt;% dplyr::tally()</a></li>
 <li class="chapter" data-level="9.4.11" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_collect"><i class="fa fa-check"></i><b>9.4.11</b> Q %&gt;% dplyr::collect()</a></li>
-<li class="chapter" data-level="9.4.12" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_show-query"><i class="fa fa-check"></i><b>9.4.12</b> Q %&gt;% dplyr::show_query()</a></li>
-<li class="chapter" data-level="9.4.13" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#more-lazy-execution-examples"><i class="fa fa-check"></i><b>9.4.13</b> More lazy execution examples</a></li>
+<li class="chapter" data-level="9.4.12" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_plot-categories"><i class="fa fa-check"></i><b>9.4.12</b> Q %&gt;% ggplot</a></li>
+<li class="chapter" data-level="9.4.13" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_show-query"><i class="fa fa-check"></i><b>9.4.13</b> Q %&gt;% dplyr::show_query()</a></li>
 </ul></li>
 <li class="chapter" data-level="9.5" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#other-resources"><i class="fa fa-check"></i><b>9.5</b> Other resources</a></li>
 </ul></li>
@@ -276,10 +276,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="10.1.2" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#time-based-execution-environment-issues"><i class="fa fa-check"></i><b>10.1.2</b> Time-based, execution environment issues</a></li>
 <li class="chapter" data-level="10.1.3" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#lazy_q_build"><i class="fa fa-check"></i><b>10.1.3</b> Q %&gt;% <code>more dplyr</code></a></li>
 <li class="chapter" data-level="10.1.4" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#many-handy-r-functions-cant-be-translated-to-sql"><i class="fa fa-check"></i><b>10.1.4</b> Many handy R functions can’t be translated to SQL</a></li>
-<li class="chapter" data-level="10.1.5" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#more-lazy-execution-examples-1"><i class="fa fa-check"></i><b>10.1.5</b> More lazy execution examples</a></li>
+<li class="chapter" data-level="10.1.5" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#further-lazy-execution-examples"><i class="fa fa-check"></i><b>10.1.5</b> Further lazy execution examples</a></li>
 </ul></li>
 <li class="chapter" data-level="10.2" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#other-resources-1"><i class="fa fa-check"></i><b>10.2</b> Other resources</a></li>
-<li class="chapter" data-level="10.3" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#parking-lot"><i class="fa fa-check"></i><b>10.3</b> Parking lot</a></li>
 </ul></li>
 <li class="chapter" data-level="11" data-path="chapter-dbi-package-sql.html"><a href="chapter-dbi-package-sql.html"><i class="fa fa-check"></i><b>11</b> DBI package and SQL</a><ul>
 <li class="chapter" data-level="11.1" data-path="chapter-dbi-package-sql.html"><a href="chapter-dbi-package-sql.html#setup-3"><i class="fa fa-check"></i><b>11.1</b> Setup</a></li>
@@ -679,36 +678,37 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="dplyr-connection-objects" class="section level3">
 <h3><span class="header-section-number">9.3.1</span> <code>dplyr</code> connection objects</h3>
 <p>As introduced in the previous chapter, the <code>dplyr::tbl</code> function creates an object that might <strong>look</strong> like a data frame in that when you enter it on the command line, it prints a bunch of rows from the dbms table. But it is actually a <strong>list</strong> object that <code>dplyr</code> uses for constructing queries and retrieving data from the DBMS.</p>
-<p>The following code illustrates these issues. The <code>dplyr::tbl</code> function creates the connection object that we store in an object named <code>rental_table</code>:</p>
-<pre class="sourceCode r"><code class="sourceCode r">rental_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">tbl</span>(con, <span class="st">&quot;rental&quot;</span>)</code></pre>
-<p>At first glance, it <em>acts</em> like a data frame when you print it, although it only prints 10 of the table’s 16,044 rows:</p>
-<pre class="sourceCode r"><code class="sourceCode r">rental_table</code></pre>
-<pre><code>## # Source:   table&lt;rental&gt; [?? x 7]
+<p>The following code illustrates these issues. The <code>dplyr::tbl</code> function creates the connection object that we store in an object named <code>film_table</code>:</p>
+<pre class="sourceCode r"><code class="sourceCode r">film_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">tbl</span>(con, <span class="st">&quot;film&quot;</span>)</code></pre>
+<p>At first glance, it <em>acts</em> like a data frame when you print it, although it only prints 10 of the table’s 1,000 rows:</p>
+<pre class="sourceCode r"><code class="sourceCode r">film_table</code></pre>
+<pre><code>## # Source:   table&lt;film&gt; [?? x 13]
 ## # Database: postgres [postgres@localhost:5432/dvdrental]
-##    rental_id rental_date         inventory_id customer_id
-##        &lt;int&gt; &lt;dttm&gt;                     &lt;int&gt;       &lt;int&gt;
-##  1         2 2005-05-24 22:54:33         1525         459
-##  2         3 2005-05-24 23:03:39         1711         408
-##  3         4 2005-05-24 23:04:41         2452         333
-##  4         5 2005-05-24 23:05:21         2079         222
-##  5         6 2005-05-24 23:08:07         2792         549
-##  6         7 2005-05-24 23:11:53         3995         269
-##  7         8 2005-05-24 23:31:46         2346         239
-##  8         9 2005-05-25 00:00:40         2580         126
-##  9        10 2005-05-25 00:02:21         1824         399
-## 10        11 2005-05-25 00:09:02         4443         142
-## # … with more rows, and 3 more variables: return_date &lt;dttm&gt;,
-## #   staff_id &lt;int&gt;, last_update &lt;dttm&gt;</code></pre>
+##    film_id title description release_year language_id rental_duration
+##      &lt;int&gt; &lt;chr&gt; &lt;chr&gt;              &lt;int&gt;       &lt;int&gt;           &lt;int&gt;
+##  1     133 Cham… A Fateful …         2006           1               7
+##  2     384 Gros… A Epic Dra…         2006           1               5
+##  3       8 Airp… A Epic Tal…         2006           1               6
+##  4      98 Brig… A Fateful …         2006           1               4
+##  5       1 Acad… A Epic Dra…         2006           1               6
+##  6       2 Ace … A Astoundi…         2006           1               3
+##  7       3 Adap… A Astoundi…         2006           1               7
+##  8       4 Affa… A Fanciful…         2006           1               5
+##  9       5 Afri… A Fast-Pac…         2006           1               6
+## 10       6 Agen… A Intrepid…         2006           1               3
+## # … with more rows, and 7 more variables: rental_rate &lt;dbl&gt;, length &lt;int&gt;,
+## #   replacement_cost &lt;dbl&gt;, rating &lt;chr&gt;, last_update &lt;dttm&gt;,
+## #   special_features &lt;chr&gt;, fulltext &lt;chr&gt;</code></pre>
 <p>However, notice that the first output line shows <code>??</code>, rather than providing the number of rows in the table. Similarly, the next to last line shows:</p>
-<pre><code>    ... with more rows, and 3 more variables</code></pre>
-<p>whereas the output for a normal <code>tbl</code> of this rental data would say:</p>
-<pre><code>    ... with 16,034 more rows, and 3 more variables</code></pre>
-<p>So even though <code>rental_table</code> is a <code>tbl</code>, it’s <strong>also</strong> a <code>tbl_PqConnection</code>:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(rental_table)</code></pre>
+<pre><code>    … with more rows, and 7 more variables</code></pre>
+<p>whereas the output for a normal <code>tbl</code> of this film data would say:</p>
+<pre><code>    … with more 1,000, and 7 more variables</code></pre>
+<p>So even though <code>film_table</code> is a <code>tbl</code>, it’s <strong>also</strong> a <code>tbl_PqConnection</code>:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(film_table)</code></pre>
 <pre><code>## [1] &quot;tbl_PqConnection&quot; &quot;tbl_dbi&quot;          &quot;tbl_sql&quot;         
 ## [4] &quot;tbl_lazy&quot;         &quot;tbl&quot;</code></pre>
-<p>It is not just a normal <code>tbl</code> of data. We can see that from the structure of <code>rental_table</code>:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(rental_table)</code></pre>
+<p>It is not just a normal <code>tbl</code> of data. We can see that from the structure of <code>film_table</code>:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(film_table)</code></pre>
 <pre><code>## List of 2
 ##  $ src:List of 2
 ##   ..$ con  :Formal class &#39;PqConnection&#39; [package &quot;RPostgres&quot;] with 3 slots
@@ -720,12 +720,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##   ..$ disco: NULL
 ##   ..- attr(*, &quot;class&quot;)= chr [1:4] &quot;src_PqConnection&quot; &quot;src_dbi&quot; &quot;src_sql&quot; &quot;src&quot;
 ##  $ ops:List of 2
-##   ..$ x   : &#39;ident&#39; chr &quot;rental&quot;
-##   ..$ vars: chr [1:7] &quot;rental_id&quot; &quot;rental_date&quot; &quot;inventory_id&quot; &quot;customer_id&quot; ...
+##   ..$ x   : &#39;ident&#39; chr &quot;film&quot;
+##   ..$ vars: chr [1:13] &quot;film_id&quot; &quot;title&quot; &quot;description&quot; &quot;release_year&quot; ...
 ##   ..- attr(*, &quot;class&quot;)= chr [1:3] &quot;op_base_remote&quot; &quot;op_base&quot; &quot;op&quot;
 ##  - attr(*, &quot;class&quot;)= chr [1:5] &quot;tbl_PqConnection&quot; &quot;tbl_dbi&quot; &quot;tbl_sql&quot; &quot;tbl_lazy&quot; ...</code></pre>
 <p>It has only <em>two</em> rows! The first row contains all the information in the <code>con</code> object, which contains information about all the tables and objects in the database:</p>
-<pre class="sourceCode r"><code class="sourceCode r">rental_table<span class="op">$</span>src<span class="op">$</span>con<span class="op">@</span>typnames<span class="op">$</span>typname[<span class="dv">380</span><span class="op">:</span><span class="dv">437</span>]</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">film_table<span class="op">$</span>src<span class="op">$</span>con<span class="op">@</span>typnames<span class="op">$</span>typname[<span class="dv">380</span><span class="op">:</span><span class="dv">437</span>]</code></pre>
 <pre><code>##  [1] &quot;customer&quot;                    &quot;_customer&quot;                  
 ##  [3] &quot;actor_actor_id_seq&quot;          &quot;actor&quot;                      
 ##  [5] &quot;_actor&quot;                      &quot;category_category_id_seq&quot;   
@@ -755,11 +755,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## [53] &quot;store&quot;                       &quot;_store&quot;                     
 ## [55] &quot;sales_by_store&quot;              &quot;_sales_by_store&quot;            
 ## [57] &quot;staff_list&quot;                  &quot;_staff_list&quot;</code></pre>
-<p>The second row contains a list of the columns in the <code>rental</code> table, among other things:</p>
-<pre class="sourceCode r"><code class="sourceCode r">rental_table<span class="op">$</span>ops<span class="op">$</span>vars</code></pre>
-<pre><code>## [1] &quot;rental_id&quot;    &quot;rental_date&quot;  &quot;inventory_id&quot; &quot;customer_id&quot; 
-## [5] &quot;return_date&quot;  &quot;staff_id&quot;     &quot;last_update&quot;</code></pre>
-<p><code>rental_table</code> holds information needed to get the data from the ‘rental’ table, but <code>rental_table</code> does not hold the data itself. In the following sections, we will examine more closely this relationship between the <code>rental_table</code> object and the data in the database’s ‘rental’ table.</p>
+<p>The second row contains a list of the columns in the <code>film</code> table, among other things:</p>
+<pre class="sourceCode r"><code class="sourceCode r">film_table<span class="op">$</span>ops<span class="op">$</span>vars</code></pre>
+<pre><code>##  [1] &quot;film_id&quot;          &quot;title&quot;            &quot;description&quot;     
+##  [4] &quot;release_year&quot;     &quot;language_id&quot;      &quot;rental_duration&quot; 
+##  [7] &quot;rental_rate&quot;      &quot;length&quot;           &quot;replacement_cost&quot;
+## [10] &quot;rating&quot;           &quot;last_update&quot;      &quot;special_features&quot;
+## [13] &quot;fulltext&quot;</code></pre>
+<p><code>film_table</code> holds information needed to get the data from the ‘film’ table, but <code>film_table</code> does not hold the data itself. In the following sections, we will examine more closely this relationship between the <code>film_table</code> object and the data in the database’s ‘film’ table.</p>
 </div>
 </div>
 <div id="when-does-a-lazy-query-trigger-data-retrieval" class="section level2">
@@ -767,17 +770,34 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="create-a-black-box-query-for-experimentation" class="section level3">
 <h3><span class="header-section-number">9.4.1</span> Create a black box query for experimentation</h3>
 <p>To illustrate the different issues involved in data retrieval, we create more connection objects to link to two other tables.</p>
-<pre class="sourceCode r"><code class="sourceCode r">staff_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">tbl</span>(con, <span class="st">&quot;staff&quot;</span>) </code></pre>
-<p>The ‘staff’ table has 2 rows.</p>
-<pre class="sourceCode r"><code class="sourceCode r">customer_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">tbl</span>(con, <span class="st">&quot;customer&quot;</span>) </code></pre>
-<p>The ‘customer’ table has 599 rows.</p>
+<pre class="sourceCode r"><code class="sourceCode r">film_category_table &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="st">&quot;film_category&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>last_update)</code></pre>
+<p>The ‘film_category’ table has 1,000 rows and 2 columns because we dropped <code>last_update</code> which is a column name that appears in more than one table and will just mess things up (and we don’t really care when the category was updated).</p>
+<pre class="sourceCode r"><code class="sourceCode r">category_table &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="st">&quot;category&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>last_update) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rename</span>(<span class="dt">category =</span> name)</code></pre>
+<p>The ‘category_table’ table has 16 rows.</p>
 <p>Here is a typical string of <code>dplyr</code> verbs strung together with the magrittr <code>%&gt;%</code> pipe command that will be used to tease out the several different behaviors that a lazy query has when passed to different R functions. This query joins three connection objects into a query we’ll call <code>Q</code>:</p>
-<pre class="sourceCode r"><code class="sourceCode r">Q &lt;-<span class="st"> </span>rental_table <span class="op">%&gt;%</span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">left_join</span>(staff_table, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;staff_id&quot;</span> =<span class="st"> &quot;staff_id&quot;</span>)) <span class="op">%&gt;%</span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">rename</span>(<span class="dt">staff_email =</span> email) <span class="op">%&gt;%</span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">left_join</span>(customer_table, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;customer_id&quot;</span> =<span class="st"> &quot;customer_id&quot;</span>)) <span class="op">%&gt;%</span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">rename</span>(<span class="dt">customer_email =</span> email) <span class="op">%&gt;%</span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(rental_date, staff_email, customer_email)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">film_table &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="st">&quot;film&quot;</span>)
+Q &lt;-<span class="st"> </span>film_table <span class="op">%&gt;%</span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">left_join</span>(film_category_table, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;film_id&quot;</span> =<span class="st"> &quot;film_id&quot;</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">left_join</span>(category_table, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;category_id&quot;</span> =<span class="st"> &quot;category_id&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(title, length, rating, category)</code></pre>
+<p>The <code>str</code> function gives us a hint at how R is collecting information that can be used to construct and execute a query later on:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(Q, <span class="dt">max.level =</span> <span class="dv">2</span>)</code></pre>
+<pre><code>## List of 2
+##  $ src:List of 2
+##   ..$ con  :Formal class &#39;PqConnection&#39; [package &quot;RPostgres&quot;] with 3 slots
+##   ..$ disco: NULL
+##   ..- attr(*, &quot;class&quot;)= chr [1:4] &quot;src_PqConnection&quot; &quot;src_dbi&quot; &quot;src_sql&quot; &quot;src&quot;
+##  $ ops:List of 4
+##   ..$ name: chr &quot;select&quot;
+##   ..$ x   :List of 4
+##   .. ..- attr(*, &quot;class&quot;)= chr [1:3] &quot;op_join&quot; &quot;op_double&quot; &quot;op&quot;
+##   ..$ dots:List of 4
+##   .. ..- attr(*, &quot;class&quot;)= chr &quot;quosures&quot;
+##   ..$ args: list()
+##   ..- attr(*, &quot;class&quot;)= chr [1:3] &quot;op_select&quot; &quot;op_single&quot; &quot;op&quot;
+##  - attr(*, &quot;class&quot;)= chr [1:5] &quot;tbl_PqConnection&quot; &quot;tbl_dbi&quot; &quot;tbl_sql&quot; &quot;tbl_lazy&quot; ...</code></pre>
 </div>
 <div id="experiment-overview" class="section level3">
 <h3><span class="header-section-number">9.4.2</span> Experiment overview</h3>
@@ -838,6 +858,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <td><img src="screenshots/green-check.png" /> Prints 6 rows</td>
 </tr>
 <tr class="odd">
+<td><a href="chapter-lazy-evaluation-queries.html#lazy_q_plot-categories"><code>Q %&gt;% ggplot</code></a></td>
+<td><img src="screenshots/green-check.png" /> <img src="screenshots/green-check.png" /> Plots a barchart</td>
+</tr>
+<tr class="even">
 <td><a href="#lazy-q-show-query"><code>Q %&gt;% dplyr::show_query()</code></a></td>
 <td><img src="screenshots/red-x.png" /> <strong>Translates</strong> the lazy query object into SQL</td>
 </tr>
@@ -850,63 +874,63 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3><span class="header-section-number">9.4.3</span> Q %&gt;% print()</h3>
 <p>Remember that <code>Q %&gt;% print()</code> is equivalent to <code>print(Q)</code> and the same as just entering <code>Q</code> on the command line. We use the magrittr pipe operator here, because chaining functions highlights how the same object behaves differently in each use.</p>
 <pre class="sourceCode r"><code class="sourceCode r">Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">print</span>()</code></pre>
-<pre><code>## # Source:   lazy query [?? x 3]
+<pre><code>## # Source:   lazy query [?? x 4]
 ## # Database: postgres [postgres@localhost:5432/dvdrental]
-##    rental_date         staff_email             customer_email              
-##    &lt;dttm&gt;              &lt;chr&gt;                   &lt;chr&gt;                       
-##  1 2005-05-24 22:54:33 Mike.Hillyer@sakilasta… tommy.collazo@sakilacustome…
-##  2 2005-05-24 23:03:39 Mike.Hillyer@sakilasta… manuel.murrell@sakilacustom…
-##  3 2005-05-24 23:04:41 Jon.Stephens@sakilasta… andrew.purdy@sakilacustomer…
-##  4 2005-05-24 23:05:21 Mike.Hillyer@sakilasta… delores.hansen@sakilacustom…
-##  5 2005-05-24 23:08:07 Mike.Hillyer@sakilasta… nelson.christenson@sakilacu…
-##  6 2005-05-24 23:11:53 Jon.Stephens@sakilasta… cassandra.walters@sakilacus…
-##  7 2005-05-24 23:31:46 Jon.Stephens@sakilasta… minnie.romero@sakilacustome…
-##  8 2005-05-25 00:00:40 Mike.Hillyer@sakilasta… ellen.simpson@sakilacustome…
-##  9 2005-05-25 00:02:21 Jon.Stephens@sakilasta… danny.isom@sakilacustomer.o…
-## 10 2005-05-25 00:09:02 Jon.Stephens@sakilasta… april.burns@sakilacustomer.…
+##    title            length rating category   
+##    &lt;chr&gt;             &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;      
+##  1 Academy Dinosaur     86 PG     Documentary
+##  2 Ace Goldfinger       48 G      Horror     
+##  3 Adaptation Holes     50 NC-17  Documentary
+##  4 Affair Prejudice    117 G      Horror     
+##  5 African Egg         130 G      Family     
+##  6 Agent Truman        169 PG     Foreign    
+##  7 Airplane Sierra      62 PG-13  Comedy     
+##  8 Airport Pollock      54 R      Horror     
+##  9 Alabama Devil       114 PG-13  Horror     
+## 10 Aladdin Calendar     63 NC-17  Sports     
 ## # … with more rows</code></pre>
 <p><img src="screenshots/green-check.png" /> R retrieves 10 observations and 3 columns. In its role as IDE, R has provided nicely formatted output that is similar to what it prints for a tibble, with descriptive information about the dataset and each column:</p>
 <blockquote>
-<p># Source: lazy query [?? x 3] </br >
-# Database: postgres [<a href="mailto:postgres@localhost" class="email">postgres@localhost</a>:5432/dvdrental] </br >
-rental_date staff_email customer_email
-&lt;dttm&gt; &lt;chr&gt; &lt;chr&gt;</p>
+<h2 id="source-lazy-query-x-4"><span class="header-section-number">9.4.3</span> # Source: lazy query [?? x 4]</h2>
+<h2 id="database-postgres-postgreslocalhost5432dvdrental"><span class="header-section-number">9.4.3</span> # Database: postgres [<a href="mailto:postgres@localhost" class="email">postgres@localhost</a>:5432/dvdrental]</h2>
+<h2 id="title-length-rating-category"><span class="header-section-number">9.4.3</span> title length rating category</h2>
+<h2 id="section"><span class="header-section-number">9.4.3</span> <chr> <int> <chr> <chr></h2>
 </blockquote>
-<p>R has not determined how many rows are left to retrieve as it shows with <code>[?? x 3]</code> and <code>... with more rows</code> in the data summary.</p>
+<p>R has not determined how many rows are left to retrieve as it shows with <code>[?? x 4]</code> and <code>... with more rows</code> in the data summary.</p>
 </div>
 <div id="lazy_q_as-tibble" class="section level3">
 <h3><span class="header-section-number">9.4.4</span> Q %&gt;% dplyr::as_tibble()</h3>
 <p><img src="screenshots/green-check.png" /> <img src="screenshots/green-check.png" /> In contrast to <code>print()</code>, the <code>as_tibble()</code> function causes R to download the whole table, using tibble’s default of displaying only the first 10 rows.</p>
 <pre class="sourceCode r"><code class="sourceCode r">Q <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">as_tibble</span>()</code></pre>
-<pre><code>## # A tibble: 16,044 x 3
-##    rental_date         staff_email             customer_email              
-##    &lt;dttm&gt;              &lt;chr&gt;                   &lt;chr&gt;                       
-##  1 2005-05-24 22:54:33 Mike.Hillyer@sakilasta… tommy.collazo@sakilacustome…
-##  2 2005-05-24 23:03:39 Mike.Hillyer@sakilasta… manuel.murrell@sakilacustom…
-##  3 2005-05-24 23:04:41 Jon.Stephens@sakilasta… andrew.purdy@sakilacustomer…
-##  4 2005-05-24 23:05:21 Mike.Hillyer@sakilasta… delores.hansen@sakilacustom…
-##  5 2005-05-24 23:08:07 Mike.Hillyer@sakilasta… nelson.christenson@sakilacu…
-##  6 2005-05-24 23:11:53 Jon.Stephens@sakilasta… cassandra.walters@sakilacus…
-##  7 2005-05-24 23:31:46 Jon.Stephens@sakilasta… minnie.romero@sakilacustome…
-##  8 2005-05-25 00:00:40 Mike.Hillyer@sakilasta… ellen.simpson@sakilacustome…
-##  9 2005-05-25 00:02:21 Jon.Stephens@sakilasta… danny.isom@sakilacustomer.o…
-## 10 2005-05-25 00:09:02 Jon.Stephens@sakilasta… april.burns@sakilacustomer.…
-## # … with 16,034 more rows</code></pre>
+<pre><code>## # A tibble: 1,000 x 4
+##    title            length rating category   
+##    &lt;chr&gt;             &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;      
+##  1 Academy Dinosaur     86 PG     Documentary
+##  2 Ace Goldfinger       48 G      Horror     
+##  3 Adaptation Holes     50 NC-17  Documentary
+##  4 Affair Prejudice    117 G      Horror     
+##  5 African Egg         130 G      Family     
+##  6 Agent Truman        169 PG     Foreign    
+##  7 Airplane Sierra      62 PG-13  Comedy     
+##  8 Airport Pollock      54 R      Horror     
+##  9 Alabama Devil       114 PG-13  Horror     
+## 10 Aladdin Calendar     63 NC-17  Sports     
+## # … with 990 more rows</code></pre>
 </div>
 <div id="lazy_q_head" class="section level3">
 <h3><span class="header-section-number">9.4.5</span> Q %&gt;% head()</h3>
 <p><img src="screenshots/green-check.png" /> The <code>head()</code> function is very similar to print but has a different “<code>max.print</code>” value.</p>
 <pre class="sourceCode r"><code class="sourceCode r">Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>()</code></pre>
-<pre><code>## # Source:   lazy query [?? x 3]
+<pre><code>## # Source:   lazy query [?? x 4]
 ## # Database: postgres [postgres@localhost:5432/dvdrental]
-##   rental_date         staff_email             customer_email               
-##   &lt;dttm&gt;              &lt;chr&gt;                   &lt;chr&gt;                        
-## 1 2005-05-24 22:54:33 Mike.Hillyer@sakilasta… tommy.collazo@sakilacustomer…
-## 2 2005-05-24 23:03:39 Mike.Hillyer@sakilasta… manuel.murrell@sakilacustome…
-## 3 2005-05-24 23:04:41 Jon.Stephens@sakilasta… andrew.purdy@sakilacustomer.…
-## 4 2005-05-24 23:05:21 Mike.Hillyer@sakilasta… delores.hansen@sakilacustome…
-## 5 2005-05-24 23:08:07 Mike.Hillyer@sakilasta… nelson.christenson@sakilacus…
-## 6 2005-05-24 23:11:53 Jon.Stephens@sakilasta… cassandra.walters@sakilacust…</code></pre>
+##   title            length rating               category   
+##   &lt;chr&gt;             &lt;int&gt; &lt;S3: pq_mpaa_rating&gt; &lt;chr&gt;      
+## 1 Academy Dinosaur     86 PG                   Documentary
+## 2 Ace Goldfinger       48 G                    Horror     
+## 3 Adaptation Holes     50 NC-17                Documentary
+## 4 Affair Prejudice    117 G                    Horror     
+## 5 African Egg         130 G                    Family     
+## 6 Agent Truman        169 PG                   Foreign</code></pre>
 </div>
 <div id="lazy_q_tail" class="section level3">
 <h3><span class="header-section-number">9.4.6</span> Q %&gt;% tail()</h3>
@@ -936,19 +960,22 @@ rental_date staff_email customer_email
 ##  $ ops:List of 4
 ##   ..$ name: chr &quot;select&quot;
 ##   ..$ x   :List of 4
-##   .. ..$ name: chr &quot;rename&quot;
-##   .. ..$ x   :List of 4
-##   .. .. ..- attr(*, &quot;class&quot;)= chr [1:3] &quot;op_join&quot; &quot;op_double&quot; &quot;op&quot;
-##   .. ..$ dots:List of 1
-##   .. ..$ args: list()
-##   .. ..- attr(*, &quot;class&quot;)= chr [1:3] &quot;op_rename&quot; &quot;op_single&quot; &quot;op&quot;
-##   ..$ dots:List of 3
-##   .. ..$ : language ~rental_date
-##   .. .. ..- attr(*, &quot;.Environment&quot;)=&lt;environment: 0x7fd409683aa0&gt; 
-##   .. ..$ : language ~staff_email
-##   .. .. ..- attr(*, &quot;.Environment&quot;)=&lt;environment: 0x7fd409683aa0&gt; 
-##   .. ..$ : language ~customer_email
-##   .. .. ..- attr(*, &quot;.Environment&quot;)=&lt;environment: 0x7fd409683aa0&gt; 
+##   .. ..$ name: chr &quot;join&quot;
+##   .. ..$ x   :List of 2
+##   .. .. ..- attr(*, &quot;class&quot;)= chr [1:5] &quot;tbl_PqConnection&quot; &quot;tbl_dbi&quot; &quot;tbl_sql&quot; &quot;tbl_lazy&quot; ...
+##   .. ..$ y   :List of 2
+##   .. .. ..- attr(*, &quot;class&quot;)= chr [1:5] &quot;tbl_PqConnection&quot; &quot;tbl_dbi&quot; &quot;tbl_sql&quot; &quot;tbl_lazy&quot; ...
+##   .. ..$ args:List of 4
+##   .. ..- attr(*, &quot;class&quot;)= chr [1:3] &quot;op_join&quot; &quot;op_double&quot; &quot;op&quot;
+##   ..$ dots:List of 4
+##   .. ..$ : language ~title
+##   .. .. ..- attr(*, &quot;.Environment&quot;)=&lt;environment: 0x7fb8eaee42a8&gt; 
+##   .. ..$ : language ~length
+##   .. .. ..- attr(*, &quot;.Environment&quot;)=&lt;environment: 0x7fb8eaee42a8&gt; 
+##   .. ..$ : language ~rating
+##   .. .. ..- attr(*, &quot;.Environment&quot;)=&lt;environment: 0x7fb8eaee42a8&gt; 
+##   .. ..$ : language ~category
+##   .. .. ..- attr(*, &quot;.Environment&quot;)=&lt;environment: 0x7fb8eaee42a8&gt; 
 ##   .. ..- attr(*, &quot;class&quot;)= chr &quot;quosures&quot;
 ##   ..$ args: list()
 ##   ..- attr(*, &quot;class&quot;)= chr [1:3] &quot;op_select&quot; &quot;op_single&quot; &quot;op&quot;
@@ -968,70 +995,74 @@ rental_date staff_email customer_email
 ## # Database: postgres [postgres@localhost:5432/dvdrental]
 ##   n              
 ##   &lt;S3: integer64&gt;
-## 1 16044</code></pre>
+## 1 1000</code></pre>
 <p>The <code>nrow()</code> function knows that <code>Q</code> is a list. On the other hand, the <code>tally()</code> function tells SQL to go count all the rows. Notice that <code>Q</code> results in 16,044 rows – the same number of rows as <code>rental</code>.</p>
 </div>
 <div id="lazy_q_collect" class="section level3">
 <h3><span class="header-section-number">9.4.11</span> Q %&gt;% dplyr::collect()</h3>
 <p><img src="screenshots/green-check.png" /> The dplyr::<a href="https://dplyr.tidyverse.org/reference/compute.html">collect</a> function triggers a call to the <code>DBI:dbFetch()</code> function behind the scenes, which forces R to download a specified number of rows:</p>
 <pre class="sourceCode r"><code class="sourceCode r">Q <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="dv">20</span>)</code></pre>
-<pre><code>## # A tibble: 20 x 3
-##    rental_date         staff_email             customer_email              
-##    &lt;dttm&gt;              &lt;chr&gt;                   &lt;chr&gt;                       
-##  1 2005-05-24 22:54:33 Mike.Hillyer@sakilasta… tommy.collazo@sakilacustome…
-##  2 2005-05-24 23:03:39 Mike.Hillyer@sakilasta… manuel.murrell@sakilacustom…
-##  3 2005-05-24 23:04:41 Jon.Stephens@sakilasta… andrew.purdy@sakilacustomer…
-##  4 2005-05-24 23:05:21 Mike.Hillyer@sakilasta… delores.hansen@sakilacustom…
-##  5 2005-05-24 23:08:07 Mike.Hillyer@sakilasta… nelson.christenson@sakilacu…
-##  6 2005-05-24 23:11:53 Jon.Stephens@sakilasta… cassandra.walters@sakilacus…
-##  7 2005-05-24 23:31:46 Jon.Stephens@sakilasta… minnie.romero@sakilacustome…
-##  8 2005-05-25 00:00:40 Mike.Hillyer@sakilasta… ellen.simpson@sakilacustome…
-##  9 2005-05-25 00:02:21 Jon.Stephens@sakilasta… danny.isom@sakilacustomer.o…
-## 10 2005-05-25 00:09:02 Jon.Stephens@sakilasta… april.burns@sakilacustomer.…
-## 11 2005-05-25 00:19:27 Jon.Stephens@sakilasta… deanna.byrd@sakilacustomer.…
-## 12 2005-05-25 00:22:55 Mike.Hillyer@sakilasta… raymond.mcwhorter@sakilacus…
-## 13 2005-05-25 00:31:15 Mike.Hillyer@sakilasta… theodore.culp@sakilacustome…
-## 14 2005-05-25 00:39:22 Mike.Hillyer@sakilasta… ronald.weiner@sakilacustome…
-## 15 2005-05-25 00:43:11 Jon.Stephens@sakilasta… steven.curley@sakilacustome…
-## 16 2005-05-25 01:06:36 Mike.Hillyer@sakilasta… isaac.oglesby@sakilacustome…
-## 17 2005-05-25 01:10:47 Jon.Stephens@sakilasta… ruth.martinez@sakilacustome…
-## 18 2005-05-25 01:17:24 Mike.Hillyer@sakilasta… ronnie.ricketts@sakilacusto…
-## 19 2005-05-25 01:48:41 Jon.Stephens@sakilasta… roberta.harper@sakilacustom…
-## 20 2005-05-25 01:59:46 Jon.Stephens@sakilasta… craig.morrell@sakilacustome…</code></pre>
+<pre><code>## # A tibble: 20 x 4
+##    title               length rating category   
+##    &lt;chr&gt;                &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;      
+##  1 Academy Dinosaur        86 PG     Documentary
+##  2 Ace Goldfinger          48 G      Horror     
+##  3 Adaptation Holes        50 NC-17  Documentary
+##  4 Affair Prejudice       117 G      Horror     
+##  5 African Egg            130 G      Family     
+##  6 Agent Truman           169 PG     Foreign    
+##  7 Airplane Sierra         62 PG-13  Comedy     
+##  8 Airport Pollock         54 R      Horror     
+##  9 Alabama Devil          114 PG-13  Horror     
+## 10 Aladdin Calendar        63 NC-17  Sports     
+## 11 Alamo Videotape        126 G      Foreign    
+## 12 Alaska Phantom         136 PG     Music      
+## 13 Ali Forever            150 PG     Horror     
+## 14 Alice Fantasia          94 NC-17  Classics   
+## 15 Alien Center            46 NC-17  Foreign    
+## 16 Alley Evolution        180 NC-17  Foreign    
+## 17 Alone Trip              82 R      Music      
+## 18 Alter Victory           57 PG-13  Animation  
+## 19 Amadeus Holy           113 PG     Action     
+## 20 Amelie Hellfighters     79 R      Music</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r">Q <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="dv">20</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>()</code></pre>
-<pre><code>## # A tibble: 6 x 3
-##   rental_date         staff_email             customer_email               
-##   &lt;dttm&gt;              &lt;chr&gt;                   &lt;chr&gt;                        
-## 1 2005-05-24 22:54:33 Mike.Hillyer@sakilasta… tommy.collazo@sakilacustomer…
-## 2 2005-05-24 23:03:39 Mike.Hillyer@sakilasta… manuel.murrell@sakilacustome…
-## 3 2005-05-24 23:04:41 Jon.Stephens@sakilasta… andrew.purdy@sakilacustomer.…
-## 4 2005-05-24 23:05:21 Mike.Hillyer@sakilasta… delores.hansen@sakilacustome…
-## 5 2005-05-24 23:08:07 Mike.Hillyer@sakilasta… nelson.christenson@sakilacus…
-## 6 2005-05-24 23:11:53 Jon.Stephens@sakilasta… cassandra.walters@sakilacust…</code></pre>
+<pre><code>## # A tibble: 6 x 4
+##   title            length rating category   
+##   &lt;chr&gt;             &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;      
+## 1 Academy Dinosaur     86 PG     Documentary
+## 2 Ace Goldfinger       48 G      Horror     
+## 3 Adaptation Holes     50 NC-17  Documentary
+## 4 Affair Prejudice    117 G      Horror     
+## 5 African Egg         130 G      Family     
+## 6 Agent Truman        169 PG     Foreign</code></pre>
 <p>The <code>dplyr::collect</code> function triggers the creation of a tibble and controls the number of rows that the DBMS sends to R. Notice that <code>head</code> only prints 6 of the 20 rows that R has retrieved.</p>
 <p>If you do not provide a value for the <code>n</code> argument, <em>all</em> of the rows will be retrieved into your R workspace.</p>
 </div>
+<div id="lazy_q_plot-categories" class="section level3">
+<h3><span class="header-section-number">9.4.12</span> Q %&gt;% ggplot</h3>
+<p>Passing the <code>Q</code> object to <code>ggplot</code> executes the query and plots the result.</p>
+<pre class="sourceCode r"><code class="sourceCode r">Q <span class="op">%&gt;%</span><span class="st"> </span>ggplot2<span class="op">::</span><span class="kw">ggplot</span>(<span class="kw">aes</span>(category)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_bar</span>() <span class="op">+</span><span class="st"> </span><span class="kw">coord_flip</span>()</code></pre>
+<p><img src="090-lazy-evalutation-intro_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<p>It’s obvious that when creating our phony <code>dvdrental</code> datbase, phony films were assigned to a category pretty randomly.</p>
+</div>
 <div id="lazy_q_show-query" class="section level3">
-<h3><span class="header-section-number">9.4.12</span> Q %&gt;% dplyr::show_query()</h3>
+<h3><span class="header-section-number">9.4.13</span> Q %&gt;% dplyr::show_query()</h3>
 <pre class="sourceCode r"><code class="sourceCode r">Q <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">show_query</span>()</code></pre>
 <pre><code>## &lt;SQL&gt;
-## SELECT &quot;rental_date&quot;, &quot;staff_email&quot;, &quot;customer_email&quot;
-## FROM (SELECT &quot;rental_id&quot;, &quot;rental_date&quot;, &quot;inventory_id&quot;, &quot;customer_id&quot;, &quot;return_date&quot;, &quot;staff_id&quot;, &quot;last_update.x&quot;, &quot;first_name.x&quot;, &quot;last_name.x&quot;, &quot;address_id.x&quot;, &quot;staff_email&quot;, &quot;store_id.x&quot;, &quot;active.x&quot;, &quot;username&quot;, &quot;password&quot;, &quot;last_update.y&quot;, &quot;picture&quot;, &quot;store_id.y&quot;, &quot;first_name.y&quot;, &quot;last_name.y&quot;, &quot;email&quot; AS &quot;customer_email&quot;, &quot;address_id.y&quot;, &quot;activebool&quot;, &quot;create_date&quot;, &quot;last_update&quot;, &quot;active.y&quot;
-## FROM (SELECT &quot;TBL_LEFT&quot;.&quot;rental_id&quot; AS &quot;rental_id&quot;, &quot;TBL_LEFT&quot;.&quot;rental_date&quot; AS &quot;rental_date&quot;, &quot;TBL_LEFT&quot;.&quot;inventory_id&quot; AS &quot;inventory_id&quot;, &quot;TBL_LEFT&quot;.&quot;customer_id&quot; AS &quot;customer_id&quot;, &quot;TBL_LEFT&quot;.&quot;return_date&quot; AS &quot;return_date&quot;, &quot;TBL_LEFT&quot;.&quot;staff_id&quot; AS &quot;staff_id&quot;, &quot;TBL_LEFT&quot;.&quot;last_update.x&quot; AS &quot;last_update.x&quot;, &quot;TBL_LEFT&quot;.&quot;first_name&quot; AS &quot;first_name.x&quot;, &quot;TBL_LEFT&quot;.&quot;last_name&quot; AS &quot;last_name.x&quot;, &quot;TBL_LEFT&quot;.&quot;address_id&quot; AS &quot;address_id.x&quot;, &quot;TBL_LEFT&quot;.&quot;staff_email&quot; AS &quot;staff_email&quot;, &quot;TBL_LEFT&quot;.&quot;store_id&quot; AS &quot;store_id.x&quot;, &quot;TBL_LEFT&quot;.&quot;active&quot; AS &quot;active.x&quot;, &quot;TBL_LEFT&quot;.&quot;username&quot; AS &quot;username&quot;, &quot;TBL_LEFT&quot;.&quot;password&quot; AS &quot;password&quot;, &quot;TBL_LEFT&quot;.&quot;last_update.y&quot; AS &quot;last_update.y&quot;, &quot;TBL_LEFT&quot;.&quot;picture&quot; AS &quot;picture&quot;, &quot;TBL_RIGHT&quot;.&quot;store_id&quot; AS &quot;store_id.y&quot;, &quot;TBL_RIGHT&quot;.&quot;first_name&quot; AS &quot;first_name.y&quot;, &quot;TBL_RIGHT&quot;.&quot;last_name&quot; AS &quot;last_name.y&quot;, &quot;TBL_RIGHT&quot;.&quot;email&quot; AS &quot;email&quot;, &quot;TBL_RIGHT&quot;.&quot;address_id&quot; AS &quot;address_id.y&quot;, &quot;TBL_RIGHT&quot;.&quot;activebool&quot; AS &quot;activebool&quot;, &quot;TBL_RIGHT&quot;.&quot;create_date&quot; AS &quot;create_date&quot;, &quot;TBL_RIGHT&quot;.&quot;last_update&quot; AS &quot;last_update&quot;, &quot;TBL_RIGHT&quot;.&quot;active&quot; AS &quot;active.y&quot;
-##   FROM (SELECT &quot;rental_id&quot;, &quot;rental_date&quot;, &quot;inventory_id&quot;, &quot;customer_id&quot;, &quot;return_date&quot;, &quot;staff_id&quot;, &quot;last_update.x&quot;, &quot;first_name&quot;, &quot;last_name&quot;, &quot;address_id&quot;, &quot;email&quot; AS &quot;staff_email&quot;, &quot;store_id&quot;, &quot;active&quot;, &quot;username&quot;, &quot;password&quot;, &quot;last_update.y&quot;, &quot;picture&quot;
-## FROM (SELECT &quot;TBL_LEFT&quot;.&quot;rental_id&quot; AS &quot;rental_id&quot;, &quot;TBL_LEFT&quot;.&quot;rental_date&quot; AS &quot;rental_date&quot;, &quot;TBL_LEFT&quot;.&quot;inventory_id&quot; AS &quot;inventory_id&quot;, &quot;TBL_LEFT&quot;.&quot;customer_id&quot; AS &quot;customer_id&quot;, &quot;TBL_LEFT&quot;.&quot;return_date&quot; AS &quot;return_date&quot;, &quot;TBL_LEFT&quot;.&quot;staff_id&quot; AS &quot;staff_id&quot;, &quot;TBL_LEFT&quot;.&quot;last_update&quot; AS &quot;last_update.x&quot;, &quot;TBL_RIGHT&quot;.&quot;first_name&quot; AS &quot;first_name&quot;, &quot;TBL_RIGHT&quot;.&quot;last_name&quot; AS &quot;last_name&quot;, &quot;TBL_RIGHT&quot;.&quot;address_id&quot; AS &quot;address_id&quot;, &quot;TBL_RIGHT&quot;.&quot;email&quot; AS &quot;email&quot;, &quot;TBL_RIGHT&quot;.&quot;store_id&quot; AS &quot;store_id&quot;, &quot;TBL_RIGHT&quot;.&quot;active&quot; AS &quot;active&quot;, &quot;TBL_RIGHT&quot;.&quot;username&quot; AS &quot;username&quot;, &quot;TBL_RIGHT&quot;.&quot;password&quot; AS &quot;password&quot;, &quot;TBL_RIGHT&quot;.&quot;last_update&quot; AS &quot;last_update.y&quot;, &quot;TBL_RIGHT&quot;.&quot;picture&quot; AS &quot;picture&quot;
-##   FROM &quot;rental&quot; AS &quot;TBL_LEFT&quot;
-##   LEFT JOIN &quot;staff&quot; AS &quot;TBL_RIGHT&quot;
-##   ON (&quot;TBL_LEFT&quot;.&quot;staff_id&quot; = &quot;TBL_RIGHT&quot;.&quot;staff_id&quot;)
-## ) &quot;qzdwvvvtzq&quot;) &quot;TBL_LEFT&quot;
-##   LEFT JOIN &quot;customer&quot; AS &quot;TBL_RIGHT&quot;
-##   ON (&quot;TBL_LEFT&quot;.&quot;customer_id&quot; = &quot;TBL_RIGHT&quot;.&quot;customer_id&quot;)
-## ) &quot;rnitnthkfz&quot;) &quot;ohetoyqsmw&quot;</code></pre>
+## SELECT &quot;title&quot;, &quot;length&quot;, &quot;rating&quot;, &quot;category&quot;
+## FROM (SELECT &quot;TBL_LEFT&quot;.&quot;film_id&quot; AS &quot;film_id&quot;, &quot;TBL_LEFT&quot;.&quot;title&quot; AS &quot;title&quot;, &quot;TBL_LEFT&quot;.&quot;description&quot; AS &quot;description&quot;, &quot;TBL_LEFT&quot;.&quot;release_year&quot; AS &quot;release_year&quot;, &quot;TBL_LEFT&quot;.&quot;language_id&quot; AS &quot;language_id&quot;, &quot;TBL_LEFT&quot;.&quot;rental_duration&quot; AS &quot;rental_duration&quot;, &quot;TBL_LEFT&quot;.&quot;rental_rate&quot; AS &quot;rental_rate&quot;, &quot;TBL_LEFT&quot;.&quot;length&quot; AS &quot;length&quot;, &quot;TBL_LEFT&quot;.&quot;replacement_cost&quot; AS &quot;replacement_cost&quot;, &quot;TBL_LEFT&quot;.&quot;rating&quot; AS &quot;rating&quot;, &quot;TBL_LEFT&quot;.&quot;last_update&quot; AS &quot;last_update&quot;, &quot;TBL_LEFT&quot;.&quot;special_features&quot; AS &quot;special_features&quot;, &quot;TBL_LEFT&quot;.&quot;fulltext&quot; AS &quot;fulltext&quot;, &quot;TBL_LEFT&quot;.&quot;category_id&quot; AS &quot;category_id&quot;, &quot;TBL_RIGHT&quot;.&quot;category&quot; AS &quot;category&quot;
+##   FROM (SELECT &quot;TBL_LEFT&quot;.&quot;film_id&quot; AS &quot;film_id&quot;, &quot;TBL_LEFT&quot;.&quot;title&quot; AS &quot;title&quot;, &quot;TBL_LEFT&quot;.&quot;description&quot; AS &quot;description&quot;, &quot;TBL_LEFT&quot;.&quot;release_year&quot; AS &quot;release_year&quot;, &quot;TBL_LEFT&quot;.&quot;language_id&quot; AS &quot;language_id&quot;, &quot;TBL_LEFT&quot;.&quot;rental_duration&quot; AS &quot;rental_duration&quot;, &quot;TBL_LEFT&quot;.&quot;rental_rate&quot; AS &quot;rental_rate&quot;, &quot;TBL_LEFT&quot;.&quot;length&quot; AS &quot;length&quot;, &quot;TBL_LEFT&quot;.&quot;replacement_cost&quot; AS &quot;replacement_cost&quot;, &quot;TBL_LEFT&quot;.&quot;rating&quot; AS &quot;rating&quot;, &quot;TBL_LEFT&quot;.&quot;last_update&quot; AS &quot;last_update&quot;, &quot;TBL_LEFT&quot;.&quot;special_features&quot; AS &quot;special_features&quot;, &quot;TBL_LEFT&quot;.&quot;fulltext&quot; AS &quot;fulltext&quot;, &quot;TBL_RIGHT&quot;.&quot;category_id&quot; AS &quot;category_id&quot;
+##   FROM &quot;film&quot; AS &quot;TBL_LEFT&quot;
+##   LEFT JOIN (SELECT &quot;film_id&quot;, &quot;category_id&quot;
+## FROM &quot;film_category&quot;) &quot;TBL_RIGHT&quot;
+##   ON (&quot;TBL_LEFT&quot;.&quot;film_id&quot; = &quot;TBL_RIGHT&quot;.&quot;film_id&quot;)
+## ) &quot;TBL_LEFT&quot;
+##   LEFT JOIN (SELECT &quot;category_id&quot;, &quot;name&quot; AS &quot;category&quot;
+## FROM (SELECT &quot;category_id&quot;, &quot;name&quot;
+## FROM &quot;category&quot;) &quot;lfcwgzpzjo&quot;) &quot;TBL_RIGHT&quot;
+##   ON (&quot;TBL_LEFT&quot;.&quot;category_id&quot; = &quot;TBL_RIGHT&quot;.&quot;category_id&quot;)
+## ) &quot;lolfcqlbui&quot;</code></pre>
 <p>Hand-written SQL code to do the same job will probably look a lot nicer and could be more efficient, but functionally <code>dplyr</code> does the job.</p>
-</div>
-<div id="more-lazy-execution-examples" class="section level3">
-<h3><span class="header-section-number">9.4.13</span> More lazy execution examples</h3>
-<p>See more examples of lazy execution <a href="https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html">here</a>.</p>
 <pre class="sourceCode r"><code class="sourceCode r">DBI<span class="op">::</span><span class="kw">dbDisconnect</span>(con)
 sqlpetr<span class="op">::</span><span class="kw">sp_docker_stop</span>(<span class="st">&quot;sql-pet&quot;</span>)</code></pre>
 </div>
