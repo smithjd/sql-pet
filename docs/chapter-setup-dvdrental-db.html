@@ -25,7 +25,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
 
 
-<meta name="date" content="2019-03-25">
+<meta name="date" content="2019-04-02">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -394,7 +394,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="15.4.2" data-path="chapter-sql-metadata-exercises.html"><a href="chapter-sql-metadata-exercises.html#other-table-pk-fk"><i class="fa fa-check"></i><b>15.4.2</b> Other Table PK FK</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="16" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html"><i class="fa fa-check"></i><b>16</b> SQL Joins exercises</a><ul>
+<li class="chapter" data-level="16" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html"><i class="fa fa-check"></i><b>16</b> SQL Joins Exercises</a><ul>
 <li class="chapter" data-level="16.1" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#exercise-instructions"><i class="fa fa-check"></i><b>16.1</b> Exercise Instructions</a></li>
 <li class="chapter" data-level="16.2" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#dplyr-tables"><i class="fa fa-check"></i><b>16.2</b> Dplyr tables</a></li>
 <li class="chapter" data-level="16.3" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#overview-exercise"><i class="fa fa-check"></i><b>16.3</b> Overview Exercise</a><ul>
@@ -436,7 +436,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="16.5" data-path="chapter-sql-joins-exercises.html"><a href="chapter-sql-joins-exercises.html#diconnect-from-the-db-and-clean-up"><i class="fa fa-check"></i><b>16.5</b> Diconnect from the db and clean up</a></li>
 </ul></li>
-<li class="chapter" data-level="17" data-path="chapter-sql-joins-exercises-answered.html"><a href="chapter-sql-joins-exercises-answered.html"><i class="fa fa-check"></i><b>17</b> SQL Joins exercises</a><ul>
+<li class="chapter" data-level="17" data-path="chapter-sql-joins-exercises-answered.html"><a href="chapter-sql-joins-exercises-answered.html"><i class="fa fa-check"></i><b>17</b> SQL Joins Exercises Answered</a><ul>
 <li class="chapter" data-level="17.1" data-path="chapter-sql-joins-exercises-answered.html"><a href="chapter-sql-joins-exercises-answered.html#exercise-instructions-1"><i class="fa fa-check"></i><b>17.1</b> Exercise Instructions</a></li>
 <li class="chapter" data-level="17.2" data-path="chapter-sql-joins-exercises-answered.html"><a href="chapter-sql-joins-exercises-answered.html#dplyr-tables-1"><i class="fa fa-check"></i><b>17.2</b> Dplyr tables</a></li>
 <li class="chapter" data-level="17.3" data-path="chapter-sql-joins-exercises-answered.html"><a href="chapter-sql-joins-exercises-answered.html#oveview-exercise"><i class="fa fa-check"></i><b>17.3</b> Oveview Exercise</a><ul>
@@ -665,8 +665,8 @@ in <code>sqlpetr</code> to build this image, called <a href="https://smithjd.git
 <pre><code>## # A tibble: 2 x 7
 ##   image_id  repository   tag   digest           created created_at    size 
 ##   &lt;chr&gt;     &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt;            &lt;chr&gt;   &lt;chr&gt;         &lt;chr&gt;
-## 1 c149455a… postgres-dv… late… &lt;none&gt;           7 days… 2019-03-18 1… 252MB
-## 2 3e016ba4… postgres     10    sha256:5c702997… 2 week… 2019-03-04 2… 230MB</code></pre>
+## 1 c149455a… postgres-dv… late… &lt;none&gt;           2 week… 2019-03-18 1… 252MB
+## 2 3e016ba4… postgres     10    sha256:5c702997… 4 week… 2019-03-04 2… 230MB</code></pre>
 </div>
 <div id="run-the-pet-sql-docker-image" class="section level2">
 <h2><span class="header-section-number">6.5</span> Run the pet-sql Docker Image</h2>
@@ -682,7 +682,7 @@ image we use an <code>sqlpetr</code> function called <a href="https://smithjd.gi
 <pre><code>## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;
-## 1 c207089611a9 post… docker… 2019-03-2… 1 seco… 0.0.… Up Le… 0B (… sql-…
+## 1 8b2024039f06 post… docker… 2019-04-0… 1 seco… 0.0.… Up Le… 0B (… sql-…
 ## # … with 3 more variables: labels &lt;chr&gt;, mounts &lt;chr&gt;, networks &lt;chr&gt;</code></pre>
 </div>
 <div id="connect-to-postgresql-with-r" class="section level2">
@@ -728,7 +728,7 @@ the <em>running</em> containers. But we can use the <code>list_all</code> option
 <pre><code>## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;
-## 1 c207089611a9 post… docker… 2019-03-2… 4 seco… &lt;NA&gt;  Exite… 0B (… sql-…
+## 1 8b2024039f06 post… docker… 2019-04-0… 5 seco… &lt;NA&gt;  Exite… 0B (… sql-…
 ## # … with 3 more variables: labels &lt;chr&gt;, mounts &lt;chr&gt;, networks &lt;chr&gt;</code></pre>
 <p>Restart the container and verify that the dvdrental tables are still there:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_docker_start</span>(<span class="st">&quot;sql-pet&quot;</span>)
@@ -736,7 +736,7 @@ the <em>running</em> containers. But we can use the <code>list_all</code> option
 <pre><code>## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;
-## 1 c207089611a9 post… docker… 2019-03-2… 5 seco… 0.0.… Up Le… 63B … sql-…
+## 1 8b2024039f06 post… docker… 2019-04-0… 6 seco… 0.0.… Up Le… 63B … sql-…
 ## # … with 3 more variables: labels &lt;chr&gt;, mounts &lt;chr&gt;, networks &lt;chr&gt;</code></pre>
 <p>Connect to the <code>dvdrental</code> database in PostgreSQL:</p>
 <pre class="sourceCode r"><code class="sourceCode r">con &lt;-<span class="st"> </span><span class="kw">sp_get_postgres_connection</span>(
@@ -761,7 +761,7 @@ the <em>running</em> containers. But we can use the <code>list_all</code> option
 <p>Show that the container still exists even though it’s not running</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_show_all_docker_containers</span>()</code></pre>
 <pre><code>## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## c207089611a9        postgres-dvdrental   &quot;docker-entrypoint.s…&quot;   5 seconds ago       Exited (0) Less than a second ago                       sql-pet</code></pre>
+## 8b2024039f06        postgres-dvdrental   &quot;docker-entrypoint.s…&quot;   7 seconds ago       Exited (0) Less than a second ago                       sql-pet</code></pre>
 <p>Next time, you can just use this command to start the container:</p>
 <blockquote>
 <p><code>sp_docker_start(&quot;sql-pet&quot;)</code></p>
