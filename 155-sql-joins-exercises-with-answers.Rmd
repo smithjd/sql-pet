@@ -4,7 +4,7 @@ output:
     code_folding: "hide"
 ---
 
-# SQL Joins exercises {#chapter_sql-joins-exercises-answered}
+# SQL Joins Exercises Answered {#chapter_sql-joins-exercises-answered}
 
 > This chapter contains questions one may be curious about or asked about the DVD Rental business.  
 > The goal of the exercises is extracting useful or questionable insights from one or more tables.   Each exercise has has some or all of the following parts.
@@ -75,7 +75,7 @@ con <- sp_get_postgres_connection(
   user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
   password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
   dbname = "dvdrental",
-  seconds_to_test = 30
+  seconds_to_test = 30, connection_tab = TRUE
 )
 ```
 
@@ -522,13 +522,6 @@ sp_print_df(store_rentals_by_mth_sql)
 # sp_tbl_descr('table_name')
 # sp_tbl_pk_fk('table_name')
 # sp_print_df(table_rows_sql)
-
-# dummy dplyr function passed to postgres to_char date function
-# dt : date
-# fmt: desired date formet.
-to_char <- function(dt, fmt) {
-  return(fmt)
-}
 
 store_rentals_by_mth_dplyr <- rental_table %>%
     inner_join(inventory_table, by = c("inventory_id" = "inventory_id"), suffix(c(".r", ".i"))) %>%
