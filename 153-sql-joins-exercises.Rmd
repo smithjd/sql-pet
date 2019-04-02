@@ -4,7 +4,7 @@ output:
     code_folding: "show"
 ---
 
-# SQL Joins exercises {#chapter_sql-joins-exercises}
+# SQL Joins Exercises {#chapter_sql-joins-exercises}
 
 > This chapter contains questions one may be curious about or asked about the DVD Rental business.  
 > The goal of the exercises is extracting useful or questionable insights from one or more tables.   Each exercise has has some or all of the following parts.
@@ -83,9 +83,9 @@ con <- sp_get_postgres_connection(
 
 ## Dplyr tables
 
-All the tables defined in the DVD Rental System will fit into memory which is rarely the case when working with a database.  Each table is loaded into an R object named TableName_table, via a DBI::dbReadTable call.
+All the tables defined in the DVD Rental System will fit into memory which is rarely the case when working with a database.  Instead of loading all the DVD Rental System tables into memory via a DBI::dbReadTable, each table is loaded into an R object named TableName_table, via a dplyr::tbl call.
 
-*  actor_table <- DBI::dbReadTable(con,"actor")
+*  actor_table <- dplyr::tbl(con,"actor")
 
 ```{r Declare Dplyr Tables}
 source(here::here('book-src','dvdrental-table-declarations.R'),echo=FALSE)
@@ -132,28 +132,19 @@ sp_print_df(table_rows_sql)
 
 #### Replicate the output above using dplyr syntax.
 
-Deoes not do a `union` but gets the same information...
-
-```{r}
-# sp_tbl_descr('store')
+```{r dplyr union, include=INCLUDE_OUTPUT,echo=ECHO_CODE_BLOCK}
+# sp_tbl_descr('table_name')
 # sp_tbl_pk_fk('table_name')
 # sp_print_df(table_rows_sql)
-actor_table %>% tally()
-address_table %>% tally()
-category_table %>% tally()
-city_table %>% tally()
-country_table %>% tally()
-customer_table %>% tally()
-film_table %>% tally()
-film_actor_table %>% tally()
-film_category_table %>% tally()
-inventory_table %>% tally()
-language_table %>% tally()
-rental_table %>% tally()
-payment_table %>% tally()
-staff_table %>% tally()
-store_table %>% tally()
 
+table_rows_dplyr <- 
+  as.data.frame(actor_table %>% mutate(name = "actor") %>% group_by(name) %>% 
+                  summarize(rows = n())) %>% 
+  union(as.data.frame(address_table %>% mutate(name = "address") %>% group_by(name) %>% 
+                        summarize(rows = n()))) %>% 
+  arrange(name)
+
+sp_print_df(table_rows_dplyr)
 ```
 
 ## Exercises
