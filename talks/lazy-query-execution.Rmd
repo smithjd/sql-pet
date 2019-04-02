@@ -18,6 +18,7 @@ library(here)
 require(knitr)
 library(dbplyr)
 library(sqlpetr)
+library(gt)
 
 #sp_check_that_docker_is_up()
 #sp_show_all_docker_containers()
@@ -49,7 +50,7 @@ Store DBMS login credentials in your `.Renviron` file:
 
 ![](../screenshots/locate-renviron-file.png)
 
-Your **.Renviron** file should contain lines sukch as:
+Your **.Renviron** file should contain lines such as:
 
 ```
 DEFAULT_POSTGRES_PASSWORD=postgres
@@ -67,7 +68,7 @@ con <- sp_get_postgres_connection(
   seconds_to_test = 30, 
   connection_tab = TRUE)
 ```
-The `con` connection object has a lot of information that R uses to commuknicate with postgreSQL.
+The `con` connection object has a lot of information that R uses to commuknicate with postgreSQL.  It executes at a point in time; if the database changes the connection object must be re-executed.
 
 ## What tables are in the database
 
@@ -83,15 +84,19 @@ table_list <- DBI::dbListTables(con)
 
 ![Connections tab showing dvdrental tables](../screenshots/connections-tab-dvdrentals-tables.png)
 
+## the Connections tab is clickable:
+
+![film table columns](../screenshots/connections-tab-dvdrentals-tables-clickable.png)
+
 ## Click on a table name to show the columns:
 
 ![film table columns](../screenshots/connections-tab-with-film-table-columns.png)
 
-## Click on the table icon
+## Click on the table icon to View
 
 ![film table object](../screenshots/film-table-view.png)
 
-## Column  information in the R console
+## Code equvalents in the R console
 
 All the fields (or columns or variables) in one specific table with:
 ```{r}
@@ -99,29 +104,129 @@ DBI::dbListFields(con, "film")
 ```
 Put the `film` table information in an object:
 ```{r}
-film_table <- DBI::dbListFields(con, "film")
+film_columns <- DBI::dbListFields(con, "film")
 ```
 ## The table object is a list
 
 ![film table object](../screenshots/str-output-table.png)
 
-
 ## Reusing table information
 
-## Constructing queries with dplyr
+Once the table connection object is stored in an object, it can be manipulated in R code:
+```{r}
+film_table <- dplyr::tbl(con, "film")
+film_table %>% 
+  head(n = 4)
+```
+## DBI::dbReadTable downloads an entire table
+```{r}
+film_tibble <- DBI::dbReadTable(con, "film")
+str(film_tibble)
+```
 
+## Examining data is R's strength
+
+Useful functions include:
+
+* str()
+* head(),  View(), or gt::gt()
+* summary()
+* tibble::glimpse()
+* skimr::skim
+
+## R is lazy and comes with guardrails
+
+By design, R is both a language and an interactive development environment (IDE).  As a language, R tries to be as efficient as possible.  As an IDE, R creates some guardrails to make it easy and safe to work with your data. 
+
+SQL is a Structured Query Language that returns a table from a database (and manages database structure, etc.)  SQL can easily return more data in a query than your computer can handle.
+
+## dplyr behavior as guard rails
+
+> When working with databases, dplyr tries to be as lazy as possible:
+> 
+> * It never pulls data into R unless you explicitly ask for it.
+> 
+> * It delays doing any work until the last possible moment: it collects together everything you want to do and then sends it to the database in one step.
+> 
 ## Introduction to Lazy Queries
 
-* Different from 
+* R's lazy behaviors
 
-  * Lazy Loading
+  * Lazy Loading: package functions loaded at the last minute
 
-  * Lazy Evaluation
+  * Lazy Evaluation: symbols evaluated when actually needed
 
-  * Lazy Retrieval 
+  * Lazy Retrieval: data retrieved from the dbms at the last possible moment
   
-## Evaluating lazy symbols 
+## It can be tricky, so experiment
 
-## Environment is the key
+We store a query in an object called `Q`
+```{r}
+film_table <- tbl(con, "film")
+film_category_table <- tbl(con, "film_category")
+category_table <- tbl(con, "category") %>% 
+  rename(category = name)
 
-## 
+Q <- film_table %>%
+  dplyr::left_join(film_category_table, 
+                   by = c("film_id" = "film_id")) %>%
+  dplyr::left_join(category_table, 
+                   by = c("category_id" = "category_id")) %>% 
+  dplyr::select(title, length, rating, category)
+```
+
+Both `category_table` and `Q` contain multiple dplyr verbs, suggesting how you can construct queries step by step.
+
+## Q is a complex list
+
+```{r}
+str(Q, max.level = 2)
+```
+
+## Q %>% print()
+
+Remember that `Q %>% print()` is equivalent to `print(Q)` and the same as just entering `Q` on the command line.  
+```{r}
+Q %>% print()
+```
+
+## Q %>% nrow() vs tally()
+
+The `nrow` function returns `NA` because it requires a data frame not a list, so it does not execute a query. `tally` counts all the rows:
+```{r}
+Q %>% nrow()
+Q %>% dplyr::tally()
+```
+
+## Q %>% dplyr::collect()
+
+The dplyr::[collect](https://dplyr.tidyverse.org/reference/compute.html) function triggers a call to the `DBI:dbFetch()` function behind the scenes, which forces R to download a specified number of rows:
+```{r}
+Q %>% dplyr::collect(n = 20) %>% head()
+```
+`collect()` defaults to the entire table.
+
+## Q %>% ggplot 
+
+Passing the `Q` object to `ggplot` executes the query and plots the result.
+```{r}
+
+Q %>% ggplot2::ggplot(aes(category)) + geom_bar() + coord_flip()
+
+```
+
+It's obvious that when creating our phony `dvdrental` datbase, phony films were assigned to a category pretty randomly.
+
+## Q %>% dplyr::show_query() 
+
+```{r}
+Q %>% dplyr::show_query()
+
+```
+Hand-written SQL code to do the same job will probably look a lot nicer and could be more efficient, but functionally `dplyr` does the job.
+
+## Disconnect from PostgreSQL and close Docker
+```{r disconnect and close down}
+DBI::dbDisconnect(con)
+sqlpetr::sp_docker_stop("sql-pet")
+```
