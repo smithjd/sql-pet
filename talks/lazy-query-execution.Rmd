@@ -21,28 +21,43 @@ library(sqlpetr)
 
 #sp_check_that_docker_is_up()
 #sp_show_all_docker_containers()
-sp_docker_start("sql-pet")
 
 # source(file = here::here('book-src','sql_pet_data.R'), echo = FALSE)
 ```
 
-## Log in to PostgreSQL
+## Setup the sandbox environment
+
+Assume that Docker is set up, that packages are updated, and that the `sqlpetr` package is installed.
+
+### Fire up PostgreSQL in Docker:
+
+```{r}
+
+sp_docker_start("sql-pet")
+```
+
+If that fails, you may need to recreate the container with: 
+```
+source(file = 
+  here::here('book-src','setup-dvdrental-docker-container.R'),
+  echo = FALSE)
+```
+
+## Check your log-in credentials:
 
 Store DBMS login credentials in your `.Renviron` file:
 
 ![](../screenshots/locate-renviron-file.png)
 
-
-Your **.Renviron** file should contain lines as follows:
+Your **.Renviron** file should contain lines sukch as:
 
 ```
 DEFAULT_POSTGRES_PASSWORD=postgres
 DEFAULT_POSTGRES_USER_NAME=postgres
 ```
+## Connect to PostgreSQL:
 
-## Connection parameters
-
-Connect to the postgrSQL using the `sp_get_postgres_connection` function:
+Connect to the postgreSQL using the `sp_get_postgres_connection` function:
 
 ```{r}
 con <- sp_get_postgres_connection(
@@ -52,6 +67,7 @@ con <- sp_get_postgres_connection(
   seconds_to_test = 30, 
   connection_tab = TRUE)
 ```
+The `con` connection object has a lot of information that R uses to commuknicate with postgreSQL.
 
 ## What tables are in the database
 
@@ -59,16 +75,36 @@ con <- sp_get_postgres_connection(
 DBI::dbListTables(con)
 ```
 
-Store the list in a vector:
+Store the list of tables in a vector:
 ```{r}
 table_list <- DBI::dbListTables(con) 
 ```
-## What columns are in a table
+## The Connections tab also lists tables
+
+![Connections tab showing dvdrental tables](../screenshots/connections-tab-dvdrentals-tables.png)
+
+## Click on a table name to show the columns:
+
+![film table columns](../screenshots/connections-tab-with-film-table-columns.png)
+
+## Click on the table icon
+
+![film table object](../screenshots/film-table-view.png)
+
+## Column  information in the R console
 
 All the fields (or columns or variables) in one specific table with:
 ```{r}
-DBI::dbListFields(con, "rental")
+DBI::dbListFields(con, "film")
 ```
+Put the `film` table information in an object:
+```{r}
+film_table <- DBI::dbListFields(con, "film")
+```
+## The table object is a list
+
+![film table object](../screenshots/str-output-table.png)
+
 
 ## Reusing table information
 
