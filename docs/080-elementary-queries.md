@@ -66,17 +66,20 @@ tables
 Print a vector with all the fields (or columns or variables) in one specific table:
 
 ```r
-DBI::dbListFields(con, "rental")
+DBI::dbListFields(con, "film")
 ```
 
 ```
-## [1] "rental_id"    "rental_date"  "inventory_id" "customer_id" 
-## [5] "return_date"  "staff_id"     "last_update"
+##  [1] "film_id"          "title"            "description"     
+##  [4] "release_year"     "language_id"      "rental_duration" 
+##  [7] "rental_rate"      "length"           "replacement_cost"
+## [10] "rating"           "last_update"      "special_features"
+## [13] "fulltext"
 ```
 
 ### Listing all the fields for all the tables
 
-The first example, `DBI::dbListTables(con)` returned 22 tables and the second example, `DBI::dbListFields(con, "rental")` returns 7 fields.  Here we combine the two calls to return a list of tables which has a list of all the fields in the table.  The code block just shows the first two tables.
+The first example, `DBI::dbListTables(con)` returned 22 tables and the second example, `DBI::dbListFields(con, "film")` returns 7 fields.  Here we combine the two calls to return a list of tables which has a list of all the fields in the table.  The code block just shows the first two tables.
 
 
 ```r
@@ -128,19 +131,25 @@ There are many different methods of getting data from a DBMS, and we'll explore 
 `DBI::dbReadTable` will download an entire table into an R [tibble](https://tibble.tidyverse.org/).  
 
 ```r
-rental_tibble <- DBI::dbReadTable(con, "rental")
-str(rental_tibble)
+film_tibble <- DBI::dbReadTable(con, "film")
+str(film_tibble)
 ```
 
 ```
-## 'data.frame':	16044 obs. of  7 variables:
-##  $ rental_id   : int  2 3 4 5 6 7 8 9 10 11 ...
-##  $ rental_date : POSIXct, format: "2005-05-24 22:54:33" "2005-05-24 23:03:39" ...
-##  $ inventory_id: int  1525 1711 2452 2079 2792 3995 2346 2580 1824 4443 ...
-##  $ customer_id : int  459 408 333 222 549 269 239 126 399 142 ...
-##  $ return_date : POSIXct, format: "2005-05-28 19:40:33" "2005-06-01 22:12:39" ...
-##  $ staff_id    : int  1 1 2 1 1 2 2 1 2 2 ...
-##  $ last_update : POSIXct, format: "2006-02-16 02:30:53" "2006-02-16 02:30:53" ...
+## 'data.frame':	1000 obs. of  13 variables:
+##  $ film_id         : int  133 384 8 98 1 2 3 4 5 6 ...
+##  $ title           : chr  "Chamber Italian" "Grosse Wonderful" "Airport Pollock" "Bright Encounters" ...
+##  $ description     : chr  "A Fateful Reflection of a Moose And a Husband who must Overcome a Monkey in Nigeria" "A Epic Drama of a Cat And a Explorer who must Redeem a Moose in Australia" "A Epic Tale of a Moose And a Girl who must Confront a Monkey in Ancient India" "A Fateful Yarn of a Lumberjack And a Feminist who must Conquer a Student in A Jet Boat" ...
+##  $ release_year    : int  2006 2006 2006 2006 2006 2006 2006 2006 2006 2006 ...
+##  $ language_id     : int  1 1 1 1 1 1 1 1 1 1 ...
+##  $ rental_duration : int  7 5 6 4 6 3 7 5 6 3 ...
+##  $ rental_rate     : num  4.99 4.99 4.99 4.99 0.99 4.99 2.99 2.99 2.99 2.99 ...
+##  $ length          : int  117 49 54 73 86 48 50 117 130 169 ...
+##  $ replacement_cost: num  15 20 16 13 21 ...
+##  $ rating          : 'pq_mpaa_rating' chr  "NC-17" "R" "R" "PG-13" ...
+##  $ last_update     : POSIXct, format: "2013-05-26 14:50:58" "2013-05-26 14:50:58" ...
+##  $ special_features: 'pq__text' chr  "{Trailers}" "{\"Behind the Scenes\"}" "{Trailers}" "{Trailers}" ...
+##  $ fulltext        : 'pq_tsvector' chr  "'chamber':1 'fate':4 'husband':11 'italian':2 'monkey':16 'moos':8 'must':13 'nigeria':18 'overcom':14 'reflect':5" "'australia':18 'cat':8 'drama':5 'epic':4 'explor':11 'gross':1 'moos':16 'must':13 'redeem':14 'wonder':2" "'airport':1 'ancient':18 'confront':14 'epic':4 'girl':11 'india':19 'monkey':16 'moos':8 'must':13 'pollock':2 'tale':5" "'boat':20 'bright':1 'conquer':14 'encount':2 'fate':4 'feminist':11 'jet':19 'lumberjack':8 'must':13 'student':16 'yarn':5" ...
 ```
 That's very simple, but if the table is large it may not be a good idea, since R is designed to keep the entire table in memory.  Note that the first line of the str() output reports the total number of observations.  
 
@@ -150,8 +159,8 @@ The `dplyr::tbl` function gives us more control over access to a table by enabli
 
 
 ```r
-rental_table <- dplyr::tbl(con, "rental")
-class(rental_table)
+film_table <- dplyr::tbl(con, "film")
+class(film_table)
 ```
 
 ```
@@ -165,19 +174,19 @@ class(rental_table)
 The `collect` function triggers the creation of a tibble and controls the number of rows that the DBMS sends to R.  For more complex queries, the `dplyr::collect()` function provides a mechanism to indicate what's processed on on the dbms server and what's processed by R on the local machine. The chapter on [Lazy Evaluation and Execution Environment](#chapter_lazy-evaluation-and-timing) discusses this issue in detail.
 
 ```r
-rental_table %>% dplyr::collect(n = 3) %>% dim
+film_table %>% dplyr::collect(n = 3) %>% dim
 ```
 
 ```
-## [1] 3 7
+## [1]  3 13
 ```
 
 ```r
-rental_table %>% dplyr::collect(n = 500) %>% dim
+film_table %>% dplyr::collect(n = 500) %>% dim
 ```
 
 ```
-## [1] 500   7
+## [1] 500  13
 ```
 
 ### Random rows from the dbms
@@ -188,8 +197,8 @@ When the dbms contains many rows, a sample of the data may be plenty for your pu
 ```r
 one_percent_sample <- DBI::dbGetQuery(
   con,
-  "SELECT rental_id, rental_date, inventory_id, 
-  customer_id FROM rental TABLESAMPLE BERNOULLI(1) LIMIT 20;
+  "SELECT film_id, title, rating
+  FROM film TABLESAMPLE BERNOULLI(1) LIMIT 20;
   "
 )
 
@@ -197,55 +206,48 @@ one_percent_sample
 ```
 
 ```
-##    rental_id         rental_date inventory_id customer_id
-## 1         10 2005-05-25 00:02:21         1824         399
-## 2         17 2005-05-25 01:06:36          830         575
-## 3         98 2005-05-25 16:48:24         2970         269
-## 4        169 2005-05-26 03:09:30         1758         381
-## 5        226 2005-05-26 10:44:04         4181         221
-## 6        243 2005-05-26 13:06:05         1721         543
-## 7        285 2005-05-26 19:41:40         2486         162
-## 8        585 2005-05-28 11:50:45         3544         490
-## 9        619 2005-05-28 15:52:26         2482         407
-## 10       628 2005-05-28 17:05:46         2513         173
-## 11       645 2005-05-28 19:14:09         3128         505
-## 12       703 2005-05-29 02:29:36         1123         269
-## 13       732 2005-05-29 07:32:51         2530         447
-## 14       925 2005-05-30 12:13:52         3203         137
-## 15       942 2005-05-30 15:05:47         4279         473
-## 16       946 2005-05-30 15:35:08         1264         486
-## 17      1001 2005-05-31 00:46:31         1498          64
-## 18      1035 2005-05-31 05:01:09          949         362
-## 19      1134 2005-05-31 19:14:15          143         191
-## 20      1137 2005-05-31 19:20:14         3259         351
+##    film_id                title rating
+## 1       23 Anaconda Confessions      R
+## 2       66         Beneath Rush  NC-17
+## 3      176   Congeniality Quest  PG-13
+## 4      434         Horror Reign      R
+## 5      471      Island Exorcist  NC-17
+## 6      524           Lion Uncut     PG
+## 7      633    October Submarine  PG-13
+## 8      648         Outlaw Hanky  PG-13
+## 9      875    Talented Homicide     PG
+## 10     882   Tenenbaums Command  PG-13
 ```
 **Exact sample of 100 records**
 
-This technique depends on knowing the range of a record index, such as the `rental_id` in the `rental` table of our `dvdrental` database.
+This technique depends on knowing the range of a record index, such as the `film_id` in the `film` table of our `dvdrental` database.
 
 Start by finding the min and max values.
 
 ```r
-DBI::dbListFields(con, "rental")
+DBI::dbListFields(con, "film")
 ```
 
 ```
-## [1] "rental_id"    "rental_date"  "inventory_id" "customer_id" 
-## [5] "return_date"  "staff_id"     "last_update"
-```
-
-```r
-rental_df <- DBI::dbReadTable(con, "rental")
-
-max(rental_df$rental_id)
-```
-
-```
-## [1] 16049
+##  [1] "film_id"          "title"            "description"     
+##  [4] "release_year"     "language_id"      "rental_duration" 
+##  [7] "rental_rate"      "length"           "replacement_cost"
+## [10] "rating"           "last_update"      "special_features"
+## [13] "fulltext"
 ```
 
 ```r
-min(rental_df$rental_id)
+film_df <- DBI::dbReadTable(con, "film")
+
+max(film_df$film_id)
+```
+
+```
+## [1] 1000
+```
+
+```r
+min(film_df$film_id)
 ```
 
 ```
@@ -256,29 +258,35 @@ Set the random number seed and draw the sample.
 
 ```r
 set.seed(123)
-sample_rows <- sample(1:16049, 100)
-rental_table <- dplyr::tbl(con, "rental")
+sample_rows <- sample(1:1000, 100)
+film_table <- dplyr::tbl(con, "film")
 ```
 
 Run query with the filter verb listing the randomly sampled rows to be retrieved:
 
 ```r
-rental_sample <- rental_table %>% 
-  dplyr::filter(rental_id %in% sample_rows) %>% 
+film_sample <- film_table %>% 
+  dplyr::filter(film_id %in% sample_rows) %>% 
   dplyr::collect()
 
-str(rental_sample)
+str(film_sample)
 ```
 
 ```
-## Classes 'tbl_df', 'tbl' and 'data.frame':	100 obs. of  7 variables:
-##  $ rental_id   : int  10 395 675 731 734 1494 1517 1643 1651 1775 ...
-##  $ rental_date : POSIXct, format: "2005-05-25 00:02:21" "2005-05-27 11:45:49" ...
-##  $ inventory_id: int  1824 752 1273 4124 3084 244 3728 1352 4444 1922 ...
-##  $ customer_id : int  399 575 338 5 538 575 148 484 524 123 ...
-##  $ return_date : POSIXct, format: "2005-05-31 22:44:21" "2005-05-31 13:42:49" ...
-##  $ staff_id    : int  2 1 2 1 2 1 1 2 2 2 ...
-##  $ last_update : POSIXct, format: "2006-02-16 02:30:53" "2006-02-16 02:30:53" ...
+## Classes 'tbl_df', 'tbl' and 'data.frame':	100 obs. of  13 variables:
+##  $ film_id         : int  133 384 1 24 42 44 46 85 90 95 ...
+##  $ title           : chr  "Chamber Italian" "Grosse Wonderful" "Academy Dinosaur" "Analyze Hoosiers" ...
+##  $ description     : chr  "A Fateful Reflection of a Moose And a Husband who must Overcome a Monkey in Nigeria" "A Epic Drama of a Cat And a Explorer who must Redeem a Moose in Australia" "A Epic Drama of a Feminist And a Mad Scientist who must Battle a Teacher in The Canadian Rockies" "A Thoughtful Display of a Explorer And a Pastry Chef who must Overcome a Feminist in The Sahara Desert" ...
+##  $ release_year    : int  2006 2006 2006 2006 2006 2006 2006 2006 2006 2006 ...
+##  $ language_id     : int  1 1 1 1 1 1 1 1 1 1 ...
+##  $ rental_duration : int  7 5 6 6 5 5 3 4 3 5 ...
+##  $ rental_rate     : num  4.99 4.99 0.99 2.99 2.99 4.99 4.99 0.99 0.99 4.99 ...
+##  $ length          : int  117 49 86 181 170 113 108 63 63 123 ...
+##  $ replacement_cost: num  15 20 21 20 11 ...
+##  $ rating          : 'pq_mpaa_rating' chr  "NC-17" "R" "PG" "R" ...
+##  $ last_update     : POSIXct, format: "2013-05-26 14:50:58" "2013-05-26 14:50:58" ...
+##  $ special_features: 'pq__text' chr  "{Trailers}" "{\"Behind the Scenes\"}" "{\"Deleted Scenes\",\"Behind the Scenes\"}" "{Trailers,\"Behind the Scenes\"}" ...
+##  $ fulltext        : 'pq_tsvector' chr  "'chamber':1 'fate':4 'husband':11 'italian':2 'monkey':16 'moos':8 'must':13 'nigeria':18 'overcom':14 'reflect':5" "'australia':18 'cat':8 'drama':5 'epic':4 'explor':11 'gross':1 'moos':16 'must':13 'redeem':14 'wonder':2" "'academi':1 'battl':15 'canadian':20 'dinosaur':2 'drama':5 'epic':4 'feminist':8 'mad':11 'must':14 'rocki':21"| __truncated__ "'analyz':1 'chef':12 'desert':21 'display':5 'explor':8 'feminist':17 'hoosier':2 'must':14 'overcom':15 'pastr"| __truncated__ ...
 ```
 
 
@@ -287,39 +295,39 @@ str(rental_sample)
 A table in the dbms may not only have many more rows than you want, but also many more columns.  The `select` command controls which columns are retrieved.
 
 ```r
-rental_table %>% dplyr::select(rental_date, return_date) %>% head()
+film_table %>% dplyr::select(title, rating) %>% head()
 ```
 
 ```
 ## # Source:   lazy query [?? x 2]
 ## # Database: postgres [postgres@localhost:5432/dvdrental]
-##   rental_date         return_date        
-##   <dttm>              <dttm>             
-## 1 2005-05-24 22:54:33 2005-05-28 19:40:33
-## 2 2005-05-24 23:03:39 2005-06-01 22:12:39
-## 3 2005-05-24 23:04:41 2005-06-03 01:43:41
-## 4 2005-05-24 23:05:21 2005-06-02 04:33:21
-## 5 2005-05-24 23:08:07 2005-05-27 01:32:07
-## 6 2005-05-24 23:11:53 2005-05-29 20:34:53
+##   title             rating              
+##   <chr>             <S3: pq_mpaa_rating>
+## 1 Chamber Italian   NC-17               
+## 2 Grosse Wonderful  R                   
+## 3 Airport Pollock   R                   
+## 4 Bright Encounters PG-13               
+## 5 Academy Dinosaur  PG                  
+## 6 Ace Goldfinger    G
 ```
 That's exactly equivalent to submitting the following SQL commands dirctly:
 
 ```r
 DBI::dbGetQuery(
   con,
-  'SELECT "rental_date", "return_date"
-FROM "rental"
+  'SELECT "title", "rating"
+FROM "film"
 LIMIT 6') 
 ```
 
 ```
-##           rental_date         return_date
-## 1 2005-05-24 22:54:33 2005-05-28 19:40:33
-## 2 2005-05-24 23:03:39 2005-06-01 22:12:39
-## 3 2005-05-24 23:04:41 2005-06-03 01:43:41
-## 4 2005-05-24 23:05:21 2005-06-02 04:33:21
-## 5 2005-05-24 23:08:07 2005-05-27 01:32:07
-## 6 2005-05-24 23:11:53 2005-05-29 20:34:53
+##               title rating
+## 1   Chamber Italian  NC-17
+## 2  Grosse Wonderful      R
+## 3   Airport Pollock      R
+## 4 Bright Encounters  PG-13
+## 5  Academy Dinosaur     PG
+## 6    Ace Goldfinger      G
 ```
 
 
@@ -332,47 +340,44 @@ In practice we find that, **renaming variables** is often quite important becaus
 
 
 ```r
-tbl(con, "rental") %>%
-  dplyr::rename(rental_id_number = rental_id, 
-                inventory_id_number = inventory_id) %>% 
-  dplyr::select(rental_id_number, rental_date, 
-                inventory_id_number) %>%
-  head()
+tbl(con, "film") %>%
+  ## CHANGE STUFF
+  dplyr::rename(film_id_number = film_id, 
+                language_id_number = language_id) %>% 
+  dplyr::select(film_id_number, title, 
+                language_id_number) %>%
+  # head()
+show_query()
 ```
 
 ```
-## # Source:   lazy query [?? x 3]
-## # Database: postgres [postgres@localhost:5432/dvdrental]
-##   rental_id_number rental_date         inventory_id_number
-##              <int> <dttm>                            <int>
-## 1                2 2005-05-24 22:54:33                1525
-## 2                3 2005-05-24 23:03:39                1711
-## 3                4 2005-05-24 23:04:41                2452
-## 4                5 2005-05-24 23:05:21                2079
-## 5                6 2005-05-24 23:08:07                2792
-## 6                7 2005-05-24 23:11:53                3995
+## <SQL>
+## SELECT "film_id_number", "title", "language_id_number"
+## FROM (SELECT "film_id" AS "film_id_number", "title", "description", "release_year", "language_id" AS "language_id_number", "rental_duration", "rental_rate", "length", "replacement_cost", "rating", "last_update", "special_features", "fulltext"
+## FROM "film") "pimymxxpkd"
 ```
 That's equivalent to the following SQL code:
 
 ```r
 DBI::dbGetQuery(
   con,
-  'SELECT "rental_id_number", "rental_date", "inventory_id_number"
-FROM (SELECT "rental_id" AS "rental_id_number", 
-  "rental_date", "inventory_id" AS "inventory_id_number", "customer_id",
-  "return_date", "staff_id", "last_update"
-FROM "rental") "ihebfvnxvb"
+  'SELECT "film_id_number", "title", "language_id_number"
+FROM (SELECT "film_id" AS "film_id_number", "title", "description",
+  "release_year", "language_id" AS "language_id_number", 
+  "rental_duration", "rental_rate", "length", "replacement_cost", 
+  "rating", "last_update", "special_features", "fulltext"
+FROM "film") "yhbysdoypk"
 LIMIT 6' )
 ```
 
 ```
-##   rental_id_number         rental_date inventory_id_number
-## 1                2 2005-05-24 22:54:33                1525
-## 2                3 2005-05-24 23:03:39                1711
-## 3                4 2005-05-24 23:04:41                2452
-## 4                5 2005-05-24 23:05:21                2079
-## 5                6 2005-05-24 23:08:07                2792
-## 6                7 2005-05-24 23:11:53                3995
+##   film_id_number             title language_id_number
+## 1            133   Chamber Italian                  1
+## 2            384  Grosse Wonderful                  1
+## 3              8   Airport Pollock                  1
+## 4             98 Bright Encounters                  1
+## 5              1  Academy Dinosaur                  1
+## 6              2    Ace Goldfinger                  1
 ```
 The one difference is that the `SQL` code returns a regular data frame and the `dplyr` code returns a `tibble`.  Notice that the seconds are greyed out in the `tibble` display.
 
@@ -381,16 +386,15 @@ The one difference is that the `SQL` code returns a regular data frame and the `
 Where did the translations we've shown above come from?  The `show_query` function shows how `dplyr` is translating your query to the dialect of the target dbms:
 
 ```r
-rental_table %>%
-  dplyr::count(staff_id) %>%
+film_table %>%
+  dplyr::tally() %>%
   dplyr::show_query()
 ```
 
 ```
 ## <SQL>
-## SELECT "staff_id", COUNT(*) AS "n"
-## FROM "rental"
-## GROUP BY "staff_id"
+## SELECT COUNT(*) AS "n"
+## FROM "film"
 ```
 Here is an extensive discussion of how `dplyr` code is translated into SQL:
 
@@ -401,17 +405,14 @@ If you prefer to use SQL directly, rather than `dplyr`, you can submit SQL code 
 ```r
 DBI::dbGetQuery(
   con,
-  'SELECT "staff_id", COUNT(*) AS "n"
-   FROM "rental"
-   GROUP BY "staff_id";
-  '
+  'SELECT COUNT(*) AS "n"
+     FROM "film"   '
 )
 ```
 
 ```
-##   staff_id    n
-## 1        2 8004
-## 2        1 8040
+##      n
+## 1 1000
 ```
 
 When you create a report to run repeatedly, you might want to put that query into R markdown. That way you can also execute that SQL code in a chunk with the following header:
@@ -420,9 +421,8 @@ When you create a report to run repeatedly, you might want to put that query int
 
 
 ```sql
-SELECT "staff_id", COUNT(*) AS "n"
-FROM "rental"
-GROUP BY "staff_id";
+SELECT COUNT(*) AS "n"
+     FROM "film";
 ```
 Rmarkdown stores that query result in a tibble which can be printed by referring to it:
 
@@ -431,9 +431,8 @@ query_results
 ```
 
 ```
-##   staff_id    n
-## 1        2 8004
-## 2        1 8040
+##      n
+## 1 1000
 ```
 
 ## Mixing dplyr and SQL
@@ -442,7 +441,7 @@ When dplyr finds code that it does not know how to translate into SQL, it will s
 
 
 ```r
-rental_table %>%
+film_table %>%
   dplyr::select_at(vars( -contains("_id"))) %>% 
   dplyr::mutate(today = now()) %>%
   dplyr::show_query()
@@ -450,16 +449,16 @@ rental_table %>%
 
 ```
 ## <SQL>
-## SELECT "rental_date", "return_date", "last_update", NOW() AS "today"
-## FROM (SELECT "rental_date", "return_date", "last_update"
-## FROM "rental") "yhbysdoypk"
+## SELECT "title", "description", "release_year", "rental_duration", "rental_rate", "length", "replacement_cost", "rating", "last_update", "special_features", "fulltext", NOW() AS "today"
+## FROM (SELECT "title", "description", "release_year", "rental_duration", "rental_rate", "length", "replacement_cost", "rating", "last_update", "special_features", "fulltext"
+## FROM "film") "yhbysdoypk"
 ```
 That is native to PostgreSQL, not [ANSI standard](https://en.wikipedia.org/wiki/SQL#Interoperability_and_standardization) SQL.
 
 Verify that it works:
 
 ```r
-rental_table %>%
+film_table %>%
   dplyr::select_at(vars( -contains("_id"))) %>% 
   head() %>% 
   dplyr::mutate(today = now()) %>%
@@ -467,16 +466,18 @@ rental_table %>%
 ```
 
 ```
-## # A tibble: 6 x 4
-##   rental_date         return_date         last_update        
-##   <dttm>              <dttm>              <dttm>             
-## 1 2005-05-24 22:54:33 2005-05-28 19:40:33 2006-02-16 02:30:53
-## 2 2005-05-24 23:03:39 2005-06-01 22:12:39 2006-02-16 02:30:53
-## 3 2005-05-24 23:04:41 2005-06-03 01:43:41 2006-02-16 02:30:53
-## 4 2005-05-24 23:05:21 2005-06-02 04:33:21 2006-02-16 02:30:53
-## 5 2005-05-24 23:08:07 2005-05-27 01:32:07 2006-02-16 02:30:53
-## 6 2005-05-24 23:11:53 2005-05-29 20:34:53 2006-02-16 02:30:53
-## # … with 1 more variable: today <dttm>
+## # A tibble: 6 x 12
+##   title description release_year rental_duration rental_rate length
+##   <chr> <chr>              <int>           <int>       <dbl>  <int>
+## 1 Cham… A Fateful …         2006               7        4.99    117
+## 2 Gros… A Epic Dra…         2006               5        4.99     49
+## 3 Airp… A Epic Tal…         2006               6        4.99     54
+## 4 Brig… A Fateful …         2006               4        4.99     73
+## 5 Acad… A Epic Dra…         2006               6        0.99     86
+## 6 Ace … A Astoundi…         2006               3        4.99     48
+## # … with 6 more variables: replacement_cost <dbl>, rating <chr>,
+## #   last_update <dttm>, special_features <chr>, fulltext <chr>,
+## #   today <dttm>
 ```
 
 
@@ -495,18 +496,24 @@ Dealing with a large, complex database highlights the utility of specific tools 
 `str` is a workhorse function that lists variables, their type and a sample of the first few variable values.
 
 ```r
-str(rental_tibble)
+str(film_tibble)
 ```
 
 ```
-## 'data.frame':	16044 obs. of  7 variables:
-##  $ rental_id   : int  2 3 4 5 6 7 8 9 10 11 ...
-##  $ rental_date : POSIXct, format: "2005-05-24 22:54:33" "2005-05-24 23:03:39" ...
-##  $ inventory_id: int  1525 1711 2452 2079 2792 3995 2346 2580 1824 4443 ...
-##  $ customer_id : int  459 408 333 222 549 269 239 126 399 142 ...
-##  $ return_date : POSIXct, format: "2005-05-28 19:40:33" "2005-06-01 22:12:39" ...
-##  $ staff_id    : int  1 1 2 1 1 2 2 1 2 2 ...
-##  $ last_update : POSIXct, format: "2006-02-16 02:30:53" "2006-02-16 02:30:53" ...
+## 'data.frame':	1000 obs. of  13 variables:
+##  $ film_id         : int  133 384 8 98 1 2 3 4 5 6 ...
+##  $ title           : chr  "Chamber Italian" "Grosse Wonderful" "Airport Pollock" "Bright Encounters" ...
+##  $ description     : chr  "A Fateful Reflection of a Moose And a Husband who must Overcome a Monkey in Nigeria" "A Epic Drama of a Cat And a Explorer who must Redeem a Moose in Australia" "A Epic Tale of a Moose And a Girl who must Confront a Monkey in Ancient India" "A Fateful Yarn of a Lumberjack And a Feminist who must Conquer a Student in A Jet Boat" ...
+##  $ release_year    : int  2006 2006 2006 2006 2006 2006 2006 2006 2006 2006 ...
+##  $ language_id     : int  1 1 1 1 1 1 1 1 1 1 ...
+##  $ rental_duration : int  7 5 6 4 6 3 7 5 6 3 ...
+##  $ rental_rate     : num  4.99 4.99 4.99 4.99 0.99 4.99 2.99 2.99 2.99 2.99 ...
+##  $ length          : int  117 49 54 73 86 48 50 117 130 169 ...
+##  $ replacement_cost: num  15 20 16 13 21 ...
+##  $ rating          : 'pq_mpaa_rating' chr  "NC-17" "R" "R" "PG-13" ...
+##  $ last_update     : POSIXct, format: "2013-05-26 14:50:58" "2013-05-26 14:50:58" ...
+##  $ special_features: 'pq__text' chr  "{Trailers}" "{\"Behind the Scenes\"}" "{Trailers}" "{Trailers}" ...
+##  $ fulltext        : 'pq_tsvector' chr  "'chamber':1 'fate':4 'husband':11 'italian':2 'monkey':16 'moos':8 'must':13 'nigeria':18 'overcom':14 'reflect':5" "'australia':18 'cat':8 'drama':5 'epic':4 'explor':11 'gross':1 'moos':16 'must':13 'redeem':14 'wonder':2" "'airport':1 'ancient':18 'confront':14 'epic':4 'girl':11 'india':19 'monkey':16 'moos':8 'must':13 'pollock':2 'tale':5" "'boat':20 'bright':1 'conquer':14 'encount':2 'fate':4 'feminist':11 'jet':19 'lumberjack':8 'must':13 'student':16 'yarn':5" ...
 ```
 
 ### Always **look** at your data with `head`, `View`, or `kable`
@@ -514,48 +521,52 @@ str(rental_tibble)
 There is no substitute for looking at your data and R provides several ways to just browse it.  The `head` function controls the number of rows that are displayed.  Note that tail does not work against a database object.  In every-day practice you would look at more than the default 6 rows, but here we wrap `head` around the data frame: 
 
 ```r
-sqlpetr::sp_print_df(head(rental_tibble))
+sqlpetr::sp_print_df(head(film_tibble))
 ```
 
 <!--html_preserve--><div id="htmlwidget-4f68022fd73b3d133ebb" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-4f68022fd73b3d133ebb">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[2,3,4,5,6,7],["2005-05-25T05:54:33Z","2005-05-25T06:03:39Z","2005-05-25T06:04:41Z","2005-05-25T06:05:21Z","2005-05-25T06:08:07Z","2005-05-25T06:11:53Z"],[1525,1711,2452,2079,2792,3995],[459,408,333,222,549,269],["2005-05-29T02:40:33Z","2005-06-02T05:12:39Z","2005-06-03T08:43:41Z","2005-06-02T11:33:21Z","2005-05-27T08:32:07Z","2005-05-30T03:34:53Z"],[1,1,2,1,1,2],["2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z","2006-02-16T10:30:53Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>rental_id<\/th>\n      <th>rental_date<\/th>\n      <th>inventory_id<\/th>\n      <th>customer_id<\/th>\n      <th>return_date<\/th>\n      <th>staff_id<\/th>\n      <th>last_update<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,3,4,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<script type="application/json" data-for="htmlwidget-4f68022fd73b3d133ebb">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[133,384,8,98,1,2],["Chamber Italian","Grosse Wonderful","Airport Pollock","Bright Encounters","Academy Dinosaur","Ace Goldfinger"],["A Fateful Reflection of a Moose And a Husband who must Overcome a Monkey in Nigeria","A Epic Drama of a Cat And a Explorer who must Redeem a Moose in Australia","A Epic Tale of a Moose And a Girl who must Confront a Monkey in Ancient India","A Fateful Yarn of a Lumberjack And a Feminist who must Conquer a Student in A Jet Boat","A Epic Drama of a Feminist And a Mad Scientist who must Battle a Teacher in The Canadian Rockies","A Astounding Epistle of a Database Administrator And a Explorer who must Find a Car in Ancient China"],[2006,2006,2006,2006,2006,2006],[1,1,1,1,1,1],[7,5,6,4,6,3],[4.99,4.99,4.99,4.99,0.99,4.99],[117,49,54,73,86,48],[14.99,19.99,15.99,12.99,20.99,12.99],["NC-17","R","R","PG-13","PG","G"],["2013-05-26T21:50:58Z","2013-05-26T21:50:58Z","2013-05-26T21:50:58Z","2013-05-26T21:50:58Z","2013-05-26T21:50:58Z","2013-05-26T21:50:58Z"],["{Trailers}","{\"Behind the Scenes\"}","{Trailers}","{Trailers}","{\"Deleted Scenes\",\"Behind the Scenes\"}","{Trailers,\"Deleted Scenes\"}"],["'chamber':1 'fate':4 'husband':11 'italian':2 'monkey':16 'moos':8 'must':13 'nigeria':18 'overcom':14 'reflect':5","'australia':18 'cat':8 'drama':5 'epic':4 'explor':11 'gross':1 'moos':16 'must':13 'redeem':14 'wonder':2","'airport':1 'ancient':18 'confront':14 'epic':4 'girl':11 'india':19 'monkey':16 'moos':8 'must':13 'pollock':2 'tale':5","'boat':20 'bright':1 'conquer':14 'encount':2 'fate':4 'feminist':11 'jet':19 'lumberjack':8 'must':13 'student':16 'yarn':5","'academi':1 'battl':15 'canadian':20 'dinosaur':2 'drama':5 'epic':4 'feminist':8 'mad':11 'must':14 'rocki':21 'scientist':12 'teacher':17","'ace':1 'administr':9 'ancient':19 'astound':4 'car':17 'china':20 'databas':8 'epistl':5 'explor':12 'find':15 'goldfing':2 'must':14"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>film_id<\/th>\n      <th>title<\/th>\n      <th>description<\/th>\n      <th>release_year<\/th>\n      <th>language_id<\/th>\n      <th>rental_duration<\/th>\n      <th>rental_rate<\/th>\n      <th>length<\/th>\n      <th>replacement_cost<\/th>\n      <th>rating<\/th>\n      <th>last_update<\/th>\n      <th>special_features<\/th>\n      <th>fulltext<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,4,5,6,7,8,9]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ### The `summary` function in `base`
 
 The `base` package's `summary` function provides basic statistics that serve a unique diagnostic purpose in this context. For example, the following output shows that:
 
-    * `rental_id` is a number from 1 to 16,049. In a previous section, we ran the `str` function and saw that there are 16,044 observations in this table. Therefore, the `rental_id` seems to be sequential from 1:16049, but there are 5 values missing from that sequence. _Exercise for the Reader_: Which 5 values from 1:16049 are missing from `rental_id` values in the `rental` table? (_Hint_: In the chapter on SQL Joins, you will learn the functions needed to answer this question.)
+    * `film_id` is a number from 1 to 16,049. In a previous section, we ran the `str` function and saw that there are 16,044 observations in this table. Therefore, the `film_id` seems to be sequential from 1:16049, but there are 5 values missing from that sequence. _Exercise for the Reader_: Which 5 values from 1:16049 are missing from `film_id` values in the `film` table? (_Hint_: In the chapter on SQL Joins, you will learn the functions needed to answer this question.)
     * The number of NA's in the `return_date` column is a good first guess as to the number of DVDs rented out or lost as of 2005-09-02 02:35:22.
 
 
 ```r
-summary(rental_tibble)
+summary(film_tibble)
 ```
 
 ```
-##    rental_id      rental_date                   inventory_id 
-##  Min.   :    1   Min.   :2005-05-24 22:53:30   Min.   :   1  
-##  1st Qu.: 4014   1st Qu.:2005-07-07 00:58:40   1st Qu.:1154  
-##  Median : 8026   Median :2005-07-28 16:04:32   Median :2291  
-##  Mean   : 8025   Mean   :2005-07-23 08:13:34   Mean   :2292  
-##  3rd Qu.:12037   3rd Qu.:2005-08-17 21:16:23   3rd Qu.:3433  
-##  Max.   :16049   Max.   :2006-02-14 15:16:03   Max.   :4581  
-##                                                              
-##   customer_id     return_date                     staff_id    
-##  Min.   :  1.0   Min.   :2005-05-25 23:55:21   Min.   :1.000  
-##  1st Qu.:148.0   1st Qu.:2005-07-10 15:49:36   1st Qu.:1.000  
-##  Median :296.0   Median :2005-08-01 19:45:29   Median :1.000  
-##  Mean   :297.1   Mean   :2005-07-25 23:58:03   Mean   :1.499  
-##  3rd Qu.:446.0   3rd Qu.:2005-08-20 23:35:55   3rd Qu.:2.000  
-##  Max.   :599.0   Max.   :2005-09-02 02:35:22   Max.   :2.000  
-##                  NA's   :183                                  
-##   last_update                 
-##  Min.   :2006-02-15 21:30:53  
-##  1st Qu.:2006-02-16 02:30:53  
-##  Median :2006-02-16 02:30:53  
-##  Mean   :2006-02-16 02:31:31  
-##  3rd Qu.:2006-02-16 02:30:53  
-##  Max.   :2006-02-23 09:12:08  
+##     film_id          title           description         release_year 
+##  Min.   :   1.0   Length:1000        Length:1000        Min.   :2006  
+##  1st Qu.: 250.8   Class :character   Class :character   1st Qu.:2006  
+##  Median : 500.5   Mode  :character   Mode  :character   Median :2006  
+##  Mean   : 500.5                                         Mean   :2006  
+##  3rd Qu.: 750.2                                         3rd Qu.:2006  
+##  Max.   :1000.0                                         Max.   :2006  
+##   language_id rental_duration  rental_rate       length     
+##  Min.   :1    Min.   :3.000   Min.   :0.99   Min.   : 46.0  
+##  1st Qu.:1    1st Qu.:4.000   1st Qu.:0.99   1st Qu.: 80.0  
+##  Median :1    Median :5.000   Median :2.99   Median :114.0  
+##  Mean   :1    Mean   :4.985   Mean   :2.98   Mean   :115.3  
+##  3rd Qu.:1    3rd Qu.:6.000   3rd Qu.:4.99   3rd Qu.:149.2  
+##  Max.   :1    Max.   :7.000   Max.   :4.99   Max.   :185.0  
+##  replacement_cost    rating                last_update                 
+##  Min.   : 9.99    Length:1000             Min.   :2013-05-26 14:50:58  
+##  1st Qu.:14.99    Class :pq_mpaa_rating   1st Qu.:2013-05-26 14:50:58  
+##  Median :19.99    Mode  :character        Median :2013-05-26 14:50:58  
+##  Mean   :19.98                            Mean   :2013-05-26 14:50:58  
+##  3rd Qu.:24.99                            3rd Qu.:2013-05-26 14:50:58  
+##  Max.   :29.99                            Max.   :2013-05-26 14:50:58  
+##  special_features     fulltext          
+##  Length:1000        Length:1000         
+##  Class :pq__text    Class :pq_tsvector  
+##  Mode  :character   Mode  :character    
+##                                         
+##                                         
 ## 
 ```
 
@@ -566,19 +577,25 @@ So the `summary` function is surprisingly useful as we first start to look at th
 The `tibble` package's `glimpse` function is a more compact version of `str`:
 
 ```r
-tibble::glimpse(rental_tibble)
+tibble::glimpse(film_tibble)
 ```
 
 ```
-## Observations: 16,044
-## Variables: 7
-## $ rental_id    <int> 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,…
-## $ rental_date  <dttm> 2005-05-24 22:54:33, 2005-05-24 23:03:39, 2005-05-…
-## $ inventory_id <int> 1525, 1711, 2452, 2079, 2792, 3995, 2346, 2580, 182…
-## $ customer_id  <int> 459, 408, 333, 222, 549, 269, 239, 126, 399, 142, 2…
-## $ return_date  <dttm> 2005-05-28 19:40:33, 2005-06-01 22:12:39, 2005-06-…
-## $ staff_id     <int> 1, 1, 2, 1, 1, 2, 2, 1, 2, 2, 2, 1, 1, 1, 2, 1, 2, …
-## $ last_update  <dttm> 2006-02-16 02:30:53, 2006-02-16 02:30:53, 2006-02-…
+## Observations: 1,000
+## Variables: 13
+## $ film_id          <int> 133, 384, 8, 98, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11…
+## $ title            <chr> "Chamber Italian", "Grosse Wonderful", "Airport…
+## $ description      <chr> "A Fateful Reflection of a Moose And a Husband …
+## $ release_year     <int> 2006, 2006, 2006, 2006, 2006, 2006, 2006, 2006,…
+## $ language_id      <int> 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,…
+## $ rental_duration  <int> 7, 5, 6, 4, 6, 3, 7, 5, 6, 3, 6, 3, 6, 6, 6, 4,…
+## $ rental_rate      <dbl> 4.99, 4.99, 4.99, 4.99, 0.99, 4.99, 2.99, 2.99,…
+## $ length           <int> 117, 49, 54, 73, 86, 48, 50, 117, 130, 169, 62,…
+## $ replacement_cost <dbl> 14.99, 19.99, 15.99, 12.99, 20.99, 12.99, 18.99…
+## $ rating           <chr> "NC-17", "R", "R", "PG-13", "PG", "G", "NC-17",…
+## $ last_update      <dttm> 2013-05-26 14:50:58, 2013-05-26 14:50:58, 2013…
+## $ special_features <chr> "{Trailers}", "{\"Behind the Scenes\"}", "{Trai…
+## $ fulltext         <chr> "'chamber':1 'fate':4 'husband':11 'italian':2 …
 ```
 ### The `skim` function in the `skimr` package
 
@@ -606,39 +623,83 @@ library(skimr)
 ```
 
 ```r
-skimr::skim(rental_tibble)
+skimr::skim(film_tibble)
+```
+
+```
+## Warning: No summary functions for vectors of class: pq_mpaa_rating.
+## Coercing to character
+```
+
+```
+## Warning: No summary functions for vectors of class: pq__text.
+## Coercing to character
+```
+
+```
+## Warning: No summary functions for vectors of class: pq_tsvector.
+## Coercing to character
 ```
 
 ```
 ## Skim summary statistics
-##  n obs: 16044 
-##  n variables: 7 
+##  n obs: 1000 
+##  n variables: 13 
 ## 
-## ── Variable type:integer ─────────────────────────────────────────────────────────────────────────────────────────────────────────────
-##      variable missing complete     n    mean      sd p0     p25    p50
-##   customer_id       0    16044 16044  297.14  172.45  1  148     296  
-##  inventory_id       0    16044 16044 2291.84 1322.21  1 1154    2291  
-##     rental_id       0    16044 16044 8025.37 4632.78  1 4013.75 8025.5
-##      staff_id       0    16044 16044    1.5     0.5   1    1       1  
-##       p75  p100     hist
-##    446      599 ▇▇▇▇▇▇▇▇
-##   3433     4581 ▇▇▇▇▇▇▇▇
-##  12037.25 16049 ▇▇▇▇▇▇▇▇
-##      2        2 ▇▁▁▁▁▁▁▇
+## ── Variable type:character ──────────────────────────────────────────────────────────────────────────────
+##          variable missing complete    n min max empty n_unique
+##       description       0     1000 1000  70 130     0     1000
+##          fulltext       0     1000 1000  98 205     0     1000
+##            rating       0     1000 1000   1   5     0        5
+##  special_features       0     1000 1000  10  60     0       15
+##             title       0     1000 1000   8  27     0     1000
 ## 
-## ── Variable type:POSIXct ─────────────────────────────────────────────────────────────────────────────────────────────────────────────
-##     variable missing complete     n        min        max     median
-##  last_update       0    16044 16044 2006-02-15 2006-02-23 2006-02-16
-##  rental_date       0    16044 16044 2005-05-24 2006-02-14 2005-07-28
-##  return_date     183    15861 16044 2005-05-25 2005-09-02 2005-08-01
+## ── Variable type:integer ────────────────────────────────────────────────────────────────────────────────
+##         variable missing complete    n    mean     sd   p0     p25    p50
+##          film_id       0     1000 1000  500.5  288.82    1  250.75  500.5
+##      language_id       0     1000 1000    1      0       1    1       1  
+##           length       0     1000 1000  115.27  40.43   46   80     114  
+##     release_year       0     1000 1000 2006      0    2006 2006    2006  
+##  rental_duration       0     1000 1000    4.99   1.41    3    4       5  
+##      p75 p100     hist
+##   750.25 1000 ▇▇▇▇▇▇▇▇
+##     1       1 ▁▁▁▇▁▁▁▁
+##   149.25  185 ▇▇▆▇▆▇▆▇
+##  2006    2006 ▁▁▁▇▁▁▁▁
+##     6       7 ▇▇▁▇▁▇▁▇
+## 
+## ── Variable type:numeric ────────────────────────────────────────────────────────────────────────────────
+##          variable missing complete    n  mean   sd    p0   p25   p50   p75
+##       rental_rate       0     1000 1000  2.98 1.65  0.99  0.99  2.99  4.99
+##  replacement_cost       0     1000 1000 19.98 6.05  9.99 14.99 19.99 24.99
+##   p100     hist
+##   4.99 ▇▁▁▇▁▁▁▇
+##  29.99 ▇▇▃▇▆▇▅▇
+## 
+## ── Variable type:POSIXct ────────────────────────────────────────────────────────────────────────────────
+##     variable missing complete    n        min        max     median
+##  last_update       0     1000 1000 2013-05-26 2013-05-26 2013-05-26
 ##  n_unique
-##         3
-##     15815
-##     15836
+##         1
 ```
 
 ```r
-wide_rental_skim <- skimr::skim_to_wide(rental_tibble)
+skimr::skim_to_wide(film_tibble[,1:7]) #skimr doesn't like certain kinds of columns
+```
+
+```
+## # A tibble: 7 x 17
+##   type  variable missing complete n     min   max   empty n_unique mean 
+##   <chr> <chr>    <chr>   <chr>    <chr> <chr> <chr> <chr> <chr>    <chr>
+## 1 char… descrip… 0       1000     1000  70    130   0     1000     <NA> 
+## 2 char… title    0       1000     1000  8     27    0     1000     <NA> 
+## 3 inte… film_id  0       1000     1000  <NA>  <NA>  <NA>  <NA>     " 50…
+## 4 inte… languag… 0       1000     1000  <NA>  <NA>  <NA>  <NA>     "   …
+## 5 inte… release… 0       1000     1000  <NA>  <NA>  <NA>  <NA>     "200…
+## 6 inte… rental_… 0       1000     1000  <NA>  <NA>  <NA>  <NA>     "   …
+## 7 nume… rental_… 0       1000     1000  <NA>  <NA>  <NA>  <NA>     2.98 
+## # … with 7 more variables: sd <chr>, p0 <chr>, p25 <chr>, p50 <chr>,
+## #   p75 <chr>, p100 <chr>, hist <chr>
 ```
 
 ### Close the connection and shut down sql-pet

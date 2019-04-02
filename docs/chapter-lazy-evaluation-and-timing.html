@@ -25,7 +25,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
 
 
-<meta name="date" content="2019-03-23">
+<meta name="date" content="2019-03-25">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -265,8 +265,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="9.4.9" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_nrow"><i class="fa fa-check"></i><b>9.4.9</b> Q %&gt;% nrow()</a></li>
 <li class="chapter" data-level="9.4.10" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_tally"><i class="fa fa-check"></i><b>9.4.10</b> Q %&gt;% dplyr::tally()</a></li>
 <li class="chapter" data-level="9.4.11" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_collect"><i class="fa fa-check"></i><b>9.4.11</b> Q %&gt;% dplyr::collect()</a></li>
-<li class="chapter" data-level="9.4.12" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_show-query"><i class="fa fa-check"></i><b>9.4.12</b> Q %&gt;% dplyr::show_query()</a></li>
-<li class="chapter" data-level="9.4.13" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#more-lazy-execution-examples"><i class="fa fa-check"></i><b>9.4.13</b> More lazy execution examples</a></li>
+<li class="chapter" data-level="9.4.12" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_plot-categories"><i class="fa fa-check"></i><b>9.4.12</b> Q %&gt;% ggplot</a></li>
+<li class="chapter" data-level="9.4.13" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_show-query"><i class="fa fa-check"></i><b>9.4.13</b> Q %&gt;% dplyr::show_query()</a></li>
 </ul></li>
 <li class="chapter" data-level="9.5" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#other-resources"><i class="fa fa-check"></i><b>9.5</b> Other resources</a></li>
 </ul></li>
@@ -276,10 +276,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="10.1.2" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#time-based-execution-environment-issues"><i class="fa fa-check"></i><b>10.1.2</b> Time-based, execution environment issues</a></li>
 <li class="chapter" data-level="10.1.3" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#lazy_q_build"><i class="fa fa-check"></i><b>10.1.3</b> Q %&gt;% <code>more dplyr</code></a></li>
 <li class="chapter" data-level="10.1.4" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#many-handy-r-functions-cant-be-translated-to-sql"><i class="fa fa-check"></i><b>10.1.4</b> Many handy R functions can’t be translated to SQL</a></li>
-<li class="chapter" data-level="10.1.5" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#more-lazy-execution-examples-1"><i class="fa fa-check"></i><b>10.1.5</b> More lazy execution examples</a></li>
+<li class="chapter" data-level="10.1.5" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#further-lazy-execution-examples"><i class="fa fa-check"></i><b>10.1.5</b> Further lazy execution examples</a></li>
 </ul></li>
 <li class="chapter" data-level="10.2" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#other-resources-1"><i class="fa fa-check"></i><b>10.2</b> Other resources</a></li>
-<li class="chapter" data-level="10.3" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#parking-lot"><i class="fa fa-check"></i><b>10.3</b> Parking lot</a></li>
 </ul></li>
 <li class="chapter" data-level="11" data-path="chapter-dbi-package-sql.html"><a href="chapter-dbi-package-sql.html"><i class="fa fa-check"></i><b>11</b> DBI package and SQL</a><ul>
 <li class="chapter" data-level="11.1" data-path="chapter-dbi-package-sql.html"><a href="chapter-dbi-package-sql.html#setup-3"><i class="fa fa-check"></i><b>11.1</b> Setup</a></li>
@@ -666,7 +665,7 @@ Q</code></pre>
 ##  9 2005-05-25 00:02:21 danny.isom@sakilacustomer.org        
 ## 10 2005-05-25 00:09:02 april.burns@sakilacustomer.org       
 ## # … with more rows</code></pre>
-<p>Note that in the previous example we follow this book’s convention of fully qualifying function names (e.g., specifying the package). In practice, it’s possible and convenient to use more abbreviated notation.</p>
+<p>Note that in the previous example we follow this book’s convention of creating a connection object to each table and fully qualifying function names (e.g., specifying the package). In practice, it’s possible and convenient to use more abbreviated notation.</p>
 <pre class="sourceCode r"><code class="sourceCode r">Q &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="st">&quot;rental&quot;</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">left_join</span>(<span class="kw">tbl</span>(con, <span class="st">&quot;customer&quot;</span>), <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;customer_id&quot;</span> =<span class="st"> &quot;customer_id&quot;</span>)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">select</span>(rental_date, email)
@@ -739,12 +738,13 @@ Q</code></pre>
 </div>
 <div id="time-based-execution-environment-issues" class="section level3">
 <h3><span class="header-section-number">10.1.2</span> Time-based, execution environment issues</h3>
-<p>Remember that if the expression is assigned to an object, it is not executed. If not, a <code>print()</code> function is implied. This behavior is the basis for a useful debugging and development process where queries are built up incrementally.</p>
+<p>Remember that if the expression is assigned to an object, it is not executed. If an expression is entered on the command line or appears in your script by itself, a <code>print()</code> function is implied.</p>
 <blockquote>
 <p><em>These two are different:</em>
 Q %&gt;% count(email)
 Q_query &lt;- Q %&gt;% count(email)</p>
 </blockquote>
+<p>This behavior is the basis of a useful debugging and development process where queries are built up incrementally.</p>
 </div>
 <div id="lazy_q_build" class="section level3">
 <h3><span class="header-section-number">10.1.3</span> Q %&gt;% <code>more dplyr</code></h3>
@@ -779,7 +779,79 @@ Q_query &lt;- Q %&gt;% count(email)</p>
 ## 3 karl.seal@sakilacustomer.org     45             
 ## 4 marcia.dean@sakilacustomer.org   42             
 ## 5 tammy.sanders@sakilacustomer.org 41</code></pre>
-<p><img src="screenshots/green-check.png" /> When all the accumulated <code>dplyr</code> verbs are executed, they are submitted to the dbms and the number of rows that are returned follow the same rules as discussed above.</p>
+<p><img src="screenshots/green-check.png" /> When all the accumulated <code>dplyr</code> verbs are executed, they are submitted to the dbms and the number of rows that are returned follow the same rules as discussed above.
+### Interspersing SQL and dplyr</p>
+<pre class="sourceCode r"><code class="sourceCode r">rental_table <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">rental_date =</span> <span class="kw">date</span>(rental_date)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">show_query</span>()</code></pre>
+<pre><code>## &lt;SQL&gt;
+## SELECT &quot;rental_id&quot;, DATE(&quot;rental_date&quot;) AS &quot;rental_date&quot;, &quot;inventory_id&quot;, &quot;customer_id&quot;, &quot;return_date&quot;, &quot;staff_id&quot;, &quot;last_update&quot;
+## FROM &quot;rental&quot;</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">rental_table <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">rental_date =</span> <span class="kw">date</span>(rental_date))</code></pre>
+<pre><code>## # Source:   lazy query [?? x 7]
+## # Database: postgres [postgres@localhost:5432/dvdrental]
+##    rental_id rental_date inventory_id customer_id return_date        
+##        &lt;int&gt; &lt;date&gt;             &lt;int&gt;       &lt;int&gt; &lt;dttm&gt;             
+##  1         2 2005-05-24          1525         459 2005-05-28 19:40:33
+##  2         3 2005-05-24          1711         408 2005-06-01 22:12:39
+##  3         4 2005-05-24          2452         333 2005-06-03 01:43:41
+##  4         5 2005-05-24          2079         222 2005-06-02 04:33:21
+##  5         6 2005-05-24          2792         549 2005-05-27 01:32:07
+##  6         7 2005-05-24          3995         269 2005-05-29 20:34:53
+##  7         8 2005-05-24          2346         239 2005-05-27 23:33:46
+##  8         9 2005-05-25          2580         126 2005-05-28 00:22:40
+##  9        10 2005-05-25          1824         399 2005-05-31 22:44:21
+## 10        11 2005-05-25          4443         142 2005-06-02 20:56:02
+## # … with more rows, and 2 more variables: staff_id &lt;int&gt;,
+## #   last_update &lt;dttm&gt;</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">try</span>(rental_table <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">rental_date =</span> lubridate<span class="op">::</span><span class="kw">date</span>(rental_date))
+)</code></pre>
+<pre><code>## Error in lubridate::date(rental_date) : object &#39;rental_date&#39; not found</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">rental_table <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">collect</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">rental_date =</span> lubridate<span class="op">::</span><span class="kw">date</span>(rental_date)) </code></pre>
+<pre><code>## # A tibble: 16,044 x 7
+##    rental_id rental_date inventory_id customer_id return_date        
+##        &lt;int&gt; &lt;date&gt;             &lt;int&gt;       &lt;int&gt; &lt;dttm&gt;             
+##  1         2 2005-05-24          1525         459 2005-05-28 19:40:33
+##  2         3 2005-05-24          1711         408 2005-06-01 22:12:39
+##  3         4 2005-05-24          2452         333 2005-06-03 01:43:41
+##  4         5 2005-05-24          2079         222 2005-06-02 04:33:21
+##  5         6 2005-05-24          2792         549 2005-05-27 01:32:07
+##  6         7 2005-05-24          3995         269 2005-05-29 20:34:53
+##  7         8 2005-05-24          2346         239 2005-05-27 23:33:46
+##  8         9 2005-05-25          2580         126 2005-05-28 00:22:40
+##  9        10 2005-05-25          1824         399 2005-05-31 22:44:21
+## 10        11 2005-05-25          4443         142 2005-06-02 20:56:02
+## # … with 16,034 more rows, and 2 more variables: staff_id &lt;int&gt;,
+## #   last_update &lt;dttm&gt;</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">to_char &lt;-<span class="st"> </span><span class="cf">function</span>(date, fmt) {<span class="kw">return</span>(fmt)}
+
+rental_table <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">rental_date =</span> <span class="kw">to_char</span>(rental_date, <span class="st">&quot;YYYY-MM&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">show_query</span>()</code></pre>
+<pre><code>## &lt;SQL&gt;
+## SELECT &quot;rental_id&quot;, TO_CHAR(&quot;rental_date&quot;, &#39;YYYY-MM&#39;) AS &quot;rental_date&quot;, &quot;inventory_id&quot;, &quot;customer_id&quot;, &quot;return_date&quot;, &quot;staff_id&quot;, &quot;last_update&quot;
+## FROM &quot;rental&quot;</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">rental_table <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">rental_date =</span> <span class="kw">to_char</span>(rental_date, <span class="st">&quot;YYYY-MM&quot;</span>)) </code></pre>
+<pre><code>## # Source:   lazy query [?? x 7]
+## # Database: postgres [postgres@localhost:5432/dvdrental]
+##    rental_id rental_date inventory_id customer_id return_date        
+##        &lt;int&gt; &lt;chr&gt;              &lt;int&gt;       &lt;int&gt; &lt;dttm&gt;             
+##  1         2 2005-05             1525         459 2005-05-28 19:40:33
+##  2         3 2005-05             1711         408 2005-06-01 22:12:39
+##  3         4 2005-05             2452         333 2005-06-03 01:43:41
+##  4         5 2005-05             2079         222 2005-06-02 04:33:21
+##  5         6 2005-05             2792         549 2005-05-27 01:32:07
+##  6         7 2005-05             3995         269 2005-05-29 20:34:53
+##  7         8 2005-05             2346         239 2005-05-27 23:33:46
+##  8         9 2005-05             2580         126 2005-05-28 00:22:40
+##  9        10 2005-05             1824         399 2005-05-31 22:44:21
+## 10        11 2005-05             4443         142 2005-06-02 20:56:02
+## # … with more rows, and 2 more variables: staff_id &lt;int&gt;,
+## #   last_update &lt;dttm&gt;</code></pre>
 </div>
 <div id="many-handy-r-functions-cant-be-translated-to-sql" class="section level3">
 <h3><span class="header-section-number">10.1.4</span> Many handy R functions can’t be translated to SQL</h3>
@@ -820,8 +892,8 @@ Q_query &lt;- Q %&gt;% count(email)</p>
 ## # … with 16,034 more rows, and 2 more variables: staff_id &lt;int&gt;,
 ## #   last_update &lt;dttm&gt;</code></pre>
 </div>
-<div id="more-lazy-execution-examples-1" class="section level3">
-<h3><span class="header-section-number">10.1.5</span> More lazy execution examples</h3>
+<div id="further-lazy-execution-examples" class="section level3">
+<h3><span class="header-section-number">10.1.5</span> Further lazy execution examples</h3>
 <p>See more examples of lazy execution <a href="https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html">here</a>.</p>
 <pre class="sourceCode r"><code class="sourceCode r">DBI<span class="op">::</span><span class="kw">dbDisconnect</span>(con)
 sqlpetr<span class="op">::</span><span class="kw">sp_docker_stop</span>(<span class="st">&quot;sql-pet&quot;</span>)</code></pre>
@@ -834,66 +906,6 @@ sqlpetr<span class="op">::</span><span class="kw">sp_docker_stop</span>(<span cl
 <li>dplyr Reference documentation: Remote tables. <a href="https://dplyr.tidyverse.org/reference/index.html#section-remote-tables">https://dplyr.tidyverse.org/reference/index.html#section-remote-tables</a></li>
 <li>Data Carpentry. SQL Databases and R. <a href="https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html">https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html</a></li>
 </ul>
-</div>
-<div id="parking-lot" class="section level2">
-<h2><span class="header-section-number">10.3</span> Parking lot</h2>
-<blockquote>
-<p>Although the material in the following table looks like it’s <em>good to know</em> it’s not clear why a run-of-the-mill R user would be concerned with it. It looks like a draft; not completley clear…</p>
-</blockquote>
-<table>
-<colgroup>
-<col width="19%" />
-<col width="28%" />
-<col width="28%" />
-<col width="23%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Operation</th>
-<th>dplyr<br>Local-Only</th>
-<th>dplyr<br>Local-Lazy</th>
-<th>SQL</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>connection</td>
-<td>DBI::dbConnect</td>
-<td>DBI::dbConnect</td>
-<td>DBI::dbConnect</td>
-</tr>
-<tr class="even">
-<td>Single Read joining one or more tables<br>and fits into memory</td>
-<td>DBI::dbReadTable, (returns a df)<br>R package calls always available</td>
-<td>tbl() + collect()<br>tbl:Returns two lists<br> collect(): returns tbl_df<br>R package calls available only after collect() call. Ideally push everything to DB.<br>May require R placeholder functions to mimick DB functions.</td>
-<td>dbGetQuery</td>
-</tr>
-<tr class="odd">
-<td>Multiple Reads</td>
-<td>Not Applicable</td>
-<td>Not Applicable</td>
-<td>dbSendQuery + dbFetch + dbClearResult</td>
-</tr>
-<tr class="even">
-<td>Fetch Data locally</td>
-<td>DBI::dbReadTable fetches data</td>
-<td>collect()</td>
-<td>dbGetQuery or dbSendQuery+dbFetch+dbClearResult</td>
-</tr>
-<tr class="odd">
-<td>Write Results Local</td>
-<td>write family of functions</td>
-<td>write family of functions</td>
-<td>write family of functions</td>
-</tr>
-<tr class="even">
-<td>Write Results to DB</td>
-<td>compute() or copy_to</td>
-<td>compute() or copy_to</td>
-<td>compute() or copy_to</td>
-</tr>
-</tbody>
-</table>
 
 </div>
 </div>
