@@ -1,7 +1,7 @@
 ---
-title: "Introduction to sqlpetr"
+title: "Setup and Technical Concepts"
 author: "M. Edward (Ed) Borasky"
-date: "3/6/2019"
+date: "4/6/2019"
 output:
   ioslides_presentation: default
   beamer_presentation: 
@@ -17,8 +17,8 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ## Prerequisites
 
-* R 3.5.0 or later
-* RStudio (Preview) 1.2.1303 or later
+* R 3.4.0 or later
+* RStudio (Preview) 1.2.1335 or later
 * Docker Community Edition (18.09 or later)
 
 ## Optional
@@ -36,31 +36,72 @@ knitr::opts_chunk$set(echo = FALSE)
 * Docker CE supported distro
     - Fedora 29
     - Ubuntu 18.04.2 LTS "Bionic Beaver"
-    - Debian 9.6 "stretch"
-    - Arch Linux with Arch User Repository (AUR) and AUR helper `yay`
+    - Arch Linux
 * Docker Community Edition (use Arch `docker` package on Arch)
 * 4 GB of RAM or greater
+
+## The `sqlpetr` R package
+* To capture common functionality and minimize the amount of typing one has to do, we've created an R package called [`sqlpetr`](https://smithjd.github.io/sqlpetr/index.html).
+* To install the package from the R console:
+
+    ```
+    install.packages("remotes")
+    remotes::install_github("smithjd/sqlpetr", force = TRUE, 
+                            build = FALSE, quiet = TRUE)
+    ```
 
 # Docker Concepts
 
 ## Images
+* A _Docker image_ is the basic artifact of Docker.
+* An image usually contains "just enough Linux" to support a single service.
+    - In this workshop, the image contains Debian GNU/Linux "stretch" and the PostgreSQL 10 relational database management service.
 
 ## Containers
+* A _container_ is a collection of Linux processes running on a Linux host.
+* The host manages these processes as a collection.
+* There is _logical_ isolation - hence the term "container" - but there is little management overhead, because the processes running in the container are plain old Linux processes.
+* In common usage, containers are considered ephemeral - "cattle, not pets".
 
-## Networks
+## How do I get an image?
+* It's a build or buy decision:
+    - "Buy" - download an image from an image repository
+    - "Build" - create a Dockerfile and do `docker build`.
+* In this workshop, we are "buying" the base PostgreSQL image from <https://hub.docker.com/_/postgres>. And we are [building on top of it](https://smithjd.github.io/sqlpetr/articles/building-the-dvdrental-docker-image.html) with a Dockerfile to install the [`dvdrental` database](http://www.postgresqltutorial.com/postgresql-sample-database/).
 
-## Volumes
-
-## Registries
+## OK, I have an image - now what?
+* You create a container by running an image in it.
+* Typically, a single process in the container will offer a service by listening on a TCP port.
+* For that service to be useful on the host, we _publish_ that port to `localhost`.
+* In this workshop, we'll run the PostgreSQL image with the `dvdrental` database on it in a container and publish its standard port, 5432, to `localhost`.
 
 # PostgreSQL Database Administration 101
 
-## Clusters, databases and schemas
+## Clusters, databases, schemas and views
+* A PostgreSQL server is called a _cluster_. A cluster of what? Databases!
+* A PostgreSQL _database_ is a collection of _schemas_. 
+* Every PostgreSQL database has at least one default schema, called `public`.
+* A _schema_ is a collection of objects. 
+    - Usually these are _tables_, but there are other types.
+    - The `dvdrental` database has tables and views.
+    - A _view_ is a query - when you reference it, PostgreSQL runs the query and returns its results as if it were a table.
 
 ## Users / Roles
-
-## Tables, views and materialized views
-
+* PostgreSQL users and groups of users are called _roles_.
+* PostgreSQL has a very fine-grained permission system for which roles can perform which operations on which objects.
+* There is at least one database superuser, `postgres`, that can do anything to any object.
+    - `postgres` can create and drop databases, schemas, tables, views.
+    - `postgres` can create and drop roles and _GRANT_ or _REVOKE_ their privileges.
+* For this workshop, you are going to be `postgres`, the database superuser.
+* In the real world, there will be a DBA who does that and GRANTs you exactly what you need to do your job.
+    
 ## Making a connection
+* To use a PostgreSQL service, you need to open a _connection_.
+* A connection needs five things:
 
-## pgAdmin
+    1. The _host_ where the service is running,
+    2. The _port_ where the service is listening,
+    3. The _database_ you want to connect to,
+    4. The _user_ you want to connect as, and
+    5. That user's _password_.
+* In the workshop, `host` will be "localhost", `port` will be 5432, `database` will be "dvdrental", and both `user` and `password` will be "postgres". 
