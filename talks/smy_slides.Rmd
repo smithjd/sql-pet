@@ -456,10 +456,9 @@ customer_ij <- customer_table %>%
 kable(customer_ij)
 ```
 
-## customer store left join
+## customer store left join{.smaller}
 
 ```{r dplyr left join Details}
-
 customer_table <- DBI::dbReadTable(con, "customer") %>%
   mutate(c_store_id = store_id)
 store_table <- DBI::dbReadTable(con, "store") %>% 
@@ -477,6 +476,12 @@ customer_lj <- customer_table %>%
 
 ```
 
+<mark>mutate(c_store_id = store_id)</mark>
+
+<mark>mutate(s_store_id = store_id)</mark>
+
+<hr>
+
 ## customer store left join results
 
 ```{r echo=FALSE}
@@ -489,7 +494,7 @@ kable(customer_lj)
 kable(store_table)
 ```
 
-- How stores are in the dvd rental business. 
+- How many stores are in the dvd rental business. 
 
 <hr>
 
@@ -535,7 +540,7 @@ customer_rj2 <- customer_table %>%
         ,s_store_id,s_mgr_id,s_addr_id)
 ```
 
-- filter(customer_id >= 597 <mark>| is.na(customer_id)<\mark>) %>%
+- filter(customer_id >= 597 <mark>| is.na(customer_id)</mark>) %>%
 
 <hr>
 
