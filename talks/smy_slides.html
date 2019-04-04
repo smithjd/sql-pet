@@ -5365,7 +5365,7 @@ slide:not(.current) .plotly.html-widget{
 
 <body style="opacity: 0">
 
-<slides>
+<slides class="layout-widescreen">
 
   <slide class="title-slide segue nobackground">
         <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
@@ -5373,14 +5373,302 @@ slide:not(.current) .plotly.html-widget{
       <h1 data-config-title><!-- populated from slide_config.json --></h1>
       <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
       <p data-config-presenter><!-- populated from slide_config.json --></p>
-            <p style="margin-top: 6px; margin-left: -2px;">22 March, 2019</p>
+            <p style="margin-top: 6px; margin-left: -2px;">03 April, 2019</p>
           </hgroup>
   </slide>
 
-<slide class=""><hgroup><h2>Join Types</h2></hgroup><article  id="join-types">
+<slide class=""><hgroup><h2>Over View</h2></hgroup><article  id="over-view">
 
-<div id="htmlwidget-1d9f9b9fdca3023baa83" style="width:720px;height:432px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-1d9f9b9fdca3023baa83">{"x":{"diagram":"\ndigraph JOINS {\n\n  # a \"graph\" statement\n  graph [overlap = true, fontsize = 10]\n\n  node [shape = box,\n        fixedsize = false,\n        hegith = 1.5\n        width = 1.50]\n  0[label=\"0.  Mutable Joins\"]\n  1[label=\"1.  Inner Join\nL.col1 {<,=,>} R.col2\"]\n  2[label=\"2.  Outer Join\nL.col1=R.col2\"]\n  3[label=\"3.  Self Join\nL.col1=tbl1.col2\"]\n  4[label=\"4.  Cross (Cartesian) Join\nL.col1=R.col2\"]\n  5[label=\"5.  Equi Join\nL.col1=R.col2\"] \n  6[label=\"6.  Natural Join\nL.col1=R.col1\"]\n  7[label=\"7.  Left Join\nL.col1=R.col1\"]\n  8[label=\"8.  Right Join\nL.col1=R.col1\"]\n  9[label=\"9.  Full Join\nL.col1=tbl2.col1\"]\n 10[label=\"10.  NonMutable Joins\"]\n 11[label=\"11.  Semi Join\nL.col1=R.col2\ncondition true\"]\n 12[label=\"12.  Anti Join\nL.col1=R.col2\ncondition false\"]\n\n  # several \"edge\" statements\n  0 -> {1,2,3,4} [arrowhead=none]\n  1 -> 5 [arrowhead=none]\n  5 -> 6 [arrowhead=none]\n  2 -> {7,8,9} [arrowhead=none]\n  10 -> {11,12} [arrowhead=none]\n\n  #3 -> {7,8,9}\n}\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<ul class = 'build'>
+<li>Challenges working in a database</li>
+<li>Database Road Map - The Movie ERD</li>
+<li>Dplyr Join Syntax - standardized syntax</li>
+<li>Join Types</li>
+<li>Join Examples</li>
+<li>Join Exercises
+
+<ul class = 'build'>
+<li>customer, rental, address, city, country, inventory, payment, film</li>
+</ul></li>
+</ul>
+
+<hr>
+
+</article></slide><slide class=""><hgroup><h2>Challenges Working in a database</h2></hgroup><article  id="challenges-working-in-a-database">
+
+<ul class = 'build'>
+<li>Connecting to the database</li>
+<li>Too many tables make it difficult to find the best version of the data</li>
+<li>Column definitions/contents can change overtime
+
+<ul class = 'build'>
+<li>active versus activebool</li>
+</ul></li>
+<li>Too much/Too little documentation
+
+<ul class = 'build'>
+<li>Confusing documentation</li>
+</ul></li>
+<li>Truly a team effort to understand database content
+
+<ul class = 'build'>
+<li>(Vendor Consultants, BSA, SME, DBA, Developers)</li>
+<li>front line workers may have valuable offline resources</li>
+</ul></li>
+</ul>
+
+<hr>
+
+</article></slide><slide class=""><hgroup><h2>Database Road Map - The Movie ERD</h2></hgroup><article  id="database-road-map---the-movie-erd">
+
+<ul class = 'build'>
+<li><a href='https://cdn-lucidchart-com.s3.amazonaws.com/how-to-page/ERD_notation.PNG' title=''>ERD Cardinality Symbols</a></li>
+<li><a href='http://www.postgresqltutorial.com/postgresql-sample-database/' title=''>ERD Postgres DVD Rental Handout</a>
+
+<ul class = 'build'>
+<li>How are keys shown?</li>
+<li>active versus activebool</li>
+<li>What is the cardinality between customer and rental?</li>
+<li>Does this make sense?</li>
+</ul></li>
+<li><a href='https://circle.visual-paradigm.com/movie-rental/' title=''>Movie DVD ERD</a></li>
+</ul>
+
+<hr>
+
+</article></slide><slide class=""><hgroup><h2>Navigating a DB – ERD’s as Road Maps</h2></hgroup><article  id="navigating-a-db-erds-as-road-maps">
+
+<p>Postgres ERD</p>
+
+<ul class = 'build'>
+<li>Shows correct keys</li>
+<li>Shows incorrect relationships</li>
+</ul>
+
+<p>Movie ERD</p>
+
+<ul class = 'build'>
+<li>Shows incorrect keys</li>
+<li>Shows correct relationships</li>
+</ul>
+
+<p>ERD models are incomplete</p>
+
+<ul class = 'build'>
+<li>ERD models emphasize certain relationships and not others</li>
+</ul>
+
+<p>Confusing Documentation versus database metadata</p>
+
+<hr>
+
+</article></slide><slide class=""><hgroup><h2>ERD - MetaData 1/3</h2></hgroup><article  id="erd---metadata-13">
+
+<ul class = 'build'>
+<li>Two Useful Tables
+
+<ul class = 'build'>
+<li>information_schema.tables</li>
+<li>information_schema.columns</li>
+</ul></li>
+<li>ERD sql-pet Functions
+
+<ul class = 'build'>
+<li>sp_tbl_descr – Parameterized Table Description Function</li>
+<li>sp_tbl_pk_fk – Parameterized Table PK-FK Function</li>
+<li>See Chapter &ldquo;SQL Metadata exercises&rdquo; for details</li>
+</ul></li>
+</ul>
+
+<hr>
+
+</article></slide><slide class=""><hgroup><h2>ERD Table Descriptions - Table MD 2/3</h2></hgroup><article  id="erd-table-descriptions---table-md-23">
+
+<pre class = 'prettyprint lang-r'>sp_tbl_descr(&#39;customer&#39;)    </pre>
+
+<pre >##    table_name seq    col_name    col_type is_null table_schema
+## 1    customer   1 customer_id     int4-32      NO       public
+## 2    customer   2    store_id     int2-16      NO       public
+## 3    customer   3  first_name varchar(45)      NO       public
+## 4    customer   4   last_name varchar(45)      NO       public
+## 5    customer   5       email varchar(50)     YES       public
+## 6    customer   6  address_id     int2-16      NO       public
+## 7    customer   7  activebool        bool      NO       public
+## 8    customer   8 create_date        date      NO       public
+## 9    customer   9 last_update   timestamp     YES       public
+## 10   customer  10      active     int4-32     YES       public</pre>
+
+<pre >                  What do these two columns Represent?
+## 7    customer   7  activebool        bool      NO       public
+## 10   customer  10      active     int4-32     YES       public</pre>
+
+<hr>
+
+</article></slide><slide class=""><hgroup><h2>ERD Primary and Foreign Key 3/3</h2></hgroup><article  id="erd-primary-and-foreign-key-33">
+
+<pre class = 'prettyprint lang-r'>sp_tbl_pk_fk_sql(&#39;customer&#39;)    </pre>
+
+<pre >##   table_name column_name          constraint_name constraint_type
+## 1   customer customer_id            customer_pkey     PRIMARY KEY
+## 2   customer  address_id customer_address_id_fkey     FOREIGN KEY
+## 3    payment customer_id payment_customer_id_fkey     FOREIGN KEY
+## 4     rental customer_id  rental_customer_id_fkey     FOREIGN KEY
+##   ref_table ref_table_col
+## 1                        
+## 2   address    address_id
+## 3  customer   customer_id
+## 4  customer   customer_id</pre>
+
+</article></slide><slide class=""><hgroup><h2>Dplyr Join Syntax - standardized syntax</h2></hgroup><article  id="dplyr-join-syntax---standardized-syntax">
+
+<ul class = 'build'>
+<li>Two syntaxes
+
+<ul class = 'build'>
+<li>Function syntax</li>
+<li>dplyr syntax</li>
+</ul></li>
+</ul>
+
+<hr>
+
+</article></slide><slide class=""><hgroup><h2>Inner &amp; Left Most Common Joins 1/4</h2></hgroup><article  id="inner-left-most-common-joins-14">
+
+<table class = 'rmdtable'>
+<col width="3.731343%" />
+<col width="55.970149%" />
+<col width="40.298507%" />
+<tr class="header">
+<th align="left">Join</th>
+<th align="left">dplyr</th>
+<th align="left">sql</th>
+</tr>
+<tr class="odd">
+<td align="left">inner</td>
+<td align="left"><b><mark>inner_join</mark></b>(customer_tbl, rental_tbl, by = &lsquo;customer_id&rsquo;, suffix = c(&ldquo;.c&rdquo;, &ldquo;.r&rdquo;))</td>
+<td align="left">from customer c join rental r on c.customer_id = r.customer_id</td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left">customer_tbl %&gt;% <b><mark>inner_join</mark></b>(rental_tbl, by = &lsquo;customer_id&rsquo;, suffix = c(&ldquo;.c&rdquo;, &ldquo;.r&rdquo;))</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">left</td>
+<td align="left"><b><mark>left_join</mark></b>(customer_tbl, rental_tbl, by = &lsquo;customer_id&rsquo;, suffix = c(&ldquo;.c&rdquo;, &ldquo;.r&rdquo;))</td>
+<td align="left">from customer c left outer join rental r on c.customer_id = r.customer_id</td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left">customer_tbl %&gt;% <b><mark>left_join</mark></b>(rental_tbl, by = &lsquo;customer_id&rsquo;, suffix = c(&ldquo;.c&rdquo;, &ldquo;.r&rdquo;))</td>
+<td align="left"></td>
+</tr>
+</table>
+
+<ul class = 'build'>
+<li>What do the customer and rental tables represent?</li>
+<li>What does the inner join represent in the real world?</li>
+<li>What does the left join represent in the real world?</li>
+</ul>
+
+<hr>
+
+</article></slide><slide class=""><hgroup><h2>Right Joins - 2/4</h2></hgroup><article  id="right-joins---24">
+
+<table class = 'rmdtable'>
+<col width="3.597122%" />
+<col width="57.553957%" />
+<col width="38.848921%" />
+<tr class="header">
+<th align="left">Join</th>
+<th align="left">dplyr</th>
+<th align="left">sql</th>
+</tr>
+<tr class="odd">
+<td align="left">right</td>
+<td align="left"><b><mark>right_join</mark></b>(customer_tbl, rental_tbl, by = &lsquo;customer_id&rsquo;, suffix = c(&ldquo;.c&rdquo;, &ldquo;.r&rdquo;))</td>
+<td align="left">from customer c right outer join rental r on c.customer_id = r.customer_id</td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left">customer_tbl %&gt;% <b><mark>right_join</mark></b>(rental_tbl, by = &lsquo;customer_id&rsquo;, suffix = c(&ldquo;.c&rdquo;, &ldquo;.r&rdquo;))</td>
+<td align="left"></td>
+</tr>
+</table>
+
+<ul class = 'build'>
+<li>Right join least commonly used</li>
+</ul>
+
+<hr>
+
+</article></slide><slide class=""><hgroup><h2>Full Joins - 3/4</h2></hgroup><article  id="full-joins---34">
+
+<table class = 'rmdtable'>
+<col width="3.597122%" />
+<col width="57.553957%" />
+<col width="38.848921%" />
+<tr class="header">
+<th align="left">Join</th>
+<th align="left">dplyr</th>
+<th align="left">sql</th>
+</tr>
+<tr class="odd">
+<td align="left">full</td>
+<td align="left"><b><mark>full_join</mark></b>(customer_tbl, rental_tbl, by = &lsquo;customer_id&rsquo;, suffix = c(&ldquo;.c&rdquo;, &ldquo;.r&rdquo;))</td>
+<td align="left">from customer c full outer join rental r on c.customer_id = r.customer_id</td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left">customer_tbl %&gt;% <b><mark>full_join</mark></b>(rental_tbl, by = &lsquo;customer_id&rsquo;, suffix = c(&ldquo;.c&rdquo;, &ldquo;.r&rdquo;))</td>
+<td align="left"></td>
+</tr>
+</table>
+
+<ul class = 'build'>
+<li>\(full\_join = left\_join + inner\_join + right\_join\)</li>
+<li>FJ often used to check for orphaned records</li>
+<li>The FULL JOIN returns all matching records from both tables whether the other table has matching rows or not.</li>
+</ul>
+
+<hr>
+
+</article></slide><slide class=""><hgroup><h2>Join Syntax - 4/4</h2></hgroup><article  id="join-syntax---44">
+
+<table class = 'rmdtable'>
+<tr class="header">
+<th align="left">Join</th>
+<th align="left">dplyr</th>
+<th align="left">sql</th>
+</tr>
+<tr class="odd">
+<td align="left">semi</td>
+<td align="left"><b><mark>semi_join</mark></b>(customer_tbl, rental_tbl, by = &lsquo;customer_id&rsquo;)</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left">customer_tbl %&gt;% semi_join(rental_tbl, by = &lsquo;customer_id&rsquo;)</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">anti</td>
+<td align="left"><b><mark>anti_join</mark></b>(customer_tbl, rental_tbl, by = &lsquo;customer_id&rsquo;)</td>
+<td align="left"></td>
+</tr>
+</table>
+
+<ul class = 'build'>
+<li>What are the key differences between the IJ, LJ, RJ, and FJ and these two joins?
+
+<ul class = 'build'>
+<li>Semi joins returns each row from the driving table that satisfy the join condition.</li>
+<li>Anti joins returns each row from the driving table that do not satisy the join condition.</li>
+<li>No column data is returned from the non-driving table.</li>
+</ul></li>
+</ul>
+
+<hr>
 
 </article></slide><slide class=""><hgroup><h2>Mutable Versus Non-Mutable Joins</h2></hgroup><article  id="mutable-versus-non-mutable-joins">
 
@@ -5399,22 +5687,55 @@ slide:not(.current) .plotly.html-widget{
 </ul></li>
 </ul>
 
-</article></slide><slide class=""><hgroup><h2>Mutable Joins - Driving Table</h2></hgroup><article  id="mutable-joins---driving-table">
+<hr>
+
+</article></slide><slide class=""><hgroup><h2>Mutable Join Types - Driving Table</h2></hgroup><article  id="mutable-join-types---driving-table">
+
+<table class = 'rmdtable'>
+<col width="7.692308%" />
+<col width="38.461538%" />
+<col width="53.846154%" />
+<tr class="header">
+<th align="left">Seq</th>
+<th align="left">Venn</th>
+<th align="left">Description</th>
+</tr>
+<tr class="odd">
+<td align="left">1</td>
+<td align="left"><img width="50px" src='Left_Join.png' title=''/></td>
+<td align="left">The LEFT JOIN returns all rows from the left table, and matching rows from the right table. The un-matched left table rows have corresponding null columns from the right table.</td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="left"><img width="50px" src='Inner_Join.Png' title=''/></td>
+<td align="left">The INNER JOIN returns all rows that have matching values in both tables.</td>
+</tr>
+<tr class="odd">
+<td align="left">3</td>
+<td align="left"><img width="50px" src='Right_Join.png' title=''/></td>
+<td align="left">The RIGHT JOIN returns all rows from the right table, and matching rows from the left table. The un-matched right table rows have corresponding null columns from the left table.</td>
+</tr>
+<tr class="even">
+<td align="left">4</td>
+<td align="left"><img width="50px" src='Full_Join.Png' title=''/></td>
+<td align="left">return all rows that match in either left or right table. The un-matched rows have corresponding null columns from the other table.</td>
+</tr>
+</table>
+
+<hr>
+
+</article></slide><slide class=""><hgroup><h2>Mutable Joins - Driving Table 1/2</h2></hgroup><article  id="mutable-joins---driving-table-12">
 
 <ul class = 'build'>
 <li>Mutable joins have a driving table, DT, whose rows always satisfies the join condition.
 
 <ul class = 'build'>
+<li>if the join is 0 or 1, then join row count = number of rows in DT, use lowest level of detail</li>
+<li>if the join is 0 or more, then join row count &gt;= number of rows in DT</li>
 <li>inner join, either table can be the driving table.</li>
 <li>left join, the first table, the left table is the driving table.</li>
 <li>right join, the second table, the right table is the driving table.</li>
 <li>full join, both tables behave as the driving table.</li>
-</ul></li>
-<li>The other table in a mutable join is the non-driving table, NDT.
-
-<ul class = 'build'>
-<li>Zero or more rows from the NDT table will satisify the join condition.<br/></li>
-<li>Zero or more rows from the NDT table will not satisify the join condition.<br/></li>
 </ul></li>
 <li>Driving table delivers the goods
 
@@ -5422,6 +5743,21 @@ slide:not(.current) .plotly.html-widget{
 <li><a href='https://video.search.yahoo.com/search/video?fr=mcafee&amp;p=rocketman+tesla#id=4&amp;vid=acbe7eaee58e021df490ef615d6a7333&amp;action=view' title=''>DT Driving Tesla 2:00</a></li>
 </ul></li>
 </ul>
+
+<hr>
+
+</article></slide><slide class=""><hgroup><h2>Mutable Joins - Non-Driving Table</h2></hgroup><article  id="mutable-joins---non-driving-table">
+
+<ul class = 'build'>
+<li>The other table in a mutable join is the non-driving table, NDT.
+
+<ul class = 'build'>
+<li>Zero or more rows from the NDT table will satisify the join condition.<br/></li>
+<li>Zero or more rows from the NDT table will not satisify the join condition.</li>
+</ul></li>
+</ul>
+
+<hr>
 
 </article></slide><slide class=""><hgroup><h2>Mutable Joins</h2></hgroup><article  id="mutable-joins">
 
@@ -5449,6 +5785,8 @@ slide:not(.current) .plotly.html-widget{
 <li>\[IJ \subset (LJ or RJ) \subset (FOJ) \subset (XJ)\]</li>
 </ul>
 
+<hr>
+
 </article></slide><slide class=""><hgroup><h2>Non Mutable Joins</h2></hgroup><article  id="non-mutable-joins">
 
 <ul class = 'build'>
@@ -5458,295 +5796,18 @@ slide:not(.current) .plotly.html-widget{
 <li>Semi-Join returns the DT rows which satisfy the join condition.</li>
 <li>Anti-Join returns the DT rows which do not satisfy the join conditon.</li>
 </ul></li>
-<li>\[DT = (DT \cap NDT) \cup (DT \cap NDT^{&#39;}) \\
+<li><p>\[DT = (DT \cap NDT) \cup (DT \cap NDT^{&#39;}) \\
    DT =  SemiJoin \cup AntiJoin
-\]</li>
+\]</p></li>
+<li><p>Partitions data into two distinct sets.</p></li>
 </ul>
 
-</article></slide><slide class="segue dark nobackground level1"><hgroup class = 'auto-fadein'><h2>Cardinality</h2></hgroup><article  id="cardinality">
+<hr>
 
-</article></slide><slide class=""><hgroup><h2>ERD Cardinality Symbols</h2></hgroup><article  id="erd-cardinality-symbols">
+</article></slide><slide class=""><hgroup><h2>Join Types Summary</h2></hgroup><article  id="join-types-summary">
 
-<ul class = 'build'>
-<li><p><a href='https://cdn-lucidchart-com.s3.amazonaws.com/how-to-page/ERD_notation.PNG' title=''>ERD Cardinality Symbols</a></p></li>
-<li>What is the cardinality between customer and rental?</li>
-<li><p>Does this make sense?</p></li>
-</ul>
-
-</article></slide><slide class=""><hgroup><h2>Postgres questionable relationships</h2></hgroup><article  id="postgres-questionable-relationships">
-
-<ul class = 'build'>
-<li>Check all the zero or one relationships</li>
-<li><p>Check address - store relationship</p></li>
-<li><p><a href='http://www.postgresqltutorial.com/postgresql-sample-database/' title=''>ERD Postgres DVD Rental Handout</a></p></li>
-<li><p><a href='https://circle.visual-paradigm.com/movie-rental/' title=''>Movie DVD ERD</a></p></li>
-<li>ERD Functions Chapter &ldquo;SQL &amp; <code>dplyr</code> joins&rdquo;
-
-<ul class = 'build'>
-<li>sp_tbl_descr – Parameterized Table Description Function</li>
-<li>sp_tbl_pk_fk – Parameterized Table PK-FK Function</li>
-</ul></li>
-<li>Useful Tables
-
-<ul class = 'build'>
-<li>information_schema.tables</li>
-<li>information_schema.columns</li>
-</ul></li>
-</ul>
-
-</article></slide><slide class="segue dark nobackground level1"><hgroup class = 'auto-fadein'><h2>Joining is not rocket science!</h2></hgroup><article  id="joining-is-not-rocket-science">
-
-</article></slide><slide class=""><hgroup><h2>Docking</h2></hgroup><article  id="docking">
-
-<p><a href='https://p.motionelements.com/stock-video/science-technology/me8359778-docking-spacecraft-space-station-hd-a0478.jpg' title=''>Docking</a>, <a href='https://www.motionelements.com/stock-video-8958852-spacecraft-docking-to-space-station' title=''>Docking Video</a></p>
-
-<p><a href='https://www.quora.com/What-types-of-foods-do-the-astronauts-eat-on-the-International-Space-Station-and-how-is-the-food-heated-and-prepared-for-consumption-on-it' title=''>ISS Food</a>, <a href='https://www.yahoo.com/news/spacex-dragon-delivers-apos-world-195100373.html' title=''>Coffee Ice Cream</a></p>
-
-<p><a href='https://en.wikipedia.org/wiki/Extravehicular_activity#/media/File:Sts114_033.jpg' title=''>Outer Join</a>, <a href='https://cdn.zmescience.com/wp-content/uploads/2011/11/soyuz-iss-moon-docking-wallpaper.jpg' title=''>full outer joins</a></p>
-
-<p><a href='https://p.motionelements.com/stock-video/science-technology/me8729918-spacecraft-docking-to-space-station-hd-a0349.jpg' title=''>Docking Right</a>, <a href='https://www.motionelements.com/stock-video-8729918-spacecraft-docking-to-space-station' title=''>Docking Right Video</a></p>
-
-<p><a href='http://www.wallpapers13.com/space_planet_shuttle_station_docking_2880x1800_desktop-hd-wallpaper/' title=''>multiple Joins</a></p>
-
-<p><a href='https://video.search.yahoo.com/search/video?fr=mcafee&amp;p=rocketman+tesla#id=58&amp;vid=86b52c305f730e0b83580696c4a4a581&amp;action=view' title=''>tesla1</a>, <a href='https://video.search.yahoo.com/search/video?fr=mcafee&amp;p=rocketman+tesla#id=56&amp;vid=86b52c305f730e0b83580696c4a4a581&amp;action=view' title=''>tesla2</a>, <a href='https://www.businessinsider.com/spacex-nasa-crew-dragon-woman-dummy-mannequin-launch-2019-2' title=''>ripley</a></p>
-
-<p><a href='https://video.search.yahoo.com/search/video?fr=mcafee&amp;p=space+x+rocket+landing#id=1&amp;vid=b53c7f00e1a601f3d2ecf11e36b32c98&amp;action=view' title=''>Land it 2</a> <a href='https://video.search.yahoo.com/search/video?fr=mcafee&amp;p=space+x+rocket+landing#id=2&amp;vid=23002d0963a29871ca10fe87932277db&amp;action=view' title=''>Land it 5</a></p>
-
-<p><a href='https://www.space.com/spacex-crew-dragon-demo-1-test-flight-photos.html' title=''>space-x 62 slides</a></p>
-
-<ul class = 'build'>
-<li>ISS needs to be resupplied with food. ISS food comes in three forms: natural form, rehydratable, and thermostabilized.</li>
-</ul>
-
-</article></slide><slide class=""><hgroup><h2>Docker (NF + R + T)</h2></hgroup><article  id="docker-nf-r-t">
-
-<ol class = 'build'>
-<li>Natural Form (NF) refers to food that does not need to be processed
-
-<ul class = 'build'>
-<li>Examples: Crackers, tortillas, nuts, granola bars, condiments, candy, and cookies.</li>
-</ul></li>
-<li>Rehydrated (R) foods have had the water removed from them. Once the crew are ready to eat, hot water is injected into the pouch to restore the food to its normal form.
-
-<ul class = 'build'>
-<li>Examples: Cottage cheese, shrimp cocktail, scrambled eggs, noodles, mashed potatoes, quiche, borsch, milk.</li>
-</ul></li>
-<li>Thermostabilized (T) foods are heated to a level sufficient to kill harmful microorganisms and enzymes and then packaged in cans, cups, or pouches.
-
-<ul class = 'build'>
-<li>Examples: Chopped pork with eggs, beef with vegetables, split pea soup, pike perch in Baltika sauce.</li>
-</ul></li>
-</ol>
-
-</article></slide><slide class=""><hgroup><h2>Inner Join Exercise 1.</h2></hgroup><article  id="inner-join-exercise-1.">
-
-<p>Assume that the ISS only has the following food items in its pantry: NF: Crackers, tortillas, R: Milk and sausage patties, T: Chopped pork with eggs</p>
-
-<p>Assume that Space X has all the food discussed above in the examples.</p>
-
-<p>What is the inner join?</p>
-
-<ul class = 'build'>
-<li>The inner join is the Space-X cargo bay NF: Crackers, tortillas, R: Milk and sausage patties, T: Chopped pork with eggs and corresponding items in the ISS food bins.
-
-<ul class = 'build'>
-<li>Space_x %&gt;% inner_join(ISS, by=c(&lsquo;food_item&rsquo; = &lsquo;food_item&rsquo;), suffix(&lsquo;.s&rsquo;,’.i)</li>
-<li>ISS %&gt;% inner_join(Space_x, by=c(&lsquo;food_item&rsquo; = &lsquo;food_item&rsquo;), suffix(&lsquo;.s&rsquo;,’.i)</li>
-</ul></li>
-</ul>
-
-</article></slide><slide class=""><hgroup><h2>Inner Join Exercise 2.</h2></hgroup><article  id="inner-join-exercise-2.">
-
-<p>Assume that Space X has all the example food items in its cargo bay and the ISS has everything in the example food list, but the food bins are nearly empty.</p>
-
-<p>What is the inner join?</p>
-
-<ul class = 'build'>
-<li>The inner join is what is common in the Space-X cargo bay and the ISS pantry: Everything in the Space-X cargo bay and the ISS pantry.</li>
-</ul>
-
-</article></slide><slide class=""><hgroup><h2>Inner Join Exercise 3.</h2></hgroup><article  id="inner-join-exercise-3.">
-
-<p>Assume that the cosmonauts have not been in the ISS for a while and there is only one serving of <code>borsh</code> and <code>pike perch in Baltika sauce</code> in the ISS food bins. Space-x is sent up with all the example food items shown previously except <code>borsh</code> and <code>pike perch in Baltika sauce</code>.</p>
-
-<p>What is the inner join?</p>
-
-<ul class = 'build'>
-<li>The inner join is what is common in the Space-X cargo bay and the ISS pantry: All food items in the example lists in the Space-X cargo bay and ISS pantry bins except for borsh and pike perch.</li>
-</ul>
-
-</article></slide><slide class=""><hgroup><h2>Inner Join Exercise 4.</h2></hgroup><article  id="inner-join-exercise-4.">
-
-<p>Assume that the NF food items include fresh fruit and vegetables. Fresh fruits and vegetables are sent up in limited quantities because there is no refrigeration on board the ISS.</p>
-
-<p>Assume that ISS has all the foods listed in the three categories and Space-X is resupplying all these food items plus fresh fruits and vegetables.</p>
-
-<p>What is the inner join?</p>
-
-<p>All the food items listed in the three categories are in the Space-X cargo bay and ISS pantry bins.</p>
-
-<ul class = 'build'>
-<li>The fresh fruits and vegetables in the Space-X cargo bay are not part of the inner join.</li>
-</ul>
-
-</article></slide><slide class=""><hgroup><h2>Left Join Exercise 5.</h2></hgroup><article  id="left-join-exercise-5.">
-
-<p>Assume that the NF food items include fresh fruit and vegetables. Fresh fruits and vegetables are sent up in limited quantities because there is no refrigeration on board the ISS.</p>
-
-<p>Assume that ISS has all the foods listed in the three categories and Space-X is resupplying all these food items plus fresh fruits and vegetables.</p>
-
-<p>What is the left join?</p>
-
-<p>All the food items listed in the three categories are in the Space-X cargo bay and ISS pantry bins.</p>
-
-<ul class = 'build'>
-<li>The fresh fruits and vegetables in the Space-X cargo bay are part of the inner join.</li>
-</ul>
-
-</article></slide><slide class=""><hgroup><h2>Right Join Exercise 6.</h2></hgroup><article  id="right-join-exercise-6.">
-
-<p>Assume that the NF food items include fresh fruit and vegetables. Fresh fruits and vegetables are sent up in limited quantities because there is no refrigeration on board the ISS. Space-X is resupplying all the example food items plus fresh fruits and vegetables, without the <code>borsh</code> and <code>pike perch in Baltika sauce</code>. ISS only has all the example food items originally listed in stock.</p>
-
-<p>What is the Right join?</p>
-
-<ul class = 'build'>
-<li>Everything in Space-x cargo bay excluding the fresh fruits and vegetables.</li>
-<li>Everything in the ISS food pantry including the <code>borsh</code> and <code>pike perch in Baltika sauce</code>.</li>
-</ul>
-
-</article></slide><slide class=""><hgroup><h2>Full Join Exercise 7.</h2></hgroup><article  id="full-join-exercise-7.">
-
-<p>Assume that the NF food items include fresh fruit and vegetables. Fresh fruits and vegetables are sent up in limited quantities because there is no refrigeration on board the ISS. Space-X is resupplying all the example food items plus fresh fruits and vegetables, without the <code>borsh</code> and <code>pike perch in Baltika sauce</code>.</p>
-
-<p>What is the Full join?</p>
-
-<ul class = 'build'>
-<li>Everything in Space-x cargo bay including the fresh fruits and vegetables.</li>
-<li>Everything in the ISS food pantry including the <code>borsh</code> and <code>pike perch in Baltika sauce</code>.</li>
-</ul>
-
-</article></slide><slide class=""><hgroup><h2>Semi Join Exercise 8.</h2></hgroup><article  id="semi-join-exercise-8.">
-
-<p>Assume that the NF food items include fresh fruit and vegetables. Fresh fruits and vegetables are sent up in limited quantities because there is no refrigeration on board the ISS. Space-X is resupplying all the example food items, fresh fruits and vegetables, without the <code>borsh</code> and <code>pike perch in Baltika sauce</code>.</p>
-
-<p>What is the Semi join assuming Space-X is the driver?</p>
-
-<ul class = 'build'>
-<li>All the food items in the Space-x cargo excluding the fresh fruits and vegetables.</li>
-</ul>
-
-<p>What is the Semi join assiming ISS is the driver?</p>
-
-<ul class = 'build'>
-<li>All the food items in the ISS food pantry excluding the the <code>borsh</code> and <code>pike perch in Baltika sauce</code>.</li>
-</ul>
-
-</article></slide><slide class=""><hgroup><h2>Anti Join Exercise 9.</h2></hgroup><article  id="anti-join-exercise-9.">
-
-<p>Assume that the NF food items include fresh fruit and vegetables. Fresh fruits and vegetables are sent up in limited quantities because there is no refrigeration on board the ISS. Space-X is resupplying all the example food items, fresh fruits and vegetables, without the <code>borsh</code> and <code>pike perch in Baltika sauce</code>.</p>
-
-<p>What is the anti join assuming Space-X is the driver?</p>
-
-<ul class = 'build'>
-<li>Fresh fruits and vegetables</li>
-</ul>
-
-<p>What is the anti join assuming ISS is the driver?</p>
-
-<ul class = 'build'>
-<li>The <code>borsh</code> and <code>pike perch in Baltika sauce</code>.</li>
-</ul>
-
-</article></slide><slide class=""><hgroup><h2>Join Syntax - 1 of 3</h2></hgroup><article  id="join-syntax---1-of-3">
-
-<table class = 'rmdtable'>
-<col width="3.597122%" />
-<col width="57.553957%" />
-<col width="38.848921%" />
-<tr class="header">
-<th align="left">Join</th>
-<th align="left">dplyr</th>
-<th align="left">sql</th>
-</tr>
-<tr class="odd">
-<td align="left">inner</td>
-<td align="left">inner_join(customer_tbl, rental_tbl, by = &lsquo;customer_id&rsquo;, suffix = c(&ldquo;.c&rdquo;, &ldquo;.r&rdquo;))</td>
-<td align="left">from customer c join rental r on c.customer_id = r.customer_id</td>
-</tr>
-<tr class="even">
-<td align="left"></td>
-<td align="left">customer_tbl %&gt;% inner_join(rental_tbl, by = &lsquo;customer_id&rsquo;, suffix = c(&ldquo;.c&rdquo;, &ldquo;.r&rdquo;))</td>
-<td align="left"></td>
-</tr>
-<tr class="odd">
-<td align="left">left</td>
-<td align="left">left_join(customer_tbl, rental_tbl, by = &lsquo;customer_id&rsquo;, suffix = c(&ldquo;.c&rdquo;, &ldquo;.r&rdquo;))</td>
-<td align="left">from customer c left outer join rental r on c.customer_id = r.customer_id</td>
-</tr>
-<tr class="even">
-<td align="left"></td>
-<td align="left">customer_tbl %&gt;% left_join(rental_tbl, by = &lsquo;customer_id&rsquo;, suffix = c(&ldquo;.c&rdquo;, &ldquo;.r&rdquo;))</td>
-<td align="left"></td>
-</tr>
-</table>
-
-</article></slide><slide class=""><hgroup><h2>Join Syntax - 2 of 3</h2></hgroup><article  id="join-syntax---2-of-3">
-
-<table class = 'rmdtable'>
-<col width="3.597122%" />
-<col width="57.553957%" />
-<col width="38.848921%" />
-<tr class="header">
-<th align="left">Join</th>
-<th align="left">dplyr</th>
-<th align="left">sql</th>
-</tr>
-<tr class="odd">
-<td align="left">right</td>
-<td align="left">right_join(customer_tbl, rental_tbl, by = &lsquo;customer_id&rsquo;, suffix = c(&ldquo;.c&rdquo;, &ldquo;.r&rdquo;))</td>
-<td align="left">from customer c right outer join rental r on c.customer_id = r.customer_id</td>
-</tr>
-<tr class="even">
-<td align="left"></td>
-<td align="left">customer_tbl %&gt;% right_join(rental_tbl, by = &lsquo;customer_id&rsquo;, suffix = c(&ldquo;.c&rdquo;, &ldquo;.r&rdquo;))</td>
-<td align="left"></td>
-</tr>
-<tr class="odd">
-<td align="left">full</td>
-<td align="left">full_join(customer_tbl, rental_tbl, by = &lsquo;customer_id&rsquo;, suffix = c(&ldquo;.c&rdquo;, &ldquo;.r&rdquo;))</td>
-<td align="left">from customer c full outer join rental r on c.customer_id = r.customer_id</td>
-</tr>
-<tr class="even">
-<td align="left"></td>
-<td align="left">customer_tbl %&gt;% full_join(rental_tbl, by = &lsquo;customer_id&rsquo;, suffix = c(&ldquo;.c&rdquo;, &ldquo;.r&rdquo;))</td>
-<td align="left"></td>
-</tr>
-</table>
-
-</article></slide><slide class=""><hgroup><h2>Join Syntax - 3 of 3</h2></hgroup><article  id="join-syntax---3-of-3">
-
-<table class = 'rmdtable'>
-<tr class="header">
-<th align="left">Join</th>
-<th align="left">dplyr</th>
-<th align="left">sql</th>
-</tr>
-<tr class="odd">
-<td align="left">semi</td>
-<td align="left">semi_join(customer_tbl, rental_tbl, by = &lsquo;customer_id&rsquo;)</td>
-<td align="left"></td>
-</tr>
-<tr class="even">
-<td align="left"></td>
-<td align="left">customer_tbl %&gt;% semi_join(rental_tbl, by = &lsquo;customer_id&rsquo;)</td>
-<td align="left"></td>
-</tr>
-<tr class="odd">
-<td align="left">anti</td>
-<td align="left">anti_join(customer_tbl, rental_tbl, by = &lsquo;customer_id&rsquo;)</td>
-<td align="left"></td>
-</tr>
-</table>
+<div id="htmlwidget-1d9f9b9fdca3023baa83" style="width:720px;height:432px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1d9f9b9fdca3023baa83">{"x":{"diagram":"\ndigraph JOINS {\n\n  # a \"graph\" statement\n  graph [overlap = true, fontsize = 10]\n  # graph [label=\"Mutable Non Mutable\", labelloc=t, fontsize=30];\n  node [shape = box,\n        fixedsize = false,\n        hegith = 1.5\n        width = 1.50]\n  0[label=\"0.  Mutable Joins\"]\n  1[label=\"1.  Inner Join\nL.col1 {<,=,>} R.col2\"]\n  2[label=\"2.  Outer Join\nL.col1=R.col2\",color=\"red\"]\n  3[label=\"3.  Self Join\nL.col1=tbl1.col2\"]\n  4[label=\"4.  Cross (Cartesian) Join\nL.col1=R.col2\",color=\"blue\"]\n  5[label=\"5.  Equi Join\nL.col1=R.col2\",color=\"red\"] \n  6[label=\"6.  Natural Join\nL.col1=R.col1\"]\n  7[label=\"7.  Left Join\nL.col1=R.col1\",color=\"red\"]\n  8[label=\"8.  Right Join\nL.col1=R.col1\",color=\"red\"]\n  9[label=\"9.  Full Join\nL.col1=tbl2.col1\",color=\"red\"]\n 10[label=\"10.  NonMutable Joins\"]\n 11[label=\"11.  Semi Join\nL.col1=R.col2\ncondition true\",color=\"red\"]\n 12[label=\"12.  Anti Join\nL.col1=R.col2\ncondition false\",color=\"red\"]\n\n  # several \"edge\" statements\n  0 -> {1,2,3,4} [arrowhead=none]\n  1 -> 5 [arrowhead=none]\n  5 -> 6 [arrowhead=none]\n  2 -> {7,8,9} [arrowhead=none]\n  10 -> {11,12} [arrowhead=none]\n\n  #3 -> {7,8,9}\n}\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 
 </article></slide><slide class=""><hgroup><h2>Join Parameters 1 of 5</h2></hgroup><article  id="join-parameters-1-of-5">
 
@@ -5765,7 +5826,7 @@ slide:not(.current) .plotly.html-widget{
 </tr>
 <tr class="even">
 <td align="left">by</td>
-<td align="left">a character vector of variables to join by. If NULL, the default, *_join() will do a natural join, using all variables with common names across the two tables. A message lists the variables so that you can check they’re right (to suppress the message, simply explicitly list the variables that you want to join).<br><br>To join by different variables on x and y use a named vector. For example, by = c(&ldquo;a&rdquo; = &ldquo;b&rdquo;) will match x.a to y.b.</td>
+<td align="left">a character vector of variables to join by. If NULL, the default, *_join() will do a <mark>natural join</mark>, using all variables with common names across the two tables. A message lists the variables so that you can check they’re right (to suppress the message, simply explicitly list the variables that you want to join).<br><br>To join by different variables on x and y use a named vector. For example, by = c(&ldquo;a&rdquo; = &ldquo;b&rdquo;) will match x.a to y.b.</td>
 </tr>
 </table>
 
@@ -5795,8 +5856,11 @@ slide:not(.current) .plotly.html-widget{
 </table>
 
 <ul class = 'build'>
-<li>na_matches=&ldquo;na&rdquo;, default, versus na_matches=&ldquo;never&rdquo; It is unclear, but this refers to joining on null columns. The default dplyr setting is opposite of SQL behavior as shown below. Null/NA values never ever match in SQL.</li>
+<li>na_matches=&ldquo;na&rdquo;, default, versus na_matches=&ldquo;never&rdquo; It is unclear, but this refers to joining on null columns.<br/></li>
+<li>The default dplyr setting is opposite of SQL behavior as shown below. Null/NA values <mark>never ever match</mark> in SQL.</li>
 </ul>
+
+<hr>
 
 </article></slide><slide class=""><hgroup><h2>Join Parameters 3 of 5</h2></hgroup><article  id="join-parameters-3-of-5">
 
@@ -5810,7 +5874,9 @@ slide:not(.current) .plotly.html-widget{
 
 <pre class = 'prettyprint lang-r'>rental_table &lt;- DBI::dbReadTable(con,&#39;rental&#39;)
 rental_table$key &lt;- 1
-x &lt;- rental_table %&gt;% filter(rental_id %in% c(11496,11541)) %&gt;% select(key,rental_id,return_date)
+x &lt;- rental_table %&gt;% 
+  filter(rental_id %in% c(11496,11541)) %&gt;%
+  select(key,rental_id,return_date) 
 rt11496 &lt;- x %&gt;% filter(rental_id == 11496)
 rt11541 &lt;- x %&gt;% filter(rental_id == 11541)
 rt11496</pre>
@@ -5826,16 +5892,29 @@ rt11496</pre>
 </article></slide><slide class=""><hgroup><h2>Join Parameters 5 of 5 Dplyr null date join</h2></hgroup><article  id="join-parameters-5-of-5-dplyr-null-date-join">
 
 <pre class = 'prettyprint lang-r'>na &lt;- rt11496 %&gt;% inner_join(rt11541,by=&#39;return_date&#39;,na_matches=&#39;na&#39;)
-never &lt;- rt11496 %&gt;% inner_join(rt11541,by=&#39;return_date&#39;,na_matches=&#39;never&#39;) 
-na</pre>
+never &lt;- rt11496 %&gt;% inner_join(rt11541,by=&#39;return_date&#39;,na_matches=&#39;never&#39;) </pre>
+
+<pre class = 'prettyprint lang-r'>na</pre>
 
 <pre >##   key.x rental_id.x return_date key.y rental_id.y
 ## 1     1       11496        &lt;NA&gt;     1       11541</pre>
+
+<ul class = 'build'>
+<li>default behavior match na/NAN/NULL values</li>
+</ul>
+
+<hr>
 
 <pre class = 'prettyprint lang-r'>never</pre>
 
 <pre >## [1] key.x       rental_id.x return_date key.y       rental_id.y
 ## &lt;0 rows&gt; (or 0-length row.names)</pre>
+
+<ul class = 'build'>
+<li>NULLs never join.</li>
+</ul>
+
+<hr>
 
 </article></slide><slide class=""><hgroup><h2>Dplyr defaults to a Natural Join</h2></hgroup><article  id="dplyr-defaults-to-a-natural-join">
 
@@ -5851,12 +5930,21 @@ inner_join(customer_tbl, rental_tbl) %&gt;% summarize(n=n())</pre>
 ##   &lt;S3: integer64&gt;
 ## 1 1</pre>
 
-</article></slide><slide class=""><hgroup><h2>What is the join between customer and rental?</h2></hgroup><article  id="what-is-the-join-between-customer-and-rental">
+<ul class = 'build'>
+<li>An &lsquo;invalid&rsquo; natural join returns fewer rows than the correct join.</li>
+<li>This NJ returned one row.</li>
+</ul>
+
+<hr>
+
+</article></slide><slide class=""><hgroup><h2>What is the correct customer - rental join?</h2></hgroup><article  id="what-is-the-correct-customer---rental-join">
 
 <ul class = 'build'>
 <li>Use ERD diagram</li>
 <li>sp_tbl_pk_fk</li>
 </ul>
+
+<hr>
 
 </article></slide><slide class=""><hgroup><h2>Correct customer rental join</h2></hgroup><article  id="correct-customer-rental-join">
 
@@ -5871,6 +5959,37 @@ inner_join(customer_tbl, rental_tbl
 ##   n              
 ##   &lt;S3: integer64&gt;
 ## 1 16045</pre>
+
+<ul class = 'build'>
+<li>The correct join returns 16045 rows.</li>
+</ul>
+
+<hr>
+
+</article></slide><slide class=""><hgroup><h2>8 Sample Customers for join examples</h2></hgroup><article  class="smaller" id="sample-customers-for-join-examples">
+
+<pre class = 'prettyprint lang-r'>customer_tbl %&gt;%
+  filter(customer_id &gt;= 597) %&gt;%
+  select(customer_id,first_name,last_name)</pre>
+
+<pre >## # Source:   lazy query [?? x 3]
+## # Database: postgres [postgres@localhost:5432/dvdrental]
+##   customer_id first_name last_name
+##         &lt;int&gt; &lt;chr&gt;      &lt;chr&gt;    
+## 1         597 Freddie    Duggan   
+## 2         598 Wade       Delvalle 
+## 3         599 Austin     Cintron  
+## 4         600 Sophie     Yang     
+## 5         601 Sophie     Yang     
+## 6         602 John       Smith    
+## 7         603 Ian        Frantz   
+## 8         604 Ed         Borasky</pre>
+
+<ul class = 'build'>
+<li><mark>filter(customer_id &gt;= 597) %&gt;%</mark></li>
+</ul>
+
+<hr>
 
 </article></slide><slide class=""><hgroup><h2>customer store inner join</h2></hgroup><article  id="customer-store-inner-join">
 
@@ -5888,6 +6007,8 @@ customer_ij &lt;- customer_table %&gt;%
         ,s_mgr_id=manager_staff_id) %&gt;%
   select(jt,c_id,first_name,last_name,c_store_id
         ,s_store_id,s_mgr_id,s_addr_id)</pre>
+
+<hr>
 
 </article></slide><slide class=""><hgroup><h2>customer store inner join results</h2></hgroup><article  id="customer-store-inner-join-results">
 
@@ -5944,7 +6065,7 @@ customer_ij &lt;- customer_table %&gt;%
 </tr>
 </table>
 
-</article></slide><slide class=""><hgroup><h2>customer store left join</h2></hgroup><article  id="customer-store-left-join">
+</article></slide><slide class=""><hgroup><h2>customer store left join</h2></hgroup><article  class="smaller" id="customer-store-left-join">
 
 <pre class = 'prettyprint lang-r'>customer_table &lt;- DBI::dbReadTable(con, &quot;customer&quot;) %&gt;%
   mutate(c_store_id = store_id)
@@ -5960,6 +6081,12 @@ customer_lj &lt;- customer_table %&gt;%
         ,s_mgr_id=manager_staff_id) %&gt;%
   select(jt,c_id,first_name,last_name,c_store_id
         ,s_store_id,s_mgr_id,s_addr_id)</pre>
+
+<p><mark>mutate(c_store_id = store_id)</mark></p>
+
+<p><mark>mutate(s_store_id = store_id)</mark></p>
+
+<hr>
 
 </article></slide><slide class=""><hgroup><h2>customer store left join results</h2></hgroup><article  id="customer-store-left-join-results">
 
@@ -6086,10 +6213,16 @@ customer_lj &lt;- customer_table %&gt;%
 <td align="right">10</td>
 <td align="right">10</td>
 <td align="right">10</td>
-<td align="left">2019-03-22 16:55:28</td>
+<td align="left">2019-04-03 18:05:15</td>
 <td align="right">10</td>
 </tr>
 </table>
+
+<ul class = 'build'>
+<li>How many stores are in the dvd rental business.</li>
+</ul>
+
+<hr>
 
 </article></slide><slide class=""><hgroup><h2>Customer Store Right Join</h2></hgroup><article  id="customer-store-right-join">
 
@@ -6159,10 +6292,12 @@ customer_lj &lt;- customer_table %&gt;%
 </table>
 
 <ul class = 'build'>
-<li><p>How many stores are shown?</p></li>
-<li><p>What happened?</p></li>
-<li><p>How many customers have a store_id = 10;</p></li>
+<li>How many stores are shown?</li>
+<li>What happened?</li>
+<li>How many customers have a store_id = 10;</li>
 </ul>
+
+<hr>
 
 </article></slide><slide class=""><hgroup><h2>Customer Store Right Join Fixed</h2></hgroup><article  id="customer-store-right-join-fixed">
 
@@ -6175,6 +6310,14 @@ customer_lj &lt;- customer_table %&gt;%
         ,s_mgr_id=manager_staff_id) %&gt;%
   select(jt,c_id,first_name,last_name,c_store_id
         ,s_store_id,s_mgr_id,s_addr_id)</pre>
+
+<ul class = 'build'>
+<li>filter(customer_id &gt;= 597 <mark>| is.na(customer_id)</mark>) %&gt;%</li>
+</ul>
+
+<hr>
+
+</article></slide><slide class=""><hgroup><h2>Customer Store Right Join Fixed Results</h2></hgroup><article  id="customer-store-right-join-fixed-results">
 
 <table class = 'rmdtable'>
 <tr class="header">
@@ -6239,7 +6382,13 @@ customer_lj &lt;- customer_table %&gt;%
 </tr>
 </table>
 
-</article></slide><slide class=""><hgroup><h2>customer store full join</h2></hgroup><article  id="customer-store-full-join">
+<ul class = 'build'>
+<li>The missing store row is the last row</li>
+</ul>
+
+<hr>
+
+</article></slide><slide class=""><hgroup><h2>customer store full join</h2></hgroup><article  class="smaller" id="customer-store-full-join">
 
 <pre class = 'prettyprint lang-r'>customer_table &lt;- DBI::dbReadTable(con, &quot;customer&quot;) %&gt;%
   mutate(c_store_id = store_id)
@@ -6256,7 +6405,11 @@ customer_fj &lt;- customer_table %&gt;%
   select(jt,c_id,first_name,last_name,c_store_id
         ,s_store_id,s_mgr_id,s_addr_id)</pre>
 
-</article></slide><slide class=""><hgroup><h2>customer store inner join results</h2></hgroup><article  id="customer-store-inner-join-results-1">
+<ul class = 'build'>
+<li>Most number of rows returned</li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>customer store full join results</h2></hgroup><article  class="smaller" id="customer-store-full-join-results">
 
 <table class = 'rmdtable'>
 <tr class="header">
@@ -6361,7 +6514,7 @@ customer_fj &lt;- customer_table %&gt;%
 </tr>
 </table>
 
-</article></slide><slide class=""><hgroup><h2>Customer Store semi join</h2></hgroup><article  id="customer-store-semi-join">
+</article></slide><slide class=""><hgroup><h2>Customer Store semi join</h2></hgroup><article  class="smaller" id="customer-store-semi-join">
 
 <pre class = 'prettyprint lang-r'>customer_sj &lt;- customer_table %&gt;%
   semi_join(store_table, by = c(&quot;store_id&quot; = &quot;store_id&quot;)
@@ -6370,7 +6523,6 @@ customer_fj &lt;- customer_table %&gt;%
   mutate(jt = &#39;sj&#39;) %&gt;%
   rename(c_id = customer_id) %&gt;%
   select(jt,c_id,first_name,last_name,c_store_id)
-
 kable (customer_sj)</pre>
 
 <table class = 'rmdtable'>
@@ -6411,7 +6563,7 @@ kable (customer_sj)</pre>
 </tr>
 </table>
 
-</article></slide><slide class=""><hgroup><h2>Customer Store Anti Join</h2></hgroup><article  id="customer-store-anti-join">
+</article></slide><slide class=""><hgroup><h2>Customer Store Anti Join</h2></hgroup><article  class="smaller" id="customer-store-anti-join">
 
 <pre class = 'prettyprint lang-r'>customer_aj &lt;- customer_table %&gt;%
   anti_join(store_table, by = c(&quot;store_id&quot; = &quot;store_id&quot;)
@@ -6420,88 +6572,7 @@ kable (customer_sj)</pre>
   mutate(jt = &#39;aj&#39;) %&gt;%
   rename(c_id = customer_id) %&gt;%
   select(jt,c_id,first_name,last_name,c_store_id)
-
 kable (customer_aj)</pre>
-
-<table class = 'rmdtable'>
-<tr class="header">
-<th align="left">jt</th>
-<th align="right">c_id</th>
-<th align="left">first_name</th>
-<th align="left">last_name</th>
-<th align="right">c_store_id</th>
-</tr>
-<tr class="odd">
-<td align="left">aj</td>
-<td align="right">600</td>
-<td align="left">Sophie</td>
-<td align="left">Yang</td>
-<td align="right">3</td>
-</tr>
-<tr class="even">
-<td align="left">aj</td>
-<td align="right">602</td>
-<td align="left">John</td>
-<td align="left">Smith</td>
-<td align="right">4</td>
-</tr>
-<tr class="odd">
-<td align="left">aj</td>
-<td align="right">603</td>
-<td align="left">Ian</td>
-<td align="left">Frantz</td>
-<td align="right">5</td>
-</tr>
-<tr class="even">
-<td align="left">aj</td>
-<td align="right">604</td>
-<td align="left">Ed</td>
-<td align="left">Borasky</td>
-<td align="right">6</td>
-</tr>
-</table>
-
-<pre class = 'prettyprint lang-r'>kable (customer_sj)</pre>
-
-<table class = 'rmdtable'>
-<tr class="header">
-<th align="left">jt</th>
-<th align="right">c_id</th>
-<th align="left">first_name</th>
-<th align="left">last_name</th>
-<th align="right">c_store_id</th>
-</tr>
-<tr class="odd">
-<td align="left">sj</td>
-<td align="right">597</td>
-<td align="left">Freddie</td>
-<td align="left">Duggan</td>
-<td align="right">1</td>
-</tr>
-<tr class="even">
-<td align="left">sj</td>
-<td align="right">598</td>
-<td align="left">Wade</td>
-<td align="left">Delvalle</td>
-<td align="right">1</td>
-</tr>
-<tr class="odd">
-<td align="left">sj</td>
-<td align="right">599</td>
-<td align="left">Austin</td>
-<td align="left">Cintron</td>
-<td align="right">2</td>
-</tr>
-<tr class="even">
-<td align="left">sj</td>
-<td align="right">601</td>
-<td align="left">Sophie</td>
-<td align="left">Yang</td>
-<td align="right">2</td>
-</tr>
-</table>
-
-<pre class = 'prettyprint lang-r'>kable (customer_aj)</pre>
 
 <table class = 'rmdtable'>
 <tr class="header">
@@ -6599,51 +6670,63 @@ kable(store_aj)</pre>
 <td align="right">10</td>
 <td align="right">10</td>
 <td align="right">10</td>
-<td align="left">2019-03-22 16:55:28</td>
+<td align="left">2019-04-03 18:05:15</td>
 <td align="right">10</td>
 <td align="left">sj</td>
 </tr>
 </table>
 
-</article></slide><slide class=""><hgroup><h2></h2></hgroup><article  id="section">
+</article></slide><slide class=""><hgroup><h2>Exercises</h2></hgroup><article  id="exercises">
 
-<ol class = 'build'>
-<li><p>How many rows are in each table?</p></li>
-<li>Where is the DVD Rental Business located?</li>
-<li>List each store and the staff contact information?</li>
-<li>How many active, inactive, and total customers does the DVD rental business have?</li>
-<li>How many and what percent of customers are from each country?</li>
-<li>What countries constitute the top 25% of the customer base?</li>
-<li>How many customers are in Australia and Canada?</li>
-<li>How many languages?</li>
-<li>What is the distribution of DVD’s by Language</li>
-<li>What are the number of rentals and rented amount by store, by month?</li>
-<li>Rank films based on the number of times rented and associated revenue</li>
-<li>What is the rental distribution/DVD for the top two rented films?</li>
-<li>List staffing information for store 1 associated with the <code>Bucket Brother</code> rentals?</li>
-<li>Which film(s) have never been rented</li>
-<li>How many films are in each film rating?</li>
-<li>What are the different film categories?</li>
-<li>How many DVD’s are in each film categeory?</li>
-<li>Which films are listed in multiple categories?</li>
-<li>Which DVD’s are in one store’s inventory but not the other</li>
-<li>Which films are not tracked in inventory?</li>
-<li>List film categories in descending accounts receivable.</li>
-<li>List film ratings in descending accounts receivable order.</li>
-<li>How many rentals were returned on time, returned late, never returned?</li>
-<li>Are there duplicate customers?</li>
-<li>Which customers have never rented a movie?</li>
-<li>Who are the top 5 customers with the most rentals and associated payments?</li>
-<li>Combine the top 5 rental customers, (40 or more rentals), and zero rental customers</li>
-<li>Who are the top-n1 and bottom-n2 customers?</li>
-<li>How much has each store collected?</li>
-<li>What is the business’ distribution of payments?</li>
-<li>Which customers have the highest open amounts?</li>
-<li>What is the business’ cash flow?</li>
-<li>Customer information</li>
-<li>dbGetQuery Versus dbSendQuery+dbFetch+dbClearResult</li>
-<li><p>Dplyr write results to the database example</p></li>
-</ol></article></slide>
+<p>Chapter &ldquo;SQL Joins exercises&rdquo; has the questions and SQL answers.</p>
+
+<p>Chapter &ldquo;SQL Joins Exercises Answered&rdquo; has dplyr answers.</p>
+
+</article></slide><slide class=""><hgroup><h2>Exercises 1/3</h2></hgroup><article  id="exercises-13">
+
+<pre >1.  How many rows are in each table?
+
+1.  Where is the DVD Rental Business located?
+2.  List each store and the staff contact information?
+3.  How many active, inactive, and total customers does the DVD rental business have?
+4.  How many and what percent of customers are from each country?
+5.  What countries constitute the top 25% of the customer base?
+6.  How many customers are in Australia and Canada?
+7.  How many languages?
+8.  What is the distribution of DVD&#39;s by Language
+9.  What are the number of rentals and rented amount by store, by month?
+10.  Rank films based on the number of times rented and associated revenue
+11.  What is the rental distribution/DVD for the top two rented films?
+12.  List staffing information for store 1 associated with the `Bucket Brother` rentals?
+13.  Which film(s) have never been rented
+14.  How many films are in each film rating?
+15.  What are the different film categories?</pre>
+
+</article></slide><slide class=""><hgroup><h2>Exercises 2/3</h2></hgroup><article  id="exercises-23">
+
+<pre >16.  How many DVD&#39;s are in each film categeory?
+17.  Which films are listed in multiple categories?
+18.  Which DVD&#39;s are in one store&#39;s inventory but not the other
+19.  Which films are not tracked in inventory?
+20.  List film categories in descending accounts receivable.
+21.  List film ratings in descending accounts receivable order.
+22.  How many rentals were returned on time, returned late, never returned?
+23.  Are there duplicate customers?
+24.  Which customers have never rented a movie?
+25.  Who are the top 5 customers with the most rentals and associated payments?
+26.  Combine the top 5 rental customers, (40 or more rentals), and zero rental customers
+27.  Who are the top-n1 and bottom-n2 customers?
+28.  How much has each store collected?
+29.  What is the business&#39; distribution of payments?
+30.  Which customers have the highest open amounts?</pre>
+
+</article></slide><slide class=""><hgroup><h2>Exercises 3/3</h2></hgroup><article  id="exercises-33">
+
+<pre >31.  What is the business&#39; cash flow?
+32.  Customer information
+
+1.  dbGetQuery Versus dbSendQuery+dbFetch+dbClearResult
+2.  Dplyr write results to the database example</pre></article></slide>
 
 
   <slide class="backdrop"></slide>
