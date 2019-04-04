@@ -418,13 +418,13 @@ Q %>% str(max.level = 3)
 ##   .. ..- attr(*, "class")= chr [1:3] "op_join" "op_double" "op"
 ##   ..$ dots:List of 4
 ##   .. ..$ : language ~title
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fb8eaee42a8> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x7f87056fa170> 
 ##   .. ..$ : language ~length
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fb8eaee42a8> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x7f87056fa170> 
 ##   .. ..$ : language ~rating
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fb8eaee42a8> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x7f87056fa170> 
 ##   .. ..$ : language ~category
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7fb8eaee42a8> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x7f87056fa170> 
 ##   .. ..- attr(*, "class")= chr "quosures"
 ##   ..$ args: list()
 ##   ..- attr(*, "class")= chr [1:3] "op_select" "op_single" "op"
@@ -458,7 +458,7 @@ Q %>% dplyr::tally()
 ##   <S3: integer64>
 ## 1 1000
 ```
-The `nrow()` function knows that `Q` is a list.  On the other hand, the `tally()` function tells SQL to go count all the rows. Notice that `Q` results in 16,044 rows -- the same number of rows as `rental`.
+The `nrow()` function knows that `Q` is a list.  On the other hand, the `tally()` function tells SQL to go count all the rows. Notice that `Q` results in 1,000 rows -- the same number of rows as `film`.
 
 ### Q %>% dplyr::collect(){#lazy_q_collect}
 
