@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Introduction to sqlpetr</title>
+  <title>Setup and Technical Concepts</title>
 
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="chrome=1">
@@ -19,7 +19,7 @@
     var SLIDE_CONFIG = {
       // Slide settings
       settings: {
-                title: 'Introduction to sqlpetr',
+                title: 'Setup and Technical Concepts',
                         useBuilds: true,
         usePrettify: true,
         enableSlideAreas: true,
@@ -3115,7 +3115,7 @@ slide:not(.current) .plotly.html-widget{
       <h1 data-config-title><!-- populated from slide_config.json --></h1>
       <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
       <p data-config-presenter><!-- populated from slide_config.json --></p>
-            <p style="margin-top: 6px; margin-left: -2px;">3/6/2019</p>
+            <p style="margin-top: 6px; margin-left: -2px;">4/6/2019</p>
           </hgroup>
   </slide>
 
@@ -3124,8 +3124,8 @@ slide:not(.current) .plotly.html-widget{
 </article></slide><slide class=""><hgroup><h2>Prerequisites</h2></hgroup><article  id="prerequisites">
 
 <ul>
-<li>R 3.5.0 or later</li>
-<li>RStudio (Preview) 1.2.1303 or later</li>
+<li>R 3.4.0 or later</li>
+<li>RStudio (Preview) 1.2.1335 or later</li>
 <li>Docker Community Edition (18.09 or later)</li>
 </ul>
 
@@ -3154,36 +3154,113 @@ slide:not(.current) .plotly.html-widget{
 <ul>
 <li>Fedora 29</li>
 <li>Ubuntu 18.04.2 LTS &ldquo;Bionic Beaver&rdquo;</li>
-<li>Debian 9.6 &ldquo;stretch&rdquo;</li>
-<li>Arch Linux with Arch User Repository (AUR) and AUR helper <code>yay</code></li>
+<li>Arch Linux</li>
 </ul></li>
 <li>Docker Community Edition (use Arch <code>docker</code> package on Arch)</li>
 <li>4 GB of RAM or greater</li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>The <code>sqlpetr</code> R package</h2></hgroup><article  id="the-sqlpetr-r-package">
+
+<ul>
+<li><p>To capture common functionality and minimize the amount of typing one has to do, we’ve created an R package called <a href='https://smithjd.github.io/sqlpetr/index.html' title=''><code>sqlpetr</code></a>.</p></li>
+<li><p>To install the package from the R console:</p>
+
+<pre >install.packages(&quot;remotes&quot;)
+remotes::install_github(&quot;smithjd/sqlpetr&quot;, force = TRUE, 
+                        build = FALSE, quiet = TRUE)</pre></li>
 </ul>
 
 </article></slide><slide class="segue dark nobackground level1"><hgroup class = 'auto-fadein'><h2>Docker Concepts</h2></hgroup><article  id="docker-concepts">
 
 </article></slide><slide class=""><hgroup><h2>Images</h2></hgroup><article  id="images">
 
+<ul>
+<li>A <em>Docker image</em> is the basic artifact of Docker.</li>
+<li>An image usually contains &ldquo;just enough Linux&rdquo; to support a single service.
+
+<ul>
+<li>In this workshop, the image contains Debian GNU/Linux &ldquo;stretch&rdquo; and the PostgreSQL 10 relational database management service.</li>
+</ul></li>
+</ul>
+
 </article></slide><slide class=""><hgroup><h2>Containers</h2></hgroup><article  id="containers">
 
-</article></slide><slide class=""><hgroup><h2>Networks</h2></hgroup><article  id="networks">
+<ul>
+<li>A <em>container</em> is a collection of Linux processes running on a Linux host.</li>
+<li>The host manages these processes as a collection.</li>
+<li>There is <em>logical</em> isolation - hence the term &ldquo;container&rdquo; - but there is little management overhead, because the processes running in the container are plain old Linux processes.</li>
+<li>In common usage, containers are considered ephemeral - &ldquo;cattle, not pets&rdquo;.</li>
+</ul>
 
-</article></slide><slide class=""><hgroup><h2>Volumes</h2></hgroup><article  id="volumes">
+</article></slide><slide class=""><hgroup><h2>How do I get an image?</h2></hgroup><article  id="how-do-i-get-an-image">
 
-</article></slide><slide class=""><hgroup><h2>Registries</h2></hgroup><article  id="registries">
+<ul>
+<li>It’s a build or buy decision:
+
+<ul>
+<li>&ldquo;Buy&rdquo; - download an image from an image repository</li>
+<li>&ldquo;Build&rdquo; - create a Dockerfile and do <code>docker build</code>.</li>
+</ul></li>
+<li>In this workshop, we are &ldquo;buying&rdquo; the base PostgreSQL image from <a href='https://hub.docker.com/_/postgres' title=''>https://hub.docker.com/_/postgres</a>. And we are <a href='https://smithjd.github.io/sqlpetr/articles/building-the-dvdrental-docker-image.html' title=''>building on top of it</a> with a Dockerfile to install the <a href='http://www.postgresqltutorial.com/postgresql-sample-database/' title=''><code>dvdrental</code> database</a>.</li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>OK, I have an image - now what?</h2></hgroup><article  id="ok-i-have-an-image---now-what">
+
+<ul>
+<li>You create a container by running an image in it.</li>
+<li>Typically, a single process in the container will offer a service by listening on a TCP port.</li>
+<li>For that service to be useful on the host, we <em>publish</em> that port to <code>localhost</code>.</li>
+<li>In this workshop, we’ll run the PostgreSQL image with the <code>dvdrental</code> database on it in a container and publish its standard port, 5432, to <code>localhost</code>.</li>
+</ul>
 
 </article></slide><slide class="segue dark nobackground level1"><hgroup class = 'auto-fadein'><h2>PostgreSQL Database Administration 101</h2></hgroup><article  id="postgresql-database-administration-101">
 
-</article></slide><slide class=""><hgroup><h2>Clusters, databases and schemas</h2></hgroup><article  id="clusters-databases-and-schemas">
+</article></slide><slide class=""><hgroup><h2>Clusters, databases, schemas and views</h2></hgroup><article  id="clusters-databases-schemas-and-views">
+
+<ul>
+<li>A PostgreSQL server is called a <em>cluster</em>. A cluster of what? Databases!</li>
+<li>A PostgreSQL <em>database</em> is a collection of <em>schemas</em>.</li>
+<li>Every PostgreSQL database has at least one default schema, called <code>public</code>.</li>
+<li>A <em>schema</em> is a collection of objects.
+
+<ul>
+<li>Usually these are <em>tables</em>, but there are other types.</li>
+<li>The <code>dvdrental</code> database has tables and views.</li>
+<li>A <em>view</em> is a query - when you reference it, PostgreSQL runs the query and returns its results as if it were a table.</li>
+</ul></li>
+</ul>
 
 </article></slide><slide class=""><hgroup><h2>Users / Roles</h2></hgroup><article  id="users-roles">
 
-</article></slide><slide class=""><hgroup><h2>Tables, views and materialized views</h2></hgroup><article  id="tables-views-and-materialized-views">
+<ul>
+<li>PostgreSQL users and groups of users are called <em>roles</em>.</li>
+<li>PostgreSQL has a very fine-grained permission system for which roles can perform which operations on which objects.</li>
+<li>There is at least one database superuser, <code>postgres</code>, that can do anything to any object.
+
+<ul>
+<li><code>postgres</code> can create and drop databases, schemas, tables, views.</li>
+<li><code>postgres</code> can create and drop roles and <em>GRANT</em> or <em>REVOKE</em> their privileges.</li>
+</ul></li>
+<li>For this workshop, you are going to be <code>postgres</code>, the database superuser.</li>
+<li>In the real world, there will be a DBA who does that and GRANTs you exactly what you need to do your job.</li>
+</ul>
 
 </article></slide><slide class=""><hgroup><h2>Making a connection</h2></hgroup><article  id="making-a-connection">
 
-</article></slide><slide class=""><hgroup><h2>pgAdmin</h2></hgroup><article  id="pgadmin"></article></slide>
+<ul>
+<li><p>To use a PostgreSQL service, you need to open a <em>connection</em>.</p></li>
+<li><p>A connection needs five things:</p>
+
+<ol>
+<li>The <em>host</em> where the service is running,</li>
+<li>The <em>port</em> where the service is listening,</li>
+<li>The <em>database</em> you want to connect to,</li>
+<li>The <em>user</em> you want to connect as, and</li>
+<li>That user’s <em>password</em>.</li>
+</ol></li>
+<li><p>In the workshop, <code>host</code> will be &ldquo;localhost&rdquo;, <code>port</code> will be 5432, <code>database</code> will be &ldquo;dvdrental&rdquo;, and both <code>user</code> and <code>password</code> will be &ldquo;postgres&rdquo;.</p></li>
+</ul></article></slide>
 
 
   <slide class="backdrop"></slide>
