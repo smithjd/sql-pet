@@ -57,7 +57,7 @@ source(file =
 
 To avoid putting passwords and login credentials in your code, store DBMS login credentials in your `.Renviron` file:
 
-![](../screenshots/locate-renviron-file.png)
+![](../../screenshots/locate-renviron-file.png)
 
 Edit your **.Renviron** file to include lines such as:
 
@@ -91,21 +91,39 @@ table_list <- DBI::dbListTables(con)
 ```
 ## The Connections tab also lists tables
 
-![](../screenshots/connections-tab-dvdrentals-tables.png)
+![](../../screenshots/connections-tab-dvdrentals-tables.png)
 
 ## The Connections tab is clickable
 
-![](../screenshots/connections-tab-dvdrentals-tables-clickable.png)
+![](../../screenshots/connections-tab-dvdrentals-tables-clickable.png)
 
 ## Click on a table name to show the columns:
 
-![](../screenshots/connections-tab-with-film-table-columns.png)
+![](../../screenshots/connections-tab-with-film-table-columns.png)
 
 ## Click on the table icon to View a sample
 
-![](../screenshots/film-table-view.png)
+![](../../screenshots/film-table-view.png)
 
-## The same information is available with R code in your console:
+## Mapping from SQL to 
+You can check on how R data types are represented in the SQL environment with:
+```{r}
+dbDataType(ANSI(), Sys.time())
+```
+And similarly you can check:
+```{r data types, eval= FALSE}
+dbDataType(ANSI(), 1:5)
+dbDataType(ANSI(), TRUE)
+dbDataType(ANSI(), Sys.Date())
+dbDataType(ANSI(), 1:5)
+dbDataType(ANSI(), c("x", "abc"))
+dbDataType(ANSI(), Sys.time() - as.POSIXct(Sys.Date()))
+dbDataType(ANSI(), list(raw(10), raw(20)))
+dbDataType(ANSI(), I(3))
+```
+The SQL equivalent of an R factor is a separate table with a common key
+
+## Table and Column information is available with R code in your console:
 
 All the fields (or *columns* or *variables*) in a table with:
 ```{r}
@@ -118,7 +136,7 @@ film_table <- tbl(con, "film")
 
 ## The film_table object is a list
 
-![](../screenshots/str-output-table.png)
+![](../../screenshots/str-output-table.png)
 
 ## Reusing table information
 
@@ -143,7 +161,7 @@ Some functions to get you started:
 
 * skimr::skim()
 
-![](../screenshots/skim-film-tibble.png)
+![](../../screenshots/skim-film-tibble.png)
 
 * str() # the workhorse
  
@@ -251,7 +269,7 @@ String as many objects together with ` %>% ` but consider that:
   * bind_cols
   * bind_rows
 
-* There are some functions like `date` are ambiguous, so are passed to SQL as SQL code if before `collect` but are executed by R if they appear afterward.
+* There are some functions like `date` that exist on both sides, so are passed to SQL as SQL code if before `collect` but are executed by R if they appear afterward.
 
 ## Q %>% ggplot 
 
@@ -268,9 +286,8 @@ It's obvious that when creating our phony `dvdrental` database, phony films were
 
 ```{r}
 Q %>% dplyr::show_query()
-
 ```
-Hand-written SQL code to do the same job will probably look a lot nicer and could be more efficient, but functionally `dplyr` does the job.
+SQL is "inside-out" compared to dplyr. Hand-written SQL code to do the same job can  look a lot simpler and could be more efficient, but functionally `dplyr` does the job as SQL.
 
 ## Disconnect from PostgreSQL and close Docker
 ```{r disconnect and close down}
