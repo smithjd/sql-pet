@@ -105,3 +105,38 @@ knitr::opts_chunk$set(echo = FALSE)
     4. The _user_ you want to connect as, and
     5. That user's _password_.
 * In the workshop, `host` will be "localhost", `port` will be 5432, `database` will be "dvdrental", and both `user` and `password` will be "postgres". 
+
+# Testing the Setup
+
+## Building the image
+```{r echo=TRUE, eval=FALSE}
+library(sqlpetr)
+sp_check_that_docker_is_up()
+sp_make_dvdrental_image("postgres-dvdrental")
+sp_docker_images_tibble()
+
+```
+
+## Running the container
+```{r echo=TRUE, eval=FALSE}
+sp_pg_docker_run(
+  container_name = "sql-pet",
+  image_tag = "postgres-dvdrental",
+  postgres_password = "postgres"
+)
+sp_docker_containers_tibble()
+
+```
+## Opening a connection
+```{r echo=TRUE, eval=FALSE}
+con <- sp_get_postgres_connection(
+  host = "localhost",
+  port = 5432,
+  user = "postgres",
+  password = "postgres",
+  dbname = "dvdrental",
+  seconds_to_test = 30, connection_tab = TRUE
+)
+
+```
+
