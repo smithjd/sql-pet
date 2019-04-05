@@ -1,29 +1,38 @@
 ---
-title: "dplyr, Rstudio and lazy execution"
+title: "Easy and lazy retrieval with dplyr and Rstudio"
 author: "John D. Smith"
 date: "3/6/2019"
 output:
   ioslides_presentation:
     incremental: true
 ---
+## Overview
 
-```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
-# These packages are called in almost every chapter of the book:
+This part of the workshop covers:
+
+* Firing up the Docker container and logging onto PostgreSQL
+* See what's in the database
+* Data retrieval basics
+* Getting a table snapshot
+* *Lazy retrieval* (kind of like lazy loading & lazy evaluation )
+* Basics of dplyr query construction
+
+## Package setup
+These packages are called in this part of the tutorial:
+
+```{r setup, echo=TRUE, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(DBI)
-library(DiagrammeR)
 library(RPostgres)
-library(glue)
-library(here)
-require(knitr)
 library(dbplyr)
 library(sqlpetr)
-library(gt)
-
+library(here)
+require(knitr)
+library(skimr)
+# Occasionally need:
 #sp_check_that_docker_is_up()
 #sp_show_all_docker_containers()
 
-# source(file = here::here('book-src','sql_pet_data.R'), echo = FALSE)
 ```
 
 ## Setup the sandbox environment
@@ -46,11 +55,11 @@ source(file =
 
 ## Check your log-in credentials:
 
-Store DBMS login credentials in your `.Renviron` file:
+To avoid putting passwords and login credentials in your code, store DBMS login credentials in your `.Renviron` file:
 
 ![](../screenshots/locate-renviron-file.png)
 
-Your **.Renviron** file should contain lines such as:
+Edit your **.Renviron** file to include lines such as:
 
 ```
 DEFAULT_POSTGRES_PASSWORD=postgres
@@ -68,9 +77,9 @@ con <- sp_get_postgres_connection(
   seconds_to_test = 30, 
   connection_tab = TRUE)
 ```
-The `con` connection object has a lot of information that R uses to commuknicate with postgreSQL.  It executes at a point in time; if the database changes the connection object must be re-executed.
+When you've connected, the `con` connection object will have a lot of information that R uses to communicate with postgreSQL.  It's a snapshot so that you must re-connect if the database structure has changed in the meantime.
 
-## What tables are in the database
+## Show what tables are in the database
 
 ```{r}
 DBI::dbListTables(con)
@@ -82,39 +91,39 @@ table_list <- DBI::dbListTables(con)
 ```
 ## The Connections tab also lists tables
 
-![Connections tab showing dvdrental tables](../screenshots/connections-tab-dvdrentals-tables.png)
+![](../screenshots/connections-tab-dvdrentals-tables.png)
 
-## the Connections tab is clickable:
+## The Connections tab is clickable
 
-![film table columns](../screenshots/connections-tab-dvdrentals-tables-clickable.png)
+![](../screenshots/connections-tab-dvdrentals-tables-clickable.png)
 
 ## Click on a table name to show the columns:
 
-![film table columns](../screenshots/connections-tab-with-film-table-columns.png)
+![](../screenshots/connections-tab-with-film-table-columns.png)
 
-## Click on the table icon to View
+## Click on the table icon to View a sample
 
-![film table object](../screenshots/film-table-view.png)
+![](../screenshots/film-table-view.png)
 
-## Code equvalents in the R console
+## The same information is available with R code in your console:
 
-All the fields (or columns or variables) in one specific table with:
+All the fields (or *columns* or *variables*) in a table with:
 ```{r}
 DBI::dbListFields(con, "film")
 ```
-Put the `film` table information in an object:
+Put the `film` table definition in an object for multiple uses:
 ```{r}
-film_columns <- DBI::dbListFields(con, "film")
+film_table <- tbl(con, "film")
 ```
-## The table object is a list
 
-![film table object](../screenshots/str-output-table.png)
+## The film_table object is a list
+
+![](../screenshots/str-output-table.png)
 
 ## Reusing table information
 
 Once the table connection object is stored in an object, it can be manipulated in R code:
 ```{r}
-film_table <- dplyr::tbl(con, "film")
 film_table %>% 
   head(n = 4)
 ```
@@ -126,28 +135,31 @@ str(film_tibble)
 
 ## Examining data is R's strength
 
-Useful functions include:
+Once you've downloaded data from the DBMS, R resources for examining data are vast.
 
-* str()
+<div class="columns-2">
+
+Some functions to get you started:
+
+* skimr::skim()
+
+![](../screenshots/skim-film-tibble.png)
+
+* str() # the workhorse
+ 
 * head(),  View(), or gt::gt()
-* summary()
-* tibble::glimpse()
-* skimr::skim
+ 
+* summary() # elementary stats
+ 
+* tibble::glimpse() # handy!
 
+</div>
 ## R is lazy and comes with guardrails
 
 By design, R is both a language and an interactive development environment (IDE).  As a language, R tries to be as efficient as possible.  As an IDE, R creates some guardrails to make it easy and safe to work with your data. 
 
 SQL is a Structured Query Language that returns a table from a database (and manages database structure, etc.)  SQL can easily return more data in a query than your computer can handle.
 
-## dplyr behavior as guard rails
-
-> When working with databases, dplyr tries to be as lazy as possible:
-> 
-> * It never pulls data into R unless you explicitly ask for it.
-> 
-> * It delays doing any work until the last possible moment: it collects together everything you want to do and then sends it to the database in one step.
-> 
 ## Introduction to Lazy Queries
 
 * R's lazy behaviors
@@ -156,9 +168,19 @@ SQL is a Structured Query Language that returns a table from a database (and man
 
   * Lazy Evaluation: symbols evaluated when actually needed
 
-  * Lazy Retrieval: data retrieved from the dbms at the last possible moment
-  
-## It can be tricky, so experiment
+  * Lazy Retrieval: data retrieved from the DBMS at the last possible moment
+
+## dplyr behavior as guard rails
+
+When working with databases, dplyr tries to be as lazy as possible:
+
+* It never pulls data into R unless you explicitly ask for it.
+
+* It delays doing any work until the last possible moment: it collects together everything you want to do and then sends it to the database in one step.
+
+* The `collect()` function forces R to pull data from the DBMS
+
+## It can be tricky, so we experiment
 
 We store a query in an object called `Q`
 ```{r}
@@ -200,11 +222,36 @@ Q %>% dplyr::tally()
 
 ## Q %>% dplyr::collect()
 
-The dplyr::[collect](https://dplyr.tidyverse.org/reference/compute.html) function triggers a call to the `DBI:dbFetch()` function behind the scenes, which forces R to download a specified number of rows:
+The [collect](https://dplyr.tidyverse.org/reference/compute.html) function triggers a call to the `DBI:dbFetch()` function, which forces R to download the data:
 ```{r}
 Q %>% dplyr::collect(n = 20) %>% head()
 ```
-`collect()` defaults to the entire table.
+The `n` parameter determines the number of rows to download.  If absent, `collect()` defaults to the entire table.
+
+## Collect is the point of demarcation 
+
+String as many objects together with ` %>% ` but consider that:
+
+* Typically these dplyr verbs go before `collect`:
+
+  * select
+  * filter
+  * rename
+  * various kinds of joins
+  * group_by
+  * case_when
+
+## After collect your code is local R, not translated to SQL
+
+* These dplyr verbs can go before `collect` but often go after:
+  * mutate
+  * ungroup
+
+* Some dplyr verbs make no sense before `collect`:
+  * bind_cols
+  * bind_rows
+
+* There are some functions like `date` are ambiguous, so are passed to SQL as SQL code if before `collect` but are executed by R if they appear afterward.
 
 ## Q %>% ggplot 
 
@@ -215,7 +262,7 @@ Q %>% ggplot2::ggplot(aes(category)) + geom_bar() + coord_flip()
 
 ```
 
-It's obvious that when creating our phony `dvdrental` datbase, phony films were assigned to a category pretty randomly.
+It's obvious that when creating our phony `dvdrental` database, phony films were assigned to a category pretty randomly.
 
 ## Q %>% dplyr::show_query() 
 
