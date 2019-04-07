@@ -74,7 +74,7 @@ knitr::opts_chunk$set(echo = FALSE)
 * Typically, a single process in the container will offer a service by listening on a TCP port.
 * For that service to be useful on the host, we _publish_ that port to `localhost`.
 * In this workshop, we'll run the PostgreSQL image with the `dvdrental` database on it in a container and publish its port, *5439*, to `localhost`.
-    - We are using port 5439 rather than the default 5432. Why? If you have PostgreSQL running on the host or another container, it probably claimed port 5432, since that's the default. So we need to use a different port for *our* PostgreSQL container.
+    - We use port 5439 rather than the default 5432. Why? If PostgreSQL is running on the host or in another container, it probably has claimed port 5432, since that's its default, and our container won't work! So we need to use a different port for our PostgreSQL container.
 
 # PostgreSQL Database Administration 101
 
