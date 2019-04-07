@@ -25,7 +25,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
 
 
-<meta name="date" content="2019-04-02">
+<meta name="date" content="2019-04-07">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -79,7 +79,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -620,8 +620,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>## [1] &quot;Docker is up but running no containers&quot;</code></pre>
 <p>Verify pet DB is available, it may be stopped.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_show_all_docker_containers</span>()</code></pre>
-<pre><code>## CONTAINER ID        IMAGE                COMMAND                  CREATED              STATUS                    PORTS               NAMES
-## 8b2024039f06        postgres-dvdrental   &quot;docker-entrypoint.s…&quot;   About a minute ago   Exited (0) 1 second ago                       sql-pet</code></pre>
+<pre><code>## CONTAINER ID        IMAGE                COMMAND                  CREATED              STATUS                     PORTS               NAMES
+## 1918fe2a68e7        postgres-dvdrental   &quot;docker-entrypoint.s…&quot;   About a minute ago   Exited (0) 2 seconds ago                       sql-pet</code></pre>
 <p>Start up the <code>docker-pet</code> container</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_docker_start</span>(<span class="st">&quot;sql-pet&quot;</span>)</code></pre>
 <p>Now connect to the database with R</p>
@@ -715,11 +715,11 @@ sql_aj3 &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(
 <div id="sql-costs" class="section level5">
 <h5><span class="header-section-number">18.1.0.0.1</span> SQL Costs</h5>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">glue</span>(<span class="st">&quot;sql_aj1 loj-null costs=&quot;</span>, sql_aj1[<span class="dv">1</span>, <span class="dv">1</span>]))</code></pre>
-<pre><code>## sql_aj1 loj-null costs=GroupAggregate  (cost=33.28..38.53 rows=300 width=266) (actual time=9.063..9.140 rows=4 loops=1)</code></pre>
+<pre><code>## sql_aj1 loj-null costs=GroupAggregate  (cost=33.28..38.53 rows=300 width=266) (actual time=0.396..0.400 rows=4 loops=1)</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">glue</span>(<span class="st">&quot;sql_aj2 not in costs=&quot;</span>, sql_aj2[<span class="dv">1</span>, <span class="dv">1</span>]))</code></pre>
-<pre><code>## sql_aj2 not in costs=GroupAggregate  (cost=29.86..35.11 rows=300 width=262) (actual time=0.610..0.814 rows=4 loops=1)</code></pre>
+<pre><code>## sql_aj2 not in costs=GroupAggregate  (cost=29.86..35.11 rows=300 width=262) (actual time=0.336..0.339 rows=4 loops=1)</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">glue</span>(<span class="st">&quot;sql_aj3 not exist costs=&quot;</span>, sql_aj3[<span class="dv">1</span>, <span class="dv">1</span>]))</code></pre>
-<pre><code>## sql_aj3 not exist costs=GroupAggregate  (cost=33.28..38.53 rows=300 width=262) (actual time=7.988..8.058 rows=4 loops=1)</code></pre>
+<pre><code>## sql_aj3 not exist costs=GroupAggregate  (cost=33.28..38.53 rows=300 width=262) (actual time=0.365..0.369 rows=4 loops=1)</code></pre>
 </div>
 </div>
 <div id="dplyr-anti-joins" class="section level2">
@@ -740,7 +740,7 @@ daj1 &lt;-
 ## WHERE NOT EXISTS (
 ##   SELECT 1 FROM &quot;rental&quot; AS &quot;TBL_RIGHT&quot;
 ##   WHERE (&quot;TBL_LEFT&quot;.&quot;customer_id&quot; = &quot;TBL_RIGHT&quot;.&quot;customer_id&quot;)
-## )) &quot;cqpqwqagrn&quot;</code></pre>
+## )) &quot;ahwfiyasld&quot;</code></pre>
 <pre><code>## </code></pre>
 <pre><code>## &lt;PLAN&gt;
 ## Hash Anti Join  (cost=510.99..552.63 rows=300 width=334)
@@ -763,7 +763,7 @@ daj2 &lt;-
 ##   FROM &quot;customer&quot; AS &quot;TBL_LEFT&quot;
 ##   LEFT JOIN &quot;rental&quot; AS &quot;TBL_RIGHT&quot;
 ##   ON (&quot;TBL_LEFT&quot;.&quot;customer_id&quot; = &quot;TBL_RIGHT&quot;.&quot;customer_id&quot;)
-## ) &quot;ihebfvnxvb&quot;
+## ) &quot;txeusoqilr&quot;
 ## WHERE (((&quot;rental_id&quot;) IS NULL))</code></pre>
 <pre><code>## </code></pre>
 <pre><code>## &lt;PLAN&gt;
@@ -807,23 +807,23 @@ Hash Right Join  (cost=22.48..375.33 rows=1 width=45)
 <span class="st">order by c.customer_id;&quot;</span>
 )
 <span class="kw">sp_print_df</span>(sql_aj1)</code></pre>
-<div id="htmlwidget-124fb78127817ec02cd9" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-124fb78127817ec02cd9">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13"],["GroupAggregate  (cost=564.97..570.22 rows=300 width=12) (actual time=215.465..215.532 rows=4 loops=1)","  Group Key: c.customer_id","  -&gt;  Sort  (cost=564.97..565.72 rows=300 width=4) (actual time=215.436..215.466 rows=4 loops=1)","        Sort Key: c.customer_id","        Sort Method: quicksort  Memory: 25kB","        -&gt;  Hash Anti Join  (cost=510.99..552.63 rows=300 width=4) (actual time=215.320..215.399 rows=4 loops=1)","              Hash Cond: (c.customer_id = r.customer_id)","              -&gt;  Seq Scan on customer c  (cost=0.00..14.99 rows=599 width=4) (actual time=0.014..3.660 rows=604 loops=1)","              -&gt;  Hash  (cost=310.44..310.44 rows=16044 width=2) (actual time=207.860..207.866 rows=16045 loops=1)","                    Buckets: 16384  Batches: 1  Memory Usage: 661kB","                    -&gt;  Seq Scan on rental r  (cost=0.00..310.44 rows=16044 width=2) (actual time=0.012..102.318 rows=16045 loops=1)","Planning time: 0.112 ms","Execution time: 215.668 ms"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>QUERY PLAN<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-544ce688af7625cc1acf" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-544ce688af7625cc1acf">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13"],["GroupAggregate  (cost=564.97..570.22 rows=300 width=12) (actual time=16.001..16.006 rows=4 loops=1)","  Group Key: c.customer_id","  -&gt;  Sort  (cost=564.97..565.72 rows=300 width=4) (actual time=15.993..15.994 rows=4 loops=1)","        Sort Key: c.customer_id","        Sort Method: quicksort  Memory: 25kB","        -&gt;  Hash Anti Join  (cost=510.99..552.63 rows=300 width=4) (actual time=15.972..15.976 rows=4 loops=1)","              Hash Cond: (c.customer_id = r.customer_id)","              -&gt;  Seq Scan on customer c  (cost=0.00..14.99 rows=599 width=4) (actual time=0.023..0.217 rows=604 loops=1)","              -&gt;  Hash  (cost=310.44..310.44 rows=16044 width=2) (actual time=15.373..15.374 rows=16045 loops=1)","                    Buckets: 16384  Batches: 1  Memory Usage: 661kB","                    -&gt;  Seq Scan on rental r  (cost=0.00..310.44 rows=16044 width=2) (actual time=0.016..7.596 rows=16045 loops=1)","Planning time: 0.345 ms","Execution time: 16.095 ms"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>QUERY PLAN<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script>
 <pre class="sourceCode r"><code class="sourceCode r">sql_aj1</code></pre>
-<pre><code>##                                                                                                                              QUERY PLAN
-## 1                                 GroupAggregate  (cost=564.97..570.22 rows=300 width=12) (actual time=215.465..215.532 rows=4 loops=1)
-## 2                                                                                                              Group Key: c.customer_id
-## 3                                        -&gt;  Sort  (cost=564.97..565.72 rows=300 width=4) (actual time=215.436..215.466 rows=4 loops=1)
-## 4                                                                                                               Sort Key: c.customer_id
-## 5                                                                                                  Sort Method: quicksort  Memory: 25kB
-## 6                              -&gt;  Hash Anti Join  (cost=510.99..552.63 rows=300 width=4) (actual time=215.320..215.399 rows=4 loops=1)
-## 7                                                                                            Hash Cond: (c.customer_id = r.customer_id)
-## 8                           -&gt;  Seq Scan on customer c  (cost=0.00..14.99 rows=599 width=4) (actual time=0.014..3.660 rows=604 loops=1)
-## 9                                  -&gt;  Hash  (cost=310.44..310.44 rows=16044 width=2) (actual time=207.860..207.866 rows=16045 loops=1)
-## 10                                                                                      Buckets: 16384  Batches: 1  Memory Usage: 661kB
-## 11                     -&gt;  Seq Scan on rental r  (cost=0.00..310.44 rows=16044 width=2) (actual time=0.012..102.318 rows=16045 loops=1)
-## 12                                                                                                              Planning time: 0.112 ms
-## 13                                                                                                           Execution time: 215.668 ms</code></pre>
+<pre><code>##                                                                                                                            QUERY PLAN
+## 1                                 GroupAggregate  (cost=564.97..570.22 rows=300 width=12) (actual time=16.001..16.006 rows=4 loops=1)
+## 2                                                                                                            Group Key: c.customer_id
+## 3                                        -&gt;  Sort  (cost=564.97..565.72 rows=300 width=4) (actual time=15.993..15.994 rows=4 loops=1)
+## 4                                                                                                             Sort Key: c.customer_id
+## 5                                                                                                Sort Method: quicksort  Memory: 25kB
+## 6                              -&gt;  Hash Anti Join  (cost=510.99..552.63 rows=300 width=4) (actual time=15.972..15.976 rows=4 loops=1)
+## 7                                                                                          Hash Cond: (c.customer_id = r.customer_id)
+## 8                         -&gt;  Seq Scan on customer c  (cost=0.00..14.99 rows=599 width=4) (actual time=0.023..0.217 rows=604 loops=1)
+## 9                                  -&gt;  Hash  (cost=310.44..310.44 rows=16044 width=2) (actual time=15.373..15.374 rows=16045 loops=1)
+## 10                                                                                    Buckets: 16384  Batches: 1  Memory Usage: 661kB
+## 11                     -&gt;  Seq Scan on rental r  (cost=0.00..310.44 rows=16044 width=2) (actual time=0.016..7.596 rows=16045 loops=1)
+## 12                                                                                                            Planning time: 0.345 ms
+## 13                                                                                                          Execution time: 16.095 ms</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r">sql_aj3 &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(
   con,
   <span class="st">&quot;explain analyze </span>
@@ -835,9 +835,9 @@ Hash Right Join  (cost=22.48..375.33 rows=1 width=45)
 )
 
 <span class="kw">print</span>(<span class="kw">glue</span>(<span class="st">&quot;sql_aj1 loj-null costs=&quot;</span>, sql_aj1[<span class="dv">1</span>, <span class="dv">1</span>]))</code></pre>
-<pre><code>## sql_aj1 loj-null costs=GroupAggregate  (cost=564.97..570.22 rows=300 width=12) (actual time=215.465..215.532 rows=4 loops=1)</code></pre>
+<pre><code>## sql_aj1 loj-null costs=GroupAggregate  (cost=564.97..570.22 rows=300 width=12) (actual time=16.001..16.006 rows=4 loops=1)</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">glue</span>(<span class="st">&quot;sql_aj3 not exist costs=&quot;</span>, sql_aj3[<span class="dv">1</span>, <span class="dv">1</span>]))</code></pre>
-<pre><code>## sql_aj3 not exist costs=HashAggregate  (cost=554.13..557.13 rows=300 width=12) (actual time=225.775..225.808 rows=4 loops=1)</code></pre>
+<pre><code>## sql_aj3 not exist costs=HashAggregate  (cost=554.13..557.13 rows=300 width=12) (actual time=15.650..15.657 rows=4 loops=1)</code></pre>
 
 </div>
 </div>

@@ -105,7 +105,7 @@ result_set <- dbSendQuery(con, 'SELECT "title", "rental_duration", "length"
 FROM "film"
 WHERE ("rental_duration" > 5.0 AND "length" > 117.0)')
 
-set.seed(5432)
+set.seed(5439)
 
 chunk_num <- 0
 while (!dbHasCompleted(result_set)) {
@@ -118,29 +118,31 @@ while (!dbHasCompleted(result_set)) {
 ```
 
 ```
-##                 title rental_duration length chunk_num
-## 1      Grinch Massage               7    150         9
-## 2     Groundhog Uncut               6    139         9
-## 3       Half Outfield               6    146         9
-## 4       Hamlet Wisdom               7    146         9
-## 5       Harold French               6    168         9
-## 6        Hedwig Alter               7    169         9
-## 7     Holes Brannigan               7    128         9
-## 8     Hollow Jeopardy               7    136         9
-## 9  Holocaust Highball               6    149         9
-## 10          Home Pity               7    185         9
-## 11     Homicide Peach               6    141         9
-## 12    Hotel Happiness               6    181         9
+##              title rental_duration length chunk_num
+## 1    Graduate Lord               7    156         9
+## 2     Grease Youth               7    135         9
+## 3     Greedy Roots               7    166         9
+## 4   Greek Everyone               7    176         9
+## 5   Grinch Massage               7    150         9
+## 6  Groundhog Uncut               6    139         9
+## 7    Half Outfield               6    146         9
+## 8    Hamlet Wisdom               7    146         9
+## 9    Harold French               6    168         9
+## 10    Hedwig Alter               7    169         9
+## 11 Holes Brannigan               7    128         9
 ##                     title rental_duration length chunk_num
-## 1        Towers Hurricane               7    144        18
-## 2                Town Ark               6    136        18
-## 3       Trading Pinocchio               6    170        18
-## 4 Trainspotting Strangers               7    132        18
-## 5          Uncut Suicides               7    172        18
-## 6    Unforgiven Zoolander               7    129        18
-## 7         Uprising Uptown               6    174        18
-## 8             Vanilla Day               7    122        18
-## 9         Vietnam Smoochy               7    174        18
+## 1          Speakeasy Date               6    165        18
+## 2              Speed Suit               7    124        18
+## 3            Spinal Rocky               7    138        18
+## 4      Spirit Flintstones               7    149        18
+## 5       Steers Armageddon               6    140        18
+## 6             Stock Glass               7    160        18
+## 7              Story Side               7    163        18
+## 8        Streak Ridgemont               7    132        18
+## 9          Sweden Shining               6    176        18
+## 10           Tadpole Park               6    155        18
+## 11      Talented Homicide               6    173        18
+## 12 Telemark Heartbreakers               6    152        18
 ```
 
 ```r
@@ -199,10 +201,10 @@ Q %>% dplyr::show_query()
 ##   FROM "rental" AS "TBL_LEFT"
 ##   LEFT JOIN "staff" AS "TBL_RIGHT"
 ##   ON ("TBL_LEFT"."staff_id" = "TBL_RIGHT"."staff_id")
-## ) "tvnvuviyiw") "TBL_LEFT"
+## ) "duklxmckvk") "TBL_LEFT"
 ##   LEFT JOIN "customer" AS "TBL_RIGHT"
 ##   ON ("TBL_LEFT"."customer_id" = "TBL_RIGHT"."customer_id")
-## ) "dkimtwhtoo") "dkadgsqpgd"
+## ) "rzlkihfkca") "ecshftlgbp"
 ```
 
 Here is the SQL query formatted for readability:

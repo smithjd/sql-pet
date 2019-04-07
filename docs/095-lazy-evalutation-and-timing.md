@@ -53,7 +53,7 @@ Q
 
 ```
 ## # Source:   lazy query [?? x 2]
-## # Database: postgres [postgres@localhost:5432/dvdrental]
+## # Database: postgres [postgres@localhost:5439/dvdrental]
 ##    rental_date         email                                
 ##    <dttm>              <chr>                                
 ##  1 2005-05-24 22:54:33 tommy.collazo@sakilacustomer.org     
@@ -80,7 +80,7 @@ Q
 
 ```
 ## # Source:   lazy query [?? x 2]
-## # Database: postgres [postgres@localhost:5432/dvdrental]
+## # Database: postgres [postgres@localhost:5439/dvdrental]
 ##    rental_date         email                                
 ##    <dttm>              <chr>                                
 ##  1 2005-05-24 22:54:33 tommy.collazo@sakilacustomer.org     
@@ -139,7 +139,7 @@ Q %>% count(email)
 
 ```
 ## # Source:   lazy query [?? x 2]
-## # Database: postgres [postgres@localhost:5432/dvdrental]
+## # Database: postgres [postgres@localhost:5439/dvdrental]
 ##    email                             n              
 ##    <chr>                             <S3: integer64>
 ##  1 harold.martino@sakilacustomer.org 32             
@@ -164,7 +164,7 @@ Q %>% count(email) %>%
 
 ```
 ## # Source:     lazy query [?? x 2]
-## # Database:   postgres [postgres@localhost:5432/dvdrental]
+## # Database:   postgres [postgres@localhost:5439/dvdrental]
 ## # Ordered by: email
 ##   email                            n              
 ##   <chr>                            <S3: integer64>
@@ -198,7 +198,7 @@ rental_table %>%
 
 ```
 ## # Source:   lazy query [?? x 7]
-## # Database: postgres [postgres@localhost:5432/dvdrental]
+## # Database: postgres [postgres@localhost:5439/dvdrental]
 ##    rental_id rental_date inventory_id customer_id return_date        
 ##        <int> <date>             <int>       <int> <dttm>             
 ##  1         2 2005-05-24          1525         459 2005-05-28 19:40:33
@@ -271,7 +271,7 @@ rental_table %>%
 
 ```
 ## # Source:   lazy query [?? x 7]
-## # Database: postgres [postgres@localhost:5432/dvdrental]
+## # Database: postgres [postgres@localhost:5439/dvdrental]
 ##    rental_id rental_date inventory_id customer_id return_date        
 ##        <int> <chr>              <int>       <int> <dttm>             
 ##  1         2 2005-05             1525         459 2005-05-28 19:40:33
@@ -299,7 +299,7 @@ rental_table %>% mutate(rental_date = date(rental_date))
 
 ```
 ## # Source:   lazy query [?? x 7]
-## # Database: postgres [postgres@localhost:5432/dvdrental]
+## # Database: postgres [postgres@localhost:5439/dvdrental]
 ##    rental_id rental_date inventory_id customer_id return_date        
 ##        <int> <date>             <int>       <int> <dttm>             
 ##  1         2 2005-05-24          1525         459 2005-05-28 19:40:33

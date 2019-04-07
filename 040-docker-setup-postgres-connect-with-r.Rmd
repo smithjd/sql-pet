@@ -90,10 +90,12 @@ are kept private.
 
 > The `sp_get_postgres_connection` function from the `sqlpetr` package gets a DBI connection string to a PostgreSQL database, waiting if it is not ready. This function connects to an instance of PostgreSQL and we assign it to a symbol, `con`, for subsequent use. The `connctions_tab = TRUE` parameter opens a connections tab that's useful for navigating a database.
 
+> Note that we are using port 5439 for PostgreSQL inside the container and published to `localhost`. Why? If you have PostgreSQL already running on the host or another container, it probably claimed port 5432, since that's the default. So we need to use a different port for *our* PostgreSQL container.
+
 ```{r}
 con <- sp_get_postgres_connection(
   host = "localhost",
-  port = 5432,
+  port = 5439,
   user = "postgres",
   password = "postgres",
   dbname = "postgres",
@@ -128,7 +130,7 @@ The Connections tab has not been updated, so it still shows no tables.  When the
 ```{r}
 con <- sp_get_postgres_connection(
   host = "localhost",
-  port = 5432,
+  port = 5439,
   user = "postgres",
   password = "postgres",
   dbname = "postgres",

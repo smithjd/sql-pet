@@ -88,7 +88,7 @@ film_table
 
 ```
 ## # Source:   table<film> [?? x 13]
-## # Database: postgres [postgres@localhost:5432/dvdrental]
+## # Database: postgres [postgres@localhost:5439/dvdrental]
 ##    film_id title description release_year language_id rental_duration
 ##      <int> <chr> <chr>              <int>       <int>           <int>
 ##  1     133 Cham… A Fateful …         2006           1               7
@@ -292,7 +292,7 @@ Q %>% print()
 
 ```
 ## # Source:   lazy query [?? x 4]
-## # Database: postgres [postgres@localhost:5432/dvdrental]
+## # Database: postgres [postgres@localhost:5439/dvdrental]
 ##    title            length rating category   
 ##    <chr>             <int> <chr>  <chr>      
 ##  1 Academy Dinosaur     86 PG     Documentary
@@ -311,7 +311,7 @@ Q %>% print()
 
 > 
 > ## # Source:   lazy query [?? x 4]
-> ## # Database: postgres [postgres@localhost:5432/dvdrental]
+> ## # Database: postgres [postgres@localhost:5439/dvdrental]
 > ##    title            length rating category   
 > ##    <chr>             <int> <chr>  <chr>      
 > 
@@ -353,7 +353,7 @@ Q %>% head()
 
 ```
 ## # Source:   lazy query [?? x 4]
-## # Database: postgres [postgres@localhost:5432/dvdrental]
+## # Database: postgres [postgres@localhost:5439/dvdrental]
 ##   title            length rating               category   
 ##   <chr>             <int> <S3: pq_mpaa_rating> <chr>      
 ## 1 Academy Dinosaur     86 PG                   Documentary
@@ -418,13 +418,13 @@ Q %>% str(max.level = 3)
 ##   .. ..- attr(*, "class")= chr [1:3] "op_join" "op_double" "op"
 ##   ..$ dots:List of 4
 ##   .. ..$ : language ~title
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7f87056fa170> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x5641c2f300e0> 
 ##   .. ..$ : language ~length
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7f87056fa170> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x5641c2f300e0> 
 ##   .. ..$ : language ~rating
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7f87056fa170> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x5641c2f300e0> 
 ##   .. ..$ : language ~category
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x7f87056fa170> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x5641c2f300e0> 
 ##   .. ..- attr(*, "class")= chr "quosures"
 ##   ..$ args: list()
 ##   ..- attr(*, "class")= chr [1:3] "op_select" "op_single" "op"
@@ -453,7 +453,7 @@ Q %>% dplyr::tally()
 
 ```
 ## # Source:   lazy query [?? x 1]
-## # Database: postgres [postgres@localhost:5432/dvdrental]
+## # Database: postgres [postgres@localhost:5439/dvdrental]
 ##   n              
 ##   <S3: integer64>
 ## 1 1000
@@ -544,9 +544,9 @@ Q %>% dplyr::show_query()
 ## ) "TBL_LEFT"
 ##   LEFT JOIN (SELECT "category_id", "name" AS "category"
 ## FROM (SELECT "category_id", "name"
-## FROM "category") "lfcwgzpzjo") "TBL_RIGHT"
+## FROM "category") "sqfdkcwewt") "TBL_RIGHT"
 ##   ON ("TBL_LEFT"."category_id" = "TBL_RIGHT"."category_id")
-## ) "lolfcqlbui"
+## ) "xjkijbsyva"
 ```
 Hand-written SQL code to do the same job will probably look a lot nicer and could be more efficient, but functionally `dplyr` does the job.
 

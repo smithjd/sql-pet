@@ -37,7 +37,7 @@ After working through the code in this book, you can expect to be able to:
 ## Imagining a DVD rental business
 
 Years ago, people rented videos on DVD disks and video stores were a big business.  To understand the data base that we use in this book, try to imagine managing a video rental store [like Movie Madness](https://en.wikipedia.org/wiki/Movie_Madness_Video) in Portland, Oregon.
-<img src="screenshots/movie-madness-sample.png" style="display: block; margin: auto;" />
+<img src="screenshots/movie-madness-sample.png" width="175" style="display: block; margin: auto;" />
 *What data would be needed and what questions would you have to answer about the business?*
 
 This tutorial uses [the PostgreSQL version of "dvd rental" database](http://www.postgresqltutorial.com/postgresql-sample-database/) which represents the transaction database for running a movie (e.g., dvd) rental business.  The database can be  [downloaded here](http://www.postgresqltutorial.com/wp-content/uploads/2017/10/dvdrental.zip).  Here's a glimpse of it's structure, which we explore using several different methods:

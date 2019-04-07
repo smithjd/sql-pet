@@ -206,18 +206,18 @@ one_percent_sample
 ```
 
 ```
-##    film_id                 title rating
-## 1       48   Backlash Undefeated  PG-13
-## 2      235        Divide Monster  PG-13
-## 3      580           Mine Titans  PG-13
-## 4      586 Mockingbird Hollywood     PG
-## 5      599       Mother Oleander      R
-## 6      675         Phantom Glory  NC-17
-## 7      680       Pinocchio Simon     PG
-## 8      730   Ridgemont Submarine  PG-13
-## 9      776      Secret Groundhog     PG
-## 10     950          Volume House     PG
-## 11     999     Zoolander Fiction      R
+##    film_id               title rating
+## 1       92    Bowfinger Gables  NC-17
+## 2       97      Bride Intrigue      G
+## 3      128       Catch Amistad      G
+## 4      152        Circus Youth  PG-13
+## 5      292      Excitement Eve      G
+## 6      493       Kane Exorcist      R
+## 7      511       Lawrence Love  NC-17
+## 8      598 Mosquito Armageddon      G
+## 9      633   October Submarine  PG-13
+## 10     694  Prejudice Oleander  PG-13
+## 11     849     Storm Happiness  NC-17
 ```
 **Exact sample of 100 records**
 
@@ -301,7 +301,7 @@ film_table %>% dplyr::select(title, rating) %>% head()
 
 ```
 ## # Source:   lazy query [?? x 2]
-## # Database: postgres [postgres@localhost:5432/dvdrental]
+## # Database: postgres [postgres@localhost:5439/dvdrental]
 ##   title             rating              
 ##   <chr>             <S3: pq_mpaa_rating>
 ## 1 Chamber Italian   NC-17               
@@ -647,7 +647,7 @@ skimr::skim(film_tibble)
 ##  n obs: 1000 
 ##  n variables: 13 
 ## 
-## ── Variable type:character ────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+## ── Variable type:character ─────────────────────────────────────────────────────────
 ##          variable missing complete    n min max empty n_unique
 ##       description       0     1000 1000  70 130     0     1000
 ##          fulltext       0     1000 1000  98 205     0     1000
@@ -655,7 +655,7 @@ skimr::skim(film_tibble)
 ##  special_features       0     1000 1000  10  60     0       15
 ##             title       0     1000 1000   8  27     0     1000
 ## 
-## ── Variable type:integer ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+## ── Variable type:integer ───────────────────────────────────────────────────────────
 ##         variable missing complete    n    mean     sd   p0     p25    p50
 ##          film_id       0     1000 1000  500.5  288.82    1  250.75  500.5
 ##      language_id       0     1000 1000    1      0       1    1       1  
@@ -669,7 +669,7 @@ skimr::skim(film_tibble)
 ##  2006    2006 ▁▁▁▇▁▁▁▁
 ##     6       7 ▇▇▁▇▁▇▁▇
 ## 
-## ── Variable type:numeric ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+## ── Variable type:numeric ───────────────────────────────────────────────────────────
 ##          variable missing complete    n  mean   sd    p0   p25   p50   p75
 ##       rental_rate       0     1000 1000  2.98 1.65  0.99  0.99  2.99  4.99
 ##  replacement_cost       0     1000 1000 19.98 6.05  9.99 14.99 19.99 24.99
@@ -677,7 +677,7 @@ skimr::skim(film_tibble)
 ##   4.99 ▇▁▁▇▁▁▁▇
 ##  29.99 ▇▇▃▇▆▇▅▇
 ## 
-## ── Variable type:POSIXct ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+## ── Variable type:POSIXct ───────────────────────────────────────────────────────────
 ##     variable missing complete    n        min        max     median
 ##  last_update       0     1000 1000 2013-05-26 2013-05-26 2013-05-26
 ##  n_unique
