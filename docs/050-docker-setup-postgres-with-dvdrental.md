@@ -75,10 +75,10 @@ sp_docker_images_tibble()
 
 ```
 ## # A tibble: 2 x 7
-##   image_id  repository   tag   digest           created created_at    size 
-##   <chr>     <chr>        <chr> <chr>            <chr>   <chr>         <chr>
-## 1 c149455a… postgres-dv… late… <none>           2 week… 2019-03-18 1… 252MB
-## 2 3e016ba4… postgres     10    sha256:5c702997… 4 week… 2019-03-04 2… 230MB
+##   image_id  repository   tag   digest          created   created_at   size 
+##   <chr>     <chr>        <chr> <chr>           <chr>     <chr>        <chr>
+## 1 94c53381… postgres-dv… late… <none>          Less tha… 2019-04-06 … 293MB
+## 2 200d7af0… postgres     10    sha256:3a397af… 11 days … 2019-03-26 … 230MB
 ```
 
 ## Run the pet-sql Docker Image
@@ -104,7 +104,7 @@ sp_docker_containers_tibble()
 ## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 8b2024039f06 post… docker… 2019-04-0… 1 seco… 0.0.… Up Le… 0B (… sql-…
+## 1 d33e46c340b1 post… docker… 2019-04-0… 2 seco… 5432… Up Le… 0B (… sql-…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 
@@ -116,7 +116,7 @@ Use the DBI package to connect to the `dvdrental` database in PostgreSQL.  Remem
 ```r
 con <- sp_get_postgres_connection(
   host = "localhost",
-  port = 5432,
+  port = 5439,
   user = "postgres",
   password = "postgres",
   dbname = "dvdrental",
@@ -184,7 +184,7 @@ sp_docker_containers_tibble(list_all = TRUE)
 ## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 8b2024039f06 post… docker… 2019-04-0… 5 seco… <NA>  Exite… 0B (… sql-…
+## 1 d33e46c340b1 post… docker… 2019-04-0… 10 sec… <NA>  Exite… 74.9… sql-…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 
@@ -200,7 +200,7 @@ sp_docker_containers_tibble()
 ## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 8b2024039f06 post… docker… 2019-04-0… 6 seco… 0.0.… Up Le… 63B … sql-…
+## 1 d33e46c340b1 post… docker… 2019-04-0… 11 sec… 5432… Up Le… 74.9… sql-…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 Connect to the `dvdrental` database in PostgreSQL:
@@ -208,7 +208,7 @@ Connect to the `dvdrental` database in PostgreSQL:
 ```r
 con <- sp_get_postgres_connection(
   host = "localhost",
-  port = 5432,
+  port = 5439,
   user = "postgres",
   password = "postgres",
   dbname = "dvdrental",
@@ -249,7 +249,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## 8b2024039f06        postgres-dvdrental   "docker-entrypoint.s…"   7 seconds ago       Exited (0) Less than a second ago                       sql-pet
+## d33e46c340b1        postgres-dvdrental   "docker-entrypoint.s…"   12 seconds ago      Exited (0) Less than a second ago                       sql-pet
 ```
 
 Next time, you can just use this command to start the container: 

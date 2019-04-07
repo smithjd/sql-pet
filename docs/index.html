@@ -25,7 +25,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
 
 
-<meta name="date" content="2019-04-02">
+<meta name="date" content="2019-04-06">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -79,7 +79,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -616,7 +616,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">R, Databases, and Docker</h1>
 <p class="author"><em>John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni</em></p>
-<p class="date"><em>2019-04-02</em></p>
+<p class="date"><em>2019-04-06</em></p>
 </div>
 <div id="chapter_introduction" class="section level1">
 <h1><span class="header-section-number">Chapter 1</span> Introduction</h1>
@@ -644,7 +644,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="docker-as-a-tool-for-users" class="section level2">
 <h2><span class="header-section-number">1.2</span> Docker as a tool for UseRs</h2>
-<p>Noam Ross’s “<a href="https://nyhackr.blob.core.windows.net/presentations/Docker-for-the-UseR_Noam-Ross.pdf">Docker for the UseR</a>” <span class="citation">(Ross <a href="#ref-Ross2018a">2018</a><a href="#ref-Ross2018a">a</a>)</span> suggests that there are four distinct Docker use-cases for useRs.</p>
+<p>Noam Ross’s “<a href="https://nyhackr.blob.core.windows.net/presentations/Docker-for-the-UseR_Noam-Ross.pdf">Docker for the UseR</a>” <span class="citation">(Ross <a href="#ref-Ross2018a" role="doc-biblioref">2018</a><a href="#ref-Ross2018a" role="doc-biblioref">a</a>)</span> suggests that there are four distinct Docker use-cases for useRs.</p>
 <ol style="list-style-type: decimal">
 <li>Make a fixed working environment for reproducible analysis</li>
 <li>Access a service outside of R <strong>(e.g., PostgreSQL)</strong></li>
@@ -655,7 +655,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li>Docker is a comparatively easy way to simulate the relationship between an R/RStudio session and a database – all on on your machine (provided you have Docker installed and running).</li>
 <li>Running PostgreSQL on a Docker container avoids OS or system dependencies or conflicts that cause confusion and limit reproducibility.</li>
-<li>A Docker environment consumes relatively few resources. Our sandbox does much less but only includes PostgreSQL and sample data, so it takes up about 5% of the space taken up by the Vagrant environment that inspired this project. <span class="citation">(Makubuya <a href="#ref-Makubuya2018">2018</a>)</span></li>
+<li>A Docker environment consumes relatively few resources. Our sandbox does much less but only includes PostgreSQL and sample data, so it takes up about 5% of the space taken up by the Vagrant environment that inspired this project. <span class="citation">(Makubuya <a href="#ref-Makubuya2018" role="doc-biblioref">2018</a>)</span></li>
 <li>A simple Docker container such as the one used in our sandbox is easy to use and could be extended for other uses.</li>
 <li>Docker is a widely used technology for deploying applications in the cloud, so for many useRs it’s worth mastering.</li>
 </ul>
@@ -676,17 +676,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="how-did-this-project-come-about" class="section level2">
 <h2><span class="header-section-number">1.4</span> How did this project come about?</h2>
-<p>We trace this book back to the <a href="https://cascadiarconf.com/">June 2, 2018 Cascadia R Conf</a> where Aaron Makubuya gave <a href="https://github.com/Cascadia-R/Using_R_With_Databases">a presentation using Vagrant hosting</a> <span class="citation">(Makubuya <a href="#ref-Makubuya2018">2018</a>)</span>. After that <a href="https://github.com/smithjd">John Smith</a>, <a href="https://github.com/ianfrantz">Ian Franz</a>, and <a href="https://github.com/SophieMYang">Sophie Yang</a> had discussions after the monthly <a href="https://www.meetup.com/Portland-Data-Science-Group/events/fxvhbnywmbgb/">Data Discussion Meetups</a> about the difficulties around setting up <a href="https://www.vagrantup.com/">Vagrant</a> (a virtual environment), connecting to a corporate database, and having realistic <strong>public</strong> environment to demo or practice the issues that come up behind corporate firewalls. <a href="https://github.com/scottcame">Scott Came’s</a> tutorial on <a href="http://www.cascadia-analytics.com/2018/07/21/docker-r-p1.html">R and Docker</a> <span class="citation">(Came <a href="#ref-Came2018">2018</a>)</span> (an alternative to Vagrant) at the 2018 UseR Conference in Melbourne was provocative and it turned out he lived nearby. We re-connected with <a href="https://github.com/znmeb">M. Edward (Ed) Borasky</a> who had done extensive development for a <a href="https://github.com/hackoregon/data-science-pet-containers">Hack Oregon data science containerization project</a> <span class="citation">(Borasky <a href="#ref-Borasky2018">2018</a>)</span>.</p>
+<p>We trace this book back to the <a href="https://cascadiarconf.com/">June 2, 2018 Cascadia R Conf</a> where Aaron Makubuya gave <a href="https://github.com/Cascadia-R/Using_R_With_Databases">a presentation using Vagrant hosting</a> <span class="citation">(Makubuya <a href="#ref-Makubuya2018" role="doc-biblioref">2018</a>)</span>. After that <a href="https://github.com/smithjd">John Smith</a>, <a href="https://github.com/ianfrantz">Ian Franz</a>, and <a href="https://github.com/SophieMYang">Sophie Yang</a> had discussions after the monthly <a href="https://www.meetup.com/Portland-Data-Science-Group/events/fxvhbnywmbgb/">Data Discussion Meetups</a> about the difficulties around setting up <a href="https://www.vagrantup.com/">Vagrant</a> (a virtual environment), connecting to a corporate database, and having realistic <strong>public</strong> environment to demo or practice the issues that come up behind corporate firewalls. <a href="https://github.com/scottcame">Scott Came’s</a> tutorial on <a href="http://www.cascadia-analytics.com/2018/07/21/docker-r-p1.html">R and Docker</a> <span class="citation">(Came <a href="#ref-Came2018" role="doc-biblioref">2018</a>)</span> (an alternative to Vagrant) at the 2018 UseR Conference in Melbourne was provocative and it turned out he lived nearby. We re-connected with <a href="https://github.com/znmeb">M. Edward (Ed) Borasky</a> who had done extensive development for a <a href="https://github.com/hackoregon/data-science-pet-containers">Hack Oregon data science containerization project</a> <span class="citation">(Borasky <a href="#ref-Borasky2018" role="doc-biblioref">2018</a>)</span>.</p>
 </div>
 <div id="navigation" class="section level2">
 <h2><span class="header-section-number">1.5</span> Navigation</h2>
-<p>If this is the first <code>bookdown</code> <span class="citation">(Xie <a href="#ref-Xie2016">2016</a>)</span> book you’ve read, here’s how to navigate the website.</p>
+<p>If this is the first <code>bookdown</code> <span class="citation">(Xie <a href="#ref-Xie2016" role="doc-biblioref">2016</a>)</span> book you’ve read, here’s how to navigate the website.</p>
 <ol style="list-style-type: decimal">
 <li><p>The controls on the upper left: there are four controls on the upper left.</p>
 <ul>
-<li>A “hamburger” menu: this toggles the table of contents on the left side of the page on or off.</li>
-<li>A magnifying glass: this toggles a search box on or off.</li>
-<li>A letter “A”: this lets you pick how you want the site to display. You have your choice of small or large text, a serif or sans-serif font, and a white, sepia or night theme.</li>
+<li><p>A “hamburger” menu: this toggles the table of contents on the left side of the page on or off.</p></li>
+<li><p>A magnifying glass: this toggles a search box on or off.</p></li>
+<li><p>A letter “A”: this lets you pick how you want the site to display. You have your choice of small or large text, a serif or sans-serif font, and a white, sepia or night theme.</p></li>
 <li><p>A pencil: this is the “Edit” button. This will take you to a GitHub edit dialog for the chapter you’re reading. If you’re a committer to the repository, you’ll be able to edit the source directly.</p>
 <p>If not, GitHub will fork a copy of the repository to your own account and you’ll be able to edit that version. Then you can make a pull request.</p></li>
 </ul></li>

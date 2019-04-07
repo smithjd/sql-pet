@@ -25,7 +25,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
 
 
-<meta name="date" content="2019-04-02">
+<meta name="date" content="2019-04-06">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -79,7 +79,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -617,18 +617,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">C</span> Appendix C - PostgreSQL Authentication</h1>
 <div id="introduction" class="section level2">
 <h2><span class="header-section-number">C.1</span> Introduction</h2>
-<p>PostgreSQL has a very robust and flexible set of authentication methods <span class="citation">(PostgreSQL Global Development Group <a href="#ref-PGDG2018a">2018</a><a href="#ref-PGDG2018a">a</a>)</span>. In most production environments, these will be managed by the database administrator (DBA) on a need-to-access basis. People and programs will be granted access only to a minimum set of capabilities required to function, and nothing more.</p>
-<p>In this book, we are using a PostgreSQL Docker image <span class="citation">(Docker <a href="#ref-Docker2018">2018</a><a href="#ref-Docker2018">d</a>)</span>. When we create a container from that image, we use its native mechanism to create the <code>postgres</code> database superuser with a password specified in an R environment file <code>~/.Renviron</code>. See <a href="chapter-dbms-login-credentials.html#chapter_dbms-login-credentials">Securing and using your dbms log-in credentials</a> for how we do this.</p>
+<p>PostgreSQL has a very robust and flexible set of authentication methods <span class="citation">(PostgreSQL Global Development Group <a href="#ref-PGDG2018a" role="doc-biblioref">2018</a><a href="#ref-PGDG2018a" role="doc-biblioref">a</a>)</span>. In most production environments, these will be managed by the database administrator (DBA) on a need-to-access basis. People and programs will be granted access only to a minimum set of capabilities required to function, and nothing more.</p>
+<p>In this book, we are using a PostgreSQL Docker image <span class="citation">(Docker <a href="#ref-Docker2018" role="doc-biblioref">2018</a><a href="#ref-Docker2018" role="doc-biblioref">d</a>)</span>. When we create a container from that image, we use its native mechanism to create the <code>postgres</code> database superuser with a password specified in an R environment file <code>~/.Renviron</code>. See <a href="chapter-dbms-login-credentials.html#chapter_dbms-login-credentials">Securing and using your dbms log-in credentials</a> for how we do this.</p>
 <p>What that means is that you are the DBA - the database superuser - for the PostgreSQL database cluster running in the container! You can create and destroy databases, schemas, tables, views, etc. You can also create and destroy users - called <code>roles</code> in PostgreSQL, and <code>GRANT</code> or <code>REVOKE</code> their privileges with great precision.</p>
 <p>You don’t have to do that to use this book. But if you want to experiment with it, feel free!</p>
 </div>
 <div id="password-authentication-on-the-postgresql-docker-image" class="section level2">
 <h2><span class="header-section-number">C.2</span> Password authentication on the PostgreSQL Docker image</h2>
-<p>Of the many PostgreSQL authentication mechanisms, the simplest that’s universallly available is <code>password authentication</code> <span class="citation">(PostgreSQL Global Development Group <a href="#ref-PGDG2018b">2018</a><a href="#ref-PGDG2018b">c</a>)</span>. That’s what we use for the <code>postgres</code> database superuser, and what we recommend for any roles you may create.</p>
+<p>Of the many PostgreSQL authentication mechanisms, the simplest that’s universallly available is <code>password authentication</code> <span class="citation">(PostgreSQL Global Development Group <a href="#ref-PGDG2018b" role="doc-biblioref">2018</a><a href="#ref-PGDG2018b" role="doc-biblioref">c</a>)</span>. That’s what we use for the <code>postgres</code> database superuser, and what we recommend for any roles you may create.</p>
 <p>Once a role has been created, you need five items to open a connection to the PostgreSQL database cluster:</p>
 <ol style="list-style-type: decimal">
 <li>The <code>host</code>. This is a name or IP address that your network can access. In this book, with the database running in a Docker container, that’s usually <code>localhost</code>.</li>
-<li>The <code>port</code>. This is the port the server is listening on. It’s usually the default, <code>5432</code>, and that’s what we use. But in a secure environment, it will often be some random number to lower the chances that an attacker can find the database server. And if you have more than one server on the network, you’ll need to use different ports for each of them.</li>
+<li>The <code>port</code>. This is the port the server is listening on. It’s usually the default, <code>5439</code>, and that’s what we use. But in a secure environment, it will often be some random number to lower the chances that an attacker can find the database server. And if you have more than one server on the network, you’ll need to use different ports for each of them.</li>
 <li>The <code>dbname</code> to connect to. This database must exist or the connection attempt will fail.</li>
 <li>The <code>user</code>. This user must exist in the database cluster and be allowed to access the database. We are using the database superuser <code>postgres</code> in this book.</li>
 <li>The <code>password</code>. This is set by the DBA for the user. In this book we use the password defined in <a href="chapter-dbms-login-credentials.html#chapter_dbms-login-credentials">Securing and using your dbms log-in credentials</a>.</li>
@@ -636,10 +636,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="adding-roles" class="section level2">
 <h2><span class="header-section-number">C.3</span> Adding roles</h2>
-<p>As noted above, PostgreSQL has a very flexible fine-grained access permissions system. We can’t cover all of it; see <span class="citation">PostgreSQL Global Development Group (<a href="#ref-PGDG2018c">2018</a><a href="#ref-PGDG2018c">b</a>)</span> for the full details. But we can give an example.</p>
+<p>As noted above, PostgreSQL has a very flexible fine-grained access permissions system. We can’t cover all of it; see <span class="citation">PostgreSQL Global Development Group (<a href="#ref-PGDG2018c" role="doc-biblioref">2018</a><a href="#ref-PGDG2018c" role="doc-biblioref">b</a>)</span> for the full details. But we can give an example.</p>
 <div id="setting-up-docker" class="section level3">
 <h3><span class="header-section-number">C.3.1</span> Setting up Docker</h3>
-<p>First, we need to make sure we don’t have any other databases listening on the default port <code>5432</code>.</p>
+<p>First, we need to make sure we don’t have any other databases listening on the default port <code>5439</code>.</p>
 <pre class="sourceCode r"><code class="sourceCode r">sqlpetr<span class="op">::</span><span class="kw">sp_check_that_docker_is_up</span>()</code></pre>
 <pre><code>## [1] &quot;Docker is up but running no containers&quot;</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r">sqlpetr<span class="op">::</span><span class="kw">sp_docker_remove_container</span>(<span class="st">&quot;cattle&quot;</span>)</code></pre>
@@ -655,7 +655,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 cattle_conn &lt;-<span class="st"> </span>sqlpetr<span class="op">::</span><span class="kw">sp_get_postgres_connection</span>(
   <span class="dt">host =</span> <span class="st">&quot;localhost&quot;</span>,
-  <span class="dt">port =</span> <span class="dv">5432</span>,
+  <span class="dt">port =</span> <span class="dv">5439</span>,
   <span class="dt">dbname =</span> <span class="st">&quot;postgres&quot;</span>,
   <span class="dt">user =</span> <span class="st">&quot;postgres&quot;</span>,
   <span class="dt">password =</span> <span class="st">&quot;postgres&quot;</span>,
@@ -668,7 +668,7 @@ cattle_conn &lt;-<span class="st"> </span>sqlpetr<span class="op">::</span><span
 <p>Create the role:</p>
 <pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">CREATE</span> <span class="kw">ROLE</span> charlie LOGIN CREATEDB <span class="kw">PASSWORD</span> <span class="st">&#39;chaplin&#39;</span>;</code></pre>
 <p>Create the database:</p>
-<pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">CREATE</span> <span class="kw">DATABASE</span> charlie OWNER = charlie;</code></pre>
+<pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">CREATE</span> <span class="kw">DATABASE</span> charlie OWNER <span class="op">=</span> charlie;</code></pre>
 </div>
 <div id="did-it-work" class="section level3">
 <h3><span class="header-section-number">C.3.4</span> Did it work?</h3>
@@ -676,14 +676,14 @@ cattle_conn &lt;-<span class="st"> </span>sqlpetr<span class="op">::</span><span
 
 cattle_conn &lt;-<span class="st"> </span>sqlpetr<span class="op">::</span><span class="kw">sp_get_postgres_connection</span>(
   <span class="dt">host =</span> <span class="st">&quot;localhost&quot;</span>,
-  <span class="dt">port =</span> <span class="dv">5432</span>,
+  <span class="dt">port =</span> <span class="dv">5439</span>,
   <span class="dt">dbname =</span> <span class="st">&quot;charlie&quot;</span>,
   <span class="dt">user =</span> <span class="st">&quot;charlie&quot;</span>,
   <span class="dt">password =</span> <span class="st">&quot;chaplin&quot;</span>,
   <span class="dt">seconds_to_test =</span> <span class="dv">30</span>, <span class="dt">connection_tab =</span> <span class="ot">TRUE</span>
 )
 <span class="kw">print</span>(cattle_conn)</code></pre>
-<pre><code>## &lt;PqConnection&gt; charlie@localhost:5432</code></pre>
+<pre><code>## &lt;PqConnection&gt; charlie@localhost:5439</code></pre>
 <p>OK, we can connect. Let’s do some stuff!</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;iris&quot;</span>)</code></pre>
 <p><code>dbCreateTable</code> creates the table with columns matching the data frame. But it does not send data to the table.</p>

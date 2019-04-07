@@ -25,7 +25,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
 
 
-<meta name="date" content="2019-04-02">
+<meta name="date" content="2019-04-06">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -79,7 +79,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -645,7 +645,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="r-is-lazy-and-comes-with-guardrails" class="section level2">
 <h2><span class="header-section-number">9.2</span> R is lazy and comes with guardrails</h2>
-<p>By design, R is both a language and an interactive development environment (IDE). As a language, R tries to be as efficient as possible. As an IDE, R creates some guardrails to make it easy and safe to work with your data. For example <code>getOption(&quot;max.print&quot;)</code> prevents R from printing more rows of data than you want to handle in an interactive session, with a default of 99999 lines, which may or may not suit you.</p>
+<p>By design, R is both a language and an interactive development environment (IDE). As a language, R tries to be as efficient as possible. As an IDE, R creates some guardrails to make it easy and safe to work with your data. For example <code>getOption("max.print")</code> prevents R from printing more rows of data than you want to handle in an interactive session, with a default of 99999 lines, which may or may not suit you.</p>
 <p>On the other hand SQL is a <em>“Structured Query Language (SQL): a standard computer language for relational database management and data manipulation.”</em>.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> SQL has various database-specific Interactive Development Environments (IDEs), such as <a href="https://www.pgadmin.org/">pgAdmin</a> for PostgreSQL. Roger Peng explains in <a href="https://bookdown.org/rdpeng/rprogdatascience/history-and-overview-of-r.html#basic-features-of-r">R Programming for Data Science</a> that:</p>
 <blockquote>
 <p>R has maintained the original S philosophy, which is that it provides a language that is both useful for interactive work, but contains a powerful programming language for developing new tools.</p>
@@ -670,7 +670,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="lazy-queries" class="section level3">
 <h3><span class="header-section-number">9.2.3</span> Lazy Queries</h3>
-<p>“<em>When you create a &quot;lazy&quot; query, you’re creating a pointer to a set of conditions on the database, but the query isn’t actually run and the data isn’t actually loaded until you call &quot;next&quot; or some similar method to actually fetch the data and load it into an object.</em>”<a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a></p>
+<p>“<em>When you create a "lazy" query, you’re creating a pointer to a set of conditions on the database, but the query isn’t actually run and the data isn’t actually loaded until you call "next" or some similar method to actually fetch the data and load it into an object.</em>”<a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a></p>
 </div>
 </div>
 <div id="lazy-evaluation-and-lazy-queries" class="section level2">
@@ -683,7 +683,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>At first glance, it <em>acts</em> like a data frame when you print it, although it only prints 10 of the table’s 1,000 rows:</p>
 <pre class="sourceCode r"><code class="sourceCode r">film_table</code></pre>
 <pre><code>## # Source:   table&lt;film&gt; [?? x 13]
-## # Database: postgres [postgres@localhost:5432/dvdrental]
+## # Database: postgres [postgres@localhost:5439/dvdrental]
 ##    film_id title description release_year language_id rental_duration
 ##      &lt;int&gt; &lt;chr&gt; &lt;chr&gt;              &lt;int&gt;       &lt;int&gt;           &lt;int&gt;
 ##  1     133 Cham… A Fateful …         2006           1               7
@@ -875,7 +875,7 @@ Q &lt;-<span class="st"> </span>film_table <span class="op">%&gt;%</span>
 <p>Remember that <code>Q %&gt;% print()</code> is equivalent to <code>print(Q)</code> and the same as just entering <code>Q</code> on the command line. We use the magrittr pipe operator here, because chaining functions highlights how the same object behaves differently in each use.</p>
 <pre class="sourceCode r"><code class="sourceCode r">Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">print</span>()</code></pre>
 <pre><code>## # Source:   lazy query [?? x 4]
-## # Database: postgres [postgres@localhost:5432/dvdrental]
+## # Database: postgres [postgres@localhost:5439/dvdrental]
 ##    title            length rating category   
 ##    &lt;chr&gt;             &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;      
 ##  1 Academy Dinosaur     86 PG     Documentary
@@ -892,7 +892,7 @@ Q &lt;-<span class="st"> </span>film_table <span class="op">%&gt;%</span>
 <p><img src="screenshots/green-check.png" /> R retrieves 10 observations and 3 columns. In its role as IDE, R has provided nicely formatted output that is similar to what it prints for a tibble, with descriptive information about the dataset and each column:</p>
 <blockquote>
 <h2 id="source-lazy-query-x-4"><span class="header-section-number">9.4.3</span> # Source: lazy query [?? x 4]</h2>
-<h2 id="database-postgres-postgreslocalhost5432dvdrental"><span class="header-section-number">9.4.3</span> # Database: postgres [<a href="mailto:postgres@localhost" class="email">postgres@localhost</a>:5432/dvdrental]</h2>
+<h2 id="database-postgres-postgreslocalhost5439dvdrental"><span class="header-section-number">9.4.3</span> # Database: postgres [<a href="mailto:postgres@localhost" class="email">postgres@localhost</a>:5439/dvdrental]</h2>
 <h2 id="title-length-rating-category"><span class="header-section-number">9.4.3</span> title length rating category</h2>
 <h2 id="section"><span class="header-section-number">9.4.3</span> <chr> <int> <chr> <chr></h2>
 </blockquote>
@@ -922,7 +922,7 @@ Q &lt;-<span class="st"> </span>film_table <span class="op">%&gt;%</span>
 <p><img src="screenshots/green-check.png" /> The <code>head()</code> function is very similar to print but has a different “<code>max.print</code>” value.</p>
 <pre class="sourceCode r"><code class="sourceCode r">Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>()</code></pre>
 <pre><code>## # Source:   lazy query [?? x 4]
-## # Database: postgres [postgres@localhost:5432/dvdrental]
+## # Database: postgres [postgres@localhost:5439/dvdrental]
 ##   title            length rating               category   
 ##   &lt;chr&gt;             &lt;int&gt; &lt;S3: pq_mpaa_rating&gt; &lt;chr&gt;      
 ## 1 Academy Dinosaur     86 PG                   Documentary
@@ -969,13 +969,13 @@ Q &lt;-<span class="st"> </span>film_table <span class="op">%&gt;%</span>
 ##   .. ..- attr(*, &quot;class&quot;)= chr [1:3] &quot;op_join&quot; &quot;op_double&quot; &quot;op&quot;
 ##   ..$ dots:List of 4
 ##   .. ..$ : language ~title
-##   .. .. ..- attr(*, &quot;.Environment&quot;)=&lt;environment: 0x7f87056fa170&gt; 
+##   .. .. ..- attr(*, &quot;.Environment&quot;)=&lt;environment: 0x55856a3cfb58&gt; 
 ##   .. ..$ : language ~length
-##   .. .. ..- attr(*, &quot;.Environment&quot;)=&lt;environment: 0x7f87056fa170&gt; 
+##   .. .. ..- attr(*, &quot;.Environment&quot;)=&lt;environment: 0x55856a3cfb58&gt; 
 ##   .. ..$ : language ~rating
-##   .. .. ..- attr(*, &quot;.Environment&quot;)=&lt;environment: 0x7f87056fa170&gt; 
+##   .. .. ..- attr(*, &quot;.Environment&quot;)=&lt;environment: 0x55856a3cfb58&gt; 
 ##   .. ..$ : language ~category
-##   .. .. ..- attr(*, &quot;.Environment&quot;)=&lt;environment: 0x7f87056fa170&gt; 
+##   .. .. ..- attr(*, &quot;.Environment&quot;)=&lt;environment: 0x55856a3cfb58&gt; 
 ##   .. ..- attr(*, &quot;class&quot;)= chr &quot;quosures&quot;
 ##   ..$ args: list()
 ##   ..- attr(*, &quot;class&quot;)= chr [1:3] &quot;op_select&quot; &quot;op_single&quot; &quot;op&quot;
@@ -992,7 +992,7 @@ Q &lt;-<span class="st"> </span>film_table <span class="op">%&gt;%</span>
 <p><img src="screenshots/green-check.png" /> The <code>tally</code> function actually counts all the rows.</p>
 <pre class="sourceCode r"><code class="sourceCode r">Q <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">tally</span>()</code></pre>
 <pre><code>## # Source:   lazy query [?? x 1]
-## # Database: postgres [postgres@localhost:5432/dvdrental]
+## # Database: postgres [postgres@localhost:5439/dvdrental]
 ##   n              
 ##   &lt;S3: integer64&gt;
 ## 1 1000</code></pre>
@@ -1059,9 +1059,9 @@ Q &lt;-<span class="st"> </span>film_table <span class="op">%&gt;%</span>
 ## ) &quot;TBL_LEFT&quot;
 ##   LEFT JOIN (SELECT &quot;category_id&quot;, &quot;name&quot; AS &quot;category&quot;
 ## FROM (SELECT &quot;category_id&quot;, &quot;name&quot;
-## FROM &quot;category&quot;) &quot;lfcwgzpzjo&quot;) &quot;TBL_RIGHT&quot;
+## FROM &quot;category&quot;) &quot;zihssgwtrn&quot;) &quot;TBL_RIGHT&quot;
 ##   ON (&quot;TBL_LEFT&quot;.&quot;category_id&quot; = &quot;TBL_RIGHT&quot;.&quot;category_id&quot;)
-## ) &quot;lolfcqlbui&quot;</code></pre>
+## ) &quot;drsgeejfcf&quot;</code></pre>
 <p>Hand-written SQL code to do the same job will probably look a lot nicer and could be more efficient, but functionally <code>dplyr</code> does the job.</p>
 <pre class="sourceCode r"><code class="sourceCode r">DBI<span class="op">::</span><span class="kw">dbDisconnect</span>(con)
 sqlpetr<span class="op">::</span><span class="kw">sp_docker_stop</span>(<span class="st">&quot;sql-pet&quot;</span>)</code></pre>
