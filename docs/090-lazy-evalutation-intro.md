@@ -418,13 +418,13 @@ Q %>% str(max.level = 3)
 ##   .. ..- attr(*, "class")= chr [1:3] "op_join" "op_double" "op"
 ##   ..$ dots:List of 4
 ##   .. ..$ : language ~title
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x55856a3cfb58> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x5641c2f300e0> 
 ##   .. ..$ : language ~length
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x55856a3cfb58> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x5641c2f300e0> 
 ##   .. ..$ : language ~rating
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x55856a3cfb58> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x5641c2f300e0> 
 ##   .. ..$ : language ~category
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x55856a3cfb58> 
+##   .. .. ..- attr(*, ".Environment")=<environment: 0x5641c2f300e0> 
 ##   .. ..- attr(*, "class")= chr "quosures"
 ##   ..$ args: list()
 ##   ..- attr(*, "class")= chr [1:3] "op_select" "op_single" "op"
@@ -544,9 +544,9 @@ Q %>% dplyr::show_query()
 ## ) "TBL_LEFT"
 ##   LEFT JOIN (SELECT "category_id", "name" AS "category"
 ## FROM (SELECT "category_id", "name"
-## FROM "category") "zihssgwtrn") "TBL_RIGHT"
+## FROM "category") "sqfdkcwewt") "TBL_RIGHT"
 ##   ON ("TBL_LEFT"."category_id" = "TBL_RIGHT"."category_id")
-## ) "drsgeejfcf"
+## ) "xjkijbsyva"
 ```
 Hand-written SQL code to do the same job will probably look a lot nicer and could be more efficient, but functionally `dplyr` does the job.
 

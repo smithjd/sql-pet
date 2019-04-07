@@ -207,17 +207,17 @@ one_percent_sample
 
 ```
 ##    film_id               title rating
-## 1      213          Date Speed      R
-## 2       33         Apollo Teen  PG-13
-## 3       76     Birdcage Casper  NC-17
-## 4      127       Cat Coneheads      G
-## 5      236 Divine Resurrection      R
-## 6      251 Dragonfly Strangers  NC-17
-## 7      296      Express Lonely      R
-## 8      375  Grail Frankenstein  NC-17
-## 9      766       Savannah Town  PG-13
-## 10     888      Thin Sagebrush  PG-13
-## 11     999   Zoolander Fiction      R
+## 1       92    Bowfinger Gables  NC-17
+## 2       97      Bride Intrigue      G
+## 3      128       Catch Amistad      G
+## 4      152        Circus Youth  PG-13
+## 5      292      Excitement Eve      G
+## 6      493       Kane Exorcist      R
+## 7      511       Lawrence Love  NC-17
+## 8      598 Mosquito Armageddon      G
+## 9      633   October Submarine  PG-13
+## 10     694  Prejudice Oleander  PG-13
+## 11     849     Storm Happiness  NC-17
 ```
 **Exact sample of 100 records**
 
