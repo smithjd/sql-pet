@@ -25,7 +25,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
 
 
-<meta name="date" content="2019-04-02">
+<meta name="date" content="2019-04-07">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -79,7 +79,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -651,7 +651,7 @@ customer_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><spa
 
 Q</code></pre>
 <pre><code>## # Source:   lazy query [?? x 2]
-## # Database: postgres [postgres@localhost:5432/dvdrental]
+## # Database: postgres [postgres@localhost:5439/dvdrental]
 ##    rental_date         email                                
 ##    &lt;dttm&gt;              &lt;chr&gt;                                
 ##  1 2005-05-24 22:54:33 tommy.collazo@sakilacustomer.org     
@@ -672,7 +672,7 @@ Q</code></pre>
 
 Q</code></pre>
 <pre><code>## # Source:   lazy query [?? x 2]
-## # Database: postgres [postgres@localhost:5432/dvdrental]
+## # Database: postgres [postgres@localhost:5439/dvdrental]
 ##    rental_date         email                                
 ##    &lt;dttm&gt;              &lt;chr&gt;                                
 ##  1 2005-05-24 22:54:33 tommy.collazo@sakilacustomer.org     
@@ -751,7 +751,7 @@ Q_query &lt;- Q %&gt;% count(email)</p>
 <p><img src="screenshots/green-check.png" /> Because the following statement implies a <code>print()</code> function at the end, we can run it repeatedly, adding dplyr expressions, and only get 10 rows back. Every time we add a dplyr expression to a chain, R will rewrite the SQL code. For example:</p>
 <pre class="sourceCode r"><code class="sourceCode r">Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(email) </code></pre>
 <pre><code>## # Source:   lazy query [?? x 2]
-## # Database: postgres [postgres@localhost:5432/dvdrental]
+## # Database: postgres [postgres@localhost:5439/dvdrental]
 ##    email                             n              
 ##    &lt;chr&gt;                             &lt;S3: integer64&gt;
 ##  1 harold.martino@sakilacustomer.org 32             
@@ -770,7 +770,7 @@ Q_query &lt;- Q %&gt;% count(email)</p>
 <span class="st">  </span><span class="kw">filter</span>(n <span class="op">&gt;</span><span class="st"> </span><span class="dv">40</span>) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">arrange</span>(email)</code></pre>
 <pre><code>## # Source:     lazy query [?? x 2]
-## # Database:   postgres [postgres@localhost:5432/dvdrental]
+## # Database:   postgres [postgres@localhost:5439/dvdrental]
 ## # Ordered by: email
 ##   email                            n              
 ##   &lt;chr&gt;                            &lt;S3: integer64&gt;
@@ -790,7 +790,7 @@ Q_query &lt;- Q %&gt;% count(email)</p>
 <pre class="sourceCode r"><code class="sourceCode r">rental_table <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">rental_date =</span> <span class="kw">date</span>(rental_date))</code></pre>
 <pre><code>## # Source:   lazy query [?? x 7]
-## # Database: postgres [postgres@localhost:5432/dvdrental]
+## # Database: postgres [postgres@localhost:5439/dvdrental]
 ##    rental_id rental_date inventory_id customer_id return_date        
 ##        &lt;int&gt; &lt;date&gt;             &lt;int&gt;       &lt;int&gt; &lt;dttm&gt;             
 ##  1         2 2005-05-24          1525         459 2005-05-28 19:40:33
@@ -837,7 +837,7 @@ rental_table <span class="op">%&gt;%</span><span class="st"> </span>
 <pre class="sourceCode r"><code class="sourceCode r">rental_table <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">rental_date =</span> <span class="kw">to_char</span>(rental_date, <span class="st">&quot;YYYY-MM&quot;</span>)) </code></pre>
 <pre><code>## # Source:   lazy query [?? x 7]
-## # Database: postgres [postgres@localhost:5432/dvdrental]
+## # Database: postgres [postgres@localhost:5439/dvdrental]
 ##    rental_id rental_date inventory_id customer_id return_date        
 ##        &lt;int&gt; &lt;chr&gt;              &lt;int&gt;       &lt;int&gt; &lt;dttm&gt;             
 ##  1         2 2005-05             1525         459 2005-05-28 19:40:33
@@ -858,7 +858,7 @@ rental_table <span class="op">%&gt;%</span><span class="st"> </span>
 <p><img src="screenshots/green-check.png" /> It just so happens that PostgreSQL has a <code>date</code> function that does the same thing as the <code>date</code> function in the <code>lubridate</code> package. In the following code the <code>date</code> function is executed by PostreSQL.</p>
 <pre class="sourceCode r"><code class="sourceCode r">rental_table <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">rental_date =</span> <span class="kw">date</span>(rental_date))</code></pre>
 <pre><code>## # Source:   lazy query [?? x 7]
-## # Database: postgres [postgres@localhost:5432/dvdrental]
+## # Database: postgres [postgres@localhost:5439/dvdrental]
 ##    rental_id rental_date inventory_id customer_id return_date        
 ##        &lt;int&gt; &lt;date&gt;             &lt;int&gt;       &lt;int&gt; &lt;dttm&gt;             
 ##  1         2 2005-05-24          1525         459 2005-05-28 19:40:33

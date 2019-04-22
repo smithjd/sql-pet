@@ -25,7 +25,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
 
 
-<meta name="date" content="2019-04-02">
+<meta name="date" content="2019-04-07">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -79,7 +79,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -639,8 +639,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="r" class="section level2">
 <h2><span class="header-section-number">2.3</span> R</h2>
-<p>We assume a general familiarity with R and RStudio. RStudio’s Big Data workshop at the 2019 RStudio has an abundance of introductory material <span class="citation">(Ruiz <a href="#ref-Ruiz2019">2019</a>)</span>.</p>
-<p>This book is <a href="https://www.tidyverse.org">Tidyverse-oriented</a>, so we assume familiarity with the pipe operator, tidy data <span class="citation">(Wickham <a href="#ref-Wickham2014">2014</a>)</span>, dplyr, and techniques for tidying data <span class="citation">(Wickham <a href="#ref-Wickham2018">2018</a>)</span>.</p>
+<p>We assume a general familiarity with R and RStudio. RStudio’s Big Data workshop at the 2019 RStudio has an abundance of introductory material <span class="citation">(Ruiz <a href="#ref-Ruiz2019" role="doc-biblioref">2019</a>)</span>.</p>
+<p>This book is <a href="https://www.tidyverse.org">Tidyverse-oriented</a>, so we assume familiarity with the pipe operator, tidy data <span class="citation">(Wickham <a href="#ref-Wickham2014" role="doc-biblioref">2014</a>)</span>, dplyr, and techniques for tidying data <span class="citation">(Wickham <a href="#ref-Wickham2018" role="doc-biblioref">2018</a>)</span>.</p>
 <p>R connects to a database by means of a series of packages that work together. The following diagram from a <a href="https://github.com/rstudio/bigdataclass">big data workshop</a> at the 2019 RStudio conference shows the big picture. The biggest difference in terms of retrieval strategies is between writing <code>dplyr</code> and native <code>SQL</code> code. Dplyr generates <a href="https://en.wikipedia.org/wiki/SQL-92">SQL-92 standard</a> code; whereas you can write SQL code that leverages the specific language features of your DBMS when you write SQL code yourself.</p>
 <div class="figure">
 <img src="screenshots/rstudioconf-2019-big-data-architecture.png" alt="Rstudio’s DBMS architecture - slide # 33" />
@@ -675,8 +675,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="docker-itself" class="section level3">
 <h3><span class="header-section-number">2.5.3</span> Docker itself</h3>
-<p>While there are both older (<em>lxc</em>) and newer container tools, the one that has caught on in terms of widespread use is <em>Docker</em> <span class="citation">(Docker <a href="#ref-Docker2019a">2019</a><a href="#ref-Docker2019a">a</a>)</span>. Docker is widely used on cloud providers to deploy services of all kinds. Using Docker on the desktop to deliver standardized packages, as we are doing in this book, is a secondary use case, but a common one.</p>
-<p>If you’re using a Linux laptop / desktop, all you need to do is install Docker CE <span class="citation">(Docker <a href="#ref-Docker2018b">2018</a><a href="#ref-Docker2018b">a</a>)</span>. However, most laptops and desktops don’t run Linux - they run Windows or MacOS. As noted above, to use Docker on Windows or MacOS, you need a hypervisor and a Linux virtual machine.</p>
+<p>While there are both older (<em>lxc</em>) and newer container tools, the one that has caught on in terms of widespread use is <em>Docker</em> <span class="citation">(Docker <a href="#ref-Docker2019a" role="doc-biblioref">2019</a><a href="#ref-Docker2019a" role="doc-biblioref">a</a>)</span>. Docker is widely used on cloud providers to deploy services of all kinds. Using Docker on the desktop to deliver standardized packages, as we are doing in this book, is a secondary use case, but a common one.</p>
+<p>If you’re using a Linux laptop / desktop, all you need to do is install Docker CE <span class="citation">(Docker <a href="#ref-Docker2018b" role="doc-biblioref">2018</a><a href="#ref-Docker2018b" role="doc-biblioref">a</a>)</span>. However, most laptops and desktops don’t run Linux - they run Windows or MacOS. As noted above, to use Docker on Windows or MacOS, you need a hypervisor and a Linux virtual machine.</p>
 </div>
 <div id="docker-objects" class="section level3">
 <h3><span class="header-section-number">2.5.4</span> Docker objects</h3>
@@ -686,12 +686,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="hosting-docker-on-windows-machines" class="section level3">
 <h3><span class="header-section-number">2.5.5</span> Hosting Docker on Windows machines</h3>
-<p>There are two ways to get Docker on Windows. For Windows 10 Home and older versions of Windows, you need Docker Toolbox <span class="citation">(Docker <a href="#ref-Docker2019b">2019</a><a href="#ref-Docker2019b">e</a>)</span>. Note that for Docker Toolbox, you need a 64-bit AMD or Intel processor with the virtualization hardware installed and enabled in the BIOS.</p>
-<p>For Windows 10 Pro, you have the Hyper-V virtualizer as standard equipment, and can use Docker for Windows <span class="citation">(Docker <a href="#ref-Docker2019c">2019</a><a href="#ref-Docker2019c">c</a>)</span>.</p>
+<p>There are two ways to get Docker on Windows. For Windows 10 Home and older versions of Windows, you need Docker Toolbox <span class="citation">(Docker <a href="#ref-Docker2019b" role="doc-biblioref">2019</a><a href="#ref-Docker2019b" role="doc-biblioref">e</a>)</span>. Note that for Docker Toolbox, you need a 64-bit AMD or Intel processor with the virtualization hardware installed and enabled in the BIOS.</p>
+<p>For Windows 10 Pro, you have the Hyper-V virtualizer as standard equipment, and can use Docker for Windows <span class="citation">(Docker <a href="#ref-Docker2019c" role="doc-biblioref">2019</a><a href="#ref-Docker2019c" role="doc-biblioref">c</a>)</span>.</p>
 </div>
 <div id="hosting-docker-on-macos-machines" class="section level3">
 <h3><span class="header-section-number">2.5.6</span> Hosting Docker on macOS machines</h3>
-<p>As with Windows, there are two ways to get Docker. For older Intel systems, you’ll need Docker Toolbox <span class="citation">(Docker <a href="#ref-Docker2019d">2019</a><a href="#ref-Docker2019d">d</a>)</span>. Newer systems (2010 or later running at least macOS El Capitan 10.11) can run Docker for Mac <span class="citation">(Docker <a href="#ref-Docker2019e">2019</a><a href="#ref-Docker2019e">b</a>)</span>.</p>
+<p>As with Windows, there are two ways to get Docker. For older Intel systems, you’ll need Docker Toolbox <span class="citation">(Docker <a href="#ref-Docker2019d" role="doc-biblioref">2019</a><a href="#ref-Docker2019d" role="doc-biblioref">d</a>)</span>. Newer systems (2010 or later running at least macOS El Capitan 10.11) can run Docker for Mac <span class="citation">(Docker <a href="#ref-Docker2019e" role="doc-biblioref">2019</a><a href="#ref-Docker2019e" role="doc-biblioref">b</a>)</span>.</p>
 </div>
 <div id="hosting-docker-on-unix-machines" class="section level3">
 <h3><span class="header-section-number">2.5.7</span> Hosting Docker on UNIX machines</h3>
@@ -702,11 +702,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">2.6</span> ‘Normal’ and ‘normalized’ data</h2>
 <div id="tidy-data" class="section level3">
 <h3><span class="header-section-number">2.6.1</span> Tidy data</h3>
-<p>Tidy data <span class="citation">(Wickham <a href="#ref-Wickham2014">2014</a>)</span> is well-behaved from the point of view of analysis and tools in the Tidyverse <span class="citation">(RStudio <a href="#ref-RStudio2019">2019</a>)</span>. Tidy data is easier to think about and it is usually worthwhile to make the data tidy <span class="citation">(Wickham <a href="#ref-Wickham2018">2018</a>)</span>. Tidy data is roughly equivalent to <em>third normal form</em> as discussed below.</p>
+<p>Tidy data <span class="citation">(Wickham <a href="#ref-Wickham2014" role="doc-biblioref">2014</a>)</span> is well-behaved from the point of view of analysis and tools in the Tidyverse <span class="citation">(RStudio <a href="#ref-RStudio2019" role="doc-biblioref">2019</a>)</span>. Tidy data is easier to think about and it is usually worthwhile to make the data tidy <span class="citation">(Wickham <a href="#ref-Wickham2018" role="doc-biblioref">2018</a>)</span>. Tidy data is roughly equivalent to <em>third normal form</em> as discussed below.</p>
 </div>
 <div id="design-of-normal-data" class="section level3">
 <h3><span class="header-section-number">2.6.2</span> Design of “normal data”</h3>
-<p>Data in a database is most often optimized to minimize storage space and increase performance while preserving integrity when adding, changing, or deleting data. The Wikipedia article on Database Normalization has a good introduction to the characteristics of “normal” data and the process of re-organizing it to meet those desirable criteria <span class="citation">(Wikipedia <a href="#ref-Wikipedia2019">2019</a>)</span>. The bottom line is that “data normalization is practical” although there are mathematical arguments for normalization based on the preservation of data integrity.</p>
+<p>Data in a database is most often optimized to minimize storage space and increase performance while preserving integrity when adding, changing, or deleting data. The Wikipedia article on Database Normalization has a good introduction to the characteristics of “normal” data and the process of re-organizing it to meet those desirable criteria <span class="citation">(Wikipedia <a href="#ref-Wikipedia2019" role="doc-biblioref">2019</a>)</span>. The bottom line is that “data normalization is practical” although there are mathematical arguments for normalization based on the preservation of data integrity.</p>
 </div>
 </div>
 <div id="organizational-dbms" class="section level2">

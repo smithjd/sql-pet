@@ -3163,7 +3163,7 @@ slide:not(.current) .plotly.html-widget{
 </article></slide><slide class=""><hgroup><h2>The <code>sqlpetr</code> R package</h2></hgroup><article  id="the-sqlpetr-r-package">
 
 <ul>
-<li>To capture common functionality and minimize the amount of typing one has to do, we’ve created an R package called <a href='https://smithjd.github.io/sqlpetr/index.html' title=''><code>sqlpetr</code></a>.</li>
+<li><p>To capture common functionality and minimize the amount of typing one has to do, we’ve created an R package called <a href='https://smithjd.github.io/sqlpetr/index.html' title=''><code>sqlpetr</code></a>.</p></li>
 <li><p>To install the package from the R console:</p>
 
 <pre >install.packages(&quot;remotes&quot;)
@@ -3211,7 +3211,11 @@ remotes::install_github(&quot;smithjd/sqlpetr&quot;, force = TRUE,
 <li>You create a container by running an image in it.</li>
 <li>Typically, a single process in the container will offer a service by listening on a TCP port.</li>
 <li>For that service to be useful on the host, we <em>publish</em> that port to <code>localhost</code>.</li>
-<li>In this workshop, we’ll run the PostgreSQL image with the <code>dvdrental</code> database on it in a container and publish its standard port, 5432, to <code>localhost</code>.</li>
+<li>In this workshop, we’ll run the PostgreSQL image with the <code>dvdrental</code> database on it in a container and publish its port, <em>5439</em>, to <code>localhost</code>.
+
+<ul>
+<li>We use port 5439 rather than the default 5432. Why? If PostgreSQL is running on the host or in another container, it probably has claimed port 5432, since that’s its default, and our container won’t work! So we need to use a different port for our PostgreSQL container.</li>
+</ul></li>
 </ul>
 
 </article></slide><slide class="segue dark nobackground level1"><hgroup class = 'auto-fadein'><h2>PostgreSQL Database Administration 101</h2></hgroup><article  id="postgresql-database-administration-101">
@@ -3249,7 +3253,7 @@ remotes::install_github(&quot;smithjd/sqlpetr&quot;, force = TRUE,
 </article></slide><slide class=""><hgroup><h2>Making a connection</h2></hgroup><article  id="making-a-connection">
 
 <ul>
-<li>To use a PostgreSQL service, you need to open a <em>connection</em>.</li>
+<li><p>To use a PostgreSQL service, you need to open a <em>connection</em>.</p></li>
 <li><p>A connection needs five things:</p>
 
 <ol>
@@ -3259,7 +3263,7 @@ remotes::install_github(&quot;smithjd/sqlpetr&quot;, force = TRUE,
 <li>The <em>user</em> you want to connect as, and</li>
 <li>That user’s <em>password</em>.</li>
 </ol></li>
-<li><p>In the workshop, <code>host</code> will be &ldquo;localhost&rdquo;, <code>port</code> will be 5432, <code>database</code> will be &ldquo;dvdrental&rdquo;, and both <code>user</code> and <code>password</code> will be &ldquo;postgres&rdquo;.</p></li>
+<li><p>In the workshop, <code>host</code> will be &ldquo;localhost&rdquo;, <code>port</code> will be 5439, <code>database</code> will be &ldquo;dvdrental&rdquo;, and both <code>user</code> and <code>password</code> will be &ldquo;postgres&rdquo;.</p></li>
 </ul>
 
 </article></slide><slide class="segue dark nobackground level1"><hgroup class = 'auto-fadein'><h2>Testing the Setup</h2></hgroup><article  id="testing-the-setup">
@@ -3284,7 +3288,7 @@ sp_docker_containers_tibble()</pre>
 
 <pre class = 'prettyprint lang-r'>con &lt;- sp_get_postgres_connection(
   host = &quot;localhost&quot;,
-  port = 5432,
+  port = 5439,
   user = &quot;postgres&quot;,
   password = &quot;postgres&quot;,
   dbname = &quot;dvdrental&quot;,

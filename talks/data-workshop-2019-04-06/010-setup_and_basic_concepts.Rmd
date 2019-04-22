@@ -73,7 +73,8 @@ knitr::opts_chunk$set(echo = FALSE)
 * You create a container by running an image in it.
 * Typically, a single process in the container will offer a service by listening on a TCP port.
 * For that service to be useful on the host, we _publish_ that port to `localhost`.
-* In this workshop, we'll run the PostgreSQL image with the `dvdrental` database on it in a container and publish its standard port, 5432, to `localhost`.
+* In this workshop, we'll run the PostgreSQL image with the `dvdrental` database on it in a container and publish its port, *5439*, to `localhost`.
+    - We use port 5439 rather than the default 5432. Why? If PostgreSQL is running on the host or in another container, it probably has claimed port 5432, since that's its default, and our container won't work! So we need to use a different port for our PostgreSQL container.
 
 # PostgreSQL Database Administration 101
 
@@ -104,7 +105,7 @@ knitr::opts_chunk$set(echo = FALSE)
     3. The _database_ you want to connect to,
     4. The _user_ you want to connect as, and
     5. That user's _password_.
-* In the workshop, `host` will be "localhost", `port` will be 5432, `database` will be "dvdrental", and both `user` and `password` will be "postgres". 
+* In the workshop, `host` will be "localhost", `port` will be 5439, `database` will be "dvdrental", and both `user` and `password` will be "postgres". 
 
 # Testing the Setup
 
@@ -131,7 +132,7 @@ sp_docker_containers_tibble()
 ```{r echo=TRUE, eval=FALSE}
 con <- sp_get_postgres_connection(
   host = "localhost",
-  port = 5432,
+  port = 5439,
   user = "postgres",
   password = "postgres",
   dbname = "dvdrental",
