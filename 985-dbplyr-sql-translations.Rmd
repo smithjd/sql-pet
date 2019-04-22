@@ -1,0 +1,89 @@
+# Dplyr to SQL translations 
+
+> This Appendix is based on the work of Dewey Dunnington ([@paleolimbot](http://twitter.com/paleolimbot)) which he published here: 
+> 
+> https://apps.fishandwhistle.net/archives/1503 
+>
+>  https://rud.is/b/2019/04/10/lost-in-sql-translation-charting-dbplyr-mapped-sql-function-support-across-all-backends/
+
+## Overview
+
+These packages are called below:
+```{r setup, echo=TRUE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(dbplyr)
+library(gt)
+library(here)
+```
+list the DBI functions that are available:
+```{r}
+names(sql_translate_env(simulate_dbi()))
+sql_translate_env(simulate_dbi())
+```
+
+```{r}
+source(here("book-src", "dbplyr-sql-function-translation.R"))
+```
+
+Each of the following dbplyr back ends may have a slightly different translation:
+
+```{r}
+translations %>%
+  filter(!is.na(sql)) %>% count(variant)
+```
+Only one postgres translation produces an output:
+```{r}
+psql <- translations %>%
+  filter(!is.na(sql), variant == "postgres") %>%
+  select(r, n_args, sql) %>%
+  arrange(r)
+
+psql %>% gt
+```
+
+the `postgres` variant fails for various reasons:
+```{r}
+psql_errors <-  translations %>%
+  filter(variant == "postgres") 
+
+error_list <- tibble(
+  function_name = psql_errors$fun_name, 
+  r = psql_errors$r,
+  errors = psql_errors %>% pluck("errors"))
+
+nrow(error_list)
+
+gt(head(error_list, n = 15))
+
+unique_error_list <- unique(error_list$errors) %>% as_tibble()
+
+gt(unique_error_list)
+
+```
+The `==` function across variant dbplyr backends
+```{r}
+equal = translations %>% 
+  filter(fun_name == "==") 
+
+equal_list <-  tibble(
+  variant = equal$variant, 
+  n_args = equal$n_args,
+  r = equal$r,
+  sql = equal$sql,
+  errors = equal %>% pluck("errors")) %>% 
+  arrange(variant, n_args) %>% 
+  filter(between(n_args,1,3))
+
+equal_list %>% gt()
+```
+odbc_postgres works on the whole list of SQL functions
+```{r}
+psql <- translations %>%
+  filter(!is.na(sql), variant == "odbc_postgresql") %>%
+  select(r, n_args, sql) %>%
+  arrange(r)
+
+psql %>% gt
+
+```
+
