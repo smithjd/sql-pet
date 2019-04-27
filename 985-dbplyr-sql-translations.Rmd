@@ -36,7 +36,7 @@ translations %>%
 Only one postgres translation produces an output:
 ```{r}
 psql <- translations %>%
-  filter(!is.na(sql), variant == "odbc_postgresql") %>%
+  filter(!is.na(sql), variant == "postgres") %>%
   select(r, n_args, sql) %>%
   arrange(r)
 
