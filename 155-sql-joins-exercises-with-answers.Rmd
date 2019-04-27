@@ -317,7 +317,9 @@ For an international company, how are the different currencies converted to a st
 
 #### Replicate the output above using dplyr syntax.
 
-```{r ex4-d, include=INCLUDE_OUTPUT, tidy=TRUE}
+> The following snippet of code fails.
+
+```{r ex4-d, include=INCLUDE_OUTPUT, eval=FALSE, tidy=TRUE}
 # sp_tbl_descr('table_name')
 # sp_tbl_pk_fk('table_name')
 # sp_print_df(table_rows_sql)
@@ -374,7 +376,7 @@ The top 25% of the customer base are from India, China, the United States, and J
 
 #### Replicate the output above using dplyr syntax.
 
-```{r ex5-d, include=INCLUDE_OUTPUT, tidy=TRUE}
+```{r ex5-d, include=INCLUDE_OUTPUT, eval=FALSE, tidy=TRUE}
 # sp_tbl_descr('table_name')
 # sp_tbl_pk_fk('table_name')
 # sp_print_df(table_rows_sql)
@@ -416,7 +418,9 @@ sp_print_df(country_au_ca_sql)
 
 #### Replicate the output above using dplyr syntax.
 
-```{r ex6-d, include=INCLUDE_OUTPUT, tidy=TRUE}
+> The following code fails:
+
+```{r ex6-d, include=INCLUDE_OUTPUT, eval=FALSE, tidy=TRUE}
 # sp_tbl_descr('table_name')
 # sp_tbl_pk_fk('table_name')
 # sp_print_df(table_rows_sql)
@@ -1457,7 +1461,7 @@ Parameterize the previous exercise to show the top 5 and bottom 5 customers.
 
 To answer this question we look at the `customer`, `rental`, and `payments` tables again.
 
-```{r ex27-s, code_folding='unhide', tidy=TRUE}
+```{r ex27-s, code_folding='unhide', eval=FALSE, tidy=TRUE}
 customer_rentals_hi_low_sql <- function(con,high_n,low_n) {
     customer_rental_high_low_sql <- dbGetQuery(con,
         "select *
@@ -1490,7 +1494,7 @@ customer_rentals_hi_low_sql <- function(con,high_n,low_n) {
 
 The next code block executes a sql version of such a function.  With top_n = 5 and bot_n = 5, it replicates the hard coded version of the previous exercise. With top_n = 5 and bot_n = 0, it gives a top 5 report.  With top_n = 0 and bot_n = 5, the report returns the bottom 5.  Change the two parameters to see the output from the different combinations.
 
-```{r customer_rentals_hi_low_sql}
+```{r customer_rentals_hi_low_sql, eval=FALSE}
 top_n = 5
 bot_n = 5
 sp_print_df(customer_rentals_hi_low_sql(con,top_n,bot_n))
