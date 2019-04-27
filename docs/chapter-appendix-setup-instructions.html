@@ -22,10 +22,10 @@
   <meta name="twitter:description" content="An introduction to Docker and PostgreSQL for R users to simulate use cases behind corporate walls." />
   
 
-<meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
+<meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, and Ian Frantz">
 
 
-<meta name="date" content="2019-04-07">
+<meta name="date" content="2019-04-26">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -58,7 +58,7 @@
 <script src="libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
 <script src="libs/viz-0.3/viz.js"></script>
 <link href="libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
-<script src="libs/grViz-binding-1.0.0/grViz.js"></script>
+<script src="libs/grViz-binding-1.0.1/grViz.js"></script>
 
 
 <style type="text/css">
@@ -79,7 +79,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(title);
+  { content: attr(data-line-number);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -584,13 +584,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="E" data-path="chapter-appendix-dplyr-functions.html"><a href="chapter-appendix-dplyr-functions.html"><i class="fa fa-check"></i><b>E</b> Dplyr functions and SQL cross-walk</a></li>
 <li class="chapter" data-level="F" data-path="chapter-appendix-dbi-functions.html"><a href="chapter-appendix-dbi-functions.html"><i class="fa fa-check"></i><b>F</b> DBI package functions - coverage</a></li>
-<li class="chapter" data-level="G" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html"><i class="fa fa-check"></i><b>G</b> Appendix Additional resources</a><ul>
-<li class="chapter" data-level="G.1" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#editing-this-book"><i class="fa fa-check"></i><b>G.1</b> Editing this book</a></li>
-<li class="chapter" data-level="G.2" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-alternatives"><i class="fa fa-check"></i><b>G.2</b> Docker alternatives</a></li>
-<li class="chapter" data-level="G.3" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-and-r"><i class="fa fa-check"></i><b>G.3</b> Docker and R</a></li>
-<li class="chapter" data-level="G.4" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#documentation-for-docker-and-postgresql"><i class="fa fa-check"></i><b>G.4</b> Documentation for Docker and PostgreSQL</a></li>
-<li class="chapter" data-level="G.5" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#sql-and-dplyr"><i class="fa fa-check"></i><b>G.5</b> SQL and dplyr</a></li>
-<li class="chapter" data-level="G.6" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#more-resources"><i class="fa fa-check"></i><b>G.6</b> More Resources</a></li>
+<li class="chapter" data-level="G" data-path="chapter-appendix-dplyr-to-postres-translation.html"><a href="chapter-appendix-dplyr-to-postres-translation.html"><i class="fa fa-check"></i><b>G</b> Appendix _ Dplyr to SQL translations</a><ul>
+<li class="chapter" data-level="G.1" data-path="chapter-appendix-dplyr-to-postres-translation.html"><a href="chapter-appendix-dplyr-to-postres-translation.html#overview-1"><i class="fa fa-check"></i><b>G.1</b> Overview</a></li>
+</ul></li>
+<li class="chapter" data-level="H" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html"><i class="fa fa-check"></i><b>H</b> Appendix Additional resources</a><ul>
+<li class="chapter" data-level="H.1" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#editing-this-book"><i class="fa fa-check"></i><b>H.1</b> Editing this book</a></li>
+<li class="chapter" data-level="H.2" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-alternatives"><i class="fa fa-check"></i><b>H.2</b> Docker alternatives</a></li>
+<li class="chapter" data-level="H.3" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-and-r"><i class="fa fa-check"></i><b>H.3</b> Docker and R</a></li>
+<li class="chapter" data-level="H.4" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#documentation-for-docker-and-postgresql"><i class="fa fa-check"></i><b>H.4</b> Documentation for Docker and PostgreSQL</a></li>
+<li class="chapter" data-level="H.5" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#sql-and-dplyr"><i class="fa fa-check"></i><b>H.5</b> SQL and dplyr</a></li>
+<li class="chapter" data-level="H.6" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#more-resources"><i class="fa fa-check"></i><b>H.6</b> More Resources</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -632,25 +635,25 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>MacOS, or</li>
 <li>Linux (any Linux distro that will run Docker Community Edition, R and RStudio will work)</li>
 </ul></li>
-<li>Current versions of <a href="https://www.datacamp.com/community/tutorials/installing-R-windows-mac-ubuntu">R and RStudio</a> [<span class="citation">Vargas (<a href="#ref-Vargas2018" role="doc-biblioref">2018</a>)</span>) required.</li>
+<li>Current versions of <a href="https://www.datacamp.com/community/tutorials/installing-R-windows-mac-ubuntu">R and RStudio</a> [<span class="citation">Vargas (<a href="#ref-Vargas2018">2018</a>)</span>) required.</li>
 <li>Docker (instructions below)</li>
-<li>Our companion package <code>sqlpetr</code> <span class="citation">(Borasky et al. <a href="#ref-Borasky2018a" role="doc-biblioref">2018</a>)</span></li>
+<li>Our companion package <code>sqlpetr</code> <span class="citation">(Borasky et al. <a href="#ref-Borasky2018a">2018</a>)</span></li>
 </ul>
 <p>The database we use is PostgreSQL 10, but you do not need to install it - it’s installed via a Docker image.</p>
 <p>In addition to the current version of R and RStudio, you will need current versions of the following packages:</p>
 <ul>
-<li><p><code>DBI</code> <span class="citation">(R Special Interest Group on Databases (R-SIG-DB), Wickham, and Müller <a href="#ref-R-DBI" role="doc-biblioref">2018</a>)</span></p></li>
-<li><p><code>DiagrammeR</code> <span class="citation">(Iannone <a href="#ref-R-DiagrammeR" role="doc-biblioref">2018</a>)</span></p></li>
-<li><p><code>RPostgres</code> <span class="citation">(Wickham, Ooms, and Müller <a href="#ref-R-RPostgres" role="doc-biblioref">2018</a>)</span></p></li>
-<li><p><code>dbplyr</code> <span class="citation">(Wickham and Ruiz <a href="#ref-R-dbplyr" role="doc-biblioref">2019</a>)</span></p></li>
-<li><p><code>devtools</code> <span class="citation">(Wickham, Hester, and Chang <a href="#ref-R-devtools" role="doc-biblioref">2018</a>)</span></p></li>
-<li><p><code>downloader</code> <span class="citation">(Chang <a href="#ref-R-downloader" role="doc-biblioref">2015</a>)</span></p></li>
-<li><p><code>glue</code> <span class="citation">(Hester <a href="#ref-R-glue" role="doc-biblioref">2019</a>)</span></p></li>
-<li><p><code>here</code> <span class="citation">(Müller <a href="#ref-R-here" role="doc-biblioref">2017</a>)</span></p></li>
-<li><p><code>knitr</code> <span class="citation">(Xie <a href="#ref-R-knitr" role="doc-biblioref">2019</a>)</span></p></li>
-<li><p><code>skimr</code> <span class="citation">(McNamara et al. <a href="#ref-R-skimr" role="doc-biblioref">2019</a>)</span></p></li>
-<li><p><code>tidyverse</code> <span class="citation">(Wickham <a href="#ref-R-tidyverse" role="doc-biblioref">2017</a>)</span></p></li>
-<li><p><code>bookdown</code> <span class="citation">(Xie <a href="#ref-R-bookdown" role="doc-biblioref">2018</a>)</span> (for compiling the book, if you want to)</p></li>
+<li><code>DBI</code> <span class="citation">(R Special Interest Group on Databases (R-SIG-DB), Wickham, and Müller <a href="#ref-R-DBI">2018</a>)</span></li>
+<li><code>DiagrammeR</code> <span class="citation">(Iannone <a href="#ref-R-DiagrammeR">2019</a>)</span></li>
+<li><code>RPostgres</code> <span class="citation">(Wickham, Ooms, and Müller <a href="#ref-R-RPostgres">2018</a>)</span></li>
+<li><code>dbplyr</code> <span class="citation">(Wickham and Ruiz <a href="#ref-R-dbplyr">2019</a>)</span></li>
+<li><code>devtools</code> <span class="citation">(Wickham, Hester, and Chang <a href="#ref-R-devtools">2019</a>)</span></li>
+<li><code>downloader</code> <span class="citation">(Chang <a href="#ref-R-downloader">2015</a>)</span></li>
+<li><code>glue</code> <span class="citation">(Hester <a href="#ref-R-glue">2019</a>)</span></li>
+<li><code>here</code> <span class="citation">(Müller <a href="#ref-R-here">2017</a>)</span></li>
+<li><code>knitr</code> <span class="citation">(Xie <a href="#ref-R-knitr">2019</a>)</span></li>
+<li><code>skimr</code> <span class="citation">(McNamara et al. <a href="#ref-R-skimr">2019</a>)</span></li>
+<li><p><code>tidyverse</code> <span class="citation">(Wickham <a href="#ref-R-tidyverse">2017</a>)</span></p></li>
+<li><p><code>bookdown</code> <span class="citation">(Xie <a href="#ref-R-bookdown">2018</a>)</span> (for compiling the book, if you want to)</p></li>
 </ul>
 </div>
 <div id="r-rstudio-and-git" class="section level2">
@@ -659,7 +662,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ol style="list-style-type: decimal">
 <li>If you do not have R:
 <ul>
-<li>Go to <a href="https://cran.rstudio.com/" class="uri">https://cran.rstudio.com/</a> <span class="citation">(R Core Team <a href="#ref-RCT2018" role="doc-biblioref">2018</a>)</span>.</li>
+<li>Go to <a href="https://cran.rstudio.com/" class="uri">https://cran.rstudio.com/</a> <span class="citation">(R Core Team <a href="#ref-RCT2018">2018</a>)</span>.</li>
 <li>Select the download link for your system. For Linux, choose your distro. We recommend Ubuntu 18.04 LTS “Bionic Beaver”. It’s much easier to find support answers on the web for Ubuntu than other distros.</li>
 <li>Follow the instructions.</li>
 <li>Note: if you already have R, make sure it’s upgraded to R 3.5.1. We don’t test on older versions!</li>
@@ -683,8 +686,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>If you have an older version of Windows, download and install Docker Toolbox (<a href="https://docs.docker.com/toolbox/overview/" class="uri">https://docs.docker.com/toolbox/overview/</a>).</li>
 <li>Note that both versions require 64-bit hardware and the virtualization needs to be enabled in the firmware.</li>
 </ul></li>
-<li><a href="https://docs.docker.com/docker-for-mac/install/">On a Mac</a> <span class="citation">(Docker <a href="#ref-Docker2018c" role="doc-biblioref">2018</a><a href="#ref-Docker2018c" role="doc-biblioref">c</a>)</span>: Go to <a href="https://store.docker.com/editions/community/docker-ce-desktop-mac" class="uri">https://store.docker.com/editions/community/docker-ce-desktop-mac</a>. If you don’t have a Docker Store login, you’ll need to create one. Then download and install Docker for Mac. Your MacOS must be at least release Yosemite (10.10.3).</li>
-<li><a href="https://docs.docker.com/install/#supported-platforms">On UNIX flavors</a> <span class="citation">(Docker <a href="#ref-Docker2018b" role="doc-biblioref">2018</a><a href="#ref-Docker2018b" role="doc-biblioref">a</a>)</span>: note that, as with Windows and MacOS, you’ll need a Docker Store loin. Although most Linux distros ship with some version of Docker, chances are it’s not the same as the official Docker CE version.
+<li><a href="https://docs.docker.com/docker-for-mac/install/">On a Mac</a> <span class="citation">(Docker <a href="#ref-Docker2018c">2018</a><a href="#ref-Docker2018c">c</a>)</span>: Go to <a href="https://store.docker.com/editions/community/docker-ce-desktop-mac" class="uri">https://store.docker.com/editions/community/docker-ce-desktop-mac</a>. If you don’t have a Docker Store login, you’ll need to create one. Then download and install Docker for Mac. Your MacOS must be at least release Yosemite (10.10.3).</li>
+<li><a href="https://docs.docker.com/install/#supported-platforms">On UNIX flavors</a> <span class="citation">(Docker <a href="#ref-Docker2018b">2018</a><a href="#ref-Docker2018b">a</a>)</span>: note that, as with Windows and MacOS, you’ll need a Docker Store loin. Although most Linux distros ship with some version of Docker, chances are it’s not the same as the official Docker CE version.
 <ul>
 <li>Ubuntu: <a href="https://store.docker.com/editions/community/docker-ce-server-ubuntu" class="uri">https://store.docker.com/editions/community/docker-ce-server-ubuntu</a>,</li>
 <li>Fedora: <a href="https://store.docker.com/editions/community/docker-ce-server-fedora" class="uri">https://store.docker.com/editions/community/docker-ce-server-fedora</a>,</li>
@@ -708,7 +711,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>R Special Interest Group on Databases (R-SIG-DB), Hadley Wickham, and Kirill Müller. 2018. <em>DBI: R Database Interface</em>. <a href="https://CRAN.R-project.org/package=DBI">https://CRAN.R-project.org/package=DBI</a>.</p>
 </div>
 <div id="ref-R-DiagrammeR">
-<p>Iannone, Richard. 2018. <em>DiagrammeR: Graph/Network Visualization</em>. <a href="https://CRAN.R-project.org/package=DiagrammeR">https://CRAN.R-project.org/package=DiagrammeR</a>.</p>
+<p>Iannone, Richard. 2019. <em>DiagrammeR: Graph/Network Visualization</em>. <a href="https://CRAN.R-project.org/package=DiagrammeR">https://CRAN.R-project.org/package=DiagrammeR</a>.</p>
 </div>
 <div id="ref-R-RPostgres">
 <p>Wickham, Hadley, Jeroen Ooms, and Kirill Müller. 2018. <em>RPostgres: ’Rcpp’ Interface to ’Postgresql’</em>. <a href="https://CRAN.R-project.org/package=RPostgres">https://CRAN.R-project.org/package=RPostgres</a>.</p>
@@ -717,7 +720,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Wickham, Hadley, and Edgar Ruiz. 2019. <em>Dbplyr: A ’Dplyr’ Back End for Databases</em>. <a href="https://CRAN.R-project.org/package=dbplyr">https://CRAN.R-project.org/package=dbplyr</a>.</p>
 </div>
 <div id="ref-R-devtools">
-<p>Wickham, Hadley, Jim Hester, and Winston Chang. 2018. <em>Devtools: Tools to Make Developing R Packages Easier</em>. <a href="https://CRAN.R-project.org/package=devtools">https://CRAN.R-project.org/package=devtools</a>.</p>
+<p>Wickham, Hadley, Jim Hester, and Winston Chang. 2019. <em>Devtools: Tools to Make Developing R Packages Easier</em>. <a href="https://CRAN.R-project.org/package=devtools">https://CRAN.R-project.org/package=devtools</a>.</p>
 </div>
 <div id="ref-R-downloader">
 <p>Chang, Winston. 2015. <em>Downloader: Download Files over Http and Https</em>. <a href="https://CRAN.R-project.org/package=downloader">https://CRAN.R-project.org/package=downloader</a>.</p>

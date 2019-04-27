@@ -22,10 +22,10 @@
   <meta name="twitter:description" content="An introduction to Docker and PostgreSQL for R users to simulate use cases behind corporate walls." />
   
 
-<meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
+<meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, and Ian Frantz">
 
 
-<meta name="date" content="2019-04-07">
+<meta name="date" content="2019-04-26">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -58,7 +58,7 @@
 <script src="libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
 <script src="libs/viz-0.3/viz.js"></script>
 <link href="libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
-<script src="libs/grViz-binding-1.0.0/grViz.js"></script>
+<script src="libs/grViz-binding-1.0.1/grViz.js"></script>
 
 
 <style type="text/css">
@@ -79,7 +79,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(title);
+  { content: attr(data-line-number);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -584,13 +584,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="E" data-path="chapter-appendix-dplyr-functions.html"><a href="chapter-appendix-dplyr-functions.html"><i class="fa fa-check"></i><b>E</b> Dplyr functions and SQL cross-walk</a></li>
 <li class="chapter" data-level="F" data-path="chapter-appendix-dbi-functions.html"><a href="chapter-appendix-dbi-functions.html"><i class="fa fa-check"></i><b>F</b> DBI package functions - coverage</a></li>
-<li class="chapter" data-level="G" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html"><i class="fa fa-check"></i><b>G</b> Appendix Additional resources</a><ul>
-<li class="chapter" data-level="G.1" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#editing-this-book"><i class="fa fa-check"></i><b>G.1</b> Editing this book</a></li>
-<li class="chapter" data-level="G.2" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-alternatives"><i class="fa fa-check"></i><b>G.2</b> Docker alternatives</a></li>
-<li class="chapter" data-level="G.3" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-and-r"><i class="fa fa-check"></i><b>G.3</b> Docker and R</a></li>
-<li class="chapter" data-level="G.4" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#documentation-for-docker-and-postgresql"><i class="fa fa-check"></i><b>G.4</b> Documentation for Docker and PostgreSQL</a></li>
-<li class="chapter" data-level="G.5" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#sql-and-dplyr"><i class="fa fa-check"></i><b>G.5</b> SQL and dplyr</a></li>
-<li class="chapter" data-level="G.6" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#more-resources"><i class="fa fa-check"></i><b>G.6</b> More Resources</a></li>
+<li class="chapter" data-level="G" data-path="chapter-appendix-dplyr-to-postres-translation.html"><a href="chapter-appendix-dplyr-to-postres-translation.html"><i class="fa fa-check"></i><b>G</b> Appendix _ Dplyr to SQL translations</a><ul>
+<li class="chapter" data-level="G.1" data-path="chapter-appendix-dplyr-to-postres-translation.html"><a href="chapter-appendix-dplyr-to-postres-translation.html#overview-1"><i class="fa fa-check"></i><b>G.1</b> Overview</a></li>
+</ul></li>
+<li class="chapter" data-level="H" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html"><i class="fa fa-check"></i><b>H</b> Appendix Additional resources</a><ul>
+<li class="chapter" data-level="H.1" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#editing-this-book"><i class="fa fa-check"></i><b>H.1</b> Editing this book</a></li>
+<li class="chapter" data-level="H.2" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-alternatives"><i class="fa fa-check"></i><b>H.2</b> Docker alternatives</a></li>
+<li class="chapter" data-level="H.3" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-and-r"><i class="fa fa-check"></i><b>H.3</b> Docker and R</a></li>
+<li class="chapter" data-level="H.4" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#documentation-for-docker-and-postgresql"><i class="fa fa-check"></i><b>H.4</b> Documentation for Docker and PostgreSQL</a></li>
+<li class="chapter" data-level="H.5" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#sql-and-dplyr"><i class="fa fa-check"></i><b>H.5</b> SQL and dplyr</a></li>
+<li class="chapter" data-level="H.6" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#more-resources"><i class="fa fa-check"></i><b>H.6</b> More Resources</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -644,7 +647,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>Run queries against PostgreSQL in an environment that simulates what you will find in a corporate setting.</li>
 <li>Understand techniques and some of the trade-offs between:
 <ul>
-<li>queries aimed at exploration or informal investigation using <a href="https://cran.r-project.org/package=dplyr">dplyr</a> <span class="citation">(Wickham <a href="#ref-Wickham2018" role="doc-biblioref">2018</a>)</span>; and</li>
+<li>queries aimed at exploration or informal investigation using <a href="https://cran.r-project.org/package=dplyr">dplyr</a> <span class="citation">(Wickham <a href="#ref-Wickham2018">2018</a>)</span>; and</li>
 <li>queries that should be written in SQL, because performance is important due to the size of the database or the frequency with which a query is to be run.</li>
 </ul></li>
 <li>Understand the equivalence between <code>dplyr</code> and SQL queries, and how R translates one into the other.</li>
@@ -652,13 +655,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>Gain familiarity with the standard metadata that a SQL database contains to describe its own contents.</li>
 <li>Understand some advanced SQL techniques.</li>
 <li>Gain some understanding of techniques for assessing query structure and performance.</li>
-<li>Understand enough about Docker to swap databases, e.g. <a href="http://www.sportsdb.org/sd/samples">Sports DB</a> for the <a href="http://www.postgresqltutorial.com/postgresql-sample-database/">DVD rental database</a> used in this tutorial. Or swap the database management system (DBMS), e.g. <a href="https://www.mysql.com/">MySQL</a> for <a href="https://www.postgresql.org/">PostgreSQL</a>.</li>
+<li>Understand enough about Docker to swap databases, e.g. <a href="http://www.sportsdb.org/sd/samples">Sports DB</a> for the <a href="http://www.postgresqltutorial.com/postgresql-sample-database/">DVD rental database</a> used in this tutorial. Or swap the database management system (DBMS), e.g. <a href="https://www.mysql.com/">MySQL</a> for <a href="https://www.postgresql.org/">PostgreSQL</a>.</li>
 </ul>
 </div>
 <div id="imagining-a-dvd-rental-business" class="section level2">
 <h2><span class="header-section-number">4.3</span> Imagining a DVD rental business</h2>
 <p>Years ago, people rented videos on DVD disks and video stores were a big business. To understand the data base that we use in this book, try to imagine managing a video rental store <a href="https://en.wikipedia.org/wiki/Movie_Madness_Video">like Movie Madness</a> in Portland, Oregon.
-<img src="screenshots/movie-madness-sample.png" width="175" style="display: block; margin: auto;" />
+<img src="screenshots/movie-madness-sample.png" style="display: block; margin: auto;" />
 <em>What data would be needed and what questions would you have to answer about the business?</em></p>
 <p>This tutorial uses <a href="http://www.postgresqltutorial.com/postgresql-sample-database/">the PostgreSQL version of “dvd rental” database</a> which represents the transaction database for running a movie (e.g., dvd) rental business. The database can be <a href="http://www.postgresqltutorial.com/wp-content/uploads/2017/10/dvdrental.zip">downloaded here</a>. Here’s a glimpse of it’s structure, which we explore using several different methods:</p>
 <div class="figure">

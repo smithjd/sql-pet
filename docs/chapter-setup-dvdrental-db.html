@@ -22,10 +22,10 @@
   <meta name="twitter:description" content="An introduction to Docker and PostgreSQL for R users to simulate use cases behind corporate walls." />
   
 
-<meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
+<meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, and Ian Frantz">
 
 
-<meta name="date" content="2019-04-07">
+<meta name="date" content="2019-04-26">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -58,7 +58,7 @@
 <script src="libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
 <script src="libs/viz-0.3/viz.js"></script>
 <link href="libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
-<script src="libs/grViz-binding-1.0.0/grViz.js"></script>
+<script src="libs/grViz-binding-1.0.1/grViz.js"></script>
 
 
 <style type="text/css">
@@ -79,7 +79,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(title);
+  { content: attr(data-line-number);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -584,13 +584,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="E" data-path="chapter-appendix-dplyr-functions.html"><a href="chapter-appendix-dplyr-functions.html"><i class="fa fa-check"></i><b>E</b> Dplyr functions and SQL cross-walk</a></li>
 <li class="chapter" data-level="F" data-path="chapter-appendix-dbi-functions.html"><a href="chapter-appendix-dbi-functions.html"><i class="fa fa-check"></i><b>F</b> DBI package functions - coverage</a></li>
-<li class="chapter" data-level="G" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html"><i class="fa fa-check"></i><b>G</b> Appendix Additional resources</a><ul>
-<li class="chapter" data-level="G.1" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#editing-this-book"><i class="fa fa-check"></i><b>G.1</b> Editing this book</a></li>
-<li class="chapter" data-level="G.2" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-alternatives"><i class="fa fa-check"></i><b>G.2</b> Docker alternatives</a></li>
-<li class="chapter" data-level="G.3" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-and-r"><i class="fa fa-check"></i><b>G.3</b> Docker and R</a></li>
-<li class="chapter" data-level="G.4" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#documentation-for-docker-and-postgresql"><i class="fa fa-check"></i><b>G.4</b> Documentation for Docker and PostgreSQL</a></li>
-<li class="chapter" data-level="G.5" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#sql-and-dplyr"><i class="fa fa-check"></i><b>G.5</b> SQL and dplyr</a></li>
-<li class="chapter" data-level="G.6" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#more-resources"><i class="fa fa-check"></i><b>G.6</b> More Resources</a></li>
+<li class="chapter" data-level="G" data-path="chapter-appendix-dplyr-to-postres-translation.html"><a href="chapter-appendix-dplyr-to-postres-translation.html"><i class="fa fa-check"></i><b>G</b> Appendix _ Dplyr to SQL translations</a><ul>
+<li class="chapter" data-level="G.1" data-path="chapter-appendix-dplyr-to-postres-translation.html"><a href="chapter-appendix-dplyr-to-postres-translation.html#overview-1"><i class="fa fa-check"></i><b>G.1</b> Overview</a></li>
+</ul></li>
+<li class="chapter" data-level="H" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html"><i class="fa fa-check"></i><b>H</b> Appendix Additional resources</a><ul>
+<li class="chapter" data-level="H.1" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#editing-this-book"><i class="fa fa-check"></i><b>H.1</b> Editing this book</a></li>
+<li class="chapter" data-level="H.2" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-alternatives"><i class="fa fa-check"></i><b>H.2</b> Docker alternatives</a></li>
+<li class="chapter" data-level="H.3" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-and-r"><i class="fa fa-check"></i><b>H.3</b> Docker and R</a></li>
+<li class="chapter" data-level="H.4" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#documentation-for-docker-and-postgresql"><i class="fa fa-check"></i><b>H.4</b> Documentation for Docker and PostgreSQL</a></li>
+<li class="chapter" data-level="H.5" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#sql-and-dplyr"><i class="fa fa-check"></i><b>H.5</b> SQL and dplyr</a></li>
+<li class="chapter" data-level="H.6" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#more-resources"><i class="fa fa-check"></i><b>H.6</b> More Resources</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -662,11 +665,12 @@ in <code>sqlpetr</code> to build this image, called <a href="https://smithjd.git
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_make_dvdrental_image</span>(<span class="st">&quot;postgres-dvdrental&quot;</span>)</code></pre>
 <p>Did it work? We have a function that lists the images into a tibble!</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_docker_images_tibble</span>()</code></pre>
-<pre><code>## # A tibble: 2 x 7
-##   image_id  repository   tag    digest           created created_at   size 
-##   &lt;chr&gt;     &lt;chr&gt;        &lt;chr&gt;  &lt;chr&gt;            &lt;chr&gt;   &lt;chr&gt;        &lt;chr&gt;
-## 1 94c53381… postgres-dv… latest &lt;none&gt;           18 hou… 2019-04-06 … 293MB
-## 2 200d7af0… postgres     10     sha256:3a397af7… 11 day… 2019-03-26 … 230MB</code></pre>
+<pre><code>## # A tibble: 3 x 7
+##   image_id  repository   tag    digest          created  created_at   size 
+##   &lt;chr&gt;     &lt;chr&gt;        &lt;chr&gt;  &lt;chr&gt;           &lt;chr&gt;    &lt;chr&gt;        &lt;chr&gt;
+## 1 aff06852… postgres-dv… latest &lt;none&gt;          About a… 2019-04-26 … 294MB
+## 2 c149455a… &lt;none&gt;       &lt;none&gt; &lt;none&gt;          5 weeks… 2019-03-18 … 252MB
+## 3 3e016ba4… postgres     10     sha256:5c70299… 7 weeks… 2019-03-04 … 230MB</code></pre>
 </div>
 <div id="run-the-pet-sql-docker-image" class="section level2">
 <h2><span class="header-section-number">6.5</span> Run the pet-sql Docker Image</h2>
@@ -677,12 +681,13 @@ image we use an <code>sqlpetr</code> function called <a href="https://smithjd.gi
   <span class="dt">image_tag =</span> <span class="st">&quot;postgres-dvdrental&quot;</span>,
   <span class="dt">postgres_password =</span> <span class="st">&quot;postgres&quot;</span>
 )</code></pre>
+<pre><code>## [1] &quot;c12077eaade2c9f6e32221fec7e5ef578b9f7d52c0a57c0fb9a934e6efe68475&quot;</code></pre>
 <p>Did it work?</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_docker_containers_tibble</span>()</code></pre>
 <pre><code>## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;
-## 1 1918fe2a68e7 post… docker… 2019-04-0… 2 seco… 5432… Up Le… 0B (… sql-…
+## 1 c12077eaade2 post… docker… 2019-04-2… 4 seco… 5432… Up 3 … 74.9… sql-…
 ## # … with 3 more variables: labels &lt;chr&gt;, mounts &lt;chr&gt;, networks &lt;chr&gt;</code></pre>
 </div>
 <div id="connect-to-postgresql-with-r" class="section level2">
@@ -725,10 +730,11 @@ image we use an <code>sqlpetr</code> function called <a href="https://smithjd.gi
 container is still there. <code>sp_docker_containers_tibble</code> by default only lists
 the <em>running</em> containers. But we can use the <code>list_all</code> option and see it:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_docker_containers_tibble</span>(<span class="dt">list_all =</span> <span class="ot">TRUE</span>)</code></pre>
-<pre><code>## # A tibble: 1 x 12
+<pre><code>## # A tibble: 2 x 12
 ##   container_id image command created_at created ports status size  names
 ##   &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;
-## 1 1918fe2a68e7 post… docker… 2019-04-0… 9 seco… &lt;NA&gt;  Exite… 74.9… sql-…
+## 1 c12077eaade2 post… docker… 2019-04-2… 5 seco… &lt;NA&gt;  Exite… 74.9… sql-…
+## 2 08cfc88c882c post… docker… 2019-04-0… 2 week… 0.0.… Exite… 0B (… hr-s…
 ## # … with 3 more variables: labels &lt;chr&gt;, mounts &lt;chr&gt;, networks &lt;chr&gt;</code></pre>
 <p>Restart the container and verify that the dvdrental tables are still there:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_docker_start</span>(<span class="st">&quot;sql-pet&quot;</span>)
@@ -736,7 +742,7 @@ the <em>running</em> containers. But we can use the <code>list_all</code> option
 <pre><code>## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;
-## 1 1918fe2a68e7 post… docker… 2019-04-0… 11 sec… 5432… Up Le… 74.9… sql-…
+## 1 c12077eaade2 post… docker… 2019-04-2… 7 seco… 5432… Up Le… 74.9… sql-…
 ## # … with 3 more variables: labels &lt;chr&gt;, mounts &lt;chr&gt;, networks &lt;chr&gt;</code></pre>
 <p>Connect to the <code>dvdrental</code> database in PostgreSQL:</p>
 <pre class="sourceCode r"><code class="sourceCode r">con &lt;-<span class="st"> </span><span class="kw">sp_get_postgres_connection</span>(
@@ -760,22 +766,23 @@ the <em>running</em> containers. But we can use the <code>list_all</code> option
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_docker_stop</span>(<span class="st">&quot;sql-pet&quot;</span>)</code></pre>
 <p>Show that the container still exists even though it’s not running</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_show_all_docker_containers</span>()</code></pre>
-<pre><code>## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## 1918fe2a68e7        postgres-dvdrental   &quot;docker-entrypoint.s…&quot;   12 seconds ago      Exited (0) Less than a second ago                       sql-pet</code></pre>
+<pre><code>## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS                    NAMES
+## c12077eaade2        postgres-dvdrental   &quot;docker-entrypoint.s…&quot;   8 seconds ago       Exited (0) Less than a second ago                            sql-pet
+## 08cfc88c882c        postgres:10          &quot;docker-entrypoint.s…&quot;   2 weeks ago         Exited (255) 2 weeks ago            0.0.0.0:5432-&gt;5432/tcp   hr-sample</code></pre>
 <p>Next time, you can just use this command to start the container:</p>
 <blockquote>
-<p><code>sp_docker_start("sql-pet")</code></p>
+<p><code>sp_docker_start(&quot;sql-pet&quot;)</code></p>
 </blockquote>
 <p>And once stopped, the container can be removed with:</p>
 <blockquote>
-<p><code>sp_check_that_docker_is_up("sql-pet")</code></p>
+<p><code>sp_check_that_docker_is_up(&quot;sql-pet&quot;)</code></p>
 </blockquote>
 </div>
 <div id="using-the-sql-pet-container-in-the-rest-of-the-book" class="section level2">
 <h2><span class="header-section-number">6.9</span> Using the <code>sql-pet</code> container in the rest of the book</h2>
 <p>After this point in the book, we assume that Docker is up and that we can always start up our <em>sql-pet database</em> with:</p>
 <blockquote>
-<p><code>sp_docker_start("sql-pet")</code></p>
+<p><code>sp_docker_start(&quot;sql-pet&quot;)</code></p>
 </blockquote>
 
 </div>

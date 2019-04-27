@@ -22,10 +22,10 @@
   <meta name="twitter:description" content="An introduction to Docker and PostgreSQL for R users to simulate use cases behind corporate walls." />
   
 
-<meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
+<meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, and Ian Frantz">
 
 
-<meta name="date" content="2019-04-07">
+<meta name="date" content="2019-04-26">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -58,7 +58,7 @@
 <script src="libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
 <script src="libs/viz-0.3/viz.js"></script>
 <link href="libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
-<script src="libs/grViz-binding-1.0.0/grViz.js"></script>
+<script src="libs/grViz-binding-1.0.1/grViz.js"></script>
 
 
 <style type="text/css">
@@ -79,7 +79,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(title);
+  { content: attr(data-line-number);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -584,13 +584,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="E" data-path="chapter-appendix-dplyr-functions.html"><a href="chapter-appendix-dplyr-functions.html"><i class="fa fa-check"></i><b>E</b> Dplyr functions and SQL cross-walk</a></li>
 <li class="chapter" data-level="F" data-path="chapter-appendix-dbi-functions.html"><a href="chapter-appendix-dbi-functions.html"><i class="fa fa-check"></i><b>F</b> DBI package functions - coverage</a></li>
-<li class="chapter" data-level="G" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html"><i class="fa fa-check"></i><b>G</b> Appendix Additional resources</a><ul>
-<li class="chapter" data-level="G.1" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#editing-this-book"><i class="fa fa-check"></i><b>G.1</b> Editing this book</a></li>
-<li class="chapter" data-level="G.2" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-alternatives"><i class="fa fa-check"></i><b>G.2</b> Docker alternatives</a></li>
-<li class="chapter" data-level="G.3" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-and-r"><i class="fa fa-check"></i><b>G.3</b> Docker and R</a></li>
-<li class="chapter" data-level="G.4" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#documentation-for-docker-and-postgresql"><i class="fa fa-check"></i><b>G.4</b> Documentation for Docker and PostgreSQL</a></li>
-<li class="chapter" data-level="G.5" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#sql-and-dplyr"><i class="fa fa-check"></i><b>G.5</b> SQL and dplyr</a></li>
-<li class="chapter" data-level="G.6" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#more-resources"><i class="fa fa-check"></i><b>G.6</b> More Resources</a></li>
+<li class="chapter" data-level="G" data-path="chapter-appendix-dplyr-to-postres-translation.html"><a href="chapter-appendix-dplyr-to-postres-translation.html"><i class="fa fa-check"></i><b>G</b> Appendix _ Dplyr to SQL translations</a><ul>
+<li class="chapter" data-level="G.1" data-path="chapter-appendix-dplyr-to-postres-translation.html"><a href="chapter-appendix-dplyr-to-postres-translation.html#overview-1"><i class="fa fa-check"></i><b>G.1</b> Overview</a></li>
+</ul></li>
+<li class="chapter" data-level="H" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html"><i class="fa fa-check"></i><b>H</b> Appendix Additional resources</a><ul>
+<li class="chapter" data-level="H.1" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#editing-this-book"><i class="fa fa-check"></i><b>H.1</b> Editing this book</a></li>
+<li class="chapter" data-level="H.2" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-alternatives"><i class="fa fa-check"></i><b>H.2</b> Docker alternatives</a></li>
+<li class="chapter" data-level="H.3" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-and-r"><i class="fa fa-check"></i><b>H.3</b> Docker and R</a></li>
+<li class="chapter" data-level="H.4" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#documentation-for-docker-and-postgresql"><i class="fa fa-check"></i><b>H.4</b> Documentation for Docker and PostgreSQL</a></li>
+<li class="chapter" data-level="H.5" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#sql-and-dplyr"><i class="fa fa-check"></i><b>H.5</b> SQL and dplyr</a></li>
+<li class="chapter" data-level="H.6" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#more-resources"><i class="fa fa-check"></i><b>H.6</b> More Resources</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -2173,7 +2176,7 @@ all_meta</code></pre>
 ## $ q_25       &lt;chr&gt; &quot;4013&quot;, &quot;2005-07-07 00:58:00&quot;, &quot;1154&quot;, &quot;148&quot;, &quot;2005-0…
 ## $ q_50       &lt;chr&gt; &quot;8025&quot;, &quot;2005-07-28 16:03:27&quot;, &quot;2291&quot;, &quot;296&quot;, &quot;2005-0…
 ## $ q_75       &lt;chr&gt; &quot;12037&quot;, &quot;2005-08-17 21:13:35&quot;, &quot;3433&quot;, &quot;446&quot;, &quot;2005-…
-## $ max        &lt;chr&gt; &quot;16050&quot;, &quot;2019-03-31&quot;, &quot;4582&quot;, &quot;600&quot;, &quot;2019-04-07&quot;, &quot;…</code></pre>
+## $ max        &lt;chr&gt; &quot;16050&quot;, &quot;2019-04-20&quot;, &quot;4582&quot;, &quot;600&quot;, &quot;2019-04-27&quot;, &quot;…</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">kable</span>(<span class="kw">head</span>(all_meta))</code></pre>
 <table>
 <thead>
@@ -2216,7 +2219,7 @@ all_meta</code></pre>
 <td align="left">2005-07-07 00:58:00</td>
 <td align="left">2005-07-28 16:03:27</td>
 <td align="left">2005-08-17 21:13:35</td>
-<td align="left">2019-03-31</td>
+<td align="left">2019-04-20</td>
 </tr>
 <tr class="odd">
 <td align="left">rental</td>
@@ -2255,7 +2258,7 @@ all_meta</code></pre>
 <td align="left">2005-07-10 15:48:58</td>
 <td align="left">2005-08-01 19:45:29</td>
 <td align="left">2005-08-20 23:49:25</td>
-<td align="left">2019-04-07</td>
+<td align="left">2019-04-27</td>
 </tr>
 <tr class="even">
 <td align="left">rental</td>
@@ -2289,12 +2292,13 @@ all_meta</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ls</span>()</code></pre>
 <pre><code>##  [1] &quot;all_meta&quot;                  &quot;columns_info_schema_info&quot; 
 ##  [3] &quot;columns_info_schema_table&quot; &quot;con&quot;                      
-##  [5] &quot;constraint_column_usage&quot;   &quot;key_column_usage&quot;         
-##  [7] &quot;keys&quot;                      &quot;public_tables&quot;            
-##  [9] &quot;referential_constraints&quot;   &quot;rs&quot;                       
-## [11] &quot;some_tables&quot;               &quot;table_constraints&quot;        
-## [13] &quot;table_info&quot;                &quot;table_info_schema_table&quot;  
-## [15] &quot;table_list&quot;                &quot;tables&quot;</code></pre>
+##  [5] &quot;constraint_column_usage&quot;   &quot;cranex&quot;                   
+##  [7] &quot;key_column_usage&quot;          &quot;keys&quot;                     
+##  [9] &quot;public_tables&quot;             &quot;referential_constraints&quot;  
+## [11] &quot;rs&quot;                        &quot;some_tables&quot;              
+## [13] &quot;table_constraints&quot;         &quot;table_info&quot;               
+## [15] &quot;table_info_schema_table&quot;   &quot;table_list&quot;               
+## [17] &quot;tables&quot;</code></pre>
 
 </div>
 </div>

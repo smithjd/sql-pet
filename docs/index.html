@@ -22,10 +22,10 @@
   <meta name="twitter:description" content="An introduction to Docker and PostgreSQL for R users to simulate use cases behind corporate walls." />
   
 
-<meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
+<meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, and Ian Frantz">
 
 
-<meta name="date" content="2019-04-07">
+<meta name="date" content="2019-04-26">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -58,7 +58,7 @@
 <script src="libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
 <script src="libs/viz-0.3/viz.js"></script>
 <link href="libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
-<script src="libs/grViz-binding-1.0.0/grViz.js"></script>
+<script src="libs/grViz-binding-1.0.1/grViz.js"></script>
 
 
 <style type="text/css">
@@ -79,7 +79,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(title);
+  { content: attr(data-line-number);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -584,13 +584,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="E" data-path="chapter-appendix-dplyr-functions.html"><a href="chapter-appendix-dplyr-functions.html"><i class="fa fa-check"></i><b>E</b> Dplyr functions and SQL cross-walk</a></li>
 <li class="chapter" data-level="F" data-path="chapter-appendix-dbi-functions.html"><a href="chapter-appendix-dbi-functions.html"><i class="fa fa-check"></i><b>F</b> DBI package functions - coverage</a></li>
-<li class="chapter" data-level="G" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html"><i class="fa fa-check"></i><b>G</b> Appendix Additional resources</a><ul>
-<li class="chapter" data-level="G.1" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#editing-this-book"><i class="fa fa-check"></i><b>G.1</b> Editing this book</a></li>
-<li class="chapter" data-level="G.2" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-alternatives"><i class="fa fa-check"></i><b>G.2</b> Docker alternatives</a></li>
-<li class="chapter" data-level="G.3" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-and-r"><i class="fa fa-check"></i><b>G.3</b> Docker and R</a></li>
-<li class="chapter" data-level="G.4" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#documentation-for-docker-and-postgresql"><i class="fa fa-check"></i><b>G.4</b> Documentation for Docker and PostgreSQL</a></li>
-<li class="chapter" data-level="G.5" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#sql-and-dplyr"><i class="fa fa-check"></i><b>G.5</b> SQL and dplyr</a></li>
-<li class="chapter" data-level="G.6" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#more-resources"><i class="fa fa-check"></i><b>G.6</b> More Resources</a></li>
+<li class="chapter" data-level="G" data-path="chapter-appendix-dplyr-to-postres-translation.html"><a href="chapter-appendix-dplyr-to-postres-translation.html"><i class="fa fa-check"></i><b>G</b> Appendix _ Dplyr to SQL translations</a><ul>
+<li class="chapter" data-level="G.1" data-path="chapter-appendix-dplyr-to-postres-translation.html"><a href="chapter-appendix-dplyr-to-postres-translation.html#overview-1"><i class="fa fa-check"></i><b>G.1</b> Overview</a></li>
+</ul></li>
+<li class="chapter" data-level="H" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html"><i class="fa fa-check"></i><b>H</b> Appendix Additional resources</a><ul>
+<li class="chapter" data-level="H.1" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#editing-this-book"><i class="fa fa-check"></i><b>H.1</b> Editing this book</a></li>
+<li class="chapter" data-level="H.2" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-alternatives"><i class="fa fa-check"></i><b>H.2</b> Docker alternatives</a></li>
+<li class="chapter" data-level="H.3" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-and-r"><i class="fa fa-check"></i><b>H.3</b> Docker and R</a></li>
+<li class="chapter" data-level="H.4" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#documentation-for-docker-and-postgresql"><i class="fa fa-check"></i><b>H.4</b> Documentation for Docker and PostgreSQL</a></li>
+<li class="chapter" data-level="H.5" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#sql-and-dplyr"><i class="fa fa-check"></i><b>H.5</b> SQL and dplyr</a></li>
+<li class="chapter" data-level="H.6" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#more-resources"><i class="fa fa-check"></i><b>H.6</b> More Resources</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -615,8 +618,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="header">
 <h1 class="title">R, Databases, and Docker</h1>
-<p class="author"><em>John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni</em></p>
-<p class="date"><em>2019-04-07</em></p>
+<p class="author"><em>John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, and Ian Frantz</em></p>
+<p class="date"><em>2019-04-26</em></p>
 </div>
 <div id="chapter_introduction" class="section level1">
 <h1><span class="header-section-number">Chapter 1</span> Introduction</h1>
@@ -644,7 +647,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="docker-as-a-tool-for-users" class="section level2">
 <h2><span class="header-section-number">1.2</span> Docker as a tool for UseRs</h2>
-<p>Noam Ross’s “<a href="https://nyhackr.blob.core.windows.net/presentations/Docker-for-the-UseR_Noam-Ross.pdf">Docker for the UseR</a>” <span class="citation">(Ross <a href="#ref-Ross2018a" role="doc-biblioref">2018</a><a href="#ref-Ross2018a" role="doc-biblioref">a</a>)</span> suggests that there are four distinct Docker use-cases for useRs.</p>
+<p>Noam Ross’s “<a href="https://nyhackr.blob.core.windows.net/presentations/Docker-for-the-UseR_Noam-Ross.pdf">Docker for the UseR</a>” <span class="citation">(Ross <a href="#ref-Ross2018a">2018</a><a href="#ref-Ross2018a">a</a>)</span> suggests that there are four distinct Docker use-cases for useRs.</p>
 <ol style="list-style-type: decimal">
 <li>Make a fixed working environment for reproducible analysis</li>
 <li>Access a service outside of R <strong>(e.g., PostgreSQL)</strong></li>
@@ -655,7 +658,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li>Docker is a comparatively easy way to simulate the relationship between an R/RStudio session and a database – all on on your machine (provided you have Docker installed and running).</li>
 <li>Running PostgreSQL on a Docker container avoids OS or system dependencies or conflicts that cause confusion and limit reproducibility.</li>
-<li>A Docker environment consumes relatively few resources. Our sandbox does much less but only includes PostgreSQL and sample data, so it takes up about 5% of the space taken up by the Vagrant environment that inspired this project. <span class="citation">(Makubuya <a href="#ref-Makubuya2018" role="doc-biblioref">2018</a>)</span></li>
+<li>A Docker environment consumes relatively few resources. Our sandbox does much less but only includes PostgreSQL and sample data, so it takes up about 5% of the space taken up by the Vagrant environment that inspired this project. <span class="citation">(Makubuya <a href="#ref-Makubuya2018">2018</a>)</span></li>
 <li>A simple Docker container such as the one used in our sandbox is easy to use and could be extended for other uses.</li>
 <li>Docker is a widely used technology for deploying applications in the cloud, so for many useRs it’s worth mastering.</li>
 </ul>
@@ -664,7 +667,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">1.3</span> Who are we?</h2>
 <p>We have been collaborating on this book since the Summer of 2018, each of us chipping into the project as time permits:</p>
 <ul>
-<li>Dipti Muni - <a href="https://github.com/deemuni">@deemuni</a></li>
 <li>Ian Franz - <a href="https://github.com/ianfrantz">@ianfrantz</a></li>
 <li>Jim Tyhurst - <a href="https://github.com/jimtyhurst">@jimtyhurst</a></li>
 <li>John David Smith - <a href="https://github.com/smithjd">@smithjd</a></li>
@@ -676,17 +678,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="how-did-this-project-come-about" class="section level2">
 <h2><span class="header-section-number">1.4</span> How did this project come about?</h2>
-<p>We trace this book back to the <a href="https://cascadiarconf.com/">June 2, 2018 Cascadia R Conf</a> where Aaron Makubuya gave <a href="https://github.com/Cascadia-R/Using_R_With_Databases">a presentation using Vagrant hosting</a> <span class="citation">(Makubuya <a href="#ref-Makubuya2018" role="doc-biblioref">2018</a>)</span>. After that <a href="https://github.com/smithjd">John Smith</a>, <a href="https://github.com/ianfrantz">Ian Franz</a>, and <a href="https://github.com/SophieMYang">Sophie Yang</a> had discussions after the monthly <a href="https://www.meetup.com/Portland-Data-Science-Group/events/fxvhbnywmbgb/">Data Discussion Meetups</a> about the difficulties around setting up <a href="https://www.vagrantup.com/">Vagrant</a> (a virtual environment), connecting to a corporate database, and having realistic <strong>public</strong> environment to demo or practice the issues that come up behind corporate firewalls. <a href="https://github.com/scottcame">Scott Came’s</a> tutorial on <a href="http://www.cascadia-analytics.com/2018/07/21/docker-r-p1.html">R and Docker</a> <span class="citation">(Came <a href="#ref-Came2018" role="doc-biblioref">2018</a>)</span> (an alternative to Vagrant) at the 2018 UseR Conference in Melbourne was provocative and it turned out he lived nearby. We re-connected with <a href="https://github.com/znmeb">M. Edward (Ed) Borasky</a> who had done extensive development for a <a href="https://github.com/hackoregon/data-science-pet-containers">Hack Oregon data science containerization project</a> <span class="citation">(Borasky <a href="#ref-Borasky2018" role="doc-biblioref">2018</a>)</span>.</p>
+<p>We trace this book back to the <a href="https://cascadiarconf.com/">June 2, 2018 Cascadia R Conf</a> where Aaron Makubuya gave <a href="https://github.com/Cascadia-R/Using_R_With_Databases">a presentation using Vagrant hosting</a> <span class="citation">(Makubuya <a href="#ref-Makubuya2018">2018</a>)</span>. After that <a href="https://github.com/smithjd">John Smith</a>, <a href="https://github.com/ianfrantz">Ian Franz</a>, and <a href="https://github.com/SophieMYang">Sophie Yang</a> had discussions after the monthly <a href="https://www.meetup.com/Portland-Data-Science-Group/events/fxvhbnywmbgb/">Data Discussion Meetups</a> about the difficulties around setting up <a href="https://www.vagrantup.com/">Vagrant</a> (a virtual environment), connecting to a corporate database, and having realistic <strong>public</strong> environment to demo or practice the issues that come up behind corporate firewalls. <a href="https://github.com/scottcame">Scott Came’s</a> tutorial on <a href="http://www.cascadia-analytics.com/2018/07/21/docker-r-p1.html">R and Docker</a> <span class="citation">(Came <a href="#ref-Came2018">2018</a>)</span> (an alternative to Vagrant) at the 2018 UseR Conference in Melbourne was provocative and it turned out he lived nearby. We re-connected with <a href="https://github.com/znmeb">M. Edward (Ed) Borasky</a> who had done extensive development for a <a href="https://github.com/hackoregon/data-science-pet-containers">Hack Oregon data science containerization project</a> <span class="citation">(Borasky <a href="#ref-Borasky2018">2018</a>)</span>.</p>
 </div>
 <div id="navigation" class="section level2">
 <h2><span class="header-section-number">1.5</span> Navigation</h2>
-<p>If this is the first <code>bookdown</code> <span class="citation">(Xie <a href="#ref-Xie2016" role="doc-biblioref">2016</a>)</span> book you’ve read, here’s how to navigate the website.</p>
+<p>If this is the first <code>bookdown</code> <span class="citation">(Xie <a href="#ref-Xie2016">2016</a>)</span> book you’ve read, here’s how to navigate the website.</p>
 <ol style="list-style-type: decimal">
 <li><p>The controls on the upper left: there are four controls on the upper left.</p>
 <ul>
-<li><p>A “hamburger” menu: this toggles the table of contents on the left side of the page on or off.</p></li>
-<li><p>A magnifying glass: this toggles a search box on or off.</p></li>
-<li><p>A letter “A”: this lets you pick how you want the site to display. You have your choice of small or large text, a serif or sans-serif font, and a white, sepia or night theme.</p></li>
+<li>A “hamburger” menu: this toggles the table of contents on the left side of the page on or off.</li>
+<li>A magnifying glass: this toggles a search box on or off.</li>
+<li>A letter “A”: this lets you pick how you want the site to display. You have your choice of small or large text, a serif or sans-serif font, and a white, sepia or night theme.</li>
 <li><p>A pencil: this is the “Edit” button. This will take you to a GitHub edit dialog for the chapter you’re reading. If you’re a committer to the repository, you’ll be able to edit the source directly.</p>
 <p>If not, GitHub will fork a copy of the repository to your own account and you’ll be able to edit that version. Then you can make a pull request.</p></li>
 </ul></li>
