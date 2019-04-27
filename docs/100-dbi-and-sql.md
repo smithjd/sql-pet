@@ -193,18 +193,17 @@ Q %>% dplyr::show_query()
 
 ```
 ## <SQL>
-## SELECT "rental_date", "staff_email", "customer_email"
-## FROM (SELECT "rental_id", "rental_date", "inventory_id", "customer_id", "return_date", "staff_id", "last_update.x", "first_name.x", "last_name.x", "address_id.x", "staff_email", "store_id.x", "active.x", "username", "password", "last_update.y", "picture", "store_id.y", "first_name.y", "last_name.y", "email" AS "customer_email", "address_id.y", "activebool", "create_date", "last_update", "active.y"
-## FROM (SELECT "TBL_LEFT"."rental_id" AS "rental_id", "TBL_LEFT"."rental_date" AS "rental_date", "TBL_LEFT"."inventory_id" AS "inventory_id", "TBL_LEFT"."customer_id" AS "customer_id", "TBL_LEFT"."return_date" AS "return_date", "TBL_LEFT"."staff_id" AS "staff_id", "TBL_LEFT"."last_update.x" AS "last_update.x", "TBL_LEFT"."first_name" AS "first_name.x", "TBL_LEFT"."last_name" AS "last_name.x", "TBL_LEFT"."address_id" AS "address_id.x", "TBL_LEFT"."staff_email" AS "staff_email", "TBL_LEFT"."store_id" AS "store_id.x", "TBL_LEFT"."active" AS "active.x", "TBL_LEFT"."username" AS "username", "TBL_LEFT"."password" AS "password", "TBL_LEFT"."last_update.y" AS "last_update.y", "TBL_LEFT"."picture" AS "picture", "TBL_RIGHT"."store_id" AS "store_id.y", "TBL_RIGHT"."first_name" AS "first_name.y", "TBL_RIGHT"."last_name" AS "last_name.y", "TBL_RIGHT"."email" AS "email", "TBL_RIGHT"."address_id" AS "address_id.y", "TBL_RIGHT"."activebool" AS "activebool", "TBL_RIGHT"."create_date" AS "create_date", "TBL_RIGHT"."last_update" AS "last_update", "TBL_RIGHT"."active" AS "active.y"
-##   FROM (SELECT "rental_id", "rental_date", "inventory_id", "customer_id", "return_date", "staff_id", "last_update.x", "first_name", "last_name", "address_id", "email" AS "staff_email", "store_id", "active", "username", "password", "last_update.y", "picture"
-## FROM (SELECT "TBL_LEFT"."rental_id" AS "rental_id", "TBL_LEFT"."rental_date" AS "rental_date", "TBL_LEFT"."inventory_id" AS "inventory_id", "TBL_LEFT"."customer_id" AS "customer_id", "TBL_LEFT"."return_date" AS "return_date", "TBL_LEFT"."staff_id" AS "staff_id", "TBL_LEFT"."last_update" AS "last_update.x", "TBL_RIGHT"."first_name" AS "first_name", "TBL_RIGHT"."last_name" AS "last_name", "TBL_RIGHT"."address_id" AS "address_id", "TBL_RIGHT"."email" AS "email", "TBL_RIGHT"."store_id" AS "store_id", "TBL_RIGHT"."active" AS "active", "TBL_RIGHT"."username" AS "username", "TBL_RIGHT"."password" AS "password", "TBL_RIGHT"."last_update" AS "last_update.y", "TBL_RIGHT"."picture" AS "picture"
-##   FROM "rental" AS "TBL_LEFT"
-##   LEFT JOIN "staff" AS "TBL_RIGHT"
-##   ON ("TBL_LEFT"."staff_id" = "TBL_RIGHT"."staff_id")
-## ) "duklxmckvk") "TBL_LEFT"
-##   LEFT JOIN "customer" AS "TBL_RIGHT"
-##   ON ("TBL_LEFT"."customer_id" = "TBL_RIGHT"."customer_id")
-## ) "rzlkihfkca") "ecshftlgbp"
+## SELECT "rental_date", "staff_email", "email" AS "customer_email"
+## FROM (SELECT "LHS"."rental_id" AS "rental_id", "LHS"."rental_date" AS "rental_date", "LHS"."inventory_id" AS "inventory_id", "LHS"."customer_id" AS "customer_id", "LHS"."return_date" AS "return_date", "LHS"."staff_id" AS "staff_id", "LHS"."last_update.x" AS "last_update.x", "LHS"."first_name" AS "first_name.x", "LHS"."last_name" AS "last_name.x", "LHS"."address_id" AS "address_id.x", "LHS"."staff_email" AS "staff_email", "LHS"."store_id" AS "store_id.x", "LHS"."active" AS "active.x", "LHS"."username" AS "username", "LHS"."password" AS "password", "LHS"."last_update.y" AS "last_update.y", "LHS"."picture" AS "picture", "RHS"."store_id" AS "store_id.y", "RHS"."first_name" AS "first_name.y", "RHS"."last_name" AS "last_name.y", "RHS"."email" AS "email", "RHS"."address_id" AS "address_id.y", "RHS"."activebool" AS "activebool", "RHS"."create_date" AS "create_date", "RHS"."last_update" AS "last_update", "RHS"."active" AS "active.y"
+## FROM (SELECT "rental_id", "rental_date", "inventory_id", "customer_id", "return_date", "staff_id", "last_update.x", "first_name", "last_name", "address_id", "email" AS "staff_email", "store_id", "active", "username", "password", "last_update.y", "picture"
+## FROM (SELECT "LHS"."rental_id" AS "rental_id", "LHS"."rental_date" AS "rental_date", "LHS"."inventory_id" AS "inventory_id", "LHS"."customer_id" AS "customer_id", "LHS"."return_date" AS "return_date", "LHS"."staff_id" AS "staff_id", "LHS"."last_update" AS "last_update.x", "RHS"."first_name" AS "first_name", "RHS"."last_name" AS "last_name", "RHS"."address_id" AS "address_id", "RHS"."email" AS "email", "RHS"."store_id" AS "store_id", "RHS"."active" AS "active", "RHS"."username" AS "username", "RHS"."password" AS "password", "RHS"."last_update" AS "last_update.y", "RHS"."picture" AS "picture"
+## FROM "rental" AS "LHS"
+## LEFT JOIN "staff" AS "RHS"
+## ON ("LHS"."staff_id" = "RHS"."staff_id")
+## ) "dbplyr_001") "LHS"
+## LEFT JOIN "customer" AS "RHS"
+## ON ("LHS"."customer_id" = "RHS"."customer_id")
+## ) "dbplyr_002"
 ```
 
 Here is the SQL query formatted for readability:

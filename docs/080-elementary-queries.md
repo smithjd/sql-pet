@@ -206,18 +206,19 @@ one_percent_sample
 ```
 
 ```
-##    film_id               title rating
-## 1       92    Bowfinger Gables  NC-17
-## 2       97      Bride Intrigue      G
-## 3      128       Catch Amistad      G
-## 4      152        Circus Youth  PG-13
-## 5      292      Excitement Eve      G
-## 6      493       Kane Exorcist      R
-## 7      511       Lawrence Love  NC-17
-## 8      598 Mosquito Armageddon      G
-## 9      633   October Submarine  PG-13
-## 10     694  Prejudice Oleander  PG-13
-## 11     849     Storm Happiness  NC-17
+##    film_id            title rating
+## 1       36   Argonauts Town  PG-13
+## 2      140    Cheaper Clyde      G
+## 3      422  Hollow Jeopardy  NC-17
+## 4      447     Ice Crossing      R
+## 5      508 Lambs Cincinatti  PG-13
+## 6      690     Pond Seattle  PG-13
+## 7      707  Quest Mussolini      R
+## 8      729 Rider Caddyshack     PG
+## 9      855 Streak Ridgemont  PG-13
+## 10     859      Sugar Wonka     PG
+## 11     914     Trouble Date     PG
+## 12     923  Unfaithful Kill      R
 ```
 **Exact sample of 100 records**
 
@@ -353,9 +354,8 @@ show_query()
 
 ```
 ## <SQL>
-## SELECT "film_id_number", "title", "language_id_number"
-## FROM (SELECT "film_id" AS "film_id_number", "title", "description", "release_year", "language_id" AS "language_id_number", "rental_duration", "rental_rate", "length", "replacement_cost", "rating", "last_update", "special_features", "fulltext"
-## FROM "film") "pimymxxpkd"
+## SELECT "film_id" AS "film_id_number", "title", "language_id" AS "language_id_number"
+## FROM "film"
 ```
 That's equivalent to the following SQL code:
 
@@ -450,9 +450,8 @@ film_table %>%
 
 ```
 ## <SQL>
-## SELECT "title", "description", "release_year", "rental_duration", "rental_rate", "length", "replacement_cost", "rating", "last_update", "special_features", "fulltext", NOW() AS "today"
-## FROM (SELECT "title", "description", "release_year", "rental_duration", "rental_rate", "length", "replacement_cost", "rating", "last_update", "special_features", "fulltext"
-## FROM "film") "yhbysdoypk"
+## SELECT "title", "description", "release_year", "rental_duration", "rental_rate", "length", "replacement_cost", "rating", "last_update", "special_features", "fulltext", CURRENT_TIMESTAMP AS "today"
+## FROM "film"
 ```
 That is native to PostgreSQL, not [ANSI standard](https://en.wikipedia.org/wiki/SQL#Interoperability_and_standardization) SQL.
 
@@ -525,8 +524,8 @@ There is no substitute for looking at your data and R provides several ways to j
 sqlpetr::sp_print_df(head(film_tibble))
 ```
 
-<!--html_preserve--><div id="htmlwidget-4f68022fd73b3d133ebb" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-4f68022fd73b3d133ebb">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[133,384,8,98,1,2],["Chamber Italian","Grosse Wonderful","Airport Pollock","Bright Encounters","Academy Dinosaur","Ace Goldfinger"],["A Fateful Reflection of a Moose And a Husband who must Overcome a Monkey in Nigeria","A Epic Drama of a Cat And a Explorer who must Redeem a Moose in Australia","A Epic Tale of a Moose And a Girl who must Confront a Monkey in Ancient India","A Fateful Yarn of a Lumberjack And a Feminist who must Conquer a Student in A Jet Boat","A Epic Drama of a Feminist And a Mad Scientist who must Battle a Teacher in The Canadian Rockies","A Astounding Epistle of a Database Administrator And a Explorer who must Find a Car in Ancient China"],[2006,2006,2006,2006,2006,2006],[1,1,1,1,1,1],[7,5,6,4,6,3],[4.99,4.99,4.99,4.99,0.99,4.99],[117,49,54,73,86,48],[14.99,19.99,15.99,12.99,20.99,12.99],["NC-17","R","R","PG-13","PG","G"],["2013-05-26T21:50:58Z","2013-05-26T21:50:58Z","2013-05-26T21:50:58Z","2013-05-26T21:50:58Z","2013-05-26T21:50:58Z","2013-05-26T21:50:58Z"],["{Trailers}","{\"Behind the Scenes\"}","{Trailers}","{Trailers}","{\"Deleted Scenes\",\"Behind the Scenes\"}","{Trailers,\"Deleted Scenes\"}"],["'chamber':1 'fate':4 'husband':11 'italian':2 'monkey':16 'moos':8 'must':13 'nigeria':18 'overcom':14 'reflect':5","'australia':18 'cat':8 'drama':5 'epic':4 'explor':11 'gross':1 'moos':16 'must':13 'redeem':14 'wonder':2","'airport':1 'ancient':18 'confront':14 'epic':4 'girl':11 'india':19 'monkey':16 'moos':8 'must':13 'pollock':2 'tale':5","'boat':20 'bright':1 'conquer':14 'encount':2 'fate':4 'feminist':11 'jet':19 'lumberjack':8 'must':13 'student':16 'yarn':5","'academi':1 'battl':15 'canadian':20 'dinosaur':2 'drama':5 'epic':4 'feminist':8 'mad':11 'must':14 'rocki':21 'scientist':12 'teacher':17","'ace':1 'administr':9 'ancient':19 'astound':4 'car':17 'china':20 'databas':8 'epistl':5 'explor':12 'find':15 'goldfing':2 'must':14"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>film_id<\/th>\n      <th>title<\/th>\n      <th>description<\/th>\n      <th>release_year<\/th>\n      <th>language_id<\/th>\n      <th>rental_duration<\/th>\n      <th>rental_rate<\/th>\n      <th>length<\/th>\n      <th>replacement_cost<\/th>\n      <th>rating<\/th>\n      <th>last_update<\/th>\n      <th>special_features<\/th>\n      <th>fulltext<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,4,5,6,7,8,9]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-99557df47be3ea9b6925" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-99557df47be3ea9b6925">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[133,384,8,98,1,2],["Chamber Italian","Grosse Wonderful","Airport Pollock","Bright Encounters","Academy Dinosaur","Ace Goldfinger"],["A Fateful Reflection of a Moose And a Husband who must Overcome a Monkey in Nigeria","A Epic Drama of a Cat And a Explorer who must Redeem a Moose in Australia","A Epic Tale of a Moose And a Girl who must Confront a Monkey in Ancient India","A Fateful Yarn of a Lumberjack And a Feminist who must Conquer a Student in A Jet Boat","A Epic Drama of a Feminist And a Mad Scientist who must Battle a Teacher in The Canadian Rockies","A Astounding Epistle of a Database Administrator And a Explorer who must Find a Car in Ancient China"],[2006,2006,2006,2006,2006,2006],[1,1,1,1,1,1],[7,5,6,4,6,3],[4.99,4.99,4.99,4.99,0.99,4.99],[117,49,54,73,86,48],[14.99,19.99,15.99,12.99,20.99,12.99],["NC-17","R","R","PG-13","PG","G"],["2013-05-26T21:50:58Z","2013-05-26T21:50:58Z","2013-05-26T21:50:58Z","2013-05-26T21:50:58Z","2013-05-26T21:50:58Z","2013-05-26T21:50:58Z"],["{Trailers}","{\"Behind the Scenes\"}","{Trailers}","{Trailers}","{\"Deleted Scenes\",\"Behind the Scenes\"}","{Trailers,\"Deleted Scenes\"}"],["'chamber':1 'fate':4 'husband':11 'italian':2 'monkey':16 'moos':8 'must':13 'nigeria':18 'overcom':14 'reflect':5","'australia':18 'cat':8 'drama':5 'epic':4 'explor':11 'gross':1 'moos':16 'must':13 'redeem':14 'wonder':2","'airport':1 'ancient':18 'confront':14 'epic':4 'girl':11 'india':19 'monkey':16 'moos':8 'must':13 'pollock':2 'tale':5","'boat':20 'bright':1 'conquer':14 'encount':2 'fate':4 'feminist':11 'jet':19 'lumberjack':8 'must':13 'student':16 'yarn':5","'academi':1 'battl':15 'canadian':20 'dinosaur':2 'drama':5 'epic':4 'feminist':8 'mad':11 'must':14 'rocki':21 'scientist':12 'teacher':17","'ace':1 'administr':9 'ancient':19 'astound':4 'car':17 'china':20 'databas':8 'epistl':5 'explor':12 'find':15 'goldfing':2 'must':14"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>film_id<\/th>\n      <th>title<\/th>\n      <th>description<\/th>\n      <th>release_year<\/th>\n      <th>language_id<\/th>\n      <th>rental_duration<\/th>\n      <th>rental_rate<\/th>\n      <th>length<\/th>\n      <th>replacement_cost<\/th>\n      <th>rating<\/th>\n      <th>last_update<\/th>\n      <th>special_features<\/th>\n      <th>fulltext<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,4,5,6,7,8,9]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ### The `summary` function in `base`
 
@@ -647,7 +646,7 @@ skimr::skim(film_tibble)
 ##  n obs: 1000 
 ##  n variables: 13 
 ## 
-## ── Variable type:character ─────────────────────────────────────────────────────────
+## ── Variable type:character ──────────────────────────────────────────────────────────────────────
 ##          variable missing complete    n min max empty n_unique
 ##       description       0     1000 1000  70 130     0     1000
 ##          fulltext       0     1000 1000  98 205     0     1000
@@ -655,7 +654,7 @@ skimr::skim(film_tibble)
 ##  special_features       0     1000 1000  10  60     0       15
 ##             title       0     1000 1000   8  27     0     1000
 ## 
-## ── Variable type:integer ───────────────────────────────────────────────────────────
+## ── Variable type:integer ────────────────────────────────────────────────────────────────────────
 ##         variable missing complete    n    mean     sd   p0     p25    p50
 ##          film_id       0     1000 1000  500.5  288.82    1  250.75  500.5
 ##      language_id       0     1000 1000    1      0       1    1       1  
@@ -669,7 +668,7 @@ skimr::skim(film_tibble)
 ##  2006    2006 ▁▁▁▇▁▁▁▁
 ##     6       7 ▇▇▁▇▁▇▁▇
 ## 
-## ── Variable type:numeric ───────────────────────────────────────────────────────────
+## ── Variable type:numeric ────────────────────────────────────────────────────────────────────────
 ##          variable missing complete    n  mean   sd    p0   p25   p50   p75
 ##       rental_rate       0     1000 1000  2.98 1.65  0.99  0.99  2.99  4.99
 ##  replacement_cost       0     1000 1000 19.98 6.05  9.99 14.99 19.99 24.99
@@ -677,7 +676,7 @@ skimr::skim(film_tibble)
 ##   4.99 ▇▁▁▇▁▁▁▇
 ##  29.99 ▇▇▃▇▆▇▅▇
 ## 
-## ── Variable type:POSIXct ───────────────────────────────────────────────────────────
+## ── Variable type:POSIXct ────────────────────────────────────────────────────────────────────────
 ##     variable missing complete    n        min        max     median
 ##  last_update       0     1000 1000 2013-05-26 2013-05-26 2013-05-26
 ##  n_unique

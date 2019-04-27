@@ -187,7 +187,7 @@ rental_table %>%
 
 ```
 ## <SQL>
-## SELECT "rental_id", DATE("rental_date") AS "rental_date", "inventory_id", "customer_id", "return_date", "staff_id", "last_update"
+## SELECT "rental_id", date("rental_date") AS "rental_date", "inventory_id", "customer_id", "return_date", "staff_id", "last_update"
 ## FROM "rental"
 ```
 
@@ -260,7 +260,7 @@ rental_table %>%
 
 ```
 ## <SQL>
-## SELECT "rental_id", TO_CHAR("rental_date", 'YYYY-MM') AS "rental_date", "inventory_id", "customer_id", "return_date", "staff_id", "last_update"
+## SELECT "rental_id", to_char("rental_date", 'YYYY-MM') AS "rental_date", "inventory_id", "customer_id", "return_date", "staff_id", "last_update"
 ## FROM "rental"
 ```
 

@@ -31,5 +31,6 @@
 |29|APPENDIX D - Quick Guide to SQL |960-sqlguide.Rmd|chapter_appendix-sql-quick-guide|
 |30|Dplyr functions and SQL cross-walk |970-dplyr-sql-summary-table.Rmd|chapter_appendix-dplyr-functions|
 |31|DBI package functions - coverage |980-dbi-summary-table.Rmd|chapter_appendix-dbi-functions|
-|32|Appendix Additional resources |997-additional-resources.Rmd|chapter_appendix-additional-resources|
-|33|NA|999-references.Rmd|NA|
+|32|Appendix _ Dplyr to SQL translations |985-dbplyr-sql-translations.Rmd|chapter_appendix-dplyr-to-postres-translation|
+|33|Appendix Additional resources |997-additional-resources.Rmd|chapter_appendix-additional-resources|
+|34|NA|999-references.Rmd|NA|

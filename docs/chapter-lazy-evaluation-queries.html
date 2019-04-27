@@ -22,10 +22,10 @@
   <meta name="twitter:description" content="An introduction to Docker and PostgreSQL for R users to simulate use cases behind corporate walls." />
   
 
-<meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
+<meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, and Ian Frantz">
 
 
-<meta name="date" content="2019-04-07">
+<meta name="date" content="2019-04-26">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -58,7 +58,7 @@
 <script src="libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
 <script src="libs/viz-0.3/viz.js"></script>
 <link href="libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
-<script src="libs/grViz-binding-1.0.0/grViz.js"></script>
+<script src="libs/grViz-binding-1.0.1/grViz.js"></script>
 
 
 <style type="text/css">
@@ -79,7 +79,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(title);
+  { content: attr(data-line-number);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -584,13 +584,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="E" data-path="chapter-appendix-dplyr-functions.html"><a href="chapter-appendix-dplyr-functions.html"><i class="fa fa-check"></i><b>E</b> Dplyr functions and SQL cross-walk</a></li>
 <li class="chapter" data-level="F" data-path="chapter-appendix-dbi-functions.html"><a href="chapter-appendix-dbi-functions.html"><i class="fa fa-check"></i><b>F</b> DBI package functions - coverage</a></li>
-<li class="chapter" data-level="G" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html"><i class="fa fa-check"></i><b>G</b> Appendix Additional resources</a><ul>
-<li class="chapter" data-level="G.1" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#editing-this-book"><i class="fa fa-check"></i><b>G.1</b> Editing this book</a></li>
-<li class="chapter" data-level="G.2" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-alternatives"><i class="fa fa-check"></i><b>G.2</b> Docker alternatives</a></li>
-<li class="chapter" data-level="G.3" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-and-r"><i class="fa fa-check"></i><b>G.3</b> Docker and R</a></li>
-<li class="chapter" data-level="G.4" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#documentation-for-docker-and-postgresql"><i class="fa fa-check"></i><b>G.4</b> Documentation for Docker and PostgreSQL</a></li>
-<li class="chapter" data-level="G.5" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#sql-and-dplyr"><i class="fa fa-check"></i><b>G.5</b> SQL and dplyr</a></li>
-<li class="chapter" data-level="G.6" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#more-resources"><i class="fa fa-check"></i><b>G.6</b> More Resources</a></li>
+<li class="chapter" data-level="G" data-path="chapter-appendix-dplyr-to-postres-translation.html"><a href="chapter-appendix-dplyr-to-postres-translation.html"><i class="fa fa-check"></i><b>G</b> Appendix _ Dplyr to SQL translations</a><ul>
+<li class="chapter" data-level="G.1" data-path="chapter-appendix-dplyr-to-postres-translation.html"><a href="chapter-appendix-dplyr-to-postres-translation.html#overview-1"><i class="fa fa-check"></i><b>G.1</b> Overview</a></li>
+</ul></li>
+<li class="chapter" data-level="H" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html"><i class="fa fa-check"></i><b>H</b> Appendix Additional resources</a><ul>
+<li class="chapter" data-level="H.1" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#editing-this-book"><i class="fa fa-check"></i><b>H.1</b> Editing this book</a></li>
+<li class="chapter" data-level="H.2" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-alternatives"><i class="fa fa-check"></i><b>H.2</b> Docker alternatives</a></li>
+<li class="chapter" data-level="H.3" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-and-r"><i class="fa fa-check"></i><b>H.3</b> Docker and R</a></li>
+<li class="chapter" data-level="H.4" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#documentation-for-docker-and-postgresql"><i class="fa fa-check"></i><b>H.4</b> Documentation for Docker and PostgreSQL</a></li>
+<li class="chapter" data-level="H.5" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#sql-and-dplyr"><i class="fa fa-check"></i><b>H.5</b> SQL and dplyr</a></li>
+<li class="chapter" data-level="H.6" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#more-resources"><i class="fa fa-check"></i><b>H.6</b> More Resources</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -645,7 +648,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="r-is-lazy-and-comes-with-guardrails" class="section level2">
 <h2><span class="header-section-number">9.2</span> R is lazy and comes with guardrails</h2>
-<p>By design, R is both a language and an interactive development environment (IDE). As a language, R tries to be as efficient as possible. As an IDE, R creates some guardrails to make it easy and safe to work with your data. For example <code>getOption("max.print")</code> prevents R from printing more rows of data than you want to handle in an interactive session, with a default of 99999 lines, which may or may not suit you.</p>
+<p>By design, R is both a language and an interactive development environment (IDE). As a language, R tries to be as efficient as possible. As an IDE, R creates some guardrails to make it easy and safe to work with your data. For example <code>getOption(&quot;max.print&quot;)</code> prevents R from printing more rows of data than you want to handle in an interactive session, with a default of 99999 lines, which may or may not suit you.</p>
 <p>On the other hand SQL is a <em>“Structured Query Language (SQL): a standard computer language for relational database management and data manipulation.”</em>.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> SQL has various database-specific Interactive Development Environments (IDEs), such as <a href="https://www.pgadmin.org/">pgAdmin</a> for PostgreSQL. Roger Peng explains in <a href="https://bookdown.org/rdpeng/rprogdatascience/history-and-overview-of-r.html#basic-features-of-r">R Programming for Data Science</a> that:</p>
 <blockquote>
 <p>R has maintained the original S philosophy, which is that it provides a language that is both useful for interactive work, but contains a powerful programming language for developing new tools.</p>
@@ -670,7 +673,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="lazy-queries" class="section level3">
 <h3><span class="header-section-number">9.2.3</span> Lazy Queries</h3>
-<p>“<em>When you create a "lazy" query, you’re creating a pointer to a set of conditions on the database, but the query isn’t actually run and the data isn’t actually loaded until you call "next" or some similar method to actually fetch the data and load it into an object.</em>”<a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a></p>
+<p>“<em>When you create a &quot;lazy&quot; query, you’re creating a pointer to a set of conditions on the database, but the query isn’t actually run and the data isn’t actually loaded until you call &quot;next&quot; or some similar method to actually fetch the data and load it into an object.</em>”<a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a></p>
 </div>
 </div>
 <div id="lazy-evaluation-and-lazy-queries" class="section level2">
@@ -793,9 +796,8 @@ Q &lt;-<span class="st"> </span>film_table <span class="op">%&gt;%</span>
 ##   ..$ name: chr &quot;select&quot;
 ##   ..$ x   :List of 4
 ##   .. ..- attr(*, &quot;class&quot;)= chr [1:3] &quot;op_join&quot; &quot;op_double&quot; &quot;op&quot;
-##   ..$ dots:List of 4
-##   .. ..- attr(*, &quot;class&quot;)= chr &quot;quosures&quot;
-##   ..$ args: list()
+##   ..$ dots: list()
+##   ..$ args:List of 1
 ##   ..- attr(*, &quot;class&quot;)= chr [1:3] &quot;op_select&quot; &quot;op_single&quot; &quot;op&quot;
 ##  - attr(*, &quot;class&quot;)= chr [1:5] &quot;tbl_PqConnection&quot; &quot;tbl_dbi&quot; &quot;tbl_sql&quot; &quot;tbl_lazy&quot; ...</code></pre>
 </div>
@@ -967,17 +969,9 @@ Q &lt;-<span class="st"> </span>film_table <span class="op">%&gt;%</span>
 ##   .. .. ..- attr(*, &quot;class&quot;)= chr [1:5] &quot;tbl_PqConnection&quot; &quot;tbl_dbi&quot; &quot;tbl_sql&quot; &quot;tbl_lazy&quot; ...
 ##   .. ..$ args:List of 4
 ##   .. ..- attr(*, &quot;class&quot;)= chr [1:3] &quot;op_join&quot; &quot;op_double&quot; &quot;op&quot;
-##   ..$ dots:List of 4
-##   .. ..$ : language ~title
-##   .. .. ..- attr(*, &quot;.Environment&quot;)=&lt;environment: 0x5641c2f300e0&gt; 
-##   .. ..$ : language ~length
-##   .. .. ..- attr(*, &quot;.Environment&quot;)=&lt;environment: 0x5641c2f300e0&gt; 
-##   .. ..$ : language ~rating
-##   .. .. ..- attr(*, &quot;.Environment&quot;)=&lt;environment: 0x5641c2f300e0&gt; 
-##   .. ..$ : language ~category
-##   .. .. ..- attr(*, &quot;.Environment&quot;)=&lt;environment: 0x5641c2f300e0&gt; 
-##   .. ..- attr(*, &quot;class&quot;)= chr &quot;quosures&quot;
-##   ..$ args: list()
+##   ..$ dots: list()
+##   ..$ args:List of 1
+##   .. ..$ vars:List of 4
 ##   ..- attr(*, &quot;class&quot;)= chr [1:3] &quot;op_select&quot; &quot;op_single&quot; &quot;op&quot;
 ##  - attr(*, &quot;class&quot;)= chr [1:5] &quot;tbl_PqConnection&quot; &quot;tbl_dbi&quot; &quot;tbl_sql&quot; &quot;tbl_lazy&quot; ...</code></pre>
 </div>
@@ -1050,18 +1044,17 @@ Q &lt;-<span class="st"> </span>film_table <span class="op">%&gt;%</span>
 <pre class="sourceCode r"><code class="sourceCode r">Q <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">show_query</span>()</code></pre>
 <pre><code>## &lt;SQL&gt;
 ## SELECT &quot;title&quot;, &quot;length&quot;, &quot;rating&quot;, &quot;category&quot;
-## FROM (SELECT &quot;TBL_LEFT&quot;.&quot;film_id&quot; AS &quot;film_id&quot;, &quot;TBL_LEFT&quot;.&quot;title&quot; AS &quot;title&quot;, &quot;TBL_LEFT&quot;.&quot;description&quot; AS &quot;description&quot;, &quot;TBL_LEFT&quot;.&quot;release_year&quot; AS &quot;release_year&quot;, &quot;TBL_LEFT&quot;.&quot;language_id&quot; AS &quot;language_id&quot;, &quot;TBL_LEFT&quot;.&quot;rental_duration&quot; AS &quot;rental_duration&quot;, &quot;TBL_LEFT&quot;.&quot;rental_rate&quot; AS &quot;rental_rate&quot;, &quot;TBL_LEFT&quot;.&quot;length&quot; AS &quot;length&quot;, &quot;TBL_LEFT&quot;.&quot;replacement_cost&quot; AS &quot;replacement_cost&quot;, &quot;TBL_LEFT&quot;.&quot;rating&quot; AS &quot;rating&quot;, &quot;TBL_LEFT&quot;.&quot;last_update&quot; AS &quot;last_update&quot;, &quot;TBL_LEFT&quot;.&quot;special_features&quot; AS &quot;special_features&quot;, &quot;TBL_LEFT&quot;.&quot;fulltext&quot; AS &quot;fulltext&quot;, &quot;TBL_LEFT&quot;.&quot;category_id&quot; AS &quot;category_id&quot;, &quot;TBL_RIGHT&quot;.&quot;category&quot; AS &quot;category&quot;
-##   FROM (SELECT &quot;TBL_LEFT&quot;.&quot;film_id&quot; AS &quot;film_id&quot;, &quot;TBL_LEFT&quot;.&quot;title&quot; AS &quot;title&quot;, &quot;TBL_LEFT&quot;.&quot;description&quot; AS &quot;description&quot;, &quot;TBL_LEFT&quot;.&quot;release_year&quot; AS &quot;release_year&quot;, &quot;TBL_LEFT&quot;.&quot;language_id&quot; AS &quot;language_id&quot;, &quot;TBL_LEFT&quot;.&quot;rental_duration&quot; AS &quot;rental_duration&quot;, &quot;TBL_LEFT&quot;.&quot;rental_rate&quot; AS &quot;rental_rate&quot;, &quot;TBL_LEFT&quot;.&quot;length&quot; AS &quot;length&quot;, &quot;TBL_LEFT&quot;.&quot;replacement_cost&quot; AS &quot;replacement_cost&quot;, &quot;TBL_LEFT&quot;.&quot;rating&quot; AS &quot;rating&quot;, &quot;TBL_LEFT&quot;.&quot;last_update&quot; AS &quot;last_update&quot;, &quot;TBL_LEFT&quot;.&quot;special_features&quot; AS &quot;special_features&quot;, &quot;TBL_LEFT&quot;.&quot;fulltext&quot; AS &quot;fulltext&quot;, &quot;TBL_RIGHT&quot;.&quot;category_id&quot; AS &quot;category_id&quot;
-##   FROM &quot;film&quot; AS &quot;TBL_LEFT&quot;
-##   LEFT JOIN (SELECT &quot;film_id&quot;, &quot;category_id&quot;
-## FROM &quot;film_category&quot;) &quot;TBL_RIGHT&quot;
-##   ON (&quot;TBL_LEFT&quot;.&quot;film_id&quot; = &quot;TBL_RIGHT&quot;.&quot;film_id&quot;)
-## ) &quot;TBL_LEFT&quot;
-##   LEFT JOIN (SELECT &quot;category_id&quot;, &quot;name&quot; AS &quot;category&quot;
-## FROM (SELECT &quot;category_id&quot;, &quot;name&quot;
-## FROM &quot;category&quot;) &quot;sqfdkcwewt&quot;) &quot;TBL_RIGHT&quot;
-##   ON (&quot;TBL_LEFT&quot;.&quot;category_id&quot; = &quot;TBL_RIGHT&quot;.&quot;category_id&quot;)
-## ) &quot;xjkijbsyva&quot;</code></pre>
+## FROM (SELECT &quot;LHS&quot;.&quot;film_id&quot; AS &quot;film_id&quot;, &quot;LHS&quot;.&quot;title&quot; AS &quot;title&quot;, &quot;LHS&quot;.&quot;description&quot; AS &quot;description&quot;, &quot;LHS&quot;.&quot;release_year&quot; AS &quot;release_year&quot;, &quot;LHS&quot;.&quot;language_id&quot; AS &quot;language_id&quot;, &quot;LHS&quot;.&quot;rental_duration&quot; AS &quot;rental_duration&quot;, &quot;LHS&quot;.&quot;rental_rate&quot; AS &quot;rental_rate&quot;, &quot;LHS&quot;.&quot;length&quot; AS &quot;length&quot;, &quot;LHS&quot;.&quot;replacement_cost&quot; AS &quot;replacement_cost&quot;, &quot;LHS&quot;.&quot;rating&quot; AS &quot;rating&quot;, &quot;LHS&quot;.&quot;last_update&quot; AS &quot;last_update&quot;, &quot;LHS&quot;.&quot;special_features&quot; AS &quot;special_features&quot;, &quot;LHS&quot;.&quot;fulltext&quot; AS &quot;fulltext&quot;, &quot;LHS&quot;.&quot;category_id&quot; AS &quot;category_id&quot;, &quot;RHS&quot;.&quot;category&quot; AS &quot;category&quot;
+## FROM (SELECT &quot;LHS&quot;.&quot;film_id&quot; AS &quot;film_id&quot;, &quot;LHS&quot;.&quot;title&quot; AS &quot;title&quot;, &quot;LHS&quot;.&quot;description&quot; AS &quot;description&quot;, &quot;LHS&quot;.&quot;release_year&quot; AS &quot;release_year&quot;, &quot;LHS&quot;.&quot;language_id&quot; AS &quot;language_id&quot;, &quot;LHS&quot;.&quot;rental_duration&quot; AS &quot;rental_duration&quot;, &quot;LHS&quot;.&quot;rental_rate&quot; AS &quot;rental_rate&quot;, &quot;LHS&quot;.&quot;length&quot; AS &quot;length&quot;, &quot;LHS&quot;.&quot;replacement_cost&quot; AS &quot;replacement_cost&quot;, &quot;LHS&quot;.&quot;rating&quot; AS &quot;rating&quot;, &quot;LHS&quot;.&quot;last_update&quot; AS &quot;last_update&quot;, &quot;LHS&quot;.&quot;special_features&quot; AS &quot;special_features&quot;, &quot;LHS&quot;.&quot;fulltext&quot; AS &quot;fulltext&quot;, &quot;RHS&quot;.&quot;category_id&quot; AS &quot;category_id&quot;
+## FROM &quot;film&quot; AS &quot;LHS&quot;
+## LEFT JOIN (SELECT &quot;film_id&quot;, &quot;category_id&quot;
+## FROM &quot;film_category&quot;) &quot;RHS&quot;
+## ON (&quot;LHS&quot;.&quot;film_id&quot; = &quot;RHS&quot;.&quot;film_id&quot;)
+## ) &quot;LHS&quot;
+## LEFT JOIN (SELECT &quot;category_id&quot;, &quot;name&quot; AS &quot;category&quot;
+## FROM &quot;category&quot;) &quot;RHS&quot;
+## ON (&quot;LHS&quot;.&quot;category_id&quot; = &quot;RHS&quot;.&quot;category_id&quot;)
+## ) &quot;dbplyr_009&quot;</code></pre>
 <p>Hand-written SQL code to do the same job will probably look a lot nicer and could be more efficient, but functionally <code>dplyr</code> does the job.</p>
 <pre class="sourceCode r"><code class="sourceCode r">DBI<span class="op">::</span><span class="kw">dbDisconnect</span>(con)
 sqlpetr<span class="op">::</span><span class="kw">sp_docker_stop</span>(<span class="st">&quot;sql-pet&quot;</span>)</code></pre>

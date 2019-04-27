@@ -22,10 +22,10 @@
   <meta name="twitter:description" content="An introduction to Docker and PostgreSQL for R users to simulate use cases behind corporate walls." />
   
 
-<meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
+<meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, and Ian Frantz">
 
 
-<meta name="date" content="2019-04-07">
+<meta name="date" content="2019-04-26">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -58,7 +58,7 @@
 <script src="libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
 <script src="libs/viz-0.3/viz.js"></script>
 <link href="libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
-<script src="libs/grViz-binding-1.0.0/grViz.js"></script>
+<script src="libs/grViz-binding-1.0.1/grViz.js"></script>
 
 
 <style type="text/css">
@@ -79,7 +79,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(title);
+  { content: attr(data-line-number);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -584,13 +584,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="E" data-path="chapter-appendix-dplyr-functions.html"><a href="chapter-appendix-dplyr-functions.html"><i class="fa fa-check"></i><b>E</b> Dplyr functions and SQL cross-walk</a></li>
 <li class="chapter" data-level="F" data-path="chapter-appendix-dbi-functions.html"><a href="chapter-appendix-dbi-functions.html"><i class="fa fa-check"></i><b>F</b> DBI package functions - coverage</a></li>
-<li class="chapter" data-level="G" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html"><i class="fa fa-check"></i><b>G</b> Appendix Additional resources</a><ul>
-<li class="chapter" data-level="G.1" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#editing-this-book"><i class="fa fa-check"></i><b>G.1</b> Editing this book</a></li>
-<li class="chapter" data-level="G.2" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-alternatives"><i class="fa fa-check"></i><b>G.2</b> Docker alternatives</a></li>
-<li class="chapter" data-level="G.3" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-and-r"><i class="fa fa-check"></i><b>G.3</b> Docker and R</a></li>
-<li class="chapter" data-level="G.4" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#documentation-for-docker-and-postgresql"><i class="fa fa-check"></i><b>G.4</b> Documentation for Docker and PostgreSQL</a></li>
-<li class="chapter" data-level="G.5" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#sql-and-dplyr"><i class="fa fa-check"></i><b>G.5</b> SQL and dplyr</a></li>
-<li class="chapter" data-level="G.6" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#more-resources"><i class="fa fa-check"></i><b>G.6</b> More Resources</a></li>
+<li class="chapter" data-level="G" data-path="chapter-appendix-dplyr-to-postres-translation.html"><a href="chapter-appendix-dplyr-to-postres-translation.html"><i class="fa fa-check"></i><b>G</b> Appendix _ Dplyr to SQL translations</a><ul>
+<li class="chapter" data-level="G.1" data-path="chapter-appendix-dplyr-to-postres-translation.html"><a href="chapter-appendix-dplyr-to-postres-translation.html#overview-1"><i class="fa fa-check"></i><b>G.1</b> Overview</a></li>
+</ul></li>
+<li class="chapter" data-level="H" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html"><i class="fa fa-check"></i><b>H</b> Appendix Additional resources</a><ul>
+<li class="chapter" data-level="H.1" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#editing-this-book"><i class="fa fa-check"></i><b>H.1</b> Editing this book</a></li>
+<li class="chapter" data-level="H.2" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-alternatives"><i class="fa fa-check"></i><b>H.2</b> Docker alternatives</a></li>
+<li class="chapter" data-level="H.3" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-and-r"><i class="fa fa-check"></i><b>H.3</b> Docker and R</a></li>
+<li class="chapter" data-level="H.4" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#documentation-for-docker-and-postgresql"><i class="fa fa-check"></i><b>H.4</b> Documentation for Docker and PostgreSQL</a></li>
+<li class="chapter" data-level="H.5" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#sql-and-dplyr"><i class="fa fa-check"></i><b>H.5</b> SQL and dplyr</a></li>
+<li class="chapter" data-level="H.6" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#more-resources"><i class="fa fa-check"></i><b>H.6</b> More Resources</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -674,7 +677,7 @@ tables</code></pre>
 </div>
 <div id="listing-all-the-fields-for-all-the-tables" class="section level3">
 <h3><span class="header-section-number">8.2.2</span> Listing all the fields for all the tables</h3>
-<p>The first example, <code>DBI::dbListTables(con)</code> returned 22 tables and the second example, <code>DBI::dbListFields(con, "film")</code> returns 7 fields. Here we combine the two calls to return a list of tables which has a list of all the fields in the table. The code block just shows the first two tables.</p>
+<p>The first example, <code>DBI::dbListTables(con)</code> returned 22 tables and the second example, <code>DBI::dbListFields(con, &quot;film&quot;)</code> returns 7 fields. Here we combine the two calls to return a list of tables which has a list of all the fields in the table. The code block just shows the first two tables.</p>
 <pre class="sourceCode r"><code class="sourceCode r">table_columns &lt;-<span class="st"> </span>purrr<span class="op">::</span><span class="kw">map</span>(tables, <span class="op">~</span><span class="st"> </span><span class="kw">dbListFields</span>(.,<span class="dt">conn =</span> con) )</code></pre>
 <p>Rename each list [[1]] … [[22]] to meaningful table name</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">names</span>(table_columns) &lt;-<span class="st"> </span>tables
@@ -755,18 +758,19 @@ tables</code></pre>
 )
 
 one_percent_sample</code></pre>
-<pre><code>##    film_id               title rating
-## 1       92    Bowfinger Gables  NC-17
-## 2       97      Bride Intrigue      G
-## 3      128       Catch Amistad      G
-## 4      152        Circus Youth  PG-13
-## 5      292      Excitement Eve      G
-## 6      493       Kane Exorcist      R
-## 7      511       Lawrence Love  NC-17
-## 8      598 Mosquito Armageddon      G
-## 9      633   October Submarine  PG-13
-## 10     694  Prejudice Oleander  PG-13
-## 11     849     Storm Happiness  NC-17</code></pre>
+<pre><code>##    film_id            title rating
+## 1       36   Argonauts Town  PG-13
+## 2      140    Cheaper Clyde      G
+## 3      422  Hollow Jeopardy  NC-17
+## 4      447     Ice Crossing      R
+## 5      508 Lambs Cincinatti  PG-13
+## 6      690     Pond Seattle  PG-13
+## 7      707  Quest Mussolini      R
+## 8      729 Rider Caddyshack     PG
+## 9      855 Streak Ridgemont  PG-13
+## 10     859      Sugar Wonka     PG
+## 11     914     Trouble Date     PG
+## 12     923  Unfaithful Kill      R</code></pre>
 <p><strong>Exact sample of 100 records</strong></p>
 <p>This technique depends on knowing the range of a record index, such as the <code>film_id</code> in the <code>film</code> table of our <code>dvdrental</code> database.</p>
 <p>Start by finding the min and max values.</p>
@@ -849,9 +853,8 @@ film_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span cl
 <span class="st">  </span><span class="co"># head()</span>
 <span class="kw">show_query</span>()</code></pre>
 <pre><code>## &lt;SQL&gt;
-## SELECT &quot;film_id_number&quot;, &quot;title&quot;, &quot;language_id_number&quot;
-## FROM (SELECT &quot;film_id&quot; AS &quot;film_id_number&quot;, &quot;title&quot;, &quot;description&quot;, &quot;release_year&quot;, &quot;language_id&quot; AS &quot;language_id_number&quot;, &quot;rental_duration&quot;, &quot;rental_rate&quot;, &quot;length&quot;, &quot;replacement_cost&quot;, &quot;rating&quot;, &quot;last_update&quot;, &quot;special_features&quot;, &quot;fulltext&quot;
-## FROM &quot;film&quot;) &quot;pimymxxpkd&quot;</code></pre>
+## SELECT &quot;film_id&quot; AS &quot;film_id_number&quot;, &quot;title&quot;, &quot;language_id&quot; AS &quot;language_id_number&quot;
+## FROM &quot;film&quot;</code></pre>
 <p>That’s equivalent to the following SQL code:</p>
 <pre class="sourceCode r"><code class="sourceCode r">DBI<span class="op">::</span><span class="kw">dbGetQuery</span>(
   con,
@@ -893,8 +896,8 @@ film_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span cl
 <pre><code>##      n
 ## 1 1000</code></pre>
 <p>When you create a report to run repeatedly, you might want to put that query into R markdown. That way you can also execute that SQL code in a chunk with the following header:</p>
-<p>{<code>sql, connection=con, output.var = "query_results"</code>}</p>
-<pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> <span class="ot">&quot;n&quot;</span>
+<p>{<code>sql, connection=con, output.var = &quot;query_results&quot;</code>}</p>
+<pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> <span class="fu">COUNT</span>(*) <span class="kw">AS</span> <span class="ot">&quot;n&quot;</span>
      <span class="kw">FROM</span> <span class="ot">&quot;film&quot;</span>;</code></pre>
 <p>Rmarkdown stores that query result in a tibble which can be printed by referring to it:</p>
 <pre class="sourceCode r"><code class="sourceCode r">query_results</code></pre>
@@ -904,15 +907,14 @@ film_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span cl
 </div>
 <div id="mixing-dplyr-and-sql" class="section level2">
 <h2><span class="header-section-number">8.3</span> Mixing dplyr and SQL</h2>
-<p>When dplyr finds code that it does not know how to translate into SQL, it will simply pass it along to the dbms. Therefore you can interleave native commands that your dbms will understand in the middle of dplyr code. Consider this example that’s derived from <span class="citation">(Ruiz <a href="#ref-Ruiz2019" role="doc-biblioref">2019</a>)</span>:</p>
+<p>When dplyr finds code that it does not know how to translate into SQL, it will simply pass it along to the dbms. Therefore you can interleave native commands that your dbms will understand in the middle of dplyr code. Consider this example that’s derived from <span class="citation">(Ruiz <a href="#ref-Ruiz2019">2019</a>)</span>:</p>
 <pre class="sourceCode r"><code class="sourceCode r">film_table <span class="op">%&gt;%</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select_at</span>(<span class="kw">vars</span>( <span class="op">-</span><span class="kw">contains</span>(<span class="st">&quot;_id&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">today =</span> <span class="kw">now</span>()) <span class="op">%&gt;%</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw">show_query</span>()</code></pre>
 <pre><code>## &lt;SQL&gt;
-## SELECT &quot;title&quot;, &quot;description&quot;, &quot;release_year&quot;, &quot;rental_duration&quot;, &quot;rental_rate&quot;, &quot;length&quot;, &quot;replacement_cost&quot;, &quot;rating&quot;, &quot;last_update&quot;, &quot;special_features&quot;, &quot;fulltext&quot;, NOW() AS &quot;today&quot;
-## FROM (SELECT &quot;title&quot;, &quot;description&quot;, &quot;release_year&quot;, &quot;rental_duration&quot;, &quot;rental_rate&quot;, &quot;length&quot;, &quot;replacement_cost&quot;, &quot;rating&quot;, &quot;last_update&quot;, &quot;special_features&quot;, &quot;fulltext&quot;
-## FROM &quot;film&quot;) &quot;yhbysdoypk&quot;</code></pre>
+## SELECT &quot;title&quot;, &quot;description&quot;, &quot;release_year&quot;, &quot;rental_duration&quot;, &quot;rental_rate&quot;, &quot;length&quot;, &quot;replacement_cost&quot;, &quot;rating&quot;, &quot;last_update&quot;, &quot;special_features&quot;, &quot;fulltext&quot;, CURRENT_TIMESTAMP AS &quot;today&quot;
+## FROM &quot;film&quot;</code></pre>
 <p>That is native to PostgreSQL, not <a href="https://en.wikipedia.org/wiki/SQL#Interoperability_and_standardization">ANSI standard</a> SQL.</p>
 <p>Verify that it works:</p>
 <pre class="sourceCode r"><code class="sourceCode r">film_table <span class="op">%&gt;%</span>
@@ -966,8 +968,8 @@ film_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span cl
 <h3><span class="header-section-number">8.4.2</span> Always <strong>look</strong> at your data with <code>head</code>, <code>View</code>, or <code>kable</code></h3>
 <p>There is no substitute for looking at your data and R provides several ways to just browse it. The <code>head</code> function controls the number of rows that are displayed. Note that tail does not work against a database object. In every-day practice you would look at more than the default 6 rows, but here we wrap <code>head</code> around the data frame:</p>
 <pre class="sourceCode r"><code class="sourceCode r">sqlpetr<span class="op">::</span><span class="kw">sp_print_df</span>(<span class="kw">head</span>(film_tibble))</code></pre>
-<div id="htmlwidget-4f68022fd73b3d133ebb" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-4f68022fd73b3d133ebb">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[133,384,8,98,1,2],["Chamber Italian","Grosse Wonderful","Airport Pollock","Bright Encounters","Academy Dinosaur","Ace Goldfinger"],["A Fateful Reflection of a Moose And a Husband who must Overcome a Monkey in Nigeria","A Epic Drama of a Cat And a Explorer who must Redeem a Moose in Australia","A Epic Tale of a Moose And a Girl who must Confront a Monkey in Ancient India","A Fateful Yarn of a Lumberjack And a Feminist who must Conquer a Student in A Jet Boat","A Epic Drama of a Feminist And a Mad Scientist who must Battle a Teacher in The Canadian Rockies","A Astounding Epistle of a Database Administrator And a Explorer who must Find a Car in Ancient China"],[2006,2006,2006,2006,2006,2006],[1,1,1,1,1,1],[7,5,6,4,6,3],[4.99,4.99,4.99,4.99,0.99,4.99],[117,49,54,73,86,48],[14.99,19.99,15.99,12.99,20.99,12.99],["NC-17","R","R","PG-13","PG","G"],["2013-05-26T21:50:58Z","2013-05-26T21:50:58Z","2013-05-26T21:50:58Z","2013-05-26T21:50:58Z","2013-05-26T21:50:58Z","2013-05-26T21:50:58Z"],["{Trailers}","{\"Behind the Scenes\"}","{Trailers}","{Trailers}","{\"Deleted Scenes\",\"Behind the Scenes\"}","{Trailers,\"Deleted Scenes\"}"],["'chamber':1 'fate':4 'husband':11 'italian':2 'monkey':16 'moos':8 'must':13 'nigeria':18 'overcom':14 'reflect':5","'australia':18 'cat':8 'drama':5 'epic':4 'explor':11 'gross':1 'moos':16 'must':13 'redeem':14 'wonder':2","'airport':1 'ancient':18 'confront':14 'epic':4 'girl':11 'india':19 'monkey':16 'moos':8 'must':13 'pollock':2 'tale':5","'boat':20 'bright':1 'conquer':14 'encount':2 'fate':4 'feminist':11 'jet':19 'lumberjack':8 'must':13 'student':16 'yarn':5","'academi':1 'battl':15 'canadian':20 'dinosaur':2 'drama':5 'epic':4 'feminist':8 'mad':11 'must':14 'rocki':21 'scientist':12 'teacher':17","'ace':1 'administr':9 'ancient':19 'astound':4 'car':17 'china':20 'databas':8 'epistl':5 'explor':12 'find':15 'goldfing':2 'must':14"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>film_id<\/th>\n      <th>title<\/th>\n      <th>description<\/th>\n      <th>release_year<\/th>\n      <th>language_id<\/th>\n      <th>rental_duration<\/th>\n      <th>rental_rate<\/th>\n      <th>length<\/th>\n      <th>replacement_cost<\/th>\n      <th>rating<\/th>\n      <th>last_update<\/th>\n      <th>special_features<\/th>\n      <th>fulltext<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,4,5,6,7,8,9]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-99557df47be3ea9b6925" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-99557df47be3ea9b6925">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[133,384,8,98,1,2],["Chamber Italian","Grosse Wonderful","Airport Pollock","Bright Encounters","Academy Dinosaur","Ace Goldfinger"],["A Fateful Reflection of a Moose And a Husband who must Overcome a Monkey in Nigeria","A Epic Drama of a Cat And a Explorer who must Redeem a Moose in Australia","A Epic Tale of a Moose And a Girl who must Confront a Monkey in Ancient India","A Fateful Yarn of a Lumberjack And a Feminist who must Conquer a Student in A Jet Boat","A Epic Drama of a Feminist And a Mad Scientist who must Battle a Teacher in The Canadian Rockies","A Astounding Epistle of a Database Administrator And a Explorer who must Find a Car in Ancient China"],[2006,2006,2006,2006,2006,2006],[1,1,1,1,1,1],[7,5,6,4,6,3],[4.99,4.99,4.99,4.99,0.99,4.99],[117,49,54,73,86,48],[14.99,19.99,15.99,12.99,20.99,12.99],["NC-17","R","R","PG-13","PG","G"],["2013-05-26T21:50:58Z","2013-05-26T21:50:58Z","2013-05-26T21:50:58Z","2013-05-26T21:50:58Z","2013-05-26T21:50:58Z","2013-05-26T21:50:58Z"],["{Trailers}","{\"Behind the Scenes\"}","{Trailers}","{Trailers}","{\"Deleted Scenes\",\"Behind the Scenes\"}","{Trailers,\"Deleted Scenes\"}"],["'chamber':1 'fate':4 'husband':11 'italian':2 'monkey':16 'moos':8 'must':13 'nigeria':18 'overcom':14 'reflect':5","'australia':18 'cat':8 'drama':5 'epic':4 'explor':11 'gross':1 'moos':16 'must':13 'redeem':14 'wonder':2","'airport':1 'ancient':18 'confront':14 'epic':4 'girl':11 'india':19 'monkey':16 'moos':8 'must':13 'pollock':2 'tale':5","'boat':20 'bright':1 'conquer':14 'encount':2 'fate':4 'feminist':11 'jet':19 'lumberjack':8 'must':13 'student':16 'yarn':5","'academi':1 'battl':15 'canadian':20 'dinosaur':2 'drama':5 'epic':4 'feminist':8 'mad':11 'must':14 'rocki':21 'scientist':12 'teacher':17","'ace':1 'administr':9 'ancient':19 'astound':4 'car':17 'china':20 'databas':8 'epistl':5 'explor':12 'find':15 'goldfing':2 'must':14"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>film_id<\/th>\n      <th>title<\/th>\n      <th>description<\/th>\n      <th>release_year<\/th>\n      <th>language_id<\/th>\n      <th>rental_duration<\/th>\n      <th>rental_rate<\/th>\n      <th>length<\/th>\n      <th>replacement_cost<\/th>\n      <th>rating<\/th>\n      <th>last_update<\/th>\n      <th>special_features<\/th>\n      <th>fulltext<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,4,5,6,7,8,9]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="the-summary-function-in-base" class="section level3">
 <h3><span class="header-section-number">8.4.3</span> The <code>summary</code> function in <code>base</code></h3>
@@ -1048,7 +1050,7 @@ film_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span cl
 ##  n obs: 1000 
 ##  n variables: 13 
 ## 
-## ── Variable type:character ─────────────────────────────────────────────────────────
+## ── Variable type:character ──────────────────────────────────────────────────────────────────────
 ##          variable missing complete    n min max empty n_unique
 ##       description       0     1000 1000  70 130     0     1000
 ##          fulltext       0     1000 1000  98 205     0     1000
@@ -1056,7 +1058,7 @@ film_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span cl
 ##  special_features       0     1000 1000  10  60     0       15
 ##             title       0     1000 1000   8  27     0     1000
 ## 
-## ── Variable type:integer ───────────────────────────────────────────────────────────
+## ── Variable type:integer ────────────────────────────────────────────────────────────────────────
 ##         variable missing complete    n    mean     sd   p0     p25    p50
 ##          film_id       0     1000 1000  500.5  288.82    1  250.75  500.5
 ##      language_id       0     1000 1000    1      0       1    1       1  
@@ -1070,7 +1072,7 @@ film_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span cl
 ##  2006    2006 ▁▁▁▇▁▁▁▁
 ##     6       7 ▇▇▁▇▁▇▁▇
 ## 
-## ── Variable type:numeric ───────────────────────────────────────────────────────────
+## ── Variable type:numeric ────────────────────────────────────────────────────────────────────────
 ##          variable missing complete    n  mean   sd    p0   p25   p50   p75
 ##       rental_rate       0     1000 1000  2.98 1.65  0.99  0.99  2.99  4.99
 ##  replacement_cost       0     1000 1000 19.98 6.05  9.99 14.99 19.99 24.99
@@ -1078,7 +1080,7 @@ film_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span cl
 ##   4.99 ▇▁▁▇▁▁▁▇
 ##  29.99 ▇▇▃▇▆▇▅▇
 ## 
-## ── Variable type:POSIXct ───────────────────────────────────────────────────────────
+## ── Variable type:POSIXct ────────────────────────────────────────────────────────────────────────
 ##     variable missing complete    n        min        max     median
 ##  last_update       0     1000 1000 2013-05-26 2013-05-26 2013-05-26
 ##  n_unique
@@ -1107,8 +1109,8 @@ sqlpetr<span class="op">::</span><span class="kw">sp_docker_stop</span>(<span cl
 <div id="additional-reading" class="section level2">
 <h2><span class="header-section-number">8.5</span> Additional reading</h2>
 <ul>
-<li><span class="citation">(Wickham <a href="#ref-Wickham2018" role="doc-biblioref">2018</a>)</span></li>
-<li><span class="citation">(Baumer <a href="#ref-Baumer2018" role="doc-biblioref">2018</a>)</span></li>
+<li><span class="citation">(Wickham <a href="#ref-Wickham2018">2018</a>)</span></li>
+<li><span class="citation">(Baumer <a href="#ref-Baumer2018">2018</a>)</span></li>
 </ul>
 
 </div>
@@ -1122,7 +1124,7 @@ sqlpetr<span class="op">::</span><span class="kw">sp_docker_stop</span>(<span cl
 <p>Wickham, Hadley. 2018. “A Grammar of Data Manipulation • Dplyr.” <a href=""></a>. <a href="https://dplyr.tidyverse.org/">https://dplyr.tidyverse.org/</a>.</p>
 </div>
 <div id="ref-Baumer2018">
-<p>Baumer, Benjamin S. 2018. “A Grammar for Reproducible and Painless Extract-Transform-Load Operations on Medium Data.” <em>Journal of Computational and Graphical Statistics</em>, August, 1–9. <a href="https://doi.org/10.1080/10618600.2018.1512867">https://doi.org/10.1080/10618600.2018.1512867</a>.</p>
+<p>Baumer, Benjamin S. 2018. “A Grammar for Reproducible and Painless Extract-Transform-Load Operations on Medium Data.” <em>Journal of Computational and Graphical Statistics</em>, August. Informa UK Limited, 1–9. <a href="https://doi.org/10.1080/10618600.2018.1512867">https://doi.org/10.1080/10618600.2018.1512867</a>.</p>
 </div>
 </div>
             </section>

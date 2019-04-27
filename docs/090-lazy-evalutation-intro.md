@@ -247,9 +247,8 @@ str(Q, max.level = 2)
 ##   ..$ name: chr "select"
 ##   ..$ x   :List of 4
 ##   .. ..- attr(*, "class")= chr [1:3] "op_join" "op_double" "op"
-##   ..$ dots:List of 4
-##   .. ..- attr(*, "class")= chr "quosures"
-##   ..$ args: list()
+##   ..$ dots: list()
+##   ..$ args:List of 1
 ##   ..- attr(*, "class")= chr [1:3] "op_select" "op_single" "op"
 ##  - attr(*, "class")= chr [1:5] "tbl_PqConnection" "tbl_dbi" "tbl_sql" "tbl_lazy" ...
 ```
@@ -416,17 +415,9 @@ Q %>% str(max.level = 3)
 ##   .. .. ..- attr(*, "class")= chr [1:5] "tbl_PqConnection" "tbl_dbi" "tbl_sql" "tbl_lazy" ...
 ##   .. ..$ args:List of 4
 ##   .. ..- attr(*, "class")= chr [1:3] "op_join" "op_double" "op"
-##   ..$ dots:List of 4
-##   .. ..$ : language ~title
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x5641c2f300e0> 
-##   .. ..$ : language ~length
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x5641c2f300e0> 
-##   .. ..$ : language ~rating
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x5641c2f300e0> 
-##   .. ..$ : language ~category
-##   .. .. ..- attr(*, ".Environment")=<environment: 0x5641c2f300e0> 
-##   .. ..- attr(*, "class")= chr "quosures"
-##   ..$ args: list()
+##   ..$ dots: list()
+##   ..$ args:List of 1
+##   .. ..$ vars:List of 4
 ##   ..- attr(*, "class")= chr [1:3] "op_select" "op_single" "op"
 ##  - attr(*, "class")= chr [1:5] "tbl_PqConnection" "tbl_dbi" "tbl_sql" "tbl_lazy" ...
 ```
@@ -535,18 +526,17 @@ Q %>% dplyr::show_query()
 ```
 ## <SQL>
 ## SELECT "title", "length", "rating", "category"
-## FROM (SELECT "TBL_LEFT"."film_id" AS "film_id", "TBL_LEFT"."title" AS "title", "TBL_LEFT"."description" AS "description", "TBL_LEFT"."release_year" AS "release_year", "TBL_LEFT"."language_id" AS "language_id", "TBL_LEFT"."rental_duration" AS "rental_duration", "TBL_LEFT"."rental_rate" AS "rental_rate", "TBL_LEFT"."length" AS "length", "TBL_LEFT"."replacement_cost" AS "replacement_cost", "TBL_LEFT"."rating" AS "rating", "TBL_LEFT"."last_update" AS "last_update", "TBL_LEFT"."special_features" AS "special_features", "TBL_LEFT"."fulltext" AS "fulltext", "TBL_LEFT"."category_id" AS "category_id", "TBL_RIGHT"."category" AS "category"
-##   FROM (SELECT "TBL_LEFT"."film_id" AS "film_id", "TBL_LEFT"."title" AS "title", "TBL_LEFT"."description" AS "description", "TBL_LEFT"."release_year" AS "release_year", "TBL_LEFT"."language_id" AS "language_id", "TBL_LEFT"."rental_duration" AS "rental_duration", "TBL_LEFT"."rental_rate" AS "rental_rate", "TBL_LEFT"."length" AS "length", "TBL_LEFT"."replacement_cost" AS "replacement_cost", "TBL_LEFT"."rating" AS "rating", "TBL_LEFT"."last_update" AS "last_update", "TBL_LEFT"."special_features" AS "special_features", "TBL_LEFT"."fulltext" AS "fulltext", "TBL_RIGHT"."category_id" AS "category_id"
-##   FROM "film" AS "TBL_LEFT"
-##   LEFT JOIN (SELECT "film_id", "category_id"
-## FROM "film_category") "TBL_RIGHT"
-##   ON ("TBL_LEFT"."film_id" = "TBL_RIGHT"."film_id")
-## ) "TBL_LEFT"
-##   LEFT JOIN (SELECT "category_id", "name" AS "category"
-## FROM (SELECT "category_id", "name"
-## FROM "category") "sqfdkcwewt") "TBL_RIGHT"
-##   ON ("TBL_LEFT"."category_id" = "TBL_RIGHT"."category_id")
-## ) "xjkijbsyva"
+## FROM (SELECT "LHS"."film_id" AS "film_id", "LHS"."title" AS "title", "LHS"."description" AS "description", "LHS"."release_year" AS "release_year", "LHS"."language_id" AS "language_id", "LHS"."rental_duration" AS "rental_duration", "LHS"."rental_rate" AS "rental_rate", "LHS"."length" AS "length", "LHS"."replacement_cost" AS "replacement_cost", "LHS"."rating" AS "rating", "LHS"."last_update" AS "last_update", "LHS"."special_features" AS "special_features", "LHS"."fulltext" AS "fulltext", "LHS"."category_id" AS "category_id", "RHS"."category" AS "category"
+## FROM (SELECT "LHS"."film_id" AS "film_id", "LHS"."title" AS "title", "LHS"."description" AS "description", "LHS"."release_year" AS "release_year", "LHS"."language_id" AS "language_id", "LHS"."rental_duration" AS "rental_duration", "LHS"."rental_rate" AS "rental_rate", "LHS"."length" AS "length", "LHS"."replacement_cost" AS "replacement_cost", "LHS"."rating" AS "rating", "LHS"."last_update" AS "last_update", "LHS"."special_features" AS "special_features", "LHS"."fulltext" AS "fulltext", "RHS"."category_id" AS "category_id"
+## FROM "film" AS "LHS"
+## LEFT JOIN (SELECT "film_id", "category_id"
+## FROM "film_category") "RHS"
+## ON ("LHS"."film_id" = "RHS"."film_id")
+## ) "LHS"
+## LEFT JOIN (SELECT "category_id", "name" AS "category"
+## FROM "category") "RHS"
+## ON ("LHS"."category_id" = "RHS"."category_id")
+## ) "dbplyr_009"
 ```
 Hand-written SQL code to do the same job will probably look a lot nicer and could be more efficient, but functionally `dplyr` does the job.
 

@@ -22,10 +22,10 @@
   <meta name="twitter:description" content="An introduction to Docker and PostgreSQL for R users to simulate use cases behind corporate walls." />
   
 
-<meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, Ian Frantz, and Dipti Muni">
+<meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, and Ian Frantz">
 
 
-<meta name="date" content="2019-04-07">
+<meta name="date" content="2019-04-26">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -58,7 +58,7 @@
 <script src="libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
 <script src="libs/viz-0.3/viz.js"></script>
 <link href="libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
-<script src="libs/grViz-binding-1.0.0/grViz.js"></script>
+<script src="libs/grViz-binding-1.0.1/grViz.js"></script>
 
 
 <style type="text/css">
@@ -79,7 +79,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(title);
+  { content: attr(data-line-number);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -584,13 +584,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="E" data-path="chapter-appendix-dplyr-functions.html"><a href="chapter-appendix-dplyr-functions.html"><i class="fa fa-check"></i><b>E</b> Dplyr functions and SQL cross-walk</a></li>
 <li class="chapter" data-level="F" data-path="chapter-appendix-dbi-functions.html"><a href="chapter-appendix-dbi-functions.html"><i class="fa fa-check"></i><b>F</b> DBI package functions - coverage</a></li>
-<li class="chapter" data-level="G" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html"><i class="fa fa-check"></i><b>G</b> Appendix Additional resources</a><ul>
-<li class="chapter" data-level="G.1" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#editing-this-book"><i class="fa fa-check"></i><b>G.1</b> Editing this book</a></li>
-<li class="chapter" data-level="G.2" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-alternatives"><i class="fa fa-check"></i><b>G.2</b> Docker alternatives</a></li>
-<li class="chapter" data-level="G.3" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-and-r"><i class="fa fa-check"></i><b>G.3</b> Docker and R</a></li>
-<li class="chapter" data-level="G.4" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#documentation-for-docker-and-postgresql"><i class="fa fa-check"></i><b>G.4</b> Documentation for Docker and PostgreSQL</a></li>
-<li class="chapter" data-level="G.5" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#sql-and-dplyr"><i class="fa fa-check"></i><b>G.5</b> SQL and dplyr</a></li>
-<li class="chapter" data-level="G.6" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#more-resources"><i class="fa fa-check"></i><b>G.6</b> More Resources</a></li>
+<li class="chapter" data-level="G" data-path="chapter-appendix-dplyr-to-postres-translation.html"><a href="chapter-appendix-dplyr-to-postres-translation.html"><i class="fa fa-check"></i><b>G</b> Appendix _ Dplyr to SQL translations</a><ul>
+<li class="chapter" data-level="G.1" data-path="chapter-appendix-dplyr-to-postres-translation.html"><a href="chapter-appendix-dplyr-to-postres-translation.html#overview-1"><i class="fa fa-check"></i><b>G.1</b> Overview</a></li>
+</ul></li>
+<li class="chapter" data-level="H" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html"><i class="fa fa-check"></i><b>H</b> Appendix Additional resources</a><ul>
+<li class="chapter" data-level="H.1" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#editing-this-book"><i class="fa fa-check"></i><b>H.1</b> Editing this book</a></li>
+<li class="chapter" data-level="H.2" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-alternatives"><i class="fa fa-check"></i><b>H.2</b> Docker alternatives</a></li>
+<li class="chapter" data-level="H.3" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-and-r"><i class="fa fa-check"></i><b>H.3</b> Docker and R</a></li>
+<li class="chapter" data-level="H.4" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#documentation-for-docker-and-postgresql"><i class="fa fa-check"></i><b>H.4</b> Documentation for Docker and PostgreSQL</a></li>
+<li class="chapter" data-level="H.5" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#sql-and-dplyr"><i class="fa fa-check"></i><b>H.5</b> SQL and dplyr</a></li>
+<li class="chapter" data-level="H.6" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#more-resources"><i class="fa fa-check"></i><b>H.6</b> More Resources</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -650,7 +653,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>The <code>sp_check_that_docker_is_up</code> function from the <code>sqlpetr</code> package checks whether Docker is up and running. If it’s not, then you need to install, launch or re-install Docker.</p>
 </blockquote>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_check_that_docker_is_up</span>()</code></pre>
-<pre><code>## [1] &quot;Docker is up but running no containers&quot;</code></pre>
+<pre><code>## [1] &quot;Docker is up, running these containers:&quot;                                                                                                               
+## [2] &quot;CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS              PORTS                              NAMES&quot;    
+## [3] &quot;f4468f858466        postgres-dvdrental   \&quot;docker-entrypoint.s…\&quot;   About an hour ago   Up 44 seconds       5432/tcp, 0.0.0.0:5439-&gt;5439/tcp   sql-pet&quot;</code></pre>
 </div>
 </div>
 <div id="remove-previous-containers-if-they-exist" class="section level2">
@@ -670,9 +675,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_make_simple_pg</span>(<span class="st">&quot;cattle&quot;</span>)</code></pre>
 <p>The first time you run this, Docker downloads the PostgreSQL image, which takes a bit of time. Did it work? The following command should show that a container named <code>cattle</code> is running <code>postgres:10</code>.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_check_that_docker_is_up</span>()</code></pre>
-<pre><code>## [1] &quot;Docker is up, running these containers:&quot;                                                                                                                 
-## [2] &quot;CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                              NAMES&quot;   
-## [3] &quot;5213500e798b        postgres:10         \&quot;docker-entrypoint.s…\&quot;   1 second ago        Up Less than a second   5432/tcp, 0.0.0.0:5439-&gt;5439/tcp   cattle&quot;</code></pre>
+<pre><code>## [1] &quot;Docker is up, running these containers:&quot;                                                                                                             
+## [2] &quot;CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                              NAMES&quot;   
+## [3] &quot;96a7e2e8c025        postgres:10         \&quot;docker-entrypoint.s…\&quot;   4 seconds ago       Up 2 seconds        5432/tcp, 0.0.0.0:5439-&gt;5439/tcp   cattle&quot;</code></pre>
 <blockquote>
 <p>The <code>sp_docker_containers_tibble</code> function from the <code>sqlpetr</code> package provides more on the containers that Docker is running. Basically this function creates a tibble of containers using <code>docker ps</code>.</p>
 </blockquote>
@@ -680,7 +685,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;
-## 1 5213500e798b post… docker… 2019-04-0… 2 seco… 5432… Up Le… 0B (… catt…
+## 1 96a7e2e8c025 post… docker… 2019-04-2… 4 seco… 5432… Up 2 … 63B … catt…
 ## # … with 3 more variables: labels &lt;chr&gt;, mounts &lt;chr&gt;, networks &lt;chr&gt;</code></pre>
 </div>
 <div id="connecting-reading-and-writing-to-postgresql-from-r" class="section level2">
@@ -750,8 +755,8 @@ Clicking on the rectangle on the right of <code>mtcars</code> opens a <code>View
 <p>The <code>sp_print_df</code> function from the <code>sqlpetr</code> package shows (or print) a data frame depending on appropriate output type. That is when running interactively or generating HTML it prints a <code>DT::datatable()</code> while it prints a <code>knitr::kable()</code> otherwise.</p>
 </blockquote>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(mtcars_df))</code></pre>
-<p><div id="htmlwidget-a563378e350772c9f6b0" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-a563378e350772c9f6b0">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[21,21,22.8,21.4,18.7,18.1],[6,6,4,6,8,6],[160,160,108,258,360,225],[110,110,93,110,175,105],[3.9,3.9,3.85,3.08,3.15,2.76],[2.62,2.875,2.32,3.215,3.44,3.46],[16.46,17.02,18.61,19.44,17.02,20.22],[0,0,1,1,0,1],[1,1,1,0,0,0],[4,4,4,3,3,3],[4,4,1,1,2,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>mpg<\/th>\n      <th>cyl<\/th>\n      <th>disp<\/th>\n      <th>hp<\/th>\n      <th>drat<\/th>\n      <th>wt<\/th>\n      <th>qsec<\/th>\n      <th>vs<\/th>\n      <th>am<\/th>\n      <th>gear<\/th>\n      <th>carb<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6,7,8,9,10,11]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<p><div id="htmlwidget-1d9f9b9fdca3023baa83" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1d9f9b9fdca3023baa83">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[21,21,22.8,21.4,18.7,18.1],[6,6,4,6,8,6],[160,160,108,258,360,225],[110,110,93,110,175,105],[3.9,3.9,3.85,3.08,3.15,2.76],[2.62,2.875,2.32,3.215,3.44,3.46],[16.46,17.02,18.61,19.44,17.02,20.22],[0,0,1,1,0,1],[1,1,1,0,0,0],[4,4,4,3,3,3],[4,4,1,1,2,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>mpg<\/th>\n      <th>cyl<\/th>\n      <th>disp<\/th>\n      <th>hp<\/th>\n      <th>drat<\/th>\n      <th>wt<\/th>\n      <th>qsec<\/th>\n      <th>vs<\/th>\n      <th>am<\/th>\n      <th>gear<\/th>\n      <th>carb<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6,7,8,9,10,11]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 Interactively, you can also click on the mtcars table in the Connections tab to see:
 <img src="screenshots/View-window-mtcars-from-postgresql.png" alt="View of mtcars" />
 The number of rows and columns shown in the View pane depends on the size of the window.</p>
@@ -776,7 +781,7 @@ The number of rows and columns shown in the View pane depends on the size of the
 <p>Verify that <code>cattle</code> is gone:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sp_docker_containers_tibble</span>()</code></pre>
 <pre><code>## # A tibble: 0 x 0</code></pre>
-<p>If we just <strong>stop</strong> the Docker container but don’t remove it (as we did with the <code>sp_docker_remove_container("cattle")</code> command), the <code>cattle</code> container will persist and we can start it up again later with <code>sp_docker_start("cattle")</code>. In that case, <code>mtcars</code> would still be there and we could retrieve it from PostgreSQL again. Since <code>sp_docker_remove_container("cattle")</code> has removed it, the updated database has been deleted. (There are enough copies of <code>mtcars</code> in the world, so no great loss.)</p>
+<p>If we just <strong>stop</strong> the Docker container but don’t remove it (as we did with the <code>sp_docker_remove_container(&quot;cattle&quot;)</code> command), the <code>cattle</code> container will persist and we can start it up again later with <code>sp_docker_start(&quot;cattle&quot;)</code>. In that case, <code>mtcars</code> would still be there and we could retrieve it from PostgreSQL again. Since <code>sp_docker_remove_container(&quot;cattle&quot;)</code> has removed it, the updated database has been deleted. (There are enough copies of <code>mtcars</code> in the world, so no great loss.)</p>
 
 </div>
 </div>
