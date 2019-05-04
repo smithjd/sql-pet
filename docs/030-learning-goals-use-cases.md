@@ -11,10 +11,32 @@
 > * Posing some imaginary use cases that a data analyst might face
 > * Discussing the different elements involved in answering questions from an organization's database
 
+An R analyst....
 
 
 
 ## Challenge: goals, context and expectations
+
+## The Challenge: Investigating a question using an organization's database
+
+* Need both familiarity with the data and a focus question
+  + An iterative process where 
+    + the data resource can shape your understanding of the question
+    + the question you need to answer will frame how you see the data resource
+  + You need to go back and forth between the two, asking 
+    + do I understand the question?
+    + do I understand the data?
+
+* How well do you understand the data resource (in the DBMS)?
+  + Use all available documentation and understand its limits
+  + Use your own tools and skills to examine the data resource
+  + What is *missing* from the database: (columns, records, cells)
+  + Why is the data missing?
+  
+* How well do you understand the question you seek to answer?
+  + How general or specific is your question?
+  + How aligned is it with the purpose for which the database was designed and is being operated?
+  + How different are your assumptions and concerns from those of the people who enter and use the data on a day to day basis?
 
 
 ## Ask yourself, what are you aiming for?  
@@ -25,6 +47,9 @@
   + In the end it's the subject-matter experts that understand your data, but you have to work with your DBAs first.
 
 ### Problems that are addressed
+
+* Database exploration 
+* Wisdom from Sophie
 
 ### Learning Objectives
 
@@ -90,23 +115,3 @@ Imagine that you have one of following several roles at our fictional company **
 * As the Director of Analytics, I want to test as much of the production R code in my shop as possible against a new release of the DBMS that the IT department is implementing next month.
 * etc.
 
-## Investigating a question using an organization's database
-
-* Need both familiarity with the data and a focus question
-  + An iterative process where 
-    + the data resource can shape your understanding of the question
-    + the question you need to answer will frame how you see the data resource
-  + You need to go back and forth between the two, asking 
-    + do I understand the question?
-    + do I understand the data?
-
-* How well do you understand the data resource (in the DBMS)?
-  + Use all available documentation and understand its limits
-  + Use your own tools and skills to examine the data resource
-  + What is *missing* from the database: (columns, records, cells)
-  + Why is the data missing?
-  
-* How well do you understand the question you seek to answer?
-  + How general or specific is your question?
-  + How aligned is it with the purpose for which the database was designed and is being operated?
-  + How different are your assumptions and concerns from those of the people who enter and use the data on a day to day basis?
