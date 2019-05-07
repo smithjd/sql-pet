@@ -1,0 +1,68 @@
+---
+title: "Import and update harryahlas/hrsample"
+author: "John D. Smith"
+date: "5/7/2019"
+output: html_document
+---
+
+This informal vignette bypasses the sp_* functions we've gotten to know and love because of the different assumptions about port number on the `sqlpetr` and `hrsample` packages.
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(DBI)
+library(here)
+library(sqlpetr)
+library(glue)
+
+```
+
+1. Open the `sql-pet` and `hrsample` projects.
+2. Update `hrsample` with this command on the `hrsample` side:
+
+```{r}
+remotes::install_github("harryahlas/hrsample", force = TRUE, 
+                        build = FALSE, quiet = TRUE)
+
+```
+
+3. On the `sql-pet` side, create container to hold `hrsample`. Before creating a new one, check for an existing one and delete it with this command in the terminal:
+
+>  `docker rm hr-sample`
+
+```{r}
+wd <- getwd()
+
+docker_cmd <- glue(
+  "run ",      # Run is the Docker command.  Everything that follows are `run` parameters.
+  "--detach ", # (or `-d`) tells Docker to disconnect from the terminal / program issuing the command
+  " --name hr-sample ",     # tells Docker to give the container a name: `sql-pet`
+  "--publish 5432:5432 ", # tells Docker to expose the PostgreSQL port 5432 to the local network with 5432
+  "--mount ", # tells Docker to mount a volume -- mapping Docker's internal file structure to the host file structure
+  'type=bind,source="', wd, '",target=/petdir',
+  " postgres:10 " # tells Docker the image that is to be run (after downloading if necessary)
+)
+cat('docker ',docker_cmd)
+
+system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
+
+```
+
+On the `hrsample` side, run 
+
+```{r}
+source("load-to-postgres.R")
+```
+At the end of the script it disconnects from the database, so to experiment, you need to reconnect with:
+```{r}
+con <- sp_get_postgres_connection(
+  host = "localhost",
+  port = 5432,
+  user = "postgres",
+  password = "postgres",
+  dbname = "postgres",
+  seconds_to_test = 30, 
+  connection_tab = TRUE
+)
+
+```
+
