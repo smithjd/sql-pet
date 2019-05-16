@@ -13,9 +13,9 @@ library(here)
 
 file.remove(here("book-src", "hr-sample.sqlite3"))   # get rid of old versions
 
-hrsampleCreateSQLite("hr-sample.sqlite3")
+hrsampleCreateSQLite(here("book-src", "hr-sample.sqlite3"))
 
-con <- dbConnect(RSQLite::SQLite(), ("hr-sample.sqlite3"))
+con <- dbConnect(RSQLite::SQLite(), here("book-src", "hr-sample.sqlite3"))
 
 dbListTables(con)
 
