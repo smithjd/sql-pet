@@ -1,19 +1,27 @@
-# demonstrate load hrsample to SQLlite & create a persistent sqllite database
+# This script isn't part of the book itself.  It's what we run
+#   to create a resource for the book
+#
+# We need to run it whenever the hrsample package is updated.
+#
+# Demonstrate load hrsample to SQLlite & create a persistent
+#   sqlite database,
 library(tidyverse)
 library(hrsample)
 library(DBI)
 library(RSQLite)
 library(here)
 
-file.remove("hr-sample.sqlite3")   # get rid of old versions
+file.remove(here("book-src", "hr-sample.sqlite3"))   # get rid of old versions
 
 hrsampleCreateSQLite("hr-sample.sqlite3")
 
-con <- dbConnect(RSQLite::SQLite(), "hr-sample.sqlite3")
+con <- dbConnect(RSQLite::SQLite(), ("hr-sample.sqlite3"))
 
 dbListTables(con)
 
 employeeinfo <- tbl(con, "employeeinfo")
+
+# trivial query to show that everything works:
 
 count(employeeinfo, state) %>% arrange(desc(n))
 
@@ -24,5 +32,6 @@ GROUP BY "state"
 ORDER BY "n" DESC'
 )
 
-
 dbDisconnect(con)
+
+# Needed: zip "hr-sample.sqlite3"?
