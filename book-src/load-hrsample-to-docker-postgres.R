@@ -3,7 +3,12 @@
 #
 # We need to run it whenever the hrsample package is updated.
 # Demonstrate load hrsample to SQLlite & create a persistent
-#   sqlite database,
+#   sqlite database.
+
+# If necessary update or load the hrsample package
+#  remotes::install_github("harryahlas/hrsample", force = TRUE, quiet = TRUE, build = TRUE, build_opts = "")
+#  devtools::install_github("harryahlas/hrsample")
+
 library(tidyverse)
 library(hrsample)
 library(RPostgres)
