@@ -75,6 +75,29 @@ con <- sp_get_postgres_connection(
   connection_tab = TRUE
 )
 
+## adding
+dbExecute(con,'alter table postgres.public.employeeinfo
+          add primary key (employee_num)')
+dbExecute(con,'alter table postgres.public.deskhistory
+          add primary key (employee_num, desk_id, desk_id_start_date)')
+
+#####deskjob two columns, not indexed
+
+dbExecute(con,'alter table postgres.public.hierarchy
+          add primary key (desk_id)')
+dbExecute(con,'CREATE INDEX perfreview_employee_num ON
+          postgres.public.performancereview (employee_num)');
+dbExecute(con,'CREATE INDEX salhistory ON
+          postgres.public.salaryhistory (employee_num)');
+dbExecute(con,'alter table postgres.public.recruiting_table
+          add primary key (employee_num)')
+dbExecute(con,'CREATE INDEX contact_employee_num
+          ON postgres.public.contact_table (employee_num)');
+dbExecute(con,'CREATE INDEX education_employee_num
+          ON postgres.public.education_table (employee_num)');
+dbExecute(con,'CREATE INDEX skills_employee_num
+          ON postgres.public.skills_table (employee_num)');
+
 dbListTables(con)
 
 employeeinfo <- tbl(con, "employeeinfo")
@@ -105,5 +128,4 @@ tar_cmd <- glue(
 
 system2("tar", tar_cmd)
 
-file.remove(here("book-src", "hr_sample.sql"))
-
+file.remove(glue("book-src/", "hr_sample.sql"))
