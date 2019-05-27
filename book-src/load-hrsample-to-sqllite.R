@@ -49,4 +49,4 @@ tar_cmd <- glue(
 
 system2("tar", tar_cmd)
 
-file.remove(here("book-src", "hr_sample.sqlite3"))
+file.remove(here("book-src/", "hr_sample.sqlite3"))
