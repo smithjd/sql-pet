@@ -7,7 +7,7 @@
 
 # If necessary update or load the hrsample package
 #  remotes::install_github("harryahlas/hrsample", force = TRUE, quiet = TRUE, build = TRUE, build_opts = "")
-#  devtools::install_github("harryahlas/hrsample")
+#  devtools::install_github("harryahlas/hrsample") # deprecated
 
 library(tidyverse)
 library(hrsample)
@@ -46,6 +46,7 @@ con <- sp_get_postgres_connection(
 
 # note sure the following dbExecute or the connect statement that follows really works.
 dbExecute(con, "CREATE SCHEMA hr_sample;")
+# Having different schemas is realistic.
 
 # con <- sp_get_postgres_connection(
 #   host = "localhost",
@@ -57,6 +58,7 @@ dbExecute(con, "CREATE SCHEMA hr_sample;")
 #   connection_tab = TRUE
 # )
 
+# Harry's code has "public" hard-coded.
 hrsampleCreatePostgreSQL(
   dbname = "postgres",
   host = "localhost",
@@ -75,8 +77,25 @@ con <- sp_get_postgres_connection(
   connection_tab = TRUE
 )
 
+# copy_to(con, employeeinfo_table, in_schema("hr_sample", "employeeinfo"))
+
 dbListTables(con)
 
+dbWriteTable(con, "employeeinfo", postgres.hr_sample.employeeinfo_table, overwrite = TRUE)
+
+dbExecute(con,'alter table postgres.public.employeeinfo add primary key (employee_num)')
+dbExecute(con,'alter table postgres.public.deskhistory add primary key (employee_num, desk_id, desk_id_start_date)')
+
+#####deskjob two columns, not indexed
+
+dbExecute(con,'alter table postgres.public.hierarchy add primary key (desk_id)')
+dbExecute(con,'CREATE INDEX perfreview_employee_num ON postgres.public.performancereview (employee_num)');
+dbExecute(con,'CREATE INDEX salhistory ON postgres.public.salaryhistory (employee_num)');
+
+dbExecute(con,'alter table postgres.public.recruiting_table add primary key (employee_num)')
+dbExecute(con,'CREATE INDEX contact_employee_num ON postgres.public.contact_table (employee_num)');
+dbExecute(con,'CREATE INDEX education_employee_num ON postgres.public.education_table (employee_num)');
+dbExecute(con,'CREATE INDEX skills_employee_num ON postgres.public.skills_table (employee_num)');
 employeeinfo <- tbl(con, "employeeinfo")
 
 count(employeeinfo, state) %>% arrange(desc(n)) %>% show_query()
