@@ -7,7 +7,7 @@
 
 # If necessary update or load the hrsample package
 #  remotes::install_github("harryahlas/hrsample", force = TRUE, quiet = TRUE, build = TRUE, build_opts = "")
-#  devtools::install_github("harryahlas/hrsample")
+#  devtools::install_github("harryahlas/hrsample") # deprecated
 
 library(tidyverse)
 library(hrsample)
@@ -46,6 +46,7 @@ con <- sp_get_postgres_connection(
 
 # note sure the following dbExecute or the connect statement that follows really works.
 dbExecute(con, "CREATE SCHEMA hr_sample;")
+# Having different schemas is realistic.
 
 # con <- sp_get_postgres_connection(
 #   host = "localhost",
@@ -57,6 +58,7 @@ dbExecute(con, "CREATE SCHEMA hr_sample;")
 #   connection_tab = TRUE
 # )
 
+# Harry's code has "public" hard-coded.
 hrsampleCreatePostgreSQL(
   dbname = "postgres",
   host = "localhost",
@@ -74,6 +76,8 @@ con <- sp_get_postgres_connection(
   seconds_to_test = 10,
   connection_tab = TRUE
 )
+
+# copy_to(con, employeeinfo_table, in_schema("hr_sample", "employeeinfo"))
 
 ## adding
 dbExecute(con,'alter table postgres.public.employeeinfo
