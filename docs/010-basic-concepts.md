@@ -95,13 +95,13 @@ Tidy data [@Wickham2014] is well-behaved from the point of view of analysis and 
 
 Data in a database is most often optimized to minimize storage space and increase performance while preserving integrity when adding, changing, or deleting data.  The Wikipedia article on  Database Normalization has a good introduction to the characteristics of "normal" data and the process of re-organizing it to meet those desirable criteria [@Wikipedia2019].  The bottom line is that "data normalization is practical" although there are mathematical arguments for normalization based on the preservation of data integrity.
 
-## Organizational DBMS
+## Enterprise DBMS
 
 The organizational context of a database matters just as much as its design characteristics.  The design of a database (or _data model_) may have been purchased from an external vendor or developed in-house.  In either case time has a tendency to erode the original design concept so that the data you find in a DBMS may not quite match the original design specification.  And the original design may or may not be well reflected in the current naming of tables, columns and other objects.
 
-It's a naive misconception to think that the data you are analyzing "comes from the database" even though you are retrieving it from your organization's DBMS.  In fact it comes from the people who design, enter, manage, protect, and use your organization's data.  In practice, a [database administrator](https://en.wikipedia.org/wiki/Database_administrator) (DBA) is often a key point of contact in terms of access and may have stringent criteria for query performance.  Make friends with your DBA. 
+It's a naive misconception to think that the data you are analyzing just "comes from the database", although that's literally true and may be the step that happens before you get your hands on it.  In fact it comes from the people who design, enter, manage, protect, and use your organization's data.  In practice, a [database administrator](https://en.wikipedia.org/wiki/Database_administrator) (DBA) is often a key point of contact in terms of access and may have stringent criteria for query performance.  Make friends with your DBA. 
 
-## SQL
+### SQL databases
 
 Although there are [ANSI standards](https://en.wikipedia.org/wiki/SQL#Interoperability_and_standardization) for [SQL syntax](https://en.wikipedia.org/wiki/SQL_syntax), different implementations vary in enough details that R's ability to customize queries for those implementations is very helpful.
 
@@ -228,3 +228,7 @@ Although everything happens on one machine in our Docker / PostgreSQL playground
 |Storage of intermediate results |Very easy to save a data frame with intermediate results locally. |May require extra privileges to save results in the database.
 |Analytical resources |Ecosystem of available R packages  |Extending SQL instruction set involves dbms-specific functions or R pseudo functions
 |Collaboration |One person working on a few data.frames. |Many people collaborating on _many_ tables.
+
+### Using SQLite to simulate an enterprise DBMS
+
+SQLite engine is embedded in one file, so that many tables are stored together in one object.  SQL commands can run against an SQLite database as demonstrated in how many uses of SQLite are in the [RStudio `dbplyr` documentation](https://dbplyr.tidyverse.org).

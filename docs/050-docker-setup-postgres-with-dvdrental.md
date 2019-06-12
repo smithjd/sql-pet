@@ -1,19 +1,19 @@
-# Create the dvdrental database in PostgreSQL in Docker {#chapter_setup-dvdrental-db}
+# Create the hrsample database in PostgreSQL in Docker {#chapter_setup-hrsample-db}
 
-> NOTE: This Chapter walks through the all steps needed to setup the dvdrental database in Docker.  All susequent chapters depend on this setup.  If for some reason you need to setup the Docker database but don't want to step through this *teaching version* of the setup, you can use:
+> NOTE: This chapter doesn't go into the details of *creating* or *restoring* the `hrsample` database.  For more detail on what's going on behind the scenes, you can examine the step-by-step code in:
 >
-> ` source('book-src/setup-dvdrental-docker-container.R') `
+> ` source('book-src/restore-hrsample-postgres-on-docker.R') `
 
 > This chapter demonstrates how to:
 >
->  * Setup the `dvdrental` database in Docker
+>  * Setup the `hrsample` database in Docker
 >  * Stop and start Docker container to demonstrate persistence
->  * Connect to and disconnect R from the `dvdrental` database
+>  * Connect to and disconnect R from the `hrsample` database
 >  * Set up the environment for subsequent chapters
 
 ## Overview
 
-In the last chapter we connected to PostgreSQL from R.  Now we set up a "realistic" database named `dvdrental`. There are different approaches to doing this: this chapter sets it up in a way that doesn't show all the Docker details.
+In the last chapter we connected to PostgreSQL from R.  Now we set up a "realistic" database named `hrsample`. There are different approaches to doing this: this chapter sets it up in a way that doesn't show all the Docker details.
 
 These packages are called in this Chapter:
 
@@ -26,6 +26,7 @@ require(knitr)
 library(dbplyr)
 library(sqlpetr)
 library(bookdown)
+library(here)
 ```
 
 ## Verify that Docker is up and running
@@ -35,7 +36,9 @@ sp_check_that_docker_is_up()
 ```
 
 ```
-## [1] "Docker is up but running no containers"
+## [1] "Docker is up, running these containers:"                                                                                                     
+## [2] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES"     
+## [3] "a66142ed0ec2        postgres:10         \"docker-entrypoint.s…\"   9 minutes ago       Up 2 minutes        0.0.0.0:5432->5432/tcp   hrsample"
 ```
 
 ## Clean up if appropriate
@@ -50,40 +53,48 @@ sp_docker_remove_container("cattle")
 ```
 
 ```r
-sp_docker_remove_container("sql-pet")
+sp_docker_remove_container("hrsample")
 ```
 
 ```
 ## [1] 0
 ```
 ## Build the pet-sql Docker image
-For the rest of the book we will be using a Docker image called
-`postgres-dvdrental`. To save space here in the book, we've created a function
-in `sqlpetr` to build this image, called [`sp_make_dvdrental_image`](https://smithjd.github.io/sqlpetr/reference/sp_make_dvdrental_image.html). Vignette [Building the `dvdrental` Docker Image
+
+**UPDATE:** For the rest of the book we will be using a Docker image called
+`hrsample`. To save space here in the book, we've created a function
+in `sqlpetr` to build this image, called [`sp_make_dvdrental_image`](https://smithjd.github.io/sqlpetr/reference/sp_make_dvdrental_image.html). Vignette [Building the `hsrample` Docker Image
 ](https://smithjd.github.io/sqlpetr/articles/building-the-dvdrental-docker-image.html) describes the build process.
 
 
 ```r
-sp_make_dvdrental_image("postgres-dvdrental")
+# sp_make_dvdrental_image("postgres-dvdrental")
+source(here("book-src", "restore-hrsample-postgres-on-docker.R"))
 ```
 
-Did it work? We have a function that lists the images into a tibble!
+```
+## docker  run --detach  --name hrsample --publish 5432:5432 --mount type=bind,source="/Users/jds/Documents/Library/R/r-system/sql-pet",target=/petdir postgres:10
+```
+
+**UPDATE:** Did it work? We have a function that lists the images into a tibble!
+
 
 ```r
-sp_docker_images_tibble()
+sp_docker_start("hrsample")
+sp_docker_images_tibble()  # Doesn't produce the expected output.
 ```
 
 ```
 ## # A tibble: 3 x 7
-##   image_id  repository   tag    digest          created  created_at   size 
-##   <chr>     <chr>        <chr>  <chr>           <chr>    <chr>        <chr>
-## 1 aff06852… postgres-dv… latest <none>          About a… 2019-04-26 … 294MB
-## 2 c149455a… <none>       <none> <none>          5 weeks… 2019-03-18 … 252MB
-## 3 3e016ba4… postgres     10     sha256:5c70299… 7 weeks… 2019-03-04 … 230MB
+##   image_id  repository   tag    digest           created created_at   size 
+##   <chr>     <chr>        <chr>  <chr>            <chr>   <chr>        <chr>
+## 1 aff06852… postgres-dv… latest <none>           6 week… 2019-04-26 … 294MB
+## 2 c149455a… <none>       <none> <none>           2 mont… 2019-03-18 … 252MB
+## 3 3e016ba4… postgres     10     sha256:5c702997… 3 mont… 2019-03-04 … 230MB
 ```
 
 ## Run the pet-sql Docker Image
-Now we can run the image in a container and connect to the database. To run the
+**UPDATE:** Now we can run the image in a container and connect to the database. To run the
 image we use an `sqlpetr` function called [`sp_pg_docker_run`](https://smithjd.github.io/sqlpetr/reference/sp_pg_docker_run.html)
 
 
@@ -95,11 +106,7 @@ sp_pg_docker_run(
 )
 ```
 
-```
-## [1] "c12077eaade2c9f6e32221fec7e5ef578b9f7d52c0a57c0fb9a934e6efe68475"
-```
-
-Did it work?
+**UPDATE:** Did it work?
 
 ```r
 sp_docker_containers_tibble()
@@ -109,54 +116,116 @@ sp_docker_containers_tibble()
 ## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 c12077eaade2 post… docker… 2019-04-2… 4 seco… 5432… Up 3 … 74.9… sql-…
+## 1 dee42b174456 post… docker… 2019-06-1… 10 sec… 0.0.… Up Le… 63B … hrsa…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 
 ## Connect to PostgreSQL with R
 
-Use the DBI package to connect to the `dvdrental` database in PostgreSQL.  Remember the settings discussion about [keeping passwords hidden][Pause for some security considerations]
+Use the DBI package to connect to the `hrsample` database in PostgreSQL.  Remember the settings discussion about [keeping passwords hidden][Pause for some security considerations]
 
 
 ```r
 con <- sp_get_postgres_connection(
   host = "localhost",
-  port = 5439,
+  port = 5432,
   user = "postgres",
   password = "postgres",
-  dbname = "dvdrental",
+  dbname = "hrsample",
   seconds_to_test = 30, connection_tab = TRUE
 )
 ```
+For the moment we by-pass some complexity that results from the fact that the `hrsample` has multiple *schemas* and that we are interested in only one of them, named `hrsample`.  
 
-List the tables in the database and the fields in one of those tables.  
+```r
+tbl(con, in_schema("information_schema", "schemata")) %>%
+  select(catalog_name, schema_name, schema_owner) %>%
+  collect()
+```
+
+```
+## # A tibble: 7 x 3
+##   catalog_name schema_name        schema_owner
+##   <chr>        <chr>              <chr>       
+## 1 hrsample     pg_toast           postgres    
+## 2 hrsample     pg_temp_1          postgres    
+## 3 hrsample     pg_toast_temp_1    postgres    
+## 4 hrsample     pg_catalog         postgres    
+## 5 hrsample     public             postgres    
+## 6 hrsample     information_schema postgres    
+## 7 hrsample     hrsample           postgres
+```
+
+Schemas will be discussed later on because multiple schemas are the norm in an enterprise database environment, but they are a side issue at this point.  So we switch the order in which PostgreSQL searches for objects with the following SQL code:
+
+```r
+dbExecute(con, "set search_path to hrsample, public;")
+```
+
+```
+## [1] 0
+```
+With the custom `search_path`, the following command works, but it will fail without out it.
 
 ```r
 dbListTables(con)
 ```
 
 ```
-##  [1] "actor_info"                 "customer_list"             
-##  [3] "film_list"                  "nicer_but_slower_film_list"
-##  [5] "sales_by_film_category"     "staff"                     
-##  [7] "sales_by_store"             "staff_list"                
-##  [9] "category"                   "film_category"             
-## [11] "country"                    "actor"                     
-## [13] "language"                   "inventory"                 
-## [15] "payment"                    "rental"                    
-## [17] "city"                       "store"                     
-## [19] "film"                       "address"                   
-## [21] "film_actor"                 "customer"
+##  [1] "contact_table"     "deskhistory"       "deskjob"          
+##  [4] "education_table"   "employeeinfo"      "hierarchy"        
+##  [7] "performancereview" "recruiting_table"  "rollup_view"      
+## [10] "salaryhistory"     "skills_table"
+```
+Same for `dbListFields`:
+
+```r
+dbListFields(con, "employeeinfo")
+```
+
+```
+## [1] "employee_num" "first_name"   "last_name"    "city"        
+## [5] "state"
+```
+
+Thus with this search order, the following two produce identical results:
+
+```r
+tbl(con, in_schema("hrsample", "employeeinfo")) %>%
+  head()
+```
+
+```
+## # Source:   lazy query [?? x 5]
+## # Database: postgres [postgres@localhost:5432/hrsample]
+##   employee_num first_name last_name   city        state
+##          <int> <chr>      <chr>       <chr>       <chr>
+## 1            3 Lana       Chrostowski Utica       MS   
+## 2           20 Justine    Kopiasz     Milnor      ND   
+## 3           21 Claude     Feldman     Woodville   AL   
+## 4           38 Ronald     Finona      West Glover VT   
+## 5           39 Stewart    Pruess      Martin      OH   
+## 6           41 Nona       Favalora    Pascagoula  MS
 ```
 
 ```r
-dbListFields(con, "rental")
+tbl(con, "employeeinfo") %>%
+  head()
 ```
 
 ```
-## [1] "rental_id"    "rental_date"  "inventory_id" "customer_id" 
-## [5] "return_date"  "staff_id"     "last_update"
+## # Source:   lazy query [?? x 5]
+## # Database: postgres [postgres@localhost:5432/hrsample]
+##   employee_num first_name last_name   city        state
+##          <int> <chr>      <chr>       <chr>       <chr>
+## 1            3 Lana       Chrostowski Utica       MS   
+## 2           20 Justine    Kopiasz     Milnor      ND   
+## 3           21 Claude     Feldman     Woodville   AL   
+## 4           38 Ronald     Finona      West Glover VT   
+## 5           39 Stewart    Pruess      Martin      OH   
+## 6           41 Nona       Favalora    Pascagoula  MS
 ```
+
 
 Disconnect from the database:
 
@@ -168,7 +237,7 @@ dbDisconnect(con)
 Stop the container:
 
 ```r
-sp_docker_stop("sql-pet")
+sp_docker_stop("hrsample")
 sp_docker_containers_tibble()
 ```
 
@@ -186,19 +255,18 @@ sp_docker_containers_tibble(list_all = TRUE)
 ```
 
 ```
-## # A tibble: 2 x 12
+## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 c12077eaade2 post… docker… 2019-04-2… 5 seco… <NA>  Exite… 74.9… sql-…
-## 2 08cfc88c882c post… docker… 2019-04-0… 2 week… 0.0.… Exite… 0B (… hr-s…
+## 1 dee42b174456 post… docker… 2019-06-1… 12 sec… <NA>  Exite… 0B (… hrsa…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 
 
-Restart the container and verify that the dvdrental tables are still there:
+Restart the container and verify that the hrsample tables are still there:
 
 ```r
-sp_docker_start("sql-pet")
+sp_docker_start("hrsample")
 sp_docker_containers_tibble()
 ```
 
@@ -206,31 +274,40 @@ sp_docker_containers_tibble()
 ## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 c12077eaade2 post… docker… 2019-04-2… 7 seco… 5432… Up Le… 74.9… sql-…
+## 1 dee42b174456 post… docker… 2019-06-1… 13 sec… 0.0.… Up Le… 63B … hrsa…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
-Connect to the `dvdrental` database in PostgreSQL:
+Connect to the `hrsample` database in PostgreSQL:
 
 ```r
 con <- sp_get_postgres_connection(
   host = "localhost",
-  port = 5439,
+  port = 5432,
   user = "postgres",
   password = "postgres",
-  dbname = "dvdrental",
+  dbname = "hrsample",
   seconds_to_test = 30
 )
 ```
 
-Check that you can still see the fields in the `rental` table:
+Check that you can still see the first few rows of the `employeeinfo` table:
 
 ```r
-dbListFields(con, "rental")
+tbl(con, in_schema("hrsample", "employeeinfo")) %>%
+  head()
 ```
 
 ```
-## [1] "rental_id"    "rental_date"  "inventory_id" "customer_id" 
-## [5] "return_date"  "staff_id"     "last_update"
+## # Source:   lazy query [?? x 5]
+## # Database: postgres [postgres@localhost:5432/hrsample]
+##   employee_num first_name last_name   city        state
+##          <int> <chr>      <chr>       <chr>       <chr>
+## 1            3 Lana       Chrostowski Utica       MS   
+## 2           20 Justine    Kopiasz     Milnor      ND   
+## 3           21 Claude     Feldman     Woodville   AL   
+## 4           38 Ronald     Finona      West Glover VT   
+## 5           39 Stewart    Pruess      Martin      OH   
+## 6           41 Nona       Favalora    Pascagoula  MS
 ```
 
 ## Cleaning up
@@ -244,7 +321,7 @@ dbDisconnect(con)
 Stop the `sql-pet` container:
 
 ```r
-sp_docker_stop("sql-pet")
+sp_docker_stop("hrsample")
 ```
 Show that the container still exists even though it's not running
 
@@ -254,21 +331,22 @@ sp_show_all_docker_containers()
 ```
 
 ```
-## CONTAINER ID        IMAGE                COMMAND                  CREATED             STATUS                              PORTS                    NAMES
-## c12077eaade2        postgres-dvdrental   "docker-entrypoint.s…"   8 seconds ago       Exited (0) Less than a second ago                            sql-pet
-## 08cfc88c882c        postgres:10          "docker-entrypoint.s…"   2 weeks ago         Exited (255) 2 weeks ago            0.0.0.0:5432->5432/tcp   hr-sample
+## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES
+## dee42b174456        postgres:10         "docker-entrypoint.s…"   14 seconds ago      Exited (0) Less than a second ago                       hrsample
 ```
 
 Next time, you can just use this command to start the container: 
 
-> `sp_docker_start("sql-pet")`
+> `sp_docker_start("hrsample")`
 
 And once stopped, the container can be removed with:
 
-> `sp_check_that_docker_is_up("sql-pet")`
+> `sp_check_that_docker_is_up("hrsample")`
 
 ## Using the `sql-pet` container in the rest of the book
 
 After this point in the book, we assume that Docker is up and that we can always start up our *sql-pet database* with:
 
-> `sp_docker_start("sql-pet")`
+> `sp_docker_start("hrsample")`
+
+

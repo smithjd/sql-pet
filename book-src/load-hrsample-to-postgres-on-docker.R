@@ -1,6 +1,8 @@
 # This is a utility job to create the hrsample database backup that's used
 # in the book.  Source it when the hrsample package is updated.
 
+# more about schemas and DBI here: https://db.rstudio.com/best-practices/schema/
+
 library(tidyverse)
 library(hrsample)
 library(DBI)
@@ -54,13 +56,14 @@ get_schema_info <- function() {
     "select * from information_schema.schemata ;"
   )
 }
-# Schemas at initiation
-get_schema_info()
+# Schemas at initiation.  Uncomment when investigating
+# get_schema_info()
 
 # Create hrsample schema
 dbExecute(con, "create schema if not exists hrsample")
 
-get_schema_info()
+# The following is not needed when executed just to set-up hrsample
+# get_schema_info()
 
 # this is a very obscure function name:
 sp_tbl_pk_fk_sql <- function(schema, table_name) {
@@ -134,12 +137,12 @@ dbExecute(con, "CREATE INDEX education_employee_num ON education_table (employee
 dbExecute(con, "CREATE INDEX skills_employee_num ON skills_table (employee_num)")
 sp_tbl_pk_fk_sql("hrsample", "recruiting_table")
 
-
-dbGetQuery(con, "select tablename,indexname,indexdef
-                 from pg_indexes
-                 where schemaname = 'hrsample'
-                 order by tablename
-                ;")
+# Not needed when merely setting up the database:
+# dbGetQuery(con, "select tablename,indexname,indexdef
+#                  from pg_indexes
+#                  where schemaname = 'hrsample'
+#                  order by tablename
+#                 ;")
 
 DBI::dbDisconnect(con)
 
@@ -149,3 +152,5 @@ docker_cmd <- glue(
 )
 
 system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
+
+system2("docker", "stop hrsample", stdout = TRUE, stderr = TRUE)
