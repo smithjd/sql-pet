@@ -1,7 +1,6 @@
-# This is a utility job to create the Docker container with the hrsample
-#  database that's used in the book.
+# This R code demonstrates some limited uses of the hrsample database.
 
-# This job depends on `load-hrsample-to-postgres-on-docker.R`
+# It depends on having run `load-hrsample-to-postgres-on-docker.R`
 
 library(tidyverse)
 library(DBI)
@@ -14,37 +13,12 @@ library(sqlpetr)
 
 wd <- here()
 
-# Verify Docker is up and running and list all containers:
+# Verify Docker is up and running.  List all containers:
 sp_check_that_docker_is_up()
-# sp_show_all_docker_containers()
+sp_show_all_docker_containers()
 
-# Remove previous container if it exists.
-
-sp_docker_remove_container("hrsample")
-
-# create new hrsample container
-docker_cmd <- glue(
-  "run ", # Run is the Docker command.  Everything that follows are `run` parameters.
-  "--detach ", # (or `-d`) tells Docker to disconnect from the terminal / program issuing the command
-  " --name hrsample ", # tells Docker to give the container a name: `sql-pet`
-  "--publish 5432:5432 ", # tells Docker to expose the PostgreSQL port 5432 to the local network with 5432
-  "--mount ", # tells Docker to mount a volume -- mapping Docker's internal file structure to the host file structure
-  'type=bind,source="', wd, '",target=/petdir', # not really used, but could be later
-  " postgres:10 " # tells Docker the image that is to be run (after downloading if necessary)
-)
-cat("docker ", docker_cmd)
-
-system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
-Sys.sleep(2)
-
-# create the hrsample database in the Docker container
-system2("docker", "exec -i hrsample psql -U postgres -c 'CREATE DATABASE hrsample;' ")
-
-# restore the hrsample tar file.  This might come from github rather than locally
-system2("docker", glue(
-  "exec -i hrsample pg_restore -U postgres ",
-  " -d hrsample /petdir/book-src/hrsample.tar "
-))
+# Start up the hrsample docker container:
+sp_docker_start("hrsample")
 
 # Wait for Docker to finish its business
 Sys.sleep(4)
@@ -55,7 +29,7 @@ con <- sp_get_postgres_connection(
   user = "postgres",
   password = "postgres",
   dbname = "hrsample",
-  seconds_to_test = 10
+  seconds_to_test = 5
 )
 
 # Show the schemas in the database:
@@ -71,7 +45,18 @@ dbGetQuery(
   "select catalog_name, schema_name, schema_owner from information_schema.schemata ;"
 )
 
-dbListTables(con, in_schema("hrsample"))
+# A postgreSQL trick to make the hrsample schema the default. Similar tricks are
+# available on other back ends:
+
+dbExecute(con, "set search_path to hrsample, public;")
+
+dbListTables(con)
+
+dbListFields(con,"employeeinfo")
+
+tbl(con,"employeeinfo") %>% head()
+
+employeeinfo %>% count(state, sort = TRUE)
 
 sp_tbl_pk_fk_sql <- function(schema, table_name) {
   dbGetQuery(con,
@@ -110,8 +95,10 @@ sp_tbl_pk_fk_sql <- function(schema, table_name) {
 
 sp_tbl_pk_fk_sql("hrsample", "recruiting_table")
 
-# Refer to an individual table as follows:
+# Refer to an individual table and schema explicitly is as follows:
+
 recruiting_table <- tbl(con, in_schema("hrsample", "recruiting_table"))
+
 head(recruiting_table)
 
 # Show the indexes in the database:
@@ -123,7 +110,7 @@ tbl(con,  "pg_indexes") %>%
   filter(!str_starts(tablename, "pg_")) %>%
   as.data.frame()
 
-# Equivalent to the following SQL query:
+# The SQL equivalent is:
 
 dbGetQuery(con, "select tablename,indexname,indexdef
                  from pg_indexes
@@ -134,4 +121,3 @@ dbGetQuery(con, "select tablename,indexname,indexdef
 DBI::dbDisconnect(con)
 
 sp_docker_stop("hrsample")
-

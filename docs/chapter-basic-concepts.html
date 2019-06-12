@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html >
-
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
 <head>
 
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 2 Basic Concepts | R, Databases, and Docker</title>
-  <meta name="description" content="An introduction to Docker and PostgreSQL for R users to simulate use cases behind corporate walls.">
-  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+  <meta name="description" content="An introduction to Docker and PostgreSQL for R users to simulate use cases behind corporate walls." />
+  <meta name="generator" content="bookdown 0.11 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 2 Basic Concepts | R, Databases, and Docker" />
   <meta property="og:type" content="book" />
@@ -22,14 +21,14 @@
   <meta name="twitter:description" content="An introduction to Docker and PostgreSQL for R users to simulate use cases behind corporate walls." />
   
 
-<meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, and Ian Frantz">
+<meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, and Ian Frantz" />
 
 
-<meta name="date" content="2019-04-26">
+<meta name="date" content="2019-04-26" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
 <link rel="prev" href="index.html">
@@ -166,11 +165,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.6.1" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#tidy-data"><i class="fa fa-check"></i><b>2.6.1</b> Tidy data</a></li>
 <li class="chapter" data-level="2.6.2" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#design-of-normal-data"><i class="fa fa-check"></i><b>2.6.2</b> Design of “normal data”</a></li>
 </ul></li>
-<li class="chapter" data-level="2.7" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#organizational-dbms"><i class="fa fa-check"></i><b>2.7</b> Organizational DBMS</a></li>
-<li class="chapter" data-level="2.8" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#sql"><i class="fa fa-check"></i><b>2.8</b> SQL</a><ul>
-<li class="chapter" data-level="2.8.1" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#data-mapping-between-r-vs-sql-data-types"><i class="fa fa-check"></i><b>2.8.1</b> Data mapping between R vs SQL data types</a></li>
-<li class="chapter" data-level="2.8.2" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#postgresql-and-connection-parameters"><i class="fa fa-check"></i><b>2.8.2</b> PostgreSQL and connection parameters</a></li>
-<li class="chapter" data-level="2.8.3" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#connecting-the-r-and-dbms-environments"><i class="fa fa-check"></i><b>2.8.3</b> Connecting the R and DBMS environments</a></li>
+<li class="chapter" data-level="2.7" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#enterprise-dbms"><i class="fa fa-check"></i><b>2.7</b> Enterprise DBMS</a><ul>
+<li class="chapter" data-level="2.7.1" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#sql-databases"><i class="fa fa-check"></i><b>2.7.1</b> SQL databases</a></li>
+<li class="chapter" data-level="2.7.2" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#data-mapping-between-r-vs-sql-data-types"><i class="fa fa-check"></i><b>2.7.2</b> Data mapping between R vs SQL data types</a></li>
+<li class="chapter" data-level="2.7.3" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#postgresql-and-connection-parameters"><i class="fa fa-check"></i><b>2.7.3</b> PostgreSQL and connection parameters</a></li>
+<li class="chapter" data-level="2.7.4" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#connecting-the-r-and-dbms-environments"><i class="fa fa-check"></i><b>2.7.4</b> Connecting the R and DBMS environments</a></li>
+<li class="chapter" data-level="2.7.5" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#using-sqlite-to-simulate-an-enterprise-dbms"><i class="fa fa-check"></i><b>2.7.5</b> Using SQLite to simulate an enterprise DBMS</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="chapter-how-to-use-this-book.html"><a href="chapter-how-to-use-this-book.html"><i class="fa fa-check"></i><b>3</b> How to use this book</a><ul>
@@ -182,11 +182,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html"><i class="fa fa-check"></i><b>4</b> Learning Goals and Use Cases</a><ul>
-<li class="chapter" data-level="4.1" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html#ask-yourself-what-are-you-aiming-for"><i class="fa fa-check"></i><b>4.1</b> Ask yourself, what are you aiming for?</a></li>
-<li class="chapter" data-level="4.2" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html#learning-goals"><i class="fa fa-check"></i><b>4.2</b> Learning Goals</a></li>
-<li class="chapter" data-level="4.3" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html#imagining-a-dvd-rental-business"><i class="fa fa-check"></i><b>4.3</b> Imagining a DVD rental business</a></li>
-<li class="chapter" data-level="4.4" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html#use-cases"><i class="fa fa-check"></i><b>4.4</b> Use cases</a></li>
-<li class="chapter" data-level="4.5" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html#investigating-a-question-using-an-organizations-database"><i class="fa fa-check"></i><b>4.5</b> Investigating a question using an organization’s database</a></li>
+<li class="chapter" data-level="4.1" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html#challenge-goals-context-and-expectations"><i class="fa fa-check"></i><b>4.1</b> Challenge: goals, context and expectations</a></li>
+<li class="chapter" data-level="4.2" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html#the-challenge-investigating-a-question-using-an-organizations-database"><i class="fa fa-check"></i><b>4.2</b> The Challenge: Investigating a question using an organization’s database</a></li>
+<li class="chapter" data-level="4.3" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html#ask-yourself-what-are-you-aiming-for"><i class="fa fa-check"></i><b>4.3</b> Ask yourself, what are you aiming for?</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html#problems-that-are-addressed"><i class="fa fa-check"></i><b>4.3.1</b> Problems that are addressed</a></li>
+<li class="chapter" data-level="4.3.2" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html#learning-objectives"><i class="fa fa-check"></i><b>4.3.2</b> Learning Objectives</a></li>
+<li class="chapter" data-level="4.3.3" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html#r-packages"><i class="fa fa-check"></i><b>4.3.3</b> R Packages</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html#imagining-a-dvd-rental-business"><i class="fa fa-check"></i><b>4.4</b> Imagining a DVD rental business</a></li>
+<li class="chapter" data-level="4.5" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html#use-cases"><i class="fa fa-check"></i><b>4.5</b> Use cases</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html"><i class="fa fa-check"></i><b>5</b> Connecting Docker, PostgreSQL, and R</a><ul>
 <li class="chapter" data-level="5.1" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#verify-that-docker-is-running"><i class="fa fa-check"></i><b>5.1</b> Verify that Docker is running</a><ul>
@@ -275,8 +279,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="10.1.1" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#experiment-overview-1"><i class="fa fa-check"></i><b>10.1.1</b> Experiment overview</a></li>
 <li class="chapter" data-level="10.1.2" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#time-based-execution-environment-issues"><i class="fa fa-check"></i><b>10.1.2</b> Time-based, execution environment issues</a></li>
 <li class="chapter" data-level="10.1.3" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#lazy_q_build"><i class="fa fa-check"></i><b>10.1.3</b> Q %&gt;% <code>more dplyr</code></a></li>
-<li class="chapter" data-level="10.1.4" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#many-handy-r-functions-cant-be-translated-to-sql"><i class="fa fa-check"></i><b>10.1.4</b> Many handy R functions can’t be translated to SQL</a></li>
-<li class="chapter" data-level="10.1.5" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#further-lazy-execution-examples"><i class="fa fa-check"></i><b>10.1.5</b> Further lazy execution examples</a></li>
+<li class="chapter" data-level="10.1.4" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#interspersing-sql-and-dplyr"><i class="fa fa-check"></i><b>10.1.4</b> Interspersing SQL and dplyr</a></li>
+<li class="chapter" data-level="10.1.5" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#many-handy-r-functions-cant-be-translated-to-sql"><i class="fa fa-check"></i><b>10.1.5</b> Many handy R functions can’t be translated to SQL</a></li>
+<li class="chapter" data-level="10.1.6" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#further-lazy-execution-examples"><i class="fa fa-check"></i><b>10.1.6</b> Further lazy execution examples</a></li>
 </ul></li>
 <li class="chapter" data-level="10.2" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#other-resources-1"><i class="fa fa-check"></i><b>10.2</b> Other resources</a></li>
 </ul></li>
@@ -308,6 +313,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="12.5.1" data-path="chapter-sql-inserting-rows.html"><a href="chapter-sql-inserting-rows.html#r-exercise-inserting-multiple-rows-via-a-dataframe"><i class="fa fa-check"></i><b>12.5.1</b> R Exercise: Inserting Multiple Rows via a Dataframe</a></li>
 <li class="chapter" data-level="12.5.2" data-path="chapter-sql-inserting-rows.html"><a href="chapter-sql-inserting-rows.html#creating-a-messy-store-row"><i class="fa fa-check"></i><b>12.5.2</b> Creating a Messy Store Row</a></li>
 </ul></li>
+<li class="chapter" data-level="12.6" data-path="chapter-sql-inserting-rows.html"><a href="chapter-sql-inserting-rows.html#creating-duplicate-customer-rows"><i class="fa fa-check"></i><b>12.6</b> Creating Duplicate Customer Rows</a></li>
 </ul></li>
 <li class="chapter" data-level="13" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html"><i class="fa fa-check"></i><b>13</b> SQL &amp; dplyr joins additional data</a><ul>
 <li class="chapter" data-level="13.1" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#making-up-data-for-join-examples-1"><i class="fa fa-check"></i><b>13.1</b> Making up data for Join Examples</a><ul>
@@ -327,6 +333,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="13.4.2" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#creating-a-messy-store-row-1"><i class="fa fa-check"></i><b>13.4.2</b> Creating a Messy Store Row</a></li>
 </ul></li>
 <li class="chapter" data-level="13.5" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#create-a-film-record"><i class="fa fa-check"></i><b>13.5</b> Create a film record</a></li>
+<li class="chapter" data-level="13.6" data-path="chapter-sql-dplyr-data.html"><a href="chapter-sql-dplyr-data.html#creating-duplicate-customer-rows-1"><i class="fa fa-check"></i><b>13.6</b> Creating Duplicate Customer Rows</a></li>
 </ul></li>
 <li class="chapter" data-level="14" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html"><i class="fa fa-check"></i><b>14</b> SQL &amp; <code>dplyr</code> joins</a><ul>
 <li class="chapter" data-level="14.1" data-path="chapter-sql-dplyr-joins.html"><a href="chapter-sql-dplyr-joins.html#joins"><i class="fa fa-check"></i><b>14.1</b> Joins</a><ul>
@@ -483,20 +490,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="18" data-path="chapter-anti-join-cost-comparisons.html"><a href="chapter-anti-join-cost-comparisons.html"><i class="fa fa-check"></i><b>18</b> Anti-join cost comparisons</a><ul>
 <li class="chapter" data-level="18.1" data-path="chapter-anti-join-cost-comparisons.html"><a href="chapter-anti-join-cost-comparisons.html#sql-anti-join-costs"><i class="fa fa-check"></i><b>18.1</b> SQL anti join Costs</a></li>
-<li class="chapter" data-level="18.2" data-path="chapter-anti-join-cost-comparisons.html"><a href="chapter-anti-join-cost-comparisons.html#dplyr-anti-joins"><i class="fa fa-check"></i><b>18.2</b> dplyr Anti joins</a></li>
+<li class="chapter" data-level="18.2" data-path="chapter-anti-join-cost-comparisons.html"><a href="chapter-anti-join-cost-comparisons.html#dplyr-anti-joins"><i class="fa fa-check"></i><b>18.2</b> dplyr Anti joins</a><ul>
+<li class="chapter" data-level="18.2.1" data-path="chapter-anti-join-cost-comparisons.html"><a href="chapter-anti-join-cost-comparisons.html#dplyr-costs"><i class="fa fa-check"></i><b>18.2.1</b> dplyr Costs</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="19" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html"><i class="fa fa-check"></i><b>19</b> SQL Quick start - simple retrieval</a><ul>
 <li class="chapter" data-level="19.1" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#intro"><i class="fa fa-check"></i><b>19.1</b> Intro</a></li>
-<li class="chapter" data-level="19.2" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#sql-commands"><i class="fa fa-check"></i><b>19.2</b> SQL Commands</a></li>
-<li class="chapter" data-level="19.3" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#sql-select-quick-start"><i class="fa fa-check"></i><b>19.3</b> SQL SELECT Quick Start</a><ul>
-<li class="chapter" data-level="19.3.1" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#select-clause-column-selection-vertical-partioning-of-data"><i class="fa fa-check"></i><b>19.3.1</b> SELECT Clause: Column Selection – Vertical Partioning of Data</a></li>
-<li class="chapter" data-level="19.3.2" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#sql-comments"><i class="fa fa-check"></i><b>19.3.2</b> SQL Comments</a></li>
-<li class="chapter" data-level="19.3.3" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#from-clause"><i class="fa fa-check"></i><b>19.3.3</b> FROM Clause</a></li>
-<li class="chapter" data-level="19.3.4" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#where-clause-row-selection-horizontal-partitioning-of-data"><i class="fa fa-check"></i><b>19.3.4</b> WHERE Clause: Row Selection – Horizontal Partitioning of Data</a></li>
+<li class="chapter" data-level="19.2" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#databases-and-third-normal-form---3nf"><i class="fa fa-check"></i><b>19.2</b> Databases and Third Normal Form - 3NF</a></li>
+<li class="chapter" data-level="19.3" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#sql-commands"><i class="fa fa-check"></i><b>19.3</b> SQL Commands</a></li>
+<li class="chapter" data-level="19.4" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#sql-select-quick-start"><i class="fa fa-check"></i><b>19.4</b> SQL SELECT Quick Start</a><ul>
+<li class="chapter" data-level="19.4.1" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#select-clause-column-selection-vertical-partioning-of-data"><i class="fa fa-check"></i><b>19.4.1</b> SELECT Clause: Column Selection – Vertical Partioning of Data</a></li>
+<li class="chapter" data-level="19.4.2" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#sql-comments"><i class="fa fa-check"></i><b>19.4.2</b> SQL Comments</a></li>
+<li class="chapter" data-level="19.4.3" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#from-clause"><i class="fa fa-check"></i><b>19.4.3</b> FROM Clause</a></li>
+<li class="chapter" data-level="19.4.4" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#where-clause-row-selection-horizontal-partitioning-of-data"><i class="fa fa-check"></i><b>19.4.4</b> WHERE Clause: Row Selection – Horizontal Partitioning of Data</a></li>
 </ul></li>
-<li class="chapter" data-level="19.4" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#paradigm-shift-from-r-dplyr-to-sql"><i class="fa fa-check"></i><b>19.4</b> Paradigm Shift from R-Dplyr to SQL</a><ul>
-<li class="chapter" data-level="19.4.1" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#big-bang-versus-piped-incremental-steps."><i class="fa fa-check"></i><b>19.4.1</b> Big bang versus piped incremental steps.</a></li>
-<li class="chapter" data-level="19.4.2" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#sql-execution-order"><i class="fa fa-check"></i><b>19.4.2</b> SQL Execution Order</a></li>
+<li class="chapter" data-level="19.5" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#paradigm-shift-from-r-dplyr-to-sql"><i class="fa fa-check"></i><b>19.5</b> Paradigm Shift from R-Dplyr to SQL</a><ul>
+<li class="chapter" data-level="19.5.1" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#big-bang-versus-piped-incremental-steps."><i class="fa fa-check"></i><b>19.5.1</b> Big bang versus piped incremental steps.</a></li>
+<li class="chapter" data-level="19.5.2" data-path="chapter-sql-quick-start.html"><a href="chapter-sql-quick-start.html#sql-execution-order"><i class="fa fa-check"></i><b>19.5.2</b> SQL Execution Order</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="20" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html"><i class="fa fa-check"></i><b>20</b> Getting metadata about and from PostgreSQL</a><ul>
@@ -518,6 +528,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="20.4.2" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#database-keys-with-dplyr"><i class="fa fa-check"></i><b>20.4.2</b> Database keys with dplyr</a></li>
 </ul></li>
 <li class="chapter" data-level="20.5" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#creating-your-own-data-dictionary"><i class="fa fa-check"></i><b>20.5</b> Creating your own data dictionary</a></li>
+<li class="chapter" data-level="20.6" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#save-your-work"><i class="fa fa-check"></i><b>20.6</b> Save your work!</a></li>
 </ul></li>
 <li class="chapter" data-level="21" data-path="chapter-dbms-environment.html"><a href="chapter-dbms-environment.html"><i class="fa fa-check"></i><b>21</b> Drilling into your DBMS environment</a><ul>
 <li class="chapter" data-level="21.1" data-path="chapter-dbms-environment.html"><a href="chapter-dbms-environment.html#which-database"><i class="fa fa-check"></i><b>21.1</b> Which database?</a></li>
@@ -553,47 +564,55 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="A.2" data-path="chapter-appendix-setup-instructions.html"><a href="chapter-appendix-setup-instructions.html#r-rstudio-and-git"><i class="fa fa-check"></i><b>A.2</b> R, RStudio and Git</a></li>
 <li class="chapter" data-level="A.3" data-path="chapter-appendix-setup-instructions.html"><a href="chapter-appendix-setup-instructions.html#install-docker"><i class="fa fa-check"></i><b>A.3</b> Install Docker</a></li>
 </ul></li>
-<li class="chapter" data-level="B" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html"><i class="fa fa-check"></i><b>B</b> Appendix B - Additional technical details for Windows users</a><ul>
-<li class="chapter" data-level="B.1" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#hardware-requirements"><i class="fa fa-check"></i><b>B.1</b> Hardware requirements</a></li>
-<li class="chapter" data-level="B.2" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#software-requirements"><i class="fa fa-check"></i><b>B.2</b> Software requirements</a><ul>
-<li class="chapter" data-level="B.2.1" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#windows-7-8-8.1-and-windows-10-home-64-bit"><i class="fa fa-check"></i><b>B.2.1</b> Windows 7, 8, 8.1 and Windows 10 Home (64 bit)</a></li>
-<li class="chapter" data-level="B.2.2" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#windows-10-pro"><i class="fa fa-check"></i><b>B.2.2</b> Windows 10 Pro</a></li>
+<li class="chapter" data-level="B" data-path="chapter-appendix-postgres-local-db-installation.html"><a href="chapter-appendix-postgres-local-db-installation.html"><i class="fa fa-check"></i><b>B</b> Appendix E - Install ‘dvdrental’ or ‘hrsample’ on your own machine</a><ul>
+<li class="chapter" data-level="B.1" data-path="chapter-appendix-postgres-local-db-installation.html"><a href="chapter-appendix-postgres-local-db-installation.html#overview-1"><i class="fa fa-check"></i><b>B.1</b> Overview</a><ul>
+<li class="chapter" data-level="B.1.1" data-path="chapter-appendix-postgres-local-db-installation.html"><a href="chapter-appendix-postgres-local-db-installation.html#download-the-dvdrental-database"><i class="fa fa-check"></i><b>B.1.1</b> Download the <code>dvdrental</code> database</a></li>
+<li class="chapter" data-level="B.1.2" data-path="chapter-appendix-postgres-local-db-installation.html"><a href="chapter-appendix-postgres-local-db-installation.html#restore-the-dvdrental-database-at-the-command-line"><i class="fa fa-check"></i><b>B.1.2</b> Restore the <code>dvdrental</code> database at the command line</a></li>
+<li class="chapter" data-level="B.1.3" data-path="chapter-appendix-postgres-local-db-installation.html"><a href="chapter-appendix-postgres-local-db-installation.html#restore-the-dvdrental-database-using-pgadmin"><i class="fa fa-check"></i><b>B.1.3</b> Restore the <code>dvdrental</code> database using pgAdmin</a></li>
 </ul></li>
-<li class="chapter" data-level="B.3" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#docker-for-windows-settings"><i class="fa fa-check"></i><b>B.3</b> Docker for Windows settings</a><ul>
-<li class="chapter" data-level="B.3.1" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#shared-drives"><i class="fa fa-check"></i><b>B.3.1</b> Shared drives</a></li>
-<li class="chapter" data-level="B.3.2" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#kubernetes"><i class="fa fa-check"></i><b>B.3.2</b> Kubernetes</a></li>
+<li class="chapter" data-level="B.2" data-path="chapter-appendix-postgres-local-db-installation.html"><a href="chapter-appendix-postgres-local-db-installation.html#resources"><i class="fa fa-check"></i><b>B.2</b> Resources</a></li>
 </ul></li>
-<li class="chapter" data-level="B.4" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#git-github-and-line-endings"><i class="fa fa-check"></i><b>B.4</b> Git, GitHub and line endings</a></li>
+<li class="chapter" data-level="C" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html"><i class="fa fa-check"></i><b>C</b> Appendix B - Additional technical details for Windows users</a><ul>
+<li class="chapter" data-level="C.1" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#hardware-requirements"><i class="fa fa-check"></i><b>C.1</b> Hardware requirements</a></li>
+<li class="chapter" data-level="C.2" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#software-requirements"><i class="fa fa-check"></i><b>C.2</b> Software requirements</a><ul>
+<li class="chapter" data-level="C.2.1" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#windows-7-8-8.1-and-windows-10-home-64-bit"><i class="fa fa-check"></i><b>C.2.1</b> Windows 7, 8, 8.1 and Windows 10 Home (64 bit)</a></li>
+<li class="chapter" data-level="C.2.2" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#windows-10-pro"><i class="fa fa-check"></i><b>C.2.2</b> Windows 10 Pro</a></li>
 </ul></li>
-<li class="chapter" data-level="C" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html"><i class="fa fa-check"></i><b>C</b> Appendix C - PostgreSQL Authentication</a><ul>
-<li class="chapter" data-level="C.1" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#introduction"><i class="fa fa-check"></i><b>C.1</b> Introduction</a></li>
-<li class="chapter" data-level="C.2" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#password-authentication-on-the-postgresql-docker-image"><i class="fa fa-check"></i><b>C.2</b> Password authentication on the PostgreSQL Docker image</a></li>
-<li class="chapter" data-level="C.3" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#adding-roles"><i class="fa fa-check"></i><b>C.3</b> Adding roles</a><ul>
-<li class="chapter" data-level="C.3.1" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#setting-up-docker"><i class="fa fa-check"></i><b>C.3.1</b> Setting up Docker</a></li>
-<li class="chapter" data-level="C.3.2" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#creating-a-new-container"><i class="fa fa-check"></i><b>C.3.2</b> Creating a new container</a></li>
-<li class="chapter" data-level="C.3.3" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#adding-a-role"><i class="fa fa-check"></i><b>C.3.3</b> Adding a role</a></li>
-<li class="chapter" data-level="C.3.4" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#did-it-work"><i class="fa fa-check"></i><b>C.3.4</b> Did it work?</a></li>
-<li class="chapter" data-level="C.3.5" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#remove-the-container"><i class="fa fa-check"></i><b>C.3.5</b> Remove the container</a></li>
+<li class="chapter" data-level="C.3" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#docker-for-windows-settings"><i class="fa fa-check"></i><b>C.3</b> Docker for Windows settings</a><ul>
+<li class="chapter" data-level="C.3.1" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#shared-drives"><i class="fa fa-check"></i><b>C.3.1</b> Shared drives</a></li>
+<li class="chapter" data-level="C.3.2" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#kubernetes"><i class="fa fa-check"></i><b>C.3.2</b> Kubernetes</a></li>
+</ul></li>
+<li class="chapter" data-level="C.4" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#git-github-and-line-endings"><i class="fa fa-check"></i><b>C.4</b> Git, GitHub and line endings</a></li>
+</ul></li>
+<li class="chapter" data-level="D" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html"><i class="fa fa-check"></i><b>D</b> Appendix C - PostgreSQL Authentication</a><ul>
+<li class="chapter" data-level="D.1" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#introduction"><i class="fa fa-check"></i><b>D.1</b> Introduction</a></li>
+<li class="chapter" data-level="D.2" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#password-authentication-on-the-postgresql-docker-image"><i class="fa fa-check"></i><b>D.2</b> Password authentication on the PostgreSQL Docker image</a></li>
+<li class="chapter" data-level="D.3" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#adding-roles"><i class="fa fa-check"></i><b>D.3</b> Adding roles</a><ul>
+<li class="chapter" data-level="D.3.1" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#setting-up-docker"><i class="fa fa-check"></i><b>D.3.1</b> Setting up Docker</a></li>
+<li class="chapter" data-level="D.3.2" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#creating-a-new-container"><i class="fa fa-check"></i><b>D.3.2</b> Creating a new container</a></li>
+<li class="chapter" data-level="D.3.3" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#adding-a-role"><i class="fa fa-check"></i><b>D.3.3</b> Adding a role</a></li>
+<li class="chapter" data-level="D.3.4" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#did-it-work"><i class="fa fa-check"></i><b>D.3.4</b> Did it work?</a></li>
+<li class="chapter" data-level="D.3.5" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#remove-the-container"><i class="fa fa-check"></i><b>D.3.5</b> Remove the container</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="D" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html"><i class="fa fa-check"></i><b>D</b> APPENDIX D - Quick Guide to SQL</a><ul>
-<li class="chapter" data-level="D.1" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html#data-manipulation-langauge-dml"><i class="fa fa-check"></i><b>D.1</b> Data Manipulation Langauge (DML)</a></li>
-<li class="chapter" data-level="D.2" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html#data-definition-langauge-ddl"><i class="fa fa-check"></i><b>D.2</b> Data Definition Langauge (DDL)</a></li>
-<li class="chapter" data-level="D.3" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html#data-control-language-dcl"><i class="fa fa-check"></i><b>D.3</b> Data Control Language (DCL)</a></li>
-<li class="chapter" data-level="D.4" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html#transaction-control-language-tcl"><i class="fa fa-check"></i><b>D.4</b> Transaction Control Language (TCL)</a></li>
+<li class="chapter" data-level="E" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html"><i class="fa fa-check"></i><b>E</b> APPENDIX D - Quick Guide to SQL</a><ul>
+<li class="chapter" data-level="E.1" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html#data-manipulation-langauge-dml"><i class="fa fa-check"></i><b>E.1</b> Data Manipulation Langauge (DML)</a></li>
+<li class="chapter" data-level="E.2" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html#data-definition-langauge-ddl"><i class="fa fa-check"></i><b>E.2</b> Data Definition Langauge (DDL)</a></li>
+<li class="chapter" data-level="E.3" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html#data-control-language-dcl"><i class="fa fa-check"></i><b>E.3</b> Data Control Language (DCL)</a></li>
+<li class="chapter" data-level="E.4" data-path="chapter-appendix-sql-quick-guide.html"><a href="chapter-appendix-sql-quick-guide.html#transaction-control-language-tcl"><i class="fa fa-check"></i><b>E.4</b> Transaction Control Language (TCL)</a></li>
 </ul></li>
-<li class="chapter" data-level="E" data-path="chapter-appendix-dplyr-functions.html"><a href="chapter-appendix-dplyr-functions.html"><i class="fa fa-check"></i><b>E</b> Dplyr functions and SQL cross-walk</a></li>
-<li class="chapter" data-level="F" data-path="chapter-appendix-dbi-functions.html"><a href="chapter-appendix-dbi-functions.html"><i class="fa fa-check"></i><b>F</b> DBI package functions - coverage</a></li>
-<li class="chapter" data-level="G" data-path="chapter-appendix-dplyr-to-postres-translation.html"><a href="chapter-appendix-dplyr-to-postres-translation.html"><i class="fa fa-check"></i><b>G</b> Appendix _ Dplyr to SQL translations</a><ul>
-<li class="chapter" data-level="G.1" data-path="chapter-appendix-dplyr-to-postres-translation.html"><a href="chapter-appendix-dplyr-to-postres-translation.html#overview-1"><i class="fa fa-check"></i><b>G.1</b> Overview</a></li>
+<li class="chapter" data-level="F" data-path="chapter-appendix-dplyr-functions.html"><a href="chapter-appendix-dplyr-functions.html"><i class="fa fa-check"></i><b>F</b> Dplyr functions and SQL cross-walk</a></li>
+<li class="chapter" data-level="G" data-path="chapter-appendix-dbi-functions.html"><a href="chapter-appendix-dbi-functions.html"><i class="fa fa-check"></i><b>G</b> DBI package functions - coverage</a></li>
+<li class="chapter" data-level="H" data-path="chapter-appendix-dplyr-to-postres-translation.html"><a href="chapter-appendix-dplyr-to-postres-translation.html"><i class="fa fa-check"></i><b>H</b> Appendix _ Dplyr to SQL translations</a><ul>
+<li class="chapter" data-level="H.1" data-path="chapter-appendix-dplyr-to-postres-translation.html"><a href="chapter-appendix-dplyr-to-postres-translation.html#overview-2"><i class="fa fa-check"></i><b>H.1</b> Overview</a></li>
 </ul></li>
-<li class="chapter" data-level="H" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html"><i class="fa fa-check"></i><b>H</b> Appendix Additional resources</a><ul>
-<li class="chapter" data-level="H.1" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#editing-this-book"><i class="fa fa-check"></i><b>H.1</b> Editing this book</a></li>
-<li class="chapter" data-level="H.2" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-alternatives"><i class="fa fa-check"></i><b>H.2</b> Docker alternatives</a></li>
-<li class="chapter" data-level="H.3" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-and-r"><i class="fa fa-check"></i><b>H.3</b> Docker and R</a></li>
-<li class="chapter" data-level="H.4" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#documentation-for-docker-and-postgresql"><i class="fa fa-check"></i><b>H.4</b> Documentation for Docker and PostgreSQL</a></li>
-<li class="chapter" data-level="H.5" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#sql-and-dplyr"><i class="fa fa-check"></i><b>H.5</b> SQL and dplyr</a></li>
-<li class="chapter" data-level="H.6" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#more-resources"><i class="fa fa-check"></i><b>H.6</b> More Resources</a></li>
+<li class="chapter" data-level="I" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html"><i class="fa fa-check"></i><b>I</b> Appendix Additional resources</a><ul>
+<li class="chapter" data-level="I.1" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#editing-this-book"><i class="fa fa-check"></i><b>I.1</b> Editing this book</a></li>
+<li class="chapter" data-level="I.2" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-alternatives"><i class="fa fa-check"></i><b>I.2</b> Docker alternatives</a></li>
+<li class="chapter" data-level="I.3" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-and-r"><i class="fa fa-check"></i><b>I.3</b> Docker and R</a></li>
+<li class="chapter" data-level="I.4" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#documentation-for-docker-and-postgresql"><i class="fa fa-check"></i><b>I.4</b> Documentation for Docker and PostgreSQL</a></li>
+<li class="chapter" data-level="I.5" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#sql-and-dplyr"><i class="fa fa-check"></i><b>I.5</b> SQL and dplyr</a></li>
+<li class="chapter" data-level="I.6" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#more-resources"><i class="fa fa-check"></i><b>I.6</b> More Resources</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -679,7 +698,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="docker-itself" class="section level3">
 <h3><span class="header-section-number">2.5.3</span> Docker itself</h3>
 <p>While there are both older (<em>lxc</em>) and newer container tools, the one that has caught on in terms of widespread use is <em>Docker</em> <span class="citation">(Docker <a href="#ref-Docker2019a">2019</a><a href="#ref-Docker2019a">a</a>)</span>. Docker is widely used on cloud providers to deploy services of all kinds. Using Docker on the desktop to deliver standardized packages, as we are doing in this book, is a secondary use case, but a common one.</p>
-<p>If you’re using a Linux laptop / desktop, all you need to do is install Docker CE <span class="citation">(Docker <a href="#ref-Docker2018b">2018</a><a href="#ref-Docker2018b">a</a>)</span>. However, most laptops and desktops don’t run Linux - they run Windows or MacOS. As noted above, to use Docker on Windows or MacOS, you need a hypervisor and a Linux virtual machine.</p>
+<p>If you’re using a Linux laptop / desktop, all you need to do is install Docker CE <span class="citation">(Docker <a href="#ref-Docker2018b">2018</a>)</span>. However, most laptops and desktops don’t run Linux - they run Windows or MacOS. As noted above, to use Docker on Windows or MacOS, you need a hypervisor and a Linux virtual machine.</p>
 </div>
 <div id="docker-objects" class="section level3">
 <h3><span class="header-section-number">2.5.4</span> Docker objects</h3>
@@ -712,19 +731,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Data in a database is most often optimized to minimize storage space and increase performance while preserving integrity when adding, changing, or deleting data. The Wikipedia article on Database Normalization has a good introduction to the characteristics of “normal” data and the process of re-organizing it to meet those desirable criteria <span class="citation">(Wikipedia <a href="#ref-Wikipedia2019">2019</a>)</span>. The bottom line is that “data normalization is practical” although there are mathematical arguments for normalization based on the preservation of data integrity.</p>
 </div>
 </div>
-<div id="organizational-dbms" class="section level2">
-<h2><span class="header-section-number">2.7</span> Organizational DBMS</h2>
+<div id="enterprise-dbms" class="section level2">
+<h2><span class="header-section-number">2.7</span> Enterprise DBMS</h2>
 <p>The organizational context of a database matters just as much as its design characteristics. The design of a database (or <em>data model</em>) may have been purchased from an external vendor or developed in-house. In either case time has a tendency to erode the original design concept so that the data you find in a DBMS may not quite match the original design specification. And the original design may or may not be well reflected in the current naming of tables, columns and other objects.</p>
-<p>It’s a naive misconception to think that the data you are analyzing “comes from the database” even though you are retrieving it from your organization’s DBMS. In fact it comes from the people who design, enter, manage, protect, and use your organization’s data. In practice, a <a href="https://en.wikipedia.org/wiki/Database_administrator">database administrator</a> (DBA) is often a key point of contact in terms of access and may have stringent criteria for query performance. Make friends with your DBA.</p>
-</div>
-<div id="sql" class="section level2">
-<h2><span class="header-section-number">2.8</span> SQL</h2>
+<p>It’s a naive misconception to think that the data you are analyzing just “comes from the database”, although that’s literally true and may be the step that happens before you get your hands on it. In fact it comes from the people who design, enter, manage, protect, and use your organization’s data. In practice, a <a href="https://en.wikipedia.org/wiki/Database_administrator">database administrator</a> (DBA) is often a key point of contact in terms of access and may have stringent criteria for query performance. Make friends with your DBA.</p>
+<div id="sql-databases" class="section level3">
+<h3><span class="header-section-number">2.7.1</span> SQL databases</h3>
 <p>Although there are <a href="https://en.wikipedia.org/wiki/SQL#Interoperability_and_standardization">ANSI standards</a> for <a href="https://en.wikipedia.org/wiki/SQL_syntax">SQL syntax</a>, different implementations vary in enough details that R’s ability to customize queries for those implementations is very helpful.</p>
 <p>The tables in a DBMS correspond to a data frame in R, so interaction with a DBMS is fairly natural for useRs.</p>
 <p>SQL code is characterized by the fact that it describes <em>what</em> to retrieve, leaving the DBMS back end to determine how to do it. Therefore it has a <em>batch</em> feel. The pipe operator (<code>%&gt;%</code>, which is read as <em>and then</em>) is inherently procedural when it’s used with dplyr: it can be used to construct queries step-by-step. Once a test dplyr query has been executed, it is easy to inspect the results and add steps with the pipe operator to refine or expand the query.</p>
 <p><a href="chapter-appendix-sql-quick-guide.html#chapter_appendix-sql-quick-guide">APPENDIX D - Quick Guide to SQL</a> lists the different elements of the SQL language.</p>
+</div>
 <div id="data-mapping-between-r-vs-sql-data-types" class="section level3">
-<h3><span class="header-section-number">2.8.1</span> Data mapping between R vs SQL data types</h3>
+<h3><span class="header-section-number">2.7.2</span> Data mapping between R vs SQL data types</h3>
 <p>The following code shows how different elements of the R bestiary are translated to and from ANSI standard data types. Note that R factors are translated as <code>TEXT</code> so that missing levels are ignored on the SQL side.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(DBI)
 
@@ -756,7 +775,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul>
 </div>
 <div id="postgresql-and-connection-parameters" class="section level3">
-<h3><span class="header-section-number">2.8.2</span> PostgreSQL and connection parameters</h3>
+<h3><span class="header-section-number">2.7.3</span> PostgreSQL and connection parameters</h3>
 <p>An <strong>important detail:</strong> We use a PostgreSQL database server running in a Docker container for the database functions. It is installed inside Docker, so you do not have to download or install it yourself. To connect to it, you have to define some parameters. These parameters are used in two places:</p>
 <ol style="list-style-type: decimal">
 <li>When the Docker container is created, they’re used to initialize the database, and</li>
@@ -765,7 +784,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>We define the parameters in an environment file that R reads when starting up. The file is called <code>.Renviron</code>, and is located in your home directory. See the discussion of <a href="chapter-appendix-postresql-authentication.html#chapter_appendix-postresql-authentication">securing and using dbms credentials</a>.</p>
 </div>
 <div id="connecting-the-r-and-dbms-environments" class="section level3">
-<h3><span class="header-section-number">2.8.3</span> Connecting the R and DBMS environments</h3>
+<h3><span class="header-section-number">2.7.4</span> Connecting the R and DBMS environments</h3>
 <p>Although everything happens on one machine in our Docker / PostgreSQL playground, in real life R and PostgreSQL (or other DBMS) will be in different environments on separate machines. How R connects them gives you control over where the work happens. You need to be aware of the differences beween the R and DBMS environments as well as how you can leverage the strengths of each one.</p>
 <p><strong>Characteristics of local vs. server processing</strong></p>
 <table>
@@ -824,29 +843,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </tr>
 </tbody>
 </table>
+</div>
+<div id="using-sqlite-to-simulate-an-enterprise-dbms" class="section level3">
+<h3><span class="header-section-number">2.7.5</span> Using SQLite to simulate an enterprise DBMS</h3>
+<p>SQLite engine is embedded in one file, so that many tables are stored together in one object. SQL commands can run against an SQLite database as demonstrated in how many uses of SQLite are in the <a href="https://dbplyr.tidyverse.org">RStudio <code>dbplyr</code> documentation</a>.</p>
 
 </div>
 </div>
 </div>
 <h3>References</h3>
 <div id="refs" class="references">
-<div id="ref-Ruiz2019">
-<p>Ruiz, Edgar. 2019. “Big Data with R: RStudio 2019 Workshop.” RStudio. January 16, 2019. <a href="https://github.com/rstudio/bigdataclass">https://github.com/rstudio/bigdataclass</a>.</p>
-</div>
-<div id="ref-Wickham2014">
-<p>Wickham, Hadley. 2014. “Tidy Data.” <em>Journal of Statistical Software, Articles</em> 59 (10): 1–23. <a href="https://doi.org/10.18637/jss.v059.i10">https://doi.org/10.18637/jss.v059.i10</a>.</p>
-</div>
-<div id="ref-Wickham2018">
-<p>Wickham, Hadley. 2018. “A Grammar of Data Manipulation • Dplyr.” <a href=""></a>. <a href="https://dplyr.tidyverse.org/">https://dplyr.tidyverse.org/</a>.</p>
+<div id="ref-Docker2018b">
+<p>Docker. 2018. “Docker CE Supported Platforms.” 2018. <a href="https://docs.docker.com/install/#supported-platforms">https://docs.docker.com/install/#supported-platforms</a>.</p>
 </div>
 <div id="ref-Docker2019a">
 <p>Docker. 2019a. “Docker Documentation.” 2019. <a href="https://docs.docker.com/">https://docs.docker.com/</a>.</p>
 </div>
-<div id="ref-Docker2018b">
-<p>Docker. 2018a. “Docker CE Supported Platforms.” 2018. <a href="https://docs.docker.com/install/#supported-platforms">https://docs.docker.com/install/#supported-platforms</a>.</p>
-</div>
-<div id="ref-Docker2019b">
-<p>Docker. 2019e. “Install Docker Toolbox on Windows.” 2019. <a href="https://docs.docker.com/toolbox/toolbox_install_windows/">https://docs.docker.com/toolbox/toolbox_install_windows/</a>.</p>
+<div id="ref-Docker2019e">
+<p>Docker. 2019b. “Install Docker for Mac.” 2019. <a href="https://docs.docker.com/docker-for-mac/install/">https://docs.docker.com/docker-for-mac/install/</a>.</p>
 </div>
 <div id="ref-Docker2019c">
 <p>Docker. 2019c. “Install Docker for Windows.” 2019. <a href="https://docs.docker.com/docker-for-windows/install/">https://docs.docker.com/docker-for-windows/install/</a>.</p>
@@ -854,11 +868,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="ref-Docker2019d">
 <p>Docker. 2019d. “Install Docker Toolbox on macOS.” 2019. <a href="https://docs.docker.com/toolbox/toolbox_install_mac/">https://docs.docker.com/toolbox/toolbox_install_mac/</a>.</p>
 </div>
-<div id="ref-Docker2019e">
-<p>Docker. 2019b. “Install Docker for Mac.” 2019. <a href="https://docs.docker.com/docker-for-mac/install/">https://docs.docker.com/docker-for-mac/install/</a>.</p>
+<div id="ref-Docker2019b">
+<p>Docker. 2019e. “Install Docker Toolbox on Windows.” 2019. <a href="https://docs.docker.com/toolbox/toolbox_install_windows/">https://docs.docker.com/toolbox/toolbox_install_windows/</a>.</p>
 </div>
 <div id="ref-RStudio2019">
 <p>RStudio. 2019. “Tidyverse; R Packages for Data Science.” 2019. <a href="https://www.tidyverse.org">https://www.tidyverse.org</a>.</p>
+</div>
+<div id="ref-Ruiz2019">
+<p>Ruiz, Edgar. 2019. “Big Data with R: RStudio 2019 Workshop.” RStudio. January 16, 2019. <a href="https://github.com/rstudio/bigdataclass">https://github.com/rstudio/bigdataclass</a>.</p>
+</div>
+<div id="ref-Wickham2014">
+<p>Wickham, Hadley. 2014. “Tidy Data.” <em>Journal of Statistical Software, Articles</em> 59 (10): 1–23. <a href="https://doi.org/10.18637/jss.v059.i10">https://doi.org/10.18637/jss.v059.i10</a>.</p>
+</div>
+<div id="ref-Wickham2018">
+<p>Wickham, Hadley. 2018. “A Grammar of Data Manipulation * Dplyr.” <a href=""></a>. <a href="https://dplyr.tidyverse.org/">https://dplyr.tidyverse.org/</a>.</p>
 </div>
 <div id="ref-Wikipedia2019">
 <p>Wikipedia. 2019. “Database Normalization.” 2019. <a href="https://en.wikipedia.org/wiki/Database_normalization">https://en.wikipedia.org/wiki/Database_normalization</a>.</p>
@@ -915,19 +938,6 @@ gitbook.start({
 });
 </script>
 
-<!-- dynamically load mathjax for compatibility with self-contained -->
-<script>
-  (function () {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    var src = "true";
-    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:" && /^https?:/.test(src))
-      src = src.replace(/^https?:/, '');
-    script.src = src;
-    document.getElementsByTagName("head")[0].appendChild(script);
-  })();
-</script>
 </body>
 
 </html>
