@@ -1,0 +1,147 @@
+---
+title: "Set-up and connect to adventureworks database"
+author: "John D. Smith"
+date: "6/19/2019"
+output: html_document
+---
+Following `https://github.com/lorint/AdventureWorks-for-Postgres`
+
+https://docs.microsoft.com/en-us/previous-versions/sql/sql-server-2008/ms124438(v=sql.100) 
+
+https://docs.microsoft.com/en-us/previous-versions/sql/sql-server-2008/ms124917%28v%3dsql.100%29
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+Libraries
+```{r load R packages}
+library(tidyverse)
+library(DBI)
+library(RPostgres)
+library(glue)
+library(here)
+require(knitr)
+library(dbplyr)
+library(sqlpetr)
+library(inspectdf)
+wd <- here()
+
+sp_docker_remove_container("adventureworks")
+```
+
+download:
+
+* `https://github.com/Microsoft/sql-server-samples/releases/download/adventureworks/AdventureWorks-oltp-install-script.zip`
+* `https://github.com/lorint/AdventureWorks-for-Postgres` 
+
+Move to `./adventureworks` directory.  Unzip `AdventureWorks-for-Postgres-master.zip`
+
+run:
+  `$ ruby update_csvs.rb`  # cleans up some of the csv files that have Microsoft junk.
+
+
+```{r}
+
+docker_cmd <- glue(
+  "run ",      # Run is the Docker command.  Everything that follows are `run` parameters.
+  "--detach ", # (or `-d`) tells Docker to disconnect from the terminal / program issuing the command
+  " --name adventureworks ",     # tells Docker to give the container a name: `sql-pet`
+  "--publish 5432:5432 ", # tells Docker to expose the PostgreSQL port 5432 to the local network with 5432
+  "--mount ", # tells Docker to mount a volume -- mapping Docker's internal file structure to the host file structure
+  'type=bind,source="', wd, '",target=/petdir',
+  " postgres:10 " # tells Docker the image that is to be run (after downloading if necessary)
+)
+cat('docker ',docker_cmd)
+
+system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
+
+```
+Build the adventureworks database
+```{r}
+system2('docker', 
+        'exec adventureworks psql -U postgres -c "CREATE DATABASE adventureworks;"',
+        stdout = TRUE, stderr = TRUE)
+
+```
+Run:
+
+  docker exec -ti adventureworks bash
+  
+Then:
+  \cd petdir/adventureworks/
+  
+  psql -U postgres -d adventureworks 
+  
+  \i install.sql
+  \dn 
+
+
+```{r}
+
+sp_docker_start("adventureworks")
+
+con <- sp_get_postgres_connection(
+  host = "localhost",
+  port = 5432,
+  user = "postgres",
+  password = "postgres",
+  dbname = "adventureworks",
+  seconds_to_test = 10
+)
+```
+
+```{r}
+
+adventureworks_meta_data <- tbl(con, in_schema("information_schema", "columns")) %>% 
+  collect() %>% 
+  filter(!str_detect(table_schema,"pg_|information_schema" ))
+
+cat_info <- inspect_cat(adventureworks_meta_data)
+cat_info %>% show_plot()
+
+# select the most useful columns
+adventureworks_meta_data <- adventureworks_meta_data %>% 
+  select(table_schema, table_name, column_name, dtd_identifier, data_type, column_default)
+
+adventureworks_meta_data %>% 
+  filter(table_name == "stateprovince") %>% 
+  select(column_name, dtd_identifier, data_type, column_default)
+
+stateprovince <- tbl(con, in_schema("person", "stateprovince")) %>% 
+  collect()
+
+stateprovince
+
+index_list <- tbl(con,  "pg_indexes") %>%
+  select(tablename, indexname, indexdef) %>%
+  arrange(tablename) %>%
+  collect() %>%
+  filter(!str_starts(tablename, "pg_")) 
+index_list
+
+```
+Merge two tables
+```{r}
+
+employee <- tbl(con, dbplyr::in_schema("humanresources", "employee"))
+
+department_history  <- tbl(con, dbplyr::in_schema("humanresources", "employeedepartmenthistory"))
+
+employee %>% 
+  left_join(department_history, by = c("businessentityid") ) %>% 
+  count(businessentityid, sort = TRUE)
+
+```
+
+```{r}
+DBI::dbDisconnect(con)
+
+docker_cmd <- glue(
+  "exec  adventureworks  pg_dump adventureworks -U postgres -Fc > book-src/adventureworks.sql"
+)
+
+system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
+
+system2("docker", "stop adventureworks", stdout = TRUE, stderr = TRUE)
+
+```
+
