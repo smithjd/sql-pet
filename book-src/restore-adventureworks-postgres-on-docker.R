@@ -1,7 +1,8 @@
-# This is a utility job to create the Docker container with the adventureworks
-#  database that's used in the book.
+#' This is a utility job to create the Docker container with the adventureworks
+#'  database that's used in the book.
 
-# This job depends on `load-adventureworks-to-postgres-on-docker.R`
+#' This job depends on the output from
+#'  `load-adventureworks-to-postgres-on-docker.R`
 
 library(tidyverse)
 library(DBI)
@@ -23,6 +24,7 @@ sp_check_that_docker_is_up()
 
 # sp_docker_remove_container("adventureworks")
 sp_docker_remove_container("adv2")
+
 
 # create new adventureworks container
 docker_cmd <- glue(
@@ -51,6 +53,8 @@ system2("docker", glue(
 # Wait for Docker to finish its business
 Sys.sleep(4)
 
+# sp_docker_start("adv2")
+
 con <- sp_get_postgres_connection(
   host = "localhost",
   port = 5432,
@@ -60,18 +64,23 @@ con <- sp_get_postgres_connection(
   seconds_to_test = 10
 )
 
-adventureworks_meta_data <- tbl(con, in_schema("information_schema", "columns")) %>%
+adventureworks_schemas <-  tbl(con, in_schema("information_schema", "schemata")) %>%
+  select(catalog_name, schema_name, schema_owner) %>%
+  collect()
+adventureworks_schemas
+
+adventureworks_table_columns <- tbl(con, in_schema("information_schema", "columns")) %>%
   collect() %>%
   filter(!str_detect(table_schema,"pg_|information_schema" ))
 
-cat_info <- inspect_cat(adventureworks_meta_data)
+cat_info <- inspect_cat(adventureworks_table_columns)
 cat_info %>% show_plot()
 
 # select the most useful columns
-adventureworks_meta_data <- adventureworks_meta_data %>%
+adventureworks_table_columns <- adventureworks_table_columns %>%
   select(table_schema, table_name, column_name, dtd_identifier, data_type, column_default)
 
-adventureworks_meta_data %>%
+adventureworks_table_columns %>%
   filter(table_name == "stateprovince") %>%
   select(column_name, dtd_identifier, data_type, column_default)
 
@@ -79,14 +88,37 @@ stateprovince <- tbl(con, in_schema("person", "stateprovince")) %>%
   collect()
 
 stateprovince
+inspect_cat(stateprovince) %>% show_plot
+
+# list all the tables in the database (except information_schema tables)
+adventureworks_tables <- adventureworks_table_columns %>%
+  count(table_name) %>% rename(n_columns = n)
+
+# deal with multiple schemas:
+
+dbListTables(con)
+dbExecute(con, "set search_path to production, person, public;") # watch for duplicates!
+dbListTables(con)
+dbListFields(con, "person")
+tbl(con, "person") %>% collect(n = 10)
+
+dbExecute(con, "set search_path to production, person, public;") # watch for duplicates!
+
+# verify that table names are unique across all schemas
+adventureworks_tables %>%
+  count(table_name) %>%
+  filter(n > 1)
 
 index_list <- tbl(con,  "pg_indexes") %>%
-  select(tablename, indexname, indexdef) %>%
+  select(schemaname, tablename, indexname, indexdef) %>%
   arrange(tablename) %>%
   collect() %>%
   filter(!str_starts(tablename, "pg_"))
 index_list
 
+index_list %>% count(schemaname)
+
+tbl(con, "pg_tables") %>% count(schemaname)
 
 employee <- tbl(con, dbplyr::in_schema("humanresources", "employee"))
 
