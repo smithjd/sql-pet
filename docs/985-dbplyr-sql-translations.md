@@ -133,6 +133,21 @@ sql_translate_env(simulate_dbi())
 source(here("book-src", "dbplyr-sql-function-translation.R"))
 ```
 
+```
+## Warning: `overscope_eval_next()` is deprecated as of rlang 0.2.0.
+## Please use `eval_tidy()` with a data mask instead.
+## This warning is displayed once per session.
+```
+
+```
+## Warning: `overscope_clean()` is deprecated as of rlang 0.2.0.
+## This warning is displayed once per session.
+```
+
+```
+## Warning: `.drop` is deprecated. All list-columns are now preserved.
+```
+
 Each of the following dbplyr back ends may have a slightly different translation:
 
 
