@@ -9,7 +9,8 @@ bookdown::render_book(
   input = "index.Rmd",
   new_session = TRUE,
   output_format = "bookdown::gitbook",
-  output_dir = "docs"
+  output_dir = "docs",
+  config_file = "_bookdown.yml"
 )
 
 # flag this as a non-Jekyll site for GitHub Pages

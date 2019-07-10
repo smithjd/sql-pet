@@ -1,4 +1,4 @@
-# DBI package functions - coverage {#chapter_appendix-dbi-functions}
+# DBI package functions - INDEX {#chapter_appendix-dbi-index}
 
 Where are these covered and should the by included?
 

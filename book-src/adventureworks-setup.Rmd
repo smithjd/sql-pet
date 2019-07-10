@@ -134,14 +134,21 @@ employee %>%
 
 ```{r}
 DBI::dbDisconnect(con)
+```
 
+Create the compressed PostgreSQL backup file
+```{r}
 docker_cmd <- glue(
   "exec  adventureworks  pg_dump adventureworks -U postgres -Fc > book-src/adventureworks.sql"
 )
 
 system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
+```
 
+Clean up:
+```{r}
 system2("docker", "stop adventureworks", stdout = TRUE, stderr = TRUE)
 
+sp_docker_remove_container("adventureworks")
 ```
 

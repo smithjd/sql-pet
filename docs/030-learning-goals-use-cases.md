@@ -2,14 +2,13 @@
 
 > This chapter sets the context for the book by:
 > 
-> * Challenging you to think about your goals, context, and expectations
+> * Describing our assumptions about your goals, context, and expectations
 > * Describing what the book offers in terms of:
 >   * Problems that are addressed 
 >   * Learning objectives
 >   * R packages used
 > * Describing the sample database used in the book
-> * Posing some imaginary use cases that a data analyst might face
-> * Discussing the different elements involved in answering questions from an organization's database
+> * Posing some imaginary but realistic use cases that frame the exercises and discussions
 
 An R analyst....
 
@@ -92,26 +91,19 @@ In addition, these are used to render the book:
 * [bookdown](https://cran.r-project.org/package=bookdown)
 * [DiagrammeR](https://cran.r-project.org/package=DiagrammeR)
 
-## Imagining a DVD rental business
+## AdventureWorks
 
-Years ago, people rented videos on DVD disks and video stores were a big business.  To understand the data base that we use in this book, try to imagine managing a video rental store [like Movie Madness](https://en.wikipedia.org/wiki/Movie_Madness_Video) in Portland, Oregon.
-<img src="screenshots/movie-madness-sample.png" style="display: block; margin: auto;" />
-*What data would be needed and what questions would you have to answer about the business?*
+In this book we have adopted the Microsoft AdventureWorks online transaction processing database for our examples.  It is 
 
-This tutorial uses [the PostgreSQL version of "dvd rental" database](http://www.postgresqltutorial.com/postgresql-sample-database/) which represents the transaction database for running a movie (e.g., dvd) rental business.  The database can be  [downloaded here](http://www.postgresqltutorial.com/wp-content/uploads/2017/10/dvdrental.zip).  Here's a glimpse of it's structure, which we explore using several different methods:
-    
-![Entity Relationship diagram for the dvdrental database](./screenshots/dvdrental-er-diagram.png)
+https://docs.microsoft.com/en-us/previous-versions/sql/sql-server-2008/ms124438(v=sql.100) 
 
-A data analyst uses the database abstraction and the practical business questions to make better decisions and solve problems.
+See Sections 3 and 4
 
-## Use cases 
+Journal of Information Systems Education, Vol. 26(3) Summer 2015. “_Teaching Tip Active Learning via a Sample Database: The Case of Microsoft’s Adventure Works_” by Michel Mitri
 
-Imagine that you have one of following several roles at our fictional company **DVDs R Us** and you have a following need to be met:
+http://jise.org/Volume26/n3/JISEv26n3p177.pdf
 
-* As a data scientist, I want to know the distribution of number of rentals per month per customer, so that the Marketing department can create incentives for customers in 3 segments: Frequent Renters, Average Renters, Infrequent Renters.
-* As the Director of Sales, I want to see the total number of rentals per month for the past 6 months and I want to know how fast our customer base is growing/shrinking per month for the past 6 months.
-* As the Director of Marketing, I want to know which categories of DVDs are the least popular, so that I can create a campaign to draw attention to rarely used inventory.
-* As a shipping clerk, I want to add rental information when I fulfill a shipment order.
-* As the Director of Analytics, I want to test as much of the production R code in my shop as possible against a new release of the DBMS that the IT department is implementing next month.
-* etc.
+See the [AdventureWorks Data Dictionary](https://docs.microsoft.com/en-us/previous-versions/sql/sql-server-2008/ms124438%28v%3dsql.100%29) and a sample table ([employee](https://docs.microsoft.com/en-us/previous-versions/sql/sql-server-2008/ms124432(v=sql.100))).
+
+Here is a (link to an ERD diagram)[https://i.stack.imgur.com/LMu4W.gif]
 

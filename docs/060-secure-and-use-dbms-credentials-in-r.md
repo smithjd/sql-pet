@@ -18,7 +18,7 @@ library(RPostgres)
 require(knitr)
 library(sqlpetr)
 ```
-## Set up the sql-pet Docker container
+## Set up the adventureworks Docker container
 
 ### Verify that Docker is running
 
@@ -34,10 +34,10 @@ sp_check_that_docker_is_up()
 ```
 ### Start the Docker container:
 
-Start the sql-pet Docker container:
+Start the adventureworks Docker container:
 
 ```r
-sp_docker_start("sql-pet")
+sp_docker_start("adventureworks")
 ```
 
 ## Storing your dbms credentials
@@ -72,27 +72,31 @@ Connect to the postgrSQL using the `sp_get_postgres_connection` function:
 ```r
 con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
                          password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
-                         dbname = "dvdrental",
+                         port = 5432,
+                         dbname = "adventureworks",
                          seconds_to_test = 30, connection_tab = TRUE)
 ```
-Once the connection object has been created, you can list all of the tables in the database:
+Once the connection object has been created, you can list all of the tables in one of the schemas:
+
+```r
+dbExecute(con, "set search_path to humanresources, public;") # watch for duplicates!
+```
+
+```
+## [1] 0
+```
 
 ```r
 dbListTables(con)
 ```
 
 ```
-##  [1] "actor_info"                 "customer_list"             
-##  [3] "film_list"                  "nicer_but_slower_film_list"
-##  [5] "sales_by_film_category"     "staff"                     
-##  [7] "sales_by_store"             "staff_list"                
-##  [9] "category"                   "film_category"             
-## [11] "country"                    "actor"                     
-## [13] "language"                   "inventory"                 
-## [15] "payment"                    "rental"                    
-## [17] "city"                       "store"                     
-## [19] "film"                       "address"                   
-## [21] "film_actor"                 "customer"
+##  [1] "shift"                      "employee"                  
+##  [3] "jobcandidate"               "vemployee"                 
+##  [5] "vemployeedepartment"        "vemployeedepartmenthistory"
+##  [7] "vjobcandidate"              "vjobcandidateeducation"    
+##  [9] "vjobcandidateemployment"    "department"                
+## [11] "employeedepartmenthistory"  "employeepayhistory"
 ```
 
 ## Clean up
@@ -102,8 +106,8 @@ Afterwards, always disconnect from the dbms:
 ```r
 dbDisconnect(con)
 ```
-Tell Docker to stop the `sql-pet` container:
+Tell Docker to stop the `adventureworks` container:
 
 ```r
-sp_docker_stop("sql-pet")
+sp_docker_stop("adventureworks")
 ```
