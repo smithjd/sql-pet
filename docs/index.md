@@ -2,9 +2,9 @@
 title: "R, Databases, and Docker"
 author: John David Smith, Sophie Yang, M. Edward (Ed) 
   Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, and Ian Frantz
-date: "2019-04-26"
-bibliography: [book.bib, packages.bib]
+date: "2019-07-10"
 description: An introduction to Docker and PostgreSQL for R users to simulate use cases behind corporate walls.
+bibliography: [book.bib, packages.bib]
 documentclass: book
 link-citations: yes
 site: bookdown::bookdown_site
@@ -51,6 +51,10 @@ This book explores #2 because it allows us to work on the database access issues
 * A simple Docker container such as the one used in our sandbox is easy to use and could be extended for other uses.
 * Docker is a widely used technology for deploying applications in the cloud, so for many useRs it's worth mastering.
 
+## Alternatives to Docker
+
+We have found Docker to be a great tool for simulating the complexities of an enterprise environment.  However, installing Docker can be challenging, especially for Windows users.  Therefore the code in this book depends on PostgreSQL[@postgresql2019] in a Docker container, but it can all be readily adapted to either SQLite[@sqlite2019], PostgreSQL running natively on your computer, or even PostgreSQL running in the cloud.  The technical details of these alternatives are all in separate chapters.
+
 ## Who are we?
 
 We have been collaborating on this book since the Summer of 2018, each of us chipping into the project as time permits:
@@ -65,7 +69,7 @@ We have been collaborating on this book since the Summer of 2018, each of us chi
 
 ## How did this project come about?
 
-We trace this book back to the [June 2, 2018 Cascadia R Conf](https://cascadiarconf.com/) where Aaron Makubuya gave [a presentation using Vagrant hosting](https://github.com/Cascadia-R/Using_R_With_Databases) [@Makubuya2018].  After that [John Smith](https://github.com/smithjd), [Ian Franz](https://github.com/ianfrantz), and [Sophie Yang](https://github.com/SophieMYang) had discussions after the monthly [Data Discussion Meetups](https://www.meetup.com/Portland-Data-Science-Group/events/fxvhbnywmbgb/) about the difficulties around setting up [Vagrant](https://www.vagrantup.com/) (a virtual environment), connecting to a corporate database, and having realistic **public** environment to demo or practice the issues that come up behind corporate firewalls. [Scott Came's](https://github.com/scottcame) tutorial on [R and Docker](http://www.cascadia-analytics.com/2018/07/21/docker-r-p1.html) [@Came2018] (an alternative to Vagrant) at the 2018 UseR Conference in Melbourne was provocative and it turned out he lived nearby.  We re-connected with [M. Edward (Ed) Borasky](https://github.com/znmeb) who had done extensive development for a [Hack Oregon data science containerization project](https://github.com/hackoregon/data-science-pet-containers) [@Borasky2018].
+We trace this book back to the [June 2, 2018 Cascadia R Conf](https://cascadiarconf.com/) where Aaron Makubuya gave [a presentation using Vagrant hosting](https://github.com/Cascadia-R/Using_R_With_Databases) [@Makubuya2018].  After that [John Smith](https://github.com/smithjd), [Ian Franz](https://github.com/ianfrantz), and [Sophie Yang](https://github.com/SophieMYang) had discussions after the monthly [Data Discussion Meetups](https://www.meetup.com/Portland-Data-Science-Group/events/fxvhbnywmbgb/) about the difficulties around setting up [Vagrant](https://www.vagrantup.com/) (a virtual environment), connecting to an enterprise database, and having realistic **public** environment to demo or practice the issues that come up behind corporate firewalls. [Scott Came's](https://github.com/scottcame) tutorial on [R and Docker](http://www.cascadia-analytics.com/2018/07/21/docker-r-p1.html) [@Came2018] (an alternative to Vagrant) at the 2018 UseR Conference in Melbourne was provocative and it turned out he lived nearby.  We re-connected with [M. Edward (Ed) Borasky](https://github.com/znmeb) who had done extensive development for a [Hack Oregon data science containerization project](https://github.com/hackoregon/data-science-pet-containers) [@Borasky2018].
 
 ## Navigation
 If this is the first `bookdown` [@Xie2016] book you've read, here's how to navigate the website.

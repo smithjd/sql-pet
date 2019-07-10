@@ -1,19 +1,19 @@
-# Create the hrsample database in PostgreSQL in Docker {#chapter_setup-hrsample-db}
+# Create the adventureworks database in PostgreSQL in Docker {#chapter_setup-adventureworks-db}
 
-> NOTE: This chapter doesn't go into the details of *creating* or *restoring* the `hrsample` database.  For more detail on what's going on behind the scenes, you can examine the step-by-step code in:
+> NOTE: This chapter doesn't go into the details of *creating* or *restoring* the `adventureworks` database.  For more detail on what's going on behind the scenes, you can examine the step-by-step code in:
 >
-> ` source('book-src/restore-hrsample-postgres-on-docker.R') `
+> ` source('book-src/restore-adventureworks-postgres-on-docker.R') `
 
 > This chapter demonstrates how to:
 >
->  * Setup the `hrsample` database in Docker
+>  * Setup the `adventureworks` database in Docker
 >  * Stop and start Docker container to demonstrate persistence
->  * Connect to and disconnect R from the `hrsample` database
+>  * Connect to and disconnect R from the `adventureworks` database
 >  * Set up the environment for subsequent chapters
 
 ## Overview
 
-In the last chapter we connected to PostgreSQL from R.  Now we set up a "realistic" database named `hrsample`. There are different approaches to doing this: this chapter sets it up in a way that doesn't show all the Docker details.
+In the last chapter we connected to PostgreSQL from R.  Now we set up a "realistic" database named `adventureworks`. There are different approaches to doing this: this chapter sets it up in a way that doesn't show all the Docker details.
 
 These packages are called in this Chapter:
 ```{r setup, echo=TRUE, message=FALSE, warning=FALSE}
@@ -34,27 +34,26 @@ sp_check_that_docker_is_up()
 ```
 
 ## Clean up if appropriate
-Force-remove the `cattle` and `sql-pet` containers if they exist (e.g., from a prior runs):
+Force-remove the `adventureworks` container if it exist (e.g., from a prior runs):
 ```{r}
-sp_docker_remove_container("cattle")
-sp_docker_remove_container("hrsample")
+sp_docker_remove_container("adventureworks")
 ```
 ## Build the pet-sql Docker image
 
 **UPDATE:** For the rest of the book we will be using a Docker image called
-`hrsample`. To save space here in the book, we've created a function
+`adventureworks`. To save space here in the book, we've created a function
 in `sqlpetr` to build this image, called [`sp_make_dvdrental_image`](https://smithjd.github.io/sqlpetr/reference/sp_make_dvdrental_image.html). Vignette [Building the `hsrample` Docker Image
 ](https://smithjd.github.io/sqlpetr/articles/building-the-dvdrental-docker-image.html) describes the build process.
 
 ```{r}
 # sp_make_dvdrental_image("postgres-dvdrental")
-source(here("book-src", "restore-hrsample-postgres-on-docker.R"))
+source(here("book-src", "restore-adventureworks-postgres-on-docker.R"))
 ```
 
 **UPDATE:** Did it work? We have a function that lists the images into a tibble!
 
 ```{r}
-sp_docker_start("hrsample")
+sp_docker_start("adventureworks")
 sp_docker_images_tibble()  # Doesn't produce the expected output.
 
 ```
@@ -64,22 +63,23 @@ sp_docker_images_tibble()  # Doesn't produce the expected output.
 image we use an `sqlpetr` function called [`sp_pg_docker_run`](https://smithjd.github.io/sqlpetr/reference/sp_pg_docker_run.html)
 
 ```{r eval= FALSE}
-sp_pg_docker_run(
-  container_name = "sql-pet",
-  image_tag = "postgres-dvdrental",
-  postgres_password = "postgres"
-)
+# sp_pg_docker_run(
+#   container_name = "adventureworks",
+#   image_tag = "adventureworks",
+#   postgres_password = "postgres"
+# )
 ```
 
 **UPDATE:** Did it work?
 ```{r}
+
 sp_docker_containers_tibble()
 
 ```
 
 ## Connect to PostgreSQL with R
 
-Use the DBI package to connect to the `hrsample` database in PostgreSQL.  Remember the settings discussion about [keeping passwords hidden][Pause for some security considerations]
+Use the DBI package to connect to the `adventureworks` database in PostgreSQL.  Remember the settings discussion about [keeping passwords hidden][Pause for some security considerations]
 
 ```{r }
 con <- sp_get_postgres_connection(
@@ -87,11 +87,11 @@ con <- sp_get_postgres_connection(
   port = 5432,
   user = "postgres",
   password = "postgres",
-  dbname = "hrsample",
-  seconds_to_test = 30, connection_tab = TRUE
+  dbname = "adventureworks",
+  seconds_to_test = 20, connection_tab = TRUE
 )
 ```
-For the moment we by-pass some complexity that results from the fact that the `hrsample` has multiple *schemas* and that we are interested in only one of them, named `hrsample`.  
+For the moment we by-pass some complexity that results from the fact that the `adventureworks` has multiple *schemas* and that we are interested in only one of them, named `adventureworks`.  
 ```{r}
 tbl(con, in_schema("information_schema", "schemata")) %>%
   select(catalog_name, schema_name, schema_owner) %>%
@@ -101,7 +101,7 @@ tbl(con, in_schema("information_schema", "schemata")) %>%
 
 Schemas will be discussed later on because multiple schemas are the norm in an enterprise database environment, but they are a side issue at this point.  So we switch the order in which PostgreSQL searches for objects with the following SQL code:
 ```{r}
-dbExecute(con, "set search_path to hrsample, public;")
+dbExecute(con, "set search_path to humanresources, public;")
 
 ```
 With the custom `search_path`, the following command works, but it will fail without out it.
@@ -110,17 +110,16 @@ dbListTables(con)
 ```
 Same for `dbListFields`:
 ```{r }
-dbListFields(con, "employeeinfo")
+dbListFields(con, "employee")
 ```
 
 Thus with this search order, the following two produce identical results:
 ```{r }
-tbl(con, in_schema("hrsample", "employeeinfo")) %>%
+tbl(con, in_schema("humanresources", "employee")) %>%
   head()
 
-tbl(con, "employeeinfo") %>%
+tbl(con, "employee") %>%
   head()
-
 
 ```
 
@@ -134,7 +133,7 @@ dbDisconnect(con)
 
 Stop the container:
 ```{r}
-sp_docker_stop("hrsample")
+sp_docker_stop("adventureworks")
 sp_docker_containers_tibble()
 ```
 
@@ -147,26 +146,26 @@ sp_docker_containers_tibble(list_all = TRUE)
 ```
 
 
-Restart the container and verify that the hrsample tables are still there:
+Restart the container and verify that the adventureworks tables are still there:
 ```{r}
-sp_docker_start("hrsample")
+sp_docker_start("adventureworks")
 sp_docker_containers_tibble()
 ```
-Connect to the `hrsample` database in PostgreSQL:
+Connect to the `adventureworks` database in PostgreSQL:
 ```{r}
 con <- sp_get_postgres_connection(
   host = "localhost",
   port = 5432,
   user = "postgres",
   password = "postgres",
-  dbname = "hrsample",
+  dbname = "adventureworks",
   seconds_to_test = 30
 )
 ```
 
 Check that you can still see the first few rows of the `employeeinfo` table:
 ```{r}
-tbl(con, in_schema("hrsample", "employeeinfo")) %>%
+tbl(con, in_schema("humanresources", "employee")) %>%
   head()
 
 ```
@@ -182,7 +181,7 @@ dbDisconnect(con)
 
 Stop the `sql-pet` container:
 ```{r}
-sp_docker_stop("hrsample")
+sp_docker_stop("adventureworks")
 ```
 Show that the container still exists even though it's not running
 
@@ -193,16 +192,15 @@ sp_show_all_docker_containers()
 
 Next time, you can just use this command to start the container: 
 
-> `sp_docker_start("hrsample")`
+> `sp_docker_start("adventureworks")`
 
 And once stopped, the container can be removed with:
 
-> `sp_check_that_docker_is_up("hrsample")`
+> `sp_check_that_docker_is_up("adventureworks")`
 
 ## Using the `sql-pet` container in the rest of the book
 
 After this point in the book, we assume that Docker is up and that we can always start up our *sql-pet database* with:
 
-> `sp_docker_start("hrsample")`
-
+> `sp_docker_start("adventureworks")`
 
