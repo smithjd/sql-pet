@@ -38,7 +38,7 @@ Force-remove the `adventureworks` container if it exist (e.g., from a prior runs
 ```{r}
 sp_docker_remove_container("adventureworks")
 ```
-## Build the pet-sql Docker image
+## Build the adventureworks Docker image
 
 **UPDATE:** For the rest of the book we will be using a Docker image called
 `adventureworks`. To save space here in the book, we've created a function
@@ -58,7 +58,7 @@ sp_docker_images_tibble()  # Doesn't produce the expected output.
 
 ```
 
-## Run the pet-sql Docker Image
+## Run the adventureworks Docker Image
 **UPDATE:** Now we can run the image in a container and connect to the database. To run the
 image we use an `sqlpetr` function called [`sp_pg_docker_run`](https://smithjd.github.io/sqlpetr/reference/sp_pg_docker_run.html)
 
@@ -137,7 +137,7 @@ sp_docker_stop("adventureworks")
 sp_docker_containers_tibble()
 ```
 
-When we stopped `sql-pet`, it no longer appeared in the tibble. But the
+When we stopped `adventureworks`, it no longer appeared in the tibble. But the
 container is still there. `sp_docker_containers_tibble` by default only lists
 the *running* containers. But we can use the `list_all` option and see it:
 
@@ -179,7 +179,7 @@ dbDisconnect(con)
 
 ```
 
-Stop the `sql-pet` container:
+Stop the `adventureworks` container:
 ```{r}
 sp_docker_stop("adventureworks")
 ```
@@ -198,9 +198,9 @@ And once stopped, the container can be removed with:
 
 > `sp_check_that_docker_is_up("adventureworks")`
 
-## Using the `sql-pet` container in the rest of the book
+## Using the `adventureworks` container in the rest of the book
 
-After this point in the book, we assume that Docker is up and that we can always start up our *sql-pet database* with:
+After this point in the book, we assume that Docker is up and that we can always start up our *adventureworks database* with:
 
 > `sp_docker_start("adventureworks")`
 

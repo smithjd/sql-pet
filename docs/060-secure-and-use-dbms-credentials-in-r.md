@@ -111,3 +111,4 @@ Tell Docker to stop the `adventureworks` container:
 ```r
 sp_docker_stop("adventureworks")
 ```
+

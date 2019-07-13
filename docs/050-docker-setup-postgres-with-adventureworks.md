@@ -49,7 +49,7 @@ sp_docker_remove_container("adventureworks")
 ```
 ## [1] 0
 ```
-## Build the pet-sql Docker image
+## Build the adventureworks Docker image
 
 **UPDATE:** For the rest of the book we will be using a Docker image called
 `adventureworks`. To save space here in the book, we've created a function
@@ -78,15 +78,15 @@ sp_docker_images_tibble()  # Doesn't produce the expected output.
 ## # A tibble: 6 x 7
 ##   image_id  repository   tag    digest           created created_at   size 
 ##   <chr>     <chr>        <chr>  <chr>            <chr>   <chr>        <chr>
-## 1 1523f751… adventurewo… latest <none>           2 week… 2019-06-19 … 475MB
-## 2 602a8e50… <none>       <none> <none>           2 week… 2019-06-19 … 365MB
+## 1 1523f751… adventurewo… latest <none>           3 week… 2019-06-19 … 475MB
+## 2 602a8e50… <none>       <none> <none>           3 week… 2019-06-19 … 365MB
 ## 3 4e045cb8… postgres     latest sha256:1518027f… 4 week… 2019-06-10 … 312MB
 ## 4 aff06852… postgres-dv… latest <none>           2 mont… 2019-04-26 … 294MB
 ## 5 c149455a… <none>       <none> <none>           3 mont… 2019-03-18 … 252MB
 ## 6 3e016ba4… postgres     10     sha256:5c702997… 4 mont… 2019-03-04 … 230MB
 ```
 
-## Run the pet-sql Docker Image
+## Run the adventureworks Docker Image
 **UPDATE:** Now we can run the image in a container and connect to the database. To run the
 image we use an `sqlpetr` function called [`sp_pg_docker_run`](https://smithjd.github.io/sqlpetr/reference/sp_pg_docker_run.html)
 
@@ -109,7 +109,7 @@ sp_docker_containers_tibble()
 ## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 f465fab9741b post… docker… 2019-07-1… 12 sec… 0.0.… Up 10… 63B … adve…
+## 1 7f011ef99a46 post… docker… 2019-07-1… 15 sec… 0.0.… Up 13… 63B … adve…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 
@@ -271,7 +271,7 @@ sp_docker_containers_tibble()
 ## # A tibble: 0 x 0
 ```
 
-When we stopped `sql-pet`, it no longer appeared in the tibble. But the
+When we stopped `adventureworks`, it no longer appeared in the tibble. But the
 container is still there. `sp_docker_containers_tibble` by default only lists
 the *running* containers. But we can use the `list_all` option and see it:
 
@@ -281,11 +281,10 @@ sp_docker_containers_tibble(list_all = TRUE)
 ```
 
 ```
-## # A tibble: 2 x 12
+## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 f465fab9741b post… docker… 2019-07-1… 13 sec… <NA>  Exite… 0B (… adve…
-## 2 dee42b174456 post… docker… 2019-06-1… 4 week… <NA>  Exite… 0B (… hrsa…
+## 1 7f011ef99a46 post… docker… 2019-07-1… 16 sec… <NA>  Exite… 0B (… adve…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 
@@ -301,7 +300,7 @@ sp_docker_containers_tibble()
 ## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 f465fab9741b post… docker… 2019-07-1… 14 sec… 0.0.… Up Le… 63B … adve…
+## 1 7f011ef99a46 post… docker… 2019-07-1… 17 sec… 0.0.… Up Le… 63B … adve…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 Connect to the `adventureworks` database in PostgreSQL:
@@ -349,7 +348,7 @@ Always have R disconnect from the database when you're done.
 dbDisconnect(con)
 ```
 
-Stop the `sql-pet` container:
+Stop the `adventureworks` container:
 
 ```r
 sp_docker_stop("adventureworks")
@@ -363,8 +362,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## f465fab9741b        postgres:10         "docker-entrypoint.s…"   15 seconds ago      Exited (0) Less than a second ago                       adventureworks
-## dee42b174456        postgres:10         "docker-entrypoint.s…"   4 weeks ago         Exited (0) 2 weeks ago                                  hrsample
+## 7f011ef99a46        postgres:10         "docker-entrypoint.s…"   18 seconds ago      Exited (0) Less than a second ago                       adventureworks
 ```
 
 Next time, you can just use this command to start the container: 
@@ -375,9 +373,9 @@ And once stopped, the container can be removed with:
 
 > `sp_check_that_docker_is_up("adventureworks")`
 
-## Using the `sql-pet` container in the rest of the book
+## Using the `adventureworks` container in the rest of the book
 
-After this point in the book, we assume that Docker is up and that we can always start up our *sql-pet database* with:
+After this point in the book, we assume that Docker is up and that we can always start up our *adventureworks database* with:
 
 > `sp_docker_start("adventureworks")`
 

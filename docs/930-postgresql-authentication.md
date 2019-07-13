@@ -26,10 +26,24 @@ As noted above, PostgreSQL has a very flexible fine-grained access permissions s
 ### Setting up Docker
 First, we need to make sure we don't have any other databases listening on the default port `5439`.
 
-```{r}
-sqlpetr::sp_check_that_docker_is_up()
-sqlpetr::sp_docker_remove_container("cattle")
 
+```r
+sqlpetr::sp_check_that_docker_is_up()
+```
+
+```
+## [1] "Docker is up but running no containers"
+```
+
+```r
+sqlpetr::sp_docker_remove_container("cattle")
+```
+
+```
+## [1] 0
+```
+
+```r
 # in case you've been doing things out of order, stop a container named 'adventureworks' if it exists:
 sqlpetr::sp_docker_stop("adventureworks")
 ```
@@ -37,7 +51,8 @@ sqlpetr::sp_docker_stop("adventureworks")
 ### Creating a new container
 We'll create a "cattle" container with a default PostgreSQL 10 database cluster.
 
-```{r}
+
+```r
 sqlpetr::sp_make_simple_pg("cattle")
 
 con <- sqlpetr::sp_get_postgres_connection(
@@ -54,23 +69,33 @@ con <- sqlpetr::sp_get_postgres_connection(
 Now, let's add a role. We'll add a role that can log in and create databases, but isn't a superuser. Since this is a demo and not a real production database cluster, we'll specify a password in plaintext. And we'll create a database for our new user.
 
 Create the role:
-```{r}
+
+```r
 DBI::dbExecute(
   con,
   "CREATE ROLE charlie LOGIN CREATEDB PASSWORD 'chaplin';"
 )
 ```
 
+```
+## [1] 0
+```
+
 Create the database:
-```{r}
+
+```r
 DBI::dbExecute(
   con,
  "CREATE DATABASE charlie OWNER = charlie")
+```
 
+```
+## [1] 0
 ```
 
 ### Did it work?
-```{r}
+
+```r
 DBI::dbDisconnect(con)
 
 con <- sqlpetr::sp_get_postgres_connection(
@@ -81,29 +106,64 @@ con <- sqlpetr::sp_get_postgres_connection(
   password = "chaplin",
   seconds_to_test = 30
 )
-
 ```
 
 OK, we can connect. Let's do some stuff!
-```{r}
+
+```r
 data("iris")
 ```
 `dbCreateTable` creates the table with columns matching the data frame. But it does not send data to the table.
-```{r}
+
+```r
 DBI::dbCreateTable(con, "iris", iris)
 ```
 To send data, we use `dbAppendTable`.
-```{r}
+
+```r
 DBI::dbAppendTable(con, "iris", iris)
+```
 
+```
+## Warning: Factors converted to character
+```
+
+```
+## [1] 150
+```
+
+```r
 DBI::dbListTables(con)
+```
 
+```
+## [1] "iris"
+```
+
+```r
 head(DBI::dbReadTable(con, "iris"))
+```
 
+```
+##   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+## 1          5.1         3.5          1.4         0.2  setosa
+## 2          4.9         3.0          1.4         0.2  setosa
+## 3          4.7         3.2          1.3         0.2  setosa
+## 4          4.6         3.1          1.5         0.2  setosa
+## 5          5.0         3.6          1.4         0.2  setosa
+## 6          5.4         3.9          1.7         0.4  setosa
+```
+
+```r
 DBI::dbDisconnect(con)
 ```
 
 ### Remove the container
-```{r}
+
+```r
 sqlpetr::sp_docker_remove_container("cattle")
+```
+
+```
+## [1] 0
 ```
