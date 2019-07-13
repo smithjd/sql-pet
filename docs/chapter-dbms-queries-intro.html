@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 8 Introduction to DBMS queries | R, Databases, and Docker</title>
+  <meta name="description" content="An introduction to Docker and PostgreSQL for R users to simulate use cases behind corporate walls." />
+  <meta name="generator" content="bookdown 0.11 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 8 Introduction to DBMS queries | R, Databases, and Docker" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="An introduction to Docker and PostgreSQL for R users to simulate use cases behind corporate walls." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 8 Introduction to DBMS queries | R, Databases, and Docker" />
+  
+  <meta name="twitter:description" content="An introduction to Docker and PostgreSQL for R users to simulate use cases behind corporate walls." />
+  
+
+<meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, and Ian Frantz" />
+
+
+<meta name="date" content="2019-07-12" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="chapter-dbms-login-credentials.html">
+<link rel="next" href="chapter-appendix-postresql-authentication.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+<script src="libs/htmlwidgets-1.3/htmlwidgets.js"></script>
+<link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="libs/datatables-binding-0.6/datatables.js"></script>
+<link href="libs/dt-core-1.10.16/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.10.16/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.10.16/js/jquery.dataTables.min.js"></script>
+<link href="libs/crosstalk-1.0.0/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">R, Databases and Docker</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#using-r-to-query-a-dbms-in-your-organization"><i class="fa fa-check"></i><b>1.1</b> Using R to query a DBMS in your organization</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#docker-as-a-tool-for-users"><i class="fa fa-check"></i><b>1.2</b> Docker as a tool for UseRs</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#alternatives-to-docker"><i class="fa fa-check"></i><b>1.3</b> Alternatives to Docker</a></li>
+<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#who-are-we"><i class="fa fa-check"></i><b>1.4</b> Who are we?</a></li>
+<li class="chapter" data-level="1.5" data-path="index.html"><a href="index.html#how-did-this-project-come-about"><i class="fa fa-check"></i><b>1.5</b> How did this project come about?</a></li>
+<li class="chapter" data-level="1.6" data-path="index.html"><a href="index.html#navigation"><i class="fa fa-check"></i><b>1.6</b> Navigation</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html"><i class="fa fa-check"></i><b>2</b> Basic Concepts</a><ul>
+<li class="chapter" data-level="2.1" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#the-big-picture-r-and-the-docker-postgresql-playground-on-your-machine"><i class="fa fa-check"></i><b>2.1</b> The big picture: R and the Docker / PostgreSQL playground on your machine</a></li>
+<li class="chapter" data-level="2.2" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#your-computer-and-its-operating-system"><i class="fa fa-check"></i><b>2.2</b> Your computer and its operating system</a></li>
+<li class="chapter" data-level="2.3" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#r"><i class="fa fa-check"></i><b>2.3</b> R</a></li>
+<li class="chapter" data-level="2.4" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#our-sqlpetr-package"><i class="fa fa-check"></i><b>2.4</b> Our <code>sqlpetr</code> package</a></li>
+<li class="chapter" data-level="2.5" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#docker"><i class="fa fa-check"></i><b>2.5</b> Docker</a><ul>
+<li class="chapter" data-level="2.5.1" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#virtual-machines-and-hypervisors"><i class="fa fa-check"></i><b>2.5.1</b> Virtual machines and hypervisors</a></li>
+<li class="chapter" data-level="2.5.2" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#containers"><i class="fa fa-check"></i><b>2.5.2</b> Containers</a></li>
+<li class="chapter" data-level="2.5.3" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#docker-itself"><i class="fa fa-check"></i><b>2.5.3</b> Docker itself</a></li>
+<li class="chapter" data-level="2.5.4" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#docker-objects"><i class="fa fa-check"></i><b>2.5.4</b> Docker objects</a></li>
+<li class="chapter" data-level="2.5.5" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#hosting-docker-on-windows-machines"><i class="fa fa-check"></i><b>2.5.5</b> Hosting Docker on Windows machines</a></li>
+<li class="chapter" data-level="2.5.6" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#hosting-docker-on-macos-machines"><i class="fa fa-check"></i><b>2.5.6</b> Hosting Docker on macOS machines</a></li>
+<li class="chapter" data-level="2.5.7" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#hosting-docker-on-unix-machines"><i class="fa fa-check"></i><b>2.5.7</b> Hosting Docker on UNIX machines</a></li>
+</ul></li>
+<li class="chapter" data-level="2.6" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#normal-and-normalized-data"><i class="fa fa-check"></i><b>2.6</b> ‘Normal’ and ‘normalized’ data</a><ul>
+<li class="chapter" data-level="2.6.1" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#tidy-data"><i class="fa fa-check"></i><b>2.6.1</b> Tidy data</a></li>
+<li class="chapter" data-level="2.6.2" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#design-of-normal-data"><i class="fa fa-check"></i><b>2.6.2</b> Design of “normal data”</a></li>
+</ul></li>
+<li class="chapter" data-level="2.7" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#enterprise-dbms"><i class="fa fa-check"></i><b>2.7</b> Enterprise DBMS</a><ul>
+<li class="chapter" data-level="2.7.1" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#sql-databases"><i class="fa fa-check"></i><b>2.7.1</b> SQL databases</a></li>
+<li class="chapter" data-level="2.7.2" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#data-mapping-between-r-vs-sql-data-types"><i class="fa fa-check"></i><b>2.7.2</b> Data mapping between R vs SQL data types</a></li>
+<li class="chapter" data-level="2.7.3" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#postgresql-and-connection-parameters"><i class="fa fa-check"></i><b>2.7.3</b> PostgreSQL and connection parameters</a></li>
+<li class="chapter" data-level="2.7.4" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#connecting-the-r-and-dbms-environments"><i class="fa fa-check"></i><b>2.7.4</b> Connecting the R and DBMS environments</a></li>
+<li class="chapter" data-level="2.7.5" data-path="chapter-basic-concepts.html"><a href="chapter-basic-concepts.html#using-sqlite-to-simulate-an-enterprise-dbms"><i class="fa fa-check"></i><b>2.7.5</b> Using SQLite to simulate an enterprise DBMS</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="chapter-how-to-use-this-book.html"><a href="chapter-how-to-use-this-book.html"><i class="fa fa-check"></i><b>3</b> How to use this book</a><ul>
+<li class="chapter" data-level="3.1" data-path="chapter-how-to-use-this-book.html"><a href="chapter-how-to-use-this-book.html#retrieve-the-code-from-github"><i class="fa fa-check"></i><b>3.1</b> Retrieve the code from GitHub</a></li>
+<li class="chapter" data-level="3.2" data-path="chapter-how-to-use-this-book.html"><a href="chapter-how-to-use-this-book.html#read-along-experiment-as-you-go"><i class="fa fa-check"></i><b>3.2</b> Read along, experiment as you go</a></li>
+<li class="chapter" data-level="3.3" data-path="chapter-how-to-use-this-book.html"><a href="chapter-how-to-use-this-book.html#participating"><i class="fa fa-check"></i><b>3.3</b> Participating</a><ul>
+<li class="chapter" data-level="3.3.1" data-path="chapter-how-to-use-this-book.html"><a href="chapter-how-to-use-this-book.html#browsing-the-book"><i class="fa fa-check"></i><b>3.3.1</b> Browsing the book</a></li>
+<li class="chapter" data-level="3.3.2" data-path="chapter-how-to-use-this-book.html"><a href="chapter-how-to-use-this-book.html#diving-in"><i class="fa fa-check"></i><b>3.3.2</b> Diving in</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html"><i class="fa fa-check"></i><b>4</b> Learning Goals and Use Cases</a><ul>
+<li class="chapter" data-level="4.1" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html#challenge-goals-context-and-expectations"><i class="fa fa-check"></i><b>4.1</b> Challenge: goals, context and expectations</a></li>
+<li class="chapter" data-level="4.2" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html#the-challenge-investigating-a-question-using-an-organizations-database"><i class="fa fa-check"></i><b>4.2</b> The Challenge: Investigating a question using an organization’s database</a></li>
+<li class="chapter" data-level="4.3" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html#ask-yourself-what-are-you-aiming-for"><i class="fa fa-check"></i><b>4.3</b> Ask yourself, what are you aiming for?</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html#problems-that-are-addressed"><i class="fa fa-check"></i><b>4.3.1</b> Problems that are addressed</a></li>
+<li class="chapter" data-level="4.3.2" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html#learning-objectives"><i class="fa fa-check"></i><b>4.3.2</b> Learning Objectives</a></li>
+<li class="chapter" data-level="4.3.3" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html#r-packages"><i class="fa fa-check"></i><b>4.3.3</b> R Packages</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html#adventureworks"><i class="fa fa-check"></i><b>4.4</b> AdventureWorks</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html"><i class="fa fa-check"></i><b>5</b> Connecting Docker, PostgreSQL, and R</a><ul>
+<li class="chapter" data-level="5.1" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#verify-that-docker-is-running"><i class="fa fa-check"></i><b>5.1</b> Verify that Docker is running</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#check-that-docker-is-up-and-running"><i class="fa fa-check"></i><b>5.1.1</b> Check that Docker is up and running</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#remove-previous-containers-if-they-exist"><i class="fa fa-check"></i><b>5.2</b> Remove previous containers if they exist</a></li>
+<li class="chapter" data-level="5.3" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#connecting-reading-and-writing-to-postgresql-from-r"><i class="fa fa-check"></i><b>5.3</b> Connecting, reading and writing to PostgreSQL from R</a><ul>
+<li class="chapter" data-level="5.3.1" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#connecting-to-postgresql"><i class="fa fa-check"></i><b>5.3.1</b> Connecting to PostgreSQL</a></li>
+<li class="chapter" data-level="5.3.2" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#interact-with-postgresql"><i class="fa fa-check"></i><b>5.3.2</b> Interact with PostgreSQL</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#clean-up"><i class="fa fa-check"></i><b>5.4</b> Clean up</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="chapter-setup-adventureworks-db.html"><a href="chapter-setup-adventureworks-db.html"><i class="fa fa-check"></i><b>6</b> Create the adventureworks database in PostgreSQL in Docker</a><ul>
+<li class="chapter" data-level="6.1" data-path="chapter-setup-adventureworks-db.html"><a href="chapter-setup-adventureworks-db.html#overview"><i class="fa fa-check"></i><b>6.1</b> Overview</a></li>
+<li class="chapter" data-level="6.2" data-path="chapter-setup-adventureworks-db.html"><a href="chapter-setup-adventureworks-db.html#verify-that-docker-is-up-and-running"><i class="fa fa-check"></i><b>6.2</b> Verify that Docker is up and running</a></li>
+<li class="chapter" data-level="6.3" data-path="chapter-setup-adventureworks-db.html"><a href="chapter-setup-adventureworks-db.html#clean-up-if-appropriate"><i class="fa fa-check"></i><b>6.3</b> Clean up if appropriate</a></li>
+<li class="chapter" data-level="6.4" data-path="chapter-setup-adventureworks-db.html"><a href="chapter-setup-adventureworks-db.html#build-the-adventureworks-docker-image"><i class="fa fa-check"></i><b>6.4</b> Build the adventureworks Docker image</a></li>
+<li class="chapter" data-level="6.5" data-path="chapter-setup-adventureworks-db.html"><a href="chapter-setup-adventureworks-db.html#run-the-adventureworks-docker-image"><i class="fa fa-check"></i><b>6.5</b> Run the adventureworks Docker Image</a></li>
+<li class="chapter" data-level="6.6" data-path="chapter-setup-adventureworks-db.html"><a href="chapter-setup-adventureworks-db.html#connect-to-postgresql-with-r"><i class="fa fa-check"></i><b>6.6</b> Connect to PostgreSQL with R</a></li>
+<li class="chapter" data-level="6.7" data-path="chapter-setup-adventureworks-db.html"><a href="chapter-setup-adventureworks-db.html#stop-and-start-to-demonstrate-persistence"><i class="fa fa-check"></i><b>6.7</b> Stop and start to demonstrate persistence</a></li>
+<li class="chapter" data-level="6.8" data-path="chapter-setup-adventureworks-db.html"><a href="chapter-setup-adventureworks-db.html#cleaning-up"><i class="fa fa-check"></i><b>6.8</b> Cleaning up</a></li>
+<li class="chapter" data-level="6.9" data-path="chapter-setup-adventureworks-db.html"><a href="chapter-setup-adventureworks-db.html#using-the-adventureworks-container-in-the-rest-of-the-book"><i class="fa fa-check"></i><b>6.9</b> Using the <code>adventureworks</code> container in the rest of the book</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="chapter-dbms-login-credentials.html"><a href="chapter-dbms-login-credentials.html"><i class="fa fa-check"></i><b>7</b> Securing and using your dbms log-in credentials</a><ul>
+<li class="chapter" data-level="7.1" data-path="chapter-dbms-login-credentials.html"><a href="chapter-dbms-login-credentials.html#set-up-the-adventureworks-docker-container"><i class="fa fa-check"></i><b>7.1</b> Set up the adventureworks Docker container</a><ul>
+<li class="chapter" data-level="7.1.1" data-path="chapter-dbms-login-credentials.html"><a href="chapter-dbms-login-credentials.html#verify-that-docker-is-running-1"><i class="fa fa-check"></i><b>7.1.1</b> Verify that Docker is running</a></li>
+<li class="chapter" data-level="7.1.2" data-path="chapter-dbms-login-credentials.html"><a href="chapter-dbms-login-credentials.html#start-the-docker-container"><i class="fa fa-check"></i><b>7.1.2</b> Start the Docker container:</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="chapter-dbms-login-credentials.html"><a href="chapter-dbms-login-credentials.html#storing-your-dbms-credentials"><i class="fa fa-check"></i><b>7.2</b> Storing your dbms credentials</a><ul>
+<li class="chapter" data-level="7.2.1" data-path="chapter-dbms-login-credentials.html"><a href="chapter-dbms-login-credentials.html#connect-with-postgres-using-the-sys.getenv-function"><i class="fa fa-check"></i><b>7.2.1</b> Connect with Postgres using the Sys.getenv function</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="chapter-dbms-login-credentials.html"><a href="chapter-dbms-login-credentials.html#clean-up-1"><i class="fa fa-check"></i><b>7.3</b> Clean up</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html"><i class="fa fa-check"></i><b>8</b> Introduction to DBMS queries</a><ul>
+<li class="chapter" data-level="8.1" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#setup"><i class="fa fa-check"></i><b>8.1</b> Setup</a></li>
+<li class="chapter" data-level="8.2" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#getting-data-from-the-database"><i class="fa fa-check"></i><b>8.2</b> Getting data from the database</a><ul>
+<li class="chapter" data-level="8.2.1" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#finding-out-whats-there"><i class="fa fa-check"></i><b>8.2.1</b> Finding out what’s there</a></li>
+<li class="chapter" data-level="8.2.2" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#listing-all-the-fields-for-all-the-tables"><i class="fa fa-check"></i><b>8.2.2</b> Listing all the fields for all the tables</a></li>
+<li class="chapter" data-level="8.2.3" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#downloading-an-entire-table"><i class="fa fa-check"></i><b>8.2.3</b> Downloading an entire table</a></li>
+<li class="chapter" data-level="8.2.4" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#a-table-object-that-can-be-reused"><i class="fa fa-check"></i><b>8.2.4</b> A table object that can be reused</a></li>
+<li class="chapter" data-level="8.2.5" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#controlling-the-number-of-rows-returned"><i class="fa fa-check"></i><b>8.2.5</b> Controlling the number of rows returned</a></li>
+<li class="chapter" data-level="8.2.6" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#random-rows-from-the-dbms"><i class="fa fa-check"></i><b>8.2.6</b> Random rows from the dbms</a></li>
+<li class="chapter" data-level="8.2.7" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#sub-setting-variables"><i class="fa fa-check"></i><b>8.2.7</b> Sub-setting variables</a></li>
+<li class="chapter" data-level="8.2.8" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#translating-dplyr-code-to-sql-queries"><i class="fa fa-check"></i><b>8.2.8</b> Translating <code>dplyr</code> code to <code>SQL</code> queries</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#mixing-dplyr-and-sql"><i class="fa fa-check"></i><b>8.3</b> Mixing dplyr and SQL</a></li>
+<li class="chapter" data-level="8.4" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#examining-a-single-table-with-r"><i class="fa fa-check"></i><b>8.4</b> Examining a single table with R</a><ul>
+<li class="chapter" data-level="8.4.1" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#str---a-base-package-workhorse"><i class="fa fa-check"></i><b>8.4.1</b> <code>str</code> - a base package workhorse</a></li>
+<li class="chapter" data-level="8.4.2" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#always-look-at-your-data-with-head-view-or-kable"><i class="fa fa-check"></i><b>8.4.2</b> Always <strong>look</strong> at your data with <code>head</code>, <code>View</code>, or <code>kable</code></a></li>
+<li class="chapter" data-level="8.4.3" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#the-summary-function-in-base"><i class="fa fa-check"></i><b>8.4.3</b> The <code>summary</code> function in <code>base</code></a></li>
+<li class="chapter" data-level="8.4.4" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#the-glimpse-function-in-the-tibble-package"><i class="fa fa-check"></i><b>8.4.4</b> The <code>glimpse</code> function in the <code>tibble</code> package</a></li>
+<li class="chapter" data-level="8.4.5" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#the-skim-function-in-the-skimr-package"><i class="fa fa-check"></i><b>8.4.5</b> The <code>skim</code> function in the <code>skimr</code> package</a></li>
+<li class="chapter" data-level="8.4.6" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#close-the-connection-and-shut-down-adventureworks"><i class="fa fa-check"></i><b>8.4.6</b> Close the connection and shut down adventureworks</a></li>
+</ul></li>
+<li class="chapter" data-level="8.5" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#additional-reading"><i class="fa fa-check"></i><b>8.5</b> Additional reading</a></li>
+</ul></li>
+<li class="appendix"><span><b>Appendices</b></span></li>
+<li class="chapter" data-level="A" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html"><i class="fa fa-check"></i><b>A</b> Appendix C - PostgreSQL Authentication</a><ul>
+<li class="chapter" data-level="A.1" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#introduction"><i class="fa fa-check"></i><b>A.1</b> Introduction</a></li>
+<li class="chapter" data-level="A.2" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#password-authentication-on-the-postgresql-docker-image"><i class="fa fa-check"></i><b>A.2</b> Password authentication on the PostgreSQL Docker image</a></li>
+<li class="chapter" data-level="A.3" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#adding-roles"><i class="fa fa-check"></i><b>A.3</b> Adding roles</a><ul>
+<li class="chapter" data-level="A.3.1" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#setting-up-docker"><i class="fa fa-check"></i><b>A.3.1</b> Setting up Docker</a></li>
+<li class="chapter" data-level="A.3.2" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#creating-a-new-container"><i class="fa fa-check"></i><b>A.3.2</b> Creating a new container</a></li>
+<li class="chapter" data-level="A.3.3" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#adding-a-role"><i class="fa fa-check"></i><b>A.3.3</b> Adding a role</a></li>
+<li class="chapter" data-level="A.3.4" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#did-it-work"><i class="fa fa-check"></i><b>A.3.4</b> Did it work?</a></li>
+<li class="chapter" data-level="A.3.5" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#remove-the-container"><i class="fa fa-check"></i><b>A.3.5</b> Remove the container</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="chapter-appendix-dbi-index.html"><a href="chapter-appendix-dbi-index.html"><i class="fa fa-check"></i><b>B</b> DBI package functions - INDEX</a></li>
+<li class="chapter" data-level="C" data-path="chapter-appendix-dplyr-to-postres-translation.html"><a href="chapter-appendix-dplyr-to-postres-translation.html"><i class="fa fa-check"></i><b>C</b> Appendix _ Dplyr to SQL translations</a><ul>
+<li class="chapter" data-level="C.1" data-path="chapter-appendix-dplyr-to-postres-translation.html"><a href="chapter-appendix-dplyr-to-postres-translation.html#overview-1"><i class="fa fa-check"></i><b>C.1</b> Overview</a></li>
+</ul></li>
+<li class="chapter" data-level="D" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html"><i class="fa fa-check"></i><b>D</b> Appendix Additional resources</a><ul>
+<li class="chapter" data-level="D.1" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#editing-this-book"><i class="fa fa-check"></i><b>D.1</b> Editing this book</a></li>
+<li class="chapter" data-level="D.2" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-alternatives"><i class="fa fa-check"></i><b>D.2</b> Docker alternatives</a></li>
+<li class="chapter" data-level="D.3" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-and-r"><i class="fa fa-check"></i><b>D.3</b> Docker and R</a></li>
+<li class="chapter" data-level="D.4" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#documentation-for-docker-and-postgresql"><i class="fa fa-check"></i><b>D.4</b> Documentation for Docker and PostgreSQL</a></li>
+<li class="chapter" data-level="D.5" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#sql-and-dplyr"><i class="fa fa-check"></i><b>D.5</b> SQL and dplyr</a></li>
+<li class="chapter" data-level="D.6" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#more-resources"><i class="fa fa-check"></i><b>D.6</b> More Resources</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">R, Databases, and Docker</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="chapter_dbms-queries-intro" class="section level1">
+<h1><span class="header-section-number">Chapter 8</span> Introduction to DBMS queries</h1>
+<blockquote>
+<p>This chapter demonstrates how to:</p>
+<ul>
+<li>Get a glimpse of what tables are in the database and what fields a table contains</li>
+<li>Download all or part of a table from the dbms</li>
+<li>See how <code>dplyr</code> code is translated into <code>SQL</code> commands</li>
+<li>Get acquainted with some useful tools for investigating a single table</li>
+<li>Begin thinking about how to divide the work between your local R session and the dbms</li>
+</ul>
+</blockquote>
+<div id="setup" class="section level2">
+<h2><span class="header-section-number">8.1</span> Setup</h2>
+<p>The following packages are used in this chapter:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)
+<span class="kw">library</span>(DBI)
+<span class="kw">library</span>(RPostgres)
+<span class="kw">library</span>(dbplyr)
+<span class="kw">require</span>(knitr)
+<span class="kw">library</span>(bookdown)
+<span class="kw">library</span>(sqlpetr)</code></pre>
+<p>Assume that the Docker container with PostgreSQL and the adventureworks database are ready to go. If not go back to [Chapter 6][#chapter_setup-adventureworks-db]</p>
+<pre class="sourceCode r"><code class="sourceCode r">sqlpetr<span class="op">::</span><span class="kw">sp_docker_start</span>(<span class="st">&quot;adventureworks&quot;</span>)</code></pre>
+<p>Connect to the database:</p>
+<pre class="sourceCode r"><code class="sourceCode r">con &lt;-<span class="st"> </span>sqlpetr<span class="op">::</span><span class="kw">sp_get_postgres_connection</span>(
+  <span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),
+  <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),
+  <span class="dt">dbname =</span> <span class="st">&quot;adventureworks&quot;</span>,
+  <span class="dt">port =</span> <span class="dv">5432</span>, 
+  <span class="dt">seconds_to_test =</span> <span class="dv">20</span>, 
+  <span class="dt">connection_tab =</span> <span class="ot">TRUE</span>
+)</code></pre>
+</div>
+<div id="getting-data-from-the-database" class="section level2">
+<h2><span class="header-section-number">8.2</span> Getting data from the database</h2>
+<p>As we show later on, the database serves as a store of data and as an engine for sub-setting, joining, and computation on the data. We begin with getting data from the dbms, or “downloading” data.</p>
+<div id="finding-out-whats-there" class="section level3">
+<h3><span class="header-section-number">8.2.1</span> Finding out what’s there</h3>
+<p>We’ve already seen how the connections tab is the easiest way to explore a database.</p>
+<div class="figure">
+<img src="screenshots/adventureworks-connections-tab.png" alt="Adventureworks connections tab" />
+<p class="caption">Adventureworks connections tab</p>
+</div>
+<p>It’s a little more complex than the <code>cattle</code> example because we have additional structure: the <code>adventureworks</code> <a href="https://en.wikipedia.org/wiki/Database_schema">database contains schemas</a>, which contain tables. The <code>hr</code> schema is the same as the <code>humanresources</code> schema, but with nicknames (the <code>d</code> table in <code>hr</code> is the same as the <code>department</code> table in the <code>humanresources</code> schema). Schemas are used to control access and to set up shortcuts. Clicking on the the right opens up the table view of the <code>d</code> table:</p>
+<div class="figure">
+<img src="screenshots/adventureworks-hr-dept-table.png" alt="Adventureworks connections tab" />
+<p class="caption">Adventureworks connections tab</p>
+</div>
+<p>Exploring a databse using R code is a littlel more complicated. The following command does not give you a list of tables as it did in the simpler case when there were no schemas other than the <code>public</code> schema:</p>
+<pre class="sourceCode r"><code class="sourceCode r">tables &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbListTables</span>(con)
+tables</code></pre>
+<pre><code>## character(0)</code></pre>
+<p>We need to to tell the database which schemas to search</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dbExecute</span>(con, <span class="st">&quot;set search_path to hr, humanresources;&quot;</span>)</code></pre>
+<pre><code>## [1] 0</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">DBI<span class="op">::</span><span class="kw">dbListTables</span>(con)</code></pre>
+<pre><code>##  [1] &quot;d&quot;                          &quot;shift&quot;                     
+##  [3] &quot;e&quot;                          &quot;employee&quot;                  
+##  [5] &quot;edh&quot;                        &quot;eph&quot;                       
+##  [7] &quot;jc&quot;                         &quot;s&quot;                         
+##  [9] &quot;jobcandidate&quot;               &quot;vemployee&quot;                 
+## [11] &quot;vemployeedepartment&quot;        &quot;vemployeedepartmenthistory&quot;
+## [13] &quot;vjobcandidate&quot;              &quot;vjobcandidateeducation&quot;    
+## [15] &quot;vjobcandidateemployment&quot;    &quot;department&quot;                
+## [17] &quot;employeedepartmenthistory&quot;  &quot;employeepayhistory&quot;</code></pre>
+<p>Notice the way the database designers have abbreviated table names for your convenience. Once</p>
+<pre class="sourceCode r"><code class="sourceCode r">DBI<span class="op">::</span><span class="kw">dbListFields</span>(con, <span class="st">&quot;d&quot;</span>)</code></pre>
+<pre><code>## [1] &quot;id&quot;           &quot;departmentid&quot; &quot;name&quot;         &quot;groupname&quot;   
+## [5] &quot;modifieddate&quot;</code></pre>
+</div>
+<div id="listing-all-the-fields-for-all-the-tables" class="section level3">
+<h3><span class="header-section-number">8.2.2</span> Listing all the fields for all the tables</h3>
+<p>The first example, <code>DBI::dbListTables(con)</code> returned 22 tables and the second example, <code>DBI::dbListFields(con, &quot;employee&quot;)</code> returns 7 fields. Here we combine the two calls to return a list of tables which has a list of all the fields in the table. The code block just shows the first two tables.</p>
+<pre class="sourceCode r"><code class="sourceCode r">table_columns &lt;-<span class="st"> </span>purrr<span class="op">::</span><span class="kw">map</span>(tables, <span class="op">~</span><span class="st"> </span><span class="kw">dbListFields</span>(.,<span class="dt">conn =</span> con) )</code></pre>
+<p>Rename each list [[1]] … [[43]] to meaningful table name</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">names</span>(table_columns) &lt;-<span class="st"> </span>tables
+
+<span class="kw">head</span>(table_columns)</code></pre>
+<pre><code>## named list()</code></pre>
+<p>Later on we’ll discuss how to get more extensive data about each table and column from the database’s own store of metadata using a similar technique. As we go further the issue of scale will come up again and again: you need to be careful about how much data a call to the dbms will return, whether it’s a list of tables or a table that could have millions of rows.</p>
+<p>It’s important to connect with people who own, generate, or are the subjects of the data. A good chat with people who own the data, generate it, or are the subjects can generate insights and set the context for your investigation of the database. The purpose for collecting the data or circumstances where it was collected may be buried far afield in an organization, but <em>usually someone knows</em>. The metadata discussed in a later chapter is essential but will only take you so far.</p>
+<p>There are different ways of just <strong>looking at the data</strong>, which we explore below.</p>
+</div>
+<div id="downloading-an-entire-table" class="section level3">
+<h3><span class="header-section-number">8.2.3</span> Downloading an entire table</h3>
+<p>There are many different methods of getting data from a DBMS, and we’ll explore the different ways of controlling each one of them.</p>
+<p><code>DBI::dbReadTable</code> will download an entire table into an R <a href="https://tibble.tidyverse.org/">tibble</a>.</p>
+<pre class="sourceCode r"><code class="sourceCode r">employee_tibble &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbReadTable</span>(con, <span class="st">&quot;employee&quot;</span>)
+<span class="kw">str</span>(employee_tibble)</code></pre>
+<pre><code>## &#39;data.frame&#39;:    290 obs. of  15 variables:
+##  $ businessentityid: int  1 2 3 4 5 6 7 8 9 10 ...
+##  $ nationalidnumber: chr  &quot;295847284&quot; &quot;245797967&quot; &quot;509647174&quot; &quot;112457891&quot; ...
+##  $ loginid         : chr  &quot;adventure-works\\ken0&quot; &quot;adventure-works\\terri0&quot; &quot;adventure-works\\roberto0&quot; &quot;adventure-works\\rob0&quot; ...
+##  $ jobtitle        : chr  &quot;Chief Executive Officer&quot; &quot;Vice President of Engineering&quot; &quot;Engineering Manager&quot; &quot;Senior Tool Designer&quot; ...
+##  $ birthdate       : Date, format: &quot;1969-01-29&quot; &quot;1971-08-01&quot; ...
+##  $ maritalstatus   : chr  &quot;S&quot; &quot;S&quot; &quot;M&quot; &quot;S&quot; ...
+##  $ gender          : chr  &quot;M&quot; &quot;F&quot; &quot;M&quot; &quot;M&quot; ...
+##  $ hiredate        : Date, format: &quot;2009-01-14&quot; &quot;2008-01-31&quot; ...
+##  $ salariedflag    : logi  TRUE TRUE TRUE FALSE TRUE TRUE ...
+##  $ vacationhours   : int  99 1 2 48 5 6 61 62 63 16 ...
+##  $ sickleavehours  : int  69 20 21 80 22 23 50 51 51 64 ...
+##  $ currentflag     : logi  TRUE TRUE TRUE TRUE TRUE TRUE ...
+##  $ rowguid         : chr  &quot;f01251e5-96a3-448d-981e-0f99d789110d&quot; &quot;45e8f437-670d-4409-93cb-f9424a40d6ee&quot; &quot;9bbbfb2c-efbb-4217-9ab7-f97689328841&quot; &quot;59747955-87b8-443f-8ed4-f8ad3afdf3a9&quot; ...
+##  $ modifieddate    : POSIXct, format: &quot;2014-06-30 00:00:00&quot; &quot;2014-06-30 00:00:00&quot; ...
+##  $ organizationnode: chr  &quot;/&quot; &quot;/1/&quot; &quot;/1/1/&quot; &quot;/1/1/1/&quot; ...</code></pre>
+<p>That’s very simple, but if the table is large it may not be a good idea, since R is designed to keep the entire table in memory. Note that the first line of the str() output reports the total number of observations.</p>
+</div>
+<div id="a-table-object-that-can-be-reused" class="section level3">
+<h3><span class="header-section-number">8.2.4</span> A table object that can be reused</h3>
+<p>The <code>dplyr::tbl</code> function gives us more control over access to a table by enabling control over which columns and rows to download. It creates an object that might <strong>look</strong> like a data frame, but it’s actually a list object that <code>dplyr</code> uses for constructing queries and retrieving data from the DBMS.</p>
+<pre class="sourceCode r"><code class="sourceCode r">employee_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">tbl</span>(con, <span class="st">&quot;employee&quot;</span>)
+<span class="kw">class</span>(employee_table)</code></pre>
+<pre><code>## [1] &quot;tbl_PqConnection&quot; &quot;tbl_dbi&quot;          &quot;tbl_sql&quot;         
+## [4] &quot;tbl_lazy&quot;         &quot;tbl&quot;</code></pre>
+</div>
+<div id="controlling-the-number-of-rows-returned" class="section level3">
+<h3><span class="header-section-number">8.2.5</span> Controlling the number of rows returned</h3>
+<p>The <code>collect</code> function triggers the creation of a tibble and controls the number of rows that the DBMS sends to R. For more complex queries, the <code>dplyr::collect()</code> function provides a mechanism to indicate what’s processed on on the dbms server and what’s processed by R on the local machine. The chapter on <a href="#chapter_lazy-evaluation-and-timing">Lazy Evaluation and Execution Environment</a> discusses this issue in detail.</p>
+<pre class="sourceCode r"><code class="sourceCode r">employee_table <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="dv">3</span>) <span class="op">%&gt;%</span><span class="st"> </span>dim</code></pre>
+<pre><code>## [1]  3 15</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">employee_table <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="dv">500</span>) <span class="op">%&gt;%</span><span class="st"> </span>dim</code></pre>
+<pre><code>## [1] 290  15</code></pre>
+</div>
+<div id="random-rows-from-the-dbms" class="section level3">
+<h3><span class="header-section-number">8.2.6</span> Random rows from the dbms</h3>
+<p>When the dbms contains many rows, a sample of the data may be plenty for your purposes. Although <code>dplyr</code> has nice functions to sample a data frame that’s already in R (e.g., the <code>sample_n</code> and <code>sample_frac</code> functions), to get a sample from the dbms we have to use <code>dbGetQuery</code> to send native SQL to the database. To peek ahead, here is one example of a query that retrieves 20 rows from a 1% sample:</p>
+<pre class="sourceCode r"><code class="sourceCode r">one_percent_sample &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbGetQuery</span>(
+  con,
+  <span class="st">&quot;SELECT businessentityid, jobtitle, birthdate</span>
+<span class="st">  FROM employee TABLESAMPLE BERNOULLI(3) LIMIT 20;</span>
+<span class="st">  &quot;</span>
+)
+
+one_percent_sample</code></pre>
+<pre><code>##   businessentityid                     jobtitle  birthdate
+## 1               15              Design Engineer 1961-05-02
+## 2               65 Production Technician - WC60 1970-04-28
+## 3              102 Production Supervisor - WC10 1983-10-26
+## 4              177 Production Technician - WC30 1982-02-11
+## 5              180 Production Supervisor - WC20 1984-11-18
+## 6              235      Human Resources Manager 1976-02-11
+## 7              239          Benefits Specialist 1984-11-20</code></pre>
+<p><strong>Exact sample of 100 records</strong></p>
+<p>This technique depends on knowing the range of a record index, such as the <code>businessentityid</code> in the <code>employee</code> table of our <code>adventureworks</code> database.</p>
+<p>Start by finding the min and max values.</p>
+<pre class="sourceCode r"><code class="sourceCode r">DBI<span class="op">::</span><span class="kw">dbListFields</span>(con, <span class="st">&quot;employee&quot;</span>)</code></pre>
+<pre><code>##  [1] &quot;businessentityid&quot; &quot;nationalidnumber&quot; &quot;loginid&quot;         
+##  [4] &quot;jobtitle&quot;         &quot;birthdate&quot;        &quot;maritalstatus&quot;   
+##  [7] &quot;gender&quot;           &quot;hiredate&quot;         &quot;salariedflag&quot;    
+## [10] &quot;vacationhours&quot;    &quot;sickleavehours&quot;   &quot;currentflag&quot;     
+## [13] &quot;rowguid&quot;          &quot;modifieddate&quot;     &quot;organizationnode&quot;</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">employee_df &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbReadTable</span>(con, <span class="st">&quot;employee&quot;</span>)
+
+<span class="kw">max</span>(employee_df<span class="op">$</span>businessentityid)</code></pre>
+<pre><code>## [1] 290</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">min</span>(employee_df<span class="op">$</span>businessentityid)</code></pre>
+<pre><code>## [1] 1</code></pre>
+<p>Set the random number seed and draw the sample.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">123</span>)
+sample_rows &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">max</span>(employee_df<span class="op">$</span>businessentityid), <span class="dv">10</span>)
+employee_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">tbl</span>(con, <span class="st">&quot;employee&quot;</span>)</code></pre>
+<p>Run query with the filter verb listing the randomly sampled rows to be retrieved:</p>
+<pre class="sourceCode r"><code class="sourceCode r">employee_sample &lt;-<span class="st"> </span>employee_table <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(businessentityid <span class="op">%in%</span><span class="st"> </span>sample_rows) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">collect</span>()</code></pre>
+<pre><code>## Warning: `overscope_eval_next()` is deprecated as of rlang 0.2.0.
+## Please use `eval_tidy()` with a data mask instead.
+## This warning is displayed once per session.</code></pre>
+<pre><code>## Warning: `overscope_clean()` is deprecated as of rlang 0.2.0.
+## This warning is displayed once per session.</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(employee_sample)</code></pre>
+<pre><code>## Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    10 obs. of  15 variables:
+##  $ businessentityid: int  13 84 118 129 150 156 228 253 254 269
+##  $ nationalidnumber: chr  &quot;486228782&quot; &quot;947029962&quot; &quot;222400012&quot; &quot;502058701&quot; ...
+##  $ loginid         : chr  &quot;adventure-works\\janice0&quot; &quot;adventure-works\\frank3&quot; &quot;adventure-works\\don0&quot; &quot;adventure-works\\gary0&quot; ...
+##  $ jobtitle        : chr  &quot;Tool Designer&quot; &quot;Production Technician - WC40&quot; &quot;Production Technician - WC50&quot; &quot;Production Technician - WC40&quot; ...
+##  $ birthdate       : Date, format: &quot;1989-05-28&quot; &quot;1952-03-02&quot; ...
+##  $ maritalstatus   : chr  &quot;M&quot; &quot;M&quot; &quot;M&quot; &quot;S&quot; ...
+##  $ gender          : chr  &quot;F&quot; &quot;M&quot; &quot;M&quot; &quot;M&quot; ...
+##  $ hiredate        : Date, format: &quot;2010-12-23&quot; &quot;2010-02-05&quot; ...
+##  $ salariedflag    : logi  FALSE FALSE FALSE FALSE FALSE FALSE ...
+##  $ vacationhours   : int  8 66 88 69 35 11 92 56 57 72
+##  $ sickleavehours  : int  24 53 64 54 37 25 66 48 48 56
+##  $ currentflag     : logi  TRUE TRUE TRUE TRUE TRUE TRUE ...
+##  $ rowguid         : chr  &quot;954b91b6-5aa7-48c2-8685-6e11c6e5c49a&quot; &quot;9af24acc-ea3e-4efe-b5e3-4762c496d57c&quot; &quot;e720053d-922e-4c91-b81a-a1ca4ef8bb0e&quot; &quot;a03d6052-1f85-4ebe-aac9-b67cfdcd91a6&quot; ...
+##  $ modifieddate    : POSIXct, format: &quot;2014-06-30&quot; &quot;2014-06-30&quot; ...
+##  $ organizationnode: chr  &quot;/1/1/5/2/&quot; &quot;/3/1/7/6/&quot; &quot;/3/1/11/10/&quot; &quot;/3/1/13/2/&quot; ...</code></pre>
+</div>
+<div id="sub-setting-variables" class="section level3">
+<h3><span class="header-section-number">8.2.7</span> Sub-setting variables</h3>
+<p>A table in the dbms may not only have many more rows than you want, but also many more columns. The <code>select</code> command controls which columns are retrieved.</p>
+<pre class="sourceCode r"><code class="sourceCode r">employee_table <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(businessentityid, jobtitle, birthdate) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>()</code></pre>
+<pre><code>## # Source:   lazy query [?? x 3]
+## # Database: postgres [postgres@localhost:5432/adventureworks]
+##   businessentityid jobtitle                      birthdate 
+##              &lt;int&gt; &lt;chr&gt;                         &lt;date&gt;    
+## 1                1 Chief Executive Officer       1969-01-29
+## 2                2 Vice President of Engineering 1971-08-01
+## 3                3 Engineering Manager           1974-11-12
+## 4                4 Senior Tool Designer          1974-12-23
+## 5                5 Design Engineer               1952-09-27
+## 6                6 Design Engineer               1959-03-11</code></pre>
+<p>That’s exactly equivalent to submitting the following SQL commands dirctly:</p>
+<pre class="sourceCode r"><code class="sourceCode r">DBI<span class="op">::</span><span class="kw">dbGetQuery</span>(
+  con,
+  <span class="st">&#39;SELECT &quot;businessentityid&quot;, &quot;jobtitle&quot;, &quot;birthdate&quot;</span>
+<span class="st">FROM &quot;employee&quot;</span>
+<span class="st">LIMIT 6&#39;</span>) </code></pre>
+<pre><code>##   businessentityid                      jobtitle  birthdate
+## 1                1       Chief Executive Officer 1969-01-29
+## 2                2 Vice President of Engineering 1971-08-01
+## 3                3           Engineering Manager 1974-11-12
+## 4                4          Senior Tool Designer 1974-12-23
+## 5                5               Design Engineer 1952-09-27
+## 6                6               Design Engineer 1959-03-11</code></pre>
+<p>We won’t discuss <code>dplyr</code> methods for sub-setting variables, deriving new ones, or sub-setting rows based on the values found in the table, because they are covered well in other places, including:</p>
+<ul>
+<li>Comprehensive reference: <a href="https://dplyr.tidyverse.org/">https://dplyr.tidyverse.org/</a></li>
+<li>Good tutorial: <a href="https://suzan.rbind.io/tags/dplyr/">https://suzan.rbind.io/tags/dplyr/</a></li>
+</ul>
+<p>In practice we find that, <strong>renaming variables</strong> is often quite important because the names in an SQL database might not meet your needs as an analyst. In “the wild”, you will find names that are ambiguous or overly specified, with spaces in them, and other problems that will make them difficult to use in R. It is good practice to do whatever renaming you are going to do in a predictable place like at the top of your code. The names in the <code>adventureworks</code> database are simple and clear, but if they were not, you might rename them for subsequent use in this way:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tbl</span>(con, <span class="st">&quot;employee&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">rename</span>(<span class="dt">businessentity_id_number =</span> businessentityid, 
+                <span class="dt">employee_job_title =</span> jobtitle) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(businessentity_id_number, employee_job_title, birthdate) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="co"># head()</span>
+<span class="kw">show_query</span>()</code></pre>
+<pre><code>## &lt;SQL&gt;
+## SELECT &quot;businessentityid&quot; AS &quot;businessentity_id_number&quot;, &quot;jobtitle&quot; AS &quot;employee_job_title&quot;, &quot;birthdate&quot;
+## FROM &quot;employee&quot;</code></pre>
+<p>That’s equivalent to the following SQL code:</p>
+<pre class="sourceCode r"><code class="sourceCode r">DBI<span class="op">::</span><span class="kw">dbGetQuery</span>(
+  con,
+  <span class="st">&#39;SELECT &quot;businessentityid&quot; AS &quot;businessentity_id_number&quot;, &quot;jobtitle&quot; AS &quot;employee_job_title&quot;, &quot;birthdate&quot;</span>
+<span class="st">FROM &quot;employee&quot; </span>
+<span class="st">LIMIT 6&#39;</span> )</code></pre>
+<pre><code>##   businessentity_id_number            employee_job_title  birthdate
+## 1                        1       Chief Executive Officer 1969-01-29
+## 2                        2 Vice President of Engineering 1971-08-01
+## 3                        3           Engineering Manager 1974-11-12
+## 4                        4          Senior Tool Designer 1974-12-23
+## 5                        5               Design Engineer 1952-09-27
+## 6                        6               Design Engineer 1959-03-11</code></pre>
+<p>The one difference is that the <code>SQL</code> code returns a regular data frame and the <code>dplyr</code> code returns a <code>tibble</code>. Notice that the seconds are greyed out in the <code>tibble</code> display.</p>
+</div>
+<div id="translating-dplyr-code-to-sql-queries" class="section level3">
+<h3><span class="header-section-number">8.2.8</span> Translating <code>dplyr</code> code to <code>SQL</code> queries</h3>
+<p>Where did the translations we’ve shown above come from? The <code>show_query</code> function shows how <code>dplyr</code> is translating your query to the dialect of the target dbms:</p>
+<pre class="sourceCode r"><code class="sourceCode r">employee_table <span class="op">%&gt;%</span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">tally</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">show_query</span>()</code></pre>
+<pre><code>## &lt;SQL&gt;
+## SELECT COUNT(*) AS &quot;n&quot;
+## FROM &quot;employee&quot;</code></pre>
+<p>Here is an extensive discussion of how <code>dplyr</code> code is translated into SQL:</p>
+<ul>
+<li><a href="https://dbplyr.tidyverse.org/articles/sql-translation.html">https://dbplyr.tidyverse.org/articles/sql-translation.html</a></li>
+</ul>
+<p>If you prefer to use SQL directly, rather than <code>dplyr</code>, you can submit SQL code to the DBMS through the <code>DBI::dbGetQuery</code> function:</p>
+<pre class="sourceCode r"><code class="sourceCode r">DBI<span class="op">::</span><span class="kw">dbGetQuery</span>(
+  con,
+  <span class="st">&#39;SELECT COUNT(*) AS &quot;n&quot;</span>
+<span class="st">     FROM &quot;employee&quot;   &#39;</span>
+)</code></pre>
+<pre><code>##     n
+## 1 290</code></pre>
+<p>When you create a report to run repeatedly, you might want to put that query into R markdown. That way you can also execute that SQL code in a chunk with the following header:</p>
+<p>{<code>sql, connection=con, output.var = &quot;query_results&quot;</code>}</p>
+<pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> <span class="fu">COUNT</span>(*) <span class="kw">AS</span> <span class="ot">&quot;n&quot;</span>
+     <span class="kw">FROM</span> <span class="ot">&quot;employee&quot;</span>;</code></pre>
+<p>Rmarkdown stores that query result in a tibble which can be printed by referring to it:</p>
+<pre class="sourceCode r"><code class="sourceCode r">query_results</code></pre>
+<pre><code>##     n
+## 1 290</code></pre>
+</div>
+</div>
+<div id="mixing-dplyr-and-sql" class="section level2">
+<h2><span class="header-section-number">8.3</span> Mixing dplyr and SQL</h2>
+<p>When dplyr finds code that it does not know how to translate into SQL, it will simply pass it along to the dbms. Therefore you can interleave native commands that your dbms will understand in the middle of dplyr code. Consider this example that’s derived from <span class="citation">(Ruiz <a href="#ref-Ruiz2019">2019</a>)</span>:</p>
+<pre class="sourceCode r"><code class="sourceCode r">employee_table <span class="op">%&gt;%</span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select_at</span>(<span class="kw">vars</span>(jobtitle, <span class="kw">contains</span>(<span class="st">&quot;hours&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">today =</span> <span class="kw">now</span>()) <span class="op">%&gt;%</span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">show_query</span>()</code></pre>
+<pre><code>## &lt;SQL&gt;
+## SELECT &quot;jobtitle&quot;, &quot;vacationhours&quot;, &quot;sickleavehours&quot;, CURRENT_TIMESTAMP AS &quot;today&quot;
+## FROM &quot;employee&quot;</code></pre>
+<p>That is native to PostgreSQL, not <a href="https://en.wikipedia.org/wiki/SQL#Interoperability_and_standardization">ANSI standard</a> SQL.</p>
+<p>Verify that it works:</p>
+<pre class="sourceCode r"><code class="sourceCode r">employee_table <span class="op">%&gt;%</span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select_at</span>(<span class="kw">vars</span>(jobtitle, <span class="kw">contains</span>(<span class="st">&quot;hours&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">head</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(<span class="dt">today =</span> <span class="kw">now</span>()) <span class="op">%&gt;%</span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">collect</span>()</code></pre>
+<pre><code>## # A tibble: 6 x 4
+##   jobtitle                 vacationhours sickleavehours today              
+##   &lt;chr&gt;                            &lt;int&gt;          &lt;int&gt; &lt;dttm&gt;             
+## 1 Chief Executive Officer             99             69 2019-07-12 17:37:06
+## 2 Vice President of Engin…             1             20 2019-07-12 17:37:06
+## 3 Engineering Manager                  2             21 2019-07-12 17:37:06
+## 4 Senior Tool Designer                48             80 2019-07-12 17:37:06
+## 5 Design Engineer                      5             22 2019-07-12 17:37:06
+## 6 Design Engineer                      6             23 2019-07-12 17:37:06</code></pre>
+</div>
+<div id="examining-a-single-table-with-r" class="section level2">
+<h2><span class="header-section-number">8.4</span> Examining a single table with R</h2>
+<p>Dealing with a large, complex database highlights the utility of specific tools in R. We include brief examples that we find to be handy:</p>
+<ul>
+<li>Base R structure: <code>str</code></li>
+<li>Printing out some of the data: <code>datatable</code>, <code>kable</code>, and <code>View</code></li>
+<li>Summary statistics: <code>summary</code></li>
+<li><code>glimpse</code> in the <code>tibble</code> package, which is included in the <code>tidyverse</code></li>
+<li><code>skim</code> in the <code>skimr</code> package</li>
+</ul>
+<div id="str---a-base-package-workhorse" class="section level3">
+<h3><span class="header-section-number">8.4.1</span> <code>str</code> - a base package workhorse</h3>
+<p><code>str</code> is a workhorse function that lists variables, their type and a sample of the first few variable values.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(employee_tibble)</code></pre>
+<pre><code>## &#39;data.frame&#39;:    290 obs. of  15 variables:
+##  $ businessentityid: int  1 2 3 4 5 6 7 8 9 10 ...
+##  $ nationalidnumber: chr  &quot;295847284&quot; &quot;245797967&quot; &quot;509647174&quot; &quot;112457891&quot; ...
+##  $ loginid         : chr  &quot;adventure-works\\ken0&quot; &quot;adventure-works\\terri0&quot; &quot;adventure-works\\roberto0&quot; &quot;adventure-works\\rob0&quot; ...
+##  $ jobtitle        : chr  &quot;Chief Executive Officer&quot; &quot;Vice President of Engineering&quot; &quot;Engineering Manager&quot; &quot;Senior Tool Designer&quot; ...
+##  $ birthdate       : Date, format: &quot;1969-01-29&quot; &quot;1971-08-01&quot; ...
+##  $ maritalstatus   : chr  &quot;S&quot; &quot;S&quot; &quot;M&quot; &quot;S&quot; ...
+##  $ gender          : chr  &quot;M&quot; &quot;F&quot; &quot;M&quot; &quot;M&quot; ...
+##  $ hiredate        : Date, format: &quot;2009-01-14&quot; &quot;2008-01-31&quot; ...
+##  $ salariedflag    : logi  TRUE TRUE TRUE FALSE TRUE TRUE ...
+##  $ vacationhours   : int  99 1 2 48 5 6 61 62 63 16 ...
+##  $ sickleavehours  : int  69 20 21 80 22 23 50 51 51 64 ...
+##  $ currentflag     : logi  TRUE TRUE TRUE TRUE TRUE TRUE ...
+##  $ rowguid         : chr  &quot;f01251e5-96a3-448d-981e-0f99d789110d&quot; &quot;45e8f437-670d-4409-93cb-f9424a40d6ee&quot; &quot;9bbbfb2c-efbb-4217-9ab7-f97689328841&quot; &quot;59747955-87b8-443f-8ed4-f8ad3afdf3a9&quot; ...
+##  $ modifieddate    : POSIXct, format: &quot;2014-06-30 00:00:00&quot; &quot;2014-06-30 00:00:00&quot; ...
+##  $ organizationnode: chr  &quot;/&quot; &quot;/1/&quot; &quot;/1/1/&quot; &quot;/1/1/1/&quot; ...</code></pre>
+</div>
+<div id="always-look-at-your-data-with-head-view-or-kable" class="section level3">
+<h3><span class="header-section-number">8.4.2</span> Always <strong>look</strong> at your data with <code>head</code>, <code>View</code>, or <code>kable</code></h3>
+<p>There is no substitute for looking at your data and R provides several ways to just browse it. The <code>head</code> function controls the number of rows that are displayed. Note that tail does not work against a database object. In every-day practice you would look at more than the default 6 rows, but here we wrap <code>head</code> around the data frame:</p>
+<pre class="sourceCode r"><code class="sourceCode r">sqlpetr<span class="op">::</span><span class="kw">sp_print_df</span>(<span class="kw">head</span>(employee_tibble))</code></pre>
+<div id="htmlwidget-f474ad921ae63e0a53f4" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-f474ad921ae63e0a53f4">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[1,2,3,4,5,6],["295847284","245797967","509647174","112457891","695256908","998320692"],["adventure-works\\ken0","adventure-works\\terri0","adventure-works\\roberto0","adventure-works\\rob0","adventure-works\\gail0","adventure-works\\jossef0"],["Chief Executive Officer","Vice President of Engineering","Engineering Manager","Senior Tool Designer","Design Engineer","Design Engineer"],["1969-01-29","1971-08-01","1974-11-12","1974-12-23","1952-09-27","1959-03-11"],["S","S","M","S","M","M"],["M","F","M","M","F","M"],["2009-01-14","2008-01-31","2007-11-11","2007-12-05","2008-01-06","2008-01-24"],[true,true,true,false,true,true],[99,1,2,48,5,6],[69,20,21,80,22,23],[true,true,true,true,true,true],["f01251e5-96a3-448d-981e-0f99d789110d","45e8f437-670d-4409-93cb-f9424a40d6ee","9bbbfb2c-efbb-4217-9ab7-f97689328841","59747955-87b8-443f-8ed4-f8ad3afdf3a9","ec84ae09-f9b8-4a15-b4a9-6ccbab919b08","e39056f1-9cd5-478d-8945-14aca7fbdcdd"],["2014-06-30T07:00:00Z","2014-06-30T07:00:00Z","2014-06-30T07:00:00Z","2014-06-30T07:00:00Z","2014-06-30T07:00:00Z","2014-06-30T07:00:00Z"],["/","/1/","/1/1/","/1/1/1/","/1/1/2/","/1/1/3/"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>businessentityid<\/th>\n      <th>nationalidnumber<\/th>\n      <th>loginid<\/th>\n      <th>jobtitle<\/th>\n      <th>birthdate<\/th>\n      <th>maritalstatus<\/th>\n      <th>gender<\/th>\n      <th>hiredate<\/th>\n      <th>salariedflag<\/th>\n      <th>vacationhours<\/th>\n      <th>sickleavehours<\/th>\n      <th>currentflag<\/th>\n      <th>rowguid<\/th>\n      <th>modifieddate<\/th>\n      <th>organizationnode<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,10,11]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="the-summary-function-in-base" class="section level3">
+<h3><span class="header-section-number">8.4.3</span> The <code>summary</code> function in <code>base</code></h3>
+<p>The <code>base</code> package’s <code>summary</code> function provides basic statistics that serve a unique diagnostic purpose in this context. For example, the following output shows that:</p>
+<pre><code>* `businessentityid` is a number from 1 to 16,049. In a previous section, we ran the `str` function and saw that there are 16,044 observations in this table. Therefore, the `businessentityid` seems to be sequential from 1:16049, but there are 5 values missing from that sequence. _Exercise for the Reader_: Which 5 values from 1:16049 are missing from `businessentityid` values in the `employee` table? (_Hint_: In the chapter on SQL Joins, you will learn the functions needed to answer this question.)
+* The number of NA&#39;s in the `return_date` column is a good first guess as to the number of DVDs rented out or lost as of 2005-09-02 02:35:22.</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(employee_tibble)</code></pre>
+<pre><code>##  businessentityid nationalidnumber     loginid            jobtitle        
+##  Min.   :  1.00   Length:290         Length:290         Length:290        
+##  1st Qu.: 73.25   Class :character   Class :character   Class :character  
+##  Median :145.50   Mode  :character   Mode  :character   Mode  :character  
+##  Mean   :145.50                                                           
+##  3rd Qu.:217.75                                                           
+##  Max.   :290.00                                                           
+##    birthdate          maritalstatus         gender         
+##  Min.   :1951-10-17   Length:290         Length:290        
+##  1st Qu.:1973-09-21   Class :character   Class :character  
+##  Median :1978-10-19   Mode  :character   Mode  :character  
+##  Mean   :1978-07-04                                        
+##  3rd Qu.:1986-05-27                                        
+##  Max.   :1991-05-31                                        
+##     hiredate          salariedflag    vacationhours   sickleavehours 
+##  Min.   :2006-06-30   Mode :logical   Min.   : 0.00   Min.   :20.00  
+##  1st Qu.:2008-12-26   FALSE:238       1st Qu.:26.25   1st Qu.:33.00  
+##  Median :2009-02-02   TRUE :52        Median :51.00   Median :46.00  
+##  Mean   :2009-05-19                   Mean   :50.61   Mean   :45.31  
+##  3rd Qu.:2009-10-09                   3rd Qu.:75.00   3rd Qu.:58.00  
+##  Max.   :2013-05-30                   Max.   :99.00   Max.   :80.00  
+##  currentflag      rowguid           modifieddate                
+##  Mode:logical   Length:290         Min.   :2014-06-30 00:00:00  
+##  TRUE:290       Class :character   1st Qu.:2014-06-30 00:00:00  
+##                 Mode  :character   Median :2014-06-30 00:00:00  
+##                                    Mean   :2014-07-01 20:32:52  
+##                                    3rd Qu.:2014-06-30 00:00:00  
+##                                    Max.   :2014-12-26 09:17:08  
+##  organizationnode  
+##  Length:290        
+##  Class :character  
+##  Mode  :character  
+##                    
+##                    
+## </code></pre>
+<p>So the <code>summary</code> function is surprisingly useful as we first start to look at the table contents.</p>
+</div>
+<div id="the-glimpse-function-in-the-tibble-package" class="section level3">
+<h3><span class="header-section-number">8.4.4</span> The <code>glimpse</code> function in the <code>tibble</code> package</h3>
+<p>The <code>tibble</code> package’s <code>glimpse</code> function is a more compact version of <code>str</code>:</p>
+<pre class="sourceCode r"><code class="sourceCode r">tibble<span class="op">::</span><span class="kw">glimpse</span>(employee_tibble)</code></pre>
+<pre><code>## Observations: 290
+## Variables: 15
+## $ businessentityid &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, …
+## $ nationalidnumber &lt;chr&gt; &quot;295847284&quot;, &quot;245797967&quot;, &quot;509647174&quot;, &quot;1124578…
+## $ loginid          &lt;chr&gt; &quot;adventure-works\\ken0&quot;, &quot;adventure-works\\terr…
+## $ jobtitle         &lt;chr&gt; &quot;Chief Executive Officer&quot;, &quot;Vice President of E…
+## $ birthdate        &lt;date&gt; 1969-01-29, 1971-08-01, 1974-11-12, 1974-12-23…
+## $ maritalstatus    &lt;chr&gt; &quot;S&quot;, &quot;S&quot;, &quot;M&quot;, &quot;S&quot;, &quot;M&quot;, &quot;M&quot;, &quot;M&quot;, &quot;S&quot;, &quot;M&quot;, &quot;M…
+## $ gender           &lt;chr&gt; &quot;M&quot;, &quot;F&quot;, &quot;M&quot;, &quot;M&quot;, &quot;F&quot;, &quot;M&quot;, &quot;M&quot;, &quot;F&quot;, &quot;F&quot;, &quot;M…
+## $ hiredate         &lt;date&gt; 2009-01-14, 2008-01-31, 2007-11-11, 2007-12-05…
+## $ salariedflag     &lt;lgl&gt; TRUE, TRUE, TRUE, FALSE, TRUE, TRUE, TRUE, TRUE…
+## $ vacationhours    &lt;int&gt; 99, 1, 2, 48, 5, 6, 61, 62, 63, 16, 7, 9, 8, 3,…
+## $ sickleavehours   &lt;int&gt; 69, 20, 21, 80, 22, 23, 50, 51, 51, 64, 23, 24,…
+## $ currentflag      &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE,…
+## $ rowguid          &lt;chr&gt; &quot;f01251e5-96a3-448d-981e-0f99d789110d&quot;, &quot;45e8f4…
+## $ modifieddate     &lt;dttm&gt; 2014-06-30, 2014-06-30, 2014-06-30, 2014-06-30…
+## $ organizationnode &lt;chr&gt; &quot;/&quot;, &quot;/1/&quot;, &quot;/1/1/&quot;, &quot;/1/1/1/&quot;, &quot;/1/1/2/&quot;, &quot;/1/…</code></pre>
+</div>
+<div id="the-skim-function-in-the-skimr-package" class="section level3">
+<h3><span class="header-section-number">8.4.5</span> The <code>skim</code> function in the <code>skimr</code> package</h3>
+<p>The <code>skimr</code> package has several functions that make it easy to examine an unknown data frame and assess what it contains. It is also extensible.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(skimr)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;skimr&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:knitr&#39;:
+## 
+##     kable</code></pre>
+<pre><code>## The following object is masked from &#39;package:stats&#39;:
+## 
+##     filter</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># skimr::skim(employee_tibble)</span>
+
+<span class="co"># skimr::skim_to_wide(employee_tibble) #skimr doesn&#39;t like certain kinds of columns</span></code></pre>
+</div>
+<div id="close-the-connection-and-shut-down-adventureworks" class="section level3">
+<h3><span class="header-section-number">8.4.6</span> Close the connection and shut down adventureworks</h3>
+<p>Where you place the <code>collect</code> function matters.</p>
+<pre class="sourceCode r"><code class="sourceCode r">DBI<span class="op">::</span><span class="kw">dbDisconnect</span>(con)
+sqlpetr<span class="op">::</span><span class="kw">sp_docker_stop</span>(<span class="st">&quot;adventureworks&quot;</span>)</code></pre>
+</div>
+</div>
+<div id="additional-reading" class="section level2">
+<h2><span class="header-section-number">8.5</span> Additional reading</h2>
+<ul>
+<li><span class="citation">(Wickham <a href="#ref-Wickham2018">2018</a>)</span></li>
+<li><span class="citation">(Baumer <a href="#ref-Baumer2018">2018</a>)</span></li>
+</ul>
+
+</div>
+</div>
+
+
+
+</div>
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-Baumer2018">
+<p>Baumer, Benjamin S. 2018. “A Grammar for Reproducible and Painless Extract-Transform-Load Operations on Medium Data.” <em>Journal of Computational and Graphical Statistics</em>, August. Informa UK Limited, 1–9. <a href="https://doi.org/10.1080/10618600.2018.1512867">https://doi.org/10.1080/10618600.2018.1512867</a>.</p>
+</div>
+<div id="ref-Ruiz2019">
+<p>Ruiz, Edgar. 2019. “Big Data with R: RStudio 2019 Workshop.” RStudio. January 16, 2019. <a href="https://github.com/rstudio/bigdataclass">https://github.com/rstudio/bigdataclass</a>.</p>
+</div>
+<div id="ref-Wickham2018">
+<p>Wickham, Hadley. 2018. “A Grammar of Data Manipulation * Dplyr.” <a href=""></a>. <a href="https://dplyr.tidyverse.org/">https://dplyr.tidyverse.org/</a>.</p>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="chapter-dbms-login-credentials.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="chapter-appendix-postresql-authentication.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/smithjd/sql-pet/edit/master/080-elementary-queries.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

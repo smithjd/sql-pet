@@ -20,17 +20,19 @@ require(knitr)
 library(bookdown)
 library(sqlpetr)
 ```
-Assume that the Docker container with PostgreSQL and the dvdrental database are ready to go. If not go back to [Chapter 7][Build the pet-sql Docker Image]
-```{r check on sql-pet}
-sqlpetr::sp_docker_start("sql-pet")
+Assume that the Docker container with PostgreSQL and the adventureworks database are ready to go. If not go back to [Chapter 6][#chapter_setup-adventureworks-db]
+```{r check on adventureworks}
+sqlpetr::sp_docker_start("adventureworks")
 ```
 Connect to the database:
 ```{r connect to postgresql}
 con <- sqlpetr::sp_get_postgres_connection(
   user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
   password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
-  dbname = "dvdrental",
-  seconds_to_test = 30, connection_tab = TRUE
+  dbname = "adventureworks",
+  port = 5432, 
+  seconds_to_test = 20, 
+  connection_tab = TRUE
 )
 ```
 
@@ -40,24 +42,38 @@ As we show later on, the database serves as a store of data and as an engine for
 
 ### Finding out what's there
 
-We've already seen the simplest way of getting a list of tables in a database with `DBI` functions that list tables and fields.  Generate a vector listing the (public) tables in the database:
+We've already seen how the connections tab is the easiest way to explore a database.  
+
+![Adventureworks connections tab](screenshots/adventureworks-connections-tab.png)
+
+It's a little more complex than the `cattle` example because we have additional structure: the `adventureworks` [database contains schemas](https://en.wikipedia.org/wiki/Database_schema), which contain tables.  The `hr` schema is the same as the `humanresources` schema, but with nicknames (the `d` table in `hr` is the same as the `department` table in the `humanresources` schema).  Schemas are used to control access and to set up shortcuts.  Clicking on the the right opens up the table view of the `d` table:
+
+![Adventureworks connections tab](screenshots/adventureworks-hr-dept-table.png)
+
+Exploring a databse using R code is a littlel more complicated.  The following command does not give you a list of tables as it did in the simpler case when there were no schemas other than the `public` schema:
 ```{r}
 tables <- DBI::dbListTables(con)
 tables
 ```
-Print a vector with all the fields (or columns or variables) in one specific table:
+
+We need to to tell the database which schemas to search
 ```{r}
-DBI::dbListFields(con, "film")
+dbExecute(con, "set search_path to hr, humanresources;")
+DBI::dbListTables(con)
+```
+Notice the way the database designers have abbreviated table names for your convenience.  Once 
+```{r}
+DBI::dbListFields(con, "d")
 ```
 
 ### Listing all the fields for all the tables
 
-The first example, `DBI::dbListTables(con)` returned 22 tables and the second example, `DBI::dbListFields(con, "film")` returns 7 fields.  Here we combine the two calls to return a list of tables which has a list of all the fields in the table.  The code block just shows the first two tables.
+The first example, `DBI::dbListTables(con)` returned 22 tables and the second example, `DBI::dbListFields(con, "employee")` returns 7 fields.  Here we combine the two calls to return a list of tables which has a list of all the fields in the table.  The code block just shows the first two tables.
 
 ```{r combine table and column data - purr}
 table_columns <- purrr::map(tables, ~ dbListFields(.,conn = con) )
 ```
-Rename each list [[1]] ... [[22]] to meaningful table name
+Rename each list [[1]] ... [[43]] to meaningful table name
 ```{r combine table and column data}
 
 names(table_columns) <- tables
@@ -77,8 +93,8 @@ There are many different methods of getting data from a DBMS, and we'll explore 
 
 `DBI::dbReadTable` will download an entire table into an R [tibble](https://tibble.tidyverse.org/).  
 ```{r}
-film_tibble <- DBI::dbReadTable(con, "film")
-str(film_tibble)
+employee_tibble <- DBI::dbReadTable(con, "employee")
+str(employee_tibble)
 ```
 That's very simple, but if the table is large it may not be a good idea, since R is designed to keep the entire table in memory.  Note that the first line of the str() output reports the total number of observations.  
 
@@ -87,8 +103,8 @@ That's very simple, but if the table is large it may not be a good idea, since R
 The `dplyr::tbl` function gives us more control over access to a table by enabling  control over which columns and rows to download.  It creates  an object that might **look** like a data frame, but it's actually a list object that `dplyr` uses for constructing queries and retrieving data from the DBMS.  
 
 ```{r}
-film_table <- dplyr::tbl(con, "film")
-class(film_table)
+employee_table <- dplyr::tbl(con, "employee")
+class(employee_table)
 ```
 
 
@@ -96,9 +112,9 @@ class(film_table)
 
 The `collect` function triggers the creation of a tibble and controls the number of rows that the DBMS sends to R.  For more complex queries, the `dplyr::collect()` function provides a mechanism to indicate what's processed on on the dbms server and what's processed by R on the local machine. The chapter on [Lazy Evaluation and Execution Environment](#chapter_lazy-evaluation-and-timing) discusses this issue in detail.
 ```{r}
-film_table %>% dplyr::collect(n = 3) %>% dim
+employee_table %>% dplyr::collect(n = 3) %>% dim
 
-film_table %>% dplyr::collect(n = 500) %>% dim
+employee_table %>% dplyr::collect(n = 500) %>% dim
 ```
 
 ### Random rows from the dbms
@@ -108,8 +124,8 @@ When the dbms contains many rows, a sample of the data may be plenty for your pu
 ```{r}
 one_percent_sample <- DBI::dbGetQuery(
   con,
-  "SELECT film_id, title, rating
-  FROM film TABLESAMPLE BERNOULLI(1) LIMIT 20;
+  "SELECT businessentityid, jobtitle, birthdate
+  FROM employee TABLESAMPLE BERNOULLI(3) LIMIT 20;
   "
 )
 
@@ -117,31 +133,31 @@ one_percent_sample
 ```
 **Exact sample of 100 records**
 
-This technique depends on knowing the range of a record index, such as the `film_id` in the `film` table of our `dvdrental` database.
+This technique depends on knowing the range of a record index, such as the `businessentityid` in the `employee` table of our `adventureworks` database.
 
 Start by finding the min and max values.
 ```{r}
-DBI::dbListFields(con, "film")
-film_df <- DBI::dbReadTable(con, "film")
+DBI::dbListFields(con, "employee")
+employee_df <- DBI::dbReadTable(con, "employee")
 
-max(film_df$film_id)
-min(film_df$film_id)
+max(employee_df$businessentityid)
+min(employee_df$businessentityid)
 ```
 
 Set the random number seed and draw the sample.
 ```{r}
 set.seed(123)
-sample_rows <- sample(1:1000, 100)
-film_table <- dplyr::tbl(con, "film")
+sample_rows <- sample(1:max(employee_df$businessentityid), 10)
+employee_table <- dplyr::tbl(con, "employee")
 ```
 
 Run query with the filter verb listing the randomly sampled rows to be retrieved:
 ```{r}
-film_sample <- film_table %>% 
-  dplyr::filter(film_id %in% sample_rows) %>% 
+employee_sample <- employee_table %>% 
+  dplyr::filter(businessentityid %in% sample_rows) %>% 
   dplyr::collect()
 
-str(film_sample)
+str(employee_sample)
 
 ```
 
@@ -150,15 +166,15 @@ str(film_sample)
 
 A table in the dbms may not only have many more rows than you want, but also many more columns.  The `select` command controls which columns are retrieved.
 ```{r}
-film_table %>% dplyr::select(title, rating) %>% head()
+employee_table %>% dplyr::select(businessentityid, jobtitle, birthdate) %>% head()
 
 ```
 That's exactly equivalent to submitting the following SQL commands dirctly:
 ```{r}
 DBI::dbGetQuery(
   con,
-  'SELECT "title", "rating"
-FROM "film"
+  'SELECT "businessentityid", "jobtitle", "birthdate"
+FROM "employee"
 LIMIT 6') 
 ```
 
@@ -168,15 +184,13 @@ We won't discuss `dplyr` methods for sub-setting variables, deriving new ones, o
   * Comprehensive reference: [https://dplyr.tidyverse.org/](https://dplyr.tidyverse.org/)
   * Good tutorial: [https://suzan.rbind.io/tags/dplyr/](https://suzan.rbind.io/tags/dplyr/) 
 
-In practice we find that, **renaming variables** is often quite important because the names in an SQL database might not meet your needs as an analyst.  In "the wild", you will find names that are ambiguous or overly specified, with spaces in them, and other problems that will make them difficult to use in R.  It is good practice to do whatever renaming you are going to do in a predictable place like at the top of your code.  The names in the `dvdrental` database are simple and clear, but if they were not, you might rename them for subsequent use in this way:
+In practice we find that, **renaming variables** is often quite important because the names in an SQL database might not meet your needs as an analyst.  In "the wild", you will find names that are ambiguous or overly specified, with spaces in them, and other problems that will make them difficult to use in R.  It is good practice to do whatever renaming you are going to do in a predictable place like at the top of your code.  The names in the `adventureworks` database are simple and clear, but if they were not, you might rename them for subsequent use in this way:
 
 ```{r}
-tbl(con, "film") %>%
-  ## CHANGE STUFF
-  dplyr::rename(film_id_number = film_id, 
-                language_id_number = language_id) %>% 
-  dplyr::select(film_id_number, title, 
-                language_id_number) %>%
+tbl(con, "employee") %>%
+  dplyr::rename(businessentity_id_number = businessentityid, 
+                employee_job_title = jobtitle) %>% 
+  dplyr::select(businessentity_id_number, employee_job_title, birthdate) %>%
   # head()
 show_query()
 ```
@@ -184,12 +198,8 @@ That's equivalent to the following SQL code:
 ```{r}
 DBI::dbGetQuery(
   con,
-  'SELECT "film_id_number", "title", "language_id_number"
-FROM (SELECT "film_id" AS "film_id_number", "title", "description",
-  "release_year", "language_id" AS "language_id_number", 
-  "rental_duration", "rental_rate", "length", "replacement_cost", 
-  "rating", "last_update", "special_features", "fulltext"
-FROM "film") "yhbysdoypk"
+  'SELECT "businessentityid" AS "businessentity_id_number", "jobtitle" AS "employee_job_title", "birthdate"
+FROM "employee" 
 LIMIT 6' )
 ```
 The one difference is that the `SQL` code returns a regular data frame and the `dplyr` code returns a `tibble`.  Notice that the seconds are greyed out in the `tibble` display.
@@ -198,7 +208,7 @@ The one difference is that the `SQL` code returns a regular data frame and the `
 
 Where did the translations we've shown above come from?  The `show_query` function shows how `dplyr` is translating your query to the dialect of the target dbms:
 ```{r}
-film_table %>%
+employee_table %>%
   dplyr::tally() %>%
   dplyr::show_query()
 ```
@@ -211,7 +221,7 @@ If you prefer to use SQL directly, rather than `dplyr`, you can submit SQL code 
 DBI::dbGetQuery(
   con,
   'SELECT COUNT(*) AS "n"
-     FROM "film"   '
+     FROM "employee"   '
 )
 ```
 
@@ -221,7 +231,7 @@ When you create a report to run repeatedly, you might want to put that query int
 
 ```{sql, connection=con, output.var = "query_results"}
 SELECT COUNT(*) AS "n"
-     FROM "film";
+     FROM "employee";
 ```
 Rmarkdown stores that query result in a tibble which can be printed by referring to it:
 ```{r}
@@ -233,8 +243,8 @@ query_results
 When dplyr finds code that it does not know how to translate into SQL, it will simply pass it along to the dbms. Therefore you can interleave native commands that your dbms will understand in the middle of dplyr code.  Consider this example that's derived from [@Ruiz2019]:
 
 ```{r}
-film_table %>%
-  dplyr::select_at(vars( -contains("_id"))) %>% 
+employee_table %>%
+  dplyr::select_at(vars(jobtitle, contains("hours"))) %>% 
   dplyr::mutate(today = now()) %>%
   dplyr::show_query()
 ```
@@ -242,8 +252,8 @@ That is native to PostgreSQL, not [ANSI standard](https://en.wikipedia.org/wiki/
 
 Verify that it works:
 ```{r}
-film_table %>%
-  dplyr::select_at(vars( -contains("_id"))) %>% 
+employee_table %>%
+  dplyr::select_at(vars(jobtitle, contains("hours"))) %>% 
   head() %>% 
   dplyr::mutate(today = now()) %>%
   dplyr::collect()
@@ -264,25 +274,25 @@ Dealing with a large, complex database highlights the utility of specific tools 
 
 `str` is a workhorse function that lists variables, their type and a sample of the first few variable values.
 ```{r}
-str(film_tibble)
+str(employee_tibble)
 ```
 
 ### Always **look** at your data with `head`, `View`, or `kable`
 
 There is no substitute for looking at your data and R provides several ways to just browse it.  The `head` function controls the number of rows that are displayed.  Note that tail does not work against a database object.  In every-day practice you would look at more than the default 6 rows, but here we wrap `head` around the data frame: 
 ```{r}
-sqlpetr::sp_print_df(head(film_tibble))
+sqlpetr::sp_print_df(head(employee_tibble))
 ```
 
 ### The `summary` function in `base`
 
 The `base` package's `summary` function provides basic statistics that serve a unique diagnostic purpose in this context. For example, the following output shows that:
 
-    * `film_id` is a number from 1 to 16,049. In a previous section, we ran the `str` function and saw that there are 16,044 observations in this table. Therefore, the `film_id` seems to be sequential from 1:16049, but there are 5 values missing from that sequence. _Exercise for the Reader_: Which 5 values from 1:16049 are missing from `film_id` values in the `film` table? (_Hint_: In the chapter on SQL Joins, you will learn the functions needed to answer this question.)
+    * `businessentityid` is a number from 1 to 16,049. In a previous section, we ran the `str` function and saw that there are 16,044 observations in this table. Therefore, the `businessentityid` seems to be sequential from 1:16049, but there are 5 values missing from that sequence. _Exercise for the Reader_: Which 5 values from 1:16049 are missing from `businessentityid` values in the `employee` table? (_Hint_: In the chapter on SQL Joins, you will learn the functions needed to answer this question.)
     * The number of NA's in the `return_date` column is a good first guess as to the number of DVDs rented out or lost as of 2005-09-02 02:35:22.
 
 ```{r}
-summary(film_tibble)
+summary(employee_tibble)
 ```
 
 So the `summary` function is surprisingly useful as we first start to look at the table contents.
@@ -291,7 +301,7 @@ So the `summary` function is surprisingly useful as we first start to look at th
 
 The `tibble` package's `glimpse` function is a more compact version of `str`:
 ```{r}
-tibble::glimpse(film_tibble)
+tibble::glimpse(employee_tibble)
 ```
 ### The `skim` function in the `skimr` package
 
@@ -299,18 +309,18 @@ The `skimr` package has several functions that make it easy to examine an unknow
 ```{r}
 library(skimr)
 
-skimr::skim(film_tibble)
+# skimr::skim(employee_tibble)
 
-skimr::skim_to_wide(film_tibble[,1:7]) #skimr doesn't like certain kinds of columns
+# skimr::skim_to_wide(employee_tibble) #skimr doesn't like certain kinds of columns
 
 ```
 
-### Close the connection and shut down sql-pet
+### Close the connection and shut down adventureworks
 
 Where you place the `collect` function matters.
 ```{r}
 DBI::dbDisconnect(con)
-sqlpetr::sp_docker_stop("sql-pet")
+sqlpetr::sp_docker_stop("adventureworks")
 ```
 
 ## Additional reading
