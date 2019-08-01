@@ -10,7 +10,8 @@
 ## Setup
 
 The following packages are used in this chapter:
-```{r chapter package list, echo=TRUE, message=FALSE, warning=FALSE}
+
+```r
 library(tidyverse)
 library(DBI)
 library(RPostgres)
@@ -20,11 +21,13 @@ library(bookdown)
 library(sqlpetr)
 ```
 If you have not yet set up the Docker container with PostgreSQL and the dvdrental database, go back to [those instructions][Build the pet-sql Docker Image] to configure your environment. Otherwise, start your `adventureworks` container:
-```{r check on adventureworks}
+
+```r
 sqlpetr::sp_docker_start("adventureworks")
 ```
 Connect to the database:
-```{r connect to postgresql}
+
+```r
 con <- sqlpetr::sp_get_postgres_connection(
   user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
   password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
@@ -37,7 +40,7 @@ con <- sqlpetr::sp_get_postgres_connection(
 
 ## R is lazy and comes with guardrails
 
-By design, R is both a language and an interactive development environment (IDE).  As a language, R tries to be as efficient as possible.  As an IDE, R creates some guardrails to make it easy and safe to work with your data. For example `getOption("max.print")` prevents R from printing more rows of data than you want to handle in an interactive session, with a default of `r getOption("max.print")` lines, which may or may not suit you.
+By design, R is both a language and an interactive development environment (IDE).  As a language, R tries to be as efficient as possible.  As an IDE, R creates some guardrails to make it easy and safe to work with your data. For example `getOption("max.print")` prevents R from printing more rows of data than you want to handle in an interactive session, with a default of 99999 lines, which may or may not suit you.
 
 On the other hand SQL is a *"Structured Query Language (SQL): a standard computer language for relational database management and data manipulation."* ^[https://www.techopedia.com/definition/1245/structured-query-language-sql]. SQL has various database-specific Interactive Development Environments (IDEs), such as [pgAdmin](https://www.pgadmin.org/) for PostgreSQL.  Roger Peng explains in [R Programming for Data Science](https://bookdown.org/rdpeng/rprogdatascience/history-and-overview-of-r.html#basic-features-of-r) that:
 
@@ -76,7 +79,8 @@ When does a lazy query trigger data retrieval?  It depends on a lot of factors, 
 ### Create a black box query for experimentation
 
 Define the three tables discussed in the previous chapter to build a _black box_ query:
-```{r}
+
+```r
 sales_person_table <- tbl(con, in_schema("sales", "salesperson")) %>% 
   select(-rowguid) %>% 
   rename(sale_info_updated = modifieddate)
@@ -86,24 +90,38 @@ employee_table <- tbl(con, in_schema("humanresources", "employee")) %>%
 
 person_table <- tbl(con, in_schema("person", "person")) %>% 
   select(-modifieddate, -rowguid)
-
-
 ```
 
 
 Here is a typical string of `dplyr` verbs strung together with the magrittr `%>%` pipe command that will be used to tease out the several different behaviors that a lazy query has when passed to different R functions.  This query joins three connection objects into a query we'll call `Q`:
 
-```{r}
 
+```r
 Q <- sales_person_table %>%
   dplyr::left_join(employee_table, by = c("businessentityid" = "businessentityid")) %>%
   dplyr::left_join(person_table , by = c("businessentityid" = "businessentityid")) %>% 
   dplyr::select(firstname, lastname, salesytd, birthdate) 
 ```
 The `str` function gives us a hint at how R is collecting information that can be used to construct and execute a query later on:
-```{r}
-str(Q, max.level = 2)
 
+```r
+str(Q, max.level = 2)
+```
+
+```
+## List of 2
+##  $ src:List of 2
+##   ..$ con  :Formal class 'PqConnection' [package "RPostgres"] with 3 slots
+##   ..$ disco: NULL
+##   ..- attr(*, "class")= chr [1:4] "src_PqConnection" "src_dbi" "src_sql" "src"
+##  $ ops:List of 4
+##   ..$ name: chr "select"
+##   ..$ x   :List of 4
+##   .. ..- attr(*, "class")= chr [1:3] "op_join" "op_double" "op"
+##   ..$ dots: list()
+##   ..$ args:List of 1
+##   ..- attr(*, "class")= chr [1:3] "op_select" "op_single" "op"
+##  - attr(*, "class")= chr [1:5] "tbl_PqConnection" "tbl_dbi" "tbl_sql" "tbl_lazy" ...
 ```
 
 ### Experiment overview
@@ -138,8 +156,27 @@ The next chapter will discuss how to build queries and how to explore intermedia
 
 Remember that `Q %>% print()` is equivalent to `print(Q)` and the same as just entering `Q` on the command line.  We use the magrittr pipe operator here, because chaining functions highlights how the same object behaves differently in each use.
 
-```{r}
+
+```r
 Q %>% print()
+```
+
+```
+## # Source:   lazy query [?? x 4]
+## # Database: postgres [postgres@localhost:5432/adventureworks]
+##    firstname lastname     salesytd birthdate 
+##    <chr>     <chr>           <dbl> <date>    
+##  1 Stephen   Jiang         559698. 1951-10-17
+##  2 Michael   Blythe       3763178. 1968-12-25
+##  3 Linda     Mitchell     4251369. 1980-02-27
+##  4 Jillian   Carson       3189418. 1962-08-29
+##  5 Garrett   Vargas       1453719. 1975-02-04
+##  6 Tsvi      Reiter       2315186. 1974-01-18
+##  7 Pamela    Ansman-Wolfe 1352577. 1974-12-06
+##  8 Shu       Ito          2458536. 1968-03-09
+##  9 José      Saraiva      2604541. 1963-12-11
+## 10 David     Campbell     1573013. 1974-02-11
+## # … with more rows
 ```
 ![](screenshots/green-check.png) R retrieves 10 observations and 3 columns.  In its role as IDE, R has provided nicely formatted output that is similar to what it prints for a tibble, with descriptive information about the dataset and each column:
 
@@ -154,21 +191,60 @@ R has not determined how many rows are left to retrieve as it shows with `[?? x 
 ### Q %>% dplyr::as_tibble() {#lazy_q_as-tibble}
 
 ![](screenshots/green-check.png) ![](screenshots/green-check.png) In contrast to `print()`, the `as_tibble()` function causes R to download the whole table, using tibble's default of displaying only the first 10 rows.
-```{r}
+
+```r
 Q %>% dplyr::as_tibble()
+```
+
+```
+## # A tibble: 17 x 4
+##    firstname lastname          salesytd birthdate 
+##    <chr>     <chr>                <dbl> <date>    
+##  1 Stephen   Jiang              559698. 1951-10-17
+##  2 Michael   Blythe            3763178. 1968-12-25
+##  3 Linda     Mitchell          4251369. 1980-02-27
+##  4 Jillian   Carson            3189418. 1962-08-29
+##  5 Garrett   Vargas            1453719. 1975-02-04
+##  6 Tsvi      Reiter            2315186. 1974-01-18
+##  7 Pamela    Ansman-Wolfe      1352577. 1974-12-06
+##  8 Shu       Ito               2458536. 1968-03-09
+##  9 José      Saraiva           2604541. 1963-12-11
+## 10 David     Campbell          1573013. 1974-02-11
+## 11 Tete      Mensa-Annan       1576562. 1978-01-05
+## 12 Syed      Abbas              172524. 1975-01-11
+## 13 Lynn      Tsoflias          1421811. 1977-02-14
+## 14 Amy       Alberts            519906. 1957-09-20
+## 15 Rachel    Valdez            1827067. 1975-07-09
+## 16 Jae       Pak               4116871. 1968-03-17
+## 17 Ranjit    Varkey Chudukatil 3121616. 1975-09-30
 ```
 
 ### Q %>% head() {#lazy_q_head}
 
 ![](screenshots/green-check.png) The `head()` function is very similar to print but has a different "`max.print`" value.
-```{r}
+
+```r
 Q %>% head()
+```
+
+```
+## # Source:   lazy query [?? x 4]
+## # Database: postgres [postgres@localhost:5432/adventureworks]
+##   firstname lastname salesytd birthdate 
+##   <chr>     <chr>       <dbl> <date>    
+## 1 Stephen   Jiang     559698. 1951-10-17
+## 2 Michael   Blythe   3763178. 1968-12-25
+## 3 Linda     Mitchell 4251369. 1980-02-27
+## 4 Jillian   Carson   3189418. 1962-08-29
+## 5 Garrett   Vargas   1453719. 1975-02-04
+## 6 Tsvi      Reiter   2315186. 1974-01-18
 ```
 
 ### Q %>% tail() {#lazy_q_tail}
 
 ![](screenshots/red-x.png) Produces an error, because `Q` does not hold all of the data, so it is not possible to list the last few items from the table:
-```{r}
+
+```r
 try(
   Q %>% tail(),
   silent = FALSE,
@@ -176,41 +252,127 @@ try(
 )
 ```
 
+```
+## Error : tail() is not supported by sql sources
+```
+
 ### Q %>% length() {#lazy_q_length}
 
 ![](screenshots/red-x.png) Because the `Q` object is relatively complex, using `str()` on it prints many lines.  You can glimpse what's going on with `length()`:
-```{r}
+
+```r
 Q %>% length()
+```
+
+```
+## [1] 2
 ```
 
 ### Q %>% str() {#lazy_q_str}
 
 ![](screenshots/red-x.png) Looking inside shows some of what's going on (three levels deep):
-```{r}
+
+```r
 Q %>% str(max.level = 3) 
+```
+
+```
+## List of 2
+##  $ src:List of 2
+##   ..$ con  :Formal class 'PqConnection' [package "RPostgres"] with 3 slots
+##   ..$ disco: NULL
+##   ..- attr(*, "class")= chr [1:4] "src_PqConnection" "src_dbi" "src_sql" "src"
+##  $ ops:List of 4
+##   ..$ name: chr "select"
+##   ..$ x   :List of 4
+##   .. ..$ name: chr "join"
+##   .. ..$ x   :List of 2
+##   .. .. ..- attr(*, "class")= chr [1:5] "tbl_PqConnection" "tbl_dbi" "tbl_sql" "tbl_lazy" ...
+##   .. ..$ y   :List of 2
+##   .. .. ..- attr(*, "class")= chr [1:5] "tbl_PqConnection" "tbl_dbi" "tbl_sql" "tbl_lazy" ...
+##   .. ..$ args:List of 4
+##   .. ..- attr(*, "class")= chr [1:3] "op_join" "op_double" "op"
+##   ..$ dots: list()
+##   ..$ args:List of 1
+##   .. ..$ vars:List of 4
+##   ..- attr(*, "class")= chr [1:3] "op_select" "op_single" "op"
+##  - attr(*, "class")= chr [1:5] "tbl_PqConnection" "tbl_dbi" "tbl_sql" "tbl_lazy" ...
 ```
 
 ### Q %>% nrow() {#lazy_q_nrow}
 
 ![](screenshots/red-x.png) Notice the difference between `nrow()` and `tally()`. The `nrow` functions returns `NA` and does not execute a query:
-```{r}
+
+```r
 Q %>% nrow()
+```
+
+```
+## [1] NA
 ```
 
 ### Q %>% dplyr::tally() {#lazy_q_tally}
 
 ![](screenshots/green-check.png) The `tally` function actually counts all the rows.
-```{r}
+
+```r
 Q %>% dplyr::tally()
+```
+
+```
+## # Source:   lazy query [?? x 1]
+## # Database: postgres [postgres@localhost:5432/adventureworks]
+##   n      
+##   <int64>
+## 1 17
 ```
 The `nrow()` function knows that `Q` is a list.  On the other hand, the `tally()` function tells SQL to go count all the rows. Notice that `Q` results in 1,000 rows -- the same number of rows as `film`.
 
 ### Q %>% dplyr::collect(){#lazy_q_collect}
 
 ![](screenshots/green-check.png) The dplyr::[collect](https://dplyr.tidyverse.org/reference/compute.html) function triggers a call to the `DBI:dbFetch()` function behind the scenes, which forces R to download a specified number of rows:
-```{r}
+
+```r
 Q %>% dplyr::collect(n = 20)
+```
+
+```
+## # A tibble: 17 x 4
+##    firstname lastname          salesytd birthdate 
+##    <chr>     <chr>                <dbl> <date>    
+##  1 Stephen   Jiang              559698. 1951-10-17
+##  2 Michael   Blythe            3763178. 1968-12-25
+##  3 Linda     Mitchell          4251369. 1980-02-27
+##  4 Jillian   Carson            3189418. 1962-08-29
+##  5 Garrett   Vargas            1453719. 1975-02-04
+##  6 Tsvi      Reiter            2315186. 1974-01-18
+##  7 Pamela    Ansman-Wolfe      1352577. 1974-12-06
+##  8 Shu       Ito               2458536. 1968-03-09
+##  9 José      Saraiva           2604541. 1963-12-11
+## 10 David     Campbell          1573013. 1974-02-11
+## 11 Tete      Mensa-Annan       1576562. 1978-01-05
+## 12 Syed      Abbas              172524. 1975-01-11
+## 13 Lynn      Tsoflias          1421811. 1977-02-14
+## 14 Amy       Alberts            519906. 1957-09-20
+## 15 Rachel    Valdez            1827067. 1975-07-09
+## 16 Jae       Pak               4116871. 1968-03-17
+## 17 Ranjit    Varkey Chudukatil 3121616. 1975-09-30
+```
+
+```r
 Q %>% dplyr::collect(n = 20) %>% head()
+```
+
+```
+## # A tibble: 6 x 4
+##   firstname lastname salesytd birthdate 
+##   <chr>     <chr>       <dbl> <date>    
+## 1 Stephen   Jiang     559698. 1951-10-17
+## 2 Michael   Blythe   3763178. 1968-12-25
+## 3 Linda     Mitchell 4251369. 1980-02-27
+## 4 Jillian   Carson   3189418. 1962-08-29
+## 5 Garrett   Vargas   1453719. 1975-02-04
+## 6 Tsvi      Reiter   2315186. 1974-01-18
 ```
 The `dplyr::collect` function triggers the creation of a tibble and controls the number of rows that the DBMS sends to R.  Notice that `head` only prints 6 of the 20 rows that R has retrieved.
 
@@ -219,23 +381,42 @@ If you do not provide a value for the `n` argument, _all_ of the rows will be re
 ### Q %>% ggplot {#lazy_q_plot-categories}
 
 Passing the `Q` object to `ggplot` executes the query and plots the result.
-```{r}
 
+```r
 Q %>% ggplot2::ggplot(aes(birthdate, salesytd)) + geom_point() 
-
 ```
+
+<img src="090-lazy-evalutation-intro_files/figure-html/unnamed-chunk-13-1.png" width="672" />
 
 It's obvious that when creating our phony `dvdrental` datbase, phony films were assigned to a category pretty randomly.
 
 ### Q %>% dplyr::show_query() {#lazy_q_show-query}
 
-```{r}
-Q %>% dplyr::show_query()
 
+```r
+Q %>% dplyr::show_query()
+```
+
+```
+## <SQL>
+## SELECT "firstname", "lastname", "salesytd", "birthdate"
+## FROM (SELECT "LHS"."businessentityid" AS "businessentityid", "LHS"."territoryid" AS "territoryid", "LHS"."salesquota" AS "salesquota", "LHS"."bonus" AS "bonus", "LHS"."commissionpct" AS "commissionpct", "LHS"."salesytd" AS "salesytd", "LHS"."saleslastyear" AS "saleslastyear", "LHS"."sale_info_updated" AS "sale_info_updated", "LHS"."nationalidnumber" AS "nationalidnumber", "LHS"."loginid" AS "loginid", "LHS"."jobtitle" AS "jobtitle", "LHS"."birthdate" AS "birthdate", "LHS"."maritalstatus" AS "maritalstatus", "LHS"."gender" AS "gender", "LHS"."hiredate" AS "hiredate", "LHS"."salariedflag" AS "salariedflag", "LHS"."vacationhours" AS "vacationhours", "LHS"."sickleavehours" AS "sickleavehours", "LHS"."currentflag" AS "currentflag", "LHS"."organizationnode" AS "organizationnode", "RHS"."persontype" AS "persontype", "RHS"."namestyle" AS "namestyle", "RHS"."title" AS "title", "RHS"."firstname" AS "firstname", "RHS"."middlename" AS "middlename", "RHS"."lastname" AS "lastname", "RHS"."suffix" AS "suffix", "RHS"."emailpromotion" AS "emailpromotion", "RHS"."additionalcontactinfo" AS "additionalcontactinfo", "RHS"."demographics" AS "demographics"
+## FROM (SELECT "LHS"."businessentityid" AS "businessentityid", "LHS"."territoryid" AS "territoryid", "LHS"."salesquota" AS "salesquota", "LHS"."bonus" AS "bonus", "LHS"."commissionpct" AS "commissionpct", "LHS"."salesytd" AS "salesytd", "LHS"."saleslastyear" AS "saleslastyear", "LHS"."sale_info_updated" AS "sale_info_updated", "RHS"."nationalidnumber" AS "nationalidnumber", "RHS"."loginid" AS "loginid", "RHS"."jobtitle" AS "jobtitle", "RHS"."birthdate" AS "birthdate", "RHS"."maritalstatus" AS "maritalstatus", "RHS"."gender" AS "gender", "RHS"."hiredate" AS "hiredate", "RHS"."salariedflag" AS "salariedflag", "RHS"."vacationhours" AS "vacationhours", "RHS"."sickleavehours" AS "sickleavehours", "RHS"."currentflag" AS "currentflag", "RHS"."organizationnode" AS "organizationnode"
+## FROM (SELECT "businessentityid", "territoryid", "salesquota", "bonus", "commissionpct", "salesytd", "saleslastyear", "modifieddate" AS "sale_info_updated"
+## FROM sales.salesperson) "LHS"
+## LEFT JOIN (SELECT "businessentityid", "nationalidnumber", "loginid", "jobtitle", "birthdate", "maritalstatus", "gender", "hiredate", "salariedflag", "vacationhours", "sickleavehours", "currentflag", "organizationnode"
+## FROM humanresources.employee) "RHS"
+## ON ("LHS"."businessentityid" = "RHS"."businessentityid")
+## ) "LHS"
+## LEFT JOIN (SELECT "businessentityid", "persontype", "namestyle", "title", "firstname", "middlename", "lastname", "suffix", "emailpromotion", "additionalcontactinfo", "demographics"
+## FROM person.person) "RHS"
+## ON ("LHS"."businessentityid" = "RHS"."businessentityid")
+## ) "dbplyr_009"
 ```
 Hand-written SQL code to do the same job will probably look a lot nicer and could be more efficient, but functionally `dplyr` does the job.
 
-```{r disconnect and close down}
+
+```r
 DBI::dbDisconnect(con)
 sqlpetr::sp_docker_stop("adventureworks")
 ```

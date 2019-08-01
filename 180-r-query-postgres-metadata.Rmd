@@ -19,15 +19,17 @@ library(sqlpetr)
 
 Assume that the Docker container with PostgreSQL and the dvdrental database are ready to go. 
 ```{r}
-sp_docker_start("sql-pet")
+sp_docker_start("adventureworks")
 ```
 Connect to the database:
 ```{r}
-con <- sp_get_postgres_connection(
+con <- sqlpetr::sp_get_postgres_connection(
   user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
   password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
-  dbname = "dvdrental",
-  seconds_to_test = 30, connection_tab = TRUE
+  dbname = "adventureworks",
+  port = 5432, 
+  seconds_to_test = 20, 
+  connection_tab = TRUE
 )
 ```
 
@@ -47,12 +49,15 @@ The `information_schema` is a trove of information *about* the database.  Its fo
 For this chapter R needs the `dbplyr` package to access alternate schemas.  A [schema](http://www.postgresqltutorial.com/postgresql-server-and-database-objects/) is an object that contains one or more tables.  Most often there will be a default schema, but to access the metadata, you need to explicitly specify which schema contains the data you want.
 
 ### What tables are in the database?
-The simplest way to get a list of tables is with 
+The simplest way to get a list of tables is with ... *NO LONGER WORKS*:
 ```{r}
 
-table_list <- DBI::dbListTables(con)
+schema_list <- tbl(con, in_schema("information_schema", "schemata")) %>%
+  select(catalog_name, schema_name, schema_owner) %>%
+  collect()
 
-kable(table_list)
+
+kable(schema_list)
 ```
 ### Digging into the `information_schema`
 
@@ -67,7 +72,7 @@ The `information_schema` is large and complex and contains `r table_info_schema_
 This query retrieves a list of the tables in the database that includes additional detail, not just the name of the table.
 ```{r}
 table_info <- table_info_schema_table %>%
-  filter(table_schema == "public") %>%
+  # filter(table_schema == "public") %>%
   select(table_catalog, table_schema, table_name, table_type) %>%
   arrange(table_type, table_name) %>%
   collect()
@@ -95,7 +100,7 @@ kable(rs)
 
 Of course, the `DBI` package has a `dbListFields` function that provides the simplest way to get the minimum, a list of column names:
 ```{r}
-DBI::dbListFields(con, "rental")
+# DBI::dbListFields(con, "rental")
 ```
 
 But the `information_schema` has a lot more useful information that we can use.  
@@ -106,7 +111,7 @@ columns_info_schema_table <- tbl(con, dbplyr::in_schema("information_schema", "c
 Since the `information_schema` contains `r columns_info_schema_table %>% collect %>% dim %>% pluck(1)` columns, we are narrowing our focus to just one table.  This query retrieves more information about the `rental` table:
 ```{r}
 columns_info_schema_info <- columns_info_schema_table %>%
-  filter(table_schema == "public") %>%
+  # filter(table_schema == "public") %>%
   select(
     table_catalog, table_schema, table_name, column_name, data_type, ordinal_position,
     character_maximum_length, column_default, numeric_precision, numeric_precision_radix
@@ -117,7 +122,7 @@ columns_info_schema_info <- columns_info_schema_table %>%
     data_type == "real" ~ paste0(data_type, " (", numeric_precision, ",", numeric_precision_radix, ")"),
     TRUE ~ data_type
   )) %>%
-  filter(table_name == "rental") %>%
+  # filter(table_name == "rental") %>%
   select(-table_schema, -numeric_precision, -numeric_precision_radix)
 
 glimpse(columns_info_schema_info)
@@ -130,7 +135,8 @@ kable(columns_info_schema_info)
 The `BASE TABLE` has the underlying data in the database
 ```{r}
 table_info_schema_table %>%
-  filter(table_schema == "public" & table_type == "BASE TABLE") %>%
+  filter( table_type == "BASE TABLE") %>%
+  # filter(table_schema == "public" & table_type == "BASE TABLE") %>%
   select(table_name, table_type) %>%
   left_join(columns_info_schema_table, by = c("table_name" = "table_name")) %>%
   select(
@@ -145,7 +151,8 @@ table_info_schema_table %>%
 Probably should explore how the `VIEW` is made up of data from BASE TABLEs.
 ```{r}
 table_info_schema_table %>%
-  filter(table_schema == "public" & table_type == "VIEW") %>%
+  filter( table_type == "VIEW") %>%
+  # filter(table_schema == "public" & table_type == "VIEW") %>%
   select(table_name, table_type) %>%
   left_join(columns_info_schema_table, by = c("table_name" = "table_name")) %>%
   select(
@@ -160,7 +167,7 @@ table_info_schema_table %>%
 ### What data types are found in the database?
 ```{r}
 
-columns_info_schema_info %>% count(data_type)
+columns_info_schema_info %>% count(data_type) %>% kable()
 ```
 
 ## Characterizing how things are named
@@ -170,9 +177,12 @@ Names are the handle for accessing the data.  Tables and columns may or may not 
 ### Counting columns and name reuse
 Pull out some rough-and-ready but useful statistics about your database.  Since we are in SQL-land we talk about variables as `columns`.
 
+*this is wrong!*
+
 ```{r}
 public_tables <- columns_info_schema_table %>%
-  filter(table_schema == "public") %>%
+  # filter(str_detect(table_name, "pg_") == FALSE) %>%
+  # filter(table_schema == "public") %>%
   collect()
 
 public_tables %>%
@@ -283,17 +293,19 @@ head(rs)
 ## Creating your own data dictionary
 
 If you are going to work with a database for an extended period it can be useful to create your own data dictionary. This can take the form of [keeping detaild notes](https://caitlinhudon.com/2018/10/30/data-dictionaries/) as well as extracting metadata from the dbms. Here is an illustration of the idea.
+
+*This probably doens't work anymore*
 ```{r}
 
-some_tables <- c("rental", "city", "store")
-
-all_meta <- map_df(some_tables, sp_get_dbms_data_dictionary, con = con)
-
-all_meta
-
-glimpse(all_meta)
-
-kable(head(all_meta))
+# some_tables <- c("rental", "city", "store")
+# 
+# all_meta <- map_df(some_tables, sp_get_dbms_data_dictionary, con = con)
+# 
+# all_meta
+# 
+# glimpse(all_meta)
+# 
+# kable(head(all_meta))
 ```
 ## Save your work!
 

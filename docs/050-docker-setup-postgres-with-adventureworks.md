@@ -78,11 +78,11 @@ sp_docker_images_tibble()  # Doesn't produce the expected output.
 ## # A tibble: 6 x 7
 ##   image_id  repository   tag    digest           created created_at   size 
 ##   <chr>     <chr>        <chr>  <chr>            <chr>   <chr>        <chr>
-## 1 1523f751… adventurewo… latest <none>           3 week… 2019-06-19 … 475MB
-## 2 602a8e50… <none>       <none> <none>           3 week… 2019-06-19 … 365MB
-## 3 4e045cb8… postgres     latest sha256:1518027f… 4 week… 2019-06-10 … 312MB
-## 4 aff06852… postgres-dv… latest <none>           2 mont… 2019-04-26 … 294MB
-## 5 c149455a… <none>       <none> <none>           3 mont… 2019-03-18 … 252MB
+## 1 1523f751… adventurewo… latest <none>           6 week… 2019-06-19 … 475MB
+## 2 602a8e50… <none>       <none> <none>           6 week… 2019-06-19 … 365MB
+## 3 4e045cb8… postgres     latest sha256:1518027f… 7 week… 2019-06-10 … 312MB
+## 4 aff06852… postgres-dv… latest <none>           3 mont… 2019-04-26 … 294MB
+## 5 c149455a… <none>       <none> <none>           4 mont… 2019-03-18 … 252MB
 ## 6 3e016ba4… postgres     10     sha256:5c702997… 4 mont… 2019-03-04 … 230MB
 ```
 
@@ -109,7 +109,7 @@ sp_docker_containers_tibble()
 ## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 7f011ef99a46 post… docker… 2019-07-1… 15 sec… 0.0.… Up 13… 63B … adve…
+## 1 5cda078365f7 post… docker… 2019-08-0… 15 sec… 0.0.… Up 13… 63B … adve…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 
@@ -128,23 +128,12 @@ con <- sp_get_postgres_connection(
   seconds_to_test = 20, connection_tab = TRUE
 )
 ```
-For the moment we by-pass some complexity that results from the fact that the `adventureworks` has multiple *schemas* and that we are interested in only one of them, named `adventureworks`.  
+For the moment we by-pass some complexity that results from the fact that the `adventureworks` database has multiple *schemas* and that we are interested in only one of them, named `information_schema`.  
 
 ```r
 tbl(con, in_schema("information_schema", "schemata")) %>%
   select(catalog_name, schema_name, schema_owner) %>%
   collect()
-```
-
-```
-## Warning: `overscope_eval_next()` is deprecated as of rlang 0.2.0.
-## Please use `eval_tidy()` with a data mask instead.
-## This warning is displayed once per session.
-```
-
-```
-## Warning: `overscope_clean()` is deprecated as of rlang 0.2.0.
-## This warning is displayed once per session.
 ```
 
 ```
@@ -172,7 +161,7 @@ tbl(con, in_schema("information_schema", "schemata")) %>%
 Schemas will be discussed later on because multiple schemas are the norm in an enterprise database environment, but they are a side issue at this point.  So we switch the order in which PostgreSQL searches for objects with the following SQL code:
 
 ```r
-dbExecute(con, "set search_path to humanresources, public;")
+dbExecute(con, "set search_path to sales, public;")
 ```
 
 ```
@@ -185,73 +174,234 @@ dbListTables(con)
 ```
 
 ```
-##  [1] "shift"                      "employee"                  
-##  [3] "jobcandidate"               "vemployee"                 
-##  [5] "vemployeedepartment"        "vemployeedepartmenthistory"
-##  [7] "vjobcandidate"              "vjobcandidateeducation"    
-##  [9] "vjobcandidateemployment"    "department"                
-## [11] "employeedepartmenthistory"  "employeepayhistory"
+##  [1] "currency"                          
+##  [2] "salesorderheader"                  
+##  [3] "store"                             
+##  [4] "specialoffer"                      
+##  [5] "customer"                          
+##  [6] "personcreditcard"                  
+##  [7] "salesorderheadersalesreason"       
+##  [8] "shoppingcartitem"                  
+##  [9] "salesorderdetail"                  
+## [10] "creditcard"                        
+## [11] "specialofferproduct"               
+## [12] "salestaxrate"                      
+## [13] "salesperson"                       
+## [14] "vindividualcustomer"               
+## [15] "vpersondemographics"               
+## [16] "vsalesperson"                      
+## [17] "vsalespersonsalesbyfiscalyears"    
+## [18] "vsalespersonsalesbyfiscalyearsdata"
+## [19] "vstorewithaddresses"               
+## [20] "vstorewithcontacts"                
+## [21] "vstorewithdemographics"            
+## [22] "salespersonquotahistory"           
+## [23] "currencyrate"                      
+## [24] "countryregioncurrency"             
+## [25] "salesreason"                       
+## [26] "salesterritory"                    
+## [27] "salesterritoryhistory"
 ```
 Same for `dbListFields`:
 
 ```r
-dbListFields(con, "employee")
+dbListFields(con, "salesperson")
 ```
 
 ```
-##  [1] "businessentityid" "nationalidnumber" "loginid"         
-##  [4] "jobtitle"         "birthdate"        "maritalstatus"   
-##  [7] "gender"           "hiredate"         "salariedflag"    
-## [10] "vacationhours"    "sickleavehours"   "currentflag"     
-## [13] "rowguid"          "modifieddate"     "organizationnode"
+## [1] "businessentityid" "territoryid"      "salesquota"      
+## [4] "bonus"            "commissionpct"    "salesytd"        
+## [7] "saleslastyear"    "rowguid"          "modifieddate"
 ```
 
 Thus with this search order, the following two produce identical results:
 
 ```r
-tbl(con, in_schema("humanresources", "employee")) %>%
+tbl(con, in_schema("sales", "salesperson")) %>%
   head()
 ```
 
 ```
-## # Source:   lazy query [?? x 15]
+## # Source:   lazy query [?? x 9]
 ## # Database: postgres [postgres@localhost:5432/adventureworks]
-##   businessentityid nationalidnumber loginid jobtitle birthdate 
-##              <int> <chr>            <chr>   <chr>    <date>    
-## 1                1 295847284        "adven… Chief E… 1969-01-29
-## 2                2 245797967        "adven… Vice Pr… 1971-08-01
-## 3                3 509647174        "adven… Enginee… 1974-11-12
-## 4                4 112457891        "adven… Senior … 1974-12-23
-## 5                5 695256908        "adven… Design … 1952-09-27
-## 6                6 998320692        "adven… Design … 1959-03-11
-## # … with 10 more variables: maritalstatus <chr>, gender <chr>,
-## #   hiredate <date>, salariedflag <lgl>, vacationhours <int>,
-## #   sickleavehours <int>, currentflag <lgl>, rowguid <chr>,
-## #   modifieddate <dttm>, organizationnode <chr>
+##   businessentityid territoryid salesquota bonus commissionpct salesytd
+##              <int>       <int>      <dbl> <dbl>         <dbl>    <dbl>
+## 1              274          NA         NA     0         0      559698.
+## 2              275           2     300000  4100         0.012 3763178.
+## 3              276           4     250000  2000         0.015 4251369.
+## 4              277           3     250000  2500         0.015 3189418.
+## 5              278           6     250000   500         0.01  1453719.
+## 6              279           5     300000  6700         0.01  2315186.
+## # … with 3 more variables: saleslastyear <dbl>, rowguid <chr>,
+## #   modifieddate <dttm>
 ```
 
 ```r
-tbl(con, "employee") %>%
+tbl(con, "salesperson") %>%
   head()
 ```
 
 ```
-## # Source:   lazy query [?? x 15]
+## # Source:   lazy query [?? x 9]
 ## # Database: postgres [postgres@localhost:5432/adventureworks]
-##   businessentityid nationalidnumber loginid jobtitle birthdate 
-##              <int> <chr>            <chr>   <chr>    <date>    
-## 1                1 295847284        "adven… Chief E… 1969-01-29
-## 2                2 245797967        "adven… Vice Pr… 1971-08-01
-## 3                3 509647174        "adven… Enginee… 1974-11-12
-## 4                4 112457891        "adven… Senior … 1974-12-23
-## 5                5 695256908        "adven… Design … 1952-09-27
-## 6                6 998320692        "adven… Design … 1959-03-11
-## # … with 10 more variables: maritalstatus <chr>, gender <chr>,
-## #   hiredate <date>, salariedflag <lgl>, vacationhours <int>,
-## #   sickleavehours <int>, currentflag <lgl>, rowguid <chr>,
-## #   modifieddate <dttm>, organizationnode <chr>
+##   businessentityid territoryid salesquota bonus commissionpct salesytd
+##              <int>       <int>      <dbl> <dbl>         <dbl>    <dbl>
+## 1              274          NA         NA     0         0      559698.
+## 2              275           2     300000  4100         0.012 3763178.
+## 3              276           4     250000  2000         0.015 4251369.
+## 4              277           3     250000  2500         0.015 3189418.
+## 5              278           6     250000   500         0.01  1453719.
+## 6              279           5     300000  6700         0.01  2315186.
+## # … with 3 more variables: saleslastyear <dbl>, rowguid <chr>,
+## #   modifieddate <dttm>
 ```
 
+## `dplyr` connection objects
+As introduced in the previous chapter, the `dplyr::tbl` function creates an object that might **look** like a data frame in that when you enter it on the command line, it prints a bunch of rows from the dbms table.  But it is actually a **list** object that `dplyr` uses for constructing queries and retrieving data from the DBMS.  
+
+The following code illustrates these issues.  The `dplyr::tbl` function creates the connection object that we store in an object named `person_table`:
+
+```r
+person_table <- dplyr::tbl(con, in_schema("person", "person")) %>% 
+  select(-rowguid) %>% 
+  rename(personal_details_updated = modifieddate)
+```
+
+At first glance, it _acts_ like a data frame when you print it, although it only prints 10 of the table's 1,000 rows:
+
+```r
+person_table
+```
+
+```
+## # Source:   lazy query [?? x 12]
+## # Database: postgres [postgres@localhost:5432/adventureworks]
+##    businessentityid persontype namestyle title firstname middlename
+##               <int> <chr>      <lgl>     <chr> <chr>     <chr>     
+##  1                1 EM         FALSE     <NA>  Ken       J         
+##  2                2 EM         FALSE     <NA>  Terri     Lee       
+##  3                3 EM         FALSE     <NA>  Roberto   <NA>      
+##  4                4 EM         FALSE     <NA>  Rob       <NA>      
+##  5                5 EM         FALSE     Ms.   Gail      A         
+##  6                6 EM         FALSE     Mr.   Jossef    H         
+##  7                7 EM         FALSE     <NA>  Dylan     A         
+##  8                8 EM         FALSE     <NA>  Diane     L         
+##  9                9 EM         FALSE     <NA>  Gigi      N         
+## 10               10 EM         FALSE     <NA>  Michael   <NA>      
+## # … with more rows, and 6 more variables: lastname <chr>, suffix <chr>,
+## #   emailpromotion <int>, additionalcontactinfo <chr>, demographics <chr>,
+## #   personal_details_updated <dttm>
+```
+
+However, notice that the first output line shows `??`, rather than providing the number of rows in the table. Similarly, the next to last line shows:
+```
+    … with more rows, and 8 more variables
+```
+whereas the output for a normal `tbl` of this film data would say:
+```
+    … with more 1,000, and 8 more variables
+```
+
+So even though `person_table` is a `tbl`, it's **also** a `tbl_PqConnection`:
+
+```r
+class(person_table)
+```
+
+```
+## [1] "tbl_PqConnection" "tbl_dbi"          "tbl_sql"         
+## [4] "tbl_lazy"         "tbl"
+```
+
+It is not just a normal `tbl` of data. We can see that from the structure of `person_table`:
+
+```r
+str(person_table)
+```
+
+```
+## List of 2
+##  $ src:List of 2
+##   ..$ con  :Formal class 'PqConnection' [package "RPostgres"] with 3 slots
+##   .. .. ..@ ptr     :<externalptr> 
+##   .. .. ..@ bigint  : chr "integer64"
+##   .. .. ..@ typnames:'data.frame':	785 obs. of  2 variables:
+##   .. .. .. ..$ oid    : int [1:785] 16 17 18 19 20 21 22 23 24 25 ...
+##   .. .. .. ..$ typname: chr [1:785] "bool" "bytea" "char" "name" ...
+##   ..$ disco: NULL
+##   ..- attr(*, "class")= chr [1:4] "src_PqConnection" "src_dbi" "src_sql" "src"
+##  $ ops:List of 4
+##   ..$ name: chr "select"
+##   ..$ x   :List of 2
+##   .. ..$ x   : 'ident_q' chr "person.person"
+##   .. ..$ vars: chr [1:13] "businessentityid" "persontype" "namestyle" "title" ...
+##   .. ..- attr(*, "class")= chr [1:3] "op_base_remote" "op_base" "op"
+##   ..$ dots: list()
+##   ..$ args:List of 1
+##   .. ..$ vars:List of 12
+##   .. .. ..$ businessentityid        : symbol businessentityid
+##   .. .. ..$ persontype              : symbol persontype
+##   .. .. ..$ namestyle               : symbol namestyle
+##   .. .. ..$ title                   : symbol title
+##   .. .. ..$ firstname               : symbol firstname
+##   .. .. ..$ middlename              : symbol middlename
+##   .. .. ..$ lastname                : symbol lastname
+##   .. .. ..$ suffix                  : symbol suffix
+##   .. .. ..$ emailpromotion          : symbol emailpromotion
+##   .. .. ..$ additionalcontactinfo   : symbol additionalcontactinfo
+##   .. .. ..$ demographics            : symbol demographics
+##   .. .. ..$ personal_details_updated: symbol modifieddate
+##   ..- attr(*, "class")= chr [1:3] "op_select" "op_single" "op"
+##  - attr(*, "class")= chr [1:5] "tbl_PqConnection" "tbl_dbi" "tbl_sql" "tbl_lazy" ...
+```
+
+It has only _two_ rows!  The first row contains all the information in the `con` object, which contains information about all the tables and objects in the database:
+
+```r
+person_table$src$con@typnames$typname[380:437]
+```
+
+```
+##  [1] "tablefunc_crosstab_4"            "_tablefunc_crosstab_4"          
+##  [3] "AccountNumber"                   "Flag"                           
+##  [5] "Name"                            "NameStyle"                      
+##  [7] "OrderNumber"                     "Phone"                          
+##  [9] "department"                      "_department"                    
+## [11] "pg_toast_16433"                  "d"                              
+## [13] "_d"                              "employee"                       
+## [15] "_employee"                       "pg_toast_16444"                 
+## [17] "e"                               "_e"                             
+## [19] "employeedepartmenthistory"       "_employeedepartmenthistory"     
+## [21] "edh"                             "_edh"                           
+## [23] "employeepayhistory"              "_employeepayhistory"            
+## [25] "pg_toast_16476"                  "eph"                            
+## [27] "_eph"                            "jobcandidate"                   
+## [29] "_jobcandidate"                   "pg_toast_16489"                 
+## [31] "jc"                              "_jc"                            
+## [33] "shift"                           "_shift"                         
+## [35] "pg_toast_16500"                  "s"                              
+## [37] "_s"                              "department_departmentid_seq"    
+## [39] "jobcandidate_jobcandidateid_seq" "shift_shiftid_seq"              
+## [41] "address"                         "_address"                       
+## [43] "businessentityaddress"           "_businessentityaddress"         
+## [45] "countryregion"                   "_countryregion"                 
+## [47] "pg_toast_16527"                  "emailaddress"                   
+## [49] "_emailaddress"                   "person"                         
+## [51] "_person"                         "pg_toast_16539"                 
+## [53] "personphone"                     "_personphone"                   
+## [55] "pg_toast_16551"                  "phonenumbertype"                
+## [57] "_phonenumbertype"                "pg_toast_16558"
+```
+The second row contains a list of the columns in the `film` table, among other things:
+
+```r
+person_table$ops$vars
+```
+
+```
+## NULL
+```
+`person_table` holds information needed to get the data from the 'film' table, but `person_table` does not hold the data itself. In the following sections, we will examine more closely this relationship between the `person_table` object and the data in the database's 'film' table.
 
 Disconnect from the database:
 
@@ -284,7 +434,7 @@ sp_docker_containers_tibble(list_all = TRUE)
 ## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 7f011ef99a46 post… docker… 2019-07-1… 16 sec… <NA>  Exite… 0B (… adve…
+## 1 5cda078365f7 post… docker… 2019-08-0… 16 sec… <NA>  Exite… 0B (… adve…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 
@@ -300,7 +450,7 @@ sp_docker_containers_tibble()
 ## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 7f011ef99a46 post… docker… 2019-07-1… 17 sec… 0.0.… Up Le… 63B … adve…
+## 1 5cda078365f7 post… docker… 2019-08-0… 17 sec… 0.0.… Up Le… 0B (… adve…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 Connect to the `adventureworks` database in PostgreSQL:
@@ -319,25 +469,23 @@ con <- sp_get_postgres_connection(
 Check that you can still see the first few rows of the `employeeinfo` table:
 
 ```r
-tbl(con, in_schema("humanresources", "employee")) %>%
+tbl(con, in_schema("sales", "salesperson")) %>%
   head()
 ```
 
 ```
-## # Source:   lazy query [?? x 15]
+## # Source:   lazy query [?? x 9]
 ## # Database: postgres [postgres@localhost:5432/adventureworks]
-##   businessentityid nationalidnumber loginid jobtitle birthdate 
-##              <int> <chr>            <chr>   <chr>    <date>    
-## 1                1 295847284        "adven… Chief E… 1969-01-29
-## 2                2 245797967        "adven… Vice Pr… 1971-08-01
-## 3                3 509647174        "adven… Enginee… 1974-11-12
-## 4                4 112457891        "adven… Senior … 1974-12-23
-## 5                5 695256908        "adven… Design … 1952-09-27
-## 6                6 998320692        "adven… Design … 1959-03-11
-## # … with 10 more variables: maritalstatus <chr>, gender <chr>,
-## #   hiredate <date>, salariedflag <lgl>, vacationhours <int>,
-## #   sickleavehours <int>, currentflag <lgl>, rowguid <chr>,
-## #   modifieddate <dttm>, organizationnode <chr>
+##   businessentityid territoryid salesquota bonus commissionpct salesytd
+##              <int>       <int>      <dbl> <dbl>         <dbl>    <dbl>
+## 1              274          NA         NA     0         0      559698.
+## 2              275           2     300000  4100         0.012 3763178.
+## 3              276           4     250000  2000         0.015 4251369.
+## 4              277           3     250000  2500         0.015 3189418.
+## 5              278           6     250000   500         0.01  1453719.
+## 6              279           5     300000  6700         0.01  2315186.
+## # … with 3 more variables: saleslastyear <dbl>, rowguid <chr>,
+## #   modifieddate <dttm>
 ```
 
 ## Cleaning up
@@ -362,7 +510,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## 7f011ef99a46        postgres:10         "docker-entrypoint.s…"   18 seconds ago      Exited (0) Less than a second ago                       adventureworks
+## 5cda078365f7        postgres:10         "docker-entrypoint.s…"   19 seconds ago      Exited (0) Less than a second ago                       adventureworks
 ```
 
 Next time, you can just use this command to start the container: 

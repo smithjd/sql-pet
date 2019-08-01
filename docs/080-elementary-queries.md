@@ -39,35 +39,18 @@ con <- sqlpetr::sp_get_postgres_connection(
 )
 ```
 
-## Getting data from the database
+## Downloading a single table
 
-As we show later on, the database serves as a store of data and as an engine for sub-setting, joining, and computation on the data.  We begin with getting data from the dbms, or "downloading" data.
+For the moment, assume you know something about the database and specifically what table you need to retrieve.
 
-### Finding out what's there
+### Downloading the entire table
 
-We've already seen how the connections tab is the easiest way to explore a database.  
+There are many different methods of getting data from a DBMS, and we'll explore the different ways of controlling each one of them.
 
-![Adventureworks connections tab](screenshots/adventureworks-connections-tab.png)
-
-It's a little more complex than the `cattle` example because we have additional structure: the `adventureworks` [database contains schemas](https://en.wikipedia.org/wiki/Database_schema), which contain tables.  The `hr` schema is the same as the `humanresources` schema, but with nicknames (the `d` table in `hr` is the same as the `department` table in the `humanresources` schema).  Schemas are used to control access and to set up shortcuts.  Clicking on the the right opens up the table view of the `d` table:
-
-![Adventureworks connections tab](screenshots/adventureworks-hr-dept-table.png)
-
-Exploring a databse using R code is a littlel more complicated.  The following command does not give you a list of tables as it did in the simpler case when there were no schemas other than the `public` schema:
+`DBI::dbReadTable` will download an entire table into an R [tibble](https://tibble.tidyverse.org/).  
 
 ```r
-tables <- DBI::dbListTables(con)
-tables
-```
-
-```
-## character(0)
-```
-
-We need to to tell the database which schemas to search
-
-```r
-dbExecute(con, "set search_path to hr, humanresources;")
+dbExecute(con, "set search_path to humanresources, public;") # watch for duplicates!
 ```
 
 ```
@@ -75,65 +58,8 @@ dbExecute(con, "set search_path to hr, humanresources;")
 ```
 
 ```r
-DBI::dbListTables(con)
-```
-
-```
-##  [1] "d"                          "shift"                     
-##  [3] "e"                          "employee"                  
-##  [5] "edh"                        "eph"                       
-##  [7] "jc"                         "s"                         
-##  [9] "jobcandidate"               "vemployee"                 
-## [11] "vemployeedepartment"        "vemployeedepartmenthistory"
-## [13] "vjobcandidate"              "vjobcandidateeducation"    
-## [15] "vjobcandidateemployment"    "department"                
-## [17] "employeedepartmenthistory"  "employeepayhistory"
-```
-Notice the way the database designers have abbreviated table names for your convenience.  Once 
-
-```r
-DBI::dbListFields(con, "d")
-```
-
-```
-## [1] "id"           "departmentid" "name"         "groupname"   
-## [5] "modifieddate"
-```
-
-### Listing all the fields for all the tables
-
-The first example, `DBI::dbListTables(con)` returned 22 tables and the second example, `DBI::dbListFields(con, "employee")` returns 7 fields.  Here we combine the two calls to return a list of tables which has a list of all the fields in the table.  The code block just shows the first two tables.
-
-
-```r
-table_columns <- purrr::map(tables, ~ dbListFields(.,conn = con) )
-```
-Rename each list [[1]] ... [[43]] to meaningful table name
-
-```r
-names(table_columns) <- tables
-
-head(table_columns)
-```
-
-```
-## named list()
-```
-
-Later on we'll discuss how to get more extensive data about each table and column from the database's own store of metadata using a similar technique.  As we go further the issue of scale will come up again and again: you need to be careful about how much data a call to the dbms will return, whether it's a list of tables or a table that could have millions of rows.
-
-It's important to connect with people who own, generate, or are the subjects of the data.  A good chat with people who own the data, generate it, or are the subjects can generate insights and set the context for your investigation of the database. The purpose for collecting the data or circumstances where it was collected may be buried far afield in an organization, but *usually someone knows*.  The metadata discussed in a later chapter is essential but will only take you so far.
-
-There are different ways of just **looking at the data**, which we explore below.
-
-### Downloading an entire table
-
-There are many different methods of getting data from a DBMS, and we'll explore the different ways of controlling each one of them.
-
-`DBI::dbReadTable` will download an entire table into an R [tibble](https://tibble.tidyverse.org/).  
-
-```r
 employee_tibble <- DBI::dbReadTable(con, "employee")
+# employee_tibble <- DBI::dbReadTable(con, in_schema("humanresources", "employee"))
 str(employee_tibble)
 ```
 
@@ -157,7 +83,7 @@ str(employee_tibble)
 ```
 That's very simple, but if the table is large it may not be a good idea, since R is designed to keep the entire table in memory.  Note that the first line of the str() output reports the total number of observations.  
 
-### A table object that can be reused
+### A table *object* that can be reused
 
 The `dplyr::tbl` function gives us more control over access to a table by enabling  control over which columns and rows to download.  It creates  an object that might **look** like a data frame, but it's actually a list object that `dplyr` uses for constructing queries and retrieving data from the DBMS.  
 
@@ -211,13 +137,14 @@ one_percent_sample
 
 ```
 ##   businessentityid                     jobtitle  birthdate
-## 1               15              Design Engineer 1961-05-02
-## 2               65 Production Technician - WC60 1970-04-28
-## 3              102 Production Supervisor - WC10 1983-10-26
-## 4              177 Production Technician - WC30 1982-02-11
-## 5              180 Production Supervisor - WC20 1984-11-18
-## 6              235      Human Resources Manager 1976-02-11
-## 7              239          Benefits Specialist 1984-11-20
+## 1               27 Production Supervisor - WC60 1956-10-08
+## 2               36 Production Technician - WC60 1984-07-31
+## 3               84 Production Technician - WC40 1952-03-02
+## 4              149 Production Technician - WC30 1983-10-20
+## 5              240                    Recruiter 1978-07-18
+## 6              248                   Accountant 1979-07-01
+## 7              253                        Buyer 1970-11-30
+## 8              289         Sales Representative 1968-03-17
 ```
 **Exact sample of 100 records**
 
@@ -269,40 +196,27 @@ Run query with the filter verb listing the randomly sampled rows to be retrieved
 employee_sample <- employee_table %>% 
   dplyr::filter(businessentityid %in% sample_rows) %>% 
   dplyr::collect()
-```
 
-```
-## Warning: `overscope_eval_next()` is deprecated as of rlang 0.2.0.
-## Please use `eval_tidy()` with a data mask instead.
-## This warning is displayed once per session.
-```
-
-```
-## Warning: `overscope_clean()` is deprecated as of rlang 0.2.0.
-## This warning is displayed once per session.
-```
-
-```r
 str(employee_sample)
 ```
 
 ```
 ## Classes 'tbl_df', 'tbl' and 'data.frame':	10 obs. of  15 variables:
-##  $ businessentityid: int  13 84 118 129 150 156 228 253 254 269
-##  $ nationalidnumber: chr  "486228782" "947029962" "222400012" "502058701" ...
-##  $ loginid         : chr  "adventure-works\\janice0" "adventure-works\\frank3" "adventure-works\\don0" "adventure-works\\gary0" ...
-##  $ jobtitle        : chr  "Tool Designer" "Production Technician - WC40" "Production Technician - WC50" "Production Technician - WC40" ...
-##  $ birthdate       : Date, format: "1989-05-28" "1952-03-02" ...
-##  $ maritalstatus   : chr  "M" "M" "M" "S" ...
-##  $ gender          : chr  "F" "M" "M" "M" ...
-##  $ hiredate        : Date, format: "2010-12-23" "2010-02-05" ...
-##  $ salariedflag    : logi  FALSE FALSE FALSE FALSE FALSE FALSE ...
-##  $ vacationhours   : int  8 66 88 69 35 11 92 56 57 72
-##  $ sickleavehours  : int  24 53 64 54 37 25 66 48 48 56
+##  $ businessentityid: int  14 90 91 118 153 179 195 229 244 289
+##  $ nationalidnumber: chr  "42487730" "82638150" "390124815" "222400012" ...
+##  $ loginid         : chr  "adventure-works\\michael8" "adventure-works\\danielle0" "adventure-works\\kimberly0" "adventure-works\\don0" ...
+##  $ jobtitle        : chr  "Senior Design Engineer" "Production Technician - WC10" "Production Technician - WC10" "Production Technician - WC50" ...
+##  $ birthdate       : Date, format: "1979-06-16" "1986-09-07" ...
+##  $ maritalstatus   : chr  "S" "S" "S" "M" ...
+##  $ gender          : chr  "M" "F" "F" "M" ...
+##  $ hiredate        : Date, format: "2010-12-30" "2010-02-20" ...
+##  $ salariedflag    : logi  TRUE FALSE FALSE FALSE FALSE FALSE ...
+##  $ vacationhours   : int  3 97 95 88 15 30 58 90 62 37
+##  $ sickleavehours  : int  21 68 67 64 27 35 49 65 51 38
 ##  $ currentflag     : logi  TRUE TRUE TRUE TRUE TRUE TRUE ...
-##  $ rowguid         : chr  "954b91b6-5aa7-48c2-8685-6e11c6e5c49a" "9af24acc-ea3e-4efe-b5e3-4762c496d57c" "e720053d-922e-4c91-b81a-a1ca4ef8bb0e" "a03d6052-1f85-4ebe-aac9-b67cfdcd91a6" ...
+##  $ rowguid         : chr  "46286ca4-46dd-4ddb-9128-85b67e98d1a9" "bb886159-1400-4264-b7c9-a3769beb1274" "ce256b6c-1eee-43ed-9969-7cac480ff4d7" "e720053d-922e-4c91-b81a-a1ca4ef8bb0e" ...
 ##  $ modifieddate    : POSIXct, format: "2014-06-30" "2014-06-30" ...
-##  $ organizationnode: chr  "/1/1/5/2/" "/3/1/7/6/" "/3/1/11/10/" "/3/1/13/2/" ...
+##  $ organizationnode: chr  "/1/1/6/" "/3/1/8/3/" "/3/1/8/4/" "/3/1/11/10/" ...
 ```
 
 
@@ -477,12 +391,12 @@ employee_table %>%
 ## # A tibble: 6 x 4
 ##   jobtitle                 vacationhours sickleavehours today              
 ##   <chr>                            <int>          <int> <dttm>             
-## 1 Chief Executive Officer             99             69 2019-07-12 17:37:06
-## 2 Vice President of Engin…             1             20 2019-07-12 17:37:06
-## 3 Engineering Manager                  2             21 2019-07-12 17:37:06
-## 4 Senior Tool Designer                48             80 2019-07-12 17:37:06
-## 5 Design Engineer                      5             22 2019-07-12 17:37:06
-## 6 Design Engineer                      6             23 2019-07-12 17:37:06
+## 1 Chief Executive Officer             99             69 2019-08-01 15:48:13
+## 2 Vice President of Engin…             1             20 2019-08-01 15:48:13
+## 3 Engineering Manager                  2             21 2019-08-01 15:48:13
+## 4 Senior Tool Designer                48             80 2019-08-01 15:48:13
+## 5 Design Engineer                      5             22 2019-08-01 15:48:13
+## 6 Design Engineer                      6             23 2019-08-01 15:48:13
 ```
 
 
@@ -531,8 +445,8 @@ There is no substitute for looking at your data and R provides several ways to j
 sqlpetr::sp_print_df(head(employee_tibble))
 ```
 
-<!--html_preserve--><div id="htmlwidget-f474ad921ae63e0a53f4" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-f474ad921ae63e0a53f4">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[1,2,3,4,5,6],["295847284","245797967","509647174","112457891","695256908","998320692"],["adventure-works\\ken0","adventure-works\\terri0","adventure-works\\roberto0","adventure-works\\rob0","adventure-works\\gail0","adventure-works\\jossef0"],["Chief Executive Officer","Vice President of Engineering","Engineering Manager","Senior Tool Designer","Design Engineer","Design Engineer"],["1969-01-29","1971-08-01","1974-11-12","1974-12-23","1952-09-27","1959-03-11"],["S","S","M","S","M","M"],["M","F","M","M","F","M"],["2009-01-14","2008-01-31","2007-11-11","2007-12-05","2008-01-06","2008-01-24"],[true,true,true,false,true,true],[99,1,2,48,5,6],[69,20,21,80,22,23],[true,true,true,true,true,true],["f01251e5-96a3-448d-981e-0f99d789110d","45e8f437-670d-4409-93cb-f9424a40d6ee","9bbbfb2c-efbb-4217-9ab7-f97689328841","59747955-87b8-443f-8ed4-f8ad3afdf3a9","ec84ae09-f9b8-4a15-b4a9-6ccbab919b08","e39056f1-9cd5-478d-8945-14aca7fbdcdd"],["2014-06-30T07:00:00Z","2014-06-30T07:00:00Z","2014-06-30T07:00:00Z","2014-06-30T07:00:00Z","2014-06-30T07:00:00Z","2014-06-30T07:00:00Z"],["/","/1/","/1/1/","/1/1/1/","/1/1/2/","/1/1/3/"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>businessentityid<\/th>\n      <th>nationalidnumber<\/th>\n      <th>loginid<\/th>\n      <th>jobtitle<\/th>\n      <th>birthdate<\/th>\n      <th>maritalstatus<\/th>\n      <th>gender<\/th>\n      <th>hiredate<\/th>\n      <th>salariedflag<\/th>\n      <th>vacationhours<\/th>\n      <th>sickleavehours<\/th>\n      <th>currentflag<\/th>\n      <th>rowguid<\/th>\n      <th>modifieddate<\/th>\n      <th>organizationnode<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,10,11]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-ffc4f25ab85bf888dc62" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-ffc4f25ab85bf888dc62">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[1,2,3,4,5,6],["295847284","245797967","509647174","112457891","695256908","998320692"],["adventure-works\\ken0","adventure-works\\terri0","adventure-works\\roberto0","adventure-works\\rob0","adventure-works\\gail0","adventure-works\\jossef0"],["Chief Executive Officer","Vice President of Engineering","Engineering Manager","Senior Tool Designer","Design Engineer","Design Engineer"],["1969-01-29","1971-08-01","1974-11-12","1974-12-23","1952-09-27","1959-03-11"],["S","S","M","S","M","M"],["M","F","M","M","F","M"],["2009-01-14","2008-01-31","2007-11-11","2007-12-05","2008-01-06","2008-01-24"],[true,true,true,false,true,true],[99,1,2,48,5,6],[69,20,21,80,22,23],[true,true,true,true,true,true],["f01251e5-96a3-448d-981e-0f99d789110d","45e8f437-670d-4409-93cb-f9424a40d6ee","9bbbfb2c-efbb-4217-9ab7-f97689328841","59747955-87b8-443f-8ed4-f8ad3afdf3a9","ec84ae09-f9b8-4a15-b4a9-6ccbab919b08","e39056f1-9cd5-478d-8945-14aca7fbdcdd"],["2014-06-30T07:00:00Z","2014-06-30T07:00:00Z","2014-06-30T07:00:00Z","2014-06-30T07:00:00Z","2014-06-30T07:00:00Z","2014-06-30T07:00:00Z"],["/","/1/","/1/1/","/1/1/1/","/1/1/2/","/1/1/3/"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>businessentityid<\/th>\n      <th>nationalidnumber<\/th>\n      <th>loginid<\/th>\n      <th>jobtitle<\/th>\n      <th>birthdate<\/th>\n      <th>maritalstatus<\/th>\n      <th>gender<\/th>\n      <th>hiredate<\/th>\n      <th>salariedflag<\/th>\n      <th>vacationhours<\/th>\n      <th>sickleavehours<\/th>\n      <th>currentflag<\/th>\n      <th>rowguid<\/th>\n      <th>modifieddate<\/th>\n      <th>organizationnode<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,10,11]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ### The `summary` function in `base`
 
@@ -639,9 +553,76 @@ library(skimr)
 ```
 
 ```r
-# skimr::skim(employee_tibble)
+skimr::skim(employee_tibble)
+```
 
-# skimr::skim_to_wide(employee_tibble) #skimr doesn't like certain kinds of columns
+```
+## Skim summary statistics
+##  n obs: 290 
+##  n variables: 15 
+## 
+## ── Variable type:character ──────────────────────────────────
+##          variable missing complete   n min max empty n_unique
+##            gender       0      290 290   1   1     0        2
+##          jobtitle       0      290 290   5  40     0       67
+##           loginid       0      290 290  19  28     0      290
+##     maritalstatus       0      290 290   1   1     0        2
+##  nationalidnumber       0      290 290   5   9     0      290
+##  organizationnode       0      290 290   1  11     0      290
+##           rowguid       0      290 290  36  36     0      290
+## 
+## ── Variable type:Date ───────────────────────────────────────
+##   variable missing complete   n        min        max     median n_unique
+##  birthdate       0      290 290 1951-10-17 1991-05-31 1978-10-19      275
+##   hiredate       0      290 290 2006-06-30 2013-05-30 2009-02-02      164
+## 
+## ── Variable type:integer ────────────────────────────────────
+##          variable missing complete   n   mean    sd p0   p25   p50    p75
+##  businessentityid       0      290 290 145.5  83.86  1 73.25 145.5 217.75
+##    sickleavehours       0      290 290  45.31 14.54 20 33     46    58   
+##     vacationhours       0      290 290  50.61 28.79  0 26.25  51    75   
+##  p100     hist
+##   290 ▇▇▇▇▇▇▇▇
+##    80 ▇▇▇▇▇▇▃▁
+##    99 ▇▆▇▇▇▇▇▇
+## 
+## ── Variable type:logical ────────────────────────────────────
+##      variable missing complete   n mean                    count
+##   currentflag       0      290 290 1             TRU: 290, NA: 0
+##  salariedflag       0      290 290 0.18 FAL: 238, TRU: 52, NA: 0
+## 
+## ── Variable type:POSIXct ────────────────────────────────────
+##      variable missing complete   n        min        max     median
+##  modifieddate       0      290 290 2014-06-30 2014-12-26 2014-06-30
+##  n_unique
+##         2
+```
+
+```r
+skimr::skim_to_wide(employee_tibble) #skimr doesn't like certain kinds of columns
+```
+
+```
+## # A tibble: 15 x 19
+##    type  variable missing complete n     min   max   empty n_unique median
+##    <chr> <chr>    <chr>   <chr>    <chr> <chr> <chr> <chr> <chr>    <chr> 
+##  1 char… gender   0       290      290   1     1     0     2        <NA>  
+##  2 char… jobtitle 0       290      290   5     40    0     67       <NA>  
+##  3 char… loginid  0       290      290   19    28    0     290      <NA>  
+##  4 char… marital… 0       290      290   1     1     0     2        <NA>  
+##  5 char… nationa… 0       290      290   5     9     0     290      <NA>  
+##  6 char… organiz… 0       290      290   1     11    0     290      <NA>  
+##  7 char… rowguid  0       290      290   36    36    0     290      <NA>  
+##  8 Date  birthda… 0       290      290   1951… 1991… <NA>  275      1978-…
+##  9 Date  hiredate 0       290      290   2006… 2013… <NA>  164      2009-…
+## 10 inte… busines… 0       290      290   <NA>  <NA>  <NA>  <NA>     <NA>  
+## 11 inte… sicklea… 0       290      290   <NA>  <NA>  <NA>  <NA>     <NA>  
+## 12 inte… vacatio… 0       290      290   <NA>  <NA>  <NA>  <NA>     <NA>  
+## 13 logi… current… 0       290      290   <NA>  <NA>  <NA>  <NA>     <NA>  
+## 14 logi… salarie… 0       290      290   <NA>  <NA>  <NA>  <NA>     <NA>  
+## 15 POSI… modifie… 0       290      290   2014… 2014… <NA>  2        2014-…
+## # … with 9 more variables: mean <chr>, sd <chr>, p0 <chr>, p25 <chr>,
+## #   p50 <chr>, p75 <chr>, p100 <chr>, hist <chr>, count <chr>
 ```
 
 ### Close the connection and shut down adventureworks
