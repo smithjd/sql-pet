@@ -13,6 +13,7 @@ require(knitr)
 library(dbplyr)
 library(sqlpetr)
 library(inspectdf)
+library(gt)
 
 wd <- here()
 
@@ -81,10 +82,10 @@ adventureworks_table_columns <- adventureworks_table_columns %>%
   select(table_schema, table_name, column_name, dtd_identifier, data_type, column_default)
 
 adventureworks_table_columns %>%
-  filter(table_name == "employee") %>%
+  filter(table_name == "salesperson") %>%
   select(column_name, dtd_identifier, data_type, column_default)
 
-employee <- tbl(con, in_schema("humanresources", "employee")) %>%
+employee <- tbl(con, in_schema("sales", "salesperson")) %>%
   collect()
 
 employee
@@ -97,10 +98,10 @@ adventureworks_tables <- adventureworks_table_columns %>%
 # deal with multiple schemas:
 
 dbListTables(con)
-dbExecute(con, "set search_path to humanresources, public;") # watch for duplicates!
+dbExecute(con, "set search_path to sales, public;") # watch for duplicates!
 dbListTables(con)
-dbListFields(con, "employee")
-tbl(con, "employee") %>% collect(n = 10)
+dbListFields(con, "salesperson")
+tbl(con, "salesperson") %>% collect(n = 10)
 
 # verify that table names are unique across all schemas
 adventureworks_tables %>%
@@ -118,13 +119,15 @@ index_list %>% count(schemaname)
 
 tbl(con, "pg_tables") %>% count(schemaname)
 
-employee <- tbl(con, dbplyr::in_schema("humanresources", "employee"))
+salesperson <- tbl(con, dbplyr::in_schema("sales", "salesperson"))
 
-department_history  <- tbl(con, dbplyr::in_schema("humanresources", "employeedepartmenthistory"))
+employee  <- tbl(con, dbplyr::in_schema("humanresources", "employee"))
 
-employee %>%
-  left_join(department_history, by = c("businessentityid") ) %>%
-  count(businessentityid, sort = TRUE)
+salesperson %>%
+  left_join(employee, by = c("businessentityid") ) %>%
+  count(gender, territoryid) %>%
+  collect() %>%
+  gt()
 
 DBI::dbDisconnect(con)
 
