@@ -16,7 +16,15 @@ An R analyst....
 
 ## Challenge: goals, context and expectations
 
+* Working behind the corporate firewall -- the need to simulate it
+* Differences between production and data warehouse environments.
+* Learning to keep your DBAs happy:
+  + You are your own DBA in this simulation, so you can wreak havoc and learn from it, but you can learn to be DBA-friendly here.
+  + In the end it's the subject-matter experts that really understand your data, but you have to work with your DBAs first.
+
 ## The Challenge: Investigating a question using an organization's database
+
+Using an enterprise databse to create meaningful management insights requires a combination of very different skills:
 
 * Need both familiarity with the data and a focus question
   + An iterative process where 
@@ -26,31 +34,35 @@ An R analyst....
     + do I understand the question?
     + do I understand the data?
 
-* How well do you understand the data resource (in the DBMS)?
+* A "good enough" understanding of the data resource (in the DBMS)
   + Use all available documentation and understand its limits
   + Use your own tools and skills to examine the data resource
   + What is *missing* from the database: (columns, records, cells)
   + Why is the data missing?
   
-* How well do you understand the question you seek to answer?
+* A "good enough" understanding of the question you seek to answer
   + How general or specific is your question?
   + How aligned is it with the purpose for which the database was designed and is being operated?
   + How different are your assumptions and concerns from those of the people who enter and use the data on a day to day basis?
 
+* Brining R tools and skills to bear on these
+  + R is a powerful tool for data access, manipulation, modeling and presentation
+  + Different R packages and techniques are available for each of the elements involved in exploring, analyizing and reporting on enterprise behavior using the enterprise database.
 
-## Ask yourself, what are you aiming for?  
-
-* Differences between production and data warehouse environments.
-* Learning to keep your DBAs happy:
-  + You are your own DBA in this simulation, so you can wreak havoc and learn from it, but you can learn to be DBA-friendly here.
-  + In the end it's the subject-matter experts that understand your data, but you have to work with your DBAs first.
-
-### Problems that are addressed
+### Problems that we address in the book
 
 * Database exploration 
 * Wisdom from Sophie
 
-### Learning Objectives
+### Book structure
+
+The book explores R techniques and behaviors using progressively more complex queries, exploring this scenario: There is a new Executive VP of Sales at AdventureWorks. She wants an overview of sales and the sales organization's performance at AW.
+
+* Early chapters use just one table from the database: the `salesperson` table in the `sales` schema.  The motivating question might be: "How many sales persons does the _Adventureworks_ company have?"
+* More involved queries join three tables in three different schemas: `salesperson`, `employee`, and `person`. The relevant question might be "Who is my top salesperson?  Are the 3 top salespersons older or younger?"
+* Finally, we build a series of queries that explore the sales workflow: sales territories, sales people, top customers by product, product mixture that gives top 80% of sales.  What are they producing in detail?  Seasonal? Type of product, region, etc.?
+
+## Making your way through the book
 
 After working through the code in this book, you can expect to be able to:
 

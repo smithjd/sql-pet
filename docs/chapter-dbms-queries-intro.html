@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 8 Introduction to DBMS queries | R, Databases, and Docker</title>
+  <title>Chapter 8 Introduction to DBMS queries | r-database-docker.utf8</title>
   <meta name="description" content="An introduction to Docker and PostgreSQL for R users to simulate use cases behind corporate walls." />
   <meta name="generator" content="bookdown 0.12 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 8 Introduction to DBMS queries | R, Databases, and Docker" />
+  <meta property="og:title" content="Chapter 8 Introduction to DBMS queries | r-database-docker.utf8" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 8 Introduction to DBMS queries | R, Databases, and Docker" />
+  <meta name="twitter:title" content="Chapter 8 Introduction to DBMS queries | r-database-docker.utf8" />
   
   <meta name="twitter:description" content="An introduction to Docker and PostgreSQL for R users to simulate use cases behind corporate walls." />
   
@@ -24,7 +24,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, and Ian Frantz" />
 
 
-<meta name="date" content="2019-08-01" />
+<meta name="date" content="2019-08-03" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="chapter-dbms-login-credentials.html">
-<link rel="next" href="chapter-lazy-evaluation-queries.html">
+<link rel="next" href="chapter-database-exploration.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -180,11 +180,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="4" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html"><i class="fa fa-check"></i><b>4</b> Learning Goals and Use Cases</a><ul>
 <li class="chapter" data-level="4.1" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html#challenge-goals-context-and-expectations"><i class="fa fa-check"></i><b>4.1</b> Challenge: goals, context and expectations</a></li>
-<li class="chapter" data-level="4.2" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html#the-challenge-investigating-a-question-using-an-organizations-database"><i class="fa fa-check"></i><b>4.2</b> The Challenge: Investigating a question using an organization’s database</a></li>
-<li class="chapter" data-level="4.3" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html#ask-yourself-what-are-you-aiming-for"><i class="fa fa-check"></i><b>4.3</b> Ask yourself, what are you aiming for?</a><ul>
-<li class="chapter" data-level="4.3.1" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html#problems-that-are-addressed"><i class="fa fa-check"></i><b>4.3.1</b> Problems that are addressed</a></li>
-<li class="chapter" data-level="4.3.2" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html#learning-objectives"><i class="fa fa-check"></i><b>4.3.2</b> Learning Objectives</a></li>
-<li class="chapter" data-level="4.3.3" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html#r-packages"><i class="fa fa-check"></i><b>4.3.3</b> R Packages</a></li>
+<li class="chapter" data-level="4.2" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html#the-challenge-investigating-a-question-using-an-organizations-database"><i class="fa fa-check"></i><b>4.2</b> The Challenge: Investigating a question using an organization’s database</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html#problems-that-we-address-in-the-book"><i class="fa fa-check"></i><b>4.2.1</b> Problems that we address in the book</a></li>
+<li class="chapter" data-level="4.2.2" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html#book-structure"><i class="fa fa-check"></i><b>4.2.2</b> Book structure</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html#making-your-way-through-the-book"><i class="fa fa-check"></i><b>4.3</b> Making your way through the book</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html#r-packages"><i class="fa fa-check"></i><b>4.3.1</b> R Packages</a></li>
 </ul></li>
 <li class="chapter" data-level="4.4" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html#adventureworks"><i class="fa fa-check"></i><b>4.4</b> AdventureWorks</a></li>
 </ul></li>
@@ -242,59 +243,71 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="8.5" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#additional-reading"><i class="fa fa-check"></i><b>8.5</b> Additional reading</a></li>
 </ul></li>
-<li class="chapter" data-level="9" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html"><i class="fa fa-check"></i><b>9</b> Lazy Evaluation and Lazy Queries</a><ul>
-<li class="chapter" data-level="9.1" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#setup-1"><i class="fa fa-check"></i><b>9.1</b> Setup</a></li>
-<li class="chapter" data-level="9.2" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#r-is-lazy-and-comes-with-guardrails"><i class="fa fa-check"></i><b>9.2</b> R is lazy and comes with guardrails</a><ul>
-<li class="chapter" data-level="9.2.1" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy-loading"><i class="fa fa-check"></i><b>9.2.1</b> Lazy loading</a></li>
-<li class="chapter" data-level="9.2.2" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy-evaluation"><i class="fa fa-check"></i><b>9.2.2</b> Lazy evaluation</a></li>
-<li class="chapter" data-level="9.2.3" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy-queries"><i class="fa fa-check"></i><b>9.2.3</b> Lazy Queries</a></li>
+<li class="chapter" data-level="9" data-path="chapter-database-exploration.html"><a href="chapter-database-exploration.html"><i class="fa fa-check"></i><b>9</b> Exploring a database</a><ul>
+<li class="chapter" data-level="9.1" data-path="chapter-database-exploration.html"><a href="chapter-database-exploration.html#setup-1"><i class="fa fa-check"></i><b>9.1</b> Setup</a></li>
+<li class="chapter" data-level="9.2" data-path="chapter-database-exploration.html"><a href="chapter-database-exploration.html#getting-data-from-the-database"><i class="fa fa-check"></i><b>9.2</b> Getting data from the database</a><ul>
+<li class="chapter" data-level="9.2.1" data-path="chapter-database-exploration.html"><a href="chapter-database-exploration.html#finding-out-whats-there"><i class="fa fa-check"></i><b>9.2.1</b> Finding out what’s there</a></li>
+<li class="chapter" data-level="9.2.2" data-path="chapter-database-exploration.html"><a href="chapter-database-exploration.html#listing-all-the-fields-for-all-the-tables"><i class="fa fa-check"></i><b>9.2.2</b> Listing all the fields for all the tables</a></li>
+<li class="chapter" data-level="9.2.3" data-path="chapter-database-exploration.html"><a href="chapter-database-exploration.html#a-table-object-that-can-be-reused-1"><i class="fa fa-check"></i><b>9.2.3</b> A table object that can be reused</a></li>
+<li class="chapter" data-level="9.2.4" data-path="chapter-database-exploration.html"><a href="chapter-database-exploration.html#table-links-for-queries"><i class="fa fa-check"></i><b>9.2.4</b> Table links for queries</a></li>
+<li class="chapter" data-level="9.2.5" data-path="chapter-database-exploration.html"><a href="chapter-database-exploration.html#merge-this-into-the-above"><i class="fa fa-check"></i><b>9.2.5</b> merge this into the above:</a></li>
+<li class="chapter" data-level="9.2.6" data-path="chapter-database-exploration.html"><a href="chapter-database-exploration.html#close-the-connection-and-shut-down-adventureworks-1"><i class="fa fa-check"></i><b>9.2.6</b> Close the connection and shut down adventureworks</a></li>
 </ul></li>
-<li class="chapter" data-level="9.3" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy-evaluation-and-lazy-queries"><i class="fa fa-check"></i><b>9.3</b> Lazy evaluation and lazy queries</a><ul>
-<li class="chapter" data-level="9.3.1" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#create-a-black-box-query-for-experimentation"><i class="fa fa-check"></i><b>9.3.1</b> Create a black box query for experimentation</a></li>
-<li class="chapter" data-level="9.3.2" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#experiment-overview"><i class="fa fa-check"></i><b>9.3.2</b> Experiment overview</a></li>
-<li class="chapter" data-level="9.3.3" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_print"><i class="fa fa-check"></i><b>9.3.3</b> Q %&gt;% print()</a></li>
-<li class="chapter" data-level="9.3.4" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_as-tibble"><i class="fa fa-check"></i><b>9.3.4</b> Q %&gt;% dplyr::as_tibble()</a></li>
-<li class="chapter" data-level="9.3.5" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_head"><i class="fa fa-check"></i><b>9.3.5</b> Q %&gt;% head()</a></li>
-<li class="chapter" data-level="9.3.6" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_tail"><i class="fa fa-check"></i><b>9.3.6</b> Q %&gt;% tail()</a></li>
-<li class="chapter" data-level="9.3.7" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_length"><i class="fa fa-check"></i><b>9.3.7</b> Q %&gt;% length()</a></li>
-<li class="chapter" data-level="9.3.8" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_str"><i class="fa fa-check"></i><b>9.3.8</b> Q %&gt;% str()</a></li>
-<li class="chapter" data-level="9.3.9" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_nrow"><i class="fa fa-check"></i><b>9.3.9</b> Q %&gt;% nrow()</a></li>
-<li class="chapter" data-level="9.3.10" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_tally"><i class="fa fa-check"></i><b>9.3.10</b> Q %&gt;% dplyr::tally()</a></li>
-<li class="chapter" data-level="9.3.11" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_collect"><i class="fa fa-check"></i><b>9.3.11</b> Q %&gt;% dplyr::collect()</a></li>
-<li class="chapter" data-level="9.3.12" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_plot-categories"><i class="fa fa-check"></i><b>9.3.12</b> Q %&gt;% ggplot</a></li>
-<li class="chapter" data-level="9.3.13" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_show-query"><i class="fa fa-check"></i><b>9.3.13</b> Q %&gt;% dplyr::show_query()</a></li>
+<li class="chapter" data-level="9.3" data-path="chapter-database-exploration.html"><a href="chapter-database-exploration.html#additional-reading-1"><i class="fa fa-check"></i><b>9.3</b> Additional reading</a></li>
 </ul></li>
-<li class="chapter" data-level="9.4" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#other-resources"><i class="fa fa-check"></i><b>9.4</b> Other resources</a></li>
+<li class="chapter" data-level="10" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html"><i class="fa fa-check"></i><b>10</b> Lazy Evaluation and Lazy Queries</a><ul>
+<li class="chapter" data-level="10.1" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#setup-2"><i class="fa fa-check"></i><b>10.1</b> Setup</a></li>
+<li class="chapter" data-level="10.2" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#r-is-lazy-and-comes-with-guardrails"><i class="fa fa-check"></i><b>10.2</b> R is lazy and comes with guardrails</a><ul>
+<li class="chapter" data-level="10.2.1" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy-loading"><i class="fa fa-check"></i><b>10.2.1</b> Lazy loading</a></li>
+<li class="chapter" data-level="10.2.2" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy-evaluation"><i class="fa fa-check"></i><b>10.2.2</b> Lazy evaluation</a></li>
+<li class="chapter" data-level="10.2.3" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy-queries"><i class="fa fa-check"></i><b>10.2.3</b> Lazy Queries</a></li>
 </ul></li>
-<li class="chapter" data-level="10" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html"><i class="fa fa-check"></i><b>10</b> Lazy Evaluation and Execution Environment</a><ul>
-<li class="chapter" data-level="10.1" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#setup-2"><i class="fa fa-check"></i><b>10.1</b> Setup</a><ul>
-<li class="chapter" data-level="10.1.1" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#experiment-overview-1"><i class="fa fa-check"></i><b>10.1.1</b> Experiment overview</a></li>
-<li class="chapter" data-level="10.1.2" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#time-based-execution-environment-issues"><i class="fa fa-check"></i><b>10.1.2</b> Time-based, execution environment issues</a></li>
-<li class="chapter" data-level="10.1.3" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#lazy_q_build"><i class="fa fa-check"></i><b>10.1.3</b> Q %&gt;% <code>more dplyr</code></a></li>
-<li class="chapter" data-level="10.1.4" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#many-handy-r-functions-cant-be-translated-to-sql"><i class="fa fa-check"></i><b>10.1.4</b> Many handy R functions can’t be translated to SQL</a></li>
-<li class="chapter" data-level="10.1.5" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#further-lazy-execution-examples"><i class="fa fa-check"></i><b>10.1.5</b> Further lazy execution examples</a></li>
+<li class="chapter" data-level="10.3" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy-evaluation-and-lazy-queries"><i class="fa fa-check"></i><b>10.3</b> Lazy evaluation and lazy queries</a><ul>
+<li class="chapter" data-level="10.3.1" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#create-a-black-box-query-for-experimentation"><i class="fa fa-check"></i><b>10.3.1</b> Create a black box query for experimentation</a></li>
+<li class="chapter" data-level="10.3.2" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#experiment-overview"><i class="fa fa-check"></i><b>10.3.2</b> Experiment overview</a></li>
+<li class="chapter" data-level="10.3.3" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_print"><i class="fa fa-check"></i><b>10.3.3</b> Q %&gt;% print()</a></li>
+<li class="chapter" data-level="10.3.4" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_as-tibble"><i class="fa fa-check"></i><b>10.3.4</b> Q %&gt;% dplyr::as_tibble()</a></li>
+<li class="chapter" data-level="10.3.5" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_head"><i class="fa fa-check"></i><b>10.3.5</b> Q %&gt;% head()</a></li>
+<li class="chapter" data-level="10.3.6" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_tail"><i class="fa fa-check"></i><b>10.3.6</b> Q %&gt;% tail()</a></li>
+<li class="chapter" data-level="10.3.7" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_length"><i class="fa fa-check"></i><b>10.3.7</b> Q %&gt;% length()</a></li>
+<li class="chapter" data-level="10.3.8" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_str"><i class="fa fa-check"></i><b>10.3.8</b> Q %&gt;% str()</a></li>
+<li class="chapter" data-level="10.3.9" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_nrow"><i class="fa fa-check"></i><b>10.3.9</b> Q %&gt;% nrow()</a></li>
+<li class="chapter" data-level="10.3.10" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_tally"><i class="fa fa-check"></i><b>10.3.10</b> Q %&gt;% dplyr::tally()</a></li>
+<li class="chapter" data-level="10.3.11" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_collect"><i class="fa fa-check"></i><b>10.3.11</b> Q %&gt;% dplyr::collect()</a></li>
+<li class="chapter" data-level="10.3.12" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_plot-categories"><i class="fa fa-check"></i><b>10.3.12</b> Q %&gt;% ggplot</a></li>
+<li class="chapter" data-level="10.3.13" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_show-query"><i class="fa fa-check"></i><b>10.3.13</b> Q %&gt;% dplyr::show_query()</a></li>
 </ul></li>
-<li class="chapter" data-level="10.2" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#other-resources-1"><i class="fa fa-check"></i><b>10.2</b> Other resources</a></li>
+<li class="chapter" data-level="10.4" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#other-resources"><i class="fa fa-check"></i><b>10.4</b> Other resources</a></li>
 </ul></li>
-<li class="chapter" data-level="11" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html"><i class="fa fa-check"></i><b>11</b> Getting metadata about and from PostgreSQL</a><ul>
-<li class="chapter" data-level="11.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#database-contents-and-structure"><i class="fa fa-check"></i><b>11.1</b> Database contents and structure</a><ul>
-<li class="chapter" data-level="11.1.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#database-structure"><i class="fa fa-check"></i><b>11.1.1</b> Database structure</a></li>
-<li class="chapter" data-level="11.1.2" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#contents-of-the-information_schema"><i class="fa fa-check"></i><b>11.1.2</b> Contents of the <code>information_schema</code></a></li>
-<li class="chapter" data-level="11.1.3" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#what-tables-are-in-the-database"><i class="fa fa-check"></i><b>11.1.3</b> What tables are in the database?</a></li>
+<li class="chapter" data-level="11" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html"><i class="fa fa-check"></i><b>11</b> Lazy Evaluation and Execution Environment</a><ul>
+<li class="chapter" data-level="11.1" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#setup-3"><i class="fa fa-check"></i><b>11.1</b> Setup</a><ul>
+<li class="chapter" data-level="11.1.1" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#experiment-overview-1"><i class="fa fa-check"></i><b>11.1.1</b> Experiment overview</a></li>
+<li class="chapter" data-level="11.1.2" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#time-based-execution-environment-issues"><i class="fa fa-check"></i><b>11.1.2</b> Time-based, execution environment issues</a></li>
+<li class="chapter" data-level="11.1.3" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#lazy_q_build"><i class="fa fa-check"></i><b>11.1.3</b> Q %&gt;% <code>more dplyr</code></a></li>
+<li class="chapter" data-level="11.1.4" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#many-handy-r-functions-cant-be-translated-to-sql"><i class="fa fa-check"></i><b>11.1.4</b> Many handy R functions can’t be translated to SQL</a></li>
+<li class="chapter" data-level="11.1.5" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#further-lazy-execution-examples"><i class="fa fa-check"></i><b>11.1.5</b> Further lazy execution examples</a></li>
 </ul></li>
-<li class="chapter" data-level="11.2" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#what-columns-do-those-tables-contain"><i class="fa fa-check"></i><b>11.2</b> What columns do those tables contain?</a><ul>
-<li class="chapter" data-level="11.2.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#what-is-the-difference-between-a-view-and-a-base-table"><i class="fa fa-check"></i><b>11.2.1</b> What is the difference between a <code>VIEW</code> and a <code>BASE TABLE</code>?</a></li>
-<li class="chapter" data-level="11.2.2" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#what-data-types-are-found-in-the-database"><i class="fa fa-check"></i><b>11.2.2</b> What data types are found in the database?</a></li>
+<li class="chapter" data-level="11.2" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#other-resources-1"><i class="fa fa-check"></i><b>11.2</b> Other resources</a></li>
 </ul></li>
-<li class="chapter" data-level="11.3" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#characterizing-how-things-are-named"><i class="fa fa-check"></i><b>11.3</b> Characterizing how things are named</a><ul>
-<li class="chapter" data-level="11.3.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#counting-columns-and-name-reuse"><i class="fa fa-check"></i><b>11.3.1</b> Counting columns and name reuse</a></li>
+<li class="chapter" data-level="12" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html"><i class="fa fa-check"></i><b>12</b> Getting metadata about and from PostgreSQL</a><ul>
+<li class="chapter" data-level="12.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#database-contents-and-structure"><i class="fa fa-check"></i><b>12.1</b> Database contents and structure</a><ul>
+<li class="chapter" data-level="12.1.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#database-structure"><i class="fa fa-check"></i><b>12.1.1</b> Database structure</a></li>
+<li class="chapter" data-level="12.1.2" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#contents-of-the-information_schema"><i class="fa fa-check"></i><b>12.1.2</b> Contents of the <code>information_schema</code></a></li>
+<li class="chapter" data-level="12.1.3" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#what-tables-are-in-the-database"><i class="fa fa-check"></i><b>12.1.3</b> What tables are in the database?</a></li>
 </ul></li>
-<li class="chapter" data-level="11.4" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#database-keys"><i class="fa fa-check"></i><b>11.4</b> Database keys</a><ul>
-<li class="chapter" data-level="11.4.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#direct-sql"><i class="fa fa-check"></i><b>11.4.1</b> Direct SQL</a></li>
-<li class="chapter" data-level="11.4.2" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#database-keys-with-dplyr"><i class="fa fa-check"></i><b>11.4.2</b> Database keys with dplyr</a></li>
+<li class="chapter" data-level="12.2" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#what-columns-do-those-tables-contain"><i class="fa fa-check"></i><b>12.2</b> What columns do those tables contain?</a><ul>
+<li class="chapter" data-level="12.2.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#what-is-the-difference-between-a-view-and-a-base-table"><i class="fa fa-check"></i><b>12.2.1</b> What is the difference between a <code>VIEW</code> and a <code>BASE TABLE</code>?</a></li>
+<li class="chapter" data-level="12.2.2" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#what-data-types-are-found-in-the-database"><i class="fa fa-check"></i><b>12.2.2</b> What data types are found in the database?</a></li>
 </ul></li>
-<li class="chapter" data-level="11.5" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#creating-your-own-data-dictionary"><i class="fa fa-check"></i><b>11.5</b> Creating your own data dictionary</a></li>
-<li class="chapter" data-level="11.6" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#save-your-work"><i class="fa fa-check"></i><b>11.6</b> Save your work!</a></li>
+<li class="chapter" data-level="12.3" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#characterizing-how-things-are-named"><i class="fa fa-check"></i><b>12.3</b> Characterizing how things are named</a><ul>
+<li class="chapter" data-level="12.3.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#counting-columns-and-name-reuse"><i class="fa fa-check"></i><b>12.3.1</b> Counting columns and name reuse</a></li>
+</ul></li>
+<li class="chapter" data-level="12.4" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#database-keys"><i class="fa fa-check"></i><b>12.4</b> Database keys</a><ul>
+<li class="chapter" data-level="12.4.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#direct-sql"><i class="fa fa-check"></i><b>12.4.1</b> Direct SQL</a></li>
+<li class="chapter" data-level="12.4.2" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#database-keys-with-dplyr"><i class="fa fa-check"></i><b>12.4.2</b> Database keys with dplyr</a></li>
+</ul></li>
+<li class="chapter" data-level="12.5" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#creating-your-own-data-dictionary"><i class="fa fa-check"></i><b>12.5</b> Creating your own data dictionary</a></li>
+<li class="chapter" data-level="12.6" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#save-your-work"><i class="fa fa-check"></i><b>12.6</b> Save your work!</a></li>
 </ul></li>
 <li class="appendix"><span><b>Appendices</b></span></li>
 <li class="chapter" data-level="A" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html"><i class="fa fa-check"></i><b>A</b> Appendix B - Additional technical details for Windows users</a><ul>
@@ -346,7 +359,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">R, Databases, and Docker</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./"><div class="line-block">Exploring Enterprise Databases with R<br />
+A Tidyverse Approach&quot;</div></a>
           </h1>
         </div>
 
@@ -446,14 +460,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb126-7" data-line-number="7"></a>
 <a class="sourceLine" id="cb126-8" data-line-number="8">one_percent_sample</a></code></pre></div>
 <pre><code>##   businessentityid                     jobtitle  birthdate
-## 1               27 Production Supervisor - WC60 1956-10-08
-## 2               36 Production Technician - WC60 1984-07-31
-## 3               84 Production Technician - WC40 1952-03-02
-## 4              149 Production Technician - WC30 1983-10-20
-## 5              240                    Recruiter 1978-07-18
-## 6              248                   Accountant 1979-07-01
-## 7              253                        Buyer 1970-11-30
-## 8              289         Sales Representative 1968-03-17</code></pre>
+## 1                6              Design Engineer 1959-03-11
+## 2               65 Production Technician - WC60 1970-04-28
+## 3              151 Production Technician - WC30 1977-09-13
+## 4              270       Database Administrator 1975-05-17
+## 5              284         Sales Representative 1978-01-05
+## 6              288         Sales Representative 1975-07-09</code></pre>
 <p><strong>Exact sample of 100 records</strong></p>
 <p>This technique depends on knowing the range of a record index, such as the <code>businessentityid</code> in the <code>employee</code> table of our <code>adventureworks</code> database.</p>
 <p>Start by finding the min and max values.</p>
@@ -604,12 +616,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>## # A tibble: 6 x 4
 ##   jobtitle                 vacationhours sickleavehours today              
 ##   &lt;chr&gt;                            &lt;int&gt;          &lt;int&gt; &lt;dttm&gt;             
-## 1 Chief Executive Officer             99             69 2019-08-01 15:48:13
-## 2 Vice President of Engin…             1             20 2019-08-01 15:48:13
-## 3 Engineering Manager                  2             21 2019-08-01 15:48:13
-## 4 Senior Tool Designer                48             80 2019-08-01 15:48:13
-## 5 Design Engineer                      5             22 2019-08-01 15:48:13
-## 6 Design Engineer                      6             23 2019-08-01 15:48:13</code></pre>
+## 1 Chief Executive Officer             99             69 2019-08-03 15:03:43
+## 2 Vice President of Engin…             1             20 2019-08-03 15:03:43
+## 3 Engineering Manager                  2             21 2019-08-03 15:03:43
+## 4 Senior Tool Designer                48             80 2019-08-03 15:03:43
+## 5 Design Engineer                      5             22 2019-08-03 15:03:43
+## 6 Design Engineer                      6             23 2019-08-03 15:03:43</code></pre>
 </div>
 <div id="examining-a-single-table-with-r" class="section level2">
 <h2><span class="header-section-number">8.4</span> Examining a single table with R</h2>
@@ -731,7 +743,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##  n obs: 290 
 ##  n variables: 15 
 ## 
-## ── Variable type:character ──────────────────────────────────
+## ── Variable type:character ────────────────────────────────────────
 ##          variable missing complete   n min max empty n_unique
 ##            gender       0      290 290   1   1     0        2
 ##          jobtitle       0      290 290   5  40     0       67
@@ -741,12 +753,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##  organizationnode       0      290 290   1  11     0      290
 ##           rowguid       0      290 290  36  36     0      290
 ## 
-## ── Variable type:Date ───────────────────────────────────────
+## ── Variable type:Date ─────────────────────────────────────────────
 ##   variable missing complete   n        min        max     median n_unique
 ##  birthdate       0      290 290 1951-10-17 1991-05-31 1978-10-19      275
 ##   hiredate       0      290 290 2006-06-30 2013-05-30 2009-02-02      164
 ## 
-## ── Variable type:integer ────────────────────────────────────
+## ── Variable type:integer ──────────────────────────────────────────
 ##          variable missing complete   n   mean    sd p0   p25   p50    p75
 ##  businessentityid       0      290 290 145.5  83.86  1 73.25 145.5 217.75
 ##    sickleavehours       0      290 290  45.31 14.54 20 33     46    58   
@@ -756,12 +768,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##    80 ▇▇▇▇▇▇▃▁
 ##    99 ▇▆▇▇▇▇▇▇
 ## 
-## ── Variable type:logical ────────────────────────────────────
+## ── Variable type:logical ──────────────────────────────────────────
 ##      variable missing complete   n mean                    count
 ##   currentflag       0      290 290 1             TRU: 290, NA: 0
 ##  salariedflag       0      290 290 0.18 FAL: 238, TRU: 52, NA: 0
 ## 
-## ── Variable type:POSIXct ────────────────────────────────────
+## ── Variable type:POSIXct ──────────────────────────────────────────
 ##      variable missing complete   n        min        max     median
 ##  modifieddate       0      290 290 2014-06-30 2014-12-26 2014-06-30
 ##  n_unique
@@ -822,7 +834,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
         </div>
       </div>
 <a href="chapter-dbms-login-credentials.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="chapter-lazy-evaluation-queries.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="chapter-database-exploration.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

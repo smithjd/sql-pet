@@ -83,7 +83,7 @@ sp_docker_images_tibble()  # Doesn't produce the expected output.
 ## 3 4e045cb8… postgres     latest sha256:1518027f… 7 week… 2019-06-10 … 312MB
 ## 4 aff06852… postgres-dv… latest <none>           3 mont… 2019-04-26 … 294MB
 ## 5 c149455a… <none>       <none> <none>           4 mont… 2019-03-18 … 252MB
-## 6 3e016ba4… postgres     10     sha256:5c702997… 4 mont… 2019-03-04 … 230MB
+## 6 3e016ba4… postgres     10     sha256:5c702997… 5 mont… 2019-03-04 … 230MB
 ```
 
 ## Run the adventureworks Docker Image
@@ -109,7 +109,7 @@ sp_docker_containers_tibble()
 ## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 5cda078365f7 post… docker… 2019-08-0… 15 sec… 0.0.… Up 13… 63B … adve…
+## 1 a6bbd6156e97 post… docker… 2019-08-0… 15 sec… 0.0.… Up 13… 63B … adve…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 
@@ -434,7 +434,7 @@ sp_docker_containers_tibble(list_all = TRUE)
 ## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 5cda078365f7 post… docker… 2019-08-0… 16 sec… <NA>  Exite… 0B (… adve…
+## 1 a6bbd6156e97 post… docker… 2019-08-0… 16 sec… <NA>  Exite… 0B (… adve…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 
@@ -450,7 +450,7 @@ sp_docker_containers_tibble()
 ## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 5cda078365f7 post… docker… 2019-08-0… 17 sec… 0.0.… Up Le… 0B (… adve…
+## 1 a6bbd6156e97 post… docker… 2019-08-0… 17 sec… 0.0.… Up Le… 0B (… adve…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 Connect to the `adventureworks` database in PostgreSQL:
@@ -510,7 +510,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## 5cda078365f7        postgres:10         "docker-entrypoint.s…"   19 seconds ago      Exited (0) Less than a second ago                       adventureworks
+## a6bbd6156e97        postgres:10         "docker-entrypoint.s…"   19 seconds ago      Exited (0) Less than a second ago                       adventureworks
 ```
 
 Next time, you can just use this command to start the container: 
