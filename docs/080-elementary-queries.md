@@ -137,14 +137,12 @@ one_percent_sample
 
 ```
 ##   businessentityid                     jobtitle  birthdate
-## 1               27 Production Supervisor - WC60 1956-10-08
-## 2               36 Production Technician - WC60 1984-07-31
-## 3               84 Production Technician - WC40 1952-03-02
-## 4              149 Production Technician - WC30 1983-10-20
-## 5              240                    Recruiter 1978-07-18
-## 6              248                   Accountant 1979-07-01
-## 7              253                        Buyer 1970-11-30
-## 8              289         Sales Representative 1968-03-17
+## 1                6              Design Engineer 1959-03-11
+## 2               65 Production Technician - WC60 1970-04-28
+## 3              151 Production Technician - WC30 1977-09-13
+## 4              270       Database Administrator 1975-05-17
+## 5              284         Sales Representative 1978-01-05
+## 6              288         Sales Representative 1975-07-09
 ```
 **Exact sample of 100 records**
 
@@ -391,12 +389,12 @@ employee_table %>%
 ## # A tibble: 6 x 4
 ##   jobtitle                 vacationhours sickleavehours today              
 ##   <chr>                            <int>          <int> <dttm>             
-## 1 Chief Executive Officer             99             69 2019-08-01 15:48:13
-## 2 Vice President of Engin…             1             20 2019-08-01 15:48:13
-## 3 Engineering Manager                  2             21 2019-08-01 15:48:13
-## 4 Senior Tool Designer                48             80 2019-08-01 15:48:13
-## 5 Design Engineer                      5             22 2019-08-01 15:48:13
-## 6 Design Engineer                      6             23 2019-08-01 15:48:13
+## 1 Chief Executive Officer             99             69 2019-08-03 15:03:43
+## 2 Vice President of Engin…             1             20 2019-08-03 15:03:43
+## 3 Engineering Manager                  2             21 2019-08-03 15:03:43
+## 4 Senior Tool Designer                48             80 2019-08-03 15:03:43
+## 5 Design Engineer                      5             22 2019-08-03 15:03:43
+## 6 Design Engineer                      6             23 2019-08-03 15:03:43
 ```
 
 
@@ -561,7 +559,7 @@ skimr::skim(employee_tibble)
 ##  n obs: 290 
 ##  n variables: 15 
 ## 
-## ── Variable type:character ──────────────────────────────────
+## ── Variable type:character ────────────────────────────────────────
 ##          variable missing complete   n min max empty n_unique
 ##            gender       0      290 290   1   1     0        2
 ##          jobtitle       0      290 290   5  40     0       67
@@ -571,12 +569,12 @@ skimr::skim(employee_tibble)
 ##  organizationnode       0      290 290   1  11     0      290
 ##           rowguid       0      290 290  36  36     0      290
 ## 
-## ── Variable type:Date ───────────────────────────────────────
+## ── Variable type:Date ─────────────────────────────────────────────
 ##   variable missing complete   n        min        max     median n_unique
 ##  birthdate       0      290 290 1951-10-17 1991-05-31 1978-10-19      275
 ##   hiredate       0      290 290 2006-06-30 2013-05-30 2009-02-02      164
 ## 
-## ── Variable type:integer ────────────────────────────────────
+## ── Variable type:integer ──────────────────────────────────────────
 ##          variable missing complete   n   mean    sd p0   p25   p50    p75
 ##  businessentityid       0      290 290 145.5  83.86  1 73.25 145.5 217.75
 ##    sickleavehours       0      290 290  45.31 14.54 20 33     46    58   
@@ -586,12 +584,12 @@ skimr::skim(employee_tibble)
 ##    80 ▇▇▇▇▇▇▃▁
 ##    99 ▇▆▇▇▇▇▇▇
 ## 
-## ── Variable type:logical ────────────────────────────────────
+## ── Variable type:logical ──────────────────────────────────────────
 ##      variable missing complete   n mean                    count
 ##   currentflag       0      290 290 1             TRU: 290, NA: 0
 ##  salariedflag       0      290 290 0.18 FAL: 238, TRU: 52, NA: 0
 ## 
-## ── Variable type:POSIXct ────────────────────────────────────
+## ── Variable type:POSIXct ──────────────────────────────────────────
 ##      variable missing complete   n        min        max     median
 ##  modifieddate       0      290 290 2014-06-30 2014-12-26 2014-06-30
 ##  n_unique
