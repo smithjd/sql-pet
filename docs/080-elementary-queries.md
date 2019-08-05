@@ -136,13 +136,23 @@ one_percent_sample
 ```
 
 ```
-##   businessentityid                     jobtitle  birthdate
-## 1                6              Design Engineer 1959-03-11
-## 2               65 Production Technician - WC60 1970-04-28
-## 3              151 Production Technician - WC30 1977-09-13
-## 4              270       Database Administrator 1975-05-17
-## 5              284         Sales Representative 1978-01-05
-## 6              288         Sales Representative 1975-07-09
+##    businessentityid                          jobtitle  birthdate
+## 1                 9 Research and Development Engineer 1979-01-21
+## 2                19               Marketing Assistant 1978-01-29
+## 3                43      Production Technician - WC60 1988-11-19
+## 4                47      Production Supervisor - WC10 1988-09-06
+## 5                71      Production Supervisor - WC30 1989-01-29
+## 6                91      Production Technician - WC10 1986-09-13
+## 7               109      Production Technician - WC50 1978-01-26
+## 8               119      Production Technician - WC50 1989-06-15
+## 9               137      Production Technician - WC20 1974-09-05
+## 10              162      Production Technician - WC45 1980-12-25
+## 11              182      Production Technician - WC20 1986-12-01
+## 12              214      Quality Assurance Technician 1989-03-28
+## 13              235           Human Resources Manager 1976-02-11
+## 14              250                Purchasing Manager 1978-02-10
+## 15              260              Purchasing Assistant 1978-01-29
+## 16              274      North American Sales Manager 1951-10-17
 ```
 **Exact sample of 100 records**
 
@@ -389,12 +399,12 @@ employee_table %>%
 ## # A tibble: 6 x 4
 ##   jobtitle                 vacationhours sickleavehours today              
 ##   <chr>                            <int>          <int> <dttm>             
-## 1 Chief Executive Officer             99             69 2019-08-03 15:03:43
-## 2 Vice President of Engin…             1             20 2019-08-03 15:03:43
-## 3 Engineering Manager                  2             21 2019-08-03 15:03:43
-## 4 Senior Tool Designer                48             80 2019-08-03 15:03:43
-## 5 Design Engineer                      5             22 2019-08-03 15:03:43
-## 6 Design Engineer                      6             23 2019-08-03 15:03:43
+## 1 Chief Executive Officer             99             69 2019-08-04 18:04:48
+## 2 Vice President of Engin…             1             20 2019-08-04 18:04:48
+## 3 Engineering Manager                  2             21 2019-08-04 18:04:48
+## 4 Senior Tool Designer                48             80 2019-08-04 18:04:48
+## 5 Design Engineer                      5             22 2019-08-04 18:04:48
+## 6 Design Engineer                      6             23 2019-08-04 18:04:48
 ```
 
 

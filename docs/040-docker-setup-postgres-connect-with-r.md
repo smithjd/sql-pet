@@ -1,37 +1,9 @@
 # Connecting Docker, PostgreSQL, and R {#chapter_connect-docker-postgresql-r}
 
-> This chapter demonstrates how to:
->
->  * Run, clean-up and close PostgreSQL in Docker containers.
->  * Keep necessary credentials secret while being available to R when it executes.
->  * Interact with PostgreSQL when it's running inside a Docker container.
->  * Read and write to PostgreSQL from R.
-
-Please install the `sqlpetr` package if not already installed:
-
-```r
-library(devtools)
-if (!require(sqlpetr)) {
-    remotes::install_github(
-      "smithjd/sqlpetr",
-      force = TRUE, build = FALSE, quiet = TRUE)
-}
-```
-Note that when you install the package the first time, it will ask you to update the packages it uses and that can take some time.
-
-The following packages are used in this chapter:
-
-```r
-library(tidyverse)
-library(DBI)
-library(RPostgres)
-require(knitr)
-library(sqlpetr)
-```
+* NOTE: * a lot of this content is being moved to `040-docker-setup-postgres-connect-with-r.Rmd`
 
 ## Verify that Docker is running
 
-Docker commands can be run from a terminal (e.g., the Rstudio Terminal pane) or with a `system2()` command.  (We discuss the diffeent ways of interacting with Docker and other elements in your environment in a [separate chapter](#your-local-environment).)  The necessary functions to start, stop Docker containers and do other busy work are provided in the `sqlpetr` package.  As time permits and curiosity dictates, feel free to look at those functions to see how they work.
 
 ### Check that Docker is up and running
 
@@ -39,6 +11,77 @@ Docker commands can be run from a terminal (e.g., the Rstudio Terminal pane) or 
 
 > The `sp_check_that_docker_is_up` function from the `sqlpetr` package checks whether Docker is up and running.  If it's not, then you need to install, launch or re-install Docker.
 
+
+```r
+library(tidyverse)
+```
+
+```
+## ── Attaching packages ────────────────────────── tidyverse 1.2.1 ──
+```
+
+```
+## ✔ ggplot2 3.2.0     ✔ purrr   0.3.2
+## ✔ tibble  2.1.3     ✔ dplyr   0.8.3
+## ✔ tidyr   0.8.3     ✔ stringr 1.4.0
+## ✔ readr   1.3.1     ✔ forcats 0.4.0
+```
+
+```
+## ── Conflicts ───────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
+```
+
+```r
+library(DBI)
+library(RPostgres)
+library(glue)
+```
+
+```
+## 
+## Attaching package: 'glue'
+```
+
+```
+## The following object is masked from 'package:dplyr':
+## 
+##     collapse
+```
+
+```r
+require(knitr)
+```
+
+```
+## Loading required package: knitr
+```
+
+```r
+library(dbplyr)
+```
+
+```
+## 
+## Attaching package: 'dbplyr'
+```
+
+```
+## The following objects are masked from 'package:dplyr':
+## 
+##     ident, sql
+```
+
+```r
+library(sqlpetr)
+library(bookdown)
+library(here)
+```
+
+```
+## here() starts at /Users/jds/Documents/Library/R/r-system/sql-pet
+```
 
 ```r
 sp_check_that_docker_is_up()
@@ -80,7 +123,7 @@ sp_check_that_docker_is_up()
 ```
 ## [1] "Docker is up, running these containers:"                                                                                                             
 ## [2] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                              NAMES"   
-## [3] "a38624bac268        postgres:10         \"docker-entrypoint.s…\"   2 seconds ago       Up 2 seconds        5432/tcp, 0.0.0.0:5439->5439/tcp   cattle"
+## [3] "e3aae73ec941        postgres:10         \"docker-entrypoint.s…\"   3 seconds ago       Up 2 seconds        5432/tcp, 0.0.0.0:5439->5439/tcp   cattle"
 ```
 
 > The `sp_docker_containers_tibble` function from the `sqlpetr` package provides more on the containers that Docker is running.  Basically this function creates a tibble of containers using `docker ps`.
@@ -94,7 +137,7 @@ sp_docker_containers_tibble()
 ## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 a38624bac268 post… docker… 2019-08-0… 2 seco… 5432… Up 2 … 63B … catt…
+## 1 e3aae73ec941 post… docker… 2019-08-0… 3 seco… 5432… Up 2 … 63B … catt…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 

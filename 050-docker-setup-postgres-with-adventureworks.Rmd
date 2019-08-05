@@ -1,4 +1,4 @@
-# Create the adventureworks database in PostgreSQL in Docker {#chapter_setup-adventureworks-db}
+# Create and connect to the adventureworks database in PostgreSQL{#chapter_setup-adventureworks-db}
 
 > NOTE: This chapter doesn't go into the details of *creating* or *restoring* the `adventureworks` database.  For more detail on what's going on behind the scenes, you can examine the step-by-step code in:
 >
@@ -6,14 +6,26 @@
 
 > This chapter demonstrates how to:
 >
->  * Setup the `adventureworks` database in Docker
->  * Stop and start Docker container to demonstrate persistence
+>  * Create and connect to the PostgreSQL `adventureworks` database in Docker
+>  * Keep necessary credentials secret while being available to R when it executes.
 >  * Connect to and disconnect R from the `adventureworks` database
 >  * Set up the environment for subsequent chapters
 
 ## Overview
 
-In the last chapter we connected to PostgreSQL from R.  Now we set up a "realistic" database named `adventureworks`. There are different approaches to doing this: this chapter sets it up in a way that doesn't show all the Docker details.
+Please install the `sqlpetr` package if not already installed:
+```{r sqlpetr, echo = TRUE, message=FALSE, warning=FALSE}
+library(devtools)
+if (!require(sqlpetr)) {
+    remotes::install_github(
+      "smithjd/sqlpetr",
+      force = TRUE, build = FALSE, quiet = TRUE)
+}
+
+```
+Note that when you install this package the first time, it will ask you to update the packages it uses and that may take some time.
+
+Now we set up a "realistic" database named `adventureworks`. There are different approaches to doing this: this chapter sets it up in a way that doesn't show all the Docker details.
 
 These packages are called in this Chapter:
 ```{r setup, echo=TRUE, message=FALSE, warning=FALSE}
@@ -40,15 +52,17 @@ sp_docker_remove_container("adventureworks")
 ```
 ## Build the adventureworks Docker image
 
-**UPDATE:** For the rest of the book we will be using a Docker image called
+**NEEDS to be REWRITTEN:** For the rest of the book we will be using a Docker image called
 `adventureworks`. To save space here in the book, we've created a function
-in `sqlpetr` to build this image, called [`sp_make_dvdrental_image`](https://smithjd.github.io/sqlpetr/reference/sp_make_dvdrental_image.html). Vignette [Building the `hsrample` Docker Image
+in `sqlpetr` to build this image, called [`sp_make_dvdrental_image`](https://smithjd.github.io/sqlpetr/reference/sp_make_dvdrental_image.html). Vignette [Building the `adventureworks` Docker Image
 ](https://smithjd.github.io/sqlpetr/articles/building-the-dvdrental-docker-image.html) describes the build process.
 
 ```{r}
 # sp_make_dvdrental_image("postgres-dvdrental")
 source(here("book-src", "restore-adventureworks-postgres-on-docker.R"))
 ```
+
+Docker commands can be run from a terminal (e.g., the Rstudio Terminal pane) or with a `system2()` command.  The necessary functions to start, stop Docker containers and do other busy work are provided in the `sqlpetr` package.  As time permits and curiosity dictates, feel free to look at those functions to see how they work.
 
 **UPDATE:** Did it work? We have a function that lists the images into a tibble!
 
