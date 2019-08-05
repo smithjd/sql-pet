@@ -1,7 +1,7 @@
-# Basic Concepts{#chapter_basic-concepts}
+# Background and Basic Concepts{#appendix_background_basic-concepts}
 
 ************
-> This chapter introduces:
+> This Appendix describes:
 > 
 > * The overall structure of our Docker-based PostgreSQL sandbox
 > * Basic concepts around each of the elements that make up our sandbox: tidy data, pipes, Docker, PostgreSQL, data representation, and our `petsqlr` package.

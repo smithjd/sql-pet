@@ -1,4 +1,4 @@
-# Create the adventureworks database in PostgreSQL in Docker {#chapter_setup-adventureworks-db}
+# Create and connect to the adventureworks database in PostgreSQL{#chapter_setup-adventureworks-db}
 
 > NOTE: This chapter doesn't go into the details of *creating* or *restoring* the `adventureworks` database.  For more detail on what's going on behind the scenes, you can examine the step-by-step code in:
 >
@@ -6,14 +6,26 @@
 
 > This chapter demonstrates how to:
 >
->  * Setup the `adventureworks` database in Docker
->  * Stop and start Docker container to demonstrate persistence
+>  * Create and connect to the PostgreSQL `adventureworks` database in Docker
+>  * Keep necessary credentials secret while being available to R when it executes.
 >  * Connect to and disconnect R from the `adventureworks` database
 >  * Set up the environment for subsequent chapters
 
 ## Overview
 
-In the last chapter we connected to PostgreSQL from R.  Now we set up a "realistic" database named `adventureworks`. There are different approaches to doing this: this chapter sets it up in a way that doesn't show all the Docker details.
+Please install the `sqlpetr` package if not already installed:
+
+```r
+library(devtools)
+if (!require(sqlpetr)) {
+    remotes::install_github(
+      "smithjd/sqlpetr",
+      force = TRUE, build = FALSE, quiet = TRUE)
+}
+```
+Note that when you install this package the first time, it will ask you to update the packages it uses and that may take some time.
+
+Now we set up a "realistic" database named `adventureworks`. There are different approaches to doing this: this chapter sets it up in a way that doesn't show all the Docker details.
 
 These packages are called in this Chapter:
 
@@ -51,9 +63,9 @@ sp_docker_remove_container("adventureworks")
 ```
 ## Build the adventureworks Docker image
 
-**UPDATE:** For the rest of the book we will be using a Docker image called
+**NEEDS to be REWRITTEN:** For the rest of the book we will be using a Docker image called
 `adventureworks`. To save space here in the book, we've created a function
-in `sqlpetr` to build this image, called [`sp_make_dvdrental_image`](https://smithjd.github.io/sqlpetr/reference/sp_make_dvdrental_image.html). Vignette [Building the `hsrample` Docker Image
+in `sqlpetr` to build this image, called [`sp_make_dvdrental_image`](https://smithjd.github.io/sqlpetr/reference/sp_make_dvdrental_image.html). Vignette [Building the `adventureworks` Docker Image
 ](https://smithjd.github.io/sqlpetr/articles/building-the-dvdrental-docker-image.html) describes the build process.
 
 
@@ -65,6 +77,8 @@ source(here("book-src", "restore-adventureworks-postgres-on-docker.R"))
 ```
 ## docker  run --detach  --name adventureworks --publish 5432:5432 --mount type=bind,source="/Users/jds/Documents/Library/R/r-system/sql-pet",target=/petdir postgres:10
 ```
+
+Docker commands can be run from a terminal (e.g., the Rstudio Terminal pane) or with a `system2()` command.  The necessary functions to start, stop Docker containers and do other busy work are provided in the `sqlpetr` package.  As time permits and curiosity dictates, feel free to look at those functions to see how they work.
 
 **UPDATE:** Did it work? We have a function that lists the images into a tibble!
 
@@ -109,7 +123,7 @@ sp_docker_containers_tibble()
 ## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 a6bbd6156e97 post… docker… 2019-08-0… 15 sec… 0.0.… Up 13… 63B … adve…
+## 1 ec80334d8848 post… docker… 2019-08-0… 15 sec… 0.0.… Up 13… 63B … adve…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 
@@ -434,7 +448,7 @@ sp_docker_containers_tibble(list_all = TRUE)
 ## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 a6bbd6156e97 post… docker… 2019-08-0… 16 sec… <NA>  Exite… 0B (… adve…
+## 1 ec80334d8848 post… docker… 2019-08-0… 16 sec… <NA>  Exite… 0B (… adve…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 
@@ -450,7 +464,7 @@ sp_docker_containers_tibble()
 ## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 a6bbd6156e97 post… docker… 2019-08-0… 17 sec… 0.0.… Up Le… 0B (… adve…
+## 1 ec80334d8848 post… docker… 2019-08-0… 17 sec… 0.0.… Up Le… 0B (… adve…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 Connect to the `adventureworks` database in PostgreSQL:
@@ -510,7 +524,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## a6bbd6156e97        postgres:10         "docker-entrypoint.s…"   19 seconds ago      Exited (0) Less than a second ago                       adventureworks
+## ec80334d8848        postgres:10         "docker-entrypoint.s…"   19 seconds ago      Exited (0) Less than a second ago                       adventureworks
 ```
 
 Next time, you can just use this command to start the container: 

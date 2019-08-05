@@ -1,36 +1,9 @@
 # Connecting Docker, PostgreSQL, and R {#chapter_connect-docker-postgresql-r}
 
-> This chapter demonstrates how to:
->
->  * Run, clean-up and close PostgreSQL in Docker containers.
->  * Keep necessary credentials secret while being available to R when it executes.
->  * Interact with PostgreSQL when it's running inside a Docker container.
->  * Read and write to PostgreSQL from R.
-
-Please install the `sqlpetr` package if not already installed:
-```{r sqlpetr, echo = TRUE, message=FALSE, warning=FALSE}
-library(devtools)
-if (!require(sqlpetr)) {
-    remotes::install_github(
-      "smithjd/sqlpetr",
-      force = TRUE, build = FALSE, quiet = TRUE)
-}
-
-```
-Note that when you install the package the first time, it will ask you to update the packages it uses and that can take some time.
-
-The following packages are used in this chapter:
-```{r setup, echo=TRUE, message=FALSE, warning=FALSE}
-library(tidyverse)
-library(DBI)
-library(RPostgres)
-require(knitr)
-library(sqlpetr)
-```
+* NOTE: * a lot of this content is being moved to `040-docker-setup-postgres-connect-with-r.Rmd`
 
 ## Verify that Docker is running
 
-Docker commands can be run from a terminal (e.g., the Rstudio Terminal pane) or with a `system2()` command.  (We discuss the diffeent ways of interacting with Docker and other elements in your environment in a [separate chapter](#your-local-environment).)  The necessary functions to start, stop Docker containers and do other busy work are provided in the `sqlpetr` package.  As time permits and curiosity dictates, feel free to look at those functions to see how they work.
 
 ### Check that Docker is up and running
 
@@ -39,6 +12,15 @@ Docker commands can be run from a terminal (e.g., the Rstudio Terminal pane) or 
 > The `sp_check_that_docker_is_up` function from the `sqlpetr` package checks whether Docker is up and running.  If it's not, then you need to install, launch or re-install Docker.
 
 ```{r check on Docker}
+library(tidyverse)
+library(DBI)
+library(RPostgres)
+library(glue)
+require(knitr)
+library(dbplyr)
+library(sqlpetr)
+library(bookdown)
+library(here)
 sp_check_that_docker_is_up()
 ```
 
