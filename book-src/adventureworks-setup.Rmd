@@ -42,27 +42,27 @@ run:
 ```{r}
 
 docker_cmd <- glue(
-  "run ",      # Run is the Docker command.  Everything that follows are `run` parameters.
+  "run ", # Run is the Docker command.  Everything that follows are `run` parameters.
   "--detach ", # (or `-d`) tells Docker to disconnect from the terminal / program issuing the command
-  " --name adventureworks ",     # tells Docker to give the container a name: `sql-pet`
+  " --name adventureworks ", # tells Docker to give the container a name: `sql-pet`
   "--publish 5432:5432 ", # tells Docker to expose the PostgreSQL port 5432 to the local network with 5432
   "--mount ", # tells Docker to mount a volume -- mapping Docker's internal file structure to the host file structure
-  'type=bind,source="', wd, '",target=/petdir',
-  " postgres:10 " # tells Docker the image that is to be run (after downloading if necessary)
+  'type=bind,source="', wd, '",target=/petdir', # not really used, but could be later
+  " postgres:11 " # tells Docker the image that is to be run (after downloading if necessary)
 )
-cat('docker ',docker_cmd)
+cat("docker ", docker_cmd)
 
 system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
+Sys.sleep(2)
 
 ```
 Build the adventureworks database
 ```{r}
-system2('docker', 
-        'exec adventureworks psql -U postgres -c "CREATE DATABASE adventureworks;"',
-        stdout = TRUE, stderr = TRUE)
+system2("docker", 'exec -i adventureworks psql -U postgres -c "CREATE DATABASE adventureworks;"')
+system2("docker", 'exec -i adventureworks psql -U postgres -c "DROP SCHEMA IF EXISTS public;"')
 
 ```
-Run:
+During explortation and debugging, you can run:
 
   docker exec -ti adventureworks bash
   
@@ -76,7 +76,15 @@ Then:
 
 
 ```{r}
+system2("docker", glue(
+  "exec -i adventureworks pg_restore -U postgres ",
+  " -d adventureworks /petdir/book-src/adventureworks.sql "
+))
 
+```
+
+
+```{r}
 sp_docker_start("adventureworks")
 
 con <- sp_get_postgres_connection(

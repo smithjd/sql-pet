@@ -35,7 +35,7 @@ docker_cmd <- glue(
   "--publish 5432:5432 ", # tells Docker to expose the PostgreSQL port 5432 to the local network with 5432
   "--mount ", # tells Docker to mount a volume -- mapping Docker's internal file structure to the host file structure
   'type=bind,source="', wd, '",target=/petdir', # not really used, but could be later
-  " postgres:10 " # tells Docker the image that is to be run (after downloading if necessary)
+  " postgres:11 " # tells Docker the image that is to be run (after downloading if necessary)
 )
 cat("docker ", docker_cmd)
 
@@ -44,6 +44,7 @@ Sys.sleep(2)
 
 # create the adventureworks database in the Docker container
 system2("docker", 'exec -i adventureworks psql -U postgres -c "CREATE DATABASE adventureworks;"')
+system2("docker", 'exec -i adventureworks psql -U postgres -c "DROP SCHEMA IF EXISTS public;"')
 
 # restore the adventureworks tar file.  This might come from github rather than locally
 system2("docker", glue(

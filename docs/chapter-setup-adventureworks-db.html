@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 5 Create and connect to the adventureworks database in PostgreSQL | r-database-docker.utf8</title>
+  <title>Chapter 4 Create and connect to the adventureworks database in PostgreSQL | r-database-docker.utf8</title>
   <meta name="description" content="An introduction to Docker and PostgreSQL for R users to simulate use cases behind corporate walls." />
   <meta name="generator" content="bookdown 0.12 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 5 Create and connect to the adventureworks database in PostgreSQL | r-database-docker.utf8" />
+  <meta property="og:title" content="Chapter 4 Create and connect to the adventureworks database in PostgreSQL | r-database-docker.utf8" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 5 Create and connect to the adventureworks database in PostgreSQL | r-database-docker.utf8" />
+  <meta name="twitter:title" content="Chapter 4 Create and connect to the adventureworks database in PostgreSQL | r-database-docker.utf8" />
   
   <meta name="twitter:description" content="An introduction to Docker and PostgreSQL for R users to simulate use cases behind corporate walls." />
   
@@ -24,14 +24,14 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, and Ian Frantz" />
 
 
-<meta name="date" content="2019-08-04" />
+<meta name="date" content="2019-08-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="chapter-connect-docker-postgresql-r.html">
+<link rel="prev" href="chapter-learning-goals.html">
 <link rel="next" href="chapter-dbms-login-credentials.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -163,38 +163,36 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="3.4" data-path="chapter-learning-goals.html"><a href="chapter-learning-goals.html#adventureworks"><i class="fa fa-check"></i><b>3.4</b> AdventureWorks</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html"><i class="fa fa-check"></i><b>4</b> Connecting Docker, PostgreSQL, and R</a><ul>
-<li class="chapter" data-level="4.1" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#verify-that-docker-is-running"><i class="fa fa-check"></i><b>4.1</b> Verify that Docker is running</a><ul>
-<li class="chapter" data-level="4.1.1" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#check-that-docker-is-up-and-running"><i class="fa fa-check"></i><b>4.1.1</b> Check that Docker is up and running</a></li>
+<li class="chapter" data-level="4" data-path="chapter-setup-adventureworks-db.html"><a href="chapter-setup-adventureworks-db.html"><i class="fa fa-check"></i><b>4</b> Create and connect to the adventureworks database in PostgreSQL</a><ul>
+<li class="chapter" data-level="4.1" data-path="chapter-setup-adventureworks-db.html"><a href="chapter-setup-adventureworks-db.html#overview"><i class="fa fa-check"></i><b>4.1</b> Overview</a></li>
+<li class="chapter" data-level="4.2" data-path="chapter-setup-adventureworks-db.html"><a href="chapter-setup-adventureworks-db.html#verify-that-docker-is-up-running-and-clean-up-if-necessary"><i class="fa fa-check"></i><b>4.2</b> Verify that Docker is up, running, and clean up if necessary</a></li>
+<li class="chapter" data-level="4.3" data-path="chapter-setup-adventureworks-db.html"><a href="chapter-setup-adventureworks-db.html#clean-up-if-appropriate"><i class="fa fa-check"></i><b>4.3</b> Clean up if appropriate</a></li>
+<li class="chapter" data-level="4.4" data-path="chapter-setup-adventureworks-db.html"><a href="chapter-setup-adventureworks-db.html#build-the-adventureworks-docker-image"><i class="fa fa-check"></i><b>4.4</b> Build the adventureworks Docker image</a></li>
+<li class="chapter" data-level="4.5" data-path="chapter-setup-adventureworks-db.html"><a href="chapter-setup-adventureworks-db.html#run-the-adventureworks-docker-image"><i class="fa fa-check"></i><b>4.5</b> Run the adventureworks Docker Image</a></li>
+<li class="chapter" data-level="4.6" data-path="chapter-setup-adventureworks-db.html"><a href="chapter-setup-adventureworks-db.html#connect-to-postgresql-with-r"><i class="fa fa-check"></i><b>4.6</b> Connect to PostgreSQL with R</a></li>
+<li class="chapter" data-level="4.7" data-path="chapter-setup-adventureworks-db.html"><a href="chapter-setup-adventureworks-db.html#investigate-the-database-using-rstudio"><i class="fa fa-check"></i><b>4.7</b> Investigate the database using Rstudio</a></li>
+<li class="chapter" data-level="4.8" data-path="chapter-setup-adventureworks-db.html"><a href="chapter-setup-adventureworks-db.html#stop-and-start-to-demonstrate-persistence"><i class="fa fa-check"></i><b>4.8</b> Stop and start to demonstrate persistence</a></li>
+<li class="chapter" data-level="4.9" data-path="chapter-setup-adventureworks-db.html"><a href="chapter-setup-adventureworks-db.html#cleaning-up"><i class="fa fa-check"></i><b>4.9</b> Cleaning up</a></li>
+<li class="chapter" data-level="4.10" data-path="chapter-setup-adventureworks-db.html"><a href="chapter-setup-adventureworks-db.html#using-the-adventureworks-container-in-the-rest-of-the-book"><i class="fa fa-check"></i><b>4.10</b> Using the <code>adventureworks</code> container in the rest of the book</a></li>
 </ul></li>
-<li class="chapter" data-level="4.2" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#remove-previous-containers-if-they-exist"><i class="fa fa-check"></i><b>4.2</b> Remove previous containers if they exist</a></li>
-<li class="chapter" data-level="4.3" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#connecting-reading-and-writing-to-postgresql-from-r"><i class="fa fa-check"></i><b>4.3</b> Connecting, reading and writing to PostgreSQL from R</a><ul>
-<li class="chapter" data-level="4.3.1" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#connecting-to-postgresql"><i class="fa fa-check"></i><b>4.3.1</b> Connecting to PostgreSQL</a></li>
-<li class="chapter" data-level="4.3.2" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#interact-with-postgresql"><i class="fa fa-check"></i><b>4.3.2</b> Interact with PostgreSQL</a></li>
+<li class="chapter" data-level="5" data-path="chapter-dbms-login-credentials.html"><a href="chapter-dbms-login-credentials.html"><i class="fa fa-check"></i><b>5</b> Securing and using your dbms log-in credentials</a><ul>
+<li class="chapter" data-level="5.1" data-path="chapter-dbms-login-credentials.html"><a href="chapter-dbms-login-credentials.html#set-up-the-adventureworks-docker-container"><i class="fa fa-check"></i><b>5.1</b> Set up the adventureworks Docker container</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="chapter-dbms-login-credentials.html"><a href="chapter-dbms-login-credentials.html#verify-that-docker-is-running"><i class="fa fa-check"></i><b>5.1.1</b> Verify that Docker is running</a></li>
+<li class="chapter" data-level="5.1.2" data-path="chapter-dbms-login-credentials.html"><a href="chapter-dbms-login-credentials.html#start-the-docker-container"><i class="fa fa-check"></i><b>5.1.2</b> Start the Docker container:</a></li>
 </ul></li>
-<li class="chapter" data-level="4.4" data-path="chapter-connect-docker-postgresql-r.html"><a href="chapter-connect-docker-postgresql-r.html#clean-up"><i class="fa fa-check"></i><b>4.4</b> Clean up</a></li>
+<li class="chapter" data-level="5.2" data-path="chapter-dbms-login-credentials.html"><a href="chapter-dbms-login-credentials.html#storing-your-dbms-credentials"><i class="fa fa-check"></i><b>5.2</b> Storing your dbms credentials</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="chapter-dbms-login-credentials.html"><a href="chapter-dbms-login-credentials.html#connect-with-postgres-using-the-sys.getenv-function"><i class="fa fa-check"></i><b>5.2.1</b> Connect with Postgres using the Sys.getenv function</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="chapter-setup-adventureworks-db.html"><a href="chapter-setup-adventureworks-db.html"><i class="fa fa-check"></i><b>5</b> Create and connect to the adventureworks database in PostgreSQL</a><ul>
-<li class="chapter" data-level="5.1" data-path="chapter-setup-adventureworks-db.html"><a href="chapter-setup-adventureworks-db.html#overview"><i class="fa fa-check"></i><b>5.1</b> Overview</a></li>
-<li class="chapter" data-level="5.2" data-path="chapter-setup-adventureworks-db.html"><a href="chapter-setup-adventureworks-db.html#verify-that-docker-is-up-and-running"><i class="fa fa-check"></i><b>5.2</b> Verify that Docker is up and running</a></li>
-<li class="chapter" data-level="5.3" data-path="chapter-setup-adventureworks-db.html"><a href="chapter-setup-adventureworks-db.html#clean-up-if-appropriate"><i class="fa fa-check"></i><b>5.3</b> Clean up if appropriate</a></li>
-<li class="chapter" data-level="5.4" data-path="chapter-setup-adventureworks-db.html"><a href="chapter-setup-adventureworks-db.html#build-the-adventureworks-docker-image"><i class="fa fa-check"></i><b>5.4</b> Build the adventureworks Docker image</a></li>
-<li class="chapter" data-level="5.5" data-path="chapter-setup-adventureworks-db.html"><a href="chapter-setup-adventureworks-db.html#run-the-adventureworks-docker-image"><i class="fa fa-check"></i><b>5.5</b> Run the adventureworks Docker Image</a></li>
-<li class="chapter" data-level="5.6" data-path="chapter-setup-adventureworks-db.html"><a href="chapter-setup-adventureworks-db.html#connect-to-postgresql-with-r"><i class="fa fa-check"></i><b>5.6</b> Connect to PostgreSQL with R</a></li>
-<li class="chapter" data-level="5.7" data-path="chapter-setup-adventureworks-db.html"><a href="chapter-setup-adventureworks-db.html#dplyr-connection-objects"><i class="fa fa-check"></i><b>5.7</b> <code>dplyr</code> connection objects</a></li>
-<li class="chapter" data-level="5.8" data-path="chapter-setup-adventureworks-db.html"><a href="chapter-setup-adventureworks-db.html#stop-and-start-to-demonstrate-persistence"><i class="fa fa-check"></i><b>5.8</b> Stop and start to demonstrate persistence</a></li>
-<li class="chapter" data-level="5.9" data-path="chapter-setup-adventureworks-db.html"><a href="chapter-setup-adventureworks-db.html#cleaning-up"><i class="fa fa-check"></i><b>5.9</b> Cleaning up</a></li>
-<li class="chapter" data-level="5.10" data-path="chapter-setup-adventureworks-db.html"><a href="chapter-setup-adventureworks-db.html#using-the-adventureworks-container-in-the-rest-of-the-book"><i class="fa fa-check"></i><b>5.10</b> Using the <code>adventureworks</code> container in the rest of the book</a></li>
+<li class="chapter" data-level="5.3" data-path="chapter-dbms-login-credentials.html"><a href="chapter-dbms-login-credentials.html#clean-up"><i class="fa fa-check"></i><b>5.3</b> Clean up</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="chapter-dbms-login-credentials.html"><a href="chapter-dbms-login-credentials.html"><i class="fa fa-check"></i><b>6</b> Securing and using your dbms log-in credentials</a><ul>
-<li class="chapter" data-level="6.1" data-path="chapter-dbms-login-credentials.html"><a href="chapter-dbms-login-credentials.html#set-up-the-adventureworks-docker-container"><i class="fa fa-check"></i><b>6.1</b> Set up the adventureworks Docker container</a><ul>
-<li class="chapter" data-level="6.1.1" data-path="chapter-dbms-login-credentials.html"><a href="chapter-dbms-login-credentials.html#verify-that-docker-is-running-1"><i class="fa fa-check"></i><b>6.1.1</b> Verify that Docker is running</a></li>
-<li class="chapter" data-level="6.1.2" data-path="chapter-dbms-login-credentials.html"><a href="chapter-dbms-login-credentials.html#start-the-docker-container"><i class="fa fa-check"></i><b>6.1.2</b> Start the Docker container:</a></li>
-</ul></li>
-<li class="chapter" data-level="6.2" data-path="chapter-dbms-login-credentials.html"><a href="chapter-dbms-login-credentials.html#storing-your-dbms-credentials"><i class="fa fa-check"></i><b>6.2</b> Storing your dbms credentials</a><ul>
-<li class="chapter" data-level="6.2.1" data-path="chapter-dbms-login-credentials.html"><a href="chapter-dbms-login-credentials.html#connect-with-postgres-using-the-sys.getenv-function"><i class="fa fa-check"></i><b>6.2.1</b> Connect with Postgres using the Sys.getenv function</a></li>
-</ul></li>
-<li class="chapter" data-level="6.3" data-path="chapter-dbms-login-credentials.html"><a href="chapter-dbms-login-credentials.html#clean-up-1"><i class="fa fa-check"></i><b>6.3</b> Clean up</a></li>
+<li class="chapter" data-level="6" data-path="chapter-connect-to-adventureworks-db.html"><a href="chapter-connect-to-adventureworks-db.html"><i class="fa fa-check"></i><b>6</b> Connect to the adventureworks database in PostgreSQL</a><ul>
+<li class="chapter" data-level="6.1" data-path="chapter-connect-to-adventureworks-db.html"><a href="chapter-connect-to-adventureworks-db.html#overview-1"><i class="fa fa-check"></i><b>6.1</b> Overview</a></li>
+<li class="chapter" data-level="6.2" data-path="chapter-connect-to-adventureworks-db.html"><a href="chapter-connect-to-adventureworks-db.html#verify-that-docker-is-up-running-and-clean-up-if-necessary-1"><i class="fa fa-check"></i><b>6.2</b> Verify that Docker is up, running, and clean up if necessary</a></li>
+<li class="chapter" data-level="6.3" data-path="chapter-connect-to-adventureworks-db.html"><a href="chapter-connect-to-adventureworks-db.html#connect-to-postgresql-with-r-1"><i class="fa fa-check"></i><b>6.3</b> Connect to PostgreSQL with R</a></li>
+<li class="chapter" data-level="6.4" data-path="chapter-connect-to-adventureworks-db.html"><a href="chapter-connect-to-adventureworks-db.html#dplyr-connection-objects"><i class="fa fa-check"></i><b>6.4</b> <code>dplyr</code> connection objects</a></li>
+<li class="chapter" data-level="6.5" data-path="chapter-connect-to-adventureworks-db.html"><a href="chapter-connect-to-adventureworks-db.html#stop-and-start-to-demonstrate-persistence-1"><i class="fa fa-check"></i><b>6.5</b> Stop and start to demonstrate persistence</a></li>
+<li class="chapter" data-level="6.6" data-path="chapter-connect-to-adventureworks-db.html"><a href="chapter-connect-to-adventureworks-db.html#cleaning-up-1"><i class="fa fa-check"></i><b>6.6</b> Cleaning up</a></li>
+<li class="chapter" data-level="6.7" data-path="chapter-connect-to-adventureworks-db.html"><a href="chapter-connect-to-adventureworks-db.html#using-the-adventureworks-container-in-the-rest-of-the-book-1"><i class="fa fa-check"></i><b>6.7</b> Using the <code>adventureworks</code> container in the rest of the book</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html"><i class="fa fa-check"></i><b>7</b> Introduction to DBMS queries</a><ul>
 <li class="chapter" data-level="7.1" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#setup"><i class="fa fa-check"></i><b>7.1</b> Setup</a></li>
@@ -336,7 +334,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="D" data-path="chapter-appendix-dplyr-functions.html"><a href="chapter-appendix-dplyr-functions.html"><i class="fa fa-check"></i><b>D</b> Dplyr functions and SQL cross-walk</a></li>
 <li class="chapter" data-level="E" data-path="chapter-appendix-dbi-index.html"><a href="chapter-appendix-dbi-index.html"><i class="fa fa-check"></i><b>E</b> DBI package functions - INDEX</a></li>
 <li class="chapter" data-level="F" data-path="chapter-appendix-dplyr-to-postres-translation.html"><a href="chapter-appendix-dplyr-to-postres-translation.html"><i class="fa fa-check"></i><b>F</b> Appendix _ Dplyr to SQL translations</a><ul>
-<li class="chapter" data-level="F.1" data-path="chapter-appendix-dplyr-to-postres-translation.html"><a href="chapter-appendix-dplyr-to-postres-translation.html#overview-1"><i class="fa fa-check"></i><b>F.1</b> Overview</a></li>
+<li class="chapter" data-level="F.1" data-path="chapter-appendix-dplyr-to-postres-translation.html"><a href="chapter-appendix-dplyr-to-postres-translation.html#overview-2"><i class="fa fa-check"></i><b>F.1</b> Overview</a></li>
 </ul></li>
 <li class="chapter" data-level="G" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html"><i class="fa fa-check"></i><b>G</b> Appendix Additional resources</a><ul>
 <li class="chapter" data-level="G.1" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#editing-this-book"><i class="fa fa-check"></i><b>G.1</b> Editing this book</a></li>
@@ -369,358 +367,169 @@ A Tidyverse Approach&quot;</div></a>
 
             <section class="normal" id="section-">
 <div id="chapter_setup-adventureworks-db" class="section level1">
-<h1><span class="header-section-number">Chapter 5</span> Create and connect to the adventureworks database in PostgreSQL</h1>
-<blockquote>
-<p>NOTE: This chapter doesn’t go into the details of <em>creating</em> or <em>restoring</em> the <code>adventureworks</code> database. For more detail on what’s going on behind the scenes, you can examine the step-by-step code in:</p>
-<p><code>source('book-src/restore-adventureworks-postgres-on-docker.R')</code></p>
-</blockquote>
+<h1><span class="header-section-number">Chapter 4</span> Create and connect to the adventureworks database in PostgreSQL</h1>
 <blockquote>
 <p>This chapter demonstrates how to:</p>
 <ul>
 <li>Create and connect to the PostgreSQL <code>adventureworks</code> database in Docker</li>
 <li>Keep necessary credentials secret while being available to R when it executes.</li>
-<li>Connect to and disconnect R from the <code>adventureworks</code> database</li>
+<li>Leverage Rstudio features to get a peek at your data,</li>
 <li>Set up the environment for subsequent chapters</li>
 </ul>
 </blockquote>
 <div id="overview" class="section level2">
-<h2><span class="header-section-number">5.1</span> Overview</h2>
+<h2><span class="header-section-number">4.1</span> Overview</h2>
+<p>Docker commands can be run from a terminal (e.g., the Rstudio Terminal pane) or with a <code>system2()</code> command. The necessary functions to start, stop Docker containers and do other busy work are provided in the <code>sqlpetr</code> package.</p>
+<blockquote>
+<p>Note: The functions in the package are designed to help you focus on interacting with a dbms from R. You can ignore how they work until you are ready to delve into the details. They are all named to begin with <code>sp_</code>. The first time a function is called in the book, we provide a note explaining its use.</p>
+</blockquote>
 <p>Please install the <code>sqlpetr</code> package if not already installed:</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" data-line-number="1"><span class="kw">library</span>(devtools)</a>
-<a class="sourceLine" id="cb41-2" data-line-number="2"><span class="cf">if</span> (<span class="op">!</span><span class="kw">require</span>(sqlpetr)) {</a>
-<a class="sourceLine" id="cb41-3" data-line-number="3">    remotes<span class="op">::</span><span class="kw">install_github</span>(</a>
-<a class="sourceLine" id="cb41-4" data-line-number="4">      <span class="st">&quot;smithjd/sqlpetr&quot;</span>,</a>
-<a class="sourceLine" id="cb41-5" data-line-number="5">      <span class="dt">force =</span> <span class="ot">TRUE</span>, <span class="dt">build =</span> <span class="ot">FALSE</span>, <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb41-6" data-line-number="6">}</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(devtools)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="cf">if</span> (<span class="op">!</span><span class="kw">require</span>(sqlpetr)) {</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3">    remotes<span class="op">::</span><span class="kw">install_github</span>(</a>
+<a class="sourceLine" id="cb1-4" data-line-number="4">      <span class="st">&quot;smithjd/sqlpetr&quot;</span>,</a>
+<a class="sourceLine" id="cb1-5" data-line-number="5">      <span class="dt">force =</span> <span class="ot">TRUE</span>, <span class="dt">build =</span> <span class="ot">FALSE</span>, <span class="dt">quiet =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb1-6" data-line-number="6">}</a></code></pre></div>
 <p>Note that when you install this package the first time, it will ask you to update the packages it uses and that may take some time.</p>
-<p>Now we set up a “realistic” database named <code>adventureworks</code>. There are different approaches to doing this: this chapter sets it up in a way that doesn’t show all the Docker details.</p>
 <p>These packages are called in this Chapter:</p>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb42-1" data-line-number="1"><span class="kw">library</span>(tidyverse)</a>
-<a class="sourceLine" id="cb42-2" data-line-number="2"><span class="kw">library</span>(DBI)</a>
-<a class="sourceLine" id="cb42-3" data-line-number="3"><span class="kw">library</span>(RPostgres)</a>
-<a class="sourceLine" id="cb42-4" data-line-number="4"><span class="kw">library</span>(glue)</a>
-<a class="sourceLine" id="cb42-5" data-line-number="5"><span class="kw">require</span>(knitr)</a>
-<a class="sourceLine" id="cb42-6" data-line-number="6"><span class="kw">library</span>(dbplyr)</a>
-<a class="sourceLine" id="cb42-7" data-line-number="7"><span class="kw">library</span>(sqlpetr)</a>
-<a class="sourceLine" id="cb42-8" data-line-number="8"><span class="kw">library</span>(bookdown)</a>
-<a class="sourceLine" id="cb42-9" data-line-number="9"><span class="kw">library</span>(here)</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">library</span>(tidyverse)</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw">library</span>(DBI)</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="kw">library</span>(RPostgres)</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="kw">library</span>(glue)</a>
+<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="kw">require</span>(knitr)</a>
+<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="kw">library</span>(dbplyr)</a>
+<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="kw">library</span>(sqlpetr)</a>
+<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="kw">library</span>(bookdown)</a>
+<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="kw">library</span>(here)</a></code></pre></div>
 </div>
-<div id="verify-that-docker-is-up-and-running" class="section level2">
-<h2><span class="header-section-number">5.2</span> Verify that Docker is up and running</h2>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb43-1" data-line-number="1"><span class="kw">sp_check_that_docker_is_up</span>()</a></code></pre></div>
+<div id="verify-that-docker-is-up-running-and-clean-up-if-necessary" class="section level2">
+<h2><span class="header-section-number">4.2</span> Verify that Docker is up, running, and clean up if necessary</h2>
+<blockquote>
+<p>The <code>sp_check_that_docker_is_up</code> function from the <code>sqlpetr</code> package checks whether Docker is up and running. If it’s not, then you need to install, launch or re-install Docker.</p>
+</blockquote>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">sp_check_that_docker_is_up</span>()</a></code></pre></div>
 <pre><code>## [1] &quot;Docker is up but running no containers&quot;</code></pre>
 </div>
 <div id="clean-up-if-appropriate" class="section level2">
-<h2><span class="header-section-number">5.3</span> Clean up if appropriate</h2>
-<p>Force-remove the <code>adventureworks</code> container if it exist (e.g., from a prior runs):</p>
-<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" data-line-number="1"><span class="kw">sp_docker_remove_container</span>(<span class="st">&quot;adventureworks&quot;</span>)</a></code></pre></div>
+<h2><span class="header-section-number">4.3</span> Clean up if appropriate</h2>
+<p>Force-remove the <code>adventureworks</code> container if it was left over (e.g., from a prior runs):</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">sp_docker_remove_container</span>(<span class="st">&quot;adventureworks&quot;</span>)</a></code></pre></div>
 <pre><code>## [1] 0</code></pre>
 </div>
 <div id="build-the-adventureworks-docker-image" class="section level2">
-<h2><span class="header-section-number">5.4</span> Build the adventureworks Docker image</h2>
-<p><strong>NEEDS to be REWRITTEN:</strong> For the rest of the book we will be using a Docker image called
-<code>adventureworks</code>. To save space here in the book, we’ve created a function
-in <code>sqlpetr</code> to build this image, called <a href="https://smithjd.github.io/sqlpetr/reference/sp_make_dvdrental_image.html"><code>sp_make_dvdrental_image</code></a>. Vignette <a href="https://smithjd.github.io/sqlpetr/articles/building-the-dvdrental-docker-image.html">Building the <code>adventureworks</code> Docker Image</a> describes the build process.</p>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb47-1" data-line-number="1"><span class="co"># sp_make_dvdrental_image(&quot;postgres-dvdrental&quot;)</span></a>
-<a class="sourceLine" id="cb47-2" data-line-number="2"><span class="kw">source</span>(<span class="kw">here</span>(<span class="st">&quot;book-src&quot;</span>, <span class="st">&quot;restore-adventureworks-postgres-on-docker.R&quot;</span>))</a></code></pre></div>
-<pre><code>## docker  run --detach  --name adventureworks --publish 5432:5432 --mount type=bind,source=&quot;/Users/jds/Documents/Library/R/r-system/sql-pet&quot;,target=/petdir postgres:10</code></pre>
-<p>Docker commands can be run from a terminal (e.g., the Rstudio Terminal pane) or with a <code>system2()</code> command. The necessary functions to start, stop Docker containers and do other busy work are provided in the <code>sqlpetr</code> package. As time permits and curiosity dictates, feel free to look at those functions to see how they work.</p>
-<p><strong>UPDATE:</strong> Did it work? We have a function that lists the images into a tibble!</p>
-<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb49-1" data-line-number="1"><span class="kw">sp_docker_start</span>(<span class="st">&quot;adventureworks&quot;</span>)</a>
-<a class="sourceLine" id="cb49-2" data-line-number="2"><span class="kw">sp_docker_images_tibble</span>()  <span class="co"># Doesn&#39;t produce the expected output.</span></a></code></pre></div>
-<pre><code>## # A tibble: 6 x 7
-##   image_id  repository   tag    digest           created created_at   size 
-##   &lt;chr&gt;     &lt;chr&gt;        &lt;chr&gt;  &lt;chr&gt;            &lt;chr&gt;   &lt;chr&gt;        &lt;chr&gt;
-## 1 1523f751… adventurewo… latest &lt;none&gt;           6 week… 2019-06-19 … 475MB
-## 2 602a8e50… &lt;none&gt;       &lt;none&gt; &lt;none&gt;           6 week… 2019-06-19 … 365MB
-## 3 4e045cb8… postgres     latest sha256:1518027f… 7 week… 2019-06-10 … 312MB
-## 4 aff06852… postgres-dv… latest &lt;none&gt;           3 mont… 2019-04-26 … 294MB
-## 5 c149455a… &lt;none&gt;       &lt;none&gt; &lt;none&gt;           4 mont… 2019-03-18 … 252MB
-## 6 3e016ba4… postgres     10     sha256:5c702997… 5 mont… 2019-03-04 … 230MB</code></pre>
+<h2><span class="header-section-number">4.4</span> Build the adventureworks Docker image</h2>
+<p>Now we set up a “realistic” database named <code>adventureworks</code> in Docker.</p>
+<blockquote>
+<p>NOTE: This chapter doesn’t go into the details of <em>creating</em> or <em>restoring</em> the <code>adventureworks</code> database. For more detail on what’s going on behind the scenes, you can examine the step-by-step code in:</p>
+<p><code>source('book-src/restore-adventureworks-postgres-on-docker.R')</code></p>
+</blockquote>
+<p>To save space here in the book, we’ve created a function
+in <code>sqlpetr</code> to build this image, called <em>OUT OF DATE!!</em> <a href="https://smithjd.github.io/sqlpetr/reference/sp_make_dvdrental_image.html"><code>sp_make_dvdrental_image</code></a>. Vignette <a href="https://smithjd.github.io/sqlpetr/articles/building-the-dvdrental-docker-image.html">Building the <code>adventureworks</code> Docker Image</a> describes the build process.</p>
+<p>*Ignore the errors in the following step:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="co"># sp_make_dvdrental_image(&quot;postgres-dvdrental&quot;)</span></a>
+<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="kw">source</span>(<span class="kw">here</span>(<span class="st">&quot;book-src&quot;</span>, <span class="st">&quot;restore-adventureworks-postgres-on-docker.R&quot;</span>))</a></code></pre></div>
+<pre><code>## docker  run --detach  --name adventureworks --publish 5432:5432 --mount type=bind,source=&quot;/Users/jds/Documents/Library/R/r-system/sql-pet&quot;,target=/petdir postgres:11</code></pre>
 </div>
 <div id="run-the-adventureworks-docker-image" class="section level2">
-<h2><span class="header-section-number">5.5</span> Run the adventureworks Docker Image</h2>
-<p><strong>UPDATE:</strong> Now we can run the image in a container and connect to the database. To run the
-image we use an <code>sqlpetr</code> function called <a href="https://smithjd.github.io/sqlpetr/reference/sp_pg_docker_run.html"><code>sp_pg_docker_run</code></a></p>
-<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb51-1" data-line-number="1"><span class="co"># sp_pg_docker_run(</span></a>
-<a class="sourceLine" id="cb51-2" data-line-number="2"><span class="co">#   container_name = &quot;adventureworks&quot;,</span></a>
-<a class="sourceLine" id="cb51-3" data-line-number="3"><span class="co">#   image_tag = &quot;adventureworks&quot;,</span></a>
-<a class="sourceLine" id="cb51-4" data-line-number="4"><span class="co">#   postgres_password = &quot;postgres&quot;</span></a>
-<a class="sourceLine" id="cb51-5" data-line-number="5"><span class="co"># )</span></a></code></pre></div>
-<p><strong>UPDATE:</strong> Did it work?</p>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb52-1" data-line-number="1"><span class="kw">sp_docker_containers_tibble</span>()</a></code></pre></div>
-<pre><code>## # A tibble: 1 x 12
-##   container_id image command created_at created ports status size  names
-##   &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;
-## 1 ec80334d8848 post… docker… 2019-08-0… 15 sec… 0.0.… Up 13… 63B … adve…
-## # … with 3 more variables: labels &lt;chr&gt;, mounts &lt;chr&gt;, networks &lt;chr&gt;</code></pre>
+<h2><span class="header-section-number">4.5</span> Run the adventureworks Docker Image</h2>
+<p>Now we can run the image in a container and connect to the database. To run the
+image we use an <code>sqlpetr</code> function called <em>OUT OF DATE</em> <a href="https://smithjd.github.io/sqlpetr/reference/sp_pg_docker_run.html"><code>sp_pg_docker_run</code></a>
+For the rest of the book we will assume that you have a Docker container called
+<code>adventureworks</code> that can be stopped and started. In that sense each chapter in the book is independent.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">sp_docker_start</span>(<span class="st">&quot;adventureworks&quot;</span>)</a></code></pre></div>
 </div>
 <div id="connect-to-postgresql-with-r" class="section level2">
-<h2><span class="header-section-number">5.6</span> Connect to PostgreSQL with R</h2>
+<h2><span class="header-section-number">4.6</span> Connect to PostgreSQL with R</h2>
+<p>*CHECK for <code>sqlpetr</code> update!<code>The</code>sp_make_simple_pg<code>function we called above created a container from the</code>postgres:11<code>library image downloaded from Docker Hub. As part of the process, it set the password for the PostgreSQL database superuser</code>postgres` to the value
+“postgres”.</p>
+<p>For simplicity, we are using a weak password at this point and it’s shown here
+and in the code in plain text. That is bad practice because user credentials
+should not be shared in open code like that. A <a href="#dbms-login">subsequent chapter</a>
+demonstrates how to store and use credentials to access the DBMS so that they
+are kept private.</p>
+<blockquote>
+<p>The <code>sp_get_postgres_connection</code> function from the <code>sqlpetr</code> package gets a DBI connection string to a PostgreSQL database, waiting if it is not ready. This function connects to an instance of PostgreSQL and we assign it to a symbol, <code>con</code>, for subsequent use. The <code>connctions_tab = TRUE</code> parameter opens a connections tab that’s useful for navigating a database.</p>
+</blockquote>
+<blockquote>
+<p>Note that we are using port <em>5439</em> for PostgreSQL inside the container and published to <code>localhost</code>. Why? If you have PostgreSQL already running on the host or another container, it probably claimed port 5432, since that’s the default. So we need to use a different port for <em>our</em> PostgreSQL container.</p>
+</blockquote>
 <p>Use the DBI package to connect to the <code>adventureworks</code> database in PostgreSQL. Remember the settings discussion about [keeping passwords hidden][Pause for some security considerations]</p>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb54-1" data-line-number="1">con &lt;-<span class="st"> </span><span class="kw">sp_get_postgres_connection</span>(</a>
-<a class="sourceLine" id="cb54-2" data-line-number="2">  <span class="dt">host =</span> <span class="st">&quot;localhost&quot;</span>,</a>
-<a class="sourceLine" id="cb54-3" data-line-number="3">  <span class="dt">port =</span> <span class="dv">5432</span>,</a>
-<a class="sourceLine" id="cb54-4" data-line-number="4">  <span class="dt">user =</span> <span class="st">&quot;postgres&quot;</span>,</a>
-<a class="sourceLine" id="cb54-5" data-line-number="5">  <span class="dt">password =</span> <span class="st">&quot;postgres&quot;</span>,</a>
-<a class="sourceLine" id="cb54-6" data-line-number="6">  <span class="dt">dbname =</span> <span class="st">&quot;adventureworks&quot;</span>,</a>
-<a class="sourceLine" id="cb54-7" data-line-number="7">  <span class="dt">seconds_to_test =</span> <span class="dv">20</span>, <span class="dt">connection_tab =</span> <span class="ot">TRUE</span></a>
-<a class="sourceLine" id="cb54-8" data-line-number="8">)</a></code></pre></div>
-<p>For the moment we by-pass some complexity that results from the fact that the <code>adventureworks</code> database has multiple <em>schemas</em> and that we are interested in only one of them, named <code>information_schema</code>.</p>
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb55-1" data-line-number="1"><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;information_schema&quot;</span>, <span class="st">&quot;schemata&quot;</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb55-2" data-line-number="2"><span class="st">  </span><span class="kw">select</span>(catalog_name, schema_name, schema_owner) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb55-3" data-line-number="3"><span class="st">  </span><span class="kw">collect</span>()</a></code></pre></div>
-<pre><code>## # A tibble: 16 x 3
-##    catalog_name   schema_name        schema_owner
-##    &lt;chr&gt;          &lt;chr&gt;              &lt;chr&gt;       
-##  1 adventureworks pg_toast           postgres    
-##  2 adventureworks pg_temp_1          postgres    
-##  3 adventureworks pg_toast_temp_1    postgres    
-##  4 adventureworks pg_catalog         postgres    
-##  5 adventureworks public             postgres    
-##  6 adventureworks information_schema postgres    
-##  7 adventureworks hr                 postgres    
-##  8 adventureworks humanresources     postgres    
-##  9 adventureworks pe                 postgres    
-## 10 adventureworks person             postgres    
-## 11 adventureworks pr                 postgres    
-## 12 adventureworks production         postgres    
-## 13 adventureworks pu                 postgres    
-## 14 adventureworks purchasing         postgres    
-## 15 adventureworks sa                 postgres    
-## 16 adventureworks sales              postgres</code></pre>
-<p>Schemas will be discussed later on because multiple schemas are the norm in an enterprise database environment, but they are a side issue at this point. So we switch the order in which PostgreSQL searches for objects with the following SQL code:</p>
-<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb57-1" data-line-number="1"><span class="kw">dbExecute</span>(con, <span class="st">&quot;set search_path to sales, public;&quot;</span>)</a></code></pre></div>
-<pre><code>## [1] 0</code></pre>
-<p>With the custom <code>search_path</code>, the following command works, but it will fail without out it.</p>
-<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb59-1" data-line-number="1"><span class="kw">dbListTables</span>(con)</a></code></pre></div>
-<pre><code>##  [1] &quot;currency&quot;                          
-##  [2] &quot;salesorderheader&quot;                  
-##  [3] &quot;store&quot;                             
-##  [4] &quot;specialoffer&quot;                      
-##  [5] &quot;customer&quot;                          
-##  [6] &quot;personcreditcard&quot;                  
-##  [7] &quot;salesorderheadersalesreason&quot;       
-##  [8] &quot;shoppingcartitem&quot;                  
-##  [9] &quot;salesorderdetail&quot;                  
-## [10] &quot;creditcard&quot;                        
-## [11] &quot;specialofferproduct&quot;               
-## [12] &quot;salestaxrate&quot;                      
-## [13] &quot;salesperson&quot;                       
-## [14] &quot;vindividualcustomer&quot;               
-## [15] &quot;vpersondemographics&quot;               
-## [16] &quot;vsalesperson&quot;                      
-## [17] &quot;vsalespersonsalesbyfiscalyears&quot;    
-## [18] &quot;vsalespersonsalesbyfiscalyearsdata&quot;
-## [19] &quot;vstorewithaddresses&quot;               
-## [20] &quot;vstorewithcontacts&quot;                
-## [21] &quot;vstorewithdemographics&quot;            
-## [22] &quot;salespersonquotahistory&quot;           
-## [23] &quot;currencyrate&quot;                      
-## [24] &quot;countryregioncurrency&quot;             
-## [25] &quot;salesreason&quot;                       
-## [26] &quot;salesterritory&quot;                    
-## [27] &quot;salesterritoryhistory&quot;</code></pre>
-<p>Same for <code>dbListFields</code>:</p>
-<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb61-1" data-line-number="1"><span class="kw">dbListFields</span>(con, <span class="st">&quot;salesperson&quot;</span>)</a></code></pre></div>
-<pre><code>## [1] &quot;businessentityid&quot; &quot;territoryid&quot;      &quot;salesquota&quot;      
-## [4] &quot;bonus&quot;            &quot;commissionpct&quot;    &quot;salesytd&quot;        
-## [7] &quot;saleslastyear&quot;    &quot;rowguid&quot;          &quot;modifieddate&quot;</code></pre>
-<p>Thus with this search order, the following two produce identical results:</p>
-<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb63-1" data-line-number="1"><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;sales&quot;</span>, <span class="st">&quot;salesperson&quot;</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb63-2" data-line-number="2"><span class="st">  </span><span class="kw">head</span>()</a></code></pre></div>
-<pre><code>## # Source:   lazy query [?? x 9]
-## # Database: postgres [postgres@localhost:5432/adventureworks]
-##   businessentityid territoryid salesquota bonus commissionpct salesytd
-##              &lt;int&gt;       &lt;int&gt;      &lt;dbl&gt; &lt;dbl&gt;         &lt;dbl&gt;    &lt;dbl&gt;
-## 1              274          NA         NA     0         0      559698.
-## 2              275           2     300000  4100         0.012 3763178.
-## 3              276           4     250000  2000         0.015 4251369.
-## 4              277           3     250000  2500         0.015 3189418.
-## 5              278           6     250000   500         0.01  1453719.
-## 6              279           5     300000  6700         0.01  2315186.
-## # … with 3 more variables: saleslastyear &lt;dbl&gt;, rowguid &lt;chr&gt;,
-## #   modifieddate &lt;dttm&gt;</code></pre>
-<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb65-1" data-line-number="1"><span class="kw">tbl</span>(con, <span class="st">&quot;salesperson&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb65-2" data-line-number="2"><span class="st">  </span><span class="kw">head</span>()</a></code></pre></div>
-<pre><code>## # Source:   lazy query [?? x 9]
-## # Database: postgres [postgres@localhost:5432/adventureworks]
-##   businessentityid territoryid salesquota bonus commissionpct salesytd
-##              &lt;int&gt;       &lt;int&gt;      &lt;dbl&gt; &lt;dbl&gt;         &lt;dbl&gt;    &lt;dbl&gt;
-## 1              274          NA         NA     0         0      559698.
-## 2              275           2     300000  4100         0.012 3763178.
-## 3              276           4     250000  2000         0.015 4251369.
-## 4              277           3     250000  2500         0.015 3189418.
-## 5              278           6     250000   500         0.01  1453719.
-## 6              279           5     300000  6700         0.01  2315186.
-## # … with 3 more variables: saleslastyear &lt;dbl&gt;, rowguid &lt;chr&gt;,
-## #   modifieddate &lt;dttm&gt;</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">con &lt;-<span class="st"> </span><span class="kw">sp_get_postgres_connection</span>(</a>
+<a class="sourceLine" id="cb10-2" data-line-number="2">  <span class="dt">host =</span> <span class="st">&quot;localhost&quot;</span>,</a>
+<a class="sourceLine" id="cb10-3" data-line-number="3">  <span class="dt">port =</span> <span class="dv">5432</span>,  <span class="co"># this version still using 5432!!!</span></a>
+<a class="sourceLine" id="cb10-4" data-line-number="4">  <span class="dt">user =</span> <span class="st">&quot;postgres&quot;</span>,</a>
+<a class="sourceLine" id="cb10-5" data-line-number="5">  <span class="dt">password =</span> <span class="st">&quot;postgres&quot;</span>,</a>
+<a class="sourceLine" id="cb10-6" data-line-number="6">  <span class="dt">dbname =</span> <span class="st">&quot;adventureworks&quot;</span>,</a>
+<a class="sourceLine" id="cb10-7" data-line-number="7">  <span class="dt">seconds_to_test =</span> <span class="dv">20</span>, <span class="dt">connection_tab =</span> <span class="ot">TRUE</span></a>
+<a class="sourceLine" id="cb10-8" data-line-number="8">)</a></code></pre></div>
 </div>
-<div id="dplyr-connection-objects" class="section level2">
-<h2><span class="header-section-number">5.7</span> <code>dplyr</code> connection objects</h2>
-<p>As introduced in the previous chapter, the <code>dplyr::tbl</code> function creates an object that might <strong>look</strong> like a data frame in that when you enter it on the command line, it prints a bunch of rows from the dbms table. But it is actually a <strong>list</strong> object that <code>dplyr</code> uses for constructing queries and retrieving data from the DBMS.</p>
-<p>The following code illustrates these issues. The <code>dplyr::tbl</code> function creates the connection object that we store in an object named <code>person_table</code>:</p>
-<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb67-1" data-line-number="1">person_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;person&quot;</span>, <span class="st">&quot;person&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb67-2" data-line-number="2"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>rowguid) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb67-3" data-line-number="3"><span class="st">  </span><span class="kw">rename</span>(<span class="dt">personal_details_updated =</span> modifieddate)</a></code></pre></div>
-<p>At first glance, it <em>acts</em> like a data frame when you print it, although it only prints 10 of the table’s 1,000 rows:</p>
-<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb68-1" data-line-number="1">person_table</a></code></pre></div>
-<pre><code>## # Source:   lazy query [?? x 12]
-## # Database: postgres [postgres@localhost:5432/adventureworks]
-##    businessentityid persontype namestyle title firstname middlename
-##               &lt;int&gt; &lt;chr&gt;      &lt;lgl&gt;     &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt;     
-##  1                1 EM         FALSE     &lt;NA&gt;  Ken       J         
-##  2                2 EM         FALSE     &lt;NA&gt;  Terri     Lee       
-##  3                3 EM         FALSE     &lt;NA&gt;  Roberto   &lt;NA&gt;      
-##  4                4 EM         FALSE     &lt;NA&gt;  Rob       &lt;NA&gt;      
-##  5                5 EM         FALSE     Ms.   Gail      A         
-##  6                6 EM         FALSE     Mr.   Jossef    H         
-##  7                7 EM         FALSE     &lt;NA&gt;  Dylan     A         
-##  8                8 EM         FALSE     &lt;NA&gt;  Diane     L         
-##  9                9 EM         FALSE     &lt;NA&gt;  Gigi      N         
-## 10               10 EM         FALSE     &lt;NA&gt;  Michael   &lt;NA&gt;      
-## # … with more rows, and 6 more variables: lastname &lt;chr&gt;, suffix &lt;chr&gt;,
-## #   emailpromotion &lt;int&gt;, additionalcontactinfo &lt;chr&gt;, demographics &lt;chr&gt;,
-## #   personal_details_updated &lt;dttm&gt;</code></pre>
-<p>However, notice that the first output line shows <code>??</code>, rather than providing the number of rows in the table. Similarly, the next to last line shows:</p>
-<pre><code>    … with more rows, and 8 more variables</code></pre>
-<p>whereas the output for a normal <code>tbl</code> of this film data would say:</p>
-<pre><code>    … with more 1,000, and 8 more variables</code></pre>
-<p>So even though <code>person_table</code> is a <code>tbl</code>, it’s <strong>also</strong> a <code>tbl_PqConnection</code>:</p>
-<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb72-1" data-line-number="1"><span class="kw">class</span>(person_table)</a></code></pre></div>
-<pre><code>## [1] &quot;tbl_PqConnection&quot; &quot;tbl_dbi&quot;          &quot;tbl_sql&quot;         
-## [4] &quot;tbl_lazy&quot;         &quot;tbl&quot;</code></pre>
-<p>It is not just a normal <code>tbl</code> of data. We can see that from the structure of <code>person_table</code>:</p>
-<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb74-1" data-line-number="1"><span class="kw">str</span>(person_table)</a></code></pre></div>
-<pre><code>## List of 2
-##  $ src:List of 2
-##   ..$ con  :Formal class &#39;PqConnection&#39; [package &quot;RPostgres&quot;] with 3 slots
-##   .. .. ..@ ptr     :&lt;externalptr&gt; 
-##   .. .. ..@ bigint  : chr &quot;integer64&quot;
-##   .. .. ..@ typnames:&#39;data.frame&#39;:   785 obs. of  2 variables:
-##   .. .. .. ..$ oid    : int [1:785] 16 17 18 19 20 21 22 23 24 25 ...
-##   .. .. .. ..$ typname: chr [1:785] &quot;bool&quot; &quot;bytea&quot; &quot;char&quot; &quot;name&quot; ...
-##   ..$ disco: NULL
-##   ..- attr(*, &quot;class&quot;)= chr [1:4] &quot;src_PqConnection&quot; &quot;src_dbi&quot; &quot;src_sql&quot; &quot;src&quot;
-##  $ ops:List of 4
-##   ..$ name: chr &quot;select&quot;
-##   ..$ x   :List of 2
-##   .. ..$ x   : &#39;ident_q&#39; chr &quot;person.person&quot;
-##   .. ..$ vars: chr [1:13] &quot;businessentityid&quot; &quot;persontype&quot; &quot;namestyle&quot; &quot;title&quot; ...
-##   .. ..- attr(*, &quot;class&quot;)= chr [1:3] &quot;op_base_remote&quot; &quot;op_base&quot; &quot;op&quot;
-##   ..$ dots: list()
-##   ..$ args:List of 1
-##   .. ..$ vars:List of 12
-##   .. .. ..$ businessentityid        : symbol businessentityid
-##   .. .. ..$ persontype              : symbol persontype
-##   .. .. ..$ namestyle               : symbol namestyle
-##   .. .. ..$ title                   : symbol title
-##   .. .. ..$ firstname               : symbol firstname
-##   .. .. ..$ middlename              : symbol middlename
-##   .. .. ..$ lastname                : symbol lastname
-##   .. .. ..$ suffix                  : symbol suffix
-##   .. .. ..$ emailpromotion          : symbol emailpromotion
-##   .. .. ..$ additionalcontactinfo   : symbol additionalcontactinfo
-##   .. .. ..$ demographics            : symbol demographics
-##   .. .. ..$ personal_details_updated: symbol modifieddate
-##   ..- attr(*, &quot;class&quot;)= chr [1:3] &quot;op_select&quot; &quot;op_single&quot; &quot;op&quot;
-##  - attr(*, &quot;class&quot;)= chr [1:5] &quot;tbl_PqConnection&quot; &quot;tbl_dbi&quot; &quot;tbl_sql&quot; &quot;tbl_lazy&quot; ...</code></pre>
-<p>It has only <em>two</em> rows! The first row contains all the information in the <code>con</code> object, which contains information about all the tables and objects in the database:</p>
-<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb76-1" data-line-number="1">person_table<span class="op">$</span>src<span class="op">$</span>con<span class="op">@</span>typnames<span class="op">$</span>typname[<span class="dv">380</span><span class="op">:</span><span class="dv">437</span>]</a></code></pre></div>
-<pre><code>##  [1] &quot;tablefunc_crosstab_4&quot;            &quot;_tablefunc_crosstab_4&quot;          
-##  [3] &quot;AccountNumber&quot;                   &quot;Flag&quot;                           
-##  [5] &quot;Name&quot;                            &quot;NameStyle&quot;                      
-##  [7] &quot;OrderNumber&quot;                     &quot;Phone&quot;                          
-##  [9] &quot;department&quot;                      &quot;_department&quot;                    
-## [11] &quot;pg_toast_16433&quot;                  &quot;d&quot;                              
-## [13] &quot;_d&quot;                              &quot;employee&quot;                       
-## [15] &quot;_employee&quot;                       &quot;pg_toast_16444&quot;                 
-## [17] &quot;e&quot;                               &quot;_e&quot;                             
-## [19] &quot;employeedepartmenthistory&quot;       &quot;_employeedepartmenthistory&quot;     
-## [21] &quot;edh&quot;                             &quot;_edh&quot;                           
-## [23] &quot;employeepayhistory&quot;              &quot;_employeepayhistory&quot;            
-## [25] &quot;pg_toast_16476&quot;                  &quot;eph&quot;                            
-## [27] &quot;_eph&quot;                            &quot;jobcandidate&quot;                   
-## [29] &quot;_jobcandidate&quot;                   &quot;pg_toast_16489&quot;                 
-## [31] &quot;jc&quot;                              &quot;_jc&quot;                            
-## [33] &quot;shift&quot;                           &quot;_shift&quot;                         
-## [35] &quot;pg_toast_16500&quot;                  &quot;s&quot;                              
-## [37] &quot;_s&quot;                              &quot;department_departmentid_seq&quot;    
-## [39] &quot;jobcandidate_jobcandidateid_seq&quot; &quot;shift_shiftid_seq&quot;              
-## [41] &quot;address&quot;                         &quot;_address&quot;                       
-## [43] &quot;businessentityaddress&quot;           &quot;_businessentityaddress&quot;         
-## [45] &quot;countryregion&quot;                   &quot;_countryregion&quot;                 
-## [47] &quot;pg_toast_16527&quot;                  &quot;emailaddress&quot;                   
-## [49] &quot;_emailaddress&quot;                   &quot;person&quot;                         
-## [51] &quot;_person&quot;                         &quot;pg_toast_16539&quot;                 
-## [53] &quot;personphone&quot;                     &quot;_personphone&quot;                   
-## [55] &quot;pg_toast_16551&quot;                  &quot;phonenumbertype&quot;                
-## [57] &quot;_phonenumbertype&quot;                &quot;pg_toast_16558&quot;</code></pre>
-<p>The second row contains a list of the columns in the <code>film</code> table, among other things:</p>
-<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb78-1" data-line-number="1">person_table<span class="op">$</span>ops<span class="op">$</span>vars</a></code></pre></div>
-<pre><code>## NULL</code></pre>
-<p><code>person_table</code> holds information needed to get the data from the ‘film’ table, but <code>person_table</code> does not hold the data itself. In the following sections, we will examine more closely this relationship between the <code>person_table</code> object and the data in the database’s ‘film’ table.</p>
+<div id="investigate-the-database-using-rstudio" class="section level2">
+<h2><span class="header-section-number">4.7</span> Investigate the database using Rstudio</h2>
+<p>The Rstudio Connections tab shows that you are connected to Postgres and that the <code>adventureworks</code> database has a many schemas each of which has multiple tables in it:</p>
+<div class="figure">
+<img src="screenshots/connections-tab-adventureworks-annotated.png" alt="Connections tab - adventureworks" />
+<p class="caption">Connections tab - adventureworks</p>
+</div>
+<p>Clicking on the icon to the left of a <code>schema</code> expands the list of <code>tables</code> and <code>views</code> in that <code>schema</code>. Clicking on the <code>View</code> or <code>Table</code> icon opens up Rstudio’s <code>View</code> pane to get a peek at the data:</p>
+<div class="figure">
+<img src="screenshots/view-tab-adventureworks-employee.png" alt="View of employee table" />
+<p class="caption">View of employee table</p>
+</div>
+<p>The number of rows and columns shown in the View pane depends on the size of the window.</p>
+<p>Back on the Rstudio Connections tab, clicking on the icon to the left of a <code>table</code> or <code>view</code> displays a list of columns and their corresponding data types:</p>
+<div class="figure">
+<img src="screenshots/connections-tab-emloyee-column-info.png" alt="adventureworks employee table columns" />
+<p class="caption">adventureworks employee table columns</p>
+</div>
 <p>Disconnect from the database:</p>
-<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb80-1" data-line-number="1"><span class="kw">dbDisconnect</span>(con)</a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw">dbDisconnect</span>(con)</a></code></pre></div>
 </div>
 <div id="stop-and-start-to-demonstrate-persistence" class="section level2">
-<h2><span class="header-section-number">5.8</span> Stop and start to demonstrate persistence</h2>
+<h2><span class="header-section-number">4.8</span> Stop and start to demonstrate persistence</h2>
 <p>Stop the container:</p>
-<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb81-1" data-line-number="1"><span class="kw">sp_docker_stop</span>(<span class="st">&quot;adventureworks&quot;</span>)</a>
-<a class="sourceLine" id="cb81-2" data-line-number="2"><span class="kw">sp_docker_containers_tibble</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw">sp_docker_stop</span>(<span class="st">&quot;adventureworks&quot;</span>)</a>
+<a class="sourceLine" id="cb12-2" data-line-number="2"><span class="kw">sp_docker_containers_tibble</span>()</a></code></pre></div>
 <pre><code>## # A tibble: 0 x 0</code></pre>
 <p>When we stopped <code>adventureworks</code>, it no longer appeared in the tibble. But the
 container is still there. <code>sp_docker_containers_tibble</code> by default only lists
 the <em>running</em> containers. But we can use the <code>list_all</code> option and see it:</p>
-<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb83-1" data-line-number="1"><span class="kw">sp_docker_containers_tibble</span>(<span class="dt">list_all =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
-<pre><code>## # A tibble: 1 x 12
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="kw">sp_docker_containers_tibble</span>(<span class="dt">list_all =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<pre><code>## # A tibble: 2 x 12
 ##   container_id image command created_at created ports status size  names
 ##   &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;
-## 1 ec80334d8848 post… docker… 2019-08-0… 16 sec… &lt;NA&gt;  Exite… 0B (… adve…
+## 1 45eff02a8ccf post… docker… 2019-08-0… 17 sec… &lt;NA&gt;  Exite… 0B (… adve…
+## 2 185a8e082757 post… docker… 2019-08-0… 23 hou… &lt;NA&gt;  Exite… 63B … adv11
 ## # … with 3 more variables: labels &lt;chr&gt;, mounts &lt;chr&gt;, networks &lt;chr&gt;</code></pre>
 <p>Restart the container and verify that the adventureworks tables are still there:</p>
-<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb85-1" data-line-number="1"><span class="kw">sp_docker_start</span>(<span class="st">&quot;adventureworks&quot;</span>)</a>
-<a class="sourceLine" id="cb85-2" data-line-number="2"><span class="kw">sp_docker_containers_tibble</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="kw">sp_docker_start</span>(<span class="st">&quot;adventureworks&quot;</span>)</a>
+<a class="sourceLine" id="cb16-2" data-line-number="2"><span class="kw">sp_docker_containers_tibble</span>()</a></code></pre></div>
 <pre><code>## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;
-## 1 ec80334d8848 post… docker… 2019-08-0… 17 sec… 0.0.… Up Le… 0B (… adve…
+## 1 45eff02a8ccf post… docker… 2019-08-0… 18 sec… 0.0.… Up Le… 63B … adve…
 ## # … with 3 more variables: labels &lt;chr&gt;, mounts &lt;chr&gt;, networks &lt;chr&gt;</code></pre>
 <p>Connect to the <code>adventureworks</code> database in PostgreSQL:</p>
-<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb87-1" data-line-number="1">con &lt;-<span class="st"> </span><span class="kw">sp_get_postgres_connection</span>(</a>
-<a class="sourceLine" id="cb87-2" data-line-number="2">  <span class="dt">host =</span> <span class="st">&quot;localhost&quot;</span>,</a>
-<a class="sourceLine" id="cb87-3" data-line-number="3">  <span class="dt">port =</span> <span class="dv">5432</span>,</a>
-<a class="sourceLine" id="cb87-4" data-line-number="4">  <span class="dt">user =</span> <span class="st">&quot;postgres&quot;</span>,</a>
-<a class="sourceLine" id="cb87-5" data-line-number="5">  <span class="dt">password =</span> <span class="st">&quot;postgres&quot;</span>,</a>
-<a class="sourceLine" id="cb87-6" data-line-number="6">  <span class="dt">dbname =</span> <span class="st">&quot;adventureworks&quot;</span>,</a>
-<a class="sourceLine" id="cb87-7" data-line-number="7">  <span class="dt">seconds_to_test =</span> <span class="dv">30</span></a>
-<a class="sourceLine" id="cb87-8" data-line-number="8">)</a></code></pre></div>
-<p>Check that you can still see the first few rows of the <code>employeeinfo</code> table:</p>
-<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb88-1" data-line-number="1"><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;sales&quot;</span>, <span class="st">&quot;salesperson&quot;</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb88-2" data-line-number="2"><span class="st">  </span><span class="kw">head</span>()</a></code></pre></div>
-<pre><code>## # Source:   lazy query [?? x 9]
-## # Database: postgres [postgres@localhost:5432/adventureworks]
-##   businessentityid territoryid salesquota bonus commissionpct salesytd
-##              &lt;int&gt;       &lt;int&gt;      &lt;dbl&gt; &lt;dbl&gt;         &lt;dbl&gt;    &lt;dbl&gt;
-## 1              274          NA         NA     0         0      559698.
-## 2              275           2     300000  4100         0.012 3763178.
-## 3              276           4     250000  2000         0.015 4251369.
-## 4              277           3     250000  2500         0.015 3189418.
-## 5              278           6     250000   500         0.01  1453719.
-## 6              279           5     300000  6700         0.01  2315186.
-## # … with 3 more variables: saleslastyear &lt;dbl&gt;, rowguid &lt;chr&gt;,
-## #   modifieddate &lt;dttm&gt;</code></pre>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1">con &lt;-<span class="st"> </span><span class="kw">sp_get_postgres_connection</span>(</a>
+<a class="sourceLine" id="cb18-2" data-line-number="2">  <span class="dt">host =</span> <span class="st">&quot;localhost&quot;</span>,</a>
+<a class="sourceLine" id="cb18-3" data-line-number="3">  <span class="dt">port =</span> <span class="dv">5432</span>,</a>
+<a class="sourceLine" id="cb18-4" data-line-number="4">  <span class="dt">user =</span> <span class="st">&quot;postgres&quot;</span>,</a>
+<a class="sourceLine" id="cb18-5" data-line-number="5">  <span class="dt">password =</span> <span class="st">&quot;postgres&quot;</span>,</a>
+<a class="sourceLine" id="cb18-6" data-line-number="6">  <span class="dt">dbname =</span> <span class="st">&quot;adventureworks&quot;</span>,</a>
+<a class="sourceLine" id="cb18-7" data-line-number="7">  <span class="dt">seconds_to_test =</span> <span class="dv">30</span></a>
+<a class="sourceLine" id="cb18-8" data-line-number="8">)</a></code></pre></div>
+<p>The database is still there, in the same state as it was when it was originally built.</p>
 </div>
 <div id="cleaning-up" class="section level2">
-<h2><span class="header-section-number">5.9</span> Cleaning up</h2>
+<h2><span class="header-section-number">4.9</span> Cleaning up</h2>
 <p>Always have R disconnect from the database when you’re done.</p>
-<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb90-1" data-line-number="1"><span class="kw">dbDisconnect</span>(con)</a></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="kw">dbDisconnect</span>(con)</a></code></pre></div>
 <p>Stop the <code>adventureworks</code> container:</p>
-<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb91-1" data-line-number="1"><span class="kw">sp_docker_stop</span>(<span class="st">&quot;adventureworks&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="kw">sp_docker_stop</span>(<span class="st">&quot;adventureworks&quot;</span>)</a></code></pre></div>
 <p>Show that the container still exists even though it’s not running</p>
-<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb92-1" data-line-number="1"><span class="kw">sp_show_all_docker_containers</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="kw">sp_show_all_docker_containers</span>()</a></code></pre></div>
 <pre><code>## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## ec80334d8848        postgres:10         &quot;docker-entrypoint.s…&quot;   19 seconds ago      Exited (0) Less than a second ago                       adventureworks</code></pre>
+## 45eff02a8ccf        postgres:11         &quot;docker-entrypoint.s…&quot;   19 seconds ago      Exited (0) Less than a second ago                       adventureworks
+## 185a8e082757        postgres:11         &quot;docker-entrypoint.s…&quot;   23 hours ago        Exited (137) 23 hours ago                               adv11</code></pre>
 <p>Next time, you can just use this command to start the container:</p>
 <blockquote>
 <p><code>sp_docker_start(&quot;adventureworks&quot;)</code></p>
@@ -731,7 +540,7 @@ the <em>running</em> containers. But we can use the <code>list_all</code> option
 </blockquote>
 </div>
 <div id="using-the-adventureworks-container-in-the-rest-of-the-book" class="section level2">
-<h2><span class="header-section-number">5.10</span> Using the <code>adventureworks</code> container in the rest of the book</h2>
+<h2><span class="header-section-number">4.10</span> Using the <code>adventureworks</code> container in the rest of the book</h2>
 <p>After this point in the book, we assume that Docker is up and that we can always start up our <em>adventureworks database</em> with:</p>
 <blockquote>
 <p><code>sp_docker_start(&quot;adventureworks&quot;)</code></p>
@@ -744,7 +553,7 @@ the <em>running</em> containers. But we can use the <code>list_all</code> option
           </div>
         </div>
       </div>
-<a href="chapter-connect-docker-postgresql-r.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="chapter-learning-goals.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="chapter-dbms-login-credentials.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
