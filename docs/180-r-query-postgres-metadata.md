@@ -67,22 +67,22 @@ kable(schema_list)
 
 catalog_name     schema_name          schema_owner 
 ---------------  -------------------  -------------
-adventureworks   pg_toast             postgres     
-adventureworks   pg_temp_1            postgres     
-adventureworks   pg_toast_temp_1      postgres     
-adventureworks   pg_catalog           postgres     
-adventureworks   public               postgres     
-adventureworks   information_schema   postgres     
-adventureworks   hr                   postgres     
-adventureworks   humanresources       postgres     
-adventureworks   pe                   postgres     
-adventureworks   person               postgres     
-adventureworks   pr                   postgres     
-adventureworks   production           postgres     
-adventureworks   pu                   postgres     
-adventureworks   purchasing           postgres     
-adventureworks   sa                   postgres     
 adventureworks   sales                postgres     
+adventureworks   sa                   postgres     
+adventureworks   purchasing           postgres     
+adventureworks   pu                   postgres     
+adventureworks   production           postgres     
+adventureworks   pr                   postgres     
+adventureworks   person               postgres     
+adventureworks   pe                   postgres     
+adventureworks   humanresources       postgres     
+adventureworks   hr                   postgres     
+adventureworks   information_schema   postgres     
+adventureworks   public               postgres     
+adventureworks   pg_catalog           postgres     
+adventureworks   pg_toast_temp_1      postgres     
+adventureworks   pg_temp_1            postgres     
+adventureworks   pg_toast             postgres     
 ### Digging into the `information_schema`
 
 We usually need more detail than just a list of tables. Most SQL databases have an `information_schema` that has a standard structure to describe and control the database.
@@ -256,8 +256,8 @@ adventureworks   pe                   be                                      VI
 adventureworks   pe                   bea                                     VIEW       
 adventureworks   pe                   bec                                     VIEW       
 adventureworks   pr                   bom                                     VIEW       
-adventureworks   pr                   c                                       VIEW       
 adventureworks   sa                   c                                       VIEW       
+adventureworks   pr                   c                                       VIEW       
 adventureworks   sa                   cc                                      VIEW       
 adventureworks   information_schema   character_sets                          VIEW       
 adventureworks   information_schema   check_constraint_routine_usage          VIEW       
@@ -271,19 +271,19 @@ adventureworks   information_schema   columns                                 VI
 adventureworks   information_schema   column_udt_usage                        VIEW       
 adventureworks   information_schema   constraint_column_usage                 VIEW       
 adventureworks   information_schema   constraint_table_usage                  VIEW       
-adventureworks   sa                   cr                                      VIEW       
 adventureworks   pe                   cr                                      VIEW       
+adventureworks   sa                   cr                                      VIEW       
 adventureworks   sa                   crc                                     VIEW       
 adventureworks   pe                   ct                                      VIEW       
 adventureworks   sa                   cu                                      VIEW       
-adventureworks   hr                   d                                       VIEW       
 adventureworks   pr                   d                                       VIEW       
+adventureworks   hr                   d                                       VIEW       
 adventureworks   information_schema   data_type_privileges                    VIEW       
 adventureworks   information_schema   domain_constraints                      VIEW       
 adventureworks   information_schema   domains                                 VIEW       
 adventureworks   information_schema   domain_udt_usage                        VIEW       
-adventureworks   pe                   e                                       VIEW       
 adventureworks   hr                   e                                       VIEW       
+adventureworks   pe                   e                                       VIEW       
 adventureworks   hr                   edh                                     VIEW       
 adventureworks   information_schema   element_types                           VIEW       
 adventureworks   information_schema   enabled_roles                           VIEW       
@@ -299,8 +299,8 @@ adventureworks   information_schema   information_schema_catalog_name         VI
 adventureworks   hr                   jc                                      VIEW       
 adventureworks   information_schema   key_column_usage                        VIEW       
 adventureworks   pr                   l                                       VIEW       
-adventureworks   pr                   p                                       VIEW       
 adventureworks   pe                   p                                       VIEW       
+adventureworks   pr                   p                                       VIEW       
 adventureworks   pe                   pa                                      VIEW       
 adventureworks   information_schema   parameters                              VIEW       
 adventureworks   pr                   pc                                      VIEW       
@@ -405,11 +405,11 @@ adventureworks   sa                   sod                                     VI
 adventureworks   sa                   soh                                     VIEW       
 adventureworks   sa                   sohsr                                   VIEW       
 adventureworks   sa                   sop                                     VIEW       
-adventureworks   sa                   sp                                      VIEW       
 adventureworks   pe                   sp                                      VIEW       
+adventureworks   sa                   sp                                      VIEW       
 adventureworks   sa                   spqh                                    VIEW       
-adventureworks   pr                   sr                                      VIEW       
 adventureworks   sa                   sr                                      VIEW       
+adventureworks   pr                   sr                                      VIEW       
 adventureworks   sa                   st                                      VIEW       
 adventureworks   sa                   sth                                     VIEW       
 adventureworks   information_schema   table_constraints                       VIEW       
@@ -588,8 +588,8 @@ adventureworks   pr               ppp                                     VIEW
 adventureworks   pr               pr                                      VIEW       
 adventureworks   pr               psc                                     VIEW       
 adventureworks   pu               pv                                      VIEW       
-adventureworks   sa               s                                       VIEW       
 adventureworks   hr               s                                       VIEW       
+adventureworks   sa               s                                       VIEW       
 adventureworks   sa               sci                                     VIEW       
 adventureworks   pu               sm                                      VIEW       
 adventureworks   sa               so                                      VIEW       
@@ -597,8 +597,8 @@ adventureworks   sa               sod                                     VIEW
 adventureworks   sa               soh                                     VIEW       
 adventureworks   sa               sohsr                                   VIEW       
 adventureworks   sa               sop                                     VIEW       
-adventureworks   sa               sp                                      VIEW       
 adventureworks   pe               sp                                      VIEW       
+adventureworks   sa               sp                                      VIEW       
 adventureworks   sa               spqh                                    VIEW       
 adventureworks   pr               sr                                      VIEW       
 adventureworks   sa               sr                                      VIEW       
@@ -645,7 +645,7 @@ But the `information_schema` has a lot more useful information that we can use.
 columns_info_schema_table <- tbl(con, dbplyr::in_schema("information_schema", "columns"))
 ```
 
-Since the `information_schema` contains 2951 columns, we are narrowing our focus to just one table.  This query retrieves more information about the `rental` table:
+Since the `information_schema` contains 2961 columns, we are narrowing our focus to just one table.  This query retrieves more information about the `rental` table:
 
 ```r
 columns_info_schema_info <- columns_info_schema_table %>%
@@ -667,7 +667,7 @@ glimpse(columns_info_schema_info)
 ```
 
 ```
-## Observations: 2,951
+## Observations: 2,961
 ## Variables: 7
 ## $ table_catalog            <chr> "adventureworks", "adventureworks", "ad…
 ## $ table_name               <chr> "pg_proc", "pg_proc", "pg_proc", "pg_pr…
@@ -694,27 +694,26 @@ adventureworks   pg_proc                                 procost                
 adventureworks   pg_proc                                 prorows                               real (24,2)                                   6                         NA  NA                                                                            
 adventureworks   pg_proc                                 provariadic                           oid                                           7                         NA  NA                                                                            
 adventureworks   pg_proc                                 protransform                          regproc                                       8                         NA  NA                                                                            
-adventureworks   pg_proc                                 proisagg                              boolean                                       9                         NA  NA                                                                            
-adventureworks   pg_proc                                 proiswindow                           boolean                                      10                         NA  NA                                                                            
-adventureworks   pg_proc                                 prosecdef                             boolean                                      11                         NA  NA                                                                            
-adventureworks   pg_proc                                 proleakproof                          boolean                                      12                         NA  NA                                                                            
-adventureworks   pg_proc                                 proisstrict                           boolean                                      13                         NA  NA                                                                            
-adventureworks   pg_proc                                 proretset                             boolean                                      14                         NA  NA                                                                            
-adventureworks   pg_proc                                 provolatile                           "char"                                       15                         NA  NA                                                                            
-adventureworks   pg_proc                                 proparallel                           "char"                                       16                         NA  NA                                                                            
-adventureworks   pg_proc                                 pronargs                              smallint                                     17                         NA  NA                                                                            
-adventureworks   pg_proc                                 pronargdefaults                       smallint                                     18                         NA  NA                                                                            
-adventureworks   pg_proc                                 prorettype                            oid                                          19                         NA  NA                                                                            
-adventureworks   pg_proc                                 proargtypes                           ARRAY                                        20                         NA  NA                                                                            
-adventureworks   pg_proc                                 proallargtypes                        ARRAY                                        21                         NA  NA                                                                            
-adventureworks   pg_proc                                 proargmodes                           ARRAY                                        22                         NA  NA                                                                            
-adventureworks   pg_proc                                 proargnames                           ARRAY                                        23                         NA  NA                                                                            
-adventureworks   pg_proc                                 proargdefaults                        pg_node_tree                                 24                         NA  NA                                                                            
-adventureworks   pg_proc                                 protrftypes                           ARRAY                                        25                         NA  NA                                                                            
-adventureworks   pg_proc                                 prosrc                                text                                         26                         NA  NA                                                                            
-adventureworks   pg_proc                                 probin                                text                                         27                         NA  NA                                                                            
-adventureworks   pg_proc                                 proconfig                             ARRAY                                        28                         NA  NA                                                                            
-adventureworks   pg_proc                                 proacl                                ARRAY                                        29                         NA  NA                                                                            
+adventureworks   pg_proc                                 prokind                               "char"                                        9                         NA  NA                                                                            
+adventureworks   pg_proc                                 prosecdef                             boolean                                      10                         NA  NA                                                                            
+adventureworks   pg_proc                                 proleakproof                          boolean                                      11                         NA  NA                                                                            
+adventureworks   pg_proc                                 proisstrict                           boolean                                      12                         NA  NA                                                                            
+adventureworks   pg_proc                                 proretset                             boolean                                      13                         NA  NA                                                                            
+adventureworks   pg_proc                                 provolatile                           "char"                                       14                         NA  NA                                                                            
+adventureworks   pg_proc                                 proparallel                           "char"                                       15                         NA  NA                                                                            
+adventureworks   pg_proc                                 pronargs                              smallint                                     16                         NA  NA                                                                            
+adventureworks   pg_proc                                 pronargdefaults                       smallint                                     17                         NA  NA                                                                            
+adventureworks   pg_proc                                 prorettype                            oid                                          18                         NA  NA                                                                            
+adventureworks   pg_proc                                 proargtypes                           ARRAY                                        19                         NA  NA                                                                            
+adventureworks   pg_proc                                 proallargtypes                        ARRAY                                        20                         NA  NA                                                                            
+adventureworks   pg_proc                                 proargmodes                           ARRAY                                        21                         NA  NA                                                                            
+adventureworks   pg_proc                                 proargnames                           ARRAY                                        22                         NA  NA                                                                            
+adventureworks   pg_proc                                 proargdefaults                        pg_node_tree                                 23                         NA  NA                                                                            
+adventureworks   pg_proc                                 protrftypes                           ARRAY                                        24                         NA  NA                                                                            
+adventureworks   pg_proc                                 prosrc                                text                                         25                         NA  NA                                                                            
+adventureworks   pg_proc                                 probin                                text                                         26                         NA  NA                                                                            
+adventureworks   pg_proc                                 proconfig                             ARRAY                                        27                         NA  NA                                                                            
+adventureworks   pg_proc                                 proacl                                ARRAY                                        28                         NA  NA                                                                            
 adventureworks   pg_type                                 typname                               name                                          1                         NA  NA                                                                            
 adventureworks   pg_type                                 typnamespace                          oid                                           2                         NA  NA                                                                            
 adventureworks   pg_type                                 typowner                              oid                                           3                         NA  NA                                                                            
@@ -759,14 +758,16 @@ adventureworks   pg_attribute                            attstorage             
 adventureworks   pg_attribute                            attalign                              "char"                                       12                         NA  NA                                                                            
 adventureworks   pg_attribute                            attnotnull                            boolean                                      13                         NA  NA                                                                            
 adventureworks   pg_attribute                            atthasdef                             boolean                                      14                         NA  NA                                                                            
-adventureworks   pg_attribute                            attidentity                           "char"                                       15                         NA  NA                                                                            
-adventureworks   pg_attribute                            attisdropped                          boolean                                      16                         NA  NA                                                                            
-adventureworks   pg_attribute                            attislocal                            boolean                                      17                         NA  NA                                                                            
-adventureworks   pg_attribute                            attinhcount                           integer                                      18                         NA  NA                                                                            
-adventureworks   pg_attribute                            attcollation                          oid                                          19                         NA  NA                                                                            
-adventureworks   pg_attribute                            attacl                                ARRAY                                        20                         NA  NA                                                                            
-adventureworks   pg_attribute                            attoptions                            ARRAY                                        21                         NA  NA                                                                            
-adventureworks   pg_attribute                            attfdwoptions                         ARRAY                                        22                         NA  NA                                                                            
+adventureworks   pg_attribute                            atthasmissing                         boolean                                      15                         NA  NA                                                                            
+adventureworks   pg_attribute                            attidentity                           "char"                                       16                         NA  NA                                                                            
+adventureworks   pg_attribute                            attisdropped                          boolean                                      17                         NA  NA                                                                            
+adventureworks   pg_attribute                            attislocal                            boolean                                      18                         NA  NA                                                                            
+adventureworks   pg_attribute                            attinhcount                           integer                                      19                         NA  NA                                                                            
+adventureworks   pg_attribute                            attcollation                          oid                                          20                         NA  NA                                                                            
+adventureworks   pg_attribute                            attacl                                ARRAY                                        21                         NA  NA                                                                            
+adventureworks   pg_attribute                            attoptions                            ARRAY                                        22                         NA  NA                                                                            
+adventureworks   pg_attribute                            attfdwoptions                         ARRAY                                        23                         NA  NA                                                                            
+adventureworks   pg_attribute                            attmissingval                         anyarray                                     24                         NA  NA                                                                            
 adventureworks   pg_class                                relname                               name                                          1                         NA  NA                                                                            
 adventureworks   pg_class                                relnamespace                          oid                                           2                         NA  NA                                                                            
 adventureworks   pg_class                                reltype                               oid                                           3                         NA  NA                                                                            
@@ -786,15 +787,15 @@ adventureworks   pg_class                                relkind                
 adventureworks   pg_class                                relnatts                              smallint                                     17                         NA  NA                                                                            
 adventureworks   pg_class                                relchecks                             smallint                                     18                         NA  NA                                                                            
 adventureworks   pg_class                                relhasoids                            boolean                                      19                         NA  NA                                                                            
-adventureworks   pg_class                                relhaspkey                            boolean                                      20                         NA  NA                                                                            
-adventureworks   pg_class                                relhasrules                           boolean                                      21                         NA  NA                                                                            
-adventureworks   pg_class                                relhastriggers                        boolean                                      22                         NA  NA                                                                            
-adventureworks   pg_class                                relhassubclass                        boolean                                      23                         NA  NA                                                                            
-adventureworks   pg_class                                relrowsecurity                        boolean                                      24                         NA  NA                                                                            
-adventureworks   pg_class                                relforcerowsecurity                   boolean                                      25                         NA  NA                                                                            
-adventureworks   pg_class                                relispopulated                        boolean                                      26                         NA  NA                                                                            
-adventureworks   pg_class                                relreplident                          "char"                                       27                         NA  NA                                                                            
-adventureworks   pg_class                                relispartition                        boolean                                      28                         NA  NA                                                                            
+adventureworks   pg_class                                relhasrules                           boolean                                      20                         NA  NA                                                                            
+adventureworks   pg_class                                relhastriggers                        boolean                                      21                         NA  NA                                                                            
+adventureworks   pg_class                                relhassubclass                        boolean                                      22                         NA  NA                                                                            
+adventureworks   pg_class                                relrowsecurity                        boolean                                      23                         NA  NA                                                                            
+adventureworks   pg_class                                relforcerowsecurity                   boolean                                      24                         NA  NA                                                                            
+adventureworks   pg_class                                relispopulated                        boolean                                      25                         NA  NA                                                                            
+adventureworks   pg_class                                relreplident                          "char"                                       26                         NA  NA                                                                            
+adventureworks   pg_class                                relispartition                        boolean                                      27                         NA  NA                                                                            
+adventureworks   pg_class                                relrewrite                            oid                                          28                         NA  NA                                                                            
 adventureworks   pg_class                                relfrozenxid                          xid                                          29                         NA  NA                                                                            
 adventureworks   pg_class                                relminmxid                            xid                                          30                         NA  NA                                                                            
 adventureworks   pg_class                                relacl                                ARRAY                                        31                         NA  NA                                                                            
@@ -813,43 +814,45 @@ adventureworks   pg_constraint                           convalidated           
 adventureworks   pg_constraint                           conrelid                              oid                                           7                         NA  NA                                                                            
 adventureworks   pg_constraint                           contypid                              oid                                           8                         NA  NA                                                                            
 adventureworks   pg_constraint                           conindid                              oid                                           9                         NA  NA                                                                            
-adventureworks   pg_constraint                           confrelid                             oid                                          10                         NA  NA                                                                            
-adventureworks   pg_constraint                           confupdtype                           "char"                                       11                         NA  NA                                                                            
-adventureworks   pg_constraint                           confdeltype                           "char"                                       12                         NA  NA                                                                            
-adventureworks   pg_constraint                           confmatchtype                         "char"                                       13                         NA  NA                                                                            
-adventureworks   pg_constraint                           conislocal                            boolean                                      14                         NA  NA                                                                            
-adventureworks   pg_constraint                           coninhcount                           integer                                      15                         NA  NA                                                                            
-adventureworks   pg_constraint                           connoinherit                          boolean                                      16                         NA  NA                                                                            
-adventureworks   pg_constraint                           conkey                                ARRAY                                        17                         NA  NA                                                                            
-adventureworks   pg_constraint                           confkey                               ARRAY                                        18                         NA  NA                                                                            
-adventureworks   pg_constraint                           conpfeqop                             ARRAY                                        19                         NA  NA                                                                            
-adventureworks   pg_constraint                           conppeqop                             ARRAY                                        20                         NA  NA                                                                            
-adventureworks   pg_constraint                           conffeqop                             ARRAY                                        21                         NA  NA                                                                            
-adventureworks   pg_constraint                           conexclop                             ARRAY                                        22                         NA  NA                                                                            
-adventureworks   pg_constraint                           conbin                                pg_node_tree                                 23                         NA  NA                                                                            
-adventureworks   pg_constraint                           consrc                                text                                         24                         NA  NA                                                                            
+adventureworks   pg_constraint                           conparentid                           oid                                          10                         NA  NA                                                                            
+adventureworks   pg_constraint                           confrelid                             oid                                          11                         NA  NA                                                                            
+adventureworks   pg_constraint                           confupdtype                           "char"                                       12                         NA  NA                                                                            
+adventureworks   pg_constraint                           confdeltype                           "char"                                       13                         NA  NA                                                                            
+adventureworks   pg_constraint                           confmatchtype                         "char"                                       14                         NA  NA                                                                            
+adventureworks   pg_constraint                           conislocal                            boolean                                      15                         NA  NA                                                                            
+adventureworks   pg_constraint                           coninhcount                           integer                                      16                         NA  NA                                                                            
+adventureworks   pg_constraint                           connoinherit                          boolean                                      17                         NA  NA                                                                            
+adventureworks   pg_constraint                           conkey                                ARRAY                                        18                         NA  NA                                                                            
+adventureworks   pg_constraint                           confkey                               ARRAY                                        19                         NA  NA                                                                            
+adventureworks   pg_constraint                           conpfeqop                             ARRAY                                        20                         NA  NA                                                                            
+adventureworks   pg_constraint                           conppeqop                             ARRAY                                        21                         NA  NA                                                                            
+adventureworks   pg_constraint                           conffeqop                             ARRAY                                        22                         NA  NA                                                                            
+adventureworks   pg_constraint                           conexclop                             ARRAY                                        23                         NA  NA                                                                            
+adventureworks   pg_constraint                           conbin                                pg_node_tree                                 24                         NA  NA                                                                            
+adventureworks   pg_constraint                           consrc                                text                                         25                         NA  NA                                                                            
 adventureworks   pg_inherits                             inhrelid                              oid                                           1                         NA  NA                                                                            
 adventureworks   pg_inherits                             inhparent                             oid                                           2                         NA  NA                                                                            
 adventureworks   pg_inherits                             inhseqno                              integer                                       3                         NA  NA                                                                            
 adventureworks   pg_index                                indexrelid                            oid                                           1                         NA  NA                                                                            
 adventureworks   pg_index                                indrelid                              oid                                           2                         NA  NA                                                                            
 adventureworks   pg_index                                indnatts                              smallint                                      3                         NA  NA                                                                            
-adventureworks   pg_index                                indisunique                           boolean                                       4                         NA  NA                                                                            
-adventureworks   pg_index                                indisprimary                          boolean                                       5                         NA  NA                                                                            
-adventureworks   pg_index                                indisexclusion                        boolean                                       6                         NA  NA                                                                            
-adventureworks   pg_index                                indimmediate                          boolean                                       7                         NA  NA                                                                            
-adventureworks   pg_index                                indisclustered                        boolean                                       8                         NA  NA                                                                            
-adventureworks   pg_index                                indisvalid                            boolean                                       9                         NA  NA                                                                            
-adventureworks   pg_index                                indcheckxmin                          boolean                                      10                         NA  NA                                                                            
-adventureworks   pg_index                                indisready                            boolean                                      11                         NA  NA                                                                            
-adventureworks   pg_index                                indislive                             boolean                                      12                         NA  NA                                                                            
-adventureworks   pg_index                                indisreplident                        boolean                                      13                         NA  NA                                                                            
-adventureworks   pg_index                                indkey                                ARRAY                                        14                         NA  NA                                                                            
-adventureworks   pg_index                                indcollation                          ARRAY                                        15                         NA  NA                                                                            
-adventureworks   pg_index                                indclass                              ARRAY                                        16                         NA  NA                                                                            
-adventureworks   pg_index                                indoption                             ARRAY                                        17                         NA  NA                                                                            
-adventureworks   pg_index                                indexprs                              pg_node_tree                                 18                         NA  NA                                                                            
-adventureworks   pg_index                                indpred                               pg_node_tree                                 19                         NA  NA                                                                            
+adventureworks   pg_index                                indnkeyatts                           smallint                                      4                         NA  NA                                                                            
+adventureworks   pg_index                                indisunique                           boolean                                       5                         NA  NA                                                                            
+adventureworks   pg_index                                indisprimary                          boolean                                       6                         NA  NA                                                                            
+adventureworks   pg_index                                indisexclusion                        boolean                                       7                         NA  NA                                                                            
+adventureworks   pg_index                                indimmediate                          boolean                                       8                         NA  NA                                                                            
+adventureworks   pg_index                                indisclustered                        boolean                                       9                         NA  NA                                                                            
+adventureworks   pg_index                                indisvalid                            boolean                                      10                         NA  NA                                                                            
+adventureworks   pg_index                                indcheckxmin                          boolean                                      11                         NA  NA                                                                            
+adventureworks   pg_index                                indisready                            boolean                                      12                         NA  NA                                                                            
+adventureworks   pg_index                                indislive                             boolean                                      13                         NA  NA                                                                            
+adventureworks   pg_index                                indisreplident                        boolean                                      14                         NA  NA                                                                            
+adventureworks   pg_index                                indkey                                ARRAY                                        15                         NA  NA                                                                            
+adventureworks   pg_index                                indcollation                          ARRAY                                        16                         NA  NA                                                                            
+adventureworks   pg_index                                indclass                              ARRAY                                        17                         NA  NA                                                                            
+adventureworks   pg_index                                indoption                             ARRAY                                        18                         NA  NA                                                                            
+adventureworks   pg_index                                indexprs                              pg_node_tree                                 19                         NA  NA                                                                            
+adventureworks   pg_index                                indpred                               pg_node_tree                                 20                         NA  NA                                                                            
 adventureworks   pg_operator                             oprname                               name                                          1                         NA  NA                                                                            
 adventureworks   pg_operator                             oprnamespace                          oid                                           2                         NA  NA                                                                            
 adventureworks   pg_operator                             oprowner                              oid                                           3                         NA  NA                                                                            
@@ -918,13 +921,15 @@ adventureworks   pg_aggregate                            aggminvtransfn         
 adventureworks   pg_aggregate                            aggmfinalfn                           regproc                                      11                         NA  NA                                                                            
 adventureworks   pg_aggregate                            aggfinalextra                         boolean                                      12                         NA  NA                                                                            
 adventureworks   pg_aggregate                            aggmfinalextra                        boolean                                      13                         NA  NA                                                                            
-adventureworks   pg_aggregate                            aggsortop                             oid                                          14                         NA  NA                                                                            
-adventureworks   pg_aggregate                            aggtranstype                          oid                                          15                         NA  NA                                                                            
-adventureworks   pg_aggregate                            aggtransspace                         integer                                      16                         NA  NA                                                                            
-adventureworks   pg_aggregate                            aggmtranstype                         oid                                          17                         NA  NA                                                                            
-adventureworks   pg_aggregate                            aggmtransspace                        integer                                      18                         NA  NA                                                                            
-adventureworks   pg_aggregate                            agginitval                            text                                         19                         NA  NA                                                                            
-adventureworks   pg_aggregate                            aggminitval                           text                                         20                         NA  NA                                                                            
+adventureworks   pg_aggregate                            aggfinalmodify                        "char"                                       14                         NA  NA                                                                            
+adventureworks   pg_aggregate                            aggmfinalmodify                       "char"                                       15                         NA  NA                                                                            
+adventureworks   pg_aggregate                            aggsortop                             oid                                          16                         NA  NA                                                                            
+adventureworks   pg_aggregate                            aggtranstype                          oid                                          17                         NA  NA                                                                            
+adventureworks   pg_aggregate                            aggtransspace                         integer                                      18                         NA  NA                                                                            
+adventureworks   pg_aggregate                            aggmtranstype                         oid                                          19                         NA  NA                                                                            
+adventureworks   pg_aggregate                            aggmtransspace                        integer                                      20                         NA  NA                                                                            
+adventureworks   pg_aggregate                            agginitval                            text                                         21                         NA  NA                                                                            
+adventureworks   pg_aggregate                            aggminitval                           text                                         22                         NA  NA                                                                            
 adventureworks   pg_statistic_ext                        stxrelid                              oid                                           1                         NA  NA                                                                            
 adventureworks   pg_statistic_ext                        stxname                               name                                          2                         NA  NA                                                                            
 adventureworks   pg_statistic_ext                        stxnamespace                          oid                                           3                         NA  NA                                                                            
@@ -1159,10 +1164,11 @@ adventureworks   pg_collation                            collversion            
 adventureworks   pg_partitioned_table                    partrelid                             oid                                           1                         NA  NA                                                                            
 adventureworks   pg_partitioned_table                    partstrat                             "char"                                        2                         NA  NA                                                                            
 adventureworks   pg_partitioned_table                    partnatts                             smallint                                      3                         NA  NA                                                                            
-adventureworks   pg_partitioned_table                    partattrs                             ARRAY                                         4                         NA  NA                                                                            
-adventureworks   pg_partitioned_table                    partclass                             ARRAY                                         5                         NA  NA                                                                            
-adventureworks   pg_partitioned_table                    partcollation                         ARRAY                                         6                         NA  NA                                                                            
-adventureworks   pg_partitioned_table                    partexprs                             pg_node_tree                                  7                         NA  NA                                                                            
+adventureworks   pg_partitioned_table                    partdefid                             oid                                           4                         NA  NA                                                                            
+adventureworks   pg_partitioned_table                    partattrs                             ARRAY                                         5                         NA  NA                                                                            
+adventureworks   pg_partitioned_table                    partclass                             ARRAY                                         6                         NA  NA                                                                            
+adventureworks   pg_partitioned_table                    partcollation                         ARRAY                                         7                         NA  NA                                                                            
+adventureworks   pg_partitioned_table                    partexprs                             pg_node_tree                                  8                         NA  NA                                                                            
 adventureworks   pg_range                                rngtypid                              oid                                           1                         NA  NA                                                                            
 adventureworks   pg_range                                rngsubtype                            oid                                           2                         NA  NA                                                                            
 adventureworks   pg_range                                rngcollation                          oid                                           3                         NA  NA                                                                            
@@ -1187,6 +1193,7 @@ adventureworks   pg_publication                          puballtables           
 adventureworks   pg_publication                          pubinsert                             boolean                                       4                         NA  NA                                                                            
 adventureworks   pg_publication                          pubupdate                             boolean                                       5                         NA  NA                                                                            
 adventureworks   pg_publication                          pubdelete                             boolean                                       6                         NA  NA                                                                            
+adventureworks   pg_publication                          pubtruncate                           boolean                                       7                         NA  NA                                                                            
 adventureworks   pg_publication_rel                      prpubid                               oid                                           1                         NA  NA                                                                            
 adventureworks   pg_publication_rel                      prrelid                               oid                                           2                         NA  NA                                                                            
 adventureworks   pg_subscription                         subconninfo                           text                                          5                         NA  NA                                                                            
@@ -1628,7 +1635,9 @@ adventureworks   pg_stat_wal_receiver                    last_msg_receipt_time  
 adventureworks   pg_stat_wal_receiver                    latest_end_lsn                        pg_lsn                                        9                         NA  NA                                                                            
 adventureworks   pg_stat_wal_receiver                    latest_end_time                       timestamp with time zone                     10                         NA  NA                                                                            
 adventureworks   pg_stat_wal_receiver                    slot_name                             text                                         11                         NA  NA                                                                            
-adventureworks   pg_stat_wal_receiver                    conninfo                              text                                         12                         NA  NA                                                                            
+adventureworks   pg_stat_wal_receiver                    sender_host                           text                                         12                         NA  NA                                                                            
+adventureworks   pg_stat_wal_receiver                    sender_port                           integer                                      13                         NA  NA                                                                            
+adventureworks   pg_stat_wal_receiver                    conninfo                              text                                         14                         NA  NA                                                                            
 adventureworks   pg_stat_subscription                    subid                                 oid                                           1                         NA  NA                                                                            
 adventureworks   pg_stat_subscription                    subname                               name                                          2                         NA  NA                                                                            
 adventureworks   pg_stat_subscription                    pid                                   integer                                       3                         NA  NA                                                                            
@@ -1743,7 +1752,6 @@ adventureworks   pg_subscription                         subpublications        
 adventureworks   department                              name                                  character varying (50)                        2                         50  NA                                                                            
 adventureworks   department                              groupname                             character varying (50)                        3                         50  NA                                                                            
 adventureworks   department                              modifieddate                          timestamp without time zone                   4                         NA  now()                                                                         
-adventureworks   department                              departmentid                          integer                                       1                         NA  nextval('humanresources.department_departmentid_seq'::regclass)               
 adventureworks   d                                       id                                    integer                                       1                         NA  NA                                                                            
 adventureworks   d                                       departmentid                          integer                                       2                         NA  NA                                                                            
 adventureworks   d                                       name                                  character varying (50)                        3                         50  NA                                                                            
@@ -2170,6 +2178,7 @@ adventureworks   table_constraints                       table_name             
 adventureworks   table_constraints                       constraint_type                       character varying (NA)                        7                         NA  NA                                                                            
 adventureworks   table_constraints                       is_deferrable                         character varying (3)                         8                          3  NA                                                                            
 adventureworks   table_constraints                       initially_deferred                    character varying (3)                         9                          3  NA                                                                            
+adventureworks   table_constraints                       enforced                              character varying (3)                        10                          3  NA                                                                            
 adventureworks   table_privileges                        grantor                               character varying (NA)                        1                         NA  NA                                                                            
 adventureworks   table_privileges                        grantee                               character varying (NA)                        2                         NA  NA                                                                            
 adventureworks   table_privileges                        table_catalog                         character varying (NA)                        3                         NA  NA                                                                            
@@ -2480,6 +2489,7 @@ adventureworks   eph                                     modifieddate           
 adventureworks   jobcandidate                            businessentityid                      integer                                       2                         NA  NA                                                                            
 adventureworks   jobcandidate                            resume                                xml                                           3                         NA  NA                                                                            
 adventureworks   jobcandidate                            modifieddate                          timestamp without time zone                   4                         NA  now()                                                                         
+adventureworks   jobcandidate                            jobcandidateid                        integer                                       1                         NA  nextval('humanresources.jobcandidate_jobcandidateid_seq'::regclass)           
 adventureworks   jc                                      id                                    integer                                       1                         NA  NA                                                                            
 adventureworks   jc                                      jobcandidateid                        integer                                       2                         NA  NA                                                                            
 adventureworks   jc                                      businessentityid                      integer                                       3                         NA  NA                                                                            
@@ -2511,11 +2521,11 @@ adventureworks   businessentityaddress                   modifieddate           
 adventureworks   countryregion                           countryregioncode                     character varying (3)                         1                          3  NA                                                                            
 adventureworks   countryregion                           name                                  character varying (50)                        2                         50  NA                                                                            
 adventureworks   countryregion                           modifieddate                          timestamp without time zone                   3                         NA  now()                                                                         
+adventureworks   address                                 addressid                             integer                                       1                         NA  nextval('person.address_addressid_seq'::regclass)                             
 adventureworks   emailaddress                            businessentityid                      integer                                       1                         NA  NA                                                                            
 adventureworks   emailaddress                            emailaddress                          character varying (50)                        3                         50  NA                                                                            
 adventureworks   emailaddress                            rowguid                               uuid                                          4                         NA  uuid_generate_v1()                                                            
 adventureworks   emailaddress                            modifieddate                          timestamp without time zone                   5                         NA  now()                                                                         
-adventureworks   emailaddress                            emailaddressid                        integer                                       2                         NA  nextval('person.emailaddress_emailaddressid_seq'::regclass)                   
 adventureworks   person                                  businessentityid                      integer                                       1                         NA  NA                                                                            
 adventureworks   person                                  persontype                            character                                     2                          2  NA                                                                            
 adventureworks   person                                  title                                 character varying (8)                         4                          8  NA                                                                            
@@ -2533,6 +2543,7 @@ adventureworks   personphone                             businessentityid       
 adventureworks   personphone                             phonenumber                           character varying (25)                        2                         25  NA                                                                            
 adventureworks   personphone                             phonenumbertypeid                     integer                                       3                         NA  NA                                                                            
 adventureworks   personphone                             modifieddate                          timestamp without time zone                   4                         NA  now()                                                                         
+adventureworks   emailaddress                            emailaddressid                        integer                                       2                         NA  nextval('person.emailaddress_emailaddressid_seq'::regclass)                   
 adventureworks   phonenumbertype                         name                                  character varying (50)                        2                         50  NA                                                                            
 adventureworks   phonenumbertype                         modifieddate                          timestamp without time zone                   3                         NA  now()                                                                         
 adventureworks   stateprovince                           stateprovincecode                     character                                     2                          3  NA                                                                            
@@ -2542,6 +2553,8 @@ adventureworks   stateprovince                           territoryid            
 adventureworks   stateprovince                           isonlystateprovinceflag               boolean                                       4                         NA  true                                                                          
 adventureworks   stateprovince                           rowguid                               uuid                                          7                         NA  uuid_generate_v1()                                                            
 adventureworks   stateprovince                           modifieddate                          timestamp without time zone                   8                         NA  now()                                                                         
+adventureworks   phonenumbertype                         phonenumbertypeid                     integer                                       1                         NA  nextval('person.phonenumbertype_phonenumbertypeid_seq'::regclass)             
+adventureworks   stateprovince                           stateprovinceid                       integer                                       1                         NA  nextval('person.stateprovince_stateprovinceid_seq'::regclass)                 
 adventureworks   vemployee                               businessentityid                      integer                                       1                         NA  NA                                                                            
 adventureworks   vemployee                               title                                 character varying (8)                         2                          8  NA                                                                            
 adventureworks   vemployee                               firstname                             character varying (50)                        3                         50  NA                                                                            
@@ -2634,13 +2647,12 @@ adventureworks   a                                       modifieddate           
 adventureworks   addresstype                             name                                  character varying (50)                        2                         50  NA                                                                            
 adventureworks   addresstype                             rowguid                               uuid                                          3                         NA  uuid_generate_v1()                                                            
 adventureworks   addresstype                             modifieddate                          timestamp without time zone                   4                         NA  now()                                                                         
+adventureworks   addresstype                             addresstypeid                         integer                                       1                         NA  nextval('person.addresstype_addresstypeid_seq'::regclass)                     
 adventureworks   at                                      id                                    integer                                       1                         NA  NA                                                                            
 adventureworks   at                                      addresstypeid                         integer                                       2                         NA  NA                                                                            
 adventureworks   at                                      name                                  character varying (50)                        3                         50  NA                                                                            
 adventureworks   at                                      rowguid                               uuid                                          4                         NA  NA                                                                            
 adventureworks   at                                      modifieddate                          timestamp without time zone                   5                         NA  NA                                                                            
-adventureworks   addresstype                             addresstypeid                         integer                                       1                         NA  nextval('person.addresstype_addresstypeid_seq'::regclass)                     
-adventureworks   businessentity                          businessentityid                      integer                                       1                         NA  nextval('person.businessentity_businessentityid_seq'::regclass)               
 adventureworks   businessentity                          rowguid                               uuid                                          2                         NA  uuid_generate_v1()                                                            
 adventureworks   businessentity                          modifieddate                          timestamp without time zone                   3                         NA  now()                                                                         
 adventureworks   be                                      id                                    integer                                       1                         NA  NA                                                                            
@@ -2669,7 +2681,6 @@ adventureworks   cr                                      name                   
 adventureworks   cr                                      modifieddate                          timestamp without time zone                   3                         NA  NA                                                                            
 adventureworks   contacttype                             name                                  character varying (50)                        2                         50  NA                                                                            
 adventureworks   contacttype                             modifieddate                          timestamp without time zone                   3                         NA  now()                                                                         
-adventureworks   contacttype                             contacttypeid                         integer                                       1                         NA  nextval('person.contacttype_contacttypeid_seq'::regclass)                     
 adventureworks   ct                                      id                                    integer                                       1                         NA  NA                                                                            
 adventureworks   ct                                      contacttypeid                         integer                                       2                         NA  NA                                                                            
 adventureworks   ct                                      name                                  character varying (50)                        3                         50  NA                                                                            
@@ -2761,6 +2772,7 @@ adventureworks   bom                                     modifieddate           
 adventureworks   culture                                 cultureid                             character                                     1                          6  NA                                                                            
 adventureworks   culture                                 name                                  character varying (50)                        2                         50  NA                                                                            
 adventureworks   culture                                 modifieddate                          timestamp without time zone                   3                         NA  now()                                                                         
+adventureworks   billofmaterials                         billofmaterialsid                     integer                                       1                         NA  nextval('production.billofmaterials_billofmaterialsid_seq'::regclass)         
 adventureworks   c                                       id                                    character                                     1                          6  NA                                                                            
 adventureworks   c                                       cultureid                             character                                     2                          6  NA                                                                            
 adventureworks   c                                       name                                  character varying (50)                        3                         50  NA                                                                            
@@ -2768,7 +2780,6 @@ adventureworks   c                                       modifieddate           
 adventureworks   document                                title                                 character varying (50)                        1                         50  NA                                                                            
 adventureworks   document                                owner                                 integer                                       2                         NA  NA                                                                            
 adventureworks   document                                filename                              character varying (400)                       4                        400  NA                                                                            
-adventureworks   billofmaterials                         billofmaterialsid                     integer                                       1                         NA  nextval('production.billofmaterials_billofmaterialsid_seq'::regclass)         
 adventureworks   document                                fileextension                         character varying (8)                         5                          8  NA                                                                            
 adventureworks   document                                revision                              character                                     6                          5  NA                                                                            
 adventureworks   document                                status                                smallint                                      8                         NA  NA                                                                            
@@ -2794,7 +2805,6 @@ adventureworks   d                                       modifieddate           
 adventureworks   d                                       documentnode                          character varying (NA)                       13                         NA  NA                                                                            
 adventureworks   illustration                            diagram                               xml                                           2                         NA  NA                                                                            
 adventureworks   illustration                            modifieddate                          timestamp without time zone                   3                         NA  now()                                                                         
-adventureworks   illustration                            illustrationid                        integer                                       1                         NA  nextval('production.illustration_illustrationid_seq'::regclass)               
 adventureworks   i                                       id                                    integer                                       1                         NA  NA                                                                            
 adventureworks   i                                       illustrationid                        integer                                       2                         NA  NA                                                                            
 adventureworks   i                                       diagram                               xml                                           3                         NA  NA                                                                            
@@ -2820,10 +2830,6 @@ adventureworks   product                                 size                   
 adventureworks   product                                 sizeunitmeasurecode                   character                                    12                          3  NA                                                                            
 adventureworks   product                                 weightunitmeasurecode                 character                                    13                          3  NA                                                                            
 adventureworks   product                                 weight                                numeric                                      14                         NA  NA                                                                            
-adventureworks   product                                 makeflag                              boolean                                       4                         NA  true                                                                          
-adventureworks   product                                 finishedgoodsflag                     boolean                                       5                         NA  true                                                                          
-adventureworks   location                                locationid                            integer                                       1                         NA  nextval('production.location_locationid_seq'::regclass)                       
-adventureworks   product                                 productid                             integer                                       1                         NA  nextval('production.product_productid_seq'::regclass)                         
 adventureworks   product                                 daystomanufacture                     integer                                      15                         NA  NA                                                                            
 adventureworks   product                                 productline                           character                                    16                          2  NA                                                                            
 adventureworks   product                                 class                                 character                                    17                          2  NA                                                                            
@@ -2833,6 +2839,8 @@ adventureworks   product                                 productmodelid         
 adventureworks   product                                 sellstartdate                         timestamp without time zone                  21                         NA  NA                                                                            
 adventureworks   product                                 sellenddate                           timestamp without time zone                  22                         NA  NA                                                                            
 adventureworks   product                                 discontinueddate                      timestamp without time zone                  23                         NA  NA                                                                            
+adventureworks   product                                 makeflag                              boolean                                       4                         NA  true                                                                          
+adventureworks   product                                 finishedgoodsflag                     boolean                                       5                         NA  true                                                                          
 adventureworks   product                                 rowguid                               uuid                                         24                         NA  uuid_generate_v1()                                                            
 adventureworks   product                                 modifieddate                          timestamp without time zone                  25                         NA  now()                                                                         
 adventureworks   p                                       id                                    integer                                       1                         NA  NA                                                                            
@@ -2843,6 +2851,7 @@ adventureworks   p                                       makeflag               
 adventureworks   p                                       finishedgoodsflag                     boolean                                       6                         NA  NA                                                                            
 adventureworks   p                                       color                                 character varying (15)                        7                         15  NA                                                                            
 adventureworks   p                                       safetystocklevel                      smallint                                      8                         NA  NA                                                                            
+adventureworks   product                                 productid                             integer                                       1                         NA  nextval('production.product_productid_seq'::regclass)                         
 adventureworks   p                                       reorderpoint                          smallint                                      9                         NA  NA                                                                            
 adventureworks   p                                       standardcost                          numeric                                      10                         NA  NA                                                                            
 adventureworks   p                                       listprice                             numeric                                      11                         NA  NA                                                                            
@@ -2874,6 +2883,7 @@ adventureworks   productcosthistory                      startdate              
 adventureworks   productcosthistory                      enddate                               timestamp without time zone                   3                         NA  NA                                                                            
 adventureworks   productcosthistory                      standardcost                          numeric                                       4                         NA  NA                                                                            
 adventureworks   productcosthistory                      modifieddate                          timestamp without time zone                   5                         NA  now()                                                                         
+adventureworks   productcategory                         productcategoryid                     integer                                       1                         NA  nextval('production.productcategory_productcategoryid_seq'::regclass)         
 adventureworks   pch                                     id                                    integer                                       1                         NA  NA                                                                            
 adventureworks   pch                                     productid                             integer                                       2                         NA  NA                                                                            
 adventureworks   pch                                     startdate                             timestamp without time zone                   3                         NA  NA                                                                            
@@ -2891,6 +2901,7 @@ adventureworks   pd                                      modifieddate           
 adventureworks   productdocument                         productid                             integer                                       1                         NA  NA                                                                            
 adventureworks   productdocument                         modifieddate                          timestamp without time zone                   2                         NA  now()                                                                         
 adventureworks   productdocument                         documentnode                          character varying (NA)                        3                         NA  '/'::character varying                                                        
+adventureworks   productdescription                      productdescriptionid                  integer                                       1                         NA  nextval('production.productdescription_productdescriptionid_seq'::regclass)   
 adventureworks   pdoc                                    id                                    integer                                       1                         NA  NA                                                                            
 adventureworks   pdoc                                    productid                             integer                                       2                         NA  NA                                                                            
 adventureworks   pdoc                                    modifieddate                          timestamp without time zone                   3                         NA  NA                                                                            
@@ -2902,7 +2913,6 @@ adventureworks   productinventory                        bin                    
 adventureworks   productinventory                        quantity                              smallint                                      5                         NA  0                                                                             
 adventureworks   productinventory                        rowguid                               uuid                                          6                         NA  uuid_generate_v1()                                                            
 adventureworks   productinventory                        modifieddate                          timestamp without time zone                   7                         NA  now()                                                                         
-adventureworks   productdescription                      productdescriptionid                  integer                                       1                         NA  nextval('production.productdescription_productdescriptionid_seq'::regclass)   
 adventureworks   pi                                      id                                    integer                                       1                         NA  NA                                                                            
 adventureworks   pi                                      productid                             integer                                       2                         NA  NA                                                                            
 adventureworks   pi                                      locationid                            smallint                                      3                         NA  NA                                                                            
@@ -2927,7 +2937,6 @@ adventureworks   productmodel                            catalogdescription     
 adventureworks   productmodel                            instructions                          xml                                           4                         NA  NA                                                                            
 adventureworks   productmodel                            rowguid                               uuid                                          5                         NA  uuid_generate_v1()                                                            
 adventureworks   productmodel                            modifieddate                          timestamp without time zone                   6                         NA  now()                                                                         
-adventureworks   productmodel                            productmodelid                        integer                                       1                         NA  nextval('production.productmodel_productmodelid_seq'::regclass)               
 adventureworks   pm                                      id                                    integer                                       1                         NA  NA                                                                            
 adventureworks   pm                                      productmodelid                        integer                                       2                         NA  NA                                                                            
 adventureworks   pm                                      name                                  character varying (50)                        3                         50  NA                                                                            
@@ -2945,6 +2954,7 @@ adventureworks   productmodelproductdescriptionculture   productmodelid         
 adventureworks   productmodelproductdescriptionculture   productdescriptionid                  integer                                       2                         NA  NA                                                                            
 adventureworks   productmodelproductdescriptionculture   cultureid                             character                                     3                          6  NA                                                                            
 adventureworks   productmodelproductdescriptionculture   modifieddate                          timestamp without time zone                   4                         NA  now()                                                                         
+adventureworks   productmodel                            productmodelid                        integer                                       1                         NA  nextval('production.productmodel_productmodelid_seq'::regclass)               
 adventureworks   pmpdc                                   productmodelid                        integer                                       1                         NA  NA                                                                            
 adventureworks   pmpdc                                   productdescriptionid                  integer                                       2                         NA  NA                                                                            
 adventureworks   pmpdc                                   cultureid                             character                                     3                          6  NA                                                                            
@@ -2954,7 +2964,6 @@ adventureworks   productphoto                            thumbnailphotofilename 
 adventureworks   productphoto                            largephoto                            bytea                                         4                         NA  NA                                                                            
 adventureworks   productphoto                            largephotofilename                    character varying (50)                        5                         50  NA                                                                            
 adventureworks   productphoto                            modifieddate                          timestamp without time zone                   6                         NA  now()                                                                         
-adventureworks   productphoto                            productphotoid                        integer                                       1                         NA  nextval('production.productphoto_productphotoid_seq'::regclass)               
 adventureworks   pp                                      id                                    integer                                       1                         NA  NA                                                                            
 adventureworks   pp                                      productphotoid                        integer                                       2                         NA  NA                                                                            
 adventureworks   pp                                      thumbnailphoto                        bytea                                         3                         NA  NA                                                                            
@@ -2974,10 +2983,10 @@ adventureworks   productreview                           productid              
 adventureworks   productreview                           reviewername                          character varying (50)                        3                         50  NA                                                                            
 adventureworks   productreview                           emailaddress                          character varying (50)                        5                         50  NA                                                                            
 adventureworks   productreview                           rating                                integer                                       6                         NA  NA                                                                            
+adventureworks   productphoto                            productphotoid                        integer                                       1                         NA  nextval('production.productphoto_productphotoid_seq'::regclass)               
 adventureworks   productreview                           comments                              character varying (3850)                      7                       3850  NA                                                                            
 adventureworks   productreview                           reviewdate                            timestamp without time zone                   4                         NA  now()                                                                         
 adventureworks   productreview                           modifieddate                          timestamp without time zone                   8                         NA  now()                                                                         
-adventureworks   productreview                           productreviewid                       integer                                       1                         NA  nextval('production.productreview_productreviewid_seq'::regclass)             
 adventureworks   pr                                      id                                    integer                                       1                         NA  NA                                                                            
 adventureworks   pr                                      productreviewid                       integer                                       2                         NA  NA                                                                            
 adventureworks   pr                                      productid                             integer                                       3                         NA  NA                                                                            
@@ -2999,7 +3008,6 @@ adventureworks   psc                                     rowguid                
 adventureworks   psc                                     modifieddate                          timestamp without time zone                   6                         NA  NA                                                                            
 adventureworks   scrapreason                             name                                  character varying (50)                        2                         50  NA                                                                            
 adventureworks   scrapreason                             modifieddate                          timestamp without time zone                   3                         NA  now()                                                                         
-adventureworks   productsubcategory                      productsubcategoryid                  integer                                       1                         NA  nextval('production.productsubcategory_productsubcategoryid_seq'::regclass)   
 adventureworks   sr                                      id                                    integer                                       1                         NA  NA                                                                            
 adventureworks   sr                                      scrapreasonid                         integer                                       2                         NA  NA                                                                            
 adventureworks   sr                                      name                                  character varying (50)                        3                         50  NA                                                                            
@@ -3028,7 +3036,6 @@ adventureworks   transactionhistoryarchive               referenceorderid       
 adventureworks   transactionhistoryarchive               transactiontype                       character                                     6                          1  NA                                                                            
 adventureworks   transactionhistoryarchive               quantity                              integer                                       7                         NA  NA                                                                            
 adventureworks   transactionhistoryarchive               actualcost                            numeric                                       8                         NA  NA                                                                            
-adventureworks   transactionhistory                      transactionid                         integer                                       1                         NA  nextval('production.transactionhistory_transactionid_seq'::regclass)          
 adventureworks   transactionhistoryarchive               referenceorderlineid                  integer                                       4                         NA  0                                                                             
 adventureworks   transactionhistoryarchive               transactiondate                       timestamp without time zone                   5                         NA  now()                                                                         
 adventureworks   transactionhistoryarchive               modifieddate                          timestamp without time zone                   9                         NA  now()                                                                         
@@ -3079,6 +3086,7 @@ adventureworks   workorderrouting                        actualresourcehrs      
 adventureworks   workorderrouting                        plannedcost                           numeric                                      10                         NA  NA                                                                            
 adventureworks   workorderrouting                        actualcost                            numeric                                      11                         NA  NA                                                                            
 adventureworks   workorderrouting                        modifieddate                          timestamp without time zone                  12                         NA  now()                                                                         
+adventureworks   workorder                               workorderid                           integer                                       1                         NA  nextval('production.workorder_workorderid_seq'::regclass)                     
 adventureworks   wr                                      id                                    integer                                       1                         NA  NA                                                                            
 adventureworks   wr                                      workorderid                           integer                                       2                         NA  NA                                                                            
 adventureworks   wr                                      productid                             integer                                       3                         NA  NA                                                                            
@@ -3136,6 +3144,7 @@ adventureworks   purchaseorderdetail                     unitprice              
 adventureworks   purchaseorderdetail                     receivedqty                           numeric                                       7                         NA  NA                                                                            
 adventureworks   purchaseorderdetail                     rejectedqty                           numeric                                       8                         NA  NA                                                                            
 adventureworks   purchaseorderdetail                     modifieddate                          timestamp without time zone                   9                         NA  now()                                                                         
+adventureworks   purchaseorderdetail                     purchaseorderdetailid                 integer                                       2                         NA  nextval('purchasing.purchaseorderdetail_purchaseorderdetailid_seq'::regclass) 
 adventureworks   pod                                     id                                    integer                                       1                         NA  NA                                                                            
 adventureworks   pod                                     purchaseorderid                       integer                                       2                         NA  NA                                                                            
 adventureworks   pod                                     purchaseorderdetailid                 integer                                       3                         NA  NA                                                                            
@@ -3143,7 +3152,6 @@ adventureworks   pod                                     duedate                
 adventureworks   pod                                     orderqty                              smallint                                      5                         NA  NA                                                                            
 adventureworks   pod                                     productid                             integer                                       6                         NA  NA                                                                            
 adventureworks   pod                                     unitprice                             numeric                                       7                         NA  NA                                                                            
-adventureworks   purchaseorderdetail                     purchaseorderdetailid                 integer                                       2                         NA  nextval('purchasing.purchaseorderdetail_purchaseorderdetailid_seq'::regclass) 
 adventureworks   pod                                     receivedqty                           numeric                                       8                         NA  NA                                                                            
 adventureworks   pod                                     rejectedqty                           numeric                                       9                         NA  NA                                                                            
 adventureworks   pod                                     modifieddate                          timestamp without time zone                  10                         NA  NA                                                                            
@@ -3196,10 +3204,10 @@ adventureworks   pv                                      unitmeasurecode        
 adventureworks   pv                                      modifieddate                          timestamp without time zone                  12                         NA  NA                                                                            
 adventureworks   shipmethod                              name                                  character varying (50)                        2                         50  NA                                                                            
 adventureworks   shipmethod                              shipbase                              numeric                                       3                         NA  0.00                                                                          
+adventureworks   shipmethod                              shipmethodid                          integer                                       1                         NA  nextval('purchasing.shipmethod_shipmethodid_seq'::regclass)                   
 adventureworks   shipmethod                              shiprate                              numeric                                       4                         NA  0.00                                                                          
 adventureworks   shipmethod                              rowguid                               uuid                                          5                         NA  uuid_generate_v1()                                                            
 adventureworks   shipmethod                              modifieddate                          timestamp without time zone                   6                         NA  now()                                                                         
-adventureworks   shipmethod                              shipmethodid                          integer                                       1                         NA  nextval('purchasing.shipmethod_shipmethodid_seq'::regclass)                   
 adventureworks   sm                                      id                                    integer                                       1                         NA  NA                                                                            
 adventureworks   sm                                      shipmethodid                          integer                                       2                         NA  NA                                                                            
 adventureworks   sm                                      name                                  character varying (50)                        3                         50  NA                                                                            
@@ -3275,14 +3283,13 @@ adventureworks   currencyrate                            tocurrencycode         
 adventureworks   currencyrate                            averagerate                           numeric                                       5                         NA  NA                                                                            
 adventureworks   currencyrate                            endofdayrate                          numeric                                       6                         NA  NA                                                                            
 adventureworks   currencyrate                            modifieddate                          timestamp without time zone                   7                         NA  now()                                                                         
+adventureworks   creditcard                              creditcardid                          integer                                       1                         NA  nextval('sales.creditcard_creditcardid_seq'::regclass)                        
 adventureworks   cr                                      currencyrateid                        integer                                       1                         NA  NA                                                                            
 adventureworks   cr                                      currencyratedate                      timestamp without time zone                   2                         NA  NA                                                                            
 adventureworks   cr                                      fromcurrencycode                      character                                     3                          3  NA                                                                            
 adventureworks   cr                                      tocurrencycode                        character                                     4                          3  NA                                                                            
 adventureworks   cr                                      averagerate                           numeric                                       5                         NA  NA                                                                            
 adventureworks   cr                                      endofdayrate                          numeric                                       6                         NA  NA                                                                            
-adventureworks   creditcard                              creditcardid                          integer                                       1                         NA  nextval('sales.creditcard_creditcardid_seq'::regclass)                        
-adventureworks   currencyrate                            currencyrateid                        integer                                       1                         NA  nextval('sales.currencyrate_currencyrateid_seq'::regclass)                    
 adventureworks   cr                                      modifieddate                          timestamp without time zone                   7                         NA  NA                                                                            
 adventureworks   countryregioncurrency                   countryregioncode                     character varying (3)                         1                          3  NA                                                                            
 adventureworks   countryregioncurrency                   currencycode                          character                                     2                          3  NA                                                                            
@@ -3333,11 +3340,9 @@ adventureworks   specialoffer                            description            
 adventureworks   specialoffer                            type                                  character varying (50)                        4                         50  NA                                                                            
 adventureworks   specialoffer                            category                              character varying (50)                        5                         50  NA                                                                            
 adventureworks   specialoffer                            startdate                             timestamp without time zone                   6                         NA  NA                                                                            
-adventureworks   specialoffer                            discountpct                           numeric                                       3                         NA  0.00                                                                          
-adventureworks   shoppingcartitem                        shoppingcartitemid                    integer                                       1                         NA  nextval('sales.shoppingcartitem_shoppingcartitemid_seq'::regclass)            
-adventureworks   specialoffer                            specialofferid                        integer                                       1                         NA  nextval('sales.specialoffer_specialofferid_seq'::regclass)                    
 adventureworks   specialoffer                            enddate                               timestamp without time zone                   7                         NA  NA                                                                            
 adventureworks   specialoffer                            maxqty                                integer                                       9                         NA  NA                                                                            
+adventureworks   specialoffer                            discountpct                           numeric                                       3                         NA  0.00                                                                          
 adventureworks   specialoffer                            minqty                                integer                                       8                         NA  0                                                                             
 adventureworks   specialoffer                            rowguid                               uuid                                         10                         NA  uuid_generate_v1()                                                            
 adventureworks   specialoffer                            modifieddate                          timestamp without time zone                  11                         NA  now()                                                                         
@@ -3363,6 +3368,7 @@ adventureworks   salesorderdetail                        unitpricediscount      
 adventureworks   salesorderdetail                        rowguid                               uuid                                          9                         NA  uuid_generate_v1()                                                            
 adventureworks   salesorderdetail                        modifieddate                          timestamp without time zone                  10                         NA  now()                                                                         
 adventureworks   salesorderdetail                        salesorderdetailid                    integer                                       2                         NA  nextval('sales.salesorderdetail_salesorderdetailid_seq'::regclass)            
+adventureworks   specialoffer                            specialofferid                        integer                                       1                         NA  nextval('sales.specialoffer_specialofferid_seq'::regclass)                    
 adventureworks   sod                                     id                                    integer                                       1                         NA  NA                                                                            
 adventureworks   sod                                     salesorderid                          integer                                       2                         NA  NA                                                                            
 adventureworks   sod                                     salesorderdetailid                    integer                                       3                         NA  NA                                                                            
@@ -3389,11 +3395,11 @@ adventureworks   salesorderheader                        creditcardapprovalcode 
 adventureworks   salesorderheader                        currencyrateid                        integer                                      18                         NA  NA                                                                            
 adventureworks   salesorderheader                        totaldue                              numeric                                      22                         NA  NA                                                                            
 adventureworks   salesorderheader                        comment                               character varying (128)                      23                        128  NA                                                                            
+adventureworks   salesorderheader                        salesorderid                          integer                                       1                         NA  nextval('sales.salesorderheader_salesorderid_seq'::regclass)                  
 adventureworks   salesorderheader                        revisionnumber                        smallint                                      2                         NA  0                                                                             
 adventureworks   salesorderheader                        orderdate                             timestamp without time zone                   3                         NA  now()                                                                         
 adventureworks   salesorderheader                        status                                smallint                                      6                         NA  1                                                                             
 adventureworks   salesorderheader                        onlineorderflag                       boolean                                       7                         NA  true                                                                          
-adventureworks   salesorderheader                        salesorderid                          integer                                       1                         NA  nextval('sales.salesorderheader_salesorderid_seq'::regclass)                  
 adventureworks   salesorderheader                        subtotal                              numeric                                      19                         NA  0.00                                                                          
 adventureworks   salesorderheader                        taxamt                                numeric                                      20                         NA  0.00                                                                          
 adventureworks   salesorderheader                        freight                               numeric                                      21                         NA  0.00                                                                          
@@ -3526,6 +3532,7 @@ adventureworks   tr                                      taxrate                
 adventureworks   tr                                      name                                  character varying (50)                        6                         50  NA                                                                            
 adventureworks   tr                                      rowguid                               uuid                                          7                         NA  NA                                                                            
 adventureworks   tr                                      modifieddate                          timestamp without time zone                   8                         NA  NA                                                                            
+adventureworks   salestaxrate                            salestaxrateid                        integer                                       1                         NA  nextval('sales.salestaxrate_salestaxrateid_seq'::regclass)                    
 adventureworks   vindividualcustomer                     businessentityid                      integer                                       1                         NA  NA                                                                            
 adventureworks   vindividualcustomer                     title                                 character varying (8)                         2                          8  NA                                                                            
 adventureworks   vindividualcustomer                     firstname                             character varying (50)                        3                         50  NA                                                                            
@@ -3625,18 +3632,21 @@ adventureworks   vstorewithdemographics                  SquareFeet             
 adventureworks   vstorewithdemographics                  Brands                                character varying (30)                       10                         30  NA                                                                            
 adventureworks   vstorewithdemographics                  Internet                              character varying (30)                       11                         30  NA                                                                            
 adventureworks   vstorewithdemographics                  NumberEmployees                       integer                                      12                         NA  NA                                                                            
-adventureworks   jobcandidate                            jobcandidateid                        integer                                       1                         NA  nextval('humanresources.jobcandidate_jobcandidateid_seq'::regclass)           
+adventureworks   department                              departmentid                          integer                                       1                         NA  nextval('humanresources.department_departmentid_seq'::regclass)               
 adventureworks   shift                                   shiftid                               integer                                       1                         NA  nextval('humanresources.shift_shiftid_seq'::regclass)                         
-adventureworks   address                                 addressid                             integer                                       1                         NA  nextval('person.address_addressid_seq'::regclass)                             
-adventureworks   phonenumbertype                         phonenumbertypeid                     integer                                       1                         NA  nextval('person.phonenumbertype_phonenumbertypeid_seq'::regclass)             
-adventureworks   stateprovince                           stateprovinceid                       integer                                       1                         NA  nextval('person.stateprovince_stateprovinceid_seq'::regclass)                 
-adventureworks   productcategory                         productcategoryid                     integer                                       1                         NA  nextval('production.productcategory_productcategoryid_seq'::regclass)         
+adventureworks   businessentity                          businessentityid                      integer                                       1                         NA  nextval('person.businessentity_businessentityid_seq'::regclass)               
+adventureworks   contacttype                             contacttypeid                         integer                                       1                         NA  nextval('person.contacttype_contacttypeid_seq'::regclass)                     
+adventureworks   illustration                            illustrationid                        integer                                       1                         NA  nextval('production.illustration_illustrationid_seq'::regclass)               
+adventureworks   location                                locationid                            integer                                       1                         NA  nextval('production.location_locationid_seq'::regclass)                       
+adventureworks   productreview                           productreviewid                       integer                                       1                         NA  nextval('production.productreview_productreviewid_seq'::regclass)             
+adventureworks   productsubcategory                      productsubcategoryid                  integer                                       1                         NA  nextval('production.productsubcategory_productsubcategoryid_seq'::regclass)   
 adventureworks   scrapreason                             scrapreasonid                         integer                                       1                         NA  nextval('production.scrapreason_scrapreasonid_seq'::regclass)                 
-adventureworks   workorder                               workorderid                           integer                                       1                         NA  nextval('production.workorder_workorderid_seq'::regclass)                     
+adventureworks   transactionhistory                      transactionid                         integer                                       1                         NA  nextval('production.transactionhistory_transactionid_seq'::regclass)          
 adventureworks   purchaseorderheader                     purchaseorderid                       integer                                       1                         NA  nextval('purchasing.purchaseorderheader_purchaseorderid_seq'::regclass)       
+adventureworks   currencyrate                            currencyrateid                        integer                                       1                         NA  nextval('sales.currencyrate_currencyrateid_seq'::regclass)                    
 adventureworks   customer                                customerid                            integer                                       1                         NA  nextval('sales.customer_customerid_seq'::regclass)                            
 adventureworks   salesreason                             salesreasonid                         integer                                       1                         NA  nextval('sales.salesreason_salesreasonid_seq'::regclass)                      
-adventureworks   salestaxrate                            salestaxrateid                        integer                                       1                         NA  nextval('sales.salestaxrate_salestaxrateid_seq'::regclass)                    
+adventureworks   shoppingcartitem                        shoppingcartitemid                    integer                                       1                         NA  nextval('sales.shoppingcartitem_shoppingcartitemid_seq'::regclass)            
 
 ### What is the difference between a `VIEW` and a `BASE TABLE`?
 
@@ -3718,12 +3728,12 @@ columns_info_schema_info %>% count(data_type) %>% kable()
 
 data_type                        n
 ----------------------------  ----
-"char"                          35
+"char"                          38
 abstime                          2
-anyarray                         8
+anyarray                         9
 ARRAY                           75
 bigint                         161
-boolean                        137
+boolean                        136
 bytea                            8
 character                       45
 character varying (1)            2
@@ -3736,7 +3746,7 @@ character varying (20)           1
 character varying (25)          15
 character varying (255)          2
 character varying (256)         18
-character varying (3)           57
+character varying (3)           58
 character varying (30)          19
 character varying (3850)         2
 character varying (400)          4
@@ -3749,12 +3759,12 @@ character varying (NA)         549
 date                            17
 double precision                 9
 inet                             2
-integer                        482
+integer                        483
 interval                         5
 money                            3
 name                           140
 numeric                         98
-oid                            218
+oid                            221
 pg_dependencies                  1
 pg_lsn                          14
 pg_ndistinct                     1
@@ -3762,8 +3772,8 @@ pg_node_tree                    13
 real (24,2)                      9
 regproc                         34
 regtype                          1
-smallint                        75
-text                           113
+smallint                        76
+text                           114
 time without time zone           4
 timestamp with time zone        36
 timestamp without time zone    208
@@ -3804,13 +3814,13 @@ parameters            32
 attributes            31
 pg_type               30
 element_types         29
-pg_proc               29
 user_defined_types    29
+pg_proc               28
 domains               27
 pg_statistic          26
 soh                   26
+pg_constraint         25
 product               25
-salesorderheader      25
 
 How many *column names* are shared across tables (or duplicated)?
 
@@ -3845,7 +3855,7 @@ public_tables %>% count(column_name) %>% filter(n == 1) %>% count()
 ## # A tibble: 1 x 1
 ##       n
 ##   <int>
-## 1   872
+## 1   882
 ```
 
 ## Database keys
@@ -3870,11 +3880,11 @@ glimpse(rs)
 ```
 
 ```
-## Observations: 466,258
+## Observations: 467,838
 ## Variables: 3
 ## $ table_name <chr> "adventureworks.hr.d", "adventureworks.hr.d", "advent…
-## $ conname    <chr> "FK_SalesOrderHeader_CreditCard_CreditCardID", "FK_Sa…
-## $ condef     <chr> "FOREIGN KEY (creditcardid) REFERENCES sales.creditca…
+## $ conname    <chr> "FK_SalesOrderDetail_SpecialOfferProduct_SpecialOffer…
+## $ condef     <chr> "FOREIGN KEY (specialofferid, productid) REFERENCES s…
 ```
 
 ```r
@@ -3883,14 +3893,14 @@ kable(head(rs))
 
 
 
-table_name            conname                                         condef                                                                     
---------------------  ----------------------------------------------  ---------------------------------------------------------------------------
-adventureworks.hr.d   FK_SalesOrderHeader_CreditCard_CreditCardID     FOREIGN KEY (creditcardid) REFERENCES sales.creditcard(creditcardid)       
-adventureworks.hr.d   FK_SalesOrderHeader_SalesPerson_SalesPersonID   FOREIGN KEY (salespersonid) REFERENCES sales.salesperson(businessentityid) 
-adventureworks.hr.d   FK_SalesOrderHeader_Address_ShipToAddressID     FOREIGN KEY (shiptoaddressid) REFERENCES person.address(addressid)         
-adventureworks.hr.d   FK_SalesOrderHeader_CreditCard_CreditCardID     FOREIGN KEY (creditcardid) REFERENCES sales.creditcard(creditcardid)       
-adventureworks.hr.d   FK_SalesOrderHeader_CreditCard_CreditCardID     FOREIGN KEY (creditcardid) REFERENCES sales.creditcard(creditcardid)       
-adventureworks.hr.d   FK_SalesOrderHeader_SalesPerson_SalesPersonID   FOREIGN KEY (salespersonid) REFERENCES sales.salesperson(businessentityid) 
+table_name            conname                                                           condef                                                                                                  
+--------------------  ----------------------------------------------------------------  --------------------------------------------------------------------------------------------------------
+adventureworks.hr.d   FK_SalesOrderDetail_SpecialOfferProduct_SpecialOfferIDProductID   FOREIGN KEY (specialofferid, productid) REFERENCES sales.specialofferproduct(specialofferid, productid) 
+adventureworks.hr.d   FK_SalesOrderDetail_SpecialOfferProduct_SpecialOfferIDProductID   FOREIGN KEY (specialofferid, productid) REFERENCES sales.specialofferproduct(specialofferid, productid) 
+adventureworks.hr.d   FK_SalesOrderHeader_Address_BillToAddressID                       FOREIGN KEY (billtoaddressid) REFERENCES person.address(addressid)                                      
+adventureworks.hr.d   FK_SalesOrderHeader_Address_BillToAddressID                       FOREIGN KEY (billtoaddressid) REFERENCES person.address(addressid)                                      
+adventureworks.hr.d   FK_SalesOrderHeader_Address_BillToAddressID                       FOREIGN KEY (billtoaddressid) REFERENCES person.address(addressid)                                      
+adventureworks.hr.d   FK_SalesOrderHeader_Address_BillToAddressID                       FOREIGN KEY (billtoaddressid) REFERENCES person.address(addressid)                                      
 The following is more compact and looks more useful.  What is the difference between the two?
 
 ```r
@@ -3978,7 +3988,7 @@ glimpse(keys)
 ## $ constraint_name  <chr> "FK_Address_StateProvince_StateProvinceID", "PK…
 ## $ constraint_type  <chr> "FOREIGN KEY", "PRIMARY KEY", "PRIMARY KEY", "F…
 ## $ column_name      <chr> "stateprovinceid", "addressid", "addresstypeid"…
-## $ ordinal_position <int> 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 3, 1, 1,…
+## $ ordinal_position <int> 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 2, 1, 1,…
 ```
 
 ```r
@@ -4000,14 +4010,14 @@ businessentity                          BASE TABLE   PK_BusinessEntity_BusinessE
 businessentityaddress                   BASE TABLE   FK_BusinessEntityAddress_Address_AddressID                        FOREIGN KEY       addressid                               1
 businessentityaddress                   BASE TABLE   FK_BusinessEntityAddress_AddressType_AddressTypeID                FOREIGN KEY       addresstypeid                           1
 businessentityaddress                   BASE TABLE   FK_BusinessEntityAddress_BusinessEntity_BusinessEntityID          FOREIGN KEY       businessentityid                        1
-businessentityaddress                   BASE TABLE   PK_BusinessEntityAddress_BusinessEntityID_AddressID_AddressType   PRIMARY KEY       addressid                               2
 businessentityaddress                   BASE TABLE   PK_BusinessEntityAddress_BusinessEntityID_AddressID_AddressType   PRIMARY KEY       businessentityid                        1
 businessentityaddress                   BASE TABLE   PK_BusinessEntityAddress_BusinessEntityID_AddressID_AddressType   PRIMARY KEY       addresstypeid                           3
+businessentityaddress                   BASE TABLE   PK_BusinessEntityAddress_BusinessEntityID_AddressID_AddressType   PRIMARY KEY       addressid                               2
 businessentitycontact                   BASE TABLE   FK_BusinessEntityContact_BusinessEntity_BusinessEntityID          FOREIGN KEY       businessentityid                        1
 businessentitycontact                   BASE TABLE   FK_BusinessEntityContact_ContactType_ContactTypeID                FOREIGN KEY       contacttypeid                           1
 businessentitycontact                   BASE TABLE   FK_BusinessEntityContact_Person_PersonID                          FOREIGN KEY       personid                                1
-businessentitycontact                   BASE TABLE   PK_BusinessEntityContact_BusinessEntityID_PersonID_ContactTypeI   PRIMARY KEY       contacttypeid                           3
 businessentitycontact                   BASE TABLE   PK_BusinessEntityContact_BusinessEntityID_PersonID_ContactTypeI   PRIMARY KEY       personid                                2
+businessentitycontact                   BASE TABLE   PK_BusinessEntityContact_BusinessEntityID_PersonID_ContactTypeI   PRIMARY KEY       contacttypeid                           3
 businessentitycontact                   BASE TABLE   PK_BusinessEntityContact_BusinessEntityID_PersonID_ContactTypeI   PRIMARY KEY       businessentityid                        1
 contacttype                             BASE TABLE   PK_ContactType_ContactTypeID                                      PRIMARY KEY       contacttypeid                           1
 countryregion                           BASE TABLE   PK_CountryRegion_CountryRegionCode                                PRIMARY KEY       countryregioncode                       1
@@ -4036,9 +4046,9 @@ employee                                BASE TABLE   PK_Employee_BusinessEntityI
 employeedepartmenthistory               BASE TABLE   FK_EmployeeDepartmentHistory_Department_DepartmentID              FOREIGN KEY       departmentid                            1
 employeedepartmenthistory               BASE TABLE   FK_EmployeeDepartmentHistory_Employee_BusinessEntityID            FOREIGN KEY       businessentityid                        1
 employeedepartmenthistory               BASE TABLE   FK_EmployeeDepartmentHistory_Shift_ShiftID                        FOREIGN KEY       shiftid                                 1
+employeedepartmenthistory               BASE TABLE   PK_EmployeeDepartmentHistory_BusinessEntityID_StartDate_Departm   PRIMARY KEY       departmentid                            3
 employeedepartmenthistory               BASE TABLE   PK_EmployeeDepartmentHistory_BusinessEntityID_StartDate_Departm   PRIMARY KEY       businessentityid                        1
 employeedepartmenthistory               BASE TABLE   PK_EmployeeDepartmentHistory_BusinessEntityID_StartDate_Departm   PRIMARY KEY       startdate                               2
-employeedepartmenthistory               BASE TABLE   PK_EmployeeDepartmentHistory_BusinessEntityID_StartDate_Departm   PRIMARY KEY       departmentid                            3
 employeedepartmenthistory               BASE TABLE   PK_EmployeeDepartmentHistory_BusinessEntityID_StartDate_Departm   PRIMARY KEY       shiftid                                 4
 employeepayhistory                      BASE TABLE   FK_EmployeePayHistory_Employee_BusinessEntityID                   FOREIGN KEY       businessentityid                        1
 employeepayhistory                      BASE TABLE   PK_EmployeePayHistory_BusinessEntityID_RateChangeDate             PRIMARY KEY       ratechangedate                          2
@@ -4057,9 +4067,9 @@ personcreditcard                        BASE TABLE   PK_PersonCreditCard_Busines
 personcreditcard                        BASE TABLE   PK_PersonCreditCard_BusinessEntityID_CreditCardID                 PRIMARY KEY       creditcardid                            2
 personphone                             BASE TABLE   FK_PersonPhone_Person_BusinessEntityID                            FOREIGN KEY       businessentityid                        1
 personphone                             BASE TABLE   FK_PersonPhone_PhoneNumberType_PhoneNumberTypeID                  FOREIGN KEY       phonenumbertypeid                       1
-personphone                             BASE TABLE   PK_PersonPhone_BusinessEntityID_PhoneNumber_PhoneNumberTypeID     PRIMARY KEY       phonenumber                             2
-personphone                             BASE TABLE   PK_PersonPhone_BusinessEntityID_PhoneNumber_PhoneNumberTypeID     PRIMARY KEY       phonenumbertypeid                       3
 personphone                             BASE TABLE   PK_PersonPhone_BusinessEntityID_PhoneNumber_PhoneNumberTypeID     PRIMARY KEY       businessentityid                        1
+personphone                             BASE TABLE   PK_PersonPhone_BusinessEntityID_PhoneNumber_PhoneNumberTypeID     PRIMARY KEY       phonenumbertypeid                       3
+personphone                             BASE TABLE   PK_PersonPhone_BusinessEntityID_PhoneNumber_PhoneNumberTypeID     PRIMARY KEY       phonenumber                             2
 phonenumbertype                         BASE TABLE   PK_PhoneNumberType_PhoneNumberTypeID                              PRIMARY KEY       phonenumbertypeid                       1
 product                                 BASE TABLE   FK_Product_ProductModel_ProductModelID                            FOREIGN KEY       productmodelid                          1
 product                                 BASE TABLE   FK_Product_ProductSubcategory_ProductSubcategoryID                FOREIGN KEY       productsubcategoryid                    1
@@ -4068,8 +4078,8 @@ product                                 BASE TABLE   FK_Product_UnitMeasure_Weig
 product                                 BASE TABLE   PK_Product_ProductID                                              PRIMARY KEY       productid                               1
 productcategory                         BASE TABLE   PK_ProductCategory_ProductCategoryID                              PRIMARY KEY       productcategoryid                       1
 productcosthistory                      BASE TABLE   FK_ProductCostHistory_Product_ProductID                           FOREIGN KEY       productid                               1
-productcosthistory                      BASE TABLE   PK_ProductCostHistory_ProductID_StartDate                         PRIMARY KEY       startdate                               2
 productcosthistory                      BASE TABLE   PK_ProductCostHistory_ProductID_StartDate                         PRIMARY KEY       productid                               1
+productcosthistory                      BASE TABLE   PK_ProductCostHistory_ProductID_StartDate                         PRIMARY KEY       startdate                               2
 productdescription                      BASE TABLE   PK_ProductDescription_ProductDescriptionID                        PRIMARY KEY       productdescriptionid                    1
 productdocument                         BASE TABLE   FK_ProductDocument_Document_DocumentNode                          FOREIGN KEY       documentnode                            1
 productdocument                         BASE TABLE   FK_ProductDocument_Product_ProductID                              FOREIGN KEY       productid                               1
@@ -4077,8 +4087,8 @@ productdocument                         BASE TABLE   PK_ProductDocument_ProductI
 productdocument                         BASE TABLE   PK_ProductDocument_ProductID_DocumentNode                         PRIMARY KEY       productid                               1
 productinventory                        BASE TABLE   FK_ProductInventory_Location_LocationID                           FOREIGN KEY       locationid                              1
 productinventory                        BASE TABLE   FK_ProductInventory_Product_ProductID                             FOREIGN KEY       productid                               1
-productinventory                        BASE TABLE   PK_ProductInventory_ProductID_LocationID                          PRIMARY KEY       locationid                              2
 productinventory                        BASE TABLE   PK_ProductInventory_ProductID_LocationID                          PRIMARY KEY       productid                               1
+productinventory                        BASE TABLE   PK_ProductInventory_ProductID_LocationID                          PRIMARY KEY       locationid                              2
 productlistpricehistory                 BASE TABLE   FK_ProductListPriceHistory_Product_ProductID                      FOREIGN KEY       productid                               1
 productlistpricehistory                 BASE TABLE   PK_ProductListPriceHistory_ProductID_StartDate                    PRIMARY KEY       startdate                               2
 productlistpricehistory                 BASE TABLE   PK_ProductListPriceHistory_ProductID_StartDate                    PRIMARY KEY       productid                               1
@@ -4197,26 +4207,26 @@ head(rs)
 
 ```
 ##                        conname connamespace contype condeferrable
-## 1 cardinal_number_domain_check        12703       c         FALSE
-## 2              yes_or_no_check        12703       c         FALSE
+## 1 cardinal_number_domain_check        12771       c         FALSE
+## 2              yes_or_no_check        12771       c         FALSE
 ## 3        CK_Employee_BirthDate        16386       c         FALSE
 ## 4           CK_Employee_Gender        16386       c         FALSE
 ## 5         CK_Employee_HireDate        16386       c         FALSE
 ## 6    CK_Employee_MaritalStatus        16386       c         FALSE
-##   condeferred convalidated conrelid contypid conindid confrelid
-## 1       FALSE         TRUE        0    12716        0         0
-## 2       FALSE         TRUE        0    12724        0         0
-## 3       FALSE         TRUE    16444        0        0         0
-## 4       FALSE         TRUE    16444        0        0         0
-## 5       FALSE         TRUE    16444        0        0         0
-## 6       FALSE         TRUE    16444        0        0         0
-##   confupdtype confdeltype confmatchtype conislocal coninhcount
-## 1                                             TRUE           0
-## 2                                             TRUE           0
-## 3                                             TRUE           0
-## 4                                             TRUE           0
-## 5                                             TRUE           0
-## 6                                             TRUE           0
+##   condeferred convalidated conrelid contypid conindid conparentid
+## 1       FALSE         TRUE        0    12785        0           0
+## 2       FALSE         TRUE        0    12797        0           0
+## 3       FALSE         TRUE    16450        0        0           0
+## 4       FALSE         TRUE    16450        0        0           0
+## 5       FALSE         TRUE    16450        0        0           0
+## 6       FALSE         TRUE    16450        0        0           0
+##   confrelid confupdtype confdeltype confmatchtype conislocal coninhcount
+## 1         0                                             TRUE           0
+## 2         0                                             TRUE           0
+## 3         0                                             TRUE           0
+## 4         0                                             TRUE           0
+## 5         0                                             TRUE           0
+## 6         0                                             TRUE           0
 ##   connoinherit conkey confkey conpfeqop conppeqop conffeqop conexclop
 ## 1        FALSE   <NA>    <NA>      <NA>      <NA>      <NA>      <NA>
 ## 2        FALSE   <NA>    <NA>      <NA>      <NA>      <NA>      <NA>
@@ -4224,13 +4234,13 @@ head(rs)
 ## 4        FALSE    {7}    <NA>      <NA>      <NA>      <NA>      <NA>
 ## 5        FALSE    {8}    <NA>      <NA>      <NA>      <NA>      <NA>
 ## 6        FALSE    {6}    <NA>      <NA>      <NA>      <NA>      <NA>
-##                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                conbin
-## 1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     {OPEXPR :opno 525 :opfuncid 150 :opresulttype 16 :opretset false :opcollid 0 :inputcollid 0 :args ({COERCETODOMAINVALUE :typeId 23 :typeMod -1 :collation 0 :location 195} {CONST :consttype 23 :consttypmod -1 :constcollid 0 :constlen 4 :constbyval true :constisnull false :location 204 :constvalue 4 [ 0 0 0 0 0 0 0 0 ]}) :location 201}
-## 2                                                                                                                                                                                                                                                                                                               {SCALARARRAYOPEXPR :opno 98 :opfuncid 67 :useOr true :inputcollid 100 :args ({RELABELTYPE :arg {COERCETODOMAINVALUE :typeId 1043 :typeMod 7 :collation 100 :location 121} :resulttype 25 :resulttypmod -1 :resultcollid 100 :relabelformat 2 :location -1} {ARRAYCOERCEEXPR :arg {ARRAY :array_typeid 1015 :array_collid 100 :element_typeid 1043 :elements ({CONST :consttype 1043 :consttypmod -1 :constcollid 100 :constlen -1 :constbyval false :constisnull false :location 131 :constvalue 7 [ 28 0 0 0 89 69 83 ]} {CONST :consttype 1043 :consttypmod -1 :constcollid 100 :constlen -1 :constbyval false :constisnull false :location 138 :constvalue 6 [ 24 0 0 0 78 79 ]}) :multidims false :location -1} :elemfuncid 0 :resulttype 1009 :resulttypmod -1 :resultcollid 100 :isExplicit false :coerceformat 2 :location -1}) :location 127}
-## 3     {BOOLEXPR :boolop and :args ({OPEXPR :opno 1098 :opfuncid 1090 :opresulttype 16 :opretset false :opcollid 0 :inputcollid 0 :args ({VAR :varno 1 :varattno 5 :vartype 1082 :vartypmod -1 :varcollid 0 :varlevelsup 0 :varnoold 1 :varoattno 5 :location 804} {CONST :consttype 1082 :consttypmod -1 :constcollid 0 :constlen 4 :constbyval true :constisnull false :location 817 :constvalue 4 [ 33 -100 -1 -1 0 0 0 0 ]}) :location 814} {OPEXPR :opno 2359 :opfuncid 2352 :opresulttype 16 :opretset false :opcollid 0 :inputcollid 0 :args ({VAR :varno 1 :varattno 5 :vartype 1082 :vartypmod -1 :varcollid 0 :varlevelsup 0 :varnoold 1 :varoattno 5 :location 842} {OPEXPR :opno 1329 :opfuncid 1190 :opresulttype 1184 :opretset false :opcollid 0 :inputcollid 0 :args ({FUNCEXPR :funcid 1299 :funcresulttype 1184 :funcretset false :funcvariadic false :funcformat 0 :funccollid 0 :inputcollid 0 :args <> :location 856} {CONST :consttype 1186 :consttypmod -1 :constcollid 0 :constlen 16 :constbyval false :constisnull false :location 864 :constvalue 16 [ 0 0 0 0 0 0 0 0 0 0 0 0 -40 0 0 0 ]}) :location 862}) :location 852}) :location 837}
-## 4                                                                                                                                                                                                              {SCALARARRAYOPEXPR :opno 98 :opfuncid 67 :useOr true :inputcollid 100 :args ({FUNCEXPR :funcid 871 :funcresulttype 25 :funcretset false :funcvariadic false :funcformat 0 :funccollid 100 :inputcollid 100 :args ({FUNCEXPR :funcid 401 :funcresulttype 25 :funcretset false :funcvariadic false :funcformat 1 :funccollid 100 :inputcollid 100 :args ({VAR :varno 1 :varattno 7 :vartype 1042 :vartypmod 5 :varcollid 100 :varlevelsup 0 :varnoold 1 :varoattno 7 :location 941}) :location 948}) :location 934} {ARRAY :array_typeid 1009 :array_collid 100 :element_typeid 25 :elements ({CONST :consttype 25 :consttypmod -1 :constcollid 100 :constlen -1 :constbyval false :constisnull false :location 969 :constvalue 5 [ 20 0 0 0 77 ]} {CONST :consttype 25 :consttypmod -1 :constcollid 100 :constlen -1 :constbyval false :constisnull false :location 980 :constvalue 5 [ 20 0 0 0 70 ]}) :multidims false :location 963}) :location 956}
-## 5 {BOOLEXPR :boolop and :args ({OPEXPR :opno 1098 :opfuncid 1090 :opresulttype 16 :opretset false :opcollid 0 :inputcollid 0 :args ({VAR :varno 1 :varattno 8 :vartype 1082 :vartypmod -1 :varcollid 0 :varlevelsup 0 :varnoold 1 :varoattno 8 :location 1042} {CONST :consttype 1082 :consttypmod -1 :constcollid 0 :constlen 4 :constbyval true :constisnull false :location 1054 :constvalue 4 [ 1 -5 -1 -1 0 0 0 0 ]}) :location 1051} {OPEXPR :opno 2359 :opfuncid 2352 :opresulttype 16 :opretset false :opcollid 0 :inputcollid 0 :args ({VAR :varno 1 :varattno 8 :vartype 1082 :vartypmod -1 :varcollid 0 :varlevelsup 0 :varnoold 1 :varoattno 8 :location 1079} {OPEXPR :opno 1327 :opfuncid 1189 :opresulttype 1184 :opretset false :opcollid 0 :inputcollid 0 :args ({FUNCEXPR :funcid 1299 :funcresulttype 1184 :funcretset false :funcvariadic false :funcformat 0 :funccollid 0 :inputcollid 0 :args <> :location 1092} {CONST :consttype 1186 :consttypmod -1 :constcollid 0 :constlen 16 :constbyval false :constisnull false :location 1100 :constvalue 16 [ 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 ]}) :location 1098}) :location 1088}) :location 1074}
-## 6                                                                                                                                                                                                       {SCALARARRAYOPEXPR :opno 98 :opfuncid 67 :useOr true :inputcollid 100 :args ({FUNCEXPR :funcid 871 :funcresulttype 25 :funcretset false :funcvariadic false :funcformat 0 :funccollid 100 :inputcollid 100 :args ({FUNCEXPR :funcid 401 :funcresulttype 25 :funcretset false :funcvariadic false :funcformat 1 :funccollid 100 :inputcollid 100 :args ({VAR :varno 1 :varattno 6 :vartype 1042 :vartypmod 5 :varcollid 100 :varlevelsup 0 :varnoold 1 :varoattno 6 :location 1181}) :location 1195}) :location 1174} {ARRAY :array_typeid 1009 :array_collid 100 :element_typeid 25 :elements ({CONST :consttype 25 :consttypmod -1 :constcollid 100 :constlen -1 :constbyval false :constisnull false :location 1216 :constvalue 5 [ 20 0 0 0 77 ]} {CONST :consttype 25 :consttypmod -1 :constcollid 100 :constlen -1 :constbyval false :constisnull false :location 1227 :constvalue 5 [ 20 0 0 0 83 ]}) :multidims false :location 1210}) :location 1203}
+##                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    conbin
+## 1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         {OPEXPR :opno 525 :opfuncid 150 :opresulttype 16 :opretset false :opcollid 0 :inputcollid 0 :args ({COERCETODOMAINVALUE :typeId 23 :typeMod -1 :collation 0 :location 195} {CONST :consttype 23 :consttypmod -1 :constcollid 0 :constlen 4 :constbyval true :constisnull false :location 204 :constvalue 4 [ 0 0 0 0 0 0 0 0 ]}) :location 201}
+## 2                                                                                                                                                                                 {SCALARARRAYOPEXPR :opno 98 :opfuncid 67 :useOr true :inputcollid 100 :args ({RELABELTYPE :arg {COERCETODOMAINVALUE :typeId 1043 :typeMod 7 :collation 100 :location 121} :resulttype 25 :resulttypmod -1 :resultcollid 100 :relabelformat 2 :location -1} {ARRAYCOERCEEXPR :arg {ARRAY :array_typeid 1015 :array_collid 100 :element_typeid 1043 :elements ({CONST :consttype 1043 :consttypmod -1 :constcollid 100 :constlen -1 :constbyval false :constisnull false :location 131 :constvalue 7 [ 28 0 0 0 89 69 83 ]} {CONST :consttype 1043 :consttypmod -1 :constcollid 100 :constlen -1 :constbyval false :constisnull false :location 138 :constvalue 6 [ 24 0 0 0 78 79 ]}) :multidims false :location -1} :elemexpr {RELABELTYPE :arg {CASETESTEXPR :typeId 1043 :typeMod -1 :collation 0} :resulttype 25 :resulttypmod -1 :resultcollid 100 :relabelformat 2 :location -1} :resulttype 1009 :resulttypmod -1 :resultcollid 100 :coerceformat 2 :location -1}) :location 127}
+## 3     {BOOLEXPR :boolop and :args ({OPEXPR :opno 1098 :opfuncid 1090 :opresulttype 16 :opretset false :opcollid 0 :inputcollid 0 :args ({VAR :varno 1 :varattno 5 :vartype 1082 :vartypmod -1 :varcollid 0 :varlevelsup 0 :varnoold 1 :varoattno 5 :location 804} {CONST :consttype 1082 :consttypmod -1 :constcollid 0 :constlen 4 :constbyval true :constisnull false :location 817 :constvalue 4 [ 33 -100 -1 -1 -1 -1 -1 -1 ]}) :location 814} {OPEXPR :opno 2359 :opfuncid 2352 :opresulttype 16 :opretset false :opcollid 0 :inputcollid 0 :args ({VAR :varno 1 :varattno 5 :vartype 1082 :vartypmod -1 :varcollid 0 :varlevelsup 0 :varnoold 1 :varoattno 5 :location 842} {OPEXPR :opno 1329 :opfuncid 1190 :opresulttype 1184 :opretset false :opcollid 0 :inputcollid 0 :args ({FUNCEXPR :funcid 1299 :funcresulttype 1184 :funcretset false :funcvariadic false :funcformat 0 :funccollid 0 :inputcollid 0 :args <> :location 856} {CONST :consttype 1186 :consttypmod -1 :constcollid 0 :constlen 16 :constbyval false :constisnull false :location 864 :constvalue 16 [ 0 0 0 0 0 0 0 0 0 0 0 0 -40 0 0 0 ]}) :location 862}) :location 852}) :location 837}
+## 4                                                                                                                                                                                                                  {SCALARARRAYOPEXPR :opno 98 :opfuncid 67 :useOr true :inputcollid 100 :args ({FUNCEXPR :funcid 871 :funcresulttype 25 :funcretset false :funcvariadic false :funcformat 0 :funccollid 100 :inputcollid 100 :args ({FUNCEXPR :funcid 401 :funcresulttype 25 :funcretset false :funcvariadic false :funcformat 1 :funccollid 100 :inputcollid 100 :args ({VAR :varno 1 :varattno 7 :vartype 1042 :vartypmod 5 :varcollid 100 :varlevelsup 0 :varnoold 1 :varoattno 7 :location 941}) :location 948}) :location 934} {ARRAY :array_typeid 1009 :array_collid 100 :element_typeid 25 :elements ({CONST :consttype 25 :consttypmod -1 :constcollid 100 :constlen -1 :constbyval false :constisnull false :location 969 :constvalue 5 [ 20 0 0 0 77 ]} {CONST :consttype 25 :consttypmod -1 :constcollid 100 :constlen -1 :constbyval false :constisnull false :location 980 :constvalue 5 [ 20 0 0 0 70 ]}) :multidims false :location 963}) :location 956}
+## 5 {BOOLEXPR :boolop and :args ({OPEXPR :opno 1098 :opfuncid 1090 :opresulttype 16 :opretset false :opcollid 0 :inputcollid 0 :args ({VAR :varno 1 :varattno 8 :vartype 1082 :vartypmod -1 :varcollid 0 :varlevelsup 0 :varnoold 1 :varoattno 8 :location 1042} {CONST :consttype 1082 :consttypmod -1 :constcollid 0 :constlen 4 :constbyval true :constisnull false :location 1054 :constvalue 4 [ 1 -5 -1 -1 -1 -1 -1 -1 ]}) :location 1051} {OPEXPR :opno 2359 :opfuncid 2352 :opresulttype 16 :opretset false :opcollid 0 :inputcollid 0 :args ({VAR :varno 1 :varattno 8 :vartype 1082 :vartypmod -1 :varcollid 0 :varlevelsup 0 :varnoold 1 :varoattno 8 :location 1079} {OPEXPR :opno 1327 :opfuncid 1189 :opresulttype 1184 :opretset false :opcollid 0 :inputcollid 0 :args ({FUNCEXPR :funcid 1299 :funcresulttype 1184 :funcretset false :funcvariadic false :funcformat 0 :funccollid 0 :inputcollid 0 :args <> :location 1092} {CONST :consttype 1186 :consttypmod -1 :constcollid 0 :constlen 16 :constbyval false :constisnull false :location 1100 :constvalue 16 [ 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 ]}) :location 1098}) :location 1088}) :location 1074}
+## 6                                                                                                                                                                                                           {SCALARARRAYOPEXPR :opno 98 :opfuncid 67 :useOr true :inputcollid 100 :args ({FUNCEXPR :funcid 871 :funcresulttype 25 :funcretset false :funcvariadic false :funcformat 0 :funccollid 100 :inputcollid 100 :args ({FUNCEXPR :funcid 401 :funcresulttype 25 :funcretset false :funcvariadic false :funcformat 1 :funccollid 100 :inputcollid 100 :args ({VAR :varno 1 :varattno 6 :vartype 1042 :vartypmod 5 :varcollid 100 :varlevelsup 0 :varnoold 1 :varoattno 6 :location 1181}) :location 1195}) :location 1174} {ARRAY :array_typeid 1009 :array_collid 100 :element_typeid 25 :elements ({CONST :consttype 25 :consttypmod -1 :constcollid 100 :constlen -1 :constbyval false :constisnull false :location 1216 :constvalue 5 [ 20 0 0 0 77 ]} {CONST :consttype 25 :consttypmod -1 :constcollid 100 :constlen -1 :constbyval false :constisnull false :location 1227 :constvalue 5 [ 20 0 0 0 83 ]}) :multidims false :location 1210}) :location 1203}
 ##                                                                                       consrc
 ## 1                                                                               (VALUE >= 0)
 ## 2 ((VALUE)::text = ANY ((ARRAY['YES'::character varying, 'NO'::character varying])::text[]))

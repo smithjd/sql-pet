@@ -1,17 +1,18 @@
 # Create and connect to the adventureworks database in PostgreSQL{#chapter_setup-adventureworks-db}
 
-> NOTE: This chapter doesn't go into the details of *creating* or *restoring* the `adventureworks` database.  For more detail on what's going on behind the scenes, you can examine the step-by-step code in:
->
-> ` source('book-src/restore-adventureworks-postgres-on-docker.R') `
-
 > This chapter demonstrates how to:
 >
 >  * Create and connect to the PostgreSQL `adventureworks` database in Docker
 >  * Keep necessary credentials secret while being available to R when it executes.
->  * Connect to and disconnect R from the `adventureworks` database
+>  * Leverage Rstudio features to get a peek at your data,
 >  * Set up the environment for subsequent chapters
 
 ## Overview
+
+Docker commands can be run from a terminal (e.g., the Rstudio Terminal pane) or with a `system2()` command.  The necessary functions to start, stop Docker containers and do other busy work are provided in the `sqlpetr` package.  
+
+> Note: The functions in the package are designed to help you focus on interacting with a dbms from R.  You can ignore how they work until you are ready to delve into the details.  They are all named to begin with `sp_`.  The first time a function is called in the book, we provide a note explaining its use.
+
 
 Please install the `sqlpetr` package if not already installed:
 ```{r sqlpetr, echo = TRUE, message=FALSE, warning=FALSE}
@@ -24,8 +25,6 @@ if (!require(sqlpetr)) {
 
 ```
 Note that when you install this package the first time, it will ask you to update the packages it uses and that may take some time.
-
-Now we set up a "realistic" database named `adventureworks`. There are different approaches to doing this: this chapter sets it up in a way that doesn't show all the Docker details.
 
 These packages are called in this Chapter:
 ```{r setup, echo=TRUE, message=FALSE, warning=FALSE}
@@ -40,146 +39,96 @@ library(bookdown)
 library(here)
 ```
 
-## Verify that Docker is up and running
+## Verify that Docker is up, running, and clean up if necessary
+
+> The `sp_check_that_docker_is_up` function from the `sqlpetr` package checks whether Docker is up and running.  If it's not, then you need to install, launch or re-install Docker.
+
 ```{r docker verify}
 sp_check_that_docker_is_up()
 ```
 
 ## Clean up if appropriate
-Force-remove the `adventureworks` container if it exist (e.g., from a prior runs):
+
+Force-remove the `adventureworks` container if it was left over (e.g., from a prior runs):
 ```{r}
 sp_docker_remove_container("adventureworks")
 ```
 ## Build the adventureworks Docker image
 
-**NEEDS to be REWRITTEN:** For the rest of the book we will be using a Docker image called
-`adventureworks`. To save space here in the book, we've created a function
-in `sqlpetr` to build this image, called [`sp_make_dvdrental_image`](https://smithjd.github.io/sqlpetr/reference/sp_make_dvdrental_image.html). Vignette [Building the `adventureworks` Docker Image
+Now we set up a "realistic" database named `adventureworks` in Docker. 
+
+> NOTE: This chapter doesn't go into the details of *creating* or *restoring* the `adventureworks` database.  For more detail on what's going on behind the scenes, you can examine the step-by-step code in:
+>
+> ` source('book-src/restore-adventureworks-postgres-on-docker.R') `
+
+ To save space here in the book, we've created a function
+in `sqlpetr` to build this image, called *OUT OF DATE!!* [`sp_make_dvdrental_image`](https://smithjd.github.io/sqlpetr/reference/sp_make_dvdrental_image.html). Vignette [Building the `adventureworks` Docker Image
 ](https://smithjd.github.io/sqlpetr/articles/building-the-dvdrental-docker-image.html) describes the build process.
 
+*Ignore the errors in the following step:
 ```{r}
 # sp_make_dvdrental_image("postgres-dvdrental")
 source(here("book-src", "restore-adventureworks-postgres-on-docker.R"))
 ```
 
-Docker commands can be run from a terminal (e.g., the Rstudio Terminal pane) or with a `system2()` command.  The necessary functions to start, stop Docker containers and do other busy work are provided in the `sqlpetr` package.  As time permits and curiosity dictates, feel free to look at those functions to see how they work.
+## Run the adventureworks Docker Image
 
-**UPDATE:** Did it work? We have a function that lists the images into a tibble!
+Now we can run the image in a container and connect to the database. To run the
+image we use an `sqlpetr` function called *OUT OF DATE*  [`sp_pg_docker_run`](https://smithjd.github.io/sqlpetr/reference/sp_pg_docker_run.html)
+For the rest of the book we will assume that you have a Docker container called
+`adventureworks` that can be stopped and started.  In that sense each chapter in the book is independent.
 
 ```{r}
 sp_docker_start("adventureworks")
-sp_docker_images_tibble()  # Doesn't produce the expected output.
 
 ```
 
-## Run the adventureworks Docker Image
-**UPDATE:** Now we can run the image in a container and connect to the database. To run the
-image we use an `sqlpetr` function called [`sp_pg_docker_run`](https://smithjd.github.io/sqlpetr/reference/sp_pg_docker_run.html)
-
-```{r eval= FALSE}
-# sp_pg_docker_run(
-#   container_name = "adventureworks",
-#   image_tag = "adventureworks",
-#   postgres_password = "postgres"
-# )
-```
-
-**UPDATE:** Did it work?
-```{r}
-
-sp_docker_containers_tibble()
-
-```
 
 ## Connect to PostgreSQL with R
+
+*CHECK for `sqlpetr` update!`  The `sp_make_simple_pg` function we called above created a container from the
+`postgres:11` library image downloaded from Docker Hub. As part of the process, it set the password for the PostgreSQL database superuser `postgres` to the value 
+"postgres".
+
+For simplicity, we are using a weak password at this point and it's shown here 
+and in the code in plain text. That is bad practice because user credentials 
+should not be shared in open code like that.  A [subsequent chapter](#dbms-login)
+demonstrates how to store and use credentials to access the DBMS so that they 
+are kept private.
+
+> The `sp_get_postgres_connection` function from the `sqlpetr` package gets a DBI connection string to a PostgreSQL database, waiting if it is not ready. This function connects to an instance of PostgreSQL and we assign it to a symbol, `con`, for subsequent use. The `connctions_tab = TRUE` parameter opens a connections tab that's useful for navigating a database.
+
+> Note that we are using port *5439* for PostgreSQL inside the container and published to `localhost`. Why? If you have PostgreSQL already running on the host or another container, it probably claimed port 5432, since that's the default. So we need to use a different port for *our* PostgreSQL container.
 
 Use the DBI package to connect to the `adventureworks` database in PostgreSQL.  Remember the settings discussion about [keeping passwords hidden][Pause for some security considerations]
 
 ```{r }
 con <- sp_get_postgres_connection(
   host = "localhost",
-  port = 5432,
+  port = 5432,  # this version still using 5432!!!
   user = "postgres",
   password = "postgres",
   dbname = "adventureworks",
   seconds_to_test = 20, connection_tab = TRUE
 )
 ```
-For the moment we by-pass some complexity that results from the fact that the `adventureworks` database has multiple *schemas* and that we are interested in only one of them, named `information_schema`.  
-```{r}
-tbl(con, in_schema("information_schema", "schemata")) %>%
-  select(catalog_name, schema_name, schema_owner) %>%
-  collect()
 
-```
+## Investigate the database using Rstudio 
 
-Schemas will be discussed later on because multiple schemas are the norm in an enterprise database environment, but they are a side issue at this point.  So we switch the order in which PostgreSQL searches for objects with the following SQL code:
-```{r}
-dbExecute(con, "set search_path to sales, public;")
+The Rstudio Connections tab shows that you are connected to Postgres and that the `adventureworks` database has a many schemas each of which has multiple tables in it:
 
-```
-With the custom `search_path`, the following command works, but it will fail without out it.
-```{r}
-dbListTables(con)
-```
-Same for `dbListFields`:
-```{r }
-dbListFields(con, "salesperson")
-```
+![Connections tab - adventureworks](screenshots/connections-tab-adventureworks-annotated.png)
 
-Thus with this search order, the following two produce identical results:
-```{r }
-tbl(con, in_schema("sales", "salesperson")) %>%
-  head()
+Clicking on the icon to the left of a `schema` expands the list of `tables` and `views` in that `schema`.  Clicking on the `View` or `Table` icon opens up Rstudio's `View` pane to get a peek at the data:
 
-tbl(con, "salesperson") %>%
-  head()
+![View of employee table](screenshots/view-tab-adventureworks-employee.png)
 
-```
+The number of rows and columns shown in the View pane depends on the size of the window.
 
-## `dplyr` connection objects
-As introduced in the previous chapter, the `dplyr::tbl` function creates an object that might **look** like a data frame in that when you enter it on the command line, it prints a bunch of rows from the dbms table.  But it is actually a **list** object that `dplyr` uses for constructing queries and retrieving data from the DBMS.  
+Back on the Rstudio Connections tab, clicking on the icon to the left of a `table` or `view` displays a list of columns and their corresponding data types:
 
-The following code illustrates these issues.  The `dplyr::tbl` function creates the connection object that we store in an object named `person_table`:
-```{r}
-person_table <- dplyr::tbl(con, in_schema("person", "person")) %>% 
-  select(-rowguid) %>% 
-  rename(personal_details_updated = modifieddate)
-```
+![adventureworks employee table columns](screenshots/connections-tab-emloyee-column-info.png)
 
-At first glance, it _acts_ like a data frame when you print it, although it only prints 10 of the table's 1,000 rows:
-```{r}
-person_table
-```
-
-However, notice that the first output line shows `??`, rather than providing the number of rows in the table. Similarly, the next to last line shows:
-```
-    … with more rows, and 8 more variables
-```
-whereas the output for a normal `tbl` of this film data would say:
-```
-    … with more 1,000, and 8 more variables
-```
-
-So even though `person_table` is a `tbl`, it's **also** a `tbl_PqConnection`:
-```{r}
-class(person_table)
-```
-
-It is not just a normal `tbl` of data. We can see that from the structure of `person_table`:
-```{r}
-str(person_table)
-```
-
-It has only _two_ rows!  The first row contains all the information in the `con` object, which contains information about all the tables and objects in the database:
-```{r}
-person_table$src$con@typnames$typname[380:437]
-```
-The second row contains a list of the columns in the `film` table, among other things:
-```{r}
-person_table$ops$vars
-```
-`person_table` holds information needed to get the data from the 'film' table, but `person_table` does not hold the data itself. In the following sections, we will examine more closely this relationship between the `person_table` object and the data in the database's 'film' table.
 
 Disconnect from the database:
 ```{r }
@@ -220,12 +169,7 @@ con <- sp_get_postgres_connection(
 )
 ```
 
-Check that you can still see the first few rows of the `employeeinfo` table:
-```{r}
-tbl(con, in_schema("sales", "salesperson")) %>%
-  head()
-
-```
+The database is still there, in the same state as it was when it was originally built.
 
 ## Cleaning up
 

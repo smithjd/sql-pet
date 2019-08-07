@@ -3,9 +3,9 @@
 |1|Introduction|index.Rmd|chapter_introduction|
 |2|How to use this book |020-using-this-book.Rmd|chapter_how-to-use-this-book|
 |3|Learning Goals and Use Cases |030-learning-goals-use-cases.Rmd|chapter_learning-goals|
-|4|Connecting Docker, PostgreSQL, and R |040-docker-setup-postgres-connect-with-r.Rmd|chapter_connect-docker-postgresql-r|
-|5|Create and connect to the adventureworks database in PostgreSQL|050-docker-setup-postgres-with-adventureworks.Rmd|chapter_setup-adventureworks-db|
-|6|Securing and using your dbms log-in credentials |060-secure-and-use-dbms-credentials-in-r.Rmd|chapter_dbms-login-credentials|
+|4|Create and connect to the adventureworks database in PostgreSQL|050-docker-setup-postgres-with-adventureworks.Rmd|chapter_setup-adventureworks-db|
+|5|Securing and using your dbms log-in credentials |060-secure-and-use-dbms-credentials-in-r.Rmd|chapter_dbms-login-credentials|
+|6|Connect to the adventureworks database in PostgreSQL|065-connect-to-postgres-with-adventureworks.Rmd|chapter_connect-to-adventureworks-db|
 |7|Introduction to DBMS queries |080-elementary-queries.Rmd|chapter_dbms-queries-intro|
 |8|Exploring a database |085-exploring-a-database.Rmd|chapter_database-exploration|
 |9|Lazy Evaluation and Lazy Queries |090-lazy-evalutation-intro.Rmd|chapter_lazy-evaluation-queries|

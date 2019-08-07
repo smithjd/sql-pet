@@ -91,12 +91,12 @@ dbListTables(con)
 ```
 
 ```
-##  [1] "shift"                      "employee"                  
-##  [3] "jobcandidate"               "vemployee"                 
-##  [5] "vemployeedepartment"        "vemployeedepartmenthistory"
-##  [7] "vjobcandidate"              "vjobcandidateeducation"    
-##  [9] "vjobcandidateemployment"    "department"                
-## [11] "employeedepartmenthistory"  "employeepayhistory"
+##  [1] "employee"                   "shift"                     
+##  [3] "employeepayhistory"         "jobcandidate"              
+##  [5] "department"                 "vemployee"                 
+##  [7] "vemployeedepartment"        "vemployeedepartmenthistory"
+##  [9] "vjobcandidate"              "vjobcandidateeducation"    
+## [11] "vjobcandidateemployment"    "employeedepartmenthistory"
 ```
 
 ## Clean up

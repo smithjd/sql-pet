@@ -1,10 +1,10 @@
-# Create and connect to the adventureworks database in PostgreSQL{#chapter_setup-adventureworks-db}
+# Connect to the adventureworks database in PostgreSQL{#chapter_connect-to-adventureworks-db}
 
 > This chapter demonstrates how to:
 >
 >  * Create and connect to the PostgreSQL `adventureworks` database in Docker
 >  * Keep necessary credentials secret while being available to R when it executes.
->  * Leverage Rstudio features to get a peek at your data,
+>  * Connect to and disconnect R from the `adventureworks` database
 >  * Set up the environment for subsequent chapters
 
 ## Overview
@@ -15,20 +15,19 @@ Docker commands can be run from a terminal (e.g., the Rstudio Terminal pane) or 
 
 
 Please install the `sqlpetr` package if not already installed:
-
-```r
+```{r sqlpetr, echo = TRUE, message=FALSE, warning=FALSE}
 library(devtools)
 if (!require(sqlpetr)) {
     remotes::install_github(
       "smithjd/sqlpetr",
       force = TRUE, build = FALSE, quiet = TRUE)
 }
+
 ```
 Note that when you install this package the first time, it will ask you to update the packages it uses and that may take some time.
 
 These packages are called in this Chapter:
-
-```r
+```{r setup, echo=TRUE, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(DBI)
 library(RPostgres)
@@ -44,59 +43,13 @@ library(here)
 
 > The `sp_check_that_docker_is_up` function from the `sqlpetr` package checks whether Docker is up and running.  If it's not, then you need to install, launch or re-install Docker.
 
-
-```r
+```{r docker verify}
 sp_check_that_docker_is_up()
 ```
 
-```
-## [1] "Docker is up but running no containers"
-```
-
-## Clean up if appropriate
-
-Force-remove the `adventureworks` container if it was left over (e.g., from a prior runs):
-
-```r
-sp_docker_remove_container("adventureworks")
-```
-
-```
-## [1] 0
-```
-## Build the adventureworks Docker image
-
-Now we set up a "realistic" database named `adventureworks` in Docker. 
-
-> NOTE: This chapter doesn't go into the details of *creating* or *restoring* the `adventureworks` database.  For more detail on what's going on behind the scenes, you can examine the step-by-step code in:
->
-> ` source('book-src/restore-adventureworks-postgres-on-docker.R') `
-
- To save space here in the book, we've created a function
-in `sqlpetr` to build this image, called *OUT OF DATE!!* [`sp_make_dvdrental_image`](https://smithjd.github.io/sqlpetr/reference/sp_make_dvdrental_image.html). Vignette [Building the `adventureworks` Docker Image
-](https://smithjd.github.io/sqlpetr/articles/building-the-dvdrental-docker-image.html) describes the build process.
-
-*Ignore the errors in the following step:
-
-```r
-# sp_make_dvdrental_image("postgres-dvdrental")
-source(here("book-src", "restore-adventureworks-postgres-on-docker.R"))
-```
-
-```
-## docker  run --detach  --name adventureworks --publish 5432:5432 --mount type=bind,source="/Users/jds/Documents/Library/R/r-system/sql-pet",target=/petdir postgres:11
-```
-
-## Run the adventureworks Docker Image
-
-Now we can run the image in a container and connect to the database. To run the
-image we use an `sqlpetr` function called *OUT OF DATE*  [`sp_pg_docker_run`](https://smithjd.github.io/sqlpetr/reference/sp_pg_docker_run.html)
-For the rest of the book we will assume that you have a Docker container called
-`adventureworks` that can be stopped and started.  In that sense each chapter in the book is independent.
-
-
-```r
+```{r}
 sp_docker_start("adventureworks")
+
 ```
 
 
@@ -118,8 +71,7 @@ are kept private.
 
 Use the DBI package to connect to the `adventureworks` database in PostgreSQL.  Remember the settings discussion about [keeping passwords hidden][Pause for some security considerations]
 
-
-```r
+```{r }
 con <- sp_get_postgres_connection(
   host = "localhost",
   port = 5432,  # this version still using 5432!!!
@@ -129,78 +81,113 @@ con <- sp_get_postgres_connection(
   seconds_to_test = 20, connection_tab = TRUE
 )
 ```
+That's equivalent to excuting this code to download the table from the DBMS to a local data frame:
 
-## Investigate the database using Rstudio 
+For the moment we by-pass some complexity that results from the fact that the `adventureworks` database has multiple *schemas* and that we are interested in only one of them, named `information_schema`.  
+```{r}
+tbl(con, in_schema("information_schema", "schemata")) %>%
+  select(catalog_name, schema_name, schema_owner) %>%
+  collect()
 
-The Rstudio Connections tab shows that you are connected to Postgres and that the `adventureworks` database has a many schemas each of which has multiple tables in it:
+```
 
-![Connections tab - adventureworks](screenshots/connections-tab-adventureworks-annotated.png)
+Schemas will be discussed later on because multiple schemas are the norm in an enterprise database environment, but they are a side issue at this point.  So we switch the order in which PostgreSQL searches for objects with the following SQL code:
+```{r}
+dbExecute(con, "set search_path to sales, public;")
 
-Clicking on the icon to the left of a `schema` expands the list of `tables` and `views` in that `schema`.  Clicking on the `View` or `Table` icon opens up Rstudio's `View` pane to get a peek at the data:
+```
+With the custom `search_path`, the following command works, but it will fail without out it.
+```{r}
+dbListTables(con)
+```
+Same for `dbListFields`:
+```{r }
+dbListFields(con, "salesperson")
+```
 
-![View of employee table](screenshots/view-tab-adventureworks-employee.png)
+Thus with this search order, the following two produce identical results:
+```{r }
+tbl(con, in_schema("sales", "salesperson")) %>%
+  head()
 
-The number of rows and columns shown in the View pane depends on the size of the window.
+tbl(con, "salesperson") %>%
+  head()
 
-Back on the Rstudio Connections tab, clicking on the icon to the left of a `table` or `view` displays a list of columns and their corresponding data types:
+```
 
-![adventureworks employee table columns](screenshots/connections-tab-emloyee-column-info.png)
+## `dplyr` connection objects
+As introduced in the previous chapter, the `dplyr::tbl` function creates an object that might **look** like a data frame in that when you enter it on the command line, it prints a bunch of rows from the dbms table.  But it is actually a **list** object that `dplyr` uses for constructing queries and retrieving data from the DBMS.  
 
+The following code illustrates these issues.  The `dplyr::tbl` function creates the connection object that we store in an object named `person_table`:
+```{r}
+person_table <- dplyr::tbl(con, in_schema("person", "person")) %>% 
+  select(-rowguid) %>% 
+  rename(personal_details_updated = modifieddate)
+```
+
+At first glance, it _acts_ like a data frame when you print it, although it only prints 10 of the table's 1,000 rows:
+```{r}
+person_table
+```
+
+However, notice that the first output line shows `??`, rather than providing the number of rows in the table. Similarly, the next to last line shows:
+```
+    … with more rows, and 8 more variables
+```
+whereas the output for a normal `tbl` of this film data would say:
+```
+    … with more 1,000, and 8 more variables
+```
+
+So even though `person_table` is a `tbl`, it's **also** a `tbl_PqConnection`:
+```{r}
+class(person_table)
+```
+
+It is not just a normal `tbl` of data. We can see that from the structure of `person_table`:
+```{r}
+str(person_table)
+```
+
+It has only _two_ rows!  The first row contains all the information in the `con` object, which contains information about all the tables and objects in the database:
+```{r}
+person_table$src$con@typnames$typname[380:437]
+```
+The second row contains a list of the columns in the `film` table, among other things:
+```{r}
+person_table$ops$vars
+```
+`person_table` holds information needed to get the data from the 'film' table, but `person_table` does not hold the data itself. In the following sections, we will examine more closely this relationship between the `person_table` object and the data in the database's 'film' table.
 
 Disconnect from the database:
-
-```r
+```{r }
 dbDisconnect(con)
+
 ```
 ## Stop and start to demonstrate persistence
 
 Stop the container:
-
-```r
+```{r}
 sp_docker_stop("adventureworks")
 sp_docker_containers_tibble()
-```
-
-```
-## # A tibble: 0 x 0
 ```
 
 When we stopped `adventureworks`, it no longer appeared in the tibble. But the
 container is still there. `sp_docker_containers_tibble` by default only lists
 the *running* containers. But we can use the `list_all` option and see it:
 
-
-```r
+```{r}
 sp_docker_containers_tibble(list_all = TRUE)
-```
-
-```
-## # A tibble: 2 x 12
-##   container_id image command created_at created ports status size  names
-##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 45eff02a8ccf post… docker… 2019-08-0… 17 sec… <NA>  Exite… 0B (… adve…
-## 2 185a8e082757 post… docker… 2019-08-0… 23 hou… <NA>  Exite… 63B … adv11
-## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 
 
 Restart the container and verify that the adventureworks tables are still there:
-
-```r
+```{r}
 sp_docker_start("adventureworks")
 sp_docker_containers_tibble()
 ```
-
-```
-## # A tibble: 1 x 12
-##   container_id image command created_at created ports status size  names
-##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 45eff02a8ccf post… docker… 2019-08-0… 18 sec… 0.0.… Up Le… 63B … adve…
-## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
-```
 Connect to the `adventureworks` database in PostgreSQL:
-
-```r
+```{r}
 con <- sp_get_postgres_connection(
   host = "localhost",
   port = 5432,
@@ -211,32 +198,31 @@ con <- sp_get_postgres_connection(
 )
 ```
 
-The database is still there, in the same state as it was when it was originally built.
+Check that you can still see the first few rows of the `employeeinfo` table:
+```{r}
+tbl(con, in_schema("sales", "salesperson")) %>%
+  head()
+
+```
 
 ## Cleaning up
 
 Always have R disconnect from the database when you're done.
+```{r}
 
-```r
 dbDisconnect(con)
+
 ```
 
 Stop the `adventureworks` container:
-
-```r
+```{r}
 sp_docker_stop("adventureworks")
 ```
 Show that the container still exists even though it's not running
 
-
-```r
+```{r}
 sp_show_all_docker_containers()
-```
 
-```
-## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## 45eff02a8ccf        postgres:11         "docker-entrypoint.s…"   19 seconds ago      Exited (0) Less than a second ago                       adventureworks
-## 185a8e082757        postgres:11         "docker-entrypoint.s…"   23 hours ago        Exited (137) 23 hours ago                               adv11
 ```
 
 Next time, you can just use this command to start the container: 

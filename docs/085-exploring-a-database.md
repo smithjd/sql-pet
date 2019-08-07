@@ -76,15 +76,15 @@ DBI::dbListTables(con)
 ```
 
 ```
-##  [1] "d"                          "shift"                     
-##  [3] "e"                          "employee"                  
-##  [5] "edh"                        "eph"                       
-##  [7] "jc"                         "s"                         
-##  [9] "jobcandidate"               "vemployee"                 
-## [11] "vemployeedepartment"        "vemployeedepartmenthistory"
-## [13] "vjobcandidate"              "vjobcandidateeducation"    
-## [15] "vjobcandidateemployment"    "department"                
-## [17] "employeedepartmenthistory"  "employeepayhistory"
+##  [1] "employee"                   "d"                         
+##  [3] "shift"                      "e"                         
+##  [5] "employeepayhistory"         "edh"                       
+##  [7] "eph"                        "jc"                        
+##  [9] "jobcandidate"               "s"                         
+## [11] "department"                 "vemployee"                 
+## [13] "vemployeedepartment"        "vemployeedepartmenthistory"
+## [15] "vjobcandidate"              "vjobcandidateeducation"    
+## [17] "vjobcandidateemployment"    "employeedepartmenthistory"
 ```
 Notice the way the database designers have abbreviated table names for your convenience.
 
