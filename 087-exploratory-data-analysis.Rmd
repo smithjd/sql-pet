@@ -15,23 +15,21 @@ library(lubridate)
 library(forcats)
 library(ggplot2)
 library(sqlpetr)
+library(glue)
 require(knitr)
 library(bookdown)
 ```
 
-Assume that the Docker container with PostgreSQL and the adventureworks database are ready to go. If not go back to [Chapter 6][#chapter_setup-adventureworks-db]
+We assume that the Docker container with PostgreSQL and the `adventureworks` database have already been prepared, but make sure the container has been started:
 ```{r check on adventureworks}
 sqlpetr::sp_docker_start("adventureworks")
 ```
+If that `sp_docker_start` command leads to errors, you may need to revisit [Chapter 4](#chapter_setup-adventureworks-db).
 
 ## Number of Orders
 Suppose we are developers who use the corporate database. We often receive requests from executives who have some burning question as they try to understand and improve the company's processes. Today is no exception. AdventureWorks has just hired a new Vice President of Sales, Sally Seashells. She sends us an email, asking for a report of sales volumes for the past 4 years.
 
-Let's find the quantity of sales orders, which we can count from the SalesOrderHeader table.
-
-&#x1F53B;&nbsp;_To Do_: For now, we assume that a Docker container with PostgreSQL and the AdventureWorks database are already running.&nbsp;&#x1F53A;
-
-First, we connect to the database:
+Let's find the quantity of sales orders, which we can count from the `SalesOrderHeader` table. First, we connect to the database:
 ```{r connect to postgresql}
 con <- sqlpetr::sp_get_postgres_connection(
   user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
@@ -49,21 +47,34 @@ DBI::dbExecute(con, "set search_path to sales;")
 DBI::dbListFields(con, "salesorderheader")
 ```
 
-The `SalesOrderHeader` has a row for each sales order, so we create a table in our R environment for that data source, ignoring the fields {`rowguid`, `modifieddate`}, which we will not be using:
+The `SalesOrderHeader` table has a row for each sales order, so we create a table in our R environment for that data source, ignoring the fields {`rowguid`, `modifieddate`}, which we will not be using:
 ```{r connect to the SalesOrderHeader table}
 sales_order_header_table <- 
   dplyr::tbl(con, dbplyr::in_schema("sales", "salesorderheader")) %>% 
-  select(-rowguid, -modifieddate)
-names(collect(sales_order_header_table))
+  dplyr::select(-rowguid, -modifieddate)
+names(dplyr::collect(sales_order_header_table))
 ```
 
-Sally asked us for the sales volume, so let's assume she wants us to count the orders by the `shipdate`, rather than the `orderdate`, since `shipdate` is when the revenue is counted:
+Sally asked us for the sales volume, so let's assume she wants us to count the orders by the `shipdate`, rather than the `orderdate`, since `shipdate` is when the revenue is counted. Which dates are covered by our database?
+```{r date range of orders}
+ship_dates <- sales_order_header_table %>% 
+  dplyr::select(shipdate) %>% 
+  dplyr::arrange(shipdate) %>% 
+  dplyr::collect()
+glue(
+  "shipdate range = ({first}, {last})",
+  first = head(ship_dates, 1)[[1]],
+  last = tail(ship_dates, 1)[[1]]
+)
+```
+
+Let's count the number of orders by year:
 ```{r count orders by year}
 # Workaround as of 2019-08-09: Must convert integer64 `shipyear` to a factor,
 # due to ggplot2 defect (https://github.com/tidyverse/ggplot2/issues/2377)
 sales_order_header_table %>% 
   dplyr::select(shipdate) %>% 
-  collect() %>%   # collect before using tidyverse functions
+  dplyr::collect() %>%   # collect before using tidyverse functions
   dplyr::mutate(shipyear = lubridate::year(shipdate)) %>% 
   dplyr::mutate(shipyear = forcats::as_factor(shipyear)) %>%  # workaround
   dplyr::count(shipyear) %>%  # places count in column `n`
@@ -76,3 +87,43 @@ sales_order_header_table %>%
   ylab("Number of Orders")
 ```
 
+This looks like a good start, but maybe years are too broad. Let's drill down for more detail. We could count the number of orders by week, but that seems too detailed. Let's count by month:
+```{r count orders by month}
+sales_order_header_table %>% 
+  dplyr::select(shipdate) %>% 
+  dplyr::collect() %>%   # collect before using tidyverse functions
+  dplyr::mutate(shipmonth = format(shipdate, "%m")) %>% 
+  dplyr::mutate(shipyear = format(shipdate, "%Y")) %>% 
+  dplyr::mutate(ship_year_month = as.Date(paste(shipyear, shipmonth, "01", sep = "-"), "%Y-%m-%d")) %>% 
+  dplyr::count(ship_year_month) %>%  # places count in column `n`
+  dplyr::arrange(ship_year_month) %>%
+  ggplot(aes(ship_year_month, n)) + 
+  geom_col() + 
+  scale_x_date(labels = scales::date_format("%Y-%m")) +
+  ggtitle("Orders by Month") + 
+  xlab("Month") + 
+  ylab("Number of Orders")
+```
+
+These two plots provide a good overview of sales volume, but that huge increase in number of orders starting in July 2013 requires more investigation. Why did the number of orders increase so significantly starting that month? And why did the number decrease so drastically in June 2014?
+
+## Sources of Orders
+
+&#x1F53B;&nbsp;_To Do_: 
+
+* Why the big jump in numbers of orders? 
+* Are there new customers? 
+* Is there a corresponding jump in revenue?
+
+&nbsp;&#x1F53A;
+
+## Characteristics of Orders
+
+&#x1F53B;&nbsp;_To Do_: Has the nature of orders changed over time? For example, 
+
+* revenue per order
+* number of items per order
+* frequency of orders by customer
+* ...
+
+&nbsp;&#x1F53A;
