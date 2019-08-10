@@ -380,8 +380,8 @@ adventureworks   pr                   pmpdc                                   VI
 adventureworks   pe                   pnt                                     VIEW       
 adventureworks   pu                   pod                                     VIEW       
 adventureworks   pu                   poh                                     VIEW       
-adventureworks   pr                   pp                                      VIEW       
 adventureworks   pe                   pp                                      VIEW       
+adventureworks   pr                   pp                                      VIEW       
 adventureworks   pr                   ppp                                     VIEW       
 adventureworks   pr                   pr                                      VIEW       
 adventureworks   pr                   psc                                     VIEW       
@@ -405,8 +405,8 @@ adventureworks   sa                   sod                                     VI
 adventureworks   sa                   soh                                     VIEW       
 adventureworks   sa                   sohsr                                   VIEW       
 adventureworks   sa                   sop                                     VIEW       
-adventureworks   pe                   sp                                      VIEW       
 adventureworks   sa                   sp                                      VIEW       
+adventureworks   pe                   sp                                      VIEW       
 adventureworks   sa                   spqh                                    VIEW       
 adventureworks   sa                   sr                                      VIEW       
 adventureworks   pr                   sr                                      VIEW       
@@ -588,8 +588,8 @@ adventureworks   pr               ppp                                     VIEW
 adventureworks   pr               pr                                      VIEW       
 adventureworks   pr               psc                                     VIEW       
 adventureworks   pu               pv                                      VIEW       
-adventureworks   hr               s                                       VIEW       
 adventureworks   sa               s                                       VIEW       
+adventureworks   hr               s                                       VIEW       
 adventureworks   sa               sci                                     VIEW       
 adventureworks   pu               sm                                      VIEW       
 adventureworks   sa               so                                      VIEW       
@@ -597,8 +597,8 @@ adventureworks   sa               sod                                     VIEW
 adventureworks   sa               soh                                     VIEW       
 adventureworks   sa               sohsr                                   VIEW       
 adventureworks   sa               sop                                     VIEW       
-adventureworks   pe               sp                                      VIEW       
 adventureworks   sa               sp                                      VIEW       
+adventureworks   pe               sp                                      VIEW       
 adventureworks   sa               spqh                                    VIEW       
 adventureworks   pr               sr                                      VIEW       
 adventureworks   sa               sr                                      VIEW       
@@ -3479,6 +3479,7 @@ adventureworks   spqh                                    modifieddate           
 adventureworks   salesreason                             name                                  character varying (50)                        2                         50  NA                                                                            
 adventureworks   salesreason                             reasontype                            character varying (50)                        3                         50  NA                                                                            
 adventureworks   salesreason                             modifieddate                          timestamp without time zone                   4                         NA  now()                                                                         
+adventureworks   salesreason                             salesreasonid                         integer                                       1                         NA  nextval('sales.salesreason_salesreasonid_seq'::regclass)                      
 adventureworks   sr                                      id                                    integer                                       1                         NA  NA                                                                            
 adventureworks   sr                                      salesreasonid                         integer                                       2                         NA  NA                                                                            
 adventureworks   sr                                      name                                  character varying (50)                        3                         50  NA                                                                            
@@ -3508,9 +3509,9 @@ adventureworks   salesterritoryhistory                   businessentityid       
 adventureworks   salesterritoryhistory                   territoryid                           integer                                       2                         NA  NA                                                                            
 adventureworks   salesterritoryhistory                   startdate                             timestamp without time zone                   3                         NA  NA                                                                            
 adventureworks   salesterritoryhistory                   enddate                               timestamp without time zone                   4                         NA  NA                                                                            
+adventureworks   salesterritory                          territoryid                           integer                                       1                         NA  nextval('sales.salesterritory_territoryid_seq'::regclass)                     
 adventureworks   salesterritoryhistory                   rowguid                               uuid                                          5                         NA  uuid_generate_v1()                                                            
 adventureworks   salesterritoryhistory                   modifieddate                          timestamp without time zone                   6                         NA  now()                                                                         
-adventureworks   salesterritory                          territoryid                           integer                                       1                         NA  nextval('sales.salesterritory_territoryid_seq'::regclass)                     
 adventureworks   sth                                     id                                    integer                                       1                         NA  NA                                                                            
 adventureworks   sth                                     businessentityid                      integer                                       2                         NA  NA                                                                            
 adventureworks   sth                                     territoryid                           integer                                       3                         NA  NA                                                                            
@@ -3645,7 +3646,6 @@ adventureworks   transactionhistory                      transactionid          
 adventureworks   purchaseorderheader                     purchaseorderid                       integer                                       1                         NA  nextval('purchasing.purchaseorderheader_purchaseorderid_seq'::regclass)       
 adventureworks   currencyrate                            currencyrateid                        integer                                       1                         NA  nextval('sales.currencyrate_currencyrateid_seq'::regclass)                    
 adventureworks   customer                                customerid                            integer                                       1                         NA  nextval('sales.customer_customerid_seq'::regclass)                            
-adventureworks   salesreason                             salesreasonid                         integer                                       1                         NA  nextval('sales.salesreason_salesreasonid_seq'::regclass)                      
 adventureworks   shoppingcartitem                        shoppingcartitemid                    integer                                       1                         NA  nextval('sales.shoppingcartitem_shoppingcartitemid_seq'::regclass)            
 
 ### What is the difference between a `VIEW` and a `BASE TABLE`?
@@ -4285,12 +4285,11 @@ ls()
 ```
 ##  [1] "columns_info_schema_info"  "columns_info_schema_table"
 ##  [3] "con"                       "constraint_column_usage"  
-##  [5] "cranex"                    "key_column_usage"         
-##  [7] "keys"                      "public_tables"            
-##  [9] "referential_constraints"   "rs"                       
-## [11] "schema_list"               "table_constraints"        
-## [13] "table_info"                "table_info_schema_table"  
-## [15] "tables"
+##  [5] "key_column_usage"          "keys"                     
+##  [7] "public_tables"             "referential_constraints"  
+##  [9] "rs"                        "schema_list"              
+## [11] "table_constraints"         "table_info"               
+## [13] "table_info_schema_table"   "tables"
 ```
 
 

@@ -24,7 +24,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, and Ian Frantz" />
 
 
-<meta name="date" content="2019-08-07" />
+<meta name="date" content="2019-08-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="chapter-dbms-queries-intro.html">
-<link rel="next" href="chapter-lazy-evaluation-queries.html">
+<link rel="next" href="chapter-exploratory-data-analysis.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -74,7 +74,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -227,59 +227,65 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="8.3" data-path="chapter-database-exploration.html"><a href="chapter-database-exploration.html#additional-reading-1"><i class="fa fa-check"></i><b>8.3</b> Additional reading</a></li>
 </ul></li>
-<li class="chapter" data-level="9" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html"><i class="fa fa-check"></i><b>9</b> Lazy Evaluation and Lazy Queries</a><ul>
-<li class="chapter" data-level="9.1" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#setup-2"><i class="fa fa-check"></i><b>9.1</b> Setup</a></li>
-<li class="chapter" data-level="9.2" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#r-is-lazy-and-comes-with-guardrails"><i class="fa fa-check"></i><b>9.2</b> R is lazy and comes with guardrails</a><ul>
-<li class="chapter" data-level="9.2.1" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy-loading"><i class="fa fa-check"></i><b>9.2.1</b> Lazy loading</a></li>
-<li class="chapter" data-level="9.2.2" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy-evaluation"><i class="fa fa-check"></i><b>9.2.2</b> Lazy evaluation</a></li>
-<li class="chapter" data-level="9.2.3" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy-queries"><i class="fa fa-check"></i><b>9.2.3</b> Lazy Queries</a></li>
+<li class="chapter" data-level="9" data-path="chapter-exploratory-data-analysis.html"><a href="chapter-exploratory-data-analysis.html"><i class="fa fa-check"></i><b>9</b> Exploratory Data Analysis</a><ul>
+<li class="chapter" data-level="9.1" data-path="chapter-exploratory-data-analysis.html"><a href="chapter-exploratory-data-analysis.html#setup-2"><i class="fa fa-check"></i><b>9.1</b> Setup</a></li>
+<li class="chapter" data-level="9.2" data-path="chapter-exploratory-data-analysis.html"><a href="chapter-exploratory-data-analysis.html#number-of-orders"><i class="fa fa-check"></i><b>9.2</b> Number of Orders</a></li>
+<li class="chapter" data-level="9.3" data-path="chapter-exploratory-data-analysis.html"><a href="chapter-exploratory-data-analysis.html#sources-of-orders"><i class="fa fa-check"></i><b>9.3</b> Sources of Orders</a></li>
+<li class="chapter" data-level="9.4" data-path="chapter-exploratory-data-analysis.html"><a href="chapter-exploratory-data-analysis.html#characteristics-of-orders"><i class="fa fa-check"></i><b>9.4</b> Characteristics of Orders</a></li>
 </ul></li>
-<li class="chapter" data-level="9.3" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy-evaluation-and-lazy-queries"><i class="fa fa-check"></i><b>9.3</b> Lazy evaluation and lazy queries</a><ul>
-<li class="chapter" data-level="9.3.1" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#create-a-black-box-query-for-experimentation"><i class="fa fa-check"></i><b>9.3.1</b> Create a black box query for experimentation</a></li>
-<li class="chapter" data-level="9.3.2" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#experiment-overview"><i class="fa fa-check"></i><b>9.3.2</b> Experiment overview</a></li>
-<li class="chapter" data-level="9.3.3" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_print"><i class="fa fa-check"></i><b>9.3.3</b> Q %&gt;% print()</a></li>
-<li class="chapter" data-level="9.3.4" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_as-tibble"><i class="fa fa-check"></i><b>9.3.4</b> Q %&gt;% dplyr::as_tibble()</a></li>
-<li class="chapter" data-level="9.3.5" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_head"><i class="fa fa-check"></i><b>9.3.5</b> Q %&gt;% head()</a></li>
-<li class="chapter" data-level="9.3.6" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_tail"><i class="fa fa-check"></i><b>9.3.6</b> Q %&gt;% tail()</a></li>
-<li class="chapter" data-level="9.3.7" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_length"><i class="fa fa-check"></i><b>9.3.7</b> Q %&gt;% length()</a></li>
-<li class="chapter" data-level="9.3.8" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_str"><i class="fa fa-check"></i><b>9.3.8</b> Q %&gt;% str()</a></li>
-<li class="chapter" data-level="9.3.9" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_nrow"><i class="fa fa-check"></i><b>9.3.9</b> Q %&gt;% nrow()</a></li>
-<li class="chapter" data-level="9.3.10" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_tally"><i class="fa fa-check"></i><b>9.3.10</b> Q %&gt;% dplyr::tally()</a></li>
-<li class="chapter" data-level="9.3.11" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_collect"><i class="fa fa-check"></i><b>9.3.11</b> Q %&gt;% dplyr::collect()</a></li>
-<li class="chapter" data-level="9.3.12" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_plot-categories"><i class="fa fa-check"></i><b>9.3.12</b> Q %&gt;% ggplot</a></li>
-<li class="chapter" data-level="9.3.13" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_show-query"><i class="fa fa-check"></i><b>9.3.13</b> Q %&gt;% dplyr::show_query()</a></li>
+<li class="chapter" data-level="10" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html"><i class="fa fa-check"></i><b>10</b> Lazy Evaluation and Lazy Queries</a><ul>
+<li class="chapter" data-level="10.1" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#setup-3"><i class="fa fa-check"></i><b>10.1</b> Setup</a></li>
+<li class="chapter" data-level="10.2" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#r-is-lazy-and-comes-with-guardrails"><i class="fa fa-check"></i><b>10.2</b> R is lazy and comes with guardrails</a><ul>
+<li class="chapter" data-level="10.2.1" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy-loading"><i class="fa fa-check"></i><b>10.2.1</b> Lazy loading</a></li>
+<li class="chapter" data-level="10.2.2" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy-evaluation"><i class="fa fa-check"></i><b>10.2.2</b> Lazy evaluation</a></li>
+<li class="chapter" data-level="10.2.3" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy-queries"><i class="fa fa-check"></i><b>10.2.3</b> Lazy Queries</a></li>
 </ul></li>
-<li class="chapter" data-level="9.4" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#other-resources"><i class="fa fa-check"></i><b>9.4</b> Other resources</a></li>
+<li class="chapter" data-level="10.3" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy-evaluation-and-lazy-queries"><i class="fa fa-check"></i><b>10.3</b> Lazy evaluation and lazy queries</a><ul>
+<li class="chapter" data-level="10.3.1" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#create-a-black-box-query-for-experimentation"><i class="fa fa-check"></i><b>10.3.1</b> Create a black box query for experimentation</a></li>
+<li class="chapter" data-level="10.3.2" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#experiment-overview"><i class="fa fa-check"></i><b>10.3.2</b> Experiment overview</a></li>
+<li class="chapter" data-level="10.3.3" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_print"><i class="fa fa-check"></i><b>10.3.3</b> Q %&gt;% print()</a></li>
+<li class="chapter" data-level="10.3.4" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_as-tibble"><i class="fa fa-check"></i><b>10.3.4</b> Q %&gt;% dplyr::as_tibble()</a></li>
+<li class="chapter" data-level="10.3.5" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_head"><i class="fa fa-check"></i><b>10.3.5</b> Q %&gt;% head()</a></li>
+<li class="chapter" data-level="10.3.6" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_tail"><i class="fa fa-check"></i><b>10.3.6</b> Q %&gt;% tail()</a></li>
+<li class="chapter" data-level="10.3.7" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_length"><i class="fa fa-check"></i><b>10.3.7</b> Q %&gt;% length()</a></li>
+<li class="chapter" data-level="10.3.8" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_str"><i class="fa fa-check"></i><b>10.3.8</b> Q %&gt;% str()</a></li>
+<li class="chapter" data-level="10.3.9" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_nrow"><i class="fa fa-check"></i><b>10.3.9</b> Q %&gt;% nrow()</a></li>
+<li class="chapter" data-level="10.3.10" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_tally"><i class="fa fa-check"></i><b>10.3.10</b> Q %&gt;% dplyr::tally()</a></li>
+<li class="chapter" data-level="10.3.11" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_collect"><i class="fa fa-check"></i><b>10.3.11</b> Q %&gt;% dplyr::collect()</a></li>
+<li class="chapter" data-level="10.3.12" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_plot-categories"><i class="fa fa-check"></i><b>10.3.12</b> Q %&gt;% ggplot</a></li>
+<li class="chapter" data-level="10.3.13" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_show-query"><i class="fa fa-check"></i><b>10.3.13</b> Q %&gt;% dplyr::show_query()</a></li>
 </ul></li>
-<li class="chapter" data-level="10" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html"><i class="fa fa-check"></i><b>10</b> Lazy Evaluation and Execution Environment</a><ul>
-<li class="chapter" data-level="10.1" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#setup-3"><i class="fa fa-check"></i><b>10.1</b> Setup</a><ul>
-<li class="chapter" data-level="10.1.1" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#experiment-overview-1"><i class="fa fa-check"></i><b>10.1.1</b> Experiment overview</a></li>
-<li class="chapter" data-level="10.1.2" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#time-based-execution-environment-issues"><i class="fa fa-check"></i><b>10.1.2</b> Time-based, execution environment issues</a></li>
-<li class="chapter" data-level="10.1.3" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#lazy_q_build"><i class="fa fa-check"></i><b>10.1.3</b> Q %&gt;% <code>more dplyr</code></a></li>
-<li class="chapter" data-level="10.1.4" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#many-handy-r-functions-cant-be-translated-to-sql"><i class="fa fa-check"></i><b>10.1.4</b> Many handy R functions can’t be translated to SQL</a></li>
-<li class="chapter" data-level="10.1.5" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#further-lazy-execution-examples"><i class="fa fa-check"></i><b>10.1.5</b> Further lazy execution examples</a></li>
+<li class="chapter" data-level="10.4" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#other-resources"><i class="fa fa-check"></i><b>10.4</b> Other resources</a></li>
 </ul></li>
-<li class="chapter" data-level="10.2" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#other-resources-1"><i class="fa fa-check"></i><b>10.2</b> Other resources</a></li>
+<li class="chapter" data-level="11" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html"><i class="fa fa-check"></i><b>11</b> Lazy Evaluation and Execution Environment</a><ul>
+<li class="chapter" data-level="11.1" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#setup-4"><i class="fa fa-check"></i><b>11.1</b> Setup</a><ul>
+<li class="chapter" data-level="11.1.1" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#experiment-overview-1"><i class="fa fa-check"></i><b>11.1.1</b> Experiment overview</a></li>
+<li class="chapter" data-level="11.1.2" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#time-based-execution-environment-issues"><i class="fa fa-check"></i><b>11.1.2</b> Time-based, execution environment issues</a></li>
+<li class="chapter" data-level="11.1.3" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#lazy_q_build"><i class="fa fa-check"></i><b>11.1.3</b> Q %&gt;% <code>more dplyr</code></a></li>
+<li class="chapter" data-level="11.1.4" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#many-handy-r-functions-cant-be-translated-to-sql"><i class="fa fa-check"></i><b>11.1.4</b> Many handy R functions can’t be translated to SQL</a></li>
+<li class="chapter" data-level="11.1.5" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#further-lazy-execution-examples"><i class="fa fa-check"></i><b>11.1.5</b> Further lazy execution examples</a></li>
 </ul></li>
-<li class="chapter" data-level="11" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html"><i class="fa fa-check"></i><b>11</b> Getting metadata about and from PostgreSQL</a><ul>
-<li class="chapter" data-level="11.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#database-contents-and-structure"><i class="fa fa-check"></i><b>11.1</b> Database contents and structure</a><ul>
-<li class="chapter" data-level="11.1.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#database-structure"><i class="fa fa-check"></i><b>11.1.1</b> Database structure</a></li>
-<li class="chapter" data-level="11.1.2" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#contents-of-the-information_schema"><i class="fa fa-check"></i><b>11.1.2</b> Contents of the <code>information_schema</code></a></li>
-<li class="chapter" data-level="11.1.3" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#what-tables-are-in-the-database"><i class="fa fa-check"></i><b>11.1.3</b> What tables are in the database?</a></li>
+<li class="chapter" data-level="11.2" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#other-resources-1"><i class="fa fa-check"></i><b>11.2</b> Other resources</a></li>
 </ul></li>
-<li class="chapter" data-level="11.2" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#what-columns-do-those-tables-contain"><i class="fa fa-check"></i><b>11.2</b> What columns do those tables contain?</a><ul>
-<li class="chapter" data-level="11.2.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#what-is-the-difference-between-a-view-and-a-base-table"><i class="fa fa-check"></i><b>11.2.1</b> What is the difference between a <code>VIEW</code> and a <code>BASE TABLE</code>?</a></li>
-<li class="chapter" data-level="11.2.2" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#what-data-types-are-found-in-the-database"><i class="fa fa-check"></i><b>11.2.2</b> What data types are found in the database?</a></li>
+<li class="chapter" data-level="12" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html"><i class="fa fa-check"></i><b>12</b> Getting metadata about and from PostgreSQL</a><ul>
+<li class="chapter" data-level="12.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#database-contents-and-structure"><i class="fa fa-check"></i><b>12.1</b> Database contents and structure</a><ul>
+<li class="chapter" data-level="12.1.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#database-structure"><i class="fa fa-check"></i><b>12.1.1</b> Database structure</a></li>
+<li class="chapter" data-level="12.1.2" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#contents-of-the-information_schema"><i class="fa fa-check"></i><b>12.1.2</b> Contents of the <code>information_schema</code></a></li>
+<li class="chapter" data-level="12.1.3" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#what-tables-are-in-the-database"><i class="fa fa-check"></i><b>12.1.3</b> What tables are in the database?</a></li>
 </ul></li>
-<li class="chapter" data-level="11.3" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#characterizing-how-things-are-named"><i class="fa fa-check"></i><b>11.3</b> Characterizing how things are named</a><ul>
-<li class="chapter" data-level="11.3.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#counting-columns-and-name-reuse"><i class="fa fa-check"></i><b>11.3.1</b> Counting columns and name reuse</a></li>
+<li class="chapter" data-level="12.2" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#what-columns-do-those-tables-contain"><i class="fa fa-check"></i><b>12.2</b> What columns do those tables contain?</a><ul>
+<li class="chapter" data-level="12.2.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#what-is-the-difference-between-a-view-and-a-base-table"><i class="fa fa-check"></i><b>12.2.1</b> What is the difference between a <code>VIEW</code> and a <code>BASE TABLE</code>?</a></li>
+<li class="chapter" data-level="12.2.2" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#what-data-types-are-found-in-the-database"><i class="fa fa-check"></i><b>12.2.2</b> What data types are found in the database?</a></li>
 </ul></li>
-<li class="chapter" data-level="11.4" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#database-keys"><i class="fa fa-check"></i><b>11.4</b> Database keys</a><ul>
-<li class="chapter" data-level="11.4.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#direct-sql"><i class="fa fa-check"></i><b>11.4.1</b> Direct SQL</a></li>
-<li class="chapter" data-level="11.4.2" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#database-keys-with-dplyr"><i class="fa fa-check"></i><b>11.4.2</b> Database keys with dplyr</a></li>
+<li class="chapter" data-level="12.3" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#characterizing-how-things-are-named"><i class="fa fa-check"></i><b>12.3</b> Characterizing how things are named</a><ul>
+<li class="chapter" data-level="12.3.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#counting-columns-and-name-reuse"><i class="fa fa-check"></i><b>12.3.1</b> Counting columns and name reuse</a></li>
 </ul></li>
-<li class="chapter" data-level="11.5" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#creating-your-own-data-dictionary"><i class="fa fa-check"></i><b>11.5</b> Creating your own data dictionary</a></li>
-<li class="chapter" data-level="11.6" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#save-your-work"><i class="fa fa-check"></i><b>11.6</b> Save your work!</a></li>
+<li class="chapter" data-level="12.4" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#database-keys"><i class="fa fa-check"></i><b>12.4</b> Database keys</a><ul>
+<li class="chapter" data-level="12.4.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#direct-sql"><i class="fa fa-check"></i><b>12.4.1</b> Direct SQL</a></li>
+<li class="chapter" data-level="12.4.2" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#database-keys-with-dplyr"><i class="fa fa-check"></i><b>12.4.2</b> Database keys with dplyr</a></li>
+</ul></li>
+<li class="chapter" data-level="12.5" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#creating-your-own-data-dictionary"><i class="fa fa-check"></i><b>12.5</b> Creating your own data dictionary</a></li>
+<li class="chapter" data-level="12.6" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#save-your-work"><i class="fa fa-check"></i><b>12.6</b> Save your work!</a></li>
 </ul></li>
 <li class="appendix"><span><b>Appendices</b></span></li>
 <li class="chapter" data-level="A" data-path="appendix-background-basic-concepts.html"><a href="appendix-background-basic-concepts.html"><i class="fa fa-check"></i><b>A</b> Background and Basic Concepts</a><ul>
@@ -358,7 +364,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
         <div class="book-header" role="navigation">
           <h1>
             <i class="fa fa-circle-o-notch fa-spin"></i><a href="./"><div class="line-block">Exploring Enterprise Databases with R<br />
-A Tidyverse Approach&quot;</div></a>
+A Tidyverse Approach"</div></a>
           </h1>
         </div>
 
@@ -378,24 +384,24 @@ A Tidyverse Approach&quot;</div></a>
 <div id="setup-1" class="section level2">
 <h2><span class="header-section-number">8.1</span> Setup</h2>
 <p>The following packages are used in this chapter:</p>
-<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb140-1" data-line-number="1"><span class="kw">library</span>(tidyverse)</a>
-<a class="sourceLine" id="cb140-2" data-line-number="2"><span class="kw">library</span>(DBI)</a>
-<a class="sourceLine" id="cb140-3" data-line-number="3"><span class="kw">library</span>(RPostgres)</a>
-<a class="sourceLine" id="cb140-4" data-line-number="4"><span class="kw">library</span>(dbplyr)</a>
-<a class="sourceLine" id="cb140-5" data-line-number="5"><span class="kw">require</span>(knitr)</a>
-<a class="sourceLine" id="cb140-6" data-line-number="6"><span class="kw">library</span>(bookdown)</a>
-<a class="sourceLine" id="cb140-7" data-line-number="7"><span class="kw">library</span>(sqlpetr)</a></code></pre></div>
+<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb140-1" title="1"><span class="kw">library</span>(tidyverse)</a>
+<a class="sourceLine" id="cb140-2" title="2"><span class="kw">library</span>(DBI)</a>
+<a class="sourceLine" id="cb140-3" title="3"><span class="kw">library</span>(RPostgres)</a>
+<a class="sourceLine" id="cb140-4" title="4"><span class="kw">library</span>(dbplyr)</a>
+<a class="sourceLine" id="cb140-5" title="5"><span class="kw">require</span>(knitr)</a>
+<a class="sourceLine" id="cb140-6" title="6"><span class="kw">library</span>(bookdown)</a>
+<a class="sourceLine" id="cb140-7" title="7"><span class="kw">library</span>(sqlpetr)</a></code></pre></div>
 <p>Assume that the Docker container with PostgreSQL and the adventureworks database are ready to go. If not go back to [Chapter 6][#chapter_setup-adventureworks-db]</p>
-<div class="sourceCode" id="cb141"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb141-1" data-line-number="1">sqlpetr<span class="op">::</span><span class="kw">sp_docker_start</span>(<span class="st">&quot;adventureworks&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb141"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb141-1" title="1">sqlpetr<span class="op">::</span><span class="kw">sp_docker_start</span>(<span class="st">&quot;adventureworks&quot;</span>)</a></code></pre></div>
 <p>Connect to the database:</p>
-<div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb142-1" data-line-number="1">con &lt;-<span class="st"> </span>sqlpetr<span class="op">::</span><span class="kw">sp_get_postgres_connection</span>(</a>
-<a class="sourceLine" id="cb142-2" data-line-number="2">  <span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),</a>
-<a class="sourceLine" id="cb142-3" data-line-number="3">  <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),</a>
-<a class="sourceLine" id="cb142-4" data-line-number="4">  <span class="dt">dbname =</span> <span class="st">&quot;adventureworks&quot;</span>,</a>
-<a class="sourceLine" id="cb142-5" data-line-number="5">  <span class="dt">port =</span> <span class="dv">5432</span>, </a>
-<a class="sourceLine" id="cb142-6" data-line-number="6">  <span class="dt">seconds_to_test =</span> <span class="dv">20</span>, </a>
-<a class="sourceLine" id="cb142-7" data-line-number="7">  <span class="dt">connection_tab =</span> <span class="ot">TRUE</span></a>
-<a class="sourceLine" id="cb142-8" data-line-number="8">)</a></code></pre></div>
+<div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb142-1" title="1">con &lt;-<span class="st"> </span>sqlpetr<span class="op">::</span><span class="kw">sp_get_postgres_connection</span>(</a>
+<a class="sourceLine" id="cb142-2" title="2">  <span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),</a>
+<a class="sourceLine" id="cb142-3" title="3">  <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),</a>
+<a class="sourceLine" id="cb142-4" title="4">  <span class="dt">dbname =</span> <span class="st">&quot;adventureworks&quot;</span>,</a>
+<a class="sourceLine" id="cb142-5" title="5">  <span class="dt">port =</span> <span class="dv">5432</span>, </a>
+<a class="sourceLine" id="cb142-6" title="6">  <span class="dt">seconds_to_test =</span> <span class="dv">20</span>, </a>
+<a class="sourceLine" id="cb142-7" title="7">  <span class="dt">connection_tab =</span> <span class="ot">TRUE</span></a>
+<a class="sourceLine" id="cb142-8" title="8">)</a></code></pre></div>
 </div>
 <div id="getting-data-from-the-database" class="section level2">
 <h2><span class="header-section-number">8.2</span> Getting data from the database</h2>
@@ -413,13 +419,13 @@ A Tidyverse Approach&quot;</div></a>
 <p class="caption">Adventureworks connections tab</p>
 </div>
 <p>Exploring a databse using R code is a little more complicated. The following command does not give you a list of tables as it did in the simpler case when there were no schemas other than the <code>public</code> schema:</p>
-<div class="sourceCode" id="cb143"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb143-1" data-line-number="1">tables &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbListTables</span>(con)</a>
-<a class="sourceLine" id="cb143-2" data-line-number="2">tables</a></code></pre></div>
+<div class="sourceCode" id="cb143"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb143-1" title="1">tables &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbListTables</span>(con)</a>
+<a class="sourceLine" id="cb143-2" title="2">tables</a></code></pre></div>
 <pre><code>## character(0)</code></pre>
 <p>We need to to tell the database which schemas to search</p>
-<div class="sourceCode" id="cb145"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb145-1" data-line-number="1"><span class="kw">dbExecute</span>(con, <span class="st">&quot;set search_path to hr, humanresources;&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb145"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb145-1" title="1"><span class="kw">dbExecute</span>(con, <span class="st">&quot;set search_path to hr, humanresources;&quot;</span>)</a></code></pre></div>
 <pre><code>## [1] 0</code></pre>
-<div class="sourceCode" id="cb147"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb147-1" data-line-number="1">DBI<span class="op">::</span><span class="kw">dbListTables</span>(con)</a></code></pre></div>
+<div class="sourceCode" id="cb147"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb147-1" title="1">DBI<span class="op">::</span><span class="kw">dbListTables</span>(con)</a></code></pre></div>
 <pre><code>##  [1] &quot;employee&quot;                   &quot;d&quot;                         
 ##  [3] &quot;shift&quot;                      &quot;e&quot;                         
 ##  [5] &quot;employeepayhistory&quot;         &quot;edh&quot;                       
@@ -430,18 +436,18 @@ A Tidyverse Approach&quot;</div></a>
 ## [15] &quot;vjobcandidate&quot;              &quot;vjobcandidateeducation&quot;    
 ## [17] &quot;vjobcandidateemployment&quot;    &quot;employeedepartmenthistory&quot;</code></pre>
 <p>Notice the way the database designers have abbreviated table names for your convenience.</p>
-<div class="sourceCode" id="cb149"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb149-1" data-line-number="1">DBI<span class="op">::</span><span class="kw">dbListFields</span>(con, <span class="st">&quot;d&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb149"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb149-1" title="1">DBI<span class="op">::</span><span class="kw">dbListFields</span>(con, <span class="st">&quot;d&quot;</span>)</a></code></pre></div>
 <pre><code>## [1] &quot;id&quot;           &quot;departmentid&quot; &quot;name&quot;         &quot;groupname&quot;   
 ## [5] &quot;modifieddate&quot;</code></pre>
 </div>
 <div id="listing-all-the-fields-for-all-the-tables" class="section level3">
 <h3><span class="header-section-number">8.2.2</span> Listing all the fields for all the tables</h3>
-<p>The first example, <code>DBI::dbListTables(con)</code> returned 22 tables and the second example, <code>DBI::dbListFields(con, &quot;employee&quot;)</code> returns 7 fields. Here we combine the two calls to return a list of tables which has a list of all the fields in the table. The code block just shows the first two tables.</p>
-<div class="sourceCode" id="cb151"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb151-1" data-line-number="1">table_columns &lt;-<span class="st"> </span>purrr<span class="op">::</span><span class="kw">map</span>(tables, <span class="op">~</span><span class="st"> </span><span class="kw">dbListFields</span>(.,<span class="dt">conn =</span> con) )</a></code></pre></div>
+<p>The first example, <code>DBI::dbListTables(con)</code> returned 22 tables and the second example, <code>DBI::dbListFields(con, "employee")</code> returns 7 fields. Here we combine the two calls to return a list of tables which has a list of all the fields in the table. The code block just shows the first two tables.</p>
+<div class="sourceCode" id="cb151"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb151-1" title="1">table_columns &lt;-<span class="st"> </span>purrr<span class="op">::</span><span class="kw">map</span>(tables, <span class="op">~</span><span class="st"> </span><span class="kw">dbListFields</span>(.,<span class="dt">conn =</span> con) )</a></code></pre></div>
 <p>Rename each list [[1]] … [[43]] to meaningful table name</p>
-<div class="sourceCode" id="cb152"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb152-1" data-line-number="1"><span class="kw">names</span>(table_columns) &lt;-<span class="st"> </span>tables</a>
-<a class="sourceLine" id="cb152-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb152-3" data-line-number="3"><span class="kw">head</span>(table_columns)</a></code></pre></div>
+<div class="sourceCode" id="cb152"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb152-1" title="1"><span class="kw">names</span>(table_columns) &lt;-<span class="st"> </span>tables</a>
+<a class="sourceLine" id="cb152-2" title="2"></a>
+<a class="sourceLine" id="cb152-3" title="3"><span class="kw">head</span>(table_columns)</a></code></pre></div>
 <pre><code>## named list()</code></pre>
 <p>Later on we’ll discuss how to get more extensive data about each table and column from the database’s own store of metadata using a similar technique. As we go further the issue of scale will come up again and again: you need to be careful about how much data a call to the dbms will return, whether it’s a list of tables or a table that could have millions of rows.</p>
 <p>It’s important to connect with people who own, generate, or are the subjects of the data. A good chat with people who own the data, generate it, or are the subjects can generate insights and set the context for your investigation of the database. The purpose for collecting the data or circumstances where it was collected may be buried far afield in an organization, but <em>usually someone knows</em>. The metadata discussed in a later chapter is essential but will only take you so far.</p>
@@ -450,41 +456,41 @@ A Tidyverse Approach&quot;</div></a>
 <div id="a-table-object-that-can-be-reused-1" class="section level3">
 <h3><span class="header-section-number">8.2.3</span> A table object that can be reused</h3>
 <p>The <code>dplyr::tbl</code> function gives us more control over access to a table by enabling control over which columns and rows to download. It creates an object that might <strong>look</strong> like a data frame, but it’s actually a list object that <code>dplyr</code> uses for constructing queries and retrieving data from the DBMS.</p>
-<div class="sourceCode" id="cb154"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb154-1" data-line-number="1">employee_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">tbl</span>(con, <span class="st">&quot;employee&quot;</span>)</a>
-<a class="sourceLine" id="cb154-2" data-line-number="2"><span class="kw">class</span>(employee_table)</a></code></pre></div>
+<div class="sourceCode" id="cb154"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb154-1" title="1">employee_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">tbl</span>(con, <span class="st">&quot;employee&quot;</span>)</a>
+<a class="sourceLine" id="cb154-2" title="2"><span class="kw">class</span>(employee_table)</a></code></pre></div>
 <pre><code>## [1] &quot;tbl_PqConnection&quot; &quot;tbl_dbi&quot;          &quot;tbl_sql&quot;         
 ## [4] &quot;tbl_lazy&quot;         &quot;tbl&quot;</code></pre>
 </div>
 <div id="table-links-for-queries" class="section level3">
 <h3><span class="header-section-number">8.2.4</span> Table links for queries</h3>
 <p>To illustrate the different issues involved in data retrieval, we create more connection objects to link to two other tables.</p>
-<div class="sourceCode" id="cb156"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb156-1" data-line-number="1">employee_table &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;humanresources&quot;</span>, <span class="st">&quot;employee&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb156-2" data-line-number="2"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>modifieddate, <span class="op">-</span>rowguid)</a></code></pre></div>
+<div class="sourceCode" id="cb156"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb156-1" title="1">employee_table &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;humanresources&quot;</span>, <span class="st">&quot;employee&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb156-2" title="2"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>modifieddate, <span class="op">-</span>rowguid)</a></code></pre></div>
 <p>The ‘employee’ table has 290 rows and 13 columns because we dropped <code>modifieddate</code> which is a column name that appears in more than one table. To get the data we want we will usually want to drop or rename duplicates as we connect to each table.</p>
-<div class="sourceCode" id="cb157"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb157-1" data-line-number="1">sales_person_table &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;sales&quot;</span>, <span class="st">&quot;salesperson&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb157-2" data-line-number="2"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>rowguid) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb157-3" data-line-number="3"><span class="st">  </span><span class="kw">rename</span>(<span class="dt">sale_info_updated =</span> modifieddate)</a></code></pre></div>
+<div class="sourceCode" id="cb157"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb157-1" title="1">sales_person_table &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;sales&quot;</span>, <span class="st">&quot;salesperson&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb157-2" title="2"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>rowguid) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb157-3" title="3"><span class="st">  </span><span class="kw">rename</span>(<span class="dt">sale_info_updated =</span> modifieddate)</a></code></pre></div>
 <p>The ‘salesperson’ table has 17 rows.</p>
 <p>Discuss the <em>person</em> table here:</p>
-<div class="sourceCode" id="cb158"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb158-1" data-line-number="1">person_table &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;person&quot;</span>, <span class="st">&quot;person&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb158-2" data-line-number="2"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>modifieddate, <span class="op">-</span>rowguid)</a></code></pre></div>
+<div class="sourceCode" id="cb158"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb158-1" title="1">person_table &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;person&quot;</span>, <span class="st">&quot;person&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb158-2" title="2"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>modifieddate, <span class="op">-</span>rowguid)</a></code></pre></div>
 </div>
 <div id="merge-this-into-the-above" class="section level3">
 <h3><span class="header-section-number">8.2.5</span> merge this into the above:</h3>
 <p>Define two tables to use in a simple query to use in the following discussion.</p>
-<div class="sourceCode" id="cb159"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb159-1" data-line-number="1">sales_person_table &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;sales&quot;</span>, <span class="st">&quot;salesperson&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb159-2" data-line-number="2"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>rowguid) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb159-3" data-line-number="3"><span class="st">  </span><span class="kw">rename</span>(<span class="dt">sale_info_updated =</span> modifieddate)</a>
-<a class="sourceLine" id="cb159-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb159-5" data-line-number="5">employee_table &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;humanresources&quot;</span>, <span class="st">&quot;employee&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb159-6" data-line-number="6"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>modifieddate, <span class="op">-</span>rowguid)</a></code></pre></div>
+<div class="sourceCode" id="cb159"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb159-1" title="1">sales_person_table &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;sales&quot;</span>, <span class="st">&quot;salesperson&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb159-2" title="2"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>rowguid) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb159-3" title="3"><span class="st">  </span><span class="kw">rename</span>(<span class="dt">sale_info_updated =</span> modifieddate)</a>
+<a class="sourceLine" id="cb159-4" title="4"></a>
+<a class="sourceLine" id="cb159-5" title="5">employee_table &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;humanresources&quot;</span>, <span class="st">&quot;employee&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb159-6" title="6"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>modifieddate, <span class="op">-</span>rowguid)</a></code></pre></div>
 <p>Here is a simple string of <code>dplyr</code> verbs similar to the query used to illustrate issues in the last chapter:</p>
-<div class="sourceCode" id="cb160"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb160-1" data-line-number="1">Q &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;sales&quot;</span>, <span class="st">&quot;salesperson&quot;</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb160-2" data-line-number="2"><span class="st">  </span><span class="kw">left_join</span>(<span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;humanresources&quot;</span>, <span class="st">&quot;employee&quot;</span>)), </a>
-<a class="sourceLine" id="cb160-3" data-line-number="3">            <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;businessentityid&quot;</span> =<span class="st"> &quot;businessentityid&quot;</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb160-4" data-line-number="4"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(birthdate, saleslastyear)</a>
-<a class="sourceLine" id="cb160-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb160-6" data-line-number="6">Q</a></code></pre></div>
+<div class="sourceCode" id="cb160"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb160-1" title="1">Q &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;sales&quot;</span>, <span class="st">&quot;salesperson&quot;</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb160-2" title="2"><span class="st">  </span><span class="kw">left_join</span>(<span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;humanresources&quot;</span>, <span class="st">&quot;employee&quot;</span>)), </a>
+<a class="sourceLine" id="cb160-3" title="3">            <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;businessentityid&quot;</span> =<span class="st"> &quot;businessentityid&quot;</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb160-4" title="4"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(birthdate, saleslastyear)</a>
+<a class="sourceLine" id="cb160-5" title="5"></a>
+<a class="sourceLine" id="cb160-6" title="6">Q</a></code></pre></div>
 <pre><code>## # Source:   lazy query [?? x 2]
 ## # Database: postgres [postgres@localhost:5432/adventureworks]
 ##    birthdate  saleslastyear
@@ -501,11 +507,11 @@ A Tidyverse Approach&quot;</div></a>
 ## 10 1974-02-11      1371635.
 ## # … with more rows</code></pre>
 <p>Note that in the previous example we follow this book’s convention of creating a connection object to each table and fully qualifying function names (e.g., specifying the package). In practice, it’s possible and convenient to use more abbreviated notation.</p>
-<div class="sourceCode" id="cb162"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb162-1" data-line-number="1">Q &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;sales&quot;</span>, <span class="st">&quot;salesperson&quot;</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb162-2" data-line-number="2"><span class="st">  </span><span class="kw">left_join</span>(<span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;humanresources&quot;</span>, <span class="st">&quot;employee&quot;</span>)),  <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;businessentityid&quot;</span> =<span class="st"> &quot;businessentityid&quot;</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb162-3" data-line-number="3"><span class="st">  </span><span class="kw">select</span>(birthdate, saleslastyear)</a>
-<a class="sourceLine" id="cb162-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb162-5" data-line-number="5">Q</a></code></pre></div>
+<div class="sourceCode" id="cb162"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb162-1" title="1">Q &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;sales&quot;</span>, <span class="st">&quot;salesperson&quot;</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb162-2" title="2"><span class="st">  </span><span class="kw">left_join</span>(<span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;humanresources&quot;</span>, <span class="st">&quot;employee&quot;</span>)),  <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;businessentityid&quot;</span> =<span class="st"> &quot;businessentityid&quot;</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb162-3" title="3"><span class="st">  </span><span class="kw">select</span>(birthdate, saleslastyear)</a>
+<a class="sourceLine" id="cb162-4" title="4"></a>
+<a class="sourceLine" id="cb162-5" title="5">Q</a></code></pre></div>
 <pre><code>## # Source:   lazy query [?? x 2]
 ## # Database: postgres [postgres@localhost:5432/adventureworks]
 ##    birthdate  saleslastyear
@@ -525,15 +531,15 @@ A Tidyverse Approach&quot;</div></a>
 <div id="close-the-connection-and-shut-down-adventureworks-1" class="section level3">
 <h3><span class="header-section-number">8.2.6</span> Close the connection and shut down adventureworks</h3>
 <p>Where you place the <code>collect</code> function matters.</p>
-<div class="sourceCode" id="cb164"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb164-1" data-line-number="1">DBI<span class="op">::</span><span class="kw">dbDisconnect</span>(con)</a>
-<a class="sourceLine" id="cb164-2" data-line-number="2">sqlpetr<span class="op">::</span><span class="kw">sp_docker_stop</span>(<span class="st">&quot;adventureworks&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb164"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb164-1" title="1">DBI<span class="op">::</span><span class="kw">dbDisconnect</span>(con)</a>
+<a class="sourceLine" id="cb164-2" title="2">sqlpetr<span class="op">::</span><span class="kw">sp_docker_stop</span>(<span class="st">&quot;adventureworks&quot;</span>)</a></code></pre></div>
 </div>
 </div>
 <div id="additional-reading-1" class="section level2">
 <h2><span class="header-section-number">8.3</span> Additional reading</h2>
 <ul>
-<li><span class="citation">(Wickham <a href="#ref-Wickham2018">2018</a>)</span></li>
-<li><span class="citation">(Baumer <a href="#ref-Baumer2018">2018</a>)</span></li>
+<li><span class="citation">(Wickham <a href="#ref-Wickham2018" role="doc-biblioref">2018</a>)</span></li>
+<li><span class="citation">(Baumer <a href="#ref-Baumer2018" role="doc-biblioref">2018</a>)</span></li>
 </ul>
 
 </div>
@@ -541,7 +547,7 @@ A Tidyverse Approach&quot;</div></a>
 <h3>References</h3>
 <div id="refs" class="references">
 <div id="ref-Baumer2018">
-<p>Baumer, Benjamin S. 2018. “A Grammar for Reproducible and Painless Extract-Transform-Load Operations on Medium Data.” <em>Journal of Computational and Graphical Statistics</em>, August. Informa UK Limited, 1–9. <a href="https://doi.org/10.1080/10618600.2018.1512867">https://doi.org/10.1080/10618600.2018.1512867</a>.</p>
+<p>Baumer, Benjamin S. 2018. “A Grammar for Reproducible and Painless Extract-Transform-Load Operations on Medium Data.” <em>Journal of Computational and Graphical Statistics</em>, August, 1–9. <a href="https://doi.org/10.1080/10618600.2018.1512867">https://doi.org/10.1080/10618600.2018.1512867</a>.</p>
 </div>
 <div id="ref-Wickham2018">
 <p>Wickham, Hadley. 2018. “A Grammar of Data Manipulation * Dplyr.” <a href=""></a>. <a href="https://dplyr.tidyverse.org/">https://dplyr.tidyverse.org/</a>.</p>
@@ -553,7 +559,7 @@ A Tidyverse Approach&quot;</div></a>
         </div>
       </div>
 <a href="chapter-dbms-queries-intro.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="chapter-lazy-evaluation-queries.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="chapter-exploratory-data-analysis.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
