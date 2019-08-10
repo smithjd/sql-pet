@@ -19,6 +19,11 @@ require(knitr)
 library(bookdown)
 ```
 
+Assume that the Docker container with PostgreSQL and the adventureworks database are ready to go. If not go back to [Chapter 6][#chapter_setup-adventureworks-db]
+```{r check on adventureworks}
+sqlpetr::sp_docker_start("adventureworks")
+```
+
 ## Number of Orders
 Suppose we are developers who use the corporate database. We often receive requests from executives who have some burning question as they try to understand and improve the company's processes. Today is no exception. AdventureWorks has just hired a new Vice President of Sales, Sally Seashells. She sends us an email, asking for a report of sales volumes for the past 4 years.
 
