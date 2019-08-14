@@ -84,7 +84,7 @@ source(here("book-src", "restore-adventureworks-postgres-on-docker.R"))
 ```
 
 ```
-## docker  run --detach  --name adventureworks --publish 5432:5432 --mount type=bind,source="/Users/jds/Documents/Library/R/r-system/sql-pet",target=/petdir postgres:11
+## docker  run --detach  --name adventureworks --publish 5432:5432 --mount type=bind,source="/Users/jimtyhurst/src/r/sql-pet",target=/petdir postgres:11
 ```
 
 ## Run the adventureworks Docker Image
@@ -175,11 +175,12 @@ sp_docker_containers_tibble(list_all = TRUE)
 ```
 
 ```
-## # A tibble: 2 x 12
+## # A tibble: 3 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 45eff02a8ccf post… docker… 2019-08-0… 17 sec… <NA>  Exite… 0B (… adve…
-## 2 185a8e082757 post… docker… 2019-08-0… 23 hou… <NA>  Exite… 63B … adv11
+## 1 21053106fc9a post… docker… 2019-08-1… 28 sec… <NA>  Exite… 63B … adve…
+## 2 f15839235dc7 memg… /usr/l… 2019-03-3… 4 mont… <NA>  Exite… 0B (… eleg…
+## 3 a722c21a4228 coli… /bin/s… 2019-03-1… 4 mont… 0.0.… Exite… 134M… neo4r
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 
@@ -195,7 +196,7 @@ sp_docker_containers_tibble()
 ## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 45eff02a8ccf post… docker… 2019-08-0… 18 sec… 0.0.… Up Le… 63B … adve…
+## 1 21053106fc9a post… docker… 2019-08-1… 30 sec… 0.0.… Up Le… 63B … adve…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 Connect to the `adventureworks` database in PostgreSQL:
@@ -234,9 +235,10 @@ sp_show_all_docker_containers()
 ```
 
 ```
-## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## 45eff02a8ccf        postgres:11         "docker-entrypoint.s…"   19 seconds ago      Exited (0) Less than a second ago                       adventureworks
-## 185a8e082757        postgres:11         "docker-entrypoint.s…"   23 hours ago        Exited (137) 23 hours ago                               adv11
+## CONTAINER ID        IMAGE                   COMMAND                  CREATED             STATUS                                PORTS                    NAMES
+## 21053106fc9a        postgres:11             "docker-entrypoint.s…"   43 seconds ago      Exited (137) Less than a second ago                            adventureworks
+## f15839235dc7        memgraph                "/usr/lib/memgraph/m…"   4 months ago        Exited (0) 4 months ago                                        elegant_mcclintock
+## a722c21a4228        colinfay/neo4r-docker   "/bin/sh -c 'cd /hom…"   4 months ago        Exited (255) 4 months ago             0.0.0.0:8787->8787/tcp   neo4r
 ```
 
 Next time, you can just use this command to start the container: 

@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 11 Getting metadata about and from PostgreSQL | r-database-docker.utf8</title>
+  <title>Chapter 12 Getting metadata about and from PostgreSQL | r-database-docker.utf8</title>
   <meta name="description" content="An introduction to Docker and PostgreSQL for R users to simulate use cases behind corporate walls." />
   <meta name="generator" content="bookdown 0.12 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 11 Getting metadata about and from PostgreSQL | r-database-docker.utf8" />
+  <meta property="og:title" content="Chapter 12 Getting metadata about and from PostgreSQL | r-database-docker.utf8" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 11 Getting metadata about and from PostgreSQL | r-database-docker.utf8" />
+  <meta name="twitter:title" content="Chapter 12 Getting metadata about and from PostgreSQL | r-database-docker.utf8" />
   
   <meta name="twitter:description" content="An introduction to Docker and PostgreSQL for R users to simulate use cases behind corporate walls." />
   
@@ -24,7 +24,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, and Ian Frantz" />
 
 
-<meta name="date" content="2019-08-07" />
+<meta name="date" content="2019-08-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -74,7 +74,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -227,59 +227,65 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="8.3" data-path="chapter-database-exploration.html"><a href="chapter-database-exploration.html#additional-reading-1"><i class="fa fa-check"></i><b>8.3</b> Additional reading</a></li>
 </ul></li>
-<li class="chapter" data-level="9" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html"><i class="fa fa-check"></i><b>9</b> Lazy Evaluation and Lazy Queries</a><ul>
-<li class="chapter" data-level="9.1" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#setup-2"><i class="fa fa-check"></i><b>9.1</b> Setup</a></li>
-<li class="chapter" data-level="9.2" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#r-is-lazy-and-comes-with-guardrails"><i class="fa fa-check"></i><b>9.2</b> R is lazy and comes with guardrails</a><ul>
-<li class="chapter" data-level="9.2.1" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy-loading"><i class="fa fa-check"></i><b>9.2.1</b> Lazy loading</a></li>
-<li class="chapter" data-level="9.2.2" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy-evaluation"><i class="fa fa-check"></i><b>9.2.2</b> Lazy evaluation</a></li>
-<li class="chapter" data-level="9.2.3" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy-queries"><i class="fa fa-check"></i><b>9.2.3</b> Lazy Queries</a></li>
+<li class="chapter" data-level="9" data-path="chapter-exploratory-data-analysis.html"><a href="chapter-exploratory-data-analysis.html"><i class="fa fa-check"></i><b>9</b> Exploratory Data Analysis</a><ul>
+<li class="chapter" data-level="9.1" data-path="chapter-exploratory-data-analysis.html"><a href="chapter-exploratory-data-analysis.html#setup-2"><i class="fa fa-check"></i><b>9.1</b> Setup</a></li>
+<li class="chapter" data-level="9.2" data-path="chapter-exploratory-data-analysis.html"><a href="chapter-exploratory-data-analysis.html#number-of-orders"><i class="fa fa-check"></i><b>9.2</b> Number of Orders</a></li>
+<li class="chapter" data-level="9.3" data-path="chapter-exploratory-data-analysis.html"><a href="chapter-exploratory-data-analysis.html#sources-of-orders"><i class="fa fa-check"></i><b>9.3</b> Sources of Orders</a></li>
+<li class="chapter" data-level="9.4" data-path="chapter-exploratory-data-analysis.html"><a href="chapter-exploratory-data-analysis.html#characteristics-of-orders"><i class="fa fa-check"></i><b>9.4</b> Characteristics of Orders</a></li>
 </ul></li>
-<li class="chapter" data-level="9.3" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy-evaluation-and-lazy-queries"><i class="fa fa-check"></i><b>9.3</b> Lazy evaluation and lazy queries</a><ul>
-<li class="chapter" data-level="9.3.1" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#create-a-black-box-query-for-experimentation"><i class="fa fa-check"></i><b>9.3.1</b> Create a black box query for experimentation</a></li>
-<li class="chapter" data-level="9.3.2" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#experiment-overview"><i class="fa fa-check"></i><b>9.3.2</b> Experiment overview</a></li>
-<li class="chapter" data-level="9.3.3" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_print"><i class="fa fa-check"></i><b>9.3.3</b> Q %&gt;% print()</a></li>
-<li class="chapter" data-level="9.3.4" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_as-tibble"><i class="fa fa-check"></i><b>9.3.4</b> Q %&gt;% dplyr::as_tibble()</a></li>
-<li class="chapter" data-level="9.3.5" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_head"><i class="fa fa-check"></i><b>9.3.5</b> Q %&gt;% head()</a></li>
-<li class="chapter" data-level="9.3.6" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_tail"><i class="fa fa-check"></i><b>9.3.6</b> Q %&gt;% tail()</a></li>
-<li class="chapter" data-level="9.3.7" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_length"><i class="fa fa-check"></i><b>9.3.7</b> Q %&gt;% length()</a></li>
-<li class="chapter" data-level="9.3.8" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_str"><i class="fa fa-check"></i><b>9.3.8</b> Q %&gt;% str()</a></li>
-<li class="chapter" data-level="9.3.9" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_nrow"><i class="fa fa-check"></i><b>9.3.9</b> Q %&gt;% nrow()</a></li>
-<li class="chapter" data-level="9.3.10" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_tally"><i class="fa fa-check"></i><b>9.3.10</b> Q %&gt;% dplyr::tally()</a></li>
-<li class="chapter" data-level="9.3.11" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_collect"><i class="fa fa-check"></i><b>9.3.11</b> Q %&gt;% dplyr::collect()</a></li>
-<li class="chapter" data-level="9.3.12" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_plot-categories"><i class="fa fa-check"></i><b>9.3.12</b> Q %&gt;% ggplot</a></li>
-<li class="chapter" data-level="9.3.13" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_show-query"><i class="fa fa-check"></i><b>9.3.13</b> Q %&gt;% dplyr::show_query()</a></li>
+<li class="chapter" data-level="10" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html"><i class="fa fa-check"></i><b>10</b> Lazy Evaluation and Lazy Queries</a><ul>
+<li class="chapter" data-level="10.1" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#setup-3"><i class="fa fa-check"></i><b>10.1</b> Setup</a></li>
+<li class="chapter" data-level="10.2" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#r-is-lazy-and-comes-with-guardrails"><i class="fa fa-check"></i><b>10.2</b> R is lazy and comes with guardrails</a><ul>
+<li class="chapter" data-level="10.2.1" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy-loading"><i class="fa fa-check"></i><b>10.2.1</b> Lazy loading</a></li>
+<li class="chapter" data-level="10.2.2" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy-evaluation"><i class="fa fa-check"></i><b>10.2.2</b> Lazy evaluation</a></li>
+<li class="chapter" data-level="10.2.3" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy-queries"><i class="fa fa-check"></i><b>10.2.3</b> Lazy Queries</a></li>
 </ul></li>
-<li class="chapter" data-level="9.4" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#other-resources"><i class="fa fa-check"></i><b>9.4</b> Other resources</a></li>
+<li class="chapter" data-level="10.3" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy-evaluation-and-lazy-queries"><i class="fa fa-check"></i><b>10.3</b> Lazy evaluation and lazy queries</a><ul>
+<li class="chapter" data-level="10.3.1" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#create-a-black-box-query-for-experimentation"><i class="fa fa-check"></i><b>10.3.1</b> Create a black box query for experimentation</a></li>
+<li class="chapter" data-level="10.3.2" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#experiment-overview"><i class="fa fa-check"></i><b>10.3.2</b> Experiment overview</a></li>
+<li class="chapter" data-level="10.3.3" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_print"><i class="fa fa-check"></i><b>10.3.3</b> Q %&gt;% print()</a></li>
+<li class="chapter" data-level="10.3.4" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_as-tibble"><i class="fa fa-check"></i><b>10.3.4</b> Q %&gt;% dplyr::as_tibble()</a></li>
+<li class="chapter" data-level="10.3.5" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_head"><i class="fa fa-check"></i><b>10.3.5</b> Q %&gt;% head()</a></li>
+<li class="chapter" data-level="10.3.6" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_tail"><i class="fa fa-check"></i><b>10.3.6</b> Q %&gt;% tail()</a></li>
+<li class="chapter" data-level="10.3.7" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_length"><i class="fa fa-check"></i><b>10.3.7</b> Q %&gt;% length()</a></li>
+<li class="chapter" data-level="10.3.8" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_str"><i class="fa fa-check"></i><b>10.3.8</b> Q %&gt;% str()</a></li>
+<li class="chapter" data-level="10.3.9" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_nrow"><i class="fa fa-check"></i><b>10.3.9</b> Q %&gt;% nrow()</a></li>
+<li class="chapter" data-level="10.3.10" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_tally"><i class="fa fa-check"></i><b>10.3.10</b> Q %&gt;% dplyr::tally()</a></li>
+<li class="chapter" data-level="10.3.11" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_collect"><i class="fa fa-check"></i><b>10.3.11</b> Q %&gt;% dplyr::collect()</a></li>
+<li class="chapter" data-level="10.3.12" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_plot-categories"><i class="fa fa-check"></i><b>10.3.12</b> Q %&gt;% ggplot</a></li>
+<li class="chapter" data-level="10.3.13" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#lazy_q_show-query"><i class="fa fa-check"></i><b>10.3.13</b> Q %&gt;% dplyr::show_query()</a></li>
 </ul></li>
-<li class="chapter" data-level="10" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html"><i class="fa fa-check"></i><b>10</b> Lazy Evaluation and Execution Environment</a><ul>
-<li class="chapter" data-level="10.1" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#setup-3"><i class="fa fa-check"></i><b>10.1</b> Setup</a><ul>
-<li class="chapter" data-level="10.1.1" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#experiment-overview-1"><i class="fa fa-check"></i><b>10.1.1</b> Experiment overview</a></li>
-<li class="chapter" data-level="10.1.2" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#time-based-execution-environment-issues"><i class="fa fa-check"></i><b>10.1.2</b> Time-based, execution environment issues</a></li>
-<li class="chapter" data-level="10.1.3" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#lazy_q_build"><i class="fa fa-check"></i><b>10.1.3</b> Q %&gt;% <code>more dplyr</code></a></li>
-<li class="chapter" data-level="10.1.4" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#many-handy-r-functions-cant-be-translated-to-sql"><i class="fa fa-check"></i><b>10.1.4</b> Many handy R functions can’t be translated to SQL</a></li>
-<li class="chapter" data-level="10.1.5" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#further-lazy-execution-examples"><i class="fa fa-check"></i><b>10.1.5</b> Further lazy execution examples</a></li>
+<li class="chapter" data-level="10.4" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#other-resources"><i class="fa fa-check"></i><b>10.4</b> Other resources</a></li>
 </ul></li>
-<li class="chapter" data-level="10.2" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#other-resources-1"><i class="fa fa-check"></i><b>10.2</b> Other resources</a></li>
+<li class="chapter" data-level="11" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html"><i class="fa fa-check"></i><b>11</b> Lazy Evaluation and Execution Environment</a><ul>
+<li class="chapter" data-level="11.1" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#setup-4"><i class="fa fa-check"></i><b>11.1</b> Setup</a><ul>
+<li class="chapter" data-level="11.1.1" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#experiment-overview-1"><i class="fa fa-check"></i><b>11.1.1</b> Experiment overview</a></li>
+<li class="chapter" data-level="11.1.2" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#time-based-execution-environment-issues"><i class="fa fa-check"></i><b>11.1.2</b> Time-based, execution environment issues</a></li>
+<li class="chapter" data-level="11.1.3" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#lazy_q_build"><i class="fa fa-check"></i><b>11.1.3</b> Q %&gt;% <code>more dplyr</code></a></li>
+<li class="chapter" data-level="11.1.4" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#many-handy-r-functions-cant-be-translated-to-sql"><i class="fa fa-check"></i><b>11.1.4</b> Many handy R functions can’t be translated to SQL</a></li>
+<li class="chapter" data-level="11.1.5" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#further-lazy-execution-examples"><i class="fa fa-check"></i><b>11.1.5</b> Further lazy execution examples</a></li>
 </ul></li>
-<li class="chapter" data-level="11" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html"><i class="fa fa-check"></i><b>11</b> Getting metadata about and from PostgreSQL</a><ul>
-<li class="chapter" data-level="11.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#database-contents-and-structure"><i class="fa fa-check"></i><b>11.1</b> Database contents and structure</a><ul>
-<li class="chapter" data-level="11.1.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#database-structure"><i class="fa fa-check"></i><b>11.1.1</b> Database structure</a></li>
-<li class="chapter" data-level="11.1.2" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#contents-of-the-information_schema"><i class="fa fa-check"></i><b>11.1.2</b> Contents of the <code>information_schema</code></a></li>
-<li class="chapter" data-level="11.1.3" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#what-tables-are-in-the-database"><i class="fa fa-check"></i><b>11.1.3</b> What tables are in the database?</a></li>
+<li class="chapter" data-level="11.2" data-path="chapter-lazy-evaluation-and-timing.html"><a href="chapter-lazy-evaluation-and-timing.html#other-resources-1"><i class="fa fa-check"></i><b>11.2</b> Other resources</a></li>
 </ul></li>
-<li class="chapter" data-level="11.2" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#what-columns-do-those-tables-contain"><i class="fa fa-check"></i><b>11.2</b> What columns do those tables contain?</a><ul>
-<li class="chapter" data-level="11.2.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#what-is-the-difference-between-a-view-and-a-base-table"><i class="fa fa-check"></i><b>11.2.1</b> What is the difference between a <code>VIEW</code> and a <code>BASE TABLE</code>?</a></li>
-<li class="chapter" data-level="11.2.2" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#what-data-types-are-found-in-the-database"><i class="fa fa-check"></i><b>11.2.2</b> What data types are found in the database?</a></li>
+<li class="chapter" data-level="12" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html"><i class="fa fa-check"></i><b>12</b> Getting metadata about and from PostgreSQL</a><ul>
+<li class="chapter" data-level="12.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#database-contents-and-structure"><i class="fa fa-check"></i><b>12.1</b> Database contents and structure</a><ul>
+<li class="chapter" data-level="12.1.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#database-structure"><i class="fa fa-check"></i><b>12.1.1</b> Database structure</a></li>
+<li class="chapter" data-level="12.1.2" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#contents-of-the-information_schema"><i class="fa fa-check"></i><b>12.1.2</b> Contents of the <code>information_schema</code></a></li>
+<li class="chapter" data-level="12.1.3" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#what-tables-are-in-the-database"><i class="fa fa-check"></i><b>12.1.3</b> What tables are in the database?</a></li>
 </ul></li>
-<li class="chapter" data-level="11.3" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#characterizing-how-things-are-named"><i class="fa fa-check"></i><b>11.3</b> Characterizing how things are named</a><ul>
-<li class="chapter" data-level="11.3.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#counting-columns-and-name-reuse"><i class="fa fa-check"></i><b>11.3.1</b> Counting columns and name reuse</a></li>
+<li class="chapter" data-level="12.2" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#what-columns-do-those-tables-contain"><i class="fa fa-check"></i><b>12.2</b> What columns do those tables contain?</a><ul>
+<li class="chapter" data-level="12.2.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#what-is-the-difference-between-a-view-and-a-base-table"><i class="fa fa-check"></i><b>12.2.1</b> What is the difference between a <code>VIEW</code> and a <code>BASE TABLE</code>?</a></li>
+<li class="chapter" data-level="12.2.2" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#what-data-types-are-found-in-the-database"><i class="fa fa-check"></i><b>12.2.2</b> What data types are found in the database?</a></li>
 </ul></li>
-<li class="chapter" data-level="11.4" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#database-keys"><i class="fa fa-check"></i><b>11.4</b> Database keys</a><ul>
-<li class="chapter" data-level="11.4.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#direct-sql"><i class="fa fa-check"></i><b>11.4.1</b> Direct SQL</a></li>
-<li class="chapter" data-level="11.4.2" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#database-keys-with-dplyr"><i class="fa fa-check"></i><b>11.4.2</b> Database keys with dplyr</a></li>
+<li class="chapter" data-level="12.3" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#characterizing-how-things-are-named"><i class="fa fa-check"></i><b>12.3</b> Characterizing how things are named</a><ul>
+<li class="chapter" data-level="12.3.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#counting-columns-and-name-reuse"><i class="fa fa-check"></i><b>12.3.1</b> Counting columns and name reuse</a></li>
 </ul></li>
-<li class="chapter" data-level="11.5" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#creating-your-own-data-dictionary"><i class="fa fa-check"></i><b>11.5</b> Creating your own data dictionary</a></li>
-<li class="chapter" data-level="11.6" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#save-your-work"><i class="fa fa-check"></i><b>11.6</b> Save your work!</a></li>
+<li class="chapter" data-level="12.4" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#database-keys"><i class="fa fa-check"></i><b>12.4</b> Database keys</a><ul>
+<li class="chapter" data-level="12.4.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#direct-sql"><i class="fa fa-check"></i><b>12.4.1</b> Direct SQL</a></li>
+<li class="chapter" data-level="12.4.2" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#database-keys-with-dplyr"><i class="fa fa-check"></i><b>12.4.2</b> Database keys with dplyr</a></li>
+</ul></li>
+<li class="chapter" data-level="12.5" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#creating-your-own-data-dictionary"><i class="fa fa-check"></i><b>12.5</b> Creating your own data dictionary</a></li>
+<li class="chapter" data-level="12.6" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#save-your-work"><i class="fa fa-check"></i><b>12.6</b> Save your work!</a></li>
 </ul></li>
 <li class="appendix"><span><b>Appendices</b></span></li>
 <li class="chapter" data-level="A" data-path="appendix-background-basic-concepts.html"><a href="appendix-background-basic-concepts.html"><i class="fa fa-check"></i><b>A</b> Background and Basic Concepts</a><ul>
@@ -358,7 +364,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
         <div class="book-header" role="navigation">
           <h1>
             <i class="fa fa-circle-o-notch fa-spin"></i><a href="./"><div class="line-block">Exploring Enterprise Databases with R<br />
-A Tidyverse Approach&quot;</div></a>
+A Tidyverse Approach"</div></a>
           </h1>
         </div>
 
@@ -367,7 +373,7 @@ A Tidyverse Approach&quot;</div></a>
 
             <section class="normal" id="section-">
 <div id="chapter_postgresql-metadata" class="section level1">
-<h1><span class="header-section-number">Chapter 11</span> Getting metadata about and from PostgreSQL</h1>
+<h1><span class="header-section-number">Chapter 12</span> Getting metadata about and from PostgreSQL</h1>
 <blockquote>
 <p>This chapter demonstrates:</p>
 <ul>
@@ -376,47 +382,47 @@ A Tidyverse Approach&quot;</div></a>
 </ul>
 </blockquote>
 <p>The following packages are used in this chapter:</p>
-<div class="sourceCode" id="cb213"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb213-1" data-line-number="1"><span class="kw">library</span>(tidyverse)</a>
-<a class="sourceLine" id="cb213-2" data-line-number="2"><span class="kw">library</span>(DBI)</a>
-<a class="sourceLine" id="cb213-3" data-line-number="3"><span class="kw">library</span>(RPostgres)</a>
-<a class="sourceLine" id="cb213-4" data-line-number="4"><span class="kw">library</span>(glue)</a>
-<a class="sourceLine" id="cb213-5" data-line-number="5"><span class="kw">library</span>(here)</a>
-<a class="sourceLine" id="cb213-6" data-line-number="6"><span class="kw">require</span>(knitr)</a>
-<a class="sourceLine" id="cb213-7" data-line-number="7"><span class="kw">library</span>(dbplyr)</a>
-<a class="sourceLine" id="cb213-8" data-line-number="8"><span class="kw">library</span>(sqlpetr)</a></code></pre></div>
+<div class="sourceCode" id="cb226"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb226-1" title="1"><span class="kw">library</span>(tidyverse)</a>
+<a class="sourceLine" id="cb226-2" title="2"><span class="kw">library</span>(DBI)</a>
+<a class="sourceLine" id="cb226-3" title="3"><span class="kw">library</span>(RPostgres)</a>
+<a class="sourceLine" id="cb226-4" title="4"><span class="kw">library</span>(glue)</a>
+<a class="sourceLine" id="cb226-5" title="5"><span class="kw">library</span>(here)</a>
+<a class="sourceLine" id="cb226-6" title="6"><span class="kw">require</span>(knitr)</a>
+<a class="sourceLine" id="cb226-7" title="7"><span class="kw">library</span>(dbplyr)</a>
+<a class="sourceLine" id="cb226-8" title="8"><span class="kw">library</span>(sqlpetr)</a></code></pre></div>
 <p>Assume that the Docker container with PostgreSQL and the dvdrental database are ready to go.</p>
-<div class="sourceCode" id="cb214"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb214-1" data-line-number="1"><span class="kw">sp_docker_start</span>(<span class="st">&quot;adventureworks&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb227"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb227-1" title="1"><span class="kw">sp_docker_start</span>(<span class="st">&quot;adventureworks&quot;</span>)</a></code></pre></div>
 <p>Connect to the database:</p>
-<div class="sourceCode" id="cb215"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb215-1" data-line-number="1">con &lt;-<span class="st"> </span>sqlpetr<span class="op">::</span><span class="kw">sp_get_postgres_connection</span>(</a>
-<a class="sourceLine" id="cb215-2" data-line-number="2">  <span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),</a>
-<a class="sourceLine" id="cb215-3" data-line-number="3">  <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),</a>
-<a class="sourceLine" id="cb215-4" data-line-number="4">  <span class="dt">dbname =</span> <span class="st">&quot;adventureworks&quot;</span>,</a>
-<a class="sourceLine" id="cb215-5" data-line-number="5">  <span class="dt">port =</span> <span class="dv">5432</span>, </a>
-<a class="sourceLine" id="cb215-6" data-line-number="6">  <span class="dt">seconds_to_test =</span> <span class="dv">20</span>, </a>
-<a class="sourceLine" id="cb215-7" data-line-number="7">  <span class="dt">connection_tab =</span> <span class="ot">TRUE</span></a>
-<a class="sourceLine" id="cb215-8" data-line-number="8">)</a></code></pre></div>
+<div class="sourceCode" id="cb228"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb228-1" title="1">con &lt;-<span class="st"> </span>sqlpetr<span class="op">::</span><span class="kw">sp_get_postgres_connection</span>(</a>
+<a class="sourceLine" id="cb228-2" title="2">  <span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),</a>
+<a class="sourceLine" id="cb228-3" title="3">  <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),</a>
+<a class="sourceLine" id="cb228-4" title="4">  <span class="dt">dbname =</span> <span class="st">&quot;adventureworks&quot;</span>,</a>
+<a class="sourceLine" id="cb228-5" title="5">  <span class="dt">port =</span> <span class="dv">5432</span>, </a>
+<a class="sourceLine" id="cb228-6" title="6">  <span class="dt">seconds_to_test =</span> <span class="dv">20</span>, </a>
+<a class="sourceLine" id="cb228-7" title="7">  <span class="dt">connection_tab =</span> <span class="ot">TRUE</span></a>
+<a class="sourceLine" id="cb228-8" title="8">)</a></code></pre></div>
 <div id="database-contents-and-structure" class="section level2">
-<h2><span class="header-section-number">11.1</span> Database contents and structure</h2>
+<h2><span class="header-section-number">12.1</span> Database contents and structure</h2>
 <p>After just looking at the data you seek, it might be worthwhile stepping back and looking at the big picture.</p>
 <div id="database-structure" class="section level3">
-<h3><span class="header-section-number">11.1.1</span> Database structure</h3>
+<h3><span class="header-section-number">12.1.1</span> Database structure</h3>
 <p>For large or complex databases you need to use both the available documentation for your database (e.g., <a href="http://www.postgresqltutorial.com/postgresql-sample-database/">the dvdrental</a> database) and the other empirical tools that are available. For example it’s worth learning to interpret the symbols in an <a href="https://en.wikipedia.org/wiki/Entity%E2%80%93relationship_model">Entity Relationship Diagram</a>:</p>
 <p><img src="screenshots/ER-diagram-symbols.png" /></p>
 <p>The <code>information_schema</code> is a trove of information <em>about</em> the database. Its format is more or less consistent across the different SQL implementations that are available. Here we explore some of what’s available using several different methods. PostgreSQL stores <a href="https://www.postgresql.org/docs/current/static/infoschema-columns.html">a lot of metadata</a>.</p>
 </div>
 <div id="contents-of-the-information_schema" class="section level3">
-<h3><span class="header-section-number">11.1.2</span> Contents of the <code>information_schema</code></h3>
+<h3><span class="header-section-number">12.1.2</span> Contents of the <code>information_schema</code></h3>
 <p>For this chapter R needs the <code>dbplyr</code> package to access alternate schemas. A <a href="http://www.postgresqltutorial.com/postgresql-server-and-database-objects/">schema</a> is an object that contains one or more tables. Most often there will be a default schema, but to access the metadata, you need to explicitly specify which schema contains the data you want.</p>
 </div>
 <div id="what-tables-are-in-the-database" class="section level3">
-<h3><span class="header-section-number">11.1.3</span> What tables are in the database?</h3>
+<h3><span class="header-section-number">12.1.3</span> What tables are in the database?</h3>
 <p>The simplest way to get a list of tables is with … <em>NO LONGER WORKS</em>:</p>
-<div class="sourceCode" id="cb216"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb216-1" data-line-number="1">schema_list &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;information_schema&quot;</span>, <span class="st">&quot;schemata&quot;</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb216-2" data-line-number="2"><span class="st">  </span><span class="kw">select</span>(catalog_name, schema_name, schema_owner) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb216-3" data-line-number="3"><span class="st">  </span><span class="kw">collect</span>()</a>
-<a class="sourceLine" id="cb216-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb216-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb216-6" data-line-number="6"><span class="kw">kable</span>(schema_list)</a></code></pre></div>
+<div class="sourceCode" id="cb229"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb229-1" title="1">schema_list &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;information_schema&quot;</span>, <span class="st">&quot;schemata&quot;</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb229-2" title="2"><span class="st">  </span><span class="kw">select</span>(catalog_name, schema_name, schema_owner) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb229-3" title="3"><span class="st">  </span><span class="kw">collect</span>()</a>
+<a class="sourceLine" id="cb229-4" title="4"></a>
+<a class="sourceLine" id="cb229-5" title="5"></a>
+<a class="sourceLine" id="cb229-6" title="6"><span class="kw">kable</span>(schema_list)</a></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -515,16 +521,16 @@ A Tidyverse Approach&quot;</div></a>
 </table>
 <p>We usually need more detail than just a list of tables. Most SQL databases have an <code>information_schema</code> that has a standard structure to describe and control the database.</p>
 <p>The <code>information_schema</code> is in a different schema from the default, so to connect to the <code>tables</code> table in the <code>information_schema</code> we connect to the database in a different way:</p>
-<div class="sourceCode" id="cb217"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb217-1" data-line-number="1">table_info_schema_table &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, dbplyr<span class="op">::</span><span class="kw">in_schema</span>(<span class="st">&quot;information_schema&quot;</span>, <span class="st">&quot;tables&quot;</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb230"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb230-1" title="1">table_info_schema_table &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, dbplyr<span class="op">::</span><span class="kw">in_schema</span>(<span class="st">&quot;information_schema&quot;</span>, <span class="st">&quot;tables&quot;</span>))</a></code></pre></div>
 <p>The <code>information_schema</code> is large and complex and contains 343 tables. So it’s easy to get lost in it.</p>
 <p>This query retrieves a list of the tables in the database that includes additional detail, not just the name of the table.</p>
-<div class="sourceCode" id="cb218"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb218-1" data-line-number="1">table_info &lt;-<span class="st"> </span>table_info_schema_table <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb218-2" data-line-number="2"><span class="st">  </span><span class="co"># filter(table_schema == &quot;public&quot;) %&gt;%</span></a>
-<a class="sourceLine" id="cb218-3" data-line-number="3"><span class="st">  </span><span class="kw">select</span>(table_catalog, table_schema, table_name, table_type) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb218-4" data-line-number="4"><span class="st">  </span><span class="kw">arrange</span>(table_type, table_name) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb218-5" data-line-number="5"><span class="st">  </span><span class="kw">collect</span>()</a>
-<a class="sourceLine" id="cb218-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb218-7" data-line-number="7"><span class="kw">kable</span>(table_info)</a></code></pre></div>
+<div class="sourceCode" id="cb231"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb231-1" title="1">table_info &lt;-<span class="st"> </span>table_info_schema_table <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb231-2" title="2"><span class="st">  </span><span class="co"># filter(table_schema == &quot;public&quot;) %&gt;%</span></a>
+<a class="sourceLine" id="cb231-3" title="3"><span class="st">  </span><span class="kw">select</span>(table_catalog, table_schema, table_name, table_type) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb231-4" title="4"><span class="st">  </span><span class="kw">arrange</span>(table_type, table_name) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb231-5" title="5"><span class="st">  </span><span class="kw">collect</span>()</a>
+<a class="sourceLine" id="cb231-6" title="6"></a>
+<a class="sourceLine" id="cb231-7" title="7"><span class="kw">kable</span>(table_info)</a></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -2157,13 +2163,13 @@ A Tidyverse Approach&quot;</div></a>
 </tr>
 <tr class="odd">
 <td align="left">adventureworks</td>
-<td align="left">pr</td>
+<td align="left">pe</td>
 <td align="left">pp</td>
 <td align="left">VIEW</td>
 </tr>
 <tr class="even">
 <td align="left">adventureworks</td>
-<td align="left">pe</td>
+<td align="left">pr</td>
 <td align="left">pp</td>
 <td align="left">VIEW</td>
 </tr>
@@ -2307,13 +2313,13 @@ A Tidyverse Approach&quot;</div></a>
 </tr>
 <tr class="even">
 <td align="left">adventureworks</td>
-<td align="left">pe</td>
+<td align="left">sa</td>
 <td align="left">sp</td>
 <td align="left">VIEW</td>
 </tr>
 <tr class="odd">
 <td align="left">adventureworks</td>
-<td align="left">sa</td>
+<td align="left">pe</td>
 <td align="left">sp</td>
 <td align="left">VIEW</td>
 </tr>
@@ -2603,15 +2609,15 @@ A Tidyverse Approach&quot;</div></a>
 </table>
 <p>Notice that <em>VIEWS</em> are composites made up of one or more <em>BASE TABLES</em>.</p>
 <p>The SQL world has its own terminology. For example <code>rs</code> is shorthand for <code>result set</code>. That’s equivalent to using <code>df</code> for a <code>data frame</code>. The following SQL query returns the same information as the previous one.</p>
-<div class="sourceCode" id="cb219"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb219-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(</a>
-<a class="sourceLine" id="cb219-2" data-line-number="2">  con,</a>
-<a class="sourceLine" id="cb219-3" data-line-number="3">  <span class="st">&quot;select table_catalog, table_schema, table_name, table_type </span></a>
-<a class="sourceLine" id="cb219-4" data-line-number="4"><span class="st">  from information_schema.tables </span></a>
-<a class="sourceLine" id="cb219-5" data-line-number="5"><span class="st">  where table_schema not in (&#39;pg_catalog&#39;,&#39;information_schema&#39;)</span></a>
-<a class="sourceLine" id="cb219-6" data-line-number="6"><span class="st">  order by table_type, table_name </span></a>
-<a class="sourceLine" id="cb219-7" data-line-number="7"><span class="st">  ;&quot;</span></a>
-<a class="sourceLine" id="cb219-8" data-line-number="8">)</a>
-<a class="sourceLine" id="cb219-9" data-line-number="9"><span class="kw">kable</span>(rs)</a></code></pre></div>
+<div class="sourceCode" id="cb232"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb232-1" title="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(</a>
+<a class="sourceLine" id="cb232-2" title="2">  con,</a>
+<a class="sourceLine" id="cb232-3" title="3">  <span class="st">&quot;select table_catalog, table_schema, table_name, table_type </span></a>
+<a class="sourceLine" id="cb232-4" title="4"><span class="st">  from information_schema.tables </span></a>
+<a class="sourceLine" id="cb232-5" title="5"><span class="st">  where table_schema not in (&#39;pg_catalog&#39;,&#39;information_schema&#39;)</span></a>
+<a class="sourceLine" id="cb232-6" title="6"><span class="st">  order by table_type, table_name </span></a>
+<a class="sourceLine" id="cb232-7" title="7"><span class="st">  ;&quot;</span></a>
+<a class="sourceLine" id="cb232-8" title="8">)</a>
+<a class="sourceLine" id="cb232-9" title="9"><span class="kw">kable</span>(rs)</a></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -3302,13 +3308,13 @@ A Tidyverse Approach&quot;</div></a>
 </tr>
 <tr class="even">
 <td align="left">adventureworks</td>
-<td align="left">hr</td>
+<td align="left">sa</td>
 <td align="left">s</td>
 <td align="left">VIEW</td>
 </tr>
 <tr class="odd">
 <td align="left">adventureworks</td>
-<td align="left">sa</td>
+<td align="left">hr</td>
 <td align="left">s</td>
 <td align="left">VIEW</td>
 </tr>
@@ -3356,13 +3362,13 @@ A Tidyverse Approach&quot;</div></a>
 </tr>
 <tr class="odd">
 <td align="left">adventureworks</td>
-<td align="left">pe</td>
+<td align="left">sa</td>
 <td align="left">sp</td>
 <td align="left">VIEW</td>
 </tr>
 <tr class="even">
 <td align="left">adventureworks</td>
-<td align="left">sa</td>
+<td align="left">pe</td>
 <td align="left">sp</td>
 <td align="left">VIEW</td>
 </tr>
@@ -3557,28 +3563,28 @@ A Tidyverse Approach&quot;</div></a>
 </div>
 </div>
 <div id="what-columns-do-those-tables-contain" class="section level2">
-<h2><span class="header-section-number">11.2</span> What columns do those tables contain?</h2>
+<h2><span class="header-section-number">12.2</span> What columns do those tables contain?</h2>
 <p>Of course, the <code>DBI</code> package has a <code>dbListFields</code> function that provides the simplest way to get the minimum, a list of column names:</p>
-<div class="sourceCode" id="cb220"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb220-1" data-line-number="1"><span class="co"># DBI::dbListFields(con, &quot;rental&quot;)</span></a></code></pre></div>
+<div class="sourceCode" id="cb233"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb233-1" title="1"><span class="co"># DBI::dbListFields(con, &quot;rental&quot;)</span></a></code></pre></div>
 <p>But the <code>information_schema</code> has a lot more useful information that we can use.</p>
-<div class="sourceCode" id="cb221"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb221-1" data-line-number="1">columns_info_schema_table &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, dbplyr<span class="op">::</span><span class="kw">in_schema</span>(<span class="st">&quot;information_schema&quot;</span>, <span class="st">&quot;columns&quot;</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb234"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb234-1" title="1">columns_info_schema_table &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, dbplyr<span class="op">::</span><span class="kw">in_schema</span>(<span class="st">&quot;information_schema&quot;</span>, <span class="st">&quot;columns&quot;</span>))</a></code></pre></div>
 <p>Since the <code>information_schema</code> contains 2961 columns, we are narrowing our focus to just one table. This query retrieves more information about the <code>rental</code> table:</p>
-<div class="sourceCode" id="cb222"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb222-1" data-line-number="1">columns_info_schema_info &lt;-<span class="st"> </span>columns_info_schema_table <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb222-2" data-line-number="2"><span class="st">  </span><span class="co"># filter(table_schema == &quot;public&quot;) %&gt;%</span></a>
-<a class="sourceLine" id="cb222-3" data-line-number="3"><span class="st">  </span><span class="kw">select</span>(</a>
-<a class="sourceLine" id="cb222-4" data-line-number="4">    table_catalog, table_schema, table_name, column_name, data_type, ordinal_position,</a>
-<a class="sourceLine" id="cb222-5" data-line-number="5">    character_maximum_length, column_default, numeric_precision, numeric_precision_radix</a>
-<a class="sourceLine" id="cb222-6" data-line-number="6">  ) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb222-7" data-line-number="7"><span class="st">  </span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="ot">Inf</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb222-8" data-line-number="8"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">data_type =</span> <span class="kw">case_when</span>(</a>
-<a class="sourceLine" id="cb222-9" data-line-number="9">    data_type <span class="op">==</span><span class="st"> &quot;character varying&quot;</span> <span class="op">~</span><span class="st"> </span><span class="kw">paste0</span>(data_type, <span class="st">&quot; (&quot;</span>, character_maximum_length, <span class="st">&quot;)&quot;</span>),</a>
-<a class="sourceLine" id="cb222-10" data-line-number="10">    data_type <span class="op">==</span><span class="st"> &quot;real&quot;</span> <span class="op">~</span><span class="st"> </span><span class="kw">paste0</span>(data_type, <span class="st">&quot; (&quot;</span>, numeric_precision, <span class="st">&quot;,&quot;</span>, numeric_precision_radix, <span class="st">&quot;)&quot;</span>),</a>
-<a class="sourceLine" id="cb222-11" data-line-number="11">    <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> </span>data_type</a>
-<a class="sourceLine" id="cb222-12" data-line-number="12">  )) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb222-13" data-line-number="13"><span class="st">  </span><span class="co"># filter(table_name == &quot;rental&quot;) %&gt;%</span></a>
-<a class="sourceLine" id="cb222-14" data-line-number="14"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>table_schema, <span class="op">-</span>numeric_precision, <span class="op">-</span>numeric_precision_radix)</a>
-<a class="sourceLine" id="cb222-15" data-line-number="15"></a>
-<a class="sourceLine" id="cb222-16" data-line-number="16"><span class="kw">glimpse</span>(columns_info_schema_info)</a></code></pre></div>
+<div class="sourceCode" id="cb235"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb235-1" title="1">columns_info_schema_info &lt;-<span class="st"> </span>columns_info_schema_table <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb235-2" title="2"><span class="st">  </span><span class="co"># filter(table_schema == &quot;public&quot;) %&gt;%</span></a>
+<a class="sourceLine" id="cb235-3" title="3"><span class="st">  </span><span class="kw">select</span>(</a>
+<a class="sourceLine" id="cb235-4" title="4">    table_catalog, table_schema, table_name, column_name, data_type, ordinal_position,</a>
+<a class="sourceLine" id="cb235-5" title="5">    character_maximum_length, column_default, numeric_precision, numeric_precision_radix</a>
+<a class="sourceLine" id="cb235-6" title="6">  ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb235-7" title="7"><span class="st">  </span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="ot">Inf</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb235-8" title="8"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">data_type =</span> <span class="kw">case_when</span>(</a>
+<a class="sourceLine" id="cb235-9" title="9">    data_type <span class="op">==</span><span class="st"> &quot;character varying&quot;</span> <span class="op">~</span><span class="st"> </span><span class="kw">paste0</span>(data_type, <span class="st">&quot; (&quot;</span>, character_maximum_length, <span class="st">&quot;)&quot;</span>),</a>
+<a class="sourceLine" id="cb235-10" title="10">    data_type <span class="op">==</span><span class="st"> &quot;real&quot;</span> <span class="op">~</span><span class="st"> </span><span class="kw">paste0</span>(data_type, <span class="st">&quot; (&quot;</span>, numeric_precision, <span class="st">&quot;,&quot;</span>, numeric_precision_radix, <span class="st">&quot;)&quot;</span>),</a>
+<a class="sourceLine" id="cb235-11" title="11">    <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> </span>data_type</a>
+<a class="sourceLine" id="cb235-12" title="12">  )) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb235-13" title="13"><span class="st">  </span><span class="co"># filter(table_name == &quot;rental&quot;) %&gt;%</span></a>
+<a class="sourceLine" id="cb235-14" title="14"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>table_schema, <span class="op">-</span>numeric_precision, <span class="op">-</span>numeric_precision_radix)</a>
+<a class="sourceLine" id="cb235-15" title="15"></a>
+<a class="sourceLine" id="cb235-16" title="16"><span class="kw">glimpse</span>(columns_info_schema_info)</a></code></pre></div>
 <pre><code>## Observations: 2,961
 ## Variables: 7
 ## $ table_catalog            &lt;chr&gt; &quot;adventureworks&quot;, &quot;adventureworks&quot;, &quot;ad…
@@ -3588,7 +3594,7 @@ A Tidyverse Approach&quot;</div></a>
 ## $ ordinal_position         &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, …
 ## $ character_maximum_length &lt;int&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…
 ## $ column_default           &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…</code></pre>
-<div class="sourceCode" id="cb224"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb224-1" data-line-number="1"><span class="kw">kable</span>(columns_info_schema_info)</a></code></pre></div>
+<div class="sourceCode" id="cb237"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb237-1" title="1"><span class="kw">kable</span>(columns_info_schema_info)</a></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -28741,6 +28747,15 @@ A Tidyverse Approach&quot;</div></a>
 </tr>
 <tr class="even">
 <td align="left">adventureworks</td>
+<td align="left">salesreason</td>
+<td align="left">salesreasonid</td>
+<td align="left">integer</td>
+<td align="right">1</td>
+<td align="right">NA</td>
+<td align="left">nextval(‘sales.salesreason_salesreasonid_seq’::regclass)</td>
+</tr>
+<tr class="odd">
+<td align="left">adventureworks</td>
 <td align="left">sr</td>
 <td align="left">id</td>
 <td align="left">integer</td>
@@ -28748,7 +28763,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">sr</td>
 <td align="left">salesreasonid</td>
@@ -28757,7 +28772,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">sr</td>
 <td align="left">name</td>
@@ -28766,7 +28781,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">50</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">sr</td>
 <td align="left">reasontype</td>
@@ -28775,7 +28790,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">50</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">sr</td>
 <td align="left">modifieddate</td>
@@ -28784,7 +28799,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">salesterritory</td>
 <td align="left">name</td>
@@ -28793,7 +28808,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">50</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">salesterritory</td>
 <td align="left">countryregioncode</td>
@@ -28802,7 +28817,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">3</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">salesterritory</td>
 <td align="left">group</td>
@@ -28811,7 +28826,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">50</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">salesterritory</td>
 <td align="left">salesytd</td>
@@ -28820,7 +28835,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">0.00</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">salesterritory</td>
 <td align="left">saleslastyear</td>
@@ -28829,7 +28844,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">0.00</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">salesterritory</td>
 <td align="left">costytd</td>
@@ -28838,7 +28853,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">0.00</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">salesterritory</td>
 <td align="left">costlastyear</td>
@@ -28847,7 +28862,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">0.00</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">salesterritory</td>
 <td align="left">rowguid</td>
@@ -28856,7 +28871,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">uuid_generate_v1()</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">salesterritory</td>
 <td align="left">modifieddate</td>
@@ -28865,7 +28880,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">now()</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">st</td>
 <td align="left">id</td>
@@ -28874,7 +28889,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">st</td>
 <td align="left">territoryid</td>
@@ -28883,7 +28898,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">st</td>
 <td align="left">name</td>
@@ -28892,7 +28907,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">50</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">st</td>
 <td align="left">countryregioncode</td>
@@ -28901,7 +28916,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">3</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">st</td>
 <td align="left">group</td>
@@ -28910,7 +28925,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">50</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">st</td>
 <td align="left">salesytd</td>
@@ -28919,7 +28934,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">st</td>
 <td align="left">saleslastyear</td>
@@ -28928,7 +28943,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">st</td>
 <td align="left">costytd</td>
@@ -28937,7 +28952,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">st</td>
 <td align="left">costlastyear</td>
@@ -28946,7 +28961,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">st</td>
 <td align="left">rowguid</td>
@@ -28955,7 +28970,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">st</td>
 <td align="left">modifieddate</td>
@@ -28964,7 +28979,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">salesterritoryhistory</td>
 <td align="left">businessentityid</td>
@@ -28973,7 +28988,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">salesterritoryhistory</td>
 <td align="left">territoryid</td>
@@ -28982,7 +28997,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">salesterritoryhistory</td>
 <td align="left">startdate</td>
@@ -28991,7 +29006,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">salesterritoryhistory</td>
 <td align="left">enddate</td>
@@ -29000,25 +29015,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
-<td align="left">adventureworks</td>
-<td align="left">salesterritoryhistory</td>
-<td align="left">rowguid</td>
-<td align="left">uuid</td>
-<td align="right">5</td>
-<td align="right">NA</td>
-<td align="left">uuid_generate_v1()</td>
-</tr>
 <tr class="even">
-<td align="left">adventureworks</td>
-<td align="left">salesterritoryhistory</td>
-<td align="left">modifieddate</td>
-<td align="left">timestamp without time zone</td>
-<td align="right">6</td>
-<td align="right">NA</td>
-<td align="left">now()</td>
-</tr>
-<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">salesterritory</td>
 <td align="left">territoryid</td>
@@ -29027,7 +29024,25 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">nextval(‘sales.salesterritory_territoryid_seq’::regclass)</td>
 </tr>
+<tr class="odd">
+<td align="left">adventureworks</td>
+<td align="left">salesterritoryhistory</td>
+<td align="left">rowguid</td>
+<td align="left">uuid</td>
+<td align="right">5</td>
+<td align="right">NA</td>
+<td align="left">uuid_generate_v1()</td>
+</tr>
 <tr class="even">
+<td align="left">adventureworks</td>
+<td align="left">salesterritoryhistory</td>
+<td align="left">modifieddate</td>
+<td align="left">timestamp without time zone</td>
+<td align="right">6</td>
+<td align="right">NA</td>
+<td align="left">now()</td>
+</tr>
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">sth</td>
 <td align="left">id</td>
@@ -29036,7 +29051,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">sth</td>
 <td align="left">businessentityid</td>
@@ -29045,7 +29060,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">sth</td>
 <td align="left">territoryid</td>
@@ -29054,7 +29069,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">sth</td>
 <td align="left">startdate</td>
@@ -29063,7 +29078,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">sth</td>
 <td align="left">enddate</td>
@@ -29072,7 +29087,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">sth</td>
 <td align="left">rowguid</td>
@@ -29081,7 +29096,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">sth</td>
 <td align="left">modifieddate</td>
@@ -29090,7 +29105,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">salestaxrate</td>
 <td align="left">stateprovinceid</td>
@@ -29099,7 +29114,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">salestaxrate</td>
 <td align="left">taxtype</td>
@@ -29108,7 +29123,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">salestaxrate</td>
 <td align="left">name</td>
@@ -29117,7 +29132,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">50</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">salestaxrate</td>
 <td align="left">taxrate</td>
@@ -29126,7 +29141,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">0.00</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">salestaxrate</td>
 <td align="left">rowguid</td>
@@ -29135,7 +29150,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">uuid_generate_v1()</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">salestaxrate</td>
 <td align="left">modifieddate</td>
@@ -29144,7 +29159,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">now()</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">tr</td>
 <td align="left">id</td>
@@ -29153,7 +29168,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">tr</td>
 <td align="left">salestaxrateid</td>
@@ -29162,7 +29177,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">tr</td>
 <td align="left">stateprovinceid</td>
@@ -29171,7 +29186,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">tr</td>
 <td align="left">taxtype</td>
@@ -29180,7 +29195,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">tr</td>
 <td align="left">taxrate</td>
@@ -29189,7 +29204,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">tr</td>
 <td align="left">name</td>
@@ -29198,7 +29213,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">50</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">tr</td>
 <td align="left">rowguid</td>
@@ -29207,7 +29222,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">tr</td>
 <td align="left">modifieddate</td>
@@ -29216,7 +29231,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">salestaxrate</td>
 <td align="left">salestaxrateid</td>
@@ -29225,7 +29240,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">nextval(‘sales.salestaxrate_salestaxrateid_seq’::regclass)</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vindividualcustomer</td>
 <td align="left">businessentityid</td>
@@ -29234,7 +29249,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vindividualcustomer</td>
 <td align="left">title</td>
@@ -29243,7 +29258,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">8</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vindividualcustomer</td>
 <td align="left">firstname</td>
@@ -29252,7 +29267,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">50</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vindividualcustomer</td>
 <td align="left">middlename</td>
@@ -29261,7 +29276,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">50</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vindividualcustomer</td>
 <td align="left">lastname</td>
@@ -29270,7 +29285,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">50</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vindividualcustomer</td>
 <td align="left">suffix</td>
@@ -29279,7 +29294,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">10</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vindividualcustomer</td>
 <td align="left">phonenumber</td>
@@ -29288,7 +29303,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">25</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vindividualcustomer</td>
 <td align="left">phonenumbertype</td>
@@ -29297,7 +29312,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">50</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vindividualcustomer</td>
 <td align="left">emailaddress</td>
@@ -29306,7 +29321,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">50</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vindividualcustomer</td>
 <td align="left">emailpromotion</td>
@@ -29315,7 +29330,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vindividualcustomer</td>
 <td align="left">addresstype</td>
@@ -29324,7 +29339,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">50</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vindividualcustomer</td>
 <td align="left">addressline1</td>
@@ -29333,7 +29348,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">60</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vindividualcustomer</td>
 <td align="left">addressline2</td>
@@ -29342,7 +29357,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">60</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vindividualcustomer</td>
 <td align="left">city</td>
@@ -29351,7 +29366,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">30</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vindividualcustomer</td>
 <td align="left">stateprovincename</td>
@@ -29360,7 +29375,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">50</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vindividualcustomer</td>
 <td align="left">postalcode</td>
@@ -29369,7 +29384,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">15</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vindividualcustomer</td>
 <td align="left">countryregionname</td>
@@ -29378,7 +29393,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">50</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vindividualcustomer</td>
 <td align="left">demographics</td>
@@ -29387,7 +29402,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vpersondemographics</td>
 <td align="left">businessentityid</td>
@@ -29396,7 +29411,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vpersondemographics</td>
 <td align="left">totalpurchaseytd</td>
@@ -29405,7 +29420,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vpersondemographics</td>
 <td align="left">datefirstpurchase</td>
@@ -29414,7 +29429,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vpersondemographics</td>
 <td align="left">birthdate</td>
@@ -29423,7 +29438,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vpersondemographics</td>
 <td align="left">maritalstatus</td>
@@ -29432,7 +29447,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">1</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vpersondemographics</td>
 <td align="left">yearlyincome</td>
@@ -29441,7 +29456,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">30</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vpersondemographics</td>
 <td align="left">gender</td>
@@ -29450,7 +29465,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">1</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vpersondemographics</td>
 <td align="left">totalchildren</td>
@@ -29459,7 +29474,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vpersondemographics</td>
 <td align="left">numberchildrenathome</td>
@@ -29468,7 +29483,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vpersondemographics</td>
 <td align="left">education</td>
@@ -29477,7 +29492,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">30</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vpersondemographics</td>
 <td align="left">occupation</td>
@@ -29486,7 +29501,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">30</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vpersondemographics</td>
 <td align="left">homeownerflag</td>
@@ -29495,7 +29510,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vpersondemographics</td>
 <td align="left">numbercarsowned</td>
@@ -29504,7 +29519,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vsalesperson</td>
 <td align="left">businessentityid</td>
@@ -29513,7 +29528,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vsalesperson</td>
 <td align="left">title</td>
@@ -29522,7 +29537,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">8</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vsalesperson</td>
 <td align="left">firstname</td>
@@ -29531,7 +29546,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">50</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vsalesperson</td>
 <td align="left">middlename</td>
@@ -29540,7 +29555,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">50</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vsalesperson</td>
 <td align="left">lastname</td>
@@ -29549,7 +29564,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">50</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vsalesperson</td>
 <td align="left">suffix</td>
@@ -29558,7 +29573,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">10</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vsalesperson</td>
 <td align="left">jobtitle</td>
@@ -29567,7 +29582,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">50</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vsalesperson</td>
 <td align="left">phonenumber</td>
@@ -29576,7 +29591,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">25</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vsalesperson</td>
 <td align="left">phonenumbertype</td>
@@ -29585,7 +29600,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">50</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vsalesperson</td>
 <td align="left">emailaddress</td>
@@ -29594,7 +29609,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">50</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vsalesperson</td>
 <td align="left">emailpromotion</td>
@@ -29603,7 +29618,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vsalesperson</td>
 <td align="left">addressline1</td>
@@ -29612,7 +29627,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">60</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vsalesperson</td>
 <td align="left">addressline2</td>
@@ -29621,7 +29636,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">60</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vsalesperson</td>
 <td align="left">city</td>
@@ -29630,7 +29645,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">30</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vsalesperson</td>
 <td align="left">stateprovincename</td>
@@ -29639,7 +29654,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">50</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vsalesperson</td>
 <td align="left">postalcode</td>
@@ -29648,7 +29663,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">15</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vsalesperson</td>
 <td align="left">countryregionname</td>
@@ -29657,7 +29672,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">50</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vsalesperson</td>
 <td align="left">territoryname</td>
@@ -29666,7 +29681,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">50</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vsalesperson</td>
 <td align="left">territorygroup</td>
@@ -29675,7 +29690,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">50</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vsalesperson</td>
 <td align="left">salesquota</td>
@@ -29684,7 +29699,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vsalesperson</td>
 <td align="left">salesytd</td>
@@ -29693,7 +29708,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vsalesperson</td>
 <td align="left">saleslastyear</td>
@@ -29702,7 +29717,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vsalespersonsalesbyfiscalyears</td>
 <td align="left">SalesPersonID</td>
@@ -29711,7 +29726,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vsalespersonsalesbyfiscalyears</td>
 <td align="left">FullName</td>
@@ -29720,7 +29735,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vsalespersonsalesbyfiscalyears</td>
 <td align="left">JobTitle</td>
@@ -29729,7 +29744,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vsalespersonsalesbyfiscalyears</td>
 <td align="left">SalesTerritory</td>
@@ -29738,7 +29753,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vsalespersonsalesbyfiscalyears</td>
 <td align="left">2012</td>
@@ -29747,7 +29762,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vsalespersonsalesbyfiscalyears</td>
 <td align="left">2013</td>
@@ -29756,7 +29771,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vsalespersonsalesbyfiscalyears</td>
 <td align="left">2014</td>
@@ -29765,7 +29780,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vsalespersonsalesbyfiscalyearsdata</td>
 <td align="left">salespersonid</td>
@@ -29774,7 +29789,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vsalespersonsalesbyfiscalyearsdata</td>
 <td align="left">fullname</td>
@@ -29783,7 +29798,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vsalespersonsalesbyfiscalyearsdata</td>
 <td align="left">jobtitle</td>
@@ -29792,7 +29807,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">50</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vsalespersonsalesbyfiscalyearsdata</td>
 <td align="left">salesterritory</td>
@@ -29801,7 +29816,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">50</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vsalespersonsalesbyfiscalyearsdata</td>
 <td align="left">salestotal</td>
@@ -29810,7 +29825,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vsalespersonsalesbyfiscalyearsdata</td>
 <td align="left">fiscalyear</td>
@@ -29819,7 +29834,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vstorewithaddresses</td>
 <td align="left">businessentityid</td>
@@ -29828,7 +29843,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vstorewithaddresses</td>
 <td align="left">name</td>
@@ -29837,7 +29852,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">50</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vstorewithaddresses</td>
 <td align="left">addresstype</td>
@@ -29846,7 +29861,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">50</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vstorewithaddresses</td>
 <td align="left">addressline1</td>
@@ -29855,7 +29870,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">60</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vstorewithaddresses</td>
 <td align="left">addressline2</td>
@@ -29864,7 +29879,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">60</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vstorewithaddresses</td>
 <td align="left">city</td>
@@ -29873,7 +29888,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">30</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vstorewithaddresses</td>
 <td align="left">stateprovincename</td>
@@ -29882,7 +29897,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">50</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vstorewithaddresses</td>
 <td align="left">postalcode</td>
@@ -29891,7 +29906,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">15</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vstorewithaddresses</td>
 <td align="left">countryregionname</td>
@@ -29900,7 +29915,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">50</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vstorewithcontacts</td>
 <td align="left">businessentityid</td>
@@ -29909,7 +29924,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vstorewithcontacts</td>
 <td align="left">name</td>
@@ -29918,7 +29933,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">50</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vstorewithcontacts</td>
 <td align="left">contacttype</td>
@@ -29927,7 +29942,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">50</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vstorewithcontacts</td>
 <td align="left">title</td>
@@ -29936,7 +29951,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">8</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vstorewithcontacts</td>
 <td align="left">firstname</td>
@@ -29945,7 +29960,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">50</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vstorewithcontacts</td>
 <td align="left">middlename</td>
@@ -29954,7 +29969,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">50</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vstorewithcontacts</td>
 <td align="left">lastname</td>
@@ -29963,7 +29978,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">50</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vstorewithcontacts</td>
 <td align="left">suffix</td>
@@ -29972,7 +29987,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">10</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vstorewithcontacts</td>
 <td align="left">phonenumber</td>
@@ -29981,7 +29996,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">25</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vstorewithcontacts</td>
 <td align="left">phonenumbertype</td>
@@ -29990,7 +30005,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">50</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vstorewithcontacts</td>
 <td align="left">emailaddress</td>
@@ -29999,7 +30014,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">50</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vstorewithcontacts</td>
 <td align="left">emailpromotion</td>
@@ -30008,7 +30023,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vstorewithdemographics</td>
 <td align="left">businessentityid</td>
@@ -30017,7 +30032,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vstorewithdemographics</td>
 <td align="left">name</td>
@@ -30026,7 +30041,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">50</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vstorewithdemographics</td>
 <td align="left">AnnualSales</td>
@@ -30035,7 +30050,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vstorewithdemographics</td>
 <td align="left">AnnualRevenue</td>
@@ -30044,7 +30059,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vstorewithdemographics</td>
 <td align="left">BankName</td>
@@ -30053,7 +30068,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">50</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vstorewithdemographics</td>
 <td align="left">BusinessType</td>
@@ -30062,7 +30077,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">5</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vstorewithdemographics</td>
 <td align="left">YearOpened</td>
@@ -30071,7 +30086,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vstorewithdemographics</td>
 <td align="left">Specialty</td>
@@ -30080,7 +30095,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">50</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vstorewithdemographics</td>
 <td align="left">SquareFeet</td>
@@ -30089,7 +30104,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vstorewithdemographics</td>
 <td align="left">Brands</td>
@@ -30098,7 +30113,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">30</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">vstorewithdemographics</td>
 <td align="left">Internet</td>
@@ -30107,7 +30122,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">30</td>
 <td align="left">NA</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">vstorewithdemographics</td>
 <td align="left">NumberEmployees</td>
@@ -30116,7 +30131,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">department</td>
 <td align="left">departmentid</td>
@@ -30125,7 +30140,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">nextval(‘humanresources.department_departmentid_seq’::regclass)</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">shift</td>
 <td align="left">shiftid</td>
@@ -30134,7 +30149,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">nextval(‘humanresources.shift_shiftid_seq’::regclass)</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">businessentity</td>
 <td align="left">businessentityid</td>
@@ -30143,7 +30158,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">nextval(‘person.businessentity_businessentityid_seq’::regclass)</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">contacttype</td>
 <td align="left">contacttypeid</td>
@@ -30152,7 +30167,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">nextval(‘person.contacttype_contacttypeid_seq’::regclass)</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">illustration</td>
 <td align="left">illustrationid</td>
@@ -30161,7 +30176,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">nextval(‘production.illustration_illustrationid_seq’::regclass)</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">location</td>
 <td align="left">locationid</td>
@@ -30170,7 +30185,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">nextval(‘production.location_locationid_seq’::regclass)</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">productreview</td>
 <td align="left">productreviewid</td>
@@ -30179,7 +30194,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">nextval(‘production.productreview_productreviewid_seq’::regclass)</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">productsubcategory</td>
 <td align="left">productsubcategoryid</td>
@@ -30188,7 +30203,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">nextval(‘production.productsubcategory_productsubcategoryid_seq’::regclass)</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">scrapreason</td>
 <td align="left">scrapreasonid</td>
@@ -30197,7 +30212,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">nextval(‘production.scrapreason_scrapreasonid_seq’::regclass)</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">transactionhistory</td>
 <td align="left">transactionid</td>
@@ -30206,7 +30221,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">nextval(‘production.transactionhistory_transactionid_seq’::regclass)</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">purchaseorderheader</td>
 <td align="left">purchaseorderid</td>
@@ -30215,7 +30230,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">nextval(‘purchasing.purchaseorderheader_purchaseorderid_seq’::regclass)</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">adventureworks</td>
 <td align="left">currencyrate</td>
 <td align="left">currencyrateid</td>
@@ -30224,7 +30239,7 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">NA</td>
 <td align="left">nextval(‘sales.currencyrate_currencyrateid_seq’::regclass)</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">adventureworks</td>
 <td align="left">customer</td>
 <td align="left">customerid</td>
@@ -30232,15 +30247,6 @@ A Tidyverse Approach&quot;</div></a>
 <td align="right">1</td>
 <td align="right">NA</td>
 <td align="left">nextval(‘sales.customer_customerid_seq’::regclass)</td>
-</tr>
-<tr class="even">
-<td align="left">adventureworks</td>
-<td align="left">salesreason</td>
-<td align="left">salesreasonid</td>
-<td align="left">integer</td>
-<td align="right">1</td>
-<td align="right">NA</td>
-<td align="left">nextval(‘sales.salesreason_salesreasonid_seq’::regclass)</td>
 </tr>
 <tr class="odd">
 <td align="left">adventureworks</td>
@@ -30254,20 +30260,20 @@ A Tidyverse Approach&quot;</div></a>
 </tbody>
 </table>
 <div id="what-is-the-difference-between-a-view-and-a-base-table" class="section level3">
-<h3><span class="header-section-number">11.2.1</span> What is the difference between a <code>VIEW</code> and a <code>BASE TABLE</code>?</h3>
+<h3><span class="header-section-number">12.2.1</span> What is the difference between a <code>VIEW</code> and a <code>BASE TABLE</code>?</h3>
 <p>The <code>BASE TABLE</code> has the underlying data in the database</p>
-<div class="sourceCode" id="cb225"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb225-1" data-line-number="1">table_info_schema_table <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb225-2" data-line-number="2"><span class="st">  </span><span class="kw">filter</span>( table_type <span class="op">==</span><span class="st"> &quot;BASE TABLE&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb225-3" data-line-number="3"><span class="st">  </span><span class="co"># filter(table_schema == &quot;public&quot; &amp; table_type == &quot;BASE TABLE&quot;) %&gt;%</span></a>
-<a class="sourceLine" id="cb225-4" data-line-number="4"><span class="st">  </span><span class="kw">select</span>(table_name, table_type) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb225-5" data-line-number="5"><span class="st">  </span><span class="kw">left_join</span>(columns_info_schema_table, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;table_name&quot;</span> =<span class="st"> &quot;table_name&quot;</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb225-6" data-line-number="6"><span class="st">  </span><span class="kw">select</span>(</a>
-<a class="sourceLine" id="cb225-7" data-line-number="7">    table_type, table_name, column_name, data_type, ordinal_position,</a>
-<a class="sourceLine" id="cb225-8" data-line-number="8">    column_default</a>
-<a class="sourceLine" id="cb225-9" data-line-number="9">  ) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb225-10" data-line-number="10"><span class="st">  </span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="ot">Inf</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb225-11" data-line-number="11"><span class="st">  </span><span class="kw">filter</span>(<span class="kw">str_detect</span>(table_name, <span class="st">&quot;cust&quot;</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb225-12" data-line-number="12"><span class="st">  </span><span class="kw">kable</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb238"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb238-1" title="1">table_info_schema_table <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb238-2" title="2"><span class="st">  </span><span class="kw">filter</span>( table_type <span class="op">==</span><span class="st"> &quot;BASE TABLE&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb238-3" title="3"><span class="st">  </span><span class="co"># filter(table_schema == &quot;public&quot; &amp; table_type == &quot;BASE TABLE&quot;) %&gt;%</span></a>
+<a class="sourceLine" id="cb238-4" title="4"><span class="st">  </span><span class="kw">select</span>(table_name, table_type) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb238-5" title="5"><span class="st">  </span><span class="kw">left_join</span>(columns_info_schema_table, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;table_name&quot;</span> =<span class="st"> &quot;table_name&quot;</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb238-6" title="6"><span class="st">  </span><span class="kw">select</span>(</a>
+<a class="sourceLine" id="cb238-7" title="7">    table_type, table_name, column_name, data_type, ordinal_position,</a>
+<a class="sourceLine" id="cb238-8" title="8">    column_default</a>
+<a class="sourceLine" id="cb238-9" title="9">  ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb238-10" title="10"><span class="st">  </span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="ot">Inf</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb238-11" title="11"><span class="st">  </span><span class="kw">filter</span>(<span class="kw">str_detect</span>(table_name, <span class="st">&quot;cust&quot;</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb238-12" title="12"><span class="st">  </span><span class="kw">kable</span>()</a></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -30331,18 +30337,18 @@ A Tidyverse Approach&quot;</div></a>
 </tbody>
 </table>
 <p>Probably should explore how the <code>VIEW</code> is made up of data from BASE TABLEs.</p>
-<div class="sourceCode" id="cb226"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb226-1" data-line-number="1">table_info_schema_table <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb226-2" data-line-number="2"><span class="st">  </span><span class="kw">filter</span>( table_type <span class="op">==</span><span class="st"> &quot;VIEW&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb226-3" data-line-number="3"><span class="st">  </span><span class="co"># filter(table_schema == &quot;public&quot; &amp; table_type == &quot;VIEW&quot;) %&gt;%</span></a>
-<a class="sourceLine" id="cb226-4" data-line-number="4"><span class="st">  </span><span class="kw">select</span>(table_name, table_type) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb226-5" data-line-number="5"><span class="st">  </span><span class="kw">left_join</span>(columns_info_schema_table, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;table_name&quot;</span> =<span class="st"> &quot;table_name&quot;</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb226-6" data-line-number="6"><span class="st">  </span><span class="kw">select</span>(</a>
-<a class="sourceLine" id="cb226-7" data-line-number="7">    table_type, table_name, column_name, data_type, ordinal_position,</a>
-<a class="sourceLine" id="cb226-8" data-line-number="8">    column_default</a>
-<a class="sourceLine" id="cb226-9" data-line-number="9">  ) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb226-10" data-line-number="10"><span class="st">  </span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="ot">Inf</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb226-11" data-line-number="11"><span class="st">  </span><span class="kw">filter</span>(<span class="kw">str_detect</span>(table_name, <span class="st">&quot;cust&quot;</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb226-12" data-line-number="12"><span class="st">  </span><span class="kw">kable</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb239"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb239-1" title="1">table_info_schema_table <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb239-2" title="2"><span class="st">  </span><span class="kw">filter</span>( table_type <span class="op">==</span><span class="st"> &quot;VIEW&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb239-3" title="3"><span class="st">  </span><span class="co"># filter(table_schema == &quot;public&quot; &amp; table_type == &quot;VIEW&quot;) %&gt;%</span></a>
+<a class="sourceLine" id="cb239-4" title="4"><span class="st">  </span><span class="kw">select</span>(table_name, table_type) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb239-5" title="5"><span class="st">  </span><span class="kw">left_join</span>(columns_info_schema_table, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;table_name&quot;</span> =<span class="st"> &quot;table_name&quot;</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb239-6" title="6"><span class="st">  </span><span class="kw">select</span>(</a>
+<a class="sourceLine" id="cb239-7" title="7">    table_type, table_name, column_name, data_type, ordinal_position,</a>
+<a class="sourceLine" id="cb239-8" title="8">    column_default</a>
+<a class="sourceLine" id="cb239-9" title="9">  ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb239-10" title="10"><span class="st">  </span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="ot">Inf</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb239-11" title="11"><span class="st">  </span><span class="kw">filter</span>(<span class="kw">str_detect</span>(table_name, <span class="st">&quot;cust&quot;</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb239-12" title="12"><span class="st">  </span><span class="kw">kable</span>()</a></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -30503,8 +30509,8 @@ A Tidyverse Approach&quot;</div></a>
 </table>
 </div>
 <div id="what-data-types-are-found-in-the-database" class="section level3">
-<h3><span class="header-section-number">11.2.2</span> What data types are found in the database?</h3>
-<div class="sourceCode" id="cb227"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb227-1" data-line-number="1">columns_info_schema_info <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(data_type) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">kable</span>()</a></code></pre></div>
+<h3><span class="header-section-number">12.2.2</span> What data types are found in the database?</h3>
+<div class="sourceCode" id="cb240"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb240-1" title="1">columns_info_schema_info <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(data_type) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">kable</span>()</a></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -30726,20 +30732,20 @@ A Tidyverse Approach&quot;</div></a>
 </div>
 </div>
 <div id="characterizing-how-things-are-named" class="section level2">
-<h2><span class="header-section-number">11.3</span> Characterizing how things are named</h2>
+<h2><span class="header-section-number">12.3</span> Characterizing how things are named</h2>
 <p>Names are the handle for accessing the data. Tables and columns may or may not be named consistently or in a way that makes sense to you. You should look at these names <em>as data</em>.</p>
 <div id="counting-columns-and-name-reuse" class="section level3">
-<h3><span class="header-section-number">11.3.1</span> Counting columns and name reuse</h3>
+<h3><span class="header-section-number">12.3.1</span> Counting columns and name reuse</h3>
 <p>Pull out some rough-and-ready but useful statistics about your database. Since we are in SQL-land we talk about variables as <code>columns</code>.</p>
 <p><em>this is wrong!</em></p>
-<div class="sourceCode" id="cb228"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb228-1" data-line-number="1">public_tables &lt;-<span class="st"> </span>columns_info_schema_table <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb228-2" data-line-number="2"><span class="st">  </span><span class="co"># filter(str_detect(table_name, &quot;pg_&quot;) == FALSE) %&gt;%</span></a>
-<a class="sourceLine" id="cb228-3" data-line-number="3"><span class="st">  </span><span class="co"># filter(table_schema == &quot;public&quot;) %&gt;%</span></a>
-<a class="sourceLine" id="cb228-4" data-line-number="4"><span class="st">  </span><span class="kw">collect</span>()</a>
-<a class="sourceLine" id="cb228-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb228-6" data-line-number="6">public_tables <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb228-7" data-line-number="7"><span class="st">  </span><span class="kw">count</span>(table_name, <span class="dt">sort =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>(<span class="dt">n =</span> <span class="dv">15</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb228-8" data-line-number="8"><span class="st">  </span><span class="kw">kable</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb241"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb241-1" title="1">public_tables &lt;-<span class="st"> </span>columns_info_schema_table <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb241-2" title="2"><span class="st">  </span><span class="co"># filter(str_detect(table_name, &quot;pg_&quot;) == FALSE) %&gt;%</span></a>
+<a class="sourceLine" id="cb241-3" title="3"><span class="st">  </span><span class="co"># filter(table_schema == &quot;public&quot;) %&gt;%</span></a>
+<a class="sourceLine" id="cb241-4" title="4"><span class="st">  </span><span class="kw">collect</span>()</a>
+<a class="sourceLine" id="cb241-5" title="5"></a>
+<a class="sourceLine" id="cb241-6" title="6">public_tables <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb241-7" title="7"><span class="st">  </span><span class="kw">count</span>(table_name, <span class="dt">sort =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>(<span class="dt">n =</span> <span class="dv">15</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb241-8" title="8"><span class="st">  </span><span class="kw">kable</span>()</a></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -30811,7 +30817,7 @@ A Tidyverse Approach&quot;</div></a>
 </tbody>
 </table>
 <p>How many <em>column names</em> are shared across tables (or duplicated)?</p>
-<div class="sourceCode" id="cb229"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb229-1" data-line-number="1">public_tables <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(column_name, <span class="dt">sort =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(n <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb242"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb242-1" title="1">public_tables <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(column_name, <span class="dt">sort =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(n <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>)</a></code></pre></div>
 <pre><code>## # A tibble: 434 x 2
 ##    column_name          n
 ##    &lt;chr&gt;            &lt;int&gt;
@@ -30827,7 +30833,7 @@ A Tidyverse Approach&quot;</div></a>
 ## 10 table_catalog       17
 ## # … with 424 more rows</code></pre>
 <p>How many column names are unique?</p>
-<div class="sourceCode" id="cb231"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb231-1" data-line-number="1">public_tables <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(column_name) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(n <span class="op">==</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb244"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb244-1" title="1">public_tables <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(column_name) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(n <span class="op">==</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>()</a></code></pre></div>
 <pre><code>## # A tibble: 1 x 1
 ##       n
 ##   &lt;int&gt;
@@ -30835,28 +30841,28 @@ A Tidyverse Approach&quot;</div></a>
 </div>
 </div>
 <div id="database-keys" class="section level2">
-<h2><span class="header-section-number">11.4</span> Database keys</h2>
+<h2><span class="header-section-number">12.4</span> Database keys</h2>
 <div id="direct-sql" class="section level3">
-<h3><span class="header-section-number">11.4.1</span> Direct SQL</h3>
+<h3><span class="header-section-number">12.4.1</span> Direct SQL</h3>
 <p>How do we use this output? Could it be generated by dplyr?</p>
-<div class="sourceCode" id="cb233"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb233-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(</a>
-<a class="sourceLine" id="cb233-2" data-line-number="2">  con,</a>
-<a class="sourceLine" id="cb233-3" data-line-number="3">  <span class="st">&quot;</span></a>
-<a class="sourceLine" id="cb233-4" data-line-number="4"><span class="st">--SELECT conrelid::regclass as table_from</span></a>
-<a class="sourceLine" id="cb233-5" data-line-number="5"><span class="st">select table_catalog||&#39;.&#39;||table_schema||&#39;.&#39;||table_name table_name</span></a>
-<a class="sourceLine" id="cb233-6" data-line-number="6"><span class="st">, conname, pg_catalog.pg_get_constraintdef(r.oid, true) as condef</span></a>
-<a class="sourceLine" id="cb233-7" data-line-number="7"><span class="st">FROM information_schema.columns c,pg_catalog.pg_constraint r</span></a>
-<a class="sourceLine" id="cb233-8" data-line-number="8"><span class="st">WHERE 1 = 1 --r.conrelid = &#39;16485&#39; </span></a>
-<a class="sourceLine" id="cb233-9" data-line-number="9"><span class="st">  AND r.contype  in (&#39;f&#39;,&#39;p&#39;) ORDER BY 1</span></a>
-<a class="sourceLine" id="cb233-10" data-line-number="10"><span class="st">;&quot;</span></a>
-<a class="sourceLine" id="cb233-11" data-line-number="11">)</a>
-<a class="sourceLine" id="cb233-12" data-line-number="12"><span class="kw">glimpse</span>(rs)</a></code></pre></div>
+<div class="sourceCode" id="cb246"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb246-1" title="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(</a>
+<a class="sourceLine" id="cb246-2" title="2">  con,</a>
+<a class="sourceLine" id="cb246-3" title="3">  <span class="st">&quot;</span></a>
+<a class="sourceLine" id="cb246-4" title="4"><span class="st">--SELECT conrelid::regclass as table_from</span></a>
+<a class="sourceLine" id="cb246-5" title="5"><span class="st">select table_catalog||&#39;.&#39;||table_schema||&#39;.&#39;||table_name table_name</span></a>
+<a class="sourceLine" id="cb246-6" title="6"><span class="st">, conname, pg_catalog.pg_get_constraintdef(r.oid, true) as condef</span></a>
+<a class="sourceLine" id="cb246-7" title="7"><span class="st">FROM information_schema.columns c,pg_catalog.pg_constraint r</span></a>
+<a class="sourceLine" id="cb246-8" title="8"><span class="st">WHERE 1 = 1 --r.conrelid = &#39;16485&#39; </span></a>
+<a class="sourceLine" id="cb246-9" title="9"><span class="st">  AND r.contype  in (&#39;f&#39;,&#39;p&#39;) ORDER BY 1</span></a>
+<a class="sourceLine" id="cb246-10" title="10"><span class="st">;&quot;</span></a>
+<a class="sourceLine" id="cb246-11" title="11">)</a>
+<a class="sourceLine" id="cb246-12" title="12"><span class="kw">glimpse</span>(rs)</a></code></pre></div>
 <pre><code>## Observations: 467,838
 ## Variables: 3
 ## $ table_name &lt;chr&gt; &quot;adventureworks.hr.d&quot;, &quot;adventureworks.hr.d&quot;, &quot;advent…
 ## $ conname    &lt;chr&gt; &quot;FK_SalesOrderDetail_SpecialOfferProduct_SpecialOffer…
 ## $ condef     &lt;chr&gt; &quot;FOREIGN KEY (specialofferid, productid) REFERENCES s…</code></pre>
-<div class="sourceCode" id="cb235"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb235-1" data-line-number="1"><span class="kw">kable</span>(<span class="kw">head</span>(rs))</a></code></pre></div>
+<div class="sourceCode" id="cb248"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb248-1" title="1"><span class="kw">kable</span>(<span class="kw">head</span>(rs))</a></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -30903,25 +30909,25 @@ A Tidyverse Approach&quot;</div></a>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb236"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb236-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(</a>
-<a class="sourceLine" id="cb236-2" data-line-number="2">  con,</a>
-<a class="sourceLine" id="cb236-3" data-line-number="3">  <span class="st">&quot;select conrelid::regclass as table_from</span></a>
-<a class="sourceLine" id="cb236-4" data-line-number="4"><span class="st">      ,c.conname</span></a>
-<a class="sourceLine" id="cb236-5" data-line-number="5"><span class="st">      ,pg_get_constraintdef(c.oid)</span></a>
-<a class="sourceLine" id="cb236-6" data-line-number="6"><span class="st">  from pg_constraint c</span></a>
-<a class="sourceLine" id="cb236-7" data-line-number="7"><span class="st">  join pg_namespace n on n.oid = c.connamespace</span></a>
-<a class="sourceLine" id="cb236-8" data-line-number="8"><span class="st"> where c.contype in (&#39;f&#39;,&#39;p&#39;)</span></a>
-<a class="sourceLine" id="cb236-9" data-line-number="9"><span class="st">   and n.nspname = &#39;public&#39;</span></a>
-<a class="sourceLine" id="cb236-10" data-line-number="10"><span class="st">order by conrelid::regclass::text, contype DESC;</span></a>
-<a class="sourceLine" id="cb236-11" data-line-number="11"><span class="st">&quot;</span></a>
-<a class="sourceLine" id="cb236-12" data-line-number="12">)</a>
-<a class="sourceLine" id="cb236-13" data-line-number="13"><span class="kw">glimpse</span>(rs)</a></code></pre></div>
+<div class="sourceCode" id="cb249"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb249-1" title="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(</a>
+<a class="sourceLine" id="cb249-2" title="2">  con,</a>
+<a class="sourceLine" id="cb249-3" title="3">  <span class="st">&quot;select conrelid::regclass as table_from</span></a>
+<a class="sourceLine" id="cb249-4" title="4"><span class="st">      ,c.conname</span></a>
+<a class="sourceLine" id="cb249-5" title="5"><span class="st">      ,pg_get_constraintdef(c.oid)</span></a>
+<a class="sourceLine" id="cb249-6" title="6"><span class="st">  from pg_constraint c</span></a>
+<a class="sourceLine" id="cb249-7" title="7"><span class="st">  join pg_namespace n on n.oid = c.connamespace</span></a>
+<a class="sourceLine" id="cb249-8" title="8"><span class="st"> where c.contype in (&#39;f&#39;,&#39;p&#39;)</span></a>
+<a class="sourceLine" id="cb249-9" title="9"><span class="st">   and n.nspname = &#39;public&#39;</span></a>
+<a class="sourceLine" id="cb249-10" title="10"><span class="st">order by conrelid::regclass::text, contype DESC;</span></a>
+<a class="sourceLine" id="cb249-11" title="11"><span class="st">&quot;</span></a>
+<a class="sourceLine" id="cb249-12" title="12">)</a>
+<a class="sourceLine" id="cb249-13" title="13"><span class="kw">glimpse</span>(rs)</a></code></pre></div>
 <pre><code>## Observations: 0
 ## Variables: 3
 ## $ table_from           &lt;chr&gt; 
 ## $ conname              &lt;chr&gt; 
 ## $ pg_get_constraintdef &lt;chr&gt;</code></pre>
-<div class="sourceCode" id="cb238"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb238-1" data-line-number="1"><span class="kw">kable</span>(<span class="kw">head</span>(rs))</a></code></pre></div>
+<div class="sourceCode" id="cb251"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb251-1" title="1"><span class="kw">kable</span>(<span class="kw">head</span>(rs))</a></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -30933,41 +30939,41 @@ A Tidyverse Approach&quot;</div></a>
 <tbody>
 </tbody>
 </table>
-<div class="sourceCode" id="cb239"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb239-1" data-line-number="1"><span class="kw">dim</span>(rs)[<span class="dv">1</span>]</a></code></pre></div>
+<div class="sourceCode" id="cb252"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb252-1" title="1"><span class="kw">dim</span>(rs)[<span class="dv">1</span>]</a></code></pre></div>
 <pre><code>## [1] 0</code></pre>
 </div>
 <div id="database-keys-with-dplyr" class="section level3">
-<h3><span class="header-section-number">11.4.2</span> Database keys with dplyr</h3>
+<h3><span class="header-section-number">12.4.2</span> Database keys with dplyr</h3>
 <p>This query shows the primary and foreign keys in the database.</p>
-<div class="sourceCode" id="cb241"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb241-1" data-line-number="1">tables &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, dbplyr<span class="op">::</span><span class="kw">in_schema</span>(<span class="st">&quot;information_schema&quot;</span>, <span class="st">&quot;tables&quot;</span>))</a>
-<a class="sourceLine" id="cb241-2" data-line-number="2">table_constraints &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, dbplyr<span class="op">::</span><span class="kw">in_schema</span>(<span class="st">&quot;information_schema&quot;</span>, <span class="st">&quot;table_constraints&quot;</span>))</a>
-<a class="sourceLine" id="cb241-3" data-line-number="3">key_column_usage &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, dbplyr<span class="op">::</span><span class="kw">in_schema</span>(<span class="st">&quot;information_schema&quot;</span>, <span class="st">&quot;key_column_usage&quot;</span>))</a>
-<a class="sourceLine" id="cb241-4" data-line-number="4">referential_constraints &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, dbplyr<span class="op">::</span><span class="kw">in_schema</span>(<span class="st">&quot;information_schema&quot;</span>, <span class="st">&quot;referential_constraints&quot;</span>))</a>
-<a class="sourceLine" id="cb241-5" data-line-number="5">constraint_column_usage &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, dbplyr<span class="op">::</span><span class="kw">in_schema</span>(<span class="st">&quot;information_schema&quot;</span>, <span class="st">&quot;constraint_column_usage&quot;</span>))</a>
-<a class="sourceLine" id="cb241-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb241-7" data-line-number="7">keys &lt;-<span class="st"> </span>tables <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb241-8" data-line-number="8"><span class="st">  </span><span class="kw">left_join</span>(table_constraints, <span class="dt">by =</span> <span class="kw">c</span>(</a>
-<a class="sourceLine" id="cb241-9" data-line-number="9">    <span class="st">&quot;table_catalog&quot;</span> =<span class="st"> &quot;table_catalog&quot;</span>,</a>
-<a class="sourceLine" id="cb241-10" data-line-number="10">    <span class="st">&quot;table_schema&quot;</span> =<span class="st"> &quot;table_schema&quot;</span>,</a>
-<a class="sourceLine" id="cb241-11" data-line-number="11">    <span class="st">&quot;table_name&quot;</span> =<span class="st"> &quot;table_name&quot;</span></a>
-<a class="sourceLine" id="cb241-12" data-line-number="12">  )) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb241-13" data-line-number="13"><span class="st">  </span><span class="co"># table_constraints %&gt;%</span></a>
-<a class="sourceLine" id="cb241-14" data-line-number="14"><span class="st">  </span><span class="kw">filter</span>(constraint_type <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;FOREIGN KEY&quot;</span>, <span class="st">&quot;PRIMARY KEY&quot;</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb241-15" data-line-number="15"><span class="st">  </span><span class="kw">left_join</span>(key_column_usage,</a>
-<a class="sourceLine" id="cb241-16" data-line-number="16">    <span class="dt">by =</span> <span class="kw">c</span>(</a>
-<a class="sourceLine" id="cb241-17" data-line-number="17">      <span class="st">&quot;table_catalog&quot;</span> =<span class="st"> &quot;table_catalog&quot;</span>,</a>
-<a class="sourceLine" id="cb241-18" data-line-number="18">      <span class="st">&quot;constraint_catalog&quot;</span> =<span class="st"> &quot;constraint_catalog&quot;</span>,</a>
-<a class="sourceLine" id="cb241-19" data-line-number="19">      <span class="st">&quot;constraint_schema&quot;</span> =<span class="st"> &quot;constraint_schema&quot;</span>,</a>
-<a class="sourceLine" id="cb241-20" data-line-number="20">      <span class="st">&quot;table_name&quot;</span> =<span class="st"> &quot;table_name&quot;</span>,</a>
-<a class="sourceLine" id="cb241-21" data-line-number="21">      <span class="st">&quot;table_schema&quot;</span> =<span class="st"> &quot;table_schema&quot;</span>,</a>
-<a class="sourceLine" id="cb241-22" data-line-number="22">      <span class="st">&quot;constraint_name&quot;</span> =<span class="st"> &quot;constraint_name&quot;</span></a>
-<a class="sourceLine" id="cb241-23" data-line-number="23">    )</a>
-<a class="sourceLine" id="cb241-24" data-line-number="24">  ) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb241-25" data-line-number="25"><span class="st">  </span><span class="co"># left_join(constraint_column_usage) %&gt;% # does this table add anything useful?</span></a>
-<a class="sourceLine" id="cb241-26" data-line-number="26"><span class="st">  </span><span class="kw">select</span>(table_name, table_type, constraint_name, constraint_type, column_name, ordinal_position) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb241-27" data-line-number="27"><span class="st">  </span><span class="kw">arrange</span>(table_name) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb241-28" data-line-number="28"><span class="st">  </span><span class="kw">collect</span>()</a>
-<a class="sourceLine" id="cb241-29" data-line-number="29"><span class="kw">glimpse</span>(keys)</a></code></pre></div>
+<div class="sourceCode" id="cb254"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb254-1" title="1">tables &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, dbplyr<span class="op">::</span><span class="kw">in_schema</span>(<span class="st">&quot;information_schema&quot;</span>, <span class="st">&quot;tables&quot;</span>))</a>
+<a class="sourceLine" id="cb254-2" title="2">table_constraints &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, dbplyr<span class="op">::</span><span class="kw">in_schema</span>(<span class="st">&quot;information_schema&quot;</span>, <span class="st">&quot;table_constraints&quot;</span>))</a>
+<a class="sourceLine" id="cb254-3" title="3">key_column_usage &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, dbplyr<span class="op">::</span><span class="kw">in_schema</span>(<span class="st">&quot;information_schema&quot;</span>, <span class="st">&quot;key_column_usage&quot;</span>))</a>
+<a class="sourceLine" id="cb254-4" title="4">referential_constraints &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, dbplyr<span class="op">::</span><span class="kw">in_schema</span>(<span class="st">&quot;information_schema&quot;</span>, <span class="st">&quot;referential_constraints&quot;</span>))</a>
+<a class="sourceLine" id="cb254-5" title="5">constraint_column_usage &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, dbplyr<span class="op">::</span><span class="kw">in_schema</span>(<span class="st">&quot;information_schema&quot;</span>, <span class="st">&quot;constraint_column_usage&quot;</span>))</a>
+<a class="sourceLine" id="cb254-6" title="6"></a>
+<a class="sourceLine" id="cb254-7" title="7">keys &lt;-<span class="st"> </span>tables <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb254-8" title="8"><span class="st">  </span><span class="kw">left_join</span>(table_constraints, <span class="dt">by =</span> <span class="kw">c</span>(</a>
+<a class="sourceLine" id="cb254-9" title="9">    <span class="st">&quot;table_catalog&quot;</span> =<span class="st"> &quot;table_catalog&quot;</span>,</a>
+<a class="sourceLine" id="cb254-10" title="10">    <span class="st">&quot;table_schema&quot;</span> =<span class="st"> &quot;table_schema&quot;</span>,</a>
+<a class="sourceLine" id="cb254-11" title="11">    <span class="st">&quot;table_name&quot;</span> =<span class="st"> &quot;table_name&quot;</span></a>
+<a class="sourceLine" id="cb254-12" title="12">  )) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb254-13" title="13"><span class="st">  </span><span class="co"># table_constraints %&gt;%</span></a>
+<a class="sourceLine" id="cb254-14" title="14"><span class="st">  </span><span class="kw">filter</span>(constraint_type <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;FOREIGN KEY&quot;</span>, <span class="st">&quot;PRIMARY KEY&quot;</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb254-15" title="15"><span class="st">  </span><span class="kw">left_join</span>(key_column_usage,</a>
+<a class="sourceLine" id="cb254-16" title="16">    <span class="dt">by =</span> <span class="kw">c</span>(</a>
+<a class="sourceLine" id="cb254-17" title="17">      <span class="st">&quot;table_catalog&quot;</span> =<span class="st"> &quot;table_catalog&quot;</span>,</a>
+<a class="sourceLine" id="cb254-18" title="18">      <span class="st">&quot;constraint_catalog&quot;</span> =<span class="st"> &quot;constraint_catalog&quot;</span>,</a>
+<a class="sourceLine" id="cb254-19" title="19">      <span class="st">&quot;constraint_schema&quot;</span> =<span class="st"> &quot;constraint_schema&quot;</span>,</a>
+<a class="sourceLine" id="cb254-20" title="20">      <span class="st">&quot;table_name&quot;</span> =<span class="st"> &quot;table_name&quot;</span>,</a>
+<a class="sourceLine" id="cb254-21" title="21">      <span class="st">&quot;table_schema&quot;</span> =<span class="st"> &quot;table_schema&quot;</span>,</a>
+<a class="sourceLine" id="cb254-22" title="22">      <span class="st">&quot;constraint_name&quot;</span> =<span class="st"> &quot;constraint_name&quot;</span></a>
+<a class="sourceLine" id="cb254-23" title="23">    )</a>
+<a class="sourceLine" id="cb254-24" title="24">  ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb254-25" title="25"><span class="st">  </span><span class="co"># left_join(constraint_column_usage) %&gt;% # does this table add anything useful?</span></a>
+<a class="sourceLine" id="cb254-26" title="26"><span class="st">  </span><span class="kw">select</span>(table_name, table_type, constraint_name, constraint_type, column_name, ordinal_position) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb254-27" title="27"><span class="st">  </span><span class="kw">arrange</span>(table_name) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb254-28" title="28"><span class="st">  </span><span class="kw">collect</span>()</a>
+<a class="sourceLine" id="cb254-29" title="29"><span class="kw">glimpse</span>(keys)</a></code></pre></div>
 <pre><code>## Observations: 190
 ## Variables: 6
 ## $ table_name       &lt;chr&gt; &quot;address&quot;, &quot;address&quot;, &quot;addresstype&quot;, &quot;billofmat…
@@ -30976,7 +30982,7 @@ A Tidyverse Approach&quot;</div></a>
 ## $ constraint_type  &lt;chr&gt; &quot;FOREIGN KEY&quot;, &quot;PRIMARY KEY&quot;, &quot;PRIMARY KEY&quot;, &quot;F…
 ## $ column_name      &lt;chr&gt; &quot;stateprovinceid&quot;, &quot;addressid&quot;, &quot;addresstypeid&quot;…
 ## $ ordinal_position &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 2, 1, 1,…</code></pre>
-<div class="sourceCode" id="cb243"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb243-1" data-line-number="1"><span class="kw">kable</span>(keys)</a></code></pre></div>
+<div class="sourceCode" id="cb256"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb256-1" title="1"><span class="kw">kable</span>(keys)</a></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -32512,16 +32518,16 @@ A Tidyverse Approach&quot;</div></a>
 </tbody>
 </table>
 <p>What do we learn from the following query? How is it useful?</p>
-<div class="sourceCode" id="cb244"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb244-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(</a>
-<a class="sourceLine" id="cb244-2" data-line-number="2">  con,</a>
-<a class="sourceLine" id="cb244-3" data-line-number="3">  <span class="st">&quot;SELECT r.*,</span></a>
-<a class="sourceLine" id="cb244-4" data-line-number="4"><span class="st">  pg_catalog.pg_get_constraintdef(r.oid, true) as condef</span></a>
-<a class="sourceLine" id="cb244-5" data-line-number="5"><span class="st">  FROM pg_catalog.pg_constraint r</span></a>
-<a class="sourceLine" id="cb244-6" data-line-number="6"><span class="st">  WHERE 1=1 --r.conrelid = &#39;16485&#39; AND r.contype = &#39;f&#39; ORDER BY 1;</span></a>
-<a class="sourceLine" id="cb244-7" data-line-number="7"><span class="st">  &quot;</span></a>
-<a class="sourceLine" id="cb244-8" data-line-number="8">)</a>
-<a class="sourceLine" id="cb244-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb244-10" data-line-number="10"><span class="kw">head</span>(rs)</a></code></pre></div>
+<div class="sourceCode" id="cb257"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb257-1" title="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(</a>
+<a class="sourceLine" id="cb257-2" title="2">  con,</a>
+<a class="sourceLine" id="cb257-3" title="3">  <span class="st">&quot;SELECT r.*,</span></a>
+<a class="sourceLine" id="cb257-4" title="4"><span class="st">  pg_catalog.pg_get_constraintdef(r.oid, true) as condef</span></a>
+<a class="sourceLine" id="cb257-5" title="5"><span class="st">  FROM pg_catalog.pg_constraint r</span></a>
+<a class="sourceLine" id="cb257-6" title="6"><span class="st">  WHERE 1=1 --r.conrelid = &#39;16485&#39; AND r.contype = &#39;f&#39; ORDER BY 1;</span></a>
+<a class="sourceLine" id="cb257-7" title="7"><span class="st">  &quot;</span></a>
+<a class="sourceLine" id="cb257-8" title="8">)</a>
+<a class="sourceLine" id="cb257-9" title="9"></a>
+<a class="sourceLine" id="cb257-10" title="10"><span class="kw">head</span>(rs)</a></code></pre></div>
 <pre><code>##                        conname connamespace contype condeferrable
 ## 1 cardinal_number_domain_check        12771       c         FALSE
 ## 2              yes_or_no_check        12771       c         FALSE
@@ -32574,31 +32580,30 @@ A Tidyverse Approach&quot;</div></a>
 </div>
 </div>
 <div id="creating-your-own-data-dictionary" class="section level2">
-<h2><span class="header-section-number">11.5</span> Creating your own data dictionary</h2>
+<h2><span class="header-section-number">12.5</span> Creating your own data dictionary</h2>
 <p>If you are going to work with a database for an extended period it can be useful to create your own data dictionary. This can take the form of <a href="https://caitlinhudon.com/2018/10/30/data-dictionaries/">keeping detaild notes</a> as well as extracting metadata from the dbms. Here is an illustration of the idea.</p>
 <p><em>This probably doens’t work anymore</em></p>
-<div class="sourceCode" id="cb246"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb246-1" data-line-number="1"><span class="co"># some_tables &lt;- c(&quot;rental&quot;, &quot;city&quot;, &quot;store&quot;)</span></a>
-<a class="sourceLine" id="cb246-2" data-line-number="2"><span class="co"># </span></a>
-<a class="sourceLine" id="cb246-3" data-line-number="3"><span class="co"># all_meta &lt;- map_df(some_tables, sp_get_dbms_data_dictionary, con = con)</span></a>
-<a class="sourceLine" id="cb246-4" data-line-number="4"><span class="co"># </span></a>
-<a class="sourceLine" id="cb246-5" data-line-number="5"><span class="co"># all_meta</span></a>
-<a class="sourceLine" id="cb246-6" data-line-number="6"><span class="co"># </span></a>
-<a class="sourceLine" id="cb246-7" data-line-number="7"><span class="co"># glimpse(all_meta)</span></a>
-<a class="sourceLine" id="cb246-8" data-line-number="8"><span class="co"># </span></a>
-<a class="sourceLine" id="cb246-9" data-line-number="9"><span class="co"># kable(head(all_meta))</span></a></code></pre></div>
+<div class="sourceCode" id="cb259"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb259-1" title="1"><span class="co"># some_tables &lt;- c(&quot;rental&quot;, &quot;city&quot;, &quot;store&quot;)</span></a>
+<a class="sourceLine" id="cb259-2" title="2"><span class="co"># </span></a>
+<a class="sourceLine" id="cb259-3" title="3"><span class="co"># all_meta &lt;- map_df(some_tables, sp_get_dbms_data_dictionary, con = con)</span></a>
+<a class="sourceLine" id="cb259-4" title="4"><span class="co"># </span></a>
+<a class="sourceLine" id="cb259-5" title="5"><span class="co"># all_meta</span></a>
+<a class="sourceLine" id="cb259-6" title="6"><span class="co"># </span></a>
+<a class="sourceLine" id="cb259-7" title="7"><span class="co"># glimpse(all_meta)</span></a>
+<a class="sourceLine" id="cb259-8" title="8"><span class="co"># </span></a>
+<a class="sourceLine" id="cb259-9" title="9"><span class="co"># kable(head(all_meta))</span></a></code></pre></div>
 </div>
 <div id="save-your-work" class="section level2">
-<h2><span class="header-section-number">11.6</span> Save your work!</h2>
+<h2><span class="header-section-number">12.6</span> Save your work!</h2>
 <p>The work you do to understand the structure and contents of a database can be useful for others (including future-you). So at the end of a session, you might look at all the data frames you want to save. Consider saving them in a form where you can add notes at the appropriate level (as in a Google Doc representing table or columns that you annotate over time).</p>
-<div class="sourceCode" id="cb247"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb247-1" data-line-number="1"><span class="kw">ls</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb260"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb260-1" title="1"><span class="kw">ls</span>()</a></code></pre></div>
 <pre><code>##  [1] &quot;columns_info_schema_info&quot;  &quot;columns_info_schema_table&quot;
 ##  [3] &quot;con&quot;                       &quot;constraint_column_usage&quot;  
-##  [5] &quot;cranex&quot;                    &quot;key_column_usage&quot;         
-##  [7] &quot;keys&quot;                      &quot;public_tables&quot;            
-##  [9] &quot;referential_constraints&quot;   &quot;rs&quot;                       
-## [11] &quot;schema_list&quot;               &quot;table_constraints&quot;        
-## [13] &quot;table_info&quot;                &quot;table_info_schema_table&quot;  
-## [15] &quot;tables&quot;</code></pre>
+##  [5] &quot;key_column_usage&quot;          &quot;keys&quot;                     
+##  [7] &quot;public_tables&quot;             &quot;referential_constraints&quot;  
+##  [9] &quot;rs&quot;                        &quot;schema_list&quot;              
+## [11] &quot;table_constraints&quot;         &quot;table_info&quot;               
+## [13] &quot;table_info_schema_table&quot;   &quot;tables&quot;</code></pre>
 
 </div>
 </div>

@@ -136,12 +136,20 @@ one_percent_sample
 ```
 
 ```
-##   businessentityid                     jobtitle  birthdate
-## 1                3          Engineering Manager 1974-11-12
-## 2               79 Production Technician - WC40 1966-12-08
-## 3              195 Production Technician - WC40 1985-12-25
-## 4              222             Master Scheduler 1968-09-17
-## 5              275         Sales Representative 1968-12-25
+##    businessentityid                                 jobtitle  birthdate
+## 1                93             Production Supervisor - WC50 1980-04-28
+## 2                96             Production Technician - WC50 1990-01-25
+## 3               119             Production Technician - WC50 1989-06-15
+## 4               159             Production Technician - WC20 1984-12-08
+## 5               177             Production Technician - WC30 1982-02-11
+## 6               182             Production Technician - WC20 1986-12-01
+## 7               206             Production Technician - WC45 1962-09-13
+## 8               218                       Control Specialist 1990-04-28
+## 9               222                         Master Scheduler 1968-09-17
+## 10              237 Human Resources Administrative Assistant 1977-04-17
+## 11              266                    Network Administrator 1980-05-28
+## 12              271                   Database Administrator 1976-01-06
+## 13              287                   European Sales Manager 1957-09-20
 ```
 **Exact sample of 100 records**
 
@@ -388,12 +396,12 @@ employee_table %>%
 ## # A tibble: 6 x 4
 ##   jobtitle                 vacationhours sickleavehours today              
 ##   <chr>                            <int>          <int> <dttm>             
-## 1 Chief Executive Officer             99             69 2019-08-07 15:01:27
-## 2 Vice President of Engin…             1             20 2019-08-07 15:01:27
-## 3 Engineering Manager                  2             21 2019-08-07 15:01:27
-## 4 Senior Tool Designer                48             80 2019-08-07 15:01:27
-## 5 Design Engineer                      5             22 2019-08-07 15:01:27
-## 6 Design Engineer                      6             23 2019-08-07 15:01:27
+## 1 Chief Executive Officer             99             69 2019-08-10 09:15:53
+## 2 Vice President of Engin…             1             20 2019-08-10 09:15:53
+## 3 Engineering Manager                  2             21 2019-08-10 09:15:53
+## 4 Senior Tool Designer                48             80 2019-08-10 09:15:53
+## 5 Design Engineer                      5             22 2019-08-10 09:15:53
+## 6 Design Engineer                      6             23 2019-08-10 09:15:53
 ```
 
 
@@ -558,7 +566,7 @@ skimr::skim(employee_tibble)
 ##  n obs: 290 
 ##  n variables: 15 
 ## 
-## ── Variable type:character ──────────────────────────────────────────────────────
+## ── Variable type:character ────────────────────────────────────────────────
 ##          variable missing complete   n min max empty n_unique
 ##            gender       0      290 290   1   1     0        2
 ##          jobtitle       0      290 290   5  40     0       67
@@ -568,12 +576,12 @@ skimr::skim(employee_tibble)
 ##  organizationnode       0      290 290   1  11     0      290
 ##           rowguid       0      290 290  36  36     0      290
 ## 
-## ── Variable type:Date ───────────────────────────────────────────────────────────
+## ── Variable type:Date ─────────────────────────────────────────────────────
 ##   variable missing complete   n        min        max     median n_unique
 ##  birthdate       0      290 290 1951-10-17 1991-05-31 1978-10-19      275
 ##   hiredate       0      290 290 2006-06-30 2013-05-30 2009-02-02      164
 ## 
-## ── Variable type:integer ────────────────────────────────────────────────────────
+## ── Variable type:integer ──────────────────────────────────────────────────
 ##          variable missing complete   n   mean    sd p0   p25   p50    p75
 ##  businessentityid       0      290 290 145.5  83.86  1 73.25 145.5 217.75
 ##    sickleavehours       0      290 290  45.31 14.54 20 33     46    58   
@@ -583,12 +591,12 @@ skimr::skim(employee_tibble)
 ##    80 ▇▇▇▇▇▇▃▁
 ##    99 ▇▆▇▇▇▇▇▇
 ## 
-## ── Variable type:logical ────────────────────────────────────────────────────────
+## ── Variable type:logical ──────────────────────────────────────────────────
 ##      variable missing complete   n mean                    count
 ##   currentflag       0      290 290 1             TRU: 290, NA: 0
 ##  salariedflag       0      290 290 0.18 FAL: 238, TRU: 52, NA: 0
 ## 
-## ── Variable type:POSIXct ────────────────────────────────────────────────────────
+## ── Variable type:POSIXct ──────────────────────────────────────────────────
 ##      variable missing complete   n        min        max     median
 ##  modifieddate       0      290 290 2014-06-30 2014-12-26 2014-06-30
 ##  n_unique
