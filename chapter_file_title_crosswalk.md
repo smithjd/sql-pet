@@ -26,13 +26,12 @@
 |24|Writing to the DBMS |220-write-to-the-database.Rmd|chapter_writing-to-the-dbms|
 |25|NA|900-appendices-section.Rmd|NA|
 |26|Background and Basic Concepts|905-background-basic-concepts.Rmd|appendix_background_basic-concepts|
-|27|Appendix A - Setup instructions|910-setup-instructions.Rmd|chapter_appendix-setup-instructions|
+|27| - Setup instructions|910-setup-instructions.Rmd|chapter_appendix-setup-instructions|
 |28|Appendix E - Install 'dvdrental' or 'hrsample' on your own machine |915-local-setup-with-dvdrental.Rmd|chapter_appendix-postgres-local-db-installation|
 |29|Appendix B - Additional technical details for Windows users |920-windows-tech-details.Rmd|chapter_windows-tech-details|
 |30|Appendix C - PostgreSQL Authentication |930-postgresql-authentication.Rmd|chapter_appendix-postresql-authentication|
-|31|APPENDIX D - Quick Guide to SQL |960-sqlguide.Rmd|chapter_appendix-sql-quick-guide|
-|32|Dplyr functions and SQL cross-walk |970-dplyr-sql-summary-table.Rmd|chapter_appendix-dplyr-functions|
-|33|DBI package functions - INDEX |980-dbi-summary-table.Rmd|chapter_appendix-dbi-index|
-|34|Appendix _ Dplyr to SQL translations |985-dbplyr-sql-translations.Rmd|chapter_appendix-dplyr-to-postres-translation|
-|35|Appendix Additional resources |997-additional-resources.Rmd|chapter_appendix-additional-resources|
-|36|NA|999-references.Rmd|NA|
+|31|Dplyr functions and SQL cross-walk |970-dplyr-sql-summary-table.Rmd|chapter_appendix-dplyr-functions|
+|32|DBI package functions - INDEX |980-dbi-summary-table.Rmd|chapter_appendix-dbi-index|
+|33|Appendix _ Dplyr to SQL translations |985-dbplyr-sql-translations.Rmd|chapter_appendix-dplyr-to-postres-translation|
+|34|Appendix Additional resources |997-additional-resources.Rmd|chapter_appendix-additional-resources|
+|35|NA|999-references.Rmd|NA|
