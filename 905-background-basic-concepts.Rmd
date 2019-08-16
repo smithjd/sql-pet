@@ -95,6 +95,47 @@ Tidy data [@Wickham2014] is well-behaved from the point of view of analysis and 
 
 Data in a database is most often optimized to minimize storage space and increase performance while preserving integrity when adding, changing, or deleting data.  The Wikipedia article on  Database Normalization has a good introduction to the characteristics of "normal" data and the process of re-organizing it to meet those desirable criteria [@Wikipedia2019].  The bottom line is that "data normalization is practical" although there are mathematical arguments for normalization based on the preservation of data integrity.
 
+## SQL Language
+
+SQL stands for Structured Query Language. It is a database language where we can perform certain operations on the existing database and we can use it create a new database. There are four main categories where the SQL commands fall into: DML, DDL, DCL, and TCL.
+
+### Data Manipulation Langauge (DML)
+
+These four SQL commands deal with the manipulation of data in the database. For everyday analytical work, these are the commands that you will use the most.
+
+    1. SELECT
+    2. INSERT
+    3. UPDATE
+    4. DELETE
+
+### Data Definition Langauge (DDL)
+
+It consists of the SQL commands that can be used to define a database schema. The DDL commands include:
+
+    1. CREATE 
+    2. ALTER
+    3. TRUNCATE
+    4. COMMENT
+    5. RENAME
+    6. DROP
+    
+### Data Control Language (DCL)
+
+The DCL commands deals with user rights, permissions and other controls in database management system.
+
+    1. GRANT
+    2. REVOKE
+    
+### Transaction Control Language (TCL)
+
+These commands deal with the control over transaction within the database. Transaction combines a set of tasks into single execution. 
+
+    1. SET TRANSACTION
+    2. SAVEPOINT
+    3. ROLLBACK
+    4. COMMIT
+
+
 ## Enterprise DBMS
 
 The organizational context of a database matters just as much as its design characteristics.  The design of a database (or _data model_) may have been purchased from an external vendor or developed in-house.  In either case time has a tendency to erode the original design concept so that the data you find in a DBMS may not quite match the original design specification.  And the original design may or may not be well reflected in the current naming of tables, columns and other objects.
@@ -109,7 +150,7 @@ The tables in a DBMS correspond to a data frame in R, so interaction with a DBMS
 
 SQL code is characterized by the fact that it describes *what* to retrieve, leaving the DBMS back end to determine how to do it.  Therefore it has a *batch* feel. The pipe operator (`%>%`, which is read as _and then_) is inherently procedural when it's used with dplyr: it can be used to construct queries step-by-step. Once a test dplyr query has been executed, it is easy to inspect the results and add steps with the pipe operator to refine or expand the query.
 
-[APPENDIX D - Quick Guide to SQL](#chapter_appendix-sql-quick-guide) lists the different elements of the SQL language.
+
 
 ### Data mapping between R vs SQL data types
 

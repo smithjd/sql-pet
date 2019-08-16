@@ -24,7 +24,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, and Ian Frantz" />
 
 
-<meta name="date" content="2019-08-07" />
+<meta name="date" content="2019-08-15" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -140,9 +140,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#using-r-to-query-a-dbms-in-your-organization"><i class="fa fa-check"></i><b>1.1</b> Using R to query a DBMS in your organization</a></li>
 <li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#docker-as-a-tool-for-users"><i class="fa fa-check"></i><b>1.2</b> Docker as a tool for UseRs</a></li>
 <li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#alternatives-to-docker"><i class="fa fa-check"></i><b>1.3</b> Alternatives to Docker</a></li>
-<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#who-are-we"><i class="fa fa-check"></i><b>1.4</b> Who are we?</a></li>
-<li class="chapter" data-level="1.5" data-path="index.html"><a href="index.html#how-did-this-project-come-about"><i class="fa fa-check"></i><b>1.5</b> How did this project come about?</a></li>
-<li class="chapter" data-level="1.6" data-path="index.html"><a href="index.html#navigation"><i class="fa fa-check"></i><b>1.6</b> Navigation</a></li>
+<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#packages-used-in-this-book"><i class="fa fa-check"></i><b>1.4</b> Packages used in this book</a></li>
+<li class="chapter" data-level="1.5" data-path="index.html"><a href="index.html#who-are-we"><i class="fa fa-check"></i><b>1.5</b> Who are we?</a></li>
+<li class="chapter" data-level="1.6" data-path="index.html"><a href="index.html#how-did-this-project-come-about"><i class="fa fa-check"></i><b>1.6</b> How did this project come about?</a></li>
+<li class="chapter" data-level="1.7" data-path="index.html"><a href="index.html#navigation"><i class="fa fa-check"></i><b>1.7</b> Navigation</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="chapter-how-to-use-this-book.html"><a href="chapter-how-to-use-this-book.html"><i class="fa fa-check"></i><b>2</b> How to use this book</a><ul>
 <li class="chapter" data-level="2.1" data-path="chapter-how-to-use-this-book.html"><a href="chapter-how-to-use-this-book.html#retrieve-the-code-from-github"><i class="fa fa-check"></i><b>2.1</b> Retrieve the code from GitHub</a></li>
@@ -300,49 +301,60 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="A.6.1" data-path="appendix-background-basic-concepts.html"><a href="appendix-background-basic-concepts.html#tidy-data"><i class="fa fa-check"></i><b>A.6.1</b> Tidy data</a></li>
 <li class="chapter" data-level="A.6.2" data-path="appendix-background-basic-concepts.html"><a href="appendix-background-basic-concepts.html#design-of-normal-data"><i class="fa fa-check"></i><b>A.6.2</b> Design of “normal data”</a></li>
 </ul></li>
-<li class="chapter" data-level="A.7" data-path="appendix-background-basic-concepts.html"><a href="appendix-background-basic-concepts.html#enterprise-dbms"><i class="fa fa-check"></i><b>A.7</b> Enterprise DBMS</a><ul>
-<li class="chapter" data-level="A.7.1" data-path="appendix-background-basic-concepts.html"><a href="appendix-background-basic-concepts.html#sql-databases"><i class="fa fa-check"></i><b>A.7.1</b> SQL databases</a></li>
-<li class="chapter" data-level="A.7.2" data-path="appendix-background-basic-concepts.html"><a href="appendix-background-basic-concepts.html#data-mapping-between-r-vs-sql-data-types"><i class="fa fa-check"></i><b>A.7.2</b> Data mapping between R vs SQL data types</a></li>
-<li class="chapter" data-level="A.7.3" data-path="appendix-background-basic-concepts.html"><a href="appendix-background-basic-concepts.html#postgresql-and-connection-parameters"><i class="fa fa-check"></i><b>A.7.3</b> PostgreSQL and connection parameters</a></li>
-<li class="chapter" data-level="A.7.4" data-path="appendix-background-basic-concepts.html"><a href="appendix-background-basic-concepts.html#connecting-the-r-and-dbms-environments"><i class="fa fa-check"></i><b>A.7.4</b> Connecting the R and DBMS environments</a></li>
-<li class="chapter" data-level="A.7.5" data-path="appendix-background-basic-concepts.html"><a href="appendix-background-basic-concepts.html#using-sqlite-to-simulate-an-enterprise-dbms"><i class="fa fa-check"></i><b>A.7.5</b> Using SQLite to simulate an enterprise DBMS</a></li>
+<li class="chapter" data-level="A.7" data-path="appendix-background-basic-concepts.html"><a href="appendix-background-basic-concepts.html#sql-language"><i class="fa fa-check"></i><b>A.7</b> SQL Language</a><ul>
+<li class="chapter" data-level="A.7.1" data-path="appendix-background-basic-concepts.html"><a href="appendix-background-basic-concepts.html#data-manipulation-langauge-dml"><i class="fa fa-check"></i><b>A.7.1</b> Data Manipulation Langauge (DML)</a></li>
+<li class="chapter" data-level="A.7.2" data-path="appendix-background-basic-concepts.html"><a href="appendix-background-basic-concepts.html#data-definition-langauge-ddl"><i class="fa fa-check"></i><b>A.7.2</b> Data Definition Langauge (DDL)</a></li>
+<li class="chapter" data-level="A.7.3" data-path="appendix-background-basic-concepts.html"><a href="appendix-background-basic-concepts.html#data-control-language-dcl"><i class="fa fa-check"></i><b>A.7.3</b> Data Control Language (DCL)</a></li>
+<li class="chapter" data-level="A.7.4" data-path="appendix-background-basic-concepts.html"><a href="appendix-background-basic-concepts.html#transaction-control-language-tcl"><i class="fa fa-check"></i><b>A.7.4</b> Transaction Control Language (TCL)</a></li>
+</ul></li>
+<li class="chapter" data-level="A.8" data-path="appendix-background-basic-concepts.html"><a href="appendix-background-basic-concepts.html#enterprise-dbms"><i class="fa fa-check"></i><b>A.8</b> Enterprise DBMS</a><ul>
+<li class="chapter" data-level="A.8.1" data-path="appendix-background-basic-concepts.html"><a href="appendix-background-basic-concepts.html#sql-databases"><i class="fa fa-check"></i><b>A.8.1</b> SQL databases</a></li>
+<li class="chapter" data-level="A.8.2" data-path="appendix-background-basic-concepts.html"><a href="appendix-background-basic-concepts.html#data-mapping-between-r-vs-sql-data-types"><i class="fa fa-check"></i><b>A.8.2</b> Data mapping between R vs SQL data types</a></li>
+<li class="chapter" data-level="A.8.3" data-path="appendix-background-basic-concepts.html"><a href="appendix-background-basic-concepts.html#postgresql-and-connection-parameters"><i class="fa fa-check"></i><b>A.8.3</b> PostgreSQL and connection parameters</a></li>
+<li class="chapter" data-level="A.8.4" data-path="appendix-background-basic-concepts.html"><a href="appendix-background-basic-concepts.html#connecting-the-r-and-dbms-environments"><i class="fa fa-check"></i><b>A.8.4</b> Connecting the R and DBMS environments</a></li>
+<li class="chapter" data-level="A.8.5" data-path="appendix-background-basic-concepts.html"><a href="appendix-background-basic-concepts.html#using-sqlite-to-simulate-an-enterprise-dbms"><i class="fa fa-check"></i><b>A.8.5</b> Using SQLite to simulate an enterprise DBMS</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="B" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html"><i class="fa fa-check"></i><b>B</b> Appendix B - Additional technical details for Windows users</a><ul>
-<li class="chapter" data-level="B.1" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#hardware-requirements"><i class="fa fa-check"></i><b>B.1</b> Hardware requirements</a></li>
-<li class="chapter" data-level="B.2" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#software-requirements"><i class="fa fa-check"></i><b>B.2</b> Software requirements</a><ul>
-<li class="chapter" data-level="B.2.1" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#windows-7-8-8.1-and-windows-10-home-64-bit"><i class="fa fa-check"></i><b>B.2.1</b> Windows 7, 8, 8.1 and Windows 10 Home (64 bit)</a></li>
-<li class="chapter" data-level="B.2.2" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#windows-10-pro"><i class="fa fa-check"></i><b>B.2.2</b> Windows 10 Pro</a></li>
+<li class="chapter" data-level="B" data-path="chapter-appendix-setup-instructions.html"><a href="chapter-appendix-setup-instructions.html"><i class="fa fa-check"></i><b>B</b> - Setup instructions</a><ul>
+<li class="chapter" data-level="B.1" data-path="chapter-appendix-setup-instructions.html"><a href="chapter-appendix-setup-instructions.html#sandbox-prerequisites"><i class="fa fa-check"></i><b>B.1</b> Sandbox prerequisites</a></li>
+<li class="chapter" data-level="B.2" data-path="chapter-appendix-setup-instructions.html"><a href="chapter-appendix-setup-instructions.html#r-rstudio-and-git"><i class="fa fa-check"></i><b>B.2</b> R, RStudio and Git</a></li>
+<li class="chapter" data-level="B.3" data-path="chapter-appendix-setup-instructions.html"><a href="chapter-appendix-setup-instructions.html#install-docker"><i class="fa fa-check"></i><b>B.3</b> Install Docker</a></li>
 </ul></li>
-<li class="chapter" data-level="B.3" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#docker-for-windows-settings"><i class="fa fa-check"></i><b>B.3</b> Docker for Windows settings</a><ul>
-<li class="chapter" data-level="B.3.1" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#shared-drives"><i class="fa fa-check"></i><b>B.3.1</b> Shared drives</a></li>
-<li class="chapter" data-level="B.3.2" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#kubernetes"><i class="fa fa-check"></i><b>B.3.2</b> Kubernetes</a></li>
+<li class="chapter" data-level="C" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html"><i class="fa fa-check"></i><b>C</b> Appendix B - Additional technical details for Windows users</a><ul>
+<li class="chapter" data-level="C.1" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#hardware-requirements"><i class="fa fa-check"></i><b>C.1</b> Hardware requirements</a></li>
+<li class="chapter" data-level="C.2" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#software-requirements"><i class="fa fa-check"></i><b>C.2</b> Software requirements</a><ul>
+<li class="chapter" data-level="C.2.1" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#windows-7-8-8.1-and-windows-10-home-64-bit"><i class="fa fa-check"></i><b>C.2.1</b> Windows 7, 8, 8.1 and Windows 10 Home (64 bit)</a></li>
+<li class="chapter" data-level="C.2.2" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#windows-10-pro"><i class="fa fa-check"></i><b>C.2.2</b> Windows 10 Pro</a></li>
 </ul></li>
-<li class="chapter" data-level="B.4" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#git-github-and-line-endings"><i class="fa fa-check"></i><b>B.4</b> Git, GitHub and line endings</a></li>
+<li class="chapter" data-level="C.3" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#docker-for-windows-settings"><i class="fa fa-check"></i><b>C.3</b> Docker for Windows settings</a><ul>
+<li class="chapter" data-level="C.3.1" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#shared-drives"><i class="fa fa-check"></i><b>C.3.1</b> Shared drives</a></li>
+<li class="chapter" data-level="C.3.2" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#kubernetes"><i class="fa fa-check"></i><b>C.3.2</b> Kubernetes</a></li>
 </ul></li>
-<li class="chapter" data-level="C" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html"><i class="fa fa-check"></i><b>C</b> Appendix C - PostgreSQL Authentication</a><ul>
-<li class="chapter" data-level="C.1" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#introduction"><i class="fa fa-check"></i><b>C.1</b> Introduction</a></li>
-<li class="chapter" data-level="C.2" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#password-authentication-on-the-postgresql-docker-image"><i class="fa fa-check"></i><b>C.2</b> Password authentication on the PostgreSQL Docker image</a></li>
-<li class="chapter" data-level="C.3" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#adding-roles"><i class="fa fa-check"></i><b>C.3</b> Adding roles</a><ul>
-<li class="chapter" data-level="C.3.1" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#setting-up-docker"><i class="fa fa-check"></i><b>C.3.1</b> Setting up Docker</a></li>
-<li class="chapter" data-level="C.3.2" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#creating-a-new-container"><i class="fa fa-check"></i><b>C.3.2</b> Creating a new container</a></li>
-<li class="chapter" data-level="C.3.3" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#adding-a-role"><i class="fa fa-check"></i><b>C.3.3</b> Adding a role</a></li>
-<li class="chapter" data-level="C.3.4" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#did-it-work"><i class="fa fa-check"></i><b>C.3.4</b> Did it work?</a></li>
-<li class="chapter" data-level="C.3.5" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#remove-the-container"><i class="fa fa-check"></i><b>C.3.5</b> Remove the container</a></li>
+<li class="chapter" data-level="C.4" data-path="chapter-windows-tech-details.html"><a href="chapter-windows-tech-details.html#git-github-and-line-endings"><i class="fa fa-check"></i><b>C.4</b> Git, GitHub and line endings</a></li>
+</ul></li>
+<li class="chapter" data-level="D" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html"><i class="fa fa-check"></i><b>D</b> Appendix C - PostgreSQL Authentication</a><ul>
+<li class="chapter" data-level="D.1" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#introduction"><i class="fa fa-check"></i><b>D.1</b> Introduction</a></li>
+<li class="chapter" data-level="D.2" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#password-authentication-on-the-postgresql-docker-image"><i class="fa fa-check"></i><b>D.2</b> Password authentication on the PostgreSQL Docker image</a></li>
+<li class="chapter" data-level="D.3" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#adding-roles"><i class="fa fa-check"></i><b>D.3</b> Adding roles</a><ul>
+<li class="chapter" data-level="D.3.1" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#setting-up-docker"><i class="fa fa-check"></i><b>D.3.1</b> Setting up Docker</a></li>
+<li class="chapter" data-level="D.3.2" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#creating-a-new-container"><i class="fa fa-check"></i><b>D.3.2</b> Creating a new container</a></li>
+<li class="chapter" data-level="D.3.3" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#adding-a-role"><i class="fa fa-check"></i><b>D.3.3</b> Adding a role</a></li>
+<li class="chapter" data-level="D.3.4" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#did-it-work"><i class="fa fa-check"></i><b>D.3.4</b> Did it work?</a></li>
+<li class="chapter" data-level="D.3.5" data-path="chapter-appendix-postresql-authentication.html"><a href="chapter-appendix-postresql-authentication.html#remove-the-container"><i class="fa fa-check"></i><b>D.3.5</b> Remove the container</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="D" data-path="chapter-appendix-dplyr-functions.html"><a href="chapter-appendix-dplyr-functions.html"><i class="fa fa-check"></i><b>D</b> Dplyr functions and SQL cross-walk</a></li>
-<li class="chapter" data-level="E" data-path="chapter-appendix-dbi-index.html"><a href="chapter-appendix-dbi-index.html"><i class="fa fa-check"></i><b>E</b> DBI package functions - INDEX</a></li>
-<li class="chapter" data-level="F" data-path="chapter-appendix-dplyr-to-postres-translation.html"><a href="chapter-appendix-dplyr-to-postres-translation.html"><i class="fa fa-check"></i><b>F</b> Appendix _ Dplyr to SQL translations</a><ul>
-<li class="chapter" data-level="F.1" data-path="chapter-appendix-dplyr-to-postres-translation.html"><a href="chapter-appendix-dplyr-to-postres-translation.html#overview-2"><i class="fa fa-check"></i><b>F.1</b> Overview</a></li>
+<li class="chapter" data-level="E" data-path="chapter-appendix-dplyr-functions.html"><a href="chapter-appendix-dplyr-functions.html"><i class="fa fa-check"></i><b>E</b> Dplyr functions and SQL cross-walk</a></li>
+<li class="chapter" data-level="F" data-path="chapter-appendix-dbi-index.html"><a href="chapter-appendix-dbi-index.html"><i class="fa fa-check"></i><b>F</b> DBI package functions - INDEX</a></li>
+<li class="chapter" data-level="G" data-path="chapter-appendix-dplyr-to-postres-translation.html"><a href="chapter-appendix-dplyr-to-postres-translation.html"><i class="fa fa-check"></i><b>G</b> Appendix _ Dplyr to SQL translations</a><ul>
+<li class="chapter" data-level="G.1" data-path="chapter-appendix-dplyr-to-postres-translation.html"><a href="chapter-appendix-dplyr-to-postres-translation.html#overview-2"><i class="fa fa-check"></i><b>G.1</b> Overview</a></li>
 </ul></li>
-<li class="chapter" data-level="G" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html"><i class="fa fa-check"></i><b>G</b> Appendix Additional resources</a><ul>
-<li class="chapter" data-level="G.1" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#editing-this-book"><i class="fa fa-check"></i><b>G.1</b> Editing this book</a></li>
-<li class="chapter" data-level="G.2" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-alternatives"><i class="fa fa-check"></i><b>G.2</b> Docker alternatives</a></li>
-<li class="chapter" data-level="G.3" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-and-r"><i class="fa fa-check"></i><b>G.3</b> Docker and R</a></li>
-<li class="chapter" data-level="G.4" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#documentation-for-docker-and-postgresql"><i class="fa fa-check"></i><b>G.4</b> Documentation for Docker and PostgreSQL</a></li>
-<li class="chapter" data-level="G.5" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#sql-and-dplyr"><i class="fa fa-check"></i><b>G.5</b> SQL and dplyr</a></li>
-<li class="chapter" data-level="G.6" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#more-resources"><i class="fa fa-check"></i><b>G.6</b> More Resources</a></li>
+<li class="chapter" data-level="H" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html"><i class="fa fa-check"></i><b>H</b> Appendix Additional resources</a><ul>
+<li class="chapter" data-level="H.1" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#editing-this-book"><i class="fa fa-check"></i><b>H.1</b> Editing this book</a></li>
+<li class="chapter" data-level="H.2" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-alternatives"><i class="fa fa-check"></i><b>H.2</b> Docker alternatives</a></li>
+<li class="chapter" data-level="H.3" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#docker-and-r"><i class="fa fa-check"></i><b>H.3</b> Docker and R</a></li>
+<li class="chapter" data-level="H.4" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#documentation-for-docker-and-postgresql"><i class="fa fa-check"></i><b>H.4</b> Documentation for Docker and PostgreSQL</a></li>
+<li class="chapter" data-level="H.5" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#sql-and-dplyr"><i class="fa fa-check"></i><b>H.5</b> SQL and dplyr</a></li>
+<li class="chapter" data-level="H.6" data-path="chapter-appendix-additional-resources.html"><a href="chapter-appendix-additional-resources.html#more-resources"><i class="fa fa-check"></i><b>H.6</b> More Resources</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -457,12 +469,14 @@ A Tidyverse Approach&quot;</div></a>
 <a class="sourceLine" id="cb93-6" data-line-number="6">)</a>
 <a class="sourceLine" id="cb93-7" data-line-number="7"></a>
 <a class="sourceLine" id="cb93-8" data-line-number="8">one_percent_sample</a></code></pre></div>
-<pre><code>##   businessentityid                     jobtitle  birthdate
-## 1                3          Engineering Manager 1974-11-12
-## 2               79 Production Technician - WC40 1966-12-08
-## 3              195 Production Technician - WC40 1985-12-25
-## 4              222             Master Scheduler 1968-09-17
-## 5              275         Sales Representative 1968-12-25</code></pre>
+<pre><code>##   businessentityid                          jobtitle  birthdate
+## 1                8 Research and Development Engineer 1986-06-05
+## 2               17               Marketing Assistant 1987-05-03
+## 3               43      Production Technician - WC60 1988-11-19
+## 4              182      Production Technician - WC20 1986-12-01
+## 5              191      Production Technician - WC45 1988-03-14
+## 6              223              Scheduling Assistant 1987-12-22
+## 7              248                        Accountant 1979-07-01</code></pre>
 <p><strong>Exact sample of 100 records</strong></p>
 <p>This technique depends on knowing the range of a record index, such as the <code>businessentityid</code> in the <code>employee</code> table of our <code>adventureworks</code> database.</p>
 <p>Start by finding the min and max values.</p>
@@ -613,12 +627,12 @@ A Tidyverse Approach&quot;</div></a>
 <pre><code>## # A tibble: 6 x 4
 ##   jobtitle                 vacationhours sickleavehours today              
 ##   &lt;chr&gt;                            &lt;int&gt;          &lt;int&gt; &lt;dttm&gt;             
-## 1 Chief Executive Officer             99             69 2019-08-07 15:01:27
-## 2 Vice President of Engin…             1             20 2019-08-07 15:01:27
-## 3 Engineering Manager                  2             21 2019-08-07 15:01:27
-## 4 Senior Tool Designer                48             80 2019-08-07 15:01:27
-## 5 Design Engineer                      5             22 2019-08-07 15:01:27
-## 6 Design Engineer                      6             23 2019-08-07 15:01:27</code></pre>
+## 1 Chief Executive Officer             99             69 2019-08-15 17:13:12
+## 2 Vice President of Engin…             1             20 2019-08-15 17:13:12
+## 3 Engineering Manager                  2             21 2019-08-15 17:13:12
+## 4 Senior Tool Designer                48             80 2019-08-15 17:13:12
+## 5 Design Engineer                      5             22 2019-08-15 17:13:12
+## 6 Design Engineer                      6             23 2019-08-15 17:13:12</code></pre>
 </div>
 <div id="examining-a-single-table-with-r" class="section level2">
 <h2><span class="header-section-number">7.4</span> Examining a single table with R</h2>
@@ -740,7 +754,7 @@ A Tidyverse Approach&quot;</div></a>
 ##  n obs: 290 
 ##  n variables: 15 
 ## 
-## ── Variable type:character ──────────────────────────────────────────────────────
+## ── Variable type:character ─────────────────────────────────────────────────────────────────────
 ##          variable missing complete   n min max empty n_unique
 ##            gender       0      290 290   1   1     0        2
 ##          jobtitle       0      290 290   5  40     0       67
@@ -750,12 +764,12 @@ A Tidyverse Approach&quot;</div></a>
 ##  organizationnode       0      290 290   1  11     0      290
 ##           rowguid       0      290 290  36  36     0      290
 ## 
-## ── Variable type:Date ───────────────────────────────────────────────────────────
+## ── Variable type:Date ──────────────────────────────────────────────────────────────────────────
 ##   variable missing complete   n        min        max     median n_unique
 ##  birthdate       0      290 290 1951-10-17 1991-05-31 1978-10-19      275
 ##   hiredate       0      290 290 2006-06-30 2013-05-30 2009-02-02      164
 ## 
-## ── Variable type:integer ────────────────────────────────────────────────────────
+## ── Variable type:integer ───────────────────────────────────────────────────────────────────────
 ##          variable missing complete   n   mean    sd p0   p25   p50    p75
 ##  businessentityid       0      290 290 145.5  83.86  1 73.25 145.5 217.75
 ##    sickleavehours       0      290 290  45.31 14.54 20 33     46    58   
@@ -765,12 +779,12 @@ A Tidyverse Approach&quot;</div></a>
 ##    80 ▇▇▇▇▇▇▃▁
 ##    99 ▇▆▇▇▇▇▇▇
 ## 
-## ── Variable type:logical ────────────────────────────────────────────────────────
+## ── Variable type:logical ───────────────────────────────────────────────────────────────────────
 ##      variable missing complete   n mean                    count
 ##   currentflag       0      290 290 1             TRU: 290, NA: 0
 ##  salariedflag       0      290 290 0.18 FAL: 238, TRU: 52, NA: 0
 ## 
-## ── Variable type:POSIXct ────────────────────────────────────────────────────────
+## ── Variable type:POSIXct ───────────────────────────────────────────────────────────────────────
 ##      variable missing complete   n        min        max     median
 ##  modifieddate       0      290 290 2014-06-30 2014-12-26 2014-06-30
 ##  n_unique
