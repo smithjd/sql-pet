@@ -44,9 +44,9 @@ As we show later on, the database serves as a store of data and as an engine for
 
 We've already seen how the connections tab is the easiest way to explore a database.  
 
-![Adventureworks connections tab](screenshots/adventureworks-connections-tab.png)
+![Adventureworks connections tab](screenshots/adventureworks-schema-connections-tab.png)
 
-It's a little more complex than the `cattle` example because we have additional structure: the `adventureworks` [database contains schemas](https://en.wikipedia.org/wiki/Database_schema), which contain tables.  The `hr` schema is the same as the `humanresources` schema, but with nicknames (the `d` table in `hr` is the same as the `department` table in the `humanresources` schema).  Schemas are used to control access and to set up shortcuts.  Clicking on the the right opens up the table view of the `d` table:
+It's a little more complex than the typical `SQLite` examples found in many tutorials because we have additional structure: the `adventureworks` [database contains schemas](https://en.wikipedia.org/wiki/Database_schema), which contain tables.  The `hr` schema is the same as the `humanresources` schema, but with nicknames (the `d` table in `hr` is the same as the `department` table in the `humanresources` schema).  Schemas are used to control access and to set up shortcuts.  Clicking on the the right opens up the table view of the `d` table:
 
 ![Adventureworks connections tab](screenshots/adventureworks-hr-dept-table.png)
 

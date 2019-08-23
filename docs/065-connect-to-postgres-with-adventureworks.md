@@ -129,7 +129,7 @@ dbExecute(con, "set search_path to sales, public;")
 ```
 ## [1] 0
 ```
-With the custom `search_path`, the following command works, but it will fail without out it.
+With the custom `search_path`, the following command shows the tables in the `sales` schema.  In the `adventureworks` database, there are no tables in the `public` schema.
 
 ```r
 dbListTables(con)
@@ -164,110 +164,136 @@ dbListTables(con)
 ## [26] "salestaxrate"                      
 ## [27] "salesterritory"
 ```
+Notice there are several tables that start with the letter *v*: they are actually *views* which will turn out to be important.  They are clearly distinguished in the connections tab, but the naming is a matter of convention.
+
 Same for `dbListFields`:
 
 ```r
-dbListFields(con, "salesperson")
+dbListFields(con, "salesorderheader")
 ```
 
 ```
-## [1] "businessentityid" "territoryid"      "salesquota"      
-## [4] "bonus"            "commissionpct"    "salesytd"        
-## [7] "saleslastyear"    "rowguid"          "modifieddate"
+##  [1] "salesorderid"           "revisionnumber"        
+##  [3] "orderdate"              "duedate"               
+##  [5] "shipdate"               "status"                
+##  [7] "onlineorderflag"        "purchaseordernumber"   
+##  [9] "accountnumber"          "customerid"            
+## [11] "salespersonid"          "territoryid"           
+## [13] "billtoaddressid"        "shiptoaddressid"       
+## [15] "shipmethodid"           "creditcardid"          
+## [17] "creditcardapprovalcode" "currencyrateid"        
+## [19] "subtotal"               "taxamt"                
+## [21] "freight"                "totaldue"              
+## [23] "comment"                "rowguid"               
+## [25] "modifieddate"
 ```
 
 Thus with this search order, the following two produce identical results:
 
 ```r
-tbl(con, in_schema("sales", "salesperson")) %>%
+tbl(con, in_schema("sales", "salesorderheader")) %>%
   head()
 ```
 
 ```
-## # Source:   lazy query [?? x 9]
+## # Source:   lazy query [?? x 25]
 ## # Database: postgres [postgres@localhost:5432/adventureworks]
-##   businessentityid territoryid salesquota bonus commissionpct salesytd
-##              <int>       <int>      <dbl> <dbl>         <dbl>    <dbl>
-## 1              274          NA         NA     0         0      559698.
-## 2              275           2     300000  4100         0.012 3763178.
-## 3              276           4     250000  2000         0.015 4251369.
-## 4              277           3     250000  2500         0.015 3189418.
-## 5              278           6     250000   500         0.01  1453719.
-## 6              279           5     300000  6700         0.01  2315186.
-## # … with 3 more variables: saleslastyear <dbl>, rowguid <chr>,
-## #   modifieddate <dttm>
+##   salesorderid revisionnumber orderdate           duedate            
+##          <int>          <int> <dttm>              <dttm>             
+## 1        43659              8 2011-05-31 00:00:00 2011-06-12 00:00:00
+## 2        43660              8 2011-05-31 00:00:00 2011-06-12 00:00:00
+## 3        43661              8 2011-05-31 00:00:00 2011-06-12 00:00:00
+## 4        43662              8 2011-05-31 00:00:00 2011-06-12 00:00:00
+## 5        43663              8 2011-05-31 00:00:00 2011-06-12 00:00:00
+## 6        43664              8 2011-05-31 00:00:00 2011-06-12 00:00:00
+## # … with 21 more variables: shipdate <dttm>, status <int>,
+## #   onlineorderflag <lgl>, purchaseordernumber <chr>, accountnumber <chr>,
+## #   customerid <int>, salespersonid <int>, territoryid <int>,
+## #   billtoaddressid <int>, shiptoaddressid <int>, shipmethodid <int>,
+## #   creditcardid <int>, creditcardapprovalcode <chr>,
+## #   currencyrateid <int>, subtotal <dbl>, taxamt <dbl>, freight <dbl>,
+## #   totaldue <dbl>, comment <chr>, rowguid <chr>, modifieddate <dttm>
 ```
 
 ```r
-tbl(con, "salesperson") %>%
+tbl(con, "salesorderheader") %>%
   head()
 ```
 
 ```
-## # Source:   lazy query [?? x 9]
+## # Source:   lazy query [?? x 25]
 ## # Database: postgres [postgres@localhost:5432/adventureworks]
-##   businessentityid territoryid salesquota bonus commissionpct salesytd
-##              <int>       <int>      <dbl> <dbl>         <dbl>    <dbl>
-## 1              274          NA         NA     0         0      559698.
-## 2              275           2     300000  4100         0.012 3763178.
-## 3              276           4     250000  2000         0.015 4251369.
-## 4              277           3     250000  2500         0.015 3189418.
-## 5              278           6     250000   500         0.01  1453719.
-## 6              279           5     300000  6700         0.01  2315186.
-## # … with 3 more variables: saleslastyear <dbl>, rowguid <chr>,
-## #   modifieddate <dttm>
+##   salesorderid revisionnumber orderdate           duedate            
+##          <int>          <int> <dttm>              <dttm>             
+## 1        43659              8 2011-05-31 00:00:00 2011-06-12 00:00:00
+## 2        43660              8 2011-05-31 00:00:00 2011-06-12 00:00:00
+## 3        43661              8 2011-05-31 00:00:00 2011-06-12 00:00:00
+## 4        43662              8 2011-05-31 00:00:00 2011-06-12 00:00:00
+## 5        43663              8 2011-05-31 00:00:00 2011-06-12 00:00:00
+## 6        43664              8 2011-05-31 00:00:00 2011-06-12 00:00:00
+## # … with 21 more variables: shipdate <dttm>, status <int>,
+## #   onlineorderflag <lgl>, purchaseordernumber <chr>, accountnumber <chr>,
+## #   customerid <int>, salespersonid <int>, territoryid <int>,
+## #   billtoaddressid <int>, shiptoaddressid <int>, shipmethodid <int>,
+## #   creditcardid <int>, creditcardapprovalcode <chr>,
+## #   currencyrateid <int>, subtotal <dbl>, taxamt <dbl>, freight <dbl>,
+## #   totaldue <dbl>, comment <chr>, rowguid <chr>, modifieddate <dttm>
 ```
 
 ## `dplyr` connection objects
 As introduced in the previous chapter, the `dplyr::tbl` function creates an object that might **look** like a data frame in that when you enter it on the command line, it prints a bunch of rows from the dbms table.  But it is actually a **list** object that `dplyr` uses for constructing queries and retrieving data from the DBMS.  
 
-The following code illustrates these issues.  The `dplyr::tbl` function creates the connection object that we store in an object named `person_table`:
+The following code illustrates these issues.  The `dplyr::tbl` function creates the connection object that we store in an object named `salesorderheader_table`:
 
 ```r
-person_table <- dplyr::tbl(con, in_schema("person", "person")) %>% 
+salesorderheader_table <- dplyr::tbl(con, in_schema("sales", "salesorderheader")) %>% 
   select(-rowguid) %>% 
-  rename(personal_details_updated = modifieddate)
+  rename(salesorderheader_details_updated = modifieddate)
 ```
 
-At first glance, it _acts_ like a data frame when you print it, although it only prints 10 of the table's 1,000 rows:
+At first glance, it _acts_ like a data frame when you print it, although it only prints 10 of the table's 31,465 rows:
 
 ```r
-person_table
+salesorderheader_table
 ```
 
 ```
-## # Source:   lazy query [?? x 12]
+## # Source:   lazy query [?? x 24]
 ## # Database: postgres [postgres@localhost:5432/adventureworks]
-##    businessentityid persontype namestyle title firstname middlename
-##               <int> <chr>      <lgl>     <chr> <chr>     <chr>     
-##  1                1 EM         FALSE     <NA>  Ken       J         
-##  2                2 EM         FALSE     <NA>  Terri     Lee       
-##  3                3 EM         FALSE     <NA>  Roberto   <NA>      
-##  4                4 EM         FALSE     <NA>  Rob       <NA>      
-##  5                5 EM         FALSE     Ms.   Gail      A         
-##  6                6 EM         FALSE     Mr.   Jossef    H         
-##  7                7 EM         FALSE     <NA>  Dylan     A         
-##  8                8 EM         FALSE     <NA>  Diane     L         
-##  9                9 EM         FALSE     <NA>  Gigi      N         
-## 10               10 EM         FALSE     <NA>  Michael   <NA>      
-## # … with more rows, and 6 more variables: lastname <chr>, suffix <chr>,
-## #   emailpromotion <int>, additionalcontactinfo <chr>, demographics <chr>,
-## #   personal_details_updated <dttm>
+##    salesorderid revisionnumber orderdate           duedate            
+##           <int>          <int> <dttm>              <dttm>             
+##  1        43659              8 2011-05-31 00:00:00 2011-06-12 00:00:00
+##  2        43660              8 2011-05-31 00:00:00 2011-06-12 00:00:00
+##  3        43661              8 2011-05-31 00:00:00 2011-06-12 00:00:00
+##  4        43662              8 2011-05-31 00:00:00 2011-06-12 00:00:00
+##  5        43663              8 2011-05-31 00:00:00 2011-06-12 00:00:00
+##  6        43664              8 2011-05-31 00:00:00 2011-06-12 00:00:00
+##  7        43665              8 2011-05-31 00:00:00 2011-06-12 00:00:00
+##  8        43666              8 2011-05-31 00:00:00 2011-06-12 00:00:00
+##  9        43667              8 2011-05-31 00:00:00 2011-06-12 00:00:00
+## 10        43668              8 2011-05-31 00:00:00 2011-06-12 00:00:00
+## # … with more rows, and 20 more variables: shipdate <dttm>, status <int>,
+## #   onlineorderflag <lgl>, purchaseordernumber <chr>, accountnumber <chr>,
+## #   customerid <int>, salespersonid <int>, territoryid <int>,
+## #   billtoaddressid <int>, shiptoaddressid <int>, shipmethodid <int>,
+## #   creditcardid <int>, creditcardapprovalcode <chr>,
+## #   currencyrateid <int>, subtotal <dbl>, taxamt <dbl>, freight <dbl>,
+## #   totaldue <dbl>, comment <chr>, salesorderheader_details_updated <dttm>
 ```
 
 However, notice that the first output line shows `??`, rather than providing the number of rows in the table. Similarly, the next to last line shows:
 ```
-    … with more rows, and 8 more variables
+    … with more rows, and 20 more variables:
 ```
-whereas the output for a normal `tbl` of this film data would say:
+whereas the output for a normal `tbl` of this salesorderheader data would say:
 ```
-    … with more 1,000, and 8 more variables
+    … with 31,455 more rows, and 20 more variables:
 ```
 
-So even though `person_table` is a `tbl`, it's **also** a `tbl_PqConnection`:
+So even though `salesorderheader_table` is a `tbl`, it's **also** a `tbl_PqConnection`:
 
 ```r
-class(person_table)
+class(salesorderheader_table)
 ```
 
 ```
@@ -275,10 +301,10 @@ class(person_table)
 ## [4] "tbl_lazy"         "tbl"
 ```
 
-It is not just a normal `tbl` of data. We can see that from the structure of `person_table`:
+It is not just a normal `tbl` of data. We can see that from the structure of `salesorderheader_table`:
 
 ```r
-str(person_table)
+str(salesorderheader_table)
 ```
 
 ```
@@ -295,24 +321,36 @@ str(person_table)
 ##  $ ops:List of 4
 ##   ..$ name: chr "select"
 ##   ..$ x   :List of 2
-##   .. ..$ x   : 'ident_q' chr "person.person"
-##   .. ..$ vars: chr [1:13] "businessentityid" "persontype" "namestyle" "title" ...
+##   .. ..$ x   : 'ident_q' chr "sales.salesorderheader"
+##   .. ..$ vars: chr [1:25] "salesorderid" "revisionnumber" "orderdate" "duedate" ...
 ##   .. ..- attr(*, "class")= chr [1:3] "op_base_remote" "op_base" "op"
 ##   ..$ dots: list()
 ##   ..$ args:List of 1
-##   .. ..$ vars:List of 12
-##   .. .. ..$ businessentityid        : symbol businessentityid
-##   .. .. ..$ persontype              : symbol persontype
-##   .. .. ..$ namestyle               : symbol namestyle
-##   .. .. ..$ title                   : symbol title
-##   .. .. ..$ firstname               : symbol firstname
-##   .. .. ..$ middlename              : symbol middlename
-##   .. .. ..$ lastname                : symbol lastname
-##   .. .. ..$ suffix                  : symbol suffix
-##   .. .. ..$ emailpromotion          : symbol emailpromotion
-##   .. .. ..$ additionalcontactinfo   : symbol additionalcontactinfo
-##   .. .. ..$ demographics            : symbol demographics
-##   .. .. ..$ personal_details_updated: symbol modifieddate
+##   .. ..$ vars:List of 24
+##   .. .. ..$ salesorderid                    : symbol salesorderid
+##   .. .. ..$ revisionnumber                  : symbol revisionnumber
+##   .. .. ..$ orderdate                       : symbol orderdate
+##   .. .. ..$ duedate                         : symbol duedate
+##   .. .. ..$ shipdate                        : symbol shipdate
+##   .. .. ..$ status                          : symbol status
+##   .. .. ..$ onlineorderflag                 : symbol onlineorderflag
+##   .. .. ..$ purchaseordernumber             : symbol purchaseordernumber
+##   .. .. ..$ accountnumber                   : symbol accountnumber
+##   .. .. ..$ customerid                      : symbol customerid
+##   .. .. ..$ salespersonid                   : symbol salespersonid
+##   .. .. ..$ territoryid                     : symbol territoryid
+##   .. .. ..$ billtoaddressid                 : symbol billtoaddressid
+##   .. .. ..$ shiptoaddressid                 : symbol shiptoaddressid
+##   .. .. ..$ shipmethodid                    : symbol shipmethodid
+##   .. .. ..$ creditcardid                    : symbol creditcardid
+##   .. .. ..$ creditcardapprovalcode          : symbol creditcardapprovalcode
+##   .. .. ..$ currencyrateid                  : symbol currencyrateid
+##   .. .. ..$ subtotal                        : symbol subtotal
+##   .. .. ..$ taxamt                          : symbol taxamt
+##   .. .. ..$ freight                         : symbol freight
+##   .. .. ..$ totaldue                        : symbol totaldue
+##   .. .. ..$ comment                         : symbol comment
+##   .. .. ..$ salesorderheader_details_updated: symbol modifieddate
 ##   ..- attr(*, "class")= chr [1:3] "op_select" "op_single" "op"
 ##  - attr(*, "class")= chr [1:5] "tbl_PqConnection" "tbl_dbi" "tbl_sql" "tbl_lazy" ...
 ```
@@ -320,7 +358,7 @@ str(person_table)
 It has only _two_ rows!  The first row contains all the information in the `con` object, which contains information about all the tables and objects in the database:
 
 ```r
-person_table$src$con@typnames$typname[380:437]
+salesorderheader_table$src$con@typnames$typname[380:437]
 ```
 
 ```
@@ -354,16 +392,28 @@ person_table$src$con@typnames$typname[380:437]
 ## [55] "_businessentityaddress"          "countryregion"                  
 ## [57] "_countryregion"                  "pg_toast_16533"
 ```
-The second row contains a list of the columns in the `film` table, among other things:
+The second row contains a list of the columns in the `salesorderheader` table, among other things:
 
 ```r
-person_table$ops$vars
+salesorderheader_table$ops$x$vars
 ```
 
 ```
-## NULL
+##  [1] "salesorderid"           "revisionnumber"        
+##  [3] "orderdate"              "duedate"               
+##  [5] "shipdate"               "status"                
+##  [7] "onlineorderflag"        "purchaseordernumber"   
+##  [9] "accountnumber"          "customerid"            
+## [11] "salespersonid"          "territoryid"           
+## [13] "billtoaddressid"        "shiptoaddressid"       
+## [15] "shipmethodid"           "creditcardid"          
+## [17] "creditcardapprovalcode" "currencyrateid"        
+## [19] "subtotal"               "taxamt"                
+## [21] "freight"                "totaldue"              
+## [23] "comment"                "rowguid"               
+## [25] "modifieddate"
 ```
-`person_table` holds information needed to get the data from the 'film' table, but `person_table` does not hold the data itself. In the following sections, we will examine more closely this relationship between the `person_table` object and the data in the database's 'film' table.
+`salesorderheader_table` holds information needed to get the data from the 'salesorderheader' table, but `salesorderheader_table` does not hold the data itself. In the following sections, we will examine more closely this relationship between the `salesorderheader_table` object and the data in the database's 'salesorderheader' table.
 
 Disconnect from the database:
 
@@ -393,11 +443,10 @@ sp_docker_containers_tibble(list_all = TRUE)
 ```
 
 ```
-## # A tibble: 2 x 12
+## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 6c46bacc8312 post… docker… 2019-08-1… 28 sec… <NA>  Exite… 0B (… adve…
-## 2 185a8e082757 post… docker… 2019-08-0… 9 days… <NA>  Exite… 63B … adv11
+## 1 0105899fe547 post… docker… 2019-08-2… 26 sec… <NA>  Exite… 0B (… adve…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 
@@ -413,7 +462,7 @@ sp_docker_containers_tibble()
 ## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 6c46bacc8312 post… docker… 2019-08-1… 30 sec… 0.0.… Up Le… 63B … adve…
+## 1 0105899fe547 post… docker… 2019-08-2… 28 sec… 0.0.… Up Le… 63B … adve…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 Connect to the `adventureworks` database in PostgreSQL:
@@ -429,26 +478,31 @@ con <- sp_get_postgres_connection(
 )
 ```
 
-Check that you can still see the first few rows of the `employeeinfo` table:
+Check that you can still see the first few rows of the `salesorderheader` table:
 
 ```r
-tbl(con, in_schema("sales", "salesperson")) %>%
+tbl(con, in_schema("sales", "salesorderheader")) %>%
   head()
 ```
 
 ```
-## # Source:   lazy query [?? x 9]
+## # Source:   lazy query [?? x 25]
 ## # Database: postgres [postgres@localhost:5432/adventureworks]
-##   businessentityid territoryid salesquota bonus commissionpct salesytd
-##              <int>       <int>      <dbl> <dbl>         <dbl>    <dbl>
-## 1              274          NA         NA     0         0      559698.
-## 2              275           2     300000  4100         0.012 3763178.
-## 3              276           4     250000  2000         0.015 4251369.
-## 4              277           3     250000  2500         0.015 3189418.
-## 5              278           6     250000   500         0.01  1453719.
-## 6              279           5     300000  6700         0.01  2315186.
-## # … with 3 more variables: saleslastyear <dbl>, rowguid <chr>,
-## #   modifieddate <dttm>
+##   salesorderid revisionnumber orderdate           duedate            
+##          <int>          <int> <dttm>              <dttm>             
+## 1        43659              8 2011-05-31 00:00:00 2011-06-12 00:00:00
+## 2        43660              8 2011-05-31 00:00:00 2011-06-12 00:00:00
+## 3        43661              8 2011-05-31 00:00:00 2011-06-12 00:00:00
+## 4        43662              8 2011-05-31 00:00:00 2011-06-12 00:00:00
+## 5        43663              8 2011-05-31 00:00:00 2011-06-12 00:00:00
+## 6        43664              8 2011-05-31 00:00:00 2011-06-12 00:00:00
+## # … with 21 more variables: shipdate <dttm>, status <int>,
+## #   onlineorderflag <lgl>, purchaseordernumber <chr>, accountnumber <chr>,
+## #   customerid <int>, salespersonid <int>, territoryid <int>,
+## #   billtoaddressid <int>, shiptoaddressid <int>, shipmethodid <int>,
+## #   creditcardid <int>, creditcardapprovalcode <chr>,
+## #   currencyrateid <int>, subtotal <dbl>, taxamt <dbl>, freight <dbl>,
+## #   totaldue <dbl>, comment <chr>, rowguid <chr>, modifieddate <dttm>
 ```
 
 ## Cleaning up
@@ -473,8 +527,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## 6c46bacc8312        postgres:11         "docker-entrypoint.s…"   30 seconds ago      Exited (0) Less than a second ago                       adventureworks
-## 185a8e082757        postgres:11         "docker-entrypoint.s…"   9 days ago          Exited (137) 9 days ago                                 adv11
+## 0105899fe547        postgres:11         "docker-entrypoint.s…"   28 seconds ago      Exited (0) Less than a second ago                       adventureworks
 ```
 
 Next time, you can just use this command to start the container: 

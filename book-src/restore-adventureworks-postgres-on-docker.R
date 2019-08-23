@@ -40,7 +40,6 @@ system2("docker", docker_cmd, stdout = TRUE, stderr = TRUE)
 Sys.sleep(2)
 
 # create the adventureworks database in the Docker container
-system2("docker", 'exec -i adventureworks psql -U postgres -c "DROP SCHEMA IF EXISTS public CASCADE;"')
 system2("docker", 'exec -i adventureworks psql -U postgres -c "CREATE DATABASE adventureworks;"')
 
 

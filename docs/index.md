@@ -4,7 +4,7 @@ title: |
     | A Tidyverse Approach"
 author: John David Smith, Sophie Yang, M. Edward (Ed) 
   Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, and Ian Frantz
-date: "2019-08-15"
+date: "2019-08-23"
 description: An introduction to Docker and PostgreSQL for R users to simulate use cases behind corporate walls.
 bibliography: [book.bib, packages.bib]
 documentclass: book
