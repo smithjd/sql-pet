@@ -175,11 +175,10 @@ sp_docker_containers_tibble(list_all = TRUE)
 ```
 
 ```
-## # A tibble: 2 x 12
+## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 6c46bacc8312 post… docker… 2019-08-1… 17 sec… <NA>  Exite… 0B (… adve…
-## 2 185a8e082757 post… docker… 2019-08-0… 9 days… <NA>  Exite… 63B … adv11
+## 1 0105899fe547 post… docker… 2019-08-2… 16 sec… <NA>  Exite… 0B (… adve…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 
@@ -195,7 +194,7 @@ sp_docker_containers_tibble()
 ## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 6c46bacc8312 post… docker… 2019-08-1… 18 sec… 0.0.… Up Le… 63B … adve…
+## 1 0105899fe547 post… docker… 2019-08-2… 17 sec… 0.0.… Up Le… 63B … adve…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 Connect to the `adventureworks` database in PostgreSQL:
@@ -235,8 +234,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## 6c46bacc8312        postgres:11         "docker-entrypoint.s…"   19 seconds ago      Exited (0) Less than a second ago                       adventureworks
-## 185a8e082757        postgres:11         "docker-entrypoint.s…"   9 days ago          Exited (137) 9 days ago                                 adv11
+## 0105899fe547        postgres:11         "docker-entrypoint.s…"   18 seconds ago      Exited (0) Less than a second ago                       adventureworks
 ```
 
 Next time, you can just use this command to start the container: 
