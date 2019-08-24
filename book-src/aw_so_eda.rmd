@@ -37,34 +37,21 @@ con <- sp_get_postgres_connection(
 )
 ```
 
-```{r connection status}
+```{r connection status,echo=FALSE}
 con
 ```
 
 ```{r}
-# list view definiton
-get_viewdef <- function(schema_view) {
-  #schema_view format schema.view: e.g.: sales.vsalesperson
-  view_sql <- dbGetQuery(con,"select pg_get_viewdef(schema_view, true)")
-  View(view_sql)
-}
-```
-
-```{r}
-# dbGetQuery(con,"select pg_get_viewdef(schema_view, true)")
-
-cat(unlist(dbGetQuery(con,"select pg_get_viewdef('sa.soh', true)")))
-
+cat(unlist(dbGetQuery(con,"select pg_get_viewdef('sales.vsalesperson', true)")))
 
 ```
 
 
-```{r}
-# view_sql <- get_viewdef('hr.d')
-# cat(unlist(view_sql))
+```{r,echo=FALSE}
+dbGetQuery(con,"select pg_get_viewdef('sales.vsalespersonsalesbyfiscalyearsdata', true)")
 
+# cat(unlist(dbGetQuery(con,"select pg_get_viewdef('sa.soh', true)")))
 ```
-
 
 https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf
 
@@ -118,25 +105,14 @@ From the title we see that the available data covers the last seven months of 20
 How are the sales dollars related to the number of orders and what is the average order amount?  In the next plot, the title is centered, the y-axis is rescaled, and number of orders and average order dollar amount is added to the top of each bar. 
 
 ```{r annual sales and dollars}
-# annual_sales2 <- dbGetQuery(con,
-# "SELECT date_trunc('year', orderdate)::date DATE
-#     ,count(*) * 1.0 orders
-#     ,round(AVG(subtotal),2) avg_so_amt
-#     ,round(sum(subtotal),2) order_amt
-# FROM sales.salesorderheader sh
-# GROUP BY date_trunc('year', orderdate)
-# ORDER BY DATE
-# ")
-# 
-# sp_print_df(annual_sales2)
-
 ggplot(data=annual_sales,aes(x=date,y=so_dollars)) +
   geom_col(fill = 'lightblue', color = 'blue') +
   xlab("Year") +
   ylab("Sales Dollars") +
   scale_y_continuous(labels = dollar) + # clean up y-axis 
-  geom_text(aes(label=paste('orders',so_cnt,'\n','avg $ ',avg_so_dollars)),vjust = 1.5)+ # orders inside each bar at top
-  theme(plot.title = element_text(hjust = 0.5)) +           # Center ggplot title
+  geom_text(aes(label=paste('orders',so_cnt,'\n'
+                            ,'avg $ ',avg_so_dollars)),vjust = 1.5)+ # orders inside each bar at top
+  theme(plot.title = element_text(hjust = 0.5)) +                    # Center ggplot title
   ggtitle(paste("Sales by Year\n",min_dt," - ", max_dt))
 ```
 
@@ -178,18 +154,17 @@ ggplot(data=monthly_sales,aes(x=mo,y=so_dollars,fill=yr)) +
   xlab("Month") +
   ylab("Sales Dollars") +
   scale_y_continuous(labels = dollar) +
-#  geom_text(aes(y=cum_ord_amt,label=orders),vjust = 1.5) +     # Add nbr of orders
   geom_text(aes(label=so_cnt),vjust = 1.5) +                    # Add nbr of orders
   theme(plot.title = element_text(hjust = 0.5)) +               # Center ggplot title
   ggtitle(paste("Sales by Month\n",min_dt," - ",max_dt))
 ```
 
-That is one useless graph.  It is hard to read/interpret 
+That is one ugly and useless graph.  It is hard to read/interpret 
 *  the dollar amounts associated with each color/year in each bar
 *  the number of orders/month for each year, 
 *  the x-axis labels and associated months. 
 
-SQL does not have a factor data type.  The 'mo' and 'yr' INT data types are converted to factors and the orders by month by year are moved to the top of the bar by year in the next plot.
+SQL does not have a factor data type.  The 'mo' and 'yr' INT data types are converted to factors.  This changes the yr legend on the right from the default black to blue to the default factor colors.  The bar text positioned based on cum_so_dollars and adjusted down 1.5 units.
 
 ```{r}
 monthly_sales$mo <- as.factor(monthly_sales$mo)
@@ -200,19 +175,33 @@ ggplot(data=monthly_sales,aes(x=mo,y=so_dollars,fill=yr)) +
   xlab("Month") +
   ylab("Sales Dollars") +
   scale_y_continuous(labels = dollar) +
-  geom_text(aes(y=cum_so_dollars,label=so_cnt),vjust = 1.5) +   # Add nbr of orders @ top of stacked bar
+  geom_text(aes(y=cum_so_dollars,label=so_cnt),vjust = 1.5) +   # Add so_cnt based on mo/yr cumulative $ amounts
   theme(plot.title = element_text(hjust = 0.5)) +               # Center ggplot title
   ggtitle(paste("Sales by Month by Year\nWith Number of Sales Orders\n",min_dt," - ", max_dt))
 ```  
   
-This graph is better.  The colors associated with each year and the number of orders by year are much easier to read and the x-axis now reflect the months.    
+This plot is better.  The colors associated with each year and the number of orders by year are much easier to read and the x-axis now reflect the months.    
 
-Having stacked bars, it is difficult to compare the monthly dollar amounts between the different years.  The next plot fixes some of these short comings.  Instead of stacking the bars vertically, the next plot shows the bars horizontally in ascending year order for each month and the plot width is increased from the default 7 to 16.
+Having stacked bars, it is difficult to compare the monthly dollar amounts between the different years.  The next plot fixes some of these short comings.  Instead of stacking the bars vertically, the next plot shows the bars horizontally in ascending year order for each month and the plot width is increased from the default 7 to 16.  Note that the first four months only have three years and that the bars are wider than those with four bars.  The overall width of for each month is same.
 
-```{r fig.cap='caption goes here',fig.width=16}
+ <font color='red'>
+ 
+        # The next two statements were done in the previous code block
+        # Why do the need to be done again in this code block
+        
+        monthly_sales$mo <- as.factor(monthly_sales$mo)
+        
+        monthly_sales$yr <- as.factor(monthly_sales$yr)
+</font>
+
+```{r dodge column plot,fig.width=16}
+# The next two statements were done in the previous code block
+# Why do the need to be done again in this code block
+monthly_sales$mo <- as.factor(monthly_sales$mo)
 monthly_sales$yr <- as.factor(monthly_sales$yr)
 
-ggplot(data=monthly_sales,aes(x=factor(mo),y=so_dollars,fill=yr)) +
+# ggplot(data=monthly_sales,aes(x=mo,y=so_dollars,fill=yr)) +
+ggplot(data=monthly_sales,aes(x=mo,y=so_dollars,fill=yr)) +
   geom_col(position='dodge',color='black') + # unstack columns and outline in black
   xlab("Month") +
   ylab("Sales Dollars") +
@@ -229,12 +218,12 @@ ggplot(data=monthly_sales,aes(x=factor(mo),y=so_dollars,fill=yr)) +
 
 The next plot shows the same data as a line graph.
 
-```{r fig.cap='caption goes here',fig.width=16}
-sp_print_df(monthly_sales)
+```{r fig.cap='SO, SO Dollars, and Average SO Dollars',fig.width=16}
+#sp_print_df(monthly_sales)
 
 ggplot(data=monthly_sales
-       ,aes(x=mo,y=so_dollars,color=yr,
-            group = yr)) + # Removes msg: Each group consists of only one observation. Do you need to adjust the group aesthetic?
+       ,aes(x=mo,y=so_dollars,color=as.factor(yr),
+            group = as.factor(yr))) + # Removes msg: Each group consists of only one observation. Do you need to adjust the group aesthetic?
 
   geom_line() +
   geom_point() +
@@ -253,9 +242,9 @@ ggplot(data=monthly_sales
 
 A couple of things jump out from the graph.
 
-1.  2012 and 2013 have similar sale dollar plots and peak every three months.   
+1.  2012 and 2013 have similar sales dollar plots and peak every three months.  This may reflect the closing as many sales orders as possible to make the quarterly sales numbers look good.
 2.  2011 has more variation than 2012 and 2013 and peaks every two months.
-3.  2014 has the most variation and also peaks every two months.
+3.  2014 has the most variation and also peaks every two months.  Both the number of sales, 939, and the average sales order size, $52.19 plumet in June 2014.
 
 ```{r}
 so_cnt_2011 <- monthly_sales %>% filter (yr == 2011) %>% select(so_cnt)
@@ -275,34 +264,110 @@ cat('\n\n2014 vs 2013 sales order ratios for January - June\n',unlist(so_cnt_201
 
 ```
 
-```{r fig.cap='caption goes here',fig.width=16}
-monthly_sales_online <- dbGetQuery(con,
+Comparing the number of sales orders year over year by month for 2013 and 2012, one can see that the 2013 sales are between 1.2 and 1.8 times larger than the corresponding month of 2012 from January through June.  In July the 2013 sales are 5 to 6 times the 2012 sales orders.
+
+This trend continues into 2014 before the number of sales plumet to just 1.3 time in June.
+
+**What happened in July 2013?**
+
+```{r On-Line Orders Versus Sales Rep Orders,fig.width=16}
+mo_onl_pct <- dbGetQuery(con,
 "
-SELECT EXTRACT(MONTH FROM orderdate) mo, EXTRACT(YEAR FROM orderdate) yr
-     , min(orderdate)::DATE min_orderdate, max(orderdate)::DATE max_orderdate
-     , round(sum(subtotal), 2) sales_dollars
-     , count(*) * 1.0 orders
-     , sh.onlineorderflag
-FROM sales.salesorderheader sh
-GROUP BY EXTRACT(MONTH FROM orderdate), EXTRACT(YEAR FROM orderdate), sh.onlineorderflag
-ORDER BY mo, yr, sh.onlineorderflag
+SELECT *
+      ,round(orders/mo_orders * 100.0,2) mo_pct
+      ,round(sales_dollars/mo_sales * 100.0,2) mo_dlr_pct
+  FROM (SELECT EXTRACT(MONTH FROM orderdate) mo, EXTRACT(YEAR FROM orderdate) yr
+             , min(orderdate)::DATE min_orderdate, max(orderdate)::DATE max_orderdate
+             , round(sum(subtotal), 2) sales_dollars
+             , round(sum(sum(subtotal)) over (partition by EXTRACT(MONTH FROM orderdate),EXTRACT(YEAR FROM orderdate)
+                             order by EXTRACT(YEAR FROM orderdate)),2) mo_sales
+             , count(*) * 1.0 orders
+             , sum(count(*)) over (partition by EXTRACT(MONTH FROM orderdate),EXTRACT(YEAR FROM orderdate)
+                             order by EXTRACT(YEAR FROM orderdate)) mo_orders
+             , case when sh.onlineorderflag then 'online' else 'sales rep' end sales_type
+        FROM sales.salesorderheader sh
+        GROUP BY EXTRACT(MONTH FROM orderdate), EXTRACT(YEAR FROM orderdate), 
+                 case when sh.onlineorderflag then 'online' else 'sales rep' end
+       ) as src
+ORDER BY mo, yr, sales_type
 ")
 
-sp_print_df(monthly_sales_online)
+sp_print_df(mo_onl_pct)
 
-ggplot(data=monthly_sales_online,aes(x=factor(mo),y=sales_dollars,fill=factor(yr))) +
-  geom_col(position='dodge',color='black') + # unstack columns and outline in black
-  xlab("Month") +
-  ylab("Sales Dollars") +
-  scale_y_continuous(labels = dollar) +
-  geom_text(aes(label=onlineorderflag) 
-              ,size = 2.5
-  #           ,color = 'black'
-              ,vjust = 1.5
-              ,position=position_dodge(.9))+ #orders => avg so $ amt
-  theme(plot.title = element_text(hjust = .50)) +                   #Center ggplot title
-  ggtitle(paste("Sales by Month\nBy Online Flag\n",min_dt," - ", max_dt))
+min_dt = min(monthly_sales$min_orderdate)
+max_dt = max(monthly_sales$max_orderdate)
+mo_onl_pct$mo <- as.factor(mo_onl_pct$mo)
+mo_onl_pct$yr <- as.factor(mo_onl_pct$yr)
+mo_onl_pct$sales_type <- as.factor(mo_onl_pct$sales_type)
+mo_2011 <- mo_onl_pct %>% filter (yr == 2011)
+mo_2012 <- mo_onl_pct %>% filter (yr == 2012)
+mo_2013 <- mo_onl_pct %>% filter (yr == 2013)
+mo_2014 <- mo_onl_pct %>% filter (yr == 2014)
+
+
+ggplot(data=NULL) +
+  # data=mo_2011 first results in the x axis months out of order.
+  geom_line (data=mo_2012,aes(x=mo,y=mo_pct,color = yr,group = sales_type)) +
+  geom_line (data=mo_2011,aes(x=mo,y=mo_pct,color = yr,group = sales_type)) +  
+  geom_line (data=mo_2013,aes(x=mo,y=mo_pct,color = yr,group = sales_type)) +  
+  geom_line (data=mo_2014,aes(x=mo,y=mo_pct,color = yr,group = sales_type)) +
+  
+  geom_point(data=mo_2011,aes(x=mo,y=mo_pct,color = sales_type)) +  
+  geom_point(data=mo_2012,aes(x=mo,y=mo_pct,color = sales_type)) +
+  geom_point(data=mo_2013,aes(x=mo,y=mo_pct,color = sales_type)) +
+  geom_point(data=mo_2014,aes(x=mo,y=mo_pct,color = sales_type)) +
+
+  geom_text(data=mo_2011,aes(x=mo,y=mo_pct,label=paste(orders,':$',sales_dollars,':',mo_dlr_pct,'%')),
+            position=position_dodge(.3),size = 2.5,hjust = 0) +
+  geom_text(data=mo_2012,aes(x=mo,y=mo_pct,label=paste(orders,':$',sales_dollars,':',mo_dlr_pct,'%')),
+            position=position_dodge(.3),size = 2.5,hjust = 0) +
+  geom_text(data=mo_2013,aes(x=mo,y=mo_pct,label=paste(orders,':$',sales_dollars,':',mo_dlr_pct,'%')),
+            position=position_dodge(.3),size = 2.5,hjust = 0) +
+  geom_text(data=mo_2014,aes(x=mo,y=mo_pct,label=paste(orders,':$',sales_dollars,':',mo_dlr_pct,'%')),color='blue',
+            position=position_dodge(.3),size = 2.5,hjust = 0,vjust=1.5) +
+
+  xlab("Month") + 
+  ylab("% Online Sales\nvs\n%Rep Sales") +
+  theme(plot.title = element_text(hjust = .50)) +  
+  ggtitle(paste("Sales by Month\n",
+                "Online Orders Versus Rep Orders\n",
+                min_dt," - ", max_dt,'\n',
+                "Each Point shows Number of Orders: $ Amount: % of Total $ For the Month"))
 ```
+The sales rep orders brought in over half the monthly sales dollars for every month except three, February, Arpil, and June of 2014.  The monthly sales rep orders for those months are 3, 2, and 0 respectively. 
+
+# Monthly Sales Rep Performance Analysis
+
+```{r}
+mo_so_sreps <- dbGetQuery(con,
+"
+SELECT *
+      ,round(orders/mo_orders * 100.0,2) mo_pct
+      ,round(sales_dollars/mo_sales * 100.0,2) mo_dlr_pct
+  FROM (SELECT EXTRACT(MONTH FROM orderdate) mo, EXTRACT(YEAR FROM orderdate) yr
+             , min(orderdate)::DATE min_orderdate, max(orderdate)::DATE max_orderdate
+             , round(sum(subtotal), 2) sales_dollars
+             , round(sum(sum(subtotal)) over (partition by EXTRACT(MONTH FROM orderdate),EXTRACT(YEAR FROM orderdate)
+                             order by EXTRACT(YEAR FROM orderdate)),2) mo_sales
+             , count(*) * 1.0 orders
+             , sum(count(*)) over (partition by EXTRACT(MONTH FROM orderdate),EXTRACT(YEAR FROM orderdate)
+                             order by EXTRACT(YEAR FROM orderdate)) mo_orders
+             , case when sh.onlineorderflag then 'online' else 'sales rep' end sales_type
+        FROM sales.salesorderheader sh
+             INNER JOIN sales.salesorderdetail sd
+                ON sh.salesorderid = sd.salesorderid
+       WHERE not sh.onlineorderflag
+        GROUP BY EXTRACT(MONTH FROM orderdate), EXTRACT(YEAR FROM orderdate), 
+                 case when sh.onlineorderflag then 'online' else 'sales rep' end
+       ) as src
+ORDER BY mo, yr, sales_type
+")
+
+sp_print_df(mo_so_sreps)
+
+```
+
+
 
 ```{r fig.cap='caption goes here',fig.width=16}
 monthly_sales_online <- dbGetQuery(con,
@@ -332,7 +397,7 @@ ggplot(data=monthly_sales_online,aes(x=factor(mo),y=sales_dollars,fill=factor(yr
               ,vjust = 1.5
               ,position=position_dodge(.9))+ #orders => avg so $ amt
   theme(plot.title = element_text(hjust = .50)) +                   #Center ggplot title
-  ggtitle(paste("Sales by Month\nBy Online Flag\n",min_dt," - ", max_dt))
+  ggtitle(paste("Sales by Month\nBy Online Flag"))
 ```
 
 
@@ -368,7 +433,7 @@ order by mo,yr
 sp_print_df(monthly_sales_onl_pct)
 ```
 
-```{r}
+```{r fig.width=16}
 mo_onl_pct <- dbGetQuery(con,
 "
 SELECT *
@@ -391,9 +456,7 @@ ORDER BY mo, yr, sales_type
 ")
 
 sp_print_df(mo_onl_pct)
-```
 
-```{r fig.width=16}
 min_dt = min(monthly_sales$min_orderdate)
 max_dt = max(monthly_sales$max_orderdate)
 mo_onl_pct$mo <- as.factor(mo_onl_pct$mo)
@@ -433,10 +496,9 @@ ggplot(data=NULL) +
                 "Online Orders Versus Rep Orders\n",
                 min_dt," - ", max_dt,'\n',
                 "Each Point shows Number of Orders: $ Amount: % of Total $ For the Month"))
+
 ```
-```{r}
-str(mo_2014)
-```
+
 
 
 
@@ -451,27 +513,11 @@ Tidy data is data where:
 *  Each value is a cell.
 
 
-```{r}
-long <- gather(annual_sales2,key="metric",value = "dollars",-date) %>% arrange(date)
-sp_print_df(annual_sales2)
-sp_print_df(long)
-```
 
-```{r}
-ggplot(data=long,aes(x=date,y=order_amt)) +
-  geom_col(fill = 'lightblue', color = 'blue') +
-  xlab("Year") +
-  ylab("Sales") +
-  scale_y_continuous(labels = dollar) +                    #see scales library
-  ggtitle(paste("Sales by Month\n",min_dt," - ",max_dt)) +
-  theme(plot.title = element_text(hjust = 0.5)) +           # Center ggplot title
-  theme(axis.text.x=element_text(angle=60, hjust=1))
-```
 
-```{r}
-gather(annual_sales2,key="metric",value = "dollars",-date) %>% arrange(date)
 
-```
+
+
 
 
 The gather command throws the following warning:
