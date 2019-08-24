@@ -1,0 +1,304 @@
+---
+title: "AW SO EDA"
+author: "Sophie Yang"
+date: "July 19, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+options(digits=10)
+```
+
+```{r libraries, include=FALSE}
+library(tidyverse)
+library(DBI)
+library(RPostgres)
+library(glue)
+require(knitr)
+library(dbplyr)
+library(sqlpetr)
+library(bookdown)
+library(here)
+
+library(scales)  # ggplot xy scales
+```
+
+```{r, start adventureworks}
+sp_docker_start('adventureworks')
+Sys.sleep(10)
+con <- sp_get_postgres_connection(
+  host = "localhost",
+  port = 5432,
+  user = "postgres",
+  password = "postgres",
+  dbname = "adventureworks",
+  seconds_to_test = 60, connection_tab = TRUE
+)
+```
+
+```{r connection status,echo=FALSE}
+con
+```
+
+# Online Orders Versus Sales Rep Orders
+
+In a previous section, we examined how many orders are placed during the month, the associated dollars associated with online orders versus sales rep orders.  In the next code block we look at the number of distinct days associated with the online versus sales rep orders.
+
+```{r fig.width=15}
+mo_so_mo_dt_dist_sum <- dbGetQuery(con,
+"
+SELECT to_char(orderdate,'YYMM') yymm
+     ,EXTRACT(YEAR FROM soh.orderdate) yr
+     , EXTRACT(MONTH FROM soh.orderdate) mo 
+--     , EXTRACT(DAY FROM soh.orderdate) dd 
+     , case when onlineorderflag then 'online' else 'sales rep' end so_type
+     , COUNT(DISTINCT soh.orderdate) *1.0 unique_days
+     , COUNT(*) so_cnt
+     , sum(subtotal) so_dollars
+  FROM sales.salesorderheader soh
+where 1 = 1 --not onlineorderflag
+group by to_char(orderdate,'YYMM') 
+     , EXTRACT(MONTH FROM orderdate) 
+     , EXTRACT(YEAR FROM orderdate)
+     , case when onlineorderflag then 'online' else 'sales rep' end 
+--     , soh.orderdate
+ORDER BY to_char(orderdate,'YYMM')
+")
+
+mo_so_mo_dt_dist_sum
+
+ggplot(data=mo_so_mo_dt_dist_sum,aes(x=yymm,y=unique_days,fill=so_type)) +
+  geom_col(position='dodge') +
+  xlab("YYMM") +
+  ylab("Unique Order Days in Month") +
+  ggtitle("Sale Rep Order Days By Month") +
+  theme(plot.title = element_text(hjust = 0.5)) +           # Center ggplot title
+  theme(axis.text.x=element_text(angle=60, hjust=1))
+```
+
+The online orders are placed through out the month as one would expect.  However, there are a number of months where the company had a 0 on-line order day.  Are these associated with possible maintenance or scheduled/unscheduled downtimes.  What is going on with the salesreps?  They are placing orders on less than five days out of each month.  
+
+# Sales Rep Orderdate Distribution
+
+```{r fig.width=15}
+mo_so_mo_dt_dist_sum <- dbGetQuery(con,
+"
+SELECT to_char(orderdate,'YYMM') yymm
+     ,EXTRACT(YEAR FROM soh.orderdate) yr
+     , EXTRACT(MONTH FROM soh.orderdate) mo 
+--     , EXTRACT(DAY FROM soh.orderdate) dd 
+     , COUNT(DISTINCT soh.orderdate) *1.0 unique_days
+     , COUNT(*) so_cnt
+     , sum(subtotal) so_dollars
+  FROM sales.salesorderheader soh
+where not onlineorderflag
+group by to_char(orderdate,'YYMM') 
+     , EXTRACT(MONTH FROM orderdate) 
+     , EXTRACT(YEAR FROM orderdate)
+--     , soh.orderdate
+ORDER BY to_char(orderdate,'YYMM')
+")
+
+mo_so_mo_dt_dist_sum
+
+ggplot(data=mo_so_mo_dt_dist_sum,aes(x=yymm,y=unique_days)) +
+  geom_col(fill = 'blue') +
+  xlab("YYMM") +
+  ylab("Unique Order Days in Month") +
+  ggtitle("Sale Rep Order Days By Month") +
+  theme(plot.title = element_text(hjust = 0.5)) +           # Center ggplot title
+  theme(axis.text.x=element_text(angle=60, hjust=1))
+```
+
+That is unexpected.  A couple of  things immediately jump out from the first page of data:
+
+*  July, September, and November are missing for 2011. 
+*  Most of the sales reps' orders are entered on a single day of the month, unique days = 1. It is possible that these are monthly recurring orders that get released on a given day of the month.  If that is the case, what are the sales reps doing the rest of the month?
+*  The lines with multiple days, unique_days > 1, have a noticeable higher number of orders, so_cnt, and associated so dollars.
+
+The plot clearly shows that two months with multiple sales rep order days for 2011, (1108 and 1110), one for 2012, (1201), and two in 2014, (1401 and 1403).  The 1403 is the only three day sales rep order month.
+
+In the next code block, we flesh out the dates associatd with the sales reps' orders.  Since 4 out of the 5 months with multiple order days only have two dates, the code block captures them with a min/max orderdate.
+
+```{r}
+mo_so_mo_dt_dist_sum <- dbGetQuery(con,
+"
+SELECT EXTRACT(YEAR FROM soh.orderdate) yr
+     , EXTRACT(MONTH FROM soh.orderdate) mo
+--     , EXTRACT(DOW FROM soh.orderdate) dow
+--     , case when onlineorderflag then 'online' else 'sales rep' end so_type
+     , COUNT(*) so_cnt
+     , sum(subtotal) so_dollars
+     , min(soh.orderdate) min_dt
+     , max(soh.orderdate) max_dt
+     , EXTRACT(DAY FROM max(soh.orderdate)) - EXTRACT(DAY FROM min(soh.orderdate)) + 1 days
+     , count(distinct soh.orderdate) unique_days
+  FROM sales.salesorderheader soh
+ where not onlineorderflag
+group by EXTRACT(YEAR FROM orderdate)  
+     , EXTRACT(MONTH FROM orderdate)
+--     , EXTRACT(DOW FROM soh.orderdate) 
+     , case when onlineorderflag then 'online' else 'sales rep' end
+order by yr, mo
+")
+mo_so_mo_dt_dist_sum
+# so_rep_dist <- mo_so_mo_dt_dist_sum %>% filter (unique_days > 1)
+# so_rep_dist
+```
+
+Looking at the min-max dt columns, most sales rep orders are entered on or near the last day of the month and or the first day of the month.
+
+Looking at 2011 we see an entry for May, but not June.  However, July only has an entry 7-1, but not a 7-31 entry.  Perhaps the missing 6-30 entry is actually the 7-1 entry.  If the 7-1 is really the 6-30 entry, then the same pattern would make the 8-1 entry, the real 7-31 entry.  There is no 9-31 entry,  but there is a 10-1 and a 10-31 entry.  The same patterns adjustment has the 10-1 entry for the missing 9-31 entry.  The same adjustment pattern holds for the missing 11-30 entry is the 12-1-29 entries.
+
+The next code block shows the details associated with the sales rep orders with multiple order days.
+
+```{r  sales rep multi-day order months }
+mo_so_mo_dt_dist_xdays <- dbGetQuery(con,
+"
+SELECT to_char(orderdate,'YYMM') yymm
+     ,soh.orderdate
+     , COUNT(DISTINCT soh.orderdate) *1.0 unique_days
+     , COUNT(*) so_cnt
+     , sum(subtotal) so_dollars
+  FROM sales.salesorderheader soh
+where not onlineorderflag
+  and to_char(orderdate,'YYMM') in ('1108','1110','1201','1401','1403')
+group by to_char(orderdate,'YYMM') 
+     , soh.orderdate
+ORDER BY soh.orderdate
+")
+mo_so_mo_dt_dist_xdays
+```
+
+# Adjusted Sales Rep Order Dates
+
+In the next code block, the orders entered on the first of the month are adjusted backwards one day to put them in the prior month.
+
+```{r}
+x <- dbGetQuery(con,
+"
+select to_char(orderdate_adj,'YYMM') yymm
+      ,YR_adj yr,mo_adj mo
+      ,sales_type
+      ,sum(so_cnt) so_cnt
+      ,sum(so_dollars) so_dollars
+  from (
+SELECT EXTRACT(YEAR FROM soh.orderdate) yr
+     , EXTRACT(MONTH FROM soh.orderdate) mo
+     , EXTRACT(DAY FROM soh.orderdate) dd
+     , case when EXTRACT(DAY FROM soh.orderdate) = 1
+            THEN  soh.orderdate - '1 day'::interval
+            ELSE  soh.orderdate
+       END AS orderdate_adj
+     , case when EXTRACT(DAY FROM soh.orderdate) = 1
+            THEN EXTRACT(YEAR FROM soh.orderdate - '1 day'::interval)
+            ELSE  EXTRACT(YEAR FROM soh.orderdate) 
+       END AS YR_adj
+
+     , case when EXTRACT(DAY FROM soh.orderdate) = 1
+            THEN EXTRACT(MONTH FROM soh.orderdate - '1 day'::interval)
+            ELSE EXTRACT(MONTH FROM soh.orderdate) 
+       END mo_adj
+     , case when EXTRACT(DAY FROM soh.orderdate) = 1
+            THEN EXTRACT(DAY FROM soh.orderdate - '1 day'::interval)
+            ELSE EXTRACT(DAY FROM soh.orderdate) 
+       END dd_adj
+     , COUNT(*) * 1.0 so_cnt 
+     , sum(subtotal) so_dollars
+     , min(soh.orderdate) min_dt
+     , max(soh.orderdate) max_dt
+     , EXTRACT(DAY FROM max(soh.orderdate)) - EXTRACT(DAY FROM min(soh.orderdate)) + 1 days
+     , count(distinct soh.orderdate) unique_days
+     , case when soh.onlineorderflag then 'online' else 'sales rep' end sales_type
+  FROM sales.salesorderheader soh
+ where not onlineorderflag
+group by EXTRACT(YEAR FROM soh.orderdate)
+     , EXTRACT(MONTH FROM soh.orderdate)
+     , EXTRACT(DAY FROM soh.orderdate)
+     , case when EXTRACT(DAY FROM soh.orderdate) = 1
+            THEN  soh.orderdate - '1 day'::interval
+            ELSE  soh.orderdate
+       END
+     , case when EXTRACT(DAY FROM soh.orderdate) = 1
+            THEN EXTRACT(YEAR FROM soh.orderdate - '1 day'::interval)
+            ELSE  EXTRACT(YEAR FROM soh.orderdate) 
+       END
+     , case when EXTRACT(DAY FROM soh.orderdate) = 1
+            THEN EXTRACT(MONTH FROM soh.orderdate - '1 day'::interval)
+            ELSE EXTRACT(MONTH FROM soh.orderdate) 
+       END
+     , case when EXTRACT(DAY FROM soh.orderdate) = 1
+            THEN EXTRACT(DAY FROM soh.orderdate - '1 day'::interval)
+            ELSE EXTRACT(DAY FROM soh.orderdate) 
+       END
+     , case when onlineorderflag then 'online' else 'sales rep' end
+) as src
+group by yymm,YR_adj ,mo_adj ,sales_type
+ORDER BY mo, yr, sales_type
+")
+x
+
+```
+
+```{r Sales Rep Orders Adjusted PLot, fig.width=16}
+x$yymm <- as.factor(x$yymm)
+x$mo <- as.factor(x$mo)
+x$yr <- as.factor(x$yr)
+
+#  x$sales_type <- as.factor(mo_onl_pct$sales_type)
+mo_2011 <- x %>% filter (yr == 2011)
+mo_2012 <- x %>% filter (yr == 2012)
+mo_2013 <- x %>% filter (yr == 2013)
+mo_2014 <- x %>% filter (yr == 2014)
+
+ggplot(data=NULL) +
+  # data=mo_2011 first results in the x axis months out of order.
+  geom_line (data=mo_2012,aes(x=mo,y=so_cnt,color = yr,group = sales_type)) +
+  geom_line (data=mo_2011,aes(x=mo,y=so_cnt,color = yr,group = sales_type)) +
+  geom_line (data=mo_2013,aes(x=mo,y=so_cnt,color = yr,group = sales_type)) +
+  geom_line (data=mo_2014,aes(x=mo,y=so_cnt,color = yr,group = sales_type)) +
+  
+  geom_point(data=mo_2011,aes(x=mo,y=so_cnt,color = sales_type)) +  
+  geom_point(data=mo_2012,aes(x=mo,y=so_cnt,color = sales_type)) +
+  geom_point(data=mo_2013,aes(x=mo,y=so_cnt,color = sales_type)) +
+  geom_point(data=mo_2014,aes(x=mo,y=so_cnt,color = sales_type)) +
+  
+  xlab("Month") + 
+  ylab("Sales Rep") +
+  theme(plot.title = element_text(hjust = .50)) +  
+  ggtitle(paste("Sales Rep Orders by Month"))
+
+
+
+```
+
+```{r}
+x
+```
+
+
+```{r}
+mo_so_mo_dt_dist_det <- dbGetQuery(con,
+"
+SELECT EXTRACT(MONTH FROM soh.orderdate) mo
+     , EXTRACT(YEAR FROM soh.orderdate) yr
+     , soh.orderdate
+     , case when onlineorderflag then 'online' else 'sales rep' end so_type
+     , sum(subtotal)/10000 so_dollars
+     , COUNT(*) * 1.0 so_cnt
+  FROM sales.salesorderheader soh
+group by EXTRACT(MONTH FROM orderdate) 
+     , EXTRACT(YEAR FROM orderdate) 
+     , case when onlineorderflag then 'online' else 'sales rep' end
+     ,soh.orderdate
+order by case when onlineorderflag then 'online' else 'sales rep' end desc,soh.orderdate
+")
+long <- gather(data=mo_so_mo_dt_dist_det,key='sum_type','sum_amt',so_cnt,so_dollars)
+sp_print_df(long)
+long_online <- long %>% filter(so_type == 'sales rep')
+
+ggplot(data = long_online, aes(x=orderdate,y=sum_amt,color=sum_type)) +
+  geom_line() 
+
+```
