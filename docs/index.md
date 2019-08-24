@@ -4,7 +4,7 @@ title: |
     | A Tidyverse Approach"
 author: John David Smith, Sophie Yang, M. Edward (Ed) 
   Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, and Ian Frantz
-date: "2019-08-07"
+date: "2019-08-23"
 description: An introduction to Docker and PostgreSQL for R users to simulate use cases behind corporate walls.
 bibliography: [book.bib, packages.bib]
 documentclass: book
@@ -56,6 +56,25 @@ This book explores #2 because it allows us to work on the database access issues
 ## Alternatives to Docker
 
 We have found Docker to be a great tool for simulating the complexities of an enterprise environment.  However, installing Docker can be challenging, especially for Windows users.  Therefore the code in this book depends on PostgreSQL[@postgresql2019] in a Docker container, but it can all be readily adapted to either SQLite[@sqlite2019], PostgreSQL running natively on your computer, or even PostgreSQL running in the cloud.  The technical details of these alternatives are all in separate chapters.
+
+## Packages used in this book
+
+The following packages are used in this book:
+
+* bookdown
+* DBI
+* dbplyr
+* devtools
+* DiagrammeR
+* downloader
+* glue
+* here
+* knitr
+* RPostgres
+* skimr
+* sqlpetr (installs with: `remotes::install_github("smithjd/sqlpetr", force = TRUE, quiet = TRUE, build = TRUE, build_opts = "")`)
+* tidyverse
+
 
 ## Who are we?
 

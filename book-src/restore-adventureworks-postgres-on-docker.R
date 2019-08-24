@@ -41,7 +41,7 @@ Sys.sleep(2)
 
 # create the adventureworks database in the Docker container
 system2("docker", 'exec -i adventureworks psql -U postgres -c "CREATE DATABASE adventureworks;"')
-system2("docker", 'exec -i adventureworks psql -U postgres -c "DROP SCHEMA IF EXISTS public;"')
+
 
 # restore the adventureworks tar file.  This might come from github rather than locally
 system2("docker", glue(
