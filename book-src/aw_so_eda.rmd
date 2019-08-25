@@ -41,6 +41,9 @@ con <- sp_get_postgres_connection(
 con
 ```
 
+### Explore the vsalelsperson and vsalespersonsalesbyfiscalyearsdata views
+
+The following trick goes later in the book, where it's used to prove the finding that to make sense of othe data you need to 
 ```{r}
 cat(unlist(dbGetQuery(con,"select pg_get_viewdef('sales.vsalesperson', true)")))
 
@@ -535,13 +538,34 @@ monthly_sales <- dbGetQuery(con,
 "SELECT to_char(orderdate,'YYMM') yymm
     ,min(orderdate)::date min_orderdate
     ,max(orderdate)::date max_orderdate
---    ,count(*) nbr_of_orders
+    ,count(*) nbr_of_orders
     ,round(sum(subtotal),2) subtotal
 FROM sales.salesorderheader sh
 GROUP BY to_char(orderdate,'YYMM') 
 ORDER BY to_char(orderdate,'YYMM')
 ")
 
+monthly_sales
+```
+
+
+translate previous query with dplyr
+
+```{r}
+monthly_sales_d <- tbl(con, in_schema("sales", "salesorderheader")) %>% 
+  mutate(order_date = substr(as.character(orderdate),1,7)) %>% 
+  group_by(order_date) %>% 
+  summarize(min_orderdate = min(orderdate), 
+            max_orderdate = max(orderdate),
+            nbr_of_orders = n(),
+            subtotal = round(sum(subtotal, na.rm = TRUE), 2)) %>% 
+  arrange(order_date) %>% 
+  select(order_date, min_orderdate, max_orderdate, nbr_of_orders, subtotal) %>%
+  collect() %>% as.data.frame()
+monthly_sales_d
+```
+
+```{r fig.width=15}
 sp_print_df(monthly_sales)
 ggplot(data=monthly_sales,aes(x=yymm,y=subtotal)) +
   geom_col() + #fill = 'green', color = 'blue') +
