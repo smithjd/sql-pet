@@ -5,6 +5,11 @@ This chapter explores one table, illustrating the kind of detective work
 that’s needed to understand one table. We’ll investigate the
 `salesorderheader` table in the `sales` schema.
 
+This code currently uses the new `pivot_longer` function. You may need
+to install
+
+`devtools::install_github("tidyverse/tidyr")`
+
     sp_docker_start("adventureworks")
     Sys.sleep(sleep_default)
     con <- sp_get_postgres_connection(
@@ -271,8 +276,8 @@ same query in dplyr
       mutate(yr = year(orderdate), mo = month(orderdate)) %>%
       group_by(yr, mo) %>%
       summarize(
-        min_orderdate = min(orderdate),
-        max_orderdate = max(orderdate),
+        min_orderdate = min(orderdate, na.rm = TRUE),
+        max_orderdate = max(orderdate, na.rm = TRUE),
         so_dollars = round(sum(subtotal, na.rm = TRUE), 2),
         so_cnt = n()
       ) %>%
@@ -345,6 +350,56 @@ those with four bars. The overall width of for each month is same.
 
 </font>
 
+    min_dt <- min(monthly_sales_d$min_orderdate)
+    max_dt <- max(monthly_sales_d$max_orderdate)
+
+    start_year <- monthly_sales_d %>% 
+      filter(yr == min(yr)) %>% 
+      group_by(yr) %>% 
+      summarize(so_dollars = sum(so_dollars), 
+                so_cnt = sum(so_cnt), 
+                n_months = n(),
+                avg_dollars = so_dollars / n_months,
+                avg_cnt = so_cnt / n_months)
+    start_year
+
+    ## # A tibble: 1 x 6
+    ##      yr so_dollars so_cnt  n_months avg_dollars avg_cnt
+    ##   <dbl>      <dbl> <int64>    <int>       <dbl>   <dbl>
+    ## 1  2011  12641672. 1607           8    1580209.    201.
+
+    normalized_monthly_sales <-  monthly_sales_d %>% 
+      mutate(dollars = (100 * so_dollars) / start_year$avg_dollars,
+             number_of_orders = (100 * so_cnt) / start_year$avg_cnt)
+
+    normalized_monthly_sales <- normalized_monthly_sales %>% 
+      mutate(date = as.Date(min_orderdate)) %>% 
+      select(date, dollars, number_of_orders) %>% 
+      pivot_longer(-date, names_to = "relative_to_2011_average", values_to = "amount" )
+
+    normalized_monthly_sales %>% 
+      ggplot(aes(date, amount, color = relative_to_2011_average)) +
+      geom_line() +
+      geom_hline(yintercept = 100) +
+      xlab("Date") +
+      ylab("") +
+      scale_x_date(date_labels = "%Y-%m", date_breaks = "6 months") +
+      ggtitle(paste("Adventureworks Normalized Monthly Sales\nNumber of Sales Orders and Dollar Totals\n", min_dt, " to ", max_dt))
+
+![](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-5-1.png)
+
+    ggplot(data = monthly_sales, aes(x = mo, y = so_dollars, fill = yr)) +
+      geom_col(position = position_stack(reverse = TRUE)) + # reverse stacked bars 2011 bottom 2014 top
+      guides(fill = guide_legend(reverse = TRUE)) + # reverse bar/legend fill
+      xlab("Month") +
+      ylab("Sales Dollars") +
+      scale_y_continuous(labels = dollar) +
+      geom_text(aes(y = cum_so_dollars, label = so_cnt), vjust = 1.5) + # Add so_cnt based on mo/yr cumulative $ amounts
+      theme(plot.title = element_text(hjust = 0.5)) + # Center ggplot title
+      ggtitle(paste("Sales by Month by Year\nWith Number of Sales Orders\n", min_dt, " - ", max_dt))
+
+![](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-6-1.png)
+
     # The next two statements were done in the previous code block
     # Why do the need to be done again in this code block
     monthly_sales$mo <- as.factor(monthly_sales$mo)
@@ -396,7 +451,7 @@ The next plot shows the same data as a line graph.
       ggtitle(paste("Sales by Month by Year\nWith Number of Sales Orders\nAnd Average SO $ Amount\n", min_dt, " - ", max_dt))
 
 ![SO, SO Dollars, and Average SO
-Dollars](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-5-1.png)
+Dollars](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-7-1.png)
 
 A couple of things jump out from the graph.
 
@@ -583,7 +638,7 @@ Monthly Sales Rep Performance Analysis
 
     sp_print_df(mo_so_sreps)
 
-![](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-7-1.png)
+![](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-9-1.png)
 
     monthly_sales_online <- dbGetQuery(
       con,
@@ -604,7 +659,7 @@ Monthly Sales Rep Performance Analysis
     sp_print_df(monthly_sales_online)
 
 ![caption goes
-here](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-8-1.png)
+here](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-10-1.png)
 
     ggplot(data = monthly_sales_online, aes(x = factor(mo), y = sales_dollars, fill = factor(yr))) +
       geom_col(position = "dodge", color = "black") + # unstack columns and outline in black
@@ -621,7 +676,7 @@ here](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-8-1.png)
       ggtitle(paste("Sales by Month\nBy Online Flag"))
 
 ![caption goes
-here](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-8-2.png)
+here](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-10-2.png)
 
     monthly_sales_onl_pct <- dbGetQuery(
       con,
@@ -655,7 +710,7 @@ here](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-8-2.png)
 
     sp_print_df(monthly_sales_onl_pct)
 
-![](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-9-1.png)
+![](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-11-1.png)
 
     mo_onl_pct <- dbGetQuery(
       con,
@@ -682,7 +737,7 @@ here](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-8-2.png)
 
     sp_print_df(mo_onl_pct)
 
-![](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-10-1.png)
+![](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-12-1.png)
 
     min_dt <- min(monthly_sales$min_orderdate)
     max_dt <- max(monthly_sales$max_orderdate)
@@ -735,7 +790,7 @@ here](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-8-2.png)
         "Each Point shows Number of Orders: $ Amount: % of Total $ For the Month"
       ))
 
-![](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-10-2.png)
+![](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-12-2.png)
 
 This plot is much easier to read, but the sales orders =&gt; avg\_s From
 the tidyR overview,
@@ -874,7 +929,7 @@ translate previous query with dplyr
 
     sp_print_df(monthly_sales)
 
-![](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-13-1.png)
+![](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-15-1.png)
 
     ggplot(data = monthly_sales, aes(x = yymm, y = subtotal)) +
       geom_col() + # fill = 'green', color = 'blue') +
@@ -885,7 +940,7 @@ translate previous query with dplyr
       theme(plot.title = element_text(hjust = 0.5)) + # Center ggplot title
       theme(axis.text.x = element_text(angle = 60, hjust = 1))
 
-![](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-13-2.png)
+![](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-15-2.png)
 
 Views
 -----
