@@ -15,6 +15,10 @@ options(digits = 10)
 sleep_default <- 4
 ```
 
+This code currently uses the new `pivot_longer` function.   You may need to install
+
+  `devtools::install_github("tidyverse/tidyr")`
+
 ```{r libraries, include=FALSE}
 library(tidyverse)
 library(DBI)
@@ -25,8 +29,10 @@ library(dbplyr)
 library(sqlpetr)
 library(bookdown)
 library(here)
+library(lubridate)
 
 library(scales) # ggplot xy scales
+theme_set(theme_light())
 ```
 
 ```{r, start adventureworks}
@@ -202,8 +208,8 @@ monthly_sales_d <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
   mutate(yr = year(orderdate), mo = month(orderdate)) %>%
   group_by(yr, mo) %>%
   summarize(
-    min_orderdate = min(orderdate),
-    max_orderdate = max(orderdate),
+    min_orderdate = min(orderdate, na.rm = TRUE),
+    max_orderdate = max(orderdate, na.rm = TRUE),
     so_dollars = round(sum(subtotal, na.rm = TRUE), 2),
     so_cnt = n()
   ) %>%
@@ -264,6 +270,54 @@ Having stacked bars, it is difficult to compare the monthly dollar amounts betwe
         
         monthly_sales$yr <- as.factor(monthly_sales$yr)
 </font>
+
+
+```{r}
+min_dt <- min(monthly_sales_d$min_orderdate)
+max_dt <- max(monthly_sales_d$max_orderdate)
+
+start_year <- monthly_sales_d %>% 
+  filter(yr == min(yr)) %>% 
+  group_by(yr) %>% 
+  summarize(so_dollars = sum(so_dollars), 
+            so_cnt = sum(so_cnt), 
+            n_months = n(),
+            avg_dollars = so_dollars / n_months,
+            avg_cnt = so_cnt / n_months)
+start_year
+
+normalized_monthly_sales <-  monthly_sales_d %>% 
+  mutate(dollars = (100 * so_dollars) / start_year$avg_dollars,
+         number_of_orders = (100 * so_cnt) / start_year$avg_cnt)
+
+normalized_monthly_sales <- normalized_monthly_sales %>% 
+  mutate(date = as.Date(min_orderdate)) %>% 
+  select(date, dollars, number_of_orders) %>% 
+  pivot_longer(-date, names_to = "relative_to_2011_average", values_to = "amount" )
+
+normalized_monthly_sales %>% 
+  ggplot(aes(date, amount, color = relative_to_2011_average)) +
+  geom_line() +
+  geom_hline(yintercept = 100) +
+  xlab("Date") +
+  ylab("") +
+  scale_x_date(date_labels = "%Y-%m", date_breaks = "6 months") +
+  ggtitle(paste("Adventureworks Normalized Monthly Sales\nNumber of Sales Orders and Dollar Totals\n", min_dt, " to ", max_dt))
+```
+
+
+```{r}
+ggplot(data = monthly_sales, aes(x = mo, y = so_dollars, fill = yr)) +
+  geom_col(position = position_stack(reverse = TRUE)) + # reverse stacked bars 2011 bottom 2014 top
+  guides(fill = guide_legend(reverse = TRUE)) + # reverse bar/legend fill
+  xlab("Month") +
+  ylab("Sales Dollars") +
+  scale_y_continuous(labels = dollar) +
+  geom_text(aes(y = cum_so_dollars, label = so_cnt), vjust = 1.5) + # Add so_cnt based on mo/yr cumulative $ amounts
+  theme(plot.title = element_text(hjust = 0.5)) + # Center ggplot title
+  ggtitle(paste("Sales by Month by Year\nWith Number of Sales Orders\n", min_dt, " - ", max_dt))
+```
+
 
 ```{r dodge column plot,fig.width=16}
 # The next two statements were done in the previous code block
