@@ -95,8 +95,8 @@ annual_sales_d <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
   mutate(date = substr(as.character(orderdate), 1, 4)) %>%
   group_by(date) %>%
   summarize(
-    min_orderdate = min(orderdate),
-    max_orderdate = max(orderdate),
+    min_orderdate = min(orderdate, na.rm = TRUE),
+    max_orderdate = max(orderdate, na.rm = TRUE),
     so_dollars = round(sum(subtotal, na.rm = TRUE), 2),
     so_cnt = n()
   ) %>%
@@ -214,7 +214,8 @@ monthly_sales_d <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
     so_cnt = n()
   ) %>%
   arrange(yr, mo) %>%
-  select(yr, mo, min_orderdate, max_orderdate, so_dollars, so_cnt) %>%
+  mutate(so_date = as.Date(min_orderdate)) %>% 
+  select(yr, mo, so_date, min_orderdate, max_orderdate, so_dollars, so_cnt) %>%
   collect() %>%
   as.data.frame()
 sp_print_df(monthly_sales_d)
@@ -377,39 +378,67 @@ A couple of things jump out from the graph.
 2.  2011 has more variation than 2012 and 2013 and peaks every two months.
 3.  2014 has the most variation and also peaks every two months.  Both the number of sales, 939, and the average sales order size, $52.19 plumet in June 2014.
 
+
+```{r fig.cap='SO, SO Dollars, and Average SO Dollars-b ',fig.width=16}
+# sp_print_df(monthly_sales)
+
+ggplot(
+  data = monthly_sales_d,
+  aes(
+    x = so_date, y = so_dollars)
+  # , color = as.factor(yr),
+  #   group = as.factor(yr)
+  # )
+) +
+  geom_line() +
+  geom_smooth(se = FALSE) +
+  xlab("Month") +
+  ylab("Sales Dollars") +
+  scale_y_continuous(labels = dollar) +
+  scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
+  theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
+  ggtitle(paste("Sales by Month by Year\nWith Number of Sales Orders\nAnd Average SO $ Amount\n", min_dt, " - ", max_dt))
+```
+
+A couple of things jump out from the graph.
+
+1.  2012 and 2013 have similar sales dollar plots and peak every three months.  This may reflect the closing as many sales orders as possible to make the quarterly sales numbers look good.
+2.  2011 has more variation than 2012 and 2013 and peaks every two months.
+3.  2014 has the most variation and also peaks every two months.  Both the number of sales, 939, and the average sales order size, $52.19 plumet in June 2014.
+
 ```{r}
-so_cnt_2011 <- monthly_sales %>%
-  filter(yr == 2011) %>%
-  select(so_cnt)
-so_cnt_2012_5_12 <- monthly_sales %>%
-  filter(yr == 2012 & mo %in% c(5, 6, 7, 8, 9, 10, 11, 12)) %>%
-  select(so_cnt)
-so_cnt_2012 <- monthly_sales %>%
-  filter(yr == 2012) %>%
-  select(so_cnt)
-so_cnt_2013 <- monthly_sales %>%
-  filter(yr == 2013) %>%
-  select(so_cnt)
-so_cnt_2013_1_6 <- monthly_sales %>%
-  filter(yr == 2013 & mo %in% c(1, 2, 3, 4, 5, 6)) %>%
-  select(so_cnt)
-so_cnt_2014 <- monthly_sales %>%
-  filter(yr == 2014) %>%
-  select(so_cnt)
-so_cnt_2012_2011 <- so_cnt_2012_5_12 / so_cnt_2011
-so_cnt_2013_2012 <- so_cnt_2013 / so_cnt_2012
-so_cnt_2014_2013 <- so_cnt_2014 / so_cnt_2013_1_6
+# so_cnt_2011 <- monthly_sales %>%
+#   filter(yr == 2011) %>%
+#   select(so_cnt, min_orderdate, mo)
+# so_cnt_2012_5_12 <- monthly_sales %>%
+#   filter(yr == 2012 & mo %in% c(5, 6, 7, 8, 9, 10, 11, 12)) %>%
+#   select(so_cnt, min_orderdate, mo)
+# so_cnt_2012 <- monthly_sales %>%
+#   filter(yr == 2012) %>%
+#   select(so_cnt, min_orderdate, mo)
+# so_cnt_2013 <- monthly_sales %>%
+#   filter(yr == 2013) %>%
+#   select(so_cnt, min_orderdate, mo)
+# so_cnt_2013_1_6 <- monthly_sales %>%
+#   filter(yr == 2013 & mo %in% c(1, 2, 3, 4, 5, 6)) %>%
+#   select(so_cnt, min_oderdate, mo)
+# so_cnt_2014 <- monthly_sales %>%
+#   filter(yr == 2014) %>%
+#   select(so_cnt, min_oderdate, mo)
 
-cat("2012 vs 2011 sales order ratios for May - December
-", unlist(so_cnt_2012_2011))
-cat("
-
-2013 vs 2012 sales order ratios
-", unlist(so_cnt_2013_2012))
-cat("
-
-2014 vs 2013 sales order ratios for January - June
-", unlist(so_cnt_2014_2013))
+# STOPPED HERE.  need to join the data frames and plot the lags.
+# so_cnt_2012_2011 <- so_cnt_2012_5_12 / so_cnt_2011
+# so_cnt_2013_2012 <- so_cnt_2013 / so_cnt_2012
+# so_cnt_2014_2013 <- so_cnt_2014 / so_cnt_2013_1_6
+# 
+# cat("2012 vs 2011 sales order ratios for May - December
+# ", unlist(so_cnt_2012_2011))
+# 
+# cat("2013 vs 2012 sales order ratios
+# ", unlist(so_cnt_2013_2012))
+# 
+# cat("2014 vs 2013 sales order ratios for January - June
+# ", unlist(so_cnt_2014_2013))
 ```
 
 Comparing the number of sales orders year over year by month for 2013 and 2012, one can see that the 2013 sales are between 1.2 and 1.8 times larger than the corresponding month of 2012 from January through June.  In July the 2013 sales are 5 to 6 times the 2012 sales orders.
