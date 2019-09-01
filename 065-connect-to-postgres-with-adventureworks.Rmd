@@ -96,21 +96,23 @@ Schemas will be discussed later on because multiple schemas are the norm in an e
 dbExecute(con, "set search_path to sales, public;")
 
 ```
-With the custom `search_path`, the following command works, but it will fail without out it.
+With the custom `search_path`, the following command shows the tables in the `sales` schema.  In the `adventureworks` database, there are no tables in the `public` schema.
 ```{r}
 dbListTables(con)
 ```
+Notice there are several tables that start with the letter *v*: they are actually *views* which will turn out to be important.  They are clearly distinguished in the connections tab, but the naming is a matter of convention.
+
 Same for `dbListFields`:
 ```{r }
-dbListFields(con, "salesperson")
+dbListFields(con, "salesorderheader")
 ```
 
 Thus with this search order, the following two produce identical results:
 ```{r }
-tbl(con, in_schema("sales", "salesperson")) %>%
+tbl(con, in_schema("sales", "salesorderheader")) %>%
   head()
 
-tbl(con, "salesperson") %>%
+tbl(con, "salesorderheader") %>%
   head()
 
 ```
@@ -118,46 +120,46 @@ tbl(con, "salesperson") %>%
 ## `dplyr` connection objects
 As introduced in the previous chapter, the `dplyr::tbl` function creates an object that might **look** like a data frame in that when you enter it on the command line, it prints a bunch of rows from the dbms table.  But it is actually a **list** object that `dplyr` uses for constructing queries and retrieving data from the DBMS.  
 
-The following code illustrates these issues.  The `dplyr::tbl` function creates the connection object that we store in an object named `person_table`:
+The following code illustrates these issues.  The `dplyr::tbl` function creates the connection object that we store in an object named `salesorderheader_table`:
 ```{r}
-person_table <- dplyr::tbl(con, in_schema("person", "person")) %>% 
+salesorderheader_table <- dplyr::tbl(con, in_schema("sales", "salesorderheader")) %>% 
   select(-rowguid) %>% 
-  rename(personal_details_updated = modifieddate)
+  rename(salesorderheader_details_updated = modifieddate)
 ```
 
-At first glance, it _acts_ like a data frame when you print it, although it only prints 10 of the table's 1,000 rows:
+At first glance, it _acts_ like a data frame when you print it, although it only prints 10 of the table's 31,465 rows:
 ```{r}
-person_table
+salesorderheader_table
 ```
 
 However, notice that the first output line shows `??`, rather than providing the number of rows in the table. Similarly, the next to last line shows:
 ```
-    … with more rows, and 8 more variables
+    … with more rows, and 20 more variables:
 ```
-whereas the output for a normal `tbl` of this film data would say:
+whereas the output for a normal `tbl` of this salesorderheader data would say:
 ```
-    … with more 1,000, and 8 more variables
-```
-
-So even though `person_table` is a `tbl`, it's **also** a `tbl_PqConnection`:
-```{r}
-class(person_table)
+    … with 31,455 more rows, and 20 more variables:
 ```
 
-It is not just a normal `tbl` of data. We can see that from the structure of `person_table`:
+So even though `salesorderheader_table` is a `tbl`, it's **also** a `tbl_PqConnection`:
 ```{r}
-str(person_table)
+class(salesorderheader_table)
+```
+
+It is not just a normal `tbl` of data. We can see that from the structure of `salesorderheader_table`:
+```{r}
+str(salesorderheader_table)
 ```
 
 It has only _two_ rows!  The first row contains all the information in the `con` object, which contains information about all the tables and objects in the database:
 ```{r}
-person_table$src$con@typnames$typname[380:437]
+salesorderheader_table$src$con@typnames$typname[380:437]
 ```
-The second row contains a list of the columns in the `film` table, among other things:
+The second row contains a list of the columns in the `salesorderheader` table, among other things:
 ```{r}
-person_table$ops$vars
+salesorderheader_table$ops$x$vars
 ```
-`person_table` holds information needed to get the data from the 'film' table, but `person_table` does not hold the data itself. In the following sections, we will examine more closely this relationship between the `person_table` object and the data in the database's 'film' table.
+`salesorderheader_table` holds information needed to get the data from the 'salesorderheader' table, but `salesorderheader_table` does not hold the data itself. In the following sections, we will examine more closely this relationship between the `salesorderheader_table` object and the data in the database's 'salesorderheader' table.
 
 Disconnect from the database:
 ```{r }
@@ -198,9 +200,9 @@ con <- sp_get_postgres_connection(
 )
 ```
 
-Check that you can still see the first few rows of the `employeeinfo` table:
+Check that you can still see the first few rows of the `salesorderheader` table:
 ```{r}
-tbl(con, in_schema("sales", "salesperson")) %>%
+tbl(con, in_schema("sales", "salesorderheader")) %>%
   head()
 
 ```

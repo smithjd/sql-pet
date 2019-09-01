@@ -34,7 +34,11 @@ sqlpetr::sp_check_that_docker_is_up()
 ```
 ## [1] "Docker is up, running these containers:"                                                                                                           
 ## [2] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES"           
+<<<<<<< HEAD
 ## [3] "21053106fc9a        postgres:11         \"docker-entrypoint.s…\"   2 minutes ago       Up 11 seconds       0.0.0.0:5432->5432/tcp   adventureworks"
+=======
+## [3] "0105899fe547        postgres:11         \"docker-entrypoint.s…\"   58 seconds ago      Up 10 seconds       0.0.0.0:5432->5432/tcp   adventureworks"
+>>>>>>> b6501daaa228eb07c28ed412fb8e30891823ef72
 ```
 
 ```r
