@@ -1,10 +1,10 @@
 ---
 title: |
     | Exploring Enterprise Databases with R
-    | A Tidyverse Approach"
+    | A Tidyverse Approach
 author: John David Smith, Sophie Yang, M. Edward (Ed) 
   Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, and Ian Frantz
-date: "2019-08-23"
+date: "2019-09-02"
 description: An introduction to Docker and PostgreSQL for R users to simulate use cases behind corporate walls.
 bibliography: [book.bib, packages.bib]
 documentclass: book
@@ -17,7 +17,7 @@ site: bookdown::bookdown_site
 > This chapter introduces:
 > 
 > * The motivation for this book and the strategies we have adopted
-> * How Docker can be used to set up a dbms to demonstrate access to a service like PostgreSQL from R
+> * Our approach to exploring issues "beyind the enterprise firewall" using Docker to demonstrate access to a service like PostgreSQL from R
 > * Our team and how this project came about
 
 ## Using R to query a DBMS in your organization

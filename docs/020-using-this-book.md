@@ -15,7 +15,7 @@ The code to generate the book and the exercises it contains can be downloaded fr
 
 We have never been sure whether we're writing an expository book or a massive tutorial.  You may use it either way.  The best way to learn the material we cover is to *experiment*.
 
-After the introductory chapters and the chapter that [creates the persistent database](#dvdrental-db-setup), you can jump around and each chapter stands on its own.
+After the introductory chapters and the chapter that [creates the persistent database](#chapter_setup-adventureworks-db), you can jump around and each chapter stands on its own.
 
 ## Participating
 

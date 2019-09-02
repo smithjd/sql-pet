@@ -1,7 +1,7 @@
 # Appendix _ Dplyr to SQL translations {#chapter_appendix-dplyr-to-postres-translation}
 
 > You may be interested in exactly how the DBI package translates R functions into their SQL quivalents -- and in which functions are translated and which are not.  
-This Appendix answers those questions.  It is based on the work of Dewey Dunnington ([@paleolimbot](http://twitter.com/paleolimbot)) which he published here: 
+This Appendix answers those questions.  It is based on the work of Dewey Dunnington ([\@paleolimbot](http://twitter.com/paleolimbot)) which he published here: 
 > 
 > https://apps.fishandwhistle.net/archives/1503 
 >
@@ -131,6 +131,13 @@ sql_translate_env(simulate_dbi())
 
 ```r
 source(here("book-src", "dbplyr-sql-function-translation.R"))
+```
+
+```
+## Warning: The `.drop` argument of `unnest()` is deprecated as of tidyr 1.0.0.
+## All list-columns are now preserved.
+## This warning is displayed once per session.
+## Call `lifecycle::last_warnings()` to see where this warning was generated.
 ```
 
 Each of the following dbplyr back ends may have a slightly different translation:

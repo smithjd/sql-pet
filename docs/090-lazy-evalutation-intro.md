@@ -20,7 +20,7 @@ require(knitr)
 library(bookdown)
 library(sqlpetr)
 ```
-If you have not yet set up the Docker container with PostgreSQL and the dvdrental database, go back to [those instructions][Build the pet-sql Docker Image] to configure your environment. Otherwise, start your `adventureworks` container:
+Start your `adventureworks` container:
 
 ```r
 sqlpetr::sp_docker_start("adventureworks")
@@ -387,8 +387,9 @@ Q %>% ggplot2::ggplot(aes(birthdate, salesytd)) + geom_point()
 ```
 
 <img src="090-lazy-evalutation-intro_files/figure-html/unnamed-chunk-13-1.png" width="672" />
+* Rewrite previous query and this comment with adventureworks in mind.
 
-It's obvious that when creating our phony `dvdrental` datbase, phony films were assigned to a category pretty randomly.
+Comment on the plot...
 
 ### Q %>% dplyr::show_query() {#lazy_q_show-query}
 

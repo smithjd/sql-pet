@@ -73,13 +73,12 @@ Now we set up a "realistic" database named `adventureworks` in Docker.
 > ` source('book-src/restore-adventureworks-postgres-on-docker.R') `
 
  To save space here in the book, we've created a function
-in `sqlpetr` to build this image, called *OUT OF DATE!!* [`sp_make_dvdrental_image`](https://smithjd.github.io/sqlpetr/reference/sp_make_dvdrental_image.html). Vignette [Building the `adventureworks` Docker Image
+in `sqlpetr` to build this image, called *OUT OF DATE!!* . Vignette [Building the `adventureworks` Docker Image
 ](https://smithjd.github.io/sqlpetr/articles/building-the-dvdrental-docker-image.html) describes the build process.
 
 *Ignore the errors in the following step:
 
 ```r
-# sp_make_dvdrental_image("postgres-dvdrental")
 source(here("book-src", "restore-adventureworks-postgres-on-docker.R"))
 ```
 
@@ -130,6 +129,17 @@ con <- sp_get_postgres_connection(
 )
 ```
 
+## Adventureworks Schemas
+
+Think of the Adventureworks database as a model of the Adventureworks business.  The business is organized around different departments (humanresources, sales, and purchasing), business processes (production), and resources (person).  Each schema is a container for the all the database objects needed to model the departments, business processes, and resources.  As a data analyst, the connections tab has three of the five database objects of interest.  These are schemas, tables and views.  The other two database objects of interest not shown in the connetions tab are the table primary and foreign keys, PK and FK.  Those database objects enforce the referential integrity of the data and the performance of the application.  Let the DBA's worry about them.
+
+The Connections tab has three icons.  The node icon represents a schema.  The schema helps organize the structure and design of the database.  The schema contains the views, the grid with the glasses, and tables, the grids without the glasses, that are of interest to the data analyst.  A table is a database object usually represents something useful to a business process.  For example, a sales person may enter a new order.  The first screen is typically called the sales order header screen which contains information about the customer placing the order.  This information is captured in *salesorderheader* table.  The customers ordered items are typically entered via multiple screens.  These are captured in the *salesorderdetail* table.  
+
+A view is a database object that maybe a subset of either the columns or rows of a single table.  For example, the customer table has information on all the customers, but the customer view, *c*, shows only a single customer.  
+
+Or a view may have data from a primary/driving table and joined to other tables to provide a better understanding/view of the information in the primary table.  For example, the primary table typically has a primary key column, *PK*, and zero or more foreign key columns, *FK*.  The *PK* and *FK* are usually an integer which is great for a computer, but not so nice us mere mortals.  An extended view pulls information associated with the *FK*.  For example a sales order view a customer foreign key, can show the  actual customer name.
+
+
 ## Investigate the database using Rstudio 
 
 The Rstudio Connections tab shows that you are connected to Postgres and that the `adventureworks` database has a many schemas each of which has multiple tables in it:
@@ -178,7 +188,7 @@ sp_docker_containers_tibble(list_all = TRUE)
 ## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 0105899fe547 post… docker… 2019-08-2… 16 sec… <NA>  Exite… 0B (… adve…
+## 1 bf1f09638f4d post… docker… 2019-09-0… 16 sec… <NA>  Exite… 0B (… adve…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 
@@ -194,7 +204,7 @@ sp_docker_containers_tibble()
 ## # A tibble: 1 x 12
 ##   container_id image command created_at created ports status size  names
 ##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 0105899fe547 post… docker… 2019-08-2… 17 sec… 0.0.… Up Le… 63B … adve…
+## 1 bf1f09638f4d post… docker… 2019-09-0… 17 sec… 0.0.… Up Le… 63B … adve…
 ## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
 ```
 Connect to the `adventureworks` database in PostgreSQL:
@@ -234,7 +244,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## 0105899fe547        postgres:11         "docker-entrypoint.s…"   18 seconds ago      Exited (0) Less than a second ago                       adventureworks
+## bf1f09638f4d        postgres:11         "docker-entrypoint.s…"   18 seconds ago      Exited (0) Less than a second ago                       adventureworks
 ```
 
 Next time, you can just use this command to start the container: 
