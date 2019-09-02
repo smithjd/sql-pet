@@ -1,13 +1,11 @@
----
-title: "AW SO EDA"
-author: "Sophie Yang"
-date: "July 19, 2019"
-output: md_document
----
-# Digging into Adventureworks sales data
+# Exploring a Single Table (with a Business Perspective) {#chapter_exploring-a-single-table}
+
+> This chapter demonstrates how to:
+>
+>   * Dig into a single Adventureworks table containing sales data
+>   * Investigate the ddata from a business value perspective
 
 This chapter explores one table, illustrating the kind of detective work that's needed to understand one table.  We'll investigate the `salesorderheader` table in the `sales` schema.
-
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -56,63 +54,39 @@ https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf
 
 (moved a big chunk about schemas to 050 - setup adventureworks and connect with rstudio)
 
-## Poke around the Adventure Works Sales table
-
-Take some time now and poke around the salesorderheader table.  The `summary` function is always a good first step:
-
-```{r}
-tbl(con, in_schema("sales", "salesorderheader")) %>% 
-collect(n = 1000) %>% summary()
-
-```
-
+The previous chapter has demonstrated some of the automated techniques for showing what's in the table using specific functions and packages.
 
 The first item we examine is Adventure Works' sales dollars over the span of data available at different levels of detail.  On an annual basis, are sales dollars trending up, down or flat?
 
 
 ```{r Calculate time period and annual sales dollars- 1}
-annual_sales <- dbGetQuery(
-  con,
-  "SELECT date_trunc('year', orderdate)::date DATE
-    ,min(orderdate)::date min_orderdate
-    ,max(orderdate)::date max_orderdate
-    ,round(sum(subtotal),2) so_dollars
-    ,round(avg(subtotal),2) avg_so_dollars
-    ,count(*) so_cnt
-FROM sales.salesorderheader sh
-GROUP BY date_trunc('year', orderdate)
-ORDER BY DATE
-"
-)
-
-sp_print_df(annual_sales)
-```
-
-repeat in dplyr code
-
-```{r}
-annual_sales_d <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
-  mutate(date = substr(as.character(orderdate), 1, 4)) %>%
-  group_by(date) %>%
+annual_sales <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
+  mutate(year = substr(as.character(orderdate), 1, 4)) %>%
+  group_by(year) %>%
   summarize(
-    min_orderdate = min(orderdate),
-    max_orderdate = max(orderdate),
+    min_orderdate = min(orderdate, na.rm = TRUE),
+    max_orderdate = max(orderdate, na.rm = TRUE),
     so_dollars = round(sum(subtotal, na.rm = TRUE), 2),
+    avg_so_dollars = round(mean(subtotal, na.rm = TRUE),2),
     so_cnt = n()
   ) %>%
-  arrange(date) %>%
-  select(date, min_orderdate, max_orderdate, so_dollars, so_cnt) %>%
+  arrange(year) %>%
+  select(year, min_orderdate, max_orderdate, so_dollars, avg_so_dollars, so_cnt) %>%
   collect() %>%
   as.data.frame()
-annual_sales_d
+annual_sales
 ```
 
 ```{r Calculate time period and annual sales dollars - 2}
 min_dt <- min(annual_sales$min_orderdate)
 max_dt <- max(annual_sales$max_orderdate)
 
-ggplot(data = annual_sales, aes(x = date, y = so_dollars)) +
+ggplot(data = annual_sales, aes(x = year, y = so_dollars)) +
   geom_col(fill = "lightblue", color = "blue") +
+    geom_text(aes(label = paste(
+    "avg $ ", avg_so_dollars
+  )), vjust = 1.5) + # orders inside each bar at top
+
   xlab("Year") +
   ylab("Sales $") +
   ggtitle(paste("Adventure Works Sales Dollars by Year\n  ", min_dt, " - ", max_dt))
@@ -120,29 +94,21 @@ ggplot(data = annual_sales, aes(x = date, y = so_dollars)) +
 
 From the title we see that the available data covers the last seven months of 2011 through the first six months of 2014. From 2011 through 2013, sales are trending up and the growth between years is slowing down.  2014 sales dollars look a little behind 2013.  Are sales dollars for 2014 really down or are sales dollars seasonal?  To see if the sales dollars are sesonal, we will drill in and look at the monthly sales.  Let's first clean up the y-axis labels and include the number of sales orders and the average sales order dollars associated with the annual dollars?
 
-# Sales Orders and Dollars
+## Sales Orders and Dollars
 
 How are the sales dollars related to the number of orders and what is the average order amount?  In the next plot, the title is centered, the y-axis is rescaled, and number of orders and average order dollar amount is added to the top of each bar. 
 
-```{r annual sales and dollars}
-ggplot(data = annual_sales, aes(x = date, y = so_dollars)) +
-  geom_col(fill = "lightblue", color = "blue") +
-  xlab("Year") +
-  ylab("Sales Dollars") +
-  scale_y_continuous(labels = dollar) + # clean up y-axis
-  geom_text(aes(label = paste(
-    "orders", so_cnt, "
-",
-    "avg $ ", avg_so_dollars
-  )), vjust = 1.5) + # orders inside each bar at top
-  theme(plot.title = element_text(hjust = 0.5)) + # Center ggplot title
-  ggtitle(paste("Sales by Year\n", min_dt, " - ", max_dt))
-```
 The following 3 plots show how odd the sales data is:
 
 Look at average dollars per sale sale:
 ```{r average dollars per sale}
-ggplot(data = annual_sales, aes(x = date, y = avg_so_dollars)) +
+ggplot(data = annual_sales, aes(x = year, y = avg_so_dollars)) +
+    geom_text(aes(label = paste(
+    "orders", so_cnt, "
+",
+    "avg $ ", avg_so_dollars
+  )), vjust = 1.5) + # orders inside each bar at top
+
   geom_col(fill = "lightblue", color = "blue") +
   xlab("Year") +
   ylab("Average sale amount") +
@@ -152,8 +118,9 @@ ggplot(data = annual_sales, aes(x = date, y = avg_so_dollars)) +
 
 Look at number of orders per year:
 ```{r average dollars per sale - v2}
-ggplot(data = annual_sales, aes(x = date, y = as.numeric(so_cnt))) +
-  geom_col(fill = "lightblue", color = "blue") +
+ggplot(data = annual_sales, aes(x = year, y = as.numeric(so_cnt))) +
+  geom_col(fill = "lightblue", color = "blue") +  geom_text(aes(label = paste(
+    "orders", so_cnt), vjust = 1.5)) + # orders inside each bar at top
   xlab("Year") +
   ylab("Total number of orders") +
   ggtitle(paste("Number of Orders per Year\n", min_dt, " - ", max_dt))
@@ -161,9 +128,11 @@ ggplot(data = annual_sales, aes(x = date, y = as.numeric(so_cnt))) +
 
 Look at number of orders by the the average sales per order for the four years:
 ```{r number of orders by the the average sales per order}
-ggplot(data = annual_sales, aes(x = avg_so_dollars, y = as.numeric(so_cnt))) +
-  geom_point(fill = "lightblue", color = "blue", alpha = .2) +
-  geom_text(aes(label = lubridate::year(date), ,hjust=.5, vjust=0)) +
+annual_sales %>% arrange(min_orderdate) %>% 
+ggplot(aes(x = avg_so_dollars, y = as.numeric(so_cnt))) +
+  geom_point() +
+  geom_text(aes(label = year, hjust = .5, vjust = 0)) +
+  geom_path() +
   xlab("Average dollars per order") +
   ylab("Total number of orders") +
   ggtitle(paste("Number of Orders by Average Order Amount\n", min_dt, " - ", max_dt))
@@ -178,46 +147,22 @@ The orders in 2012 are about 30% of the 2013 sales, but the 2012 average sales o
 The next code block drills down from annual sales dollars to monthly sales dollars.
 
 ```{r monthly_sales}
-monthly_sales <- dbGetQuery(
-  con,
-  "
-SELECT *
-      ,sum(so_dollars) over (partition by mo order by yr) cum_so_dollars
-  FROM (
-        SELECT EXTRACT(MONTH FROM orderdate) mo
-              ,EXTRACT(YEAR FROM orderdate) yr
-              ,min(orderdate)::date min_orderdate
-              ,max(orderdate)::date max_orderdate
-              ,round(sum(subtotal),2) so_dollars
-              ,count(*) * 1.0  so_cnt   -- Suppress msg:Don't know how to automatically pick scale for object of type integer64. 
-              ,round(AVG(subtotal),2) avg_so_dollars
---              ,round(sum(subtotal),2) order_amt
-          FROM sales.salesorderheader sh
-        GROUP BY EXTRACT(MONTH FROM orderdate),EXTRACT(YEAR FROM orderdate) 
-       ) AS SRC
-ORDER BY mo,yr
-"
-)
-
-sp_print_df(monthly_sales)
-```
-Do the same query in dplyr
-
-```{r}
-monthly_sales_d <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
+monthly_sales <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
   mutate(yr = year(orderdate), mo = month(orderdate)) %>%
   group_by(yr, mo) %>%
   summarize(
     min_orderdate = min(orderdate, na.rm = TRUE),
     max_orderdate = max(orderdate, na.rm = TRUE),
     so_dollars = round(sum(subtotal, na.rm = TRUE), 2),
+    avg_so_dollars = round(mean(subtotal, na.rm = TRUE), 2),
     so_cnt = n()
   ) %>%
   arrange(yr, mo) %>%
-  select(yr, mo, min_orderdate, max_orderdate, so_dollars, so_cnt) %>%
+  mutate(so_date = as.Date(min_orderdate)) %>% 
+  select(yr, mo, so_date, min_orderdate, max_orderdate, so_dollars, avg_so_dollars, so_cnt) %>%
   collect() %>%
   as.data.frame()
-sp_print_df(monthly_sales_d)
+sp_print_df(monthly_sales)
 
 ```
 
@@ -243,7 +188,7 @@ That is one ugly and useless graph.  It is hard to read/interpret
 
 SQL does not have a factor data type.  The 'mo' and 'yr' INT data types are converted to factors.  This changes the yr legend on the right from the default black to blue to the default factor colors.  The bar text positioned based on cum_so_dollars and adjusted down 1.5 units.
 
-```{r}
+```{r, eval=FALSE}
 monthly_sales$mo <- as.factor(monthly_sales$mo)
 monthly_sales$yr <- as.factor(monthly_sales$yr) # changes color scale from continuous blue to distinct colors
 ggplot(data = monthly_sales, aes(x = mo, y = so_dollars, fill = yr)) +
@@ -252,7 +197,6 @@ ggplot(data = monthly_sales, aes(x = mo, y = so_dollars, fill = yr)) +
   xlab("Month") +
   ylab("Sales Dollars") +
   scale_y_continuous(labels = dollar) +
-  geom_text(aes(y = cum_so_dollars, label = so_cnt), vjust = 1.5) + # Add so_cnt based on mo/yr cumulative $ amounts
   theme(plot.title = element_text(hjust = 0.5)) + # Center ggplot title
   ggtitle(paste("Sales by Month by Year\nWith Number of Sales Orders\n", min_dt, " - ", max_dt))
 ```  
@@ -273,10 +217,10 @@ Having stacked bars, it is difficult to compare the monthly dollar amounts betwe
 
 
 ```{r}
-min_dt <- min(monthly_sales_d$min_orderdate)
-max_dt <- max(monthly_sales_d$max_orderdate)
+min_dt <- min(monthly_sales$min_orderdate)
+max_dt <- max(monthly_sales$max_orderdate)
 
-start_year <- monthly_sales_d %>% 
+start_year <- monthly_sales %>% 
   filter(yr == min(yr)) %>% 
   group_by(yr) %>% 
   summarize(so_dollars = sum(so_dollars), 
@@ -286,7 +230,7 @@ start_year <- monthly_sales_d %>%
             avg_cnt = so_cnt / n_months)
 start_year
 
-normalized_monthly_sales <-  monthly_sales_d %>% 
+normalized_monthly_sales <-  monthly_sales %>% 
   mutate(dollars = (100 * so_dollars) / start_year$avg_dollars,
          number_of_orders = (100 * so_cnt) / start_year$avg_cnt)
 
@@ -306,14 +250,13 @@ normalized_monthly_sales %>%
 ```
 
 
-```{r}
+```{r eval=FALSE}
 ggplot(data = monthly_sales, aes(x = mo, y = so_dollars, fill = yr)) +
   geom_col(position = position_stack(reverse = TRUE)) + # reverse stacked bars 2011 bottom 2014 top
   guides(fill = guide_legend(reverse = TRUE)) + # reverse bar/legend fill
   xlab("Month") +
   ylab("Sales Dollars") +
   scale_y_continuous(labels = dollar) +
-  geom_text(aes(y = cum_so_dollars, label = so_cnt), vjust = 1.5) + # Add so_cnt based on mo/yr cumulative $ amounts
   theme(plot.title = element_text(hjust = 0.5)) + # Center ggplot title
   ggtitle(paste("Sales by Month by Year\nWith Number of Sales Orders\n", min_dt, " - ", max_dt))
 ```
@@ -331,13 +274,13 @@ ggplot(data = monthly_sales, aes(x = mo, y = so_dollars, fill = yr)) +
   xlab("Month") +
   ylab("Sales Dollars") +
   scale_y_continuous(labels = dollar) +
-  geom_text(aes(label = paste(so_cnt, "
-", avg_so_dollars)),
-    size = 2.5,
-    color = "black",
-    vjust = 1.5,
-    position = position_dodge(.9)
-  ) +
+#   geom_text(aes(label = paste(so_cnt, "
+# ", avg_so_dollars)),
+#     size = 2.5,
+#     color = "black",
+#     vjust = 1.5,
+#     position = position_dodge(.9)
+#   ) +
   theme(plot.title = element_text(hjust = 0.5)) + # Center ggplot title
   ggtitle(paste("Sales by Month by Year\nWith Number of Sales Orders\nAnd Average SO $ Amount\n", min_dt, " - ", max_dt))
 ```
@@ -377,39 +320,67 @@ A couple of things jump out from the graph.
 2.  2011 has more variation than 2012 and 2013 and peaks every two months.
 3.  2014 has the most variation and also peaks every two months.  Both the number of sales, 939, and the average sales order size, $52.19 plumet in June 2014.
 
+
+```{r fig.cap='SO, SO Dollars, and Average SO Dollars-b ',fig.width=16}
+# sp_print_df(monthly_sales)
+
+ggplot(
+  data = monthly_sales,
+  aes(
+    x = so_date, y = so_dollars)
+  # , color = as.factor(yr),
+  #   group = as.factor(yr)
+  # )
+) +
+  geom_line() +
+  geom_smooth(se = FALSE) +
+  xlab("Month") +
+  ylab("Sales Dollars") +
+  scale_y_continuous(labels = dollar) +
+  scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
+  theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
+  ggtitle(paste("Sales by Month by Year\nWith Number of Sales Orders\nAnd Average SO $ Amount\n", min_dt, " - ", max_dt))
+```
+
+A couple of things jump out from the graph.
+
+1.  2012 and 2013 have similar sales dollar plots and peak every three months.  This may reflect the closing as many sales orders as possible to make the quarterly sales numbers look good.
+2.  2011 has more variation than 2012 and 2013 and peaks every two months.
+3.  2014 has the most variation and also peaks every two months.  Both the number of sales, 939, and the average sales order size, $52.19 plumet in June 2014.
+
 ```{r}
-so_cnt_2011 <- monthly_sales %>%
-  filter(yr == 2011) %>%
-  select(so_cnt)
-so_cnt_2012_5_12 <- monthly_sales %>%
-  filter(yr == 2012 & mo %in% c(5, 6, 7, 8, 9, 10, 11, 12)) %>%
-  select(so_cnt)
-so_cnt_2012 <- monthly_sales %>%
-  filter(yr == 2012) %>%
-  select(so_cnt)
-so_cnt_2013 <- monthly_sales %>%
-  filter(yr == 2013) %>%
-  select(so_cnt)
-so_cnt_2013_1_6 <- monthly_sales %>%
-  filter(yr == 2013 & mo %in% c(1, 2, 3, 4, 5, 6)) %>%
-  select(so_cnt)
-so_cnt_2014 <- monthly_sales %>%
-  filter(yr == 2014) %>%
-  select(so_cnt)
-so_cnt_2012_2011 <- so_cnt_2012_5_12 / so_cnt_2011
-so_cnt_2013_2012 <- so_cnt_2013 / so_cnt_2012
-so_cnt_2014_2013 <- so_cnt_2014 / so_cnt_2013_1_6
+# so_cnt_2011 <- monthly_sales %>%
+#   filter(yr == 2011) %>%
+#   select(so_cnt, min_orderdate, mo)
+# so_cnt_2012_5_12 <- monthly_sales %>%
+#   filter(yr == 2012 & mo %in% c(5, 6, 7, 8, 9, 10, 11, 12)) %>%
+#   select(so_cnt, min_orderdate, mo)
+# so_cnt_2012 <- monthly_sales %>%
+#   filter(yr == 2012) %>%
+#   select(so_cnt, min_orderdate, mo)
+# so_cnt_2013 <- monthly_sales %>%
+#   filter(yr == 2013) %>%
+#   select(so_cnt, min_orderdate, mo)
+# so_cnt_2013_1_6 <- monthly_sales %>%
+#   filter(yr == 2013 & mo %in% c(1, 2, 3, 4, 5, 6)) %>%
+#   select(so_cnt, min_oderdate, mo)
+# so_cnt_2014 <- monthly_sales %>%
+#   filter(yr == 2014) %>%
+#   select(so_cnt, min_oderdate, mo)
 
-cat("2012 vs 2011 sales order ratios for May - December
-", unlist(so_cnt_2012_2011))
-cat("
-
-2013 vs 2012 sales order ratios
-", unlist(so_cnt_2013_2012))
-cat("
-
-2014 vs 2013 sales order ratios for January - June
-", unlist(so_cnt_2014_2013))
+# STOPPED HERE.  need to join the data frames and plot the lags.
+# so_cnt_2012_2011 <- so_cnt_2012_5_12 / so_cnt_2011
+# so_cnt_2013_2012 <- so_cnt_2013 / so_cnt_2012
+# so_cnt_2014_2013 <- so_cnt_2014 / so_cnt_2013_1_6
+# 
+# cat("2012 vs 2011 sales order ratios for May - December
+# ", unlist(so_cnt_2012_2011))
+# 
+# cat("2013 vs 2012 sales order ratios
+# ", unlist(so_cnt_2013_2012))
+# 
+# cat("2014 vs 2013 sales order ratios for January - June
+# ", unlist(so_cnt_2014_2013))
 ```
 
 Comparing the number of sales orders year over year by month for 2013 and 2012, one can see that the 2013 sales are between 1.2 and 1.8 times larger than the corresponding month of 2012 from January through June.  In July the 2013 sales are 5 to 6 times the 2012 sales orders.
@@ -497,7 +468,7 @@ ggplot(data = NULL) +
 ```
 The sales rep orders brought in over half the monthly sales dollars for every month except three, February, Arpil, and June of 2014.  The monthly sales rep orders for those months are 3, 2, and 0 respectively. 
 
-# Monthly Sales Rep Performance Analysis
+## Monthly Sales Rep Performance Analysis
 
 ```{r}
 mo_so_sreps <- dbGetQuery(
@@ -679,9 +650,6 @@ ggplot(data = NULL) +
 ```
 
 
-
-
-
 This plot is much easier to read, but the sales orders => avg_s
 From the tidyR overview, https://tidyr.tidyverse.org/:
 
@@ -691,19 +659,13 @@ Tidy data is data where:
 *  Each observation is a row.
 *  Each value is a cell.
 
-
-
-
-
-
-
 The gather command throws the following warning:
 
     attributes are not identical across measure variables;
     they will be dropped
 
 
-# Adventure Works Monthly Sales
+## Adventure Works Monthly Sales
 
 Instead of annual sales, we drill into the monthly sales to see how sales dollars are generated over the year.  We also clean up our next graph a bit.  The y-axis is rescaled to make it easier to read and center the title.
 
@@ -728,26 +690,26 @@ monthly_sales
 translate previous query with dplyr
 
 ```{r}
-monthly_sales_d <- tbl(con, in_schema("sales", "salesorderheader")) %>%
+monthly_sales <- tbl(con, in_schema("sales", "salesorderheader")) %>%
   mutate(order_date = substr(as.character(orderdate), 1, 7)) %>%
   group_by(order_date) %>%
   summarize(
     min_orderdate = min(orderdate),
     max_orderdate = max(orderdate),
     nbr_of_orders = n(),
-    subtotal = round(sum(subtotal, na.rm = TRUE), 2)
+    so_dollars = round(sum(subtotal, na.rm = TRUE), 2)
   ) %>%
   arrange(order_date) %>%
-  select(order_date, min_orderdate, max_orderdate, nbr_of_orders, subtotal) %>%
+  select(order_date, min_orderdate, max_orderdate, nbr_of_orders, so_dollars) %>%
   collect() %>%
   as.data.frame()
-monthly_sales_d
+monthly_sales
 ```
 
 ```{r fig.width=15}
 sp_print_df(monthly_sales)
-ggplot(data = monthly_sales, aes(x = yymm, y = subtotal)) +
-  geom_col() + # fill = 'green', color = 'blue') +
+ggplot(data = monthly_sales, aes(x = min_orderdate, y = so_dollars)) +
+  geom_line() + # fill = 'green', color = 'blue') +
   xlab("Year") +
   ylab("Sales") +
   scale_y_continuous(labels = dollar) + # see scales library

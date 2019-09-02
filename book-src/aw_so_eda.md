@@ -130,8 +130,8 @@ repeat in dplyr code
       mutate(date = substr(as.character(orderdate), 1, 4)) %>%
       group_by(date) %>%
       summarize(
-        min_orderdate = min(orderdate, na.rm = TRUE),
-        max_orderdate = max(orderdate, na.rm = TRUE),
+        min_orderdate = min(orderdate),
+        max_orderdate = max(orderdate),
         so_dollars = round(sum(subtotal, na.rm = TRUE), 2),
         so_cnt = n()
       ) %>%
@@ -139,6 +139,15 @@ repeat in dplyr code
       select(date, min_orderdate, max_orderdate, so_dollars, so_cnt) %>%
       collect() %>%
       as.data.frame()
+
+    ## Warning: Missing values are always removed in SQL.
+    ## Use `MIN(x, na.rm = TRUE)` to silence this warning
+    ## This warning is displayed only once per session.
+
+    ## Warning: Missing values are always removed in SQL.
+    ## Use `MAX(x, na.rm = TRUE)` to silence this warning
+    ## This warning is displayed only once per session.
+
     annual_sales_d
 
     ##   date min_orderdate max_orderdate  so_dollars so_cnt
@@ -273,8 +282,7 @@ same query in dplyr
         so_cnt = n()
       ) %>%
       arrange(yr, mo) %>%
-      mutate(so_date = as.Date(min_orderdate)) %>% 
-      select(yr, mo, so_date, min_orderdate, max_orderdate, so_dollars, so_cnt) %>%
+      select(yr, mo, min_orderdate, max_orderdate, so_dollars, so_cnt) %>%
       collect() %>%
       as.data.frame()
     sp_print_df(monthly_sales_d)
@@ -458,75 +466,53 @@ A couple of things jump out from the graph.
 
 <!-- -->
 
-    # sp_print_df(monthly_sales)
+    so_cnt_2011 <- monthly_sales %>%
+      filter(yr == 2011) %>%
+      select(so_cnt)
+    so_cnt_2012_5_12 <- monthly_sales %>%
+      filter(yr == 2012 & mo %in% c(5, 6, 7, 8, 9, 10, 11, 12)) %>%
+      select(so_cnt)
+    so_cnt_2012 <- monthly_sales %>%
+      filter(yr == 2012) %>%
+      select(so_cnt)
+    so_cnt_2013 <- monthly_sales %>%
+      filter(yr == 2013) %>%
+      select(so_cnt)
+    so_cnt_2013_1_6 <- monthly_sales %>%
+      filter(yr == 2013 & mo %in% c(1, 2, 3, 4, 5, 6)) %>%
+      select(so_cnt)
+    so_cnt_2014 <- monthly_sales %>%
+      filter(yr == 2014) %>%
+      select(so_cnt)
+    so_cnt_2012_2011 <- so_cnt_2012_5_12 / so_cnt_2011
+    so_cnt_2013_2012 <- so_cnt_2013 / so_cnt_2012
+    so_cnt_2014_2013 <- so_cnt_2014 / so_cnt_2013_1_6
 
-    ggplot(
-      data = monthly_sales_d,
-      aes(
-        x = so_date, y = so_dollars)
-      # , color = as.factor(yr),
-      #   group = as.factor(yr)
-      # )
-    ) +
-      geom_line() +
-      geom_smooth(se = FALSE) +
-      xlab("Month") +
-      ylab("Sales Dollars") +
-      scale_y_continuous(labels = dollar) +
-      scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
-      theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
-      ggtitle(paste("Sales by Month by Year\nWith Number of Sales Orders\nAnd Average SO $ Amount\n", min_dt, " - ", max_dt))
+    cat("2012 vs 2011 sales order ratios for May - December
+    ", unlist(so_cnt_2012_2011))
 
-    ## `geom_smooth()` using method = 'loess' and formula 'y ~ x'
+    ## 2012 vs 2011 sales order ratios for May - December
+    ##  6.813953488 2.765957447 1.666666667 1.14 2.242038217 0.9816513761 1.665217391 1.657894737
 
-![SO, SO Dollars, and Average SO
-Dollars-b](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-8-1.png)
+    cat("
 
-A couple of things jump out from the graph.
+    2013 vs 2012 sales order ratios
+    ", unlist(so_cnt_2013_2012))
 
-1.  2012 and 2013 have similar sales dollar plots and peak every three
-    months. This may reflect the closing as many sales orders as
-    possible to make the quarterly sales numbers look good.
-2.  2011 has more variation than 2012 and 2013 and peaks every two
-    months.
-3.  2014 has the most variation and also peaks every two months. Both
-    the number of sales, 939, and the average sales order size, $52.19
-    plumet in June 2014.
+    ## 
+    ## 
+    ## 2013 vs 2012 sales order ratios
+    ##  1.19047619 1.484018265 1.450657895 1.591078067 1.460750853 1.843589744 4.519480519 6.277192982 5.088068182 6.130841121 5.490861619 5.423280423
 
-<!-- -->
+    cat("
 
-    # so_cnt_2011 <- monthly_sales %>%
-    #   filter(yr == 2011) %>%
-    #   select(so_cnt, min_orderdate, mo)
-    # so_cnt_2012_5_12 <- monthly_sales %>%
-    #   filter(yr == 2012 & mo %in% c(5, 6, 7, 8, 9, 10, 11, 12)) %>%
-    #   select(so_cnt, min_orderdate, mo)
-    # so_cnt_2012 <- monthly_sales %>%
-    #   filter(yr == 2012) %>%
-    #   select(so_cnt, min_orderdate, mo)
-    # so_cnt_2013 <- monthly_sales %>%
-    #   filter(yr == 2013) %>%
-    #   select(so_cnt, min_orderdate, mo)
-    # so_cnt_2013_1_6 <- monthly_sales %>%
-    #   filter(yr == 2013 & mo %in% c(1, 2, 3, 4, 5, 6)) %>%
-    #   select(so_cnt, min_oderdate, mo)
-    # so_cnt_2014 <- monthly_sales %>%
-    #   filter(yr == 2014) %>%
-    #   select(so_cnt, min_oderdate, mo)
+    2014 vs 2013 sales order ratios for January - June
+    ", unlist(so_cnt_2014_2013))
 
-    # STOPPED HERE.  need to join the data frames and plot the lags.
-    # so_cnt_2012_2011 <- so_cnt_2012_5_12 / so_cnt_2011
-    # so_cnt_2013_2012 <- so_cnt_2013 / so_cnt_2012
-    # so_cnt_2014_2013 <- so_cnt_2014 / so_cnt_2013_1_6
-    # 
-    # cat("2012 vs 2011 sales order ratios for May - December
-    # ", unlist(so_cnt_2012_2011))
-    # 
-    # cat("2013 vs 2012 sales order ratios
-    # ", unlist(so_cnt_2013_2012))
-    # 
-    # cat("2014 vs 2013 sales order ratios for January - June
-    # ", unlist(so_cnt_2014_2013))
+    ## 
+    ## 
+    ## 2014 vs 2013 sales order ratios for January - June
+    ##  5.3525 5.403076923 5.439909297 4.941588785 5.63317757 1.305980529
 
 Comparing the number of sales orders year over year by month for 2013
 and 2012, one can see that the 2013 sales are between 1.2 and 1.8 times
@@ -652,7 +638,7 @@ Monthly Sales Rep Performance Analysis
 
     sp_print_df(mo_so_sreps)
 
-![](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-10-1.png)
+![](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-9-1.png)
 
     monthly_sales_online <- dbGetQuery(
       con,
@@ -673,7 +659,7 @@ Monthly Sales Rep Performance Analysis
     sp_print_df(monthly_sales_online)
 
 ![caption goes
-here](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-11-1.png)
+here](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-10-1.png)
 
     ggplot(data = monthly_sales_online, aes(x = factor(mo), y = sales_dollars, fill = factor(yr))) +
       geom_col(position = "dodge", color = "black") + # unstack columns and outline in black
@@ -690,7 +676,7 @@ here](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-11-1.png)
       ggtitle(paste("Sales by Month\nBy Online Flag"))
 
 ![caption goes
-here](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-11-2.png)
+here](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-10-2.png)
 
     monthly_sales_onl_pct <- dbGetQuery(
       con,
@@ -724,7 +710,7 @@ here](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-11-2.png)
 
     sp_print_df(monthly_sales_onl_pct)
 
-![](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-12-1.png)
+![](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-11-1.png)
 
     mo_onl_pct <- dbGetQuery(
       con,
@@ -751,7 +737,7 @@ here](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-11-2.png)
 
     sp_print_df(mo_onl_pct)
 
-![](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-13-1.png)
+![](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-12-1.png)
 
     min_dt <- min(monthly_sales$min_orderdate)
     max_dt <- max(monthly_sales$max_orderdate)
@@ -804,7 +790,7 @@ here](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-11-2.png)
         "Each Point shows Number of Orders: $ Amount: % of Total $ For the Month"
       ))
 
-![](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-13-2.png)
+![](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-12-2.png)
 
 This plot is much easier to read, but the sales orders =&gt; avg\_s From
 the tidyR overview,
@@ -899,15 +885,6 @@ translate previous query with dplyr
       select(order_date, min_orderdate, max_orderdate, nbr_of_orders, subtotal) %>%
       collect() %>%
       as.data.frame()
-
-    ## Warning: Missing values are always removed in SQL.
-    ## Use `MIN(x, na.rm = TRUE)` to silence this warning
-    ## This warning is displayed only once per session.
-
-    ## Warning: Missing values are always removed in SQL.
-    ## Use `MAX(x, na.rm = TRUE)` to silence this warning
-    ## This warning is displayed only once per session.
-
     monthly_sales_d
 
     ##    order_date min_orderdate max_orderdate nbr_of_orders   subtotal
@@ -952,7 +929,7 @@ translate previous query with dplyr
 
     sp_print_df(monthly_sales)
 
-![](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-16-1.png)
+![](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-15-1.png)
 
     ggplot(data = monthly_sales, aes(x = yymm, y = subtotal)) +
       geom_col() + # fill = 'green', color = 'blue') +
@@ -963,7 +940,7 @@ translate previous query with dplyr
       theme(plot.title = element_text(hjust = 0.5)) + # Center ggplot title
       theme(axis.text.x = element_text(angle = 60, hjust = 1))
 
-![](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-16-2.png)
+![](aw_so_eda_files/figure-markdown_strict/unnamed-chunk-15-2.png)
 
 Views
 -----
