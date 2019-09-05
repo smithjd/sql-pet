@@ -50,7 +50,7 @@ There are many different methods of getting data from a DBMS, and we'll explore 
 `DBI::dbReadTable` will download an entire table into an R [tibble](https://tibble.tidyverse.org/).  
 
 ```r
-dbExecute(con, "set search_path to humanresources, public;") # watch for duplicates!
+dbExecute(con, "set search_path to sales, humanresources;") # watch for duplicates!
 ```
 
 ```
@@ -58,28 +58,37 @@ dbExecute(con, "set search_path to humanresources, public;") # watch for duplica
 ```
 
 ```r
-employee_tibble <- DBI::dbReadTable(con, "employee")
-# employee_tibble <- DBI::dbReadTable(con, in_schema("humanresources", "employee"))
-str(employee_tibble)
+salesorderheader_tibble <- DBI::dbReadTable(con, "salesorderheader")
+str(salesorderheader_tibble)
 ```
 
 ```
-## 'data.frame':	290 obs. of  15 variables:
-##  $ businessentityid: int  1 2 3 4 5 6 7 8 9 10 ...
-##  $ nationalidnumber: chr  "295847284" "245797967" "509647174" "112457891" ...
-##  $ loginid         : chr  "adventure-works\\ken0" "adventure-works\\terri0" "adventure-works\\roberto0" "adventure-works\\rob0" ...
-##  $ jobtitle        : chr  "Chief Executive Officer" "Vice President of Engineering" "Engineering Manager" "Senior Tool Designer" ...
-##  $ birthdate       : Date, format: "1969-01-29" "1971-08-01" ...
-##  $ maritalstatus   : chr  "S" "S" "M" "S" ...
-##  $ gender          : chr  "M" "F" "M" "M" ...
-##  $ hiredate        : Date, format: "2009-01-14" "2008-01-31" ...
-##  $ salariedflag    : logi  TRUE TRUE TRUE FALSE TRUE TRUE ...
-##  $ vacationhours   : int  99 1 2 48 5 6 61 62 63 16 ...
-##  $ sickleavehours  : int  69 20 21 80 22 23 50 51 51 64 ...
-##  $ currentflag     : logi  TRUE TRUE TRUE TRUE TRUE TRUE ...
-##  $ rowguid         : chr  "f01251e5-96a3-448d-981e-0f99d789110d" "45e8f437-670d-4409-93cb-f9424a40d6ee" "9bbbfb2c-efbb-4217-9ab7-f97689328841" "59747955-87b8-443f-8ed4-f8ad3afdf3a9" ...
-##  $ modifieddate    : POSIXct, format: "2014-06-30 00:00:00" "2014-06-30 00:00:00" ...
-##  $ organizationnode: chr  "/" "/1/" "/1/1/" "/1/1/1/" ...
+## 'data.frame':	31465 obs. of  25 variables:
+##  $ salesorderid          : int  43659 43660 43661 43662 43663 43664 43665 43666 43667 43668 ...
+##  $ revisionnumber        : int  8 8 8 8 8 8 8 8 8 8 ...
+##  $ orderdate             : POSIXct, format: "2011-05-31" "2011-05-31" ...
+##  $ duedate               : POSIXct, format: "2011-06-12" "2011-06-12" ...
+##  $ shipdate              : POSIXct, format: "2011-06-07" "2011-06-07" ...
+##  $ status                : int  5 5 5 5 5 5 5 5 5 5 ...
+##  $ onlineorderflag       : logi  FALSE FALSE FALSE FALSE FALSE FALSE ...
+##  $ purchaseordernumber   : chr  "PO522145787" "PO18850127500" "PO18473189620" "PO18444174044" ...
+##  $ accountnumber         : chr  "10-4020-000676" "10-4020-000117" "10-4020-000442" "10-4020-000227" ...
+##  $ customerid            : int  29825 29672 29734 29994 29565 29898 29580 30052 29974 29614 ...
+##  $ salespersonid         : int  279 279 282 282 276 280 283 276 277 282 ...
+##  $ territoryid           : int  5 5 6 6 4 1 1 4 3 6 ...
+##  $ billtoaddressid       : int  985 921 517 482 1073 876 849 1074 629 529 ...
+##  $ shiptoaddressid       : int  985 921 517 482 1073 876 849 1074 629 529 ...
+##  $ shipmethodid          : int  5 5 5 5 5 5 5 5 5 5 ...
+##  $ creditcardid          : int  16281 5618 1346 10456 4322 806 15232 13349 10370 1566 ...
+##  $ creditcardapprovalcode: chr  "105041Vi84182" "115213Vi29411" "85274Vi6854" "125295Vi53935" ...
+##  $ currencyrateid        : int  NA NA 4 4 NA NA NA NA NA 4 ...
+##  $ subtotal              : num  20566 1294 32726 28833 419 ...
+##  $ taxamt                : num  1971.5 124.2 3153.8 2775.2 40.3 ...
+##  $ freight               : num  616.1 38.8 985.6 867.2 12.6 ...
+##  $ totaldue              : num  23153 1457 36866 32475 472 ...
+##  $ comment               : chr  NA NA NA NA ...
+##  $ rowguid               : chr  "79b65321-39ca-4115-9cba-8fe0903e12e6" "738dc42d-d03b-48a1-9822-f95a67ea7389" "d91b9131-18a4-4a11-bc3a-90b6f53e9d74" "4a1ecfc0-cc3a-4740-b028-1c50bb48711c" ...
+##  $ modifieddate          : POSIXct, format: "2011-06-07" "2011-06-07" ...
 ```
 That's very simple, but if the table is large it may not be a good idea, since R is designed to keep the entire table in memory.  Note that the first line of the str() output reports the total number of observations.  
 
@@ -89,8 +98,8 @@ The `dplyr::tbl` function gives us more control over access to a table by enabli
 
 
 ```r
-employee_table <- dplyr::tbl(con, "employee")
-class(employee_table)
+salesorderheader_table <- dplyr::tbl(con, "salesorderheader")
+class(salesorderheader_table)
 ```
 
 ```
@@ -104,19 +113,19 @@ class(employee_table)
 The `collect` function triggers the creation of a tibble and controls the number of rows that the DBMS sends to R.  For more complex queries, the `dplyr::collect()` function provides a mechanism to indicate what's processed on on the dbms server and what's processed by R on the local machine. The chapter on [Lazy Evaluation and Execution Environment](#chapter_lazy-evaluation-and-timing) discusses this issue in detail.
 
 ```r
-employee_table %>% dplyr::collect(n = 3) %>% dim
+salesorderheader_table %>% dplyr::collect(n = 3) %>% dim
 ```
 
 ```
-## [1]  3 15
+## [1]  3 25
 ```
 
 ```r
-employee_table %>% dplyr::collect(n = 500) %>% dim
+salesorderheader_table %>% dplyr::collect(n = 500) %>% dim
 ```
 
 ```
-## [1] 290  15
+## [1] 500  25
 ```
 
 ### Random rows from the dbms
@@ -127,91 +136,127 @@ When the dbms contains many rows, a sample of the data may be plenty for your pu
 ```r
 one_percent_sample <- DBI::dbGetQuery(
   con,
-  "SELECT businessentityid, jobtitle, birthdate
-  FROM employee TABLESAMPLE BERNOULLI(3) LIMIT 20;
+  "SELECT orderdate, subtotal, taxamt, freight, totaldue
+  FROM salesorderheader TABLESAMPLE BERNOULLI(3) LIMIT 20;
   "
 )
+
 
 one_percent_sample
 ```
 
 ```
-##   businessentityid                     jobtitle  birthdate
-## 1               79 Production Technician - WC40 1966-12-08
-## 2              164 Production Technician - WC45 1988-09-24
-## 3              191 Production Technician - WC45 1988-03-14
+##     orderdate   subtotal    taxamt   freight   totaldue
+## 1  2011-06-05  3578.2700  286.2616   89.4568  3953.9884
+## 2  2011-06-18   699.0982   55.9279   17.4775   772.5036
+## 3  2011-06-21  3399.9900  271.9992   84.9998  3756.9890
+## 4  2011-06-24   699.0982   55.9279   17.4775   772.5036
+## 5  2011-06-27  3578.2700  286.2616   89.4568  3953.9884
+## 6  2011-07-01  2082.6748  199.3984   62.3120  2344.3852
+## 7  2011-07-01 36724.0974 3522.2975 1100.7180 41347.1129
+## 8  2011-07-03  3578.2700  286.2616   89.4568  3953.9884
+## 9  2011-07-07  3578.2700  286.2616   89.4568  3953.9884
+## 10 2011-07-12  3578.2700  286.2616   89.4568  3953.9884
+## 11 2011-07-18  3374.9900  269.9992   84.3748  3729.3640
+## 12 2011-07-21  3374.9900  269.9992   84.3748  3729.3640
+## 13 2011-07-27  3578.2700  286.2616   89.4568  3953.9884
+## 14 2011-07-29  3578.2700  286.2616   89.4568  3953.9884
+## 15 2011-08-01 28045.3358 2702.1800  844.4313 31591.9471
+## 16 2011-08-01  2039.9940  195.8394   61.1998  2297.0332
+## 17 2011-08-01 73761.5266 7108.6377 2221.4493 83091.6136
+## 18 2011-08-01  8129.9760  780.4777  243.8993  9154.3530
+## 19 2011-08-01 12907.7717 1241.5408  387.9815 14537.2940
+## 20 2011-08-01  3427.4236  329.0327  102.8227  3859.2790
 ```
 **Exact sample of 100 records**
 
-This technique depends on knowing the range of a record index, such as the `businessentityid` in the `employee` table of our `adventureworks` database.
+This technique depends on knowing the range of a record index, such as the `businessentityid` in the `salesorderheader` table of our `adventureworks` database.
 
 Start by finding the min and max values.
 
 ```r
-DBI::dbListFields(con, "employee")
+DBI::dbListFields(con, "salesorderheader")
 ```
 
 ```
-##  [1] "businessentityid" "nationalidnumber" "loginid"         
-##  [4] "jobtitle"         "birthdate"        "maritalstatus"   
-##  [7] "gender"           "hiredate"         "salariedflag"    
-## [10] "vacationhours"    "sickleavehours"   "currentflag"     
-## [13] "rowguid"          "modifieddate"     "organizationnode"
-```
-
-```r
-employee_df <- DBI::dbReadTable(con, "employee")
-
-max(employee_df$businessentityid)
-```
-
-```
-## [1] 290
+##  [1] "salesorderid"           "revisionnumber"        
+##  [3] "orderdate"              "duedate"               
+##  [5] "shipdate"               "status"                
+##  [7] "onlineorderflag"        "purchaseordernumber"   
+##  [9] "accountnumber"          "customerid"            
+## [11] "salespersonid"          "territoryid"           
+## [13] "billtoaddressid"        "shiptoaddressid"       
+## [15] "shipmethodid"           "creditcardid"          
+## [17] "creditcardapprovalcode" "currencyrateid"        
+## [19] "subtotal"               "taxamt"                
+## [21] "freight"                "totaldue"              
+## [23] "comment"                "rowguid"               
+## [25] "modifieddate"
 ```
 
 ```r
-min(employee_df$businessentityid)
+salesorderheader_df <- DBI::dbReadTable(con, "salesorderheader")
+
+(max_id <- max(salesorderheader_df$salesorderid))
 ```
 
 ```
-## [1] 1
+## [1] 75123
+```
+
+```r
+(min_id <- min(salesorderheader_df$salesorderid))
+```
+
+```
+## [1] 43659
 ```
 
 Set the random number seed and draw the sample.
 
 ```r
 set.seed(123)
-sample_rows <- sample(1:max(employee_df$businessentityid), 10)
-employee_table <- dplyr::tbl(con, "employee")
+sample_rows <- sample(1:max(salesorderheader_df$salesorderid), 10)
+salesorderheader_table <- dplyr::tbl(con, "salesorderheader")
 ```
 
 Run query with the filter verb listing the randomly sampled rows to be retrieved:
 
 ```r
-employee_sample <- employee_table %>% 
-  dplyr::filter(businessentityid %in% sample_rows) %>% 
+salesorderheader_sample <- salesorderheader_table %>% 
+  dplyr::filter(salesorderid %in% sample_rows) %>% 
   dplyr::collect()
 
-str(employee_sample)
+str(salesorderheader_sample)
 ```
 
 ```
-## Classes 'tbl_df', 'tbl' and 'data.frame':	10 obs. of  15 variables:
-##  $ businessentityid: int  14 90 91 118 153 179 195 229 244 289
-##  $ nationalidnumber: chr  "42487730" "82638150" "390124815" "222400012" ...
-##  $ loginid         : chr  "adventure-works\\michael8" "adventure-works\\danielle0" "adventure-works\\kimberly0" "adventure-works\\don0" ...
-##  $ jobtitle        : chr  "Senior Design Engineer" "Production Technician - WC10" "Production Technician - WC10" "Production Technician - WC50" ...
-##  $ birthdate       : Date, format: "1979-06-16" "1986-09-07" ...
-##  $ maritalstatus   : chr  "S" "S" "S" "M" ...
-##  $ gender          : chr  "M" "F" "F" "M" ...
-##  $ hiredate        : Date, format: "2010-12-30" "2010-02-20" ...
-##  $ salariedflag    : logi  TRUE FALSE FALSE FALSE FALSE FALSE ...
-##  $ vacationhours   : int  3 97 95 88 15 30 58 90 62 37
-##  $ sickleavehours  : int  21 68 67 64 27 35 49 65 51 38
-##  $ currentflag     : logi  TRUE TRUE TRUE TRUE TRUE TRUE ...
-##  $ rowguid         : chr  "46286ca4-46dd-4ddb-9128-85b67e98d1a9" "bb886159-1400-4264-b7c9-a3769beb1274" "ce256b6c-1eee-43ed-9969-7cac480ff4d7" "e720053d-922e-4c91-b81a-a1ca4ef8bb0e" ...
-##  $ modifieddate    : POSIXct, format: "2014-06-30" "2014-06-30" ...
-##  $ organizationnode: chr  "/1/1/6/" "/3/1/8/3/" "/3/1/8/4/" "/3/1/11/10/" ...
+## Classes 'tbl_df', 'tbl' and 'data.frame':	7 obs. of  25 variables:
+##  $ salesorderid          : int  45404 46435 51663 57870 62555 65161 68293
+##  $ revisionnumber        : int  8 8 8 8 8 8 8
+##  $ orderdate             : POSIXct, format: "2012-01-10" "2012-05-06" ...
+##  $ duedate               : POSIXct, format: "2012-01-22" "2012-05-18" ...
+##  $ shipdate              : POSIXct, format: "2012-01-17" "2012-05-13" ...
+##  $ status                : int  5 5 5 5 5 5 5
+##  $ onlineorderflag       : logi  TRUE TRUE TRUE TRUE TRUE FALSE ...
+##  $ purchaseordernumber   : chr  NA NA NA NA ...
+##  $ accountnumber         : chr  "10-4030-011217" "10-4030-012251" "10-4030-016327" "10-4030-018572" ...
+##  $ customerid            : int  11217 12251 16327 18572 13483 29799 13239
+##  $ salespersonid         : int  NA NA NA NA NA 281 NA
+##  $ territoryid           : int  1 9 8 4 1 4 6
+##  $ billtoaddressid       : int  19321 24859 19265 16902 15267 997 27923
+##  $ shiptoaddressid       : int  19321 24859 19265 16902 15267 997 27923
+##  $ shipmethodid          : int  1 1 1 1 1 5 1
+##  $ creditcardid          : int  8241 13188 16357 1884 4409 12582 1529
+##  $ creditcardapprovalcode: chr  "332581Vi42712" "635144Vi68383" "420152Vi84562" "1224478Vi9772" ...
+##  $ currencyrateid        : int  NA 4121 NA NA NA NA 11581
+##  $ subtotal              : num  3578 3375 2466 14 57 ...
+##  $ taxamt                : num  286.26 270 197.31 1.12 4.56 ...
+##  $ freight               : num  89.457 84.375 61.658 0.349 1.424 ...
+##  $ totaldue              : num  3954 3729.4 2725.3 15.4 63 ...
+##  $ comment               : chr  NA NA NA NA ...
+##  $ rowguid               : chr  "358f91b2-dadd-4014-8d4f-7f9736cb664e" "eb312409-fcd5-4bac-bd3b-16d4bd7889db" "ddc60552-af98-4166-9249-d09d424d8430" "fe46e631-47b9-4e14-9da5-1e4a4a135364" ...
+##  $ modifieddate          : POSIXct, format: "2012-01-17" "2012-05-13" ...
 ```
 
 
@@ -220,39 +265,40 @@ str(employee_sample)
 A table in the dbms may not only have many more rows than you want, but also many more columns.  The `select` command controls which columns are retrieved.
 
 ```r
-employee_table %>% dplyr::select(businessentityid, jobtitle, birthdate) %>% head()
+salesorderheader_table %>% dplyr::select(orderdate, subtotal, taxamt, freight, totaldue) %>% 
+  head() 
 ```
 
 ```
-## # Source:   lazy query [?? x 3]
+## # Source:   lazy query [?? x 5]
 ## # Database: postgres [postgres@localhost:5432/adventureworks]
-##   businessentityid jobtitle                      birthdate 
-##              <int> <chr>                         <date>    
-## 1                1 Chief Executive Officer       1969-01-29
-## 2                2 Vice President of Engineering 1971-08-01
-## 3                3 Engineering Manager           1974-11-12
-## 4                4 Senior Tool Designer          1974-12-23
-## 5                5 Design Engineer               1952-09-27
-## 6                6 Design Engineer               1959-03-11
+##   orderdate           subtotal taxamt freight totaldue
+##   <dttm>                 <dbl>  <dbl>   <dbl>    <dbl>
+## 1 2011-05-31 00:00:00   20566. 1972.    616.    23153.
+## 2 2011-05-31 00:00:00    1294.  124.     38.8    1457.
+## 3 2011-05-31 00:00:00   32726. 3154.    986.    36866.
+## 4 2011-05-31 00:00:00   28833. 2775.    867.    32475.
+## 5 2011-05-31 00:00:00     419.   40.3    12.6     472.
+## 6 2011-05-31 00:00:00   24433. 2345.    733.    27510.
 ```
 That's exactly equivalent to submitting the following SQL commands dirctly:
 
 ```r
 DBI::dbGetQuery(
   con,
-  'SELECT "businessentityid", "jobtitle", "birthdate"
-FROM "employee"
-LIMIT 6') 
+  'SELECT "orderdate", "subtotal", "taxamt", "freight", "totaldue"
+    FROM "salesorderheader"
+    LIMIT 6') 
 ```
 
 ```
-##   businessentityid                      jobtitle  birthdate
-## 1                1       Chief Executive Officer 1969-01-29
-## 2                2 Vice President of Engineering 1971-08-01
-## 3                3           Engineering Manager 1974-11-12
-## 4                4          Senior Tool Designer 1974-12-23
-## 5                5               Design Engineer 1952-09-27
-## 6                6               Design Engineer 1959-03-11
+##    orderdate   subtotal    taxamt  freight   totaldue
+## 1 2011-05-31 20565.6206 1971.5149 616.0984 23153.2339
+## 2 2011-05-31  1294.2529  124.2483  38.8276  1457.3288
+## 3 2011-05-31 32726.4786 3153.7696 985.5530 36865.8012
+## 4 2011-05-31 28832.5289 2775.1646 867.2389 32474.9324
+## 5 2011-05-31   419.4589   40.2681  12.5838   472.3108
+## 6 2011-05-31 24432.6088 2344.9921 732.8100 27510.4109
 ```
 
 
@@ -265,37 +311,40 @@ In practice we find that, **renaming variables** is often quite important becaus
 
 
 ```r
-tbl(con, "employee") %>%
-  dplyr::rename(businessentity_id_number = businessentityid, 
-                employee_job_title = jobtitle) %>% 
-  dplyr::select(businessentity_id_number, employee_job_title, birthdate) %>%
+tbl(con, "salesorderheader") %>%
+  dplyr::rename(order_date = orderdate, sub_total_amount = subtotal,
+              tax_amount = taxamt, freight_amount = freight, total_due_amount = totaldue) %>% 
+  dplyr::select(order_date, sub_total_amount, tax_amount, freight_amount, total_due_amount ) %>%
   # head()
 show_query()
 ```
 
 ```
 ## <SQL>
-## SELECT "businessentityid" AS "businessentity_id_number", "jobtitle" AS "employee_job_title", "birthdate"
-## FROM "employee"
+## SELECT "orderdate" AS "order_date", "subtotal" AS "sub_total_amount", "taxamt" AS "tax_amount", "freight" AS "freight_amount", "totaldue" AS "total_due_amount"
+## FROM "salesorderheader"
 ```
 That's equivalent to the following SQL code:
 
 ```r
 DBI::dbGetQuery(
   con,
-  'SELECT "businessentityid" AS "businessentity_id_number", "jobtitle" AS "employee_job_title", "birthdate"
-FROM "employee" 
-LIMIT 6' )
+    'SELECT "orderdate" AS "order_date", 
+    "subtotal" AS "sub_total_amount", 
+    "taxamt" AS "tax_amount", 
+    "freight" AS "freight_amount", 
+    "totaldue" AS "total_due_amount"
+    FROM "salesorderheader"' ) %>% head()
 ```
 
 ```
-##   businessentity_id_number            employee_job_title  birthdate
-## 1                        1       Chief Executive Officer 1969-01-29
-## 2                        2 Vice President of Engineering 1971-08-01
-## 3                        3           Engineering Manager 1974-11-12
-## 4                        4          Senior Tool Designer 1974-12-23
-## 5                        5               Design Engineer 1952-09-27
-## 6                        6               Design Engineer 1959-03-11
+##   order_date sub_total_amount tax_amount freight_amount total_due_amount
+## 1 2011-05-31       20565.6206  1971.5149       616.0984       23153.2339
+## 2 2011-05-31        1294.2529   124.2483        38.8276        1457.3288
+## 3 2011-05-31       32726.4786  3153.7696       985.5530       36865.8012
+## 4 2011-05-31       28832.5289  2775.1646       867.2389       32474.9324
+## 5 2011-05-31         419.4589    40.2681        12.5838         472.3108
+## 6 2011-05-31       24432.6088  2344.9921       732.8100       27510.4109
 ```
 The one difference is that the `SQL` code returns a regular data frame and the `dplyr` code returns a `tibble`.  Notice that the seconds are greyed out in the `tibble` display.
 
@@ -304,7 +353,7 @@ The one difference is that the `SQL` code returns a regular data frame and the `
 Where did the translations we've shown above come from?  The `show_query` function shows how `dplyr` is translating your query to the dialect of the target dbms:
 
 ```r
-employee_table %>%
+salesorderheader_table %>%
   dplyr::tally() %>%
   dplyr::show_query()
 ```
@@ -312,7 +361,7 @@ employee_table %>%
 ```
 ## <SQL>
 ## SELECT COUNT(*) AS "n"
-## FROM "employee"
+## FROM "salesorderheader"
 ```
 Here is an extensive discussion of how `dplyr` code is translated into SQL:
 
@@ -324,13 +373,13 @@ If you prefer to use SQL directly, rather than `dplyr`, you can submit SQL code 
 DBI::dbGetQuery(
   con,
   'SELECT COUNT(*) AS "n"
-     FROM "employee"   '
+     FROM "salesorderheader"   '
 )
 ```
 
 ```
-##     n
-## 1 290
+##       n
+## 1 31465
 ```
 
 When you create a report to run repeatedly, you might want to put that query into R markdown. That way you can also execute that SQL code in a chunk with the following header:
@@ -340,7 +389,7 @@ When you create a report to run repeatedly, you might want to put that query int
 
 ```sql
 SELECT COUNT(*) AS "n"
-     FROM "employee";
+     FROM "salesorderheader";
 ```
 Rmarkdown stores that query result in a tibble which can be printed by referring to it:
 
@@ -349,8 +398,8 @@ query_results
 ```
 
 ```
-##     n
-## 1 290
+##       n
+## 1 31465
 ```
 
 ## Mixing dplyr and SQL
@@ -359,39 +408,40 @@ When dplyr finds code that it does not know how to translate into SQL, it will s
 
 
 ```r
-employee_table %>%
-  dplyr::select_at(vars(jobtitle, contains("hours"))) %>% 
+salesorderheader_table %>%
+  dplyr::select_at(vars(subtotal, contains("date"))) %>% 
   dplyr::mutate(today = now()) %>%
   dplyr::show_query()
 ```
 
 ```
 ## <SQL>
-## SELECT "jobtitle", "vacationhours", "sickleavehours", CURRENT_TIMESTAMP AS "today"
-## FROM "employee"
+## SELECT "subtotal", "orderdate", "duedate", "shipdate", "modifieddate", CURRENT_TIMESTAMP AS "today"
+## FROM "salesorderheader"
 ```
 That is native to PostgreSQL, not [ANSI standard](https://en.wikipedia.org/wiki/SQL#Interoperability_and_standardization) SQL.
 
 Verify that it works:
 
 ```r
-employee_table %>%
-  dplyr::select_at(vars(jobtitle, contains("hours"))) %>% 
+salesorderheader_table %>%
+  dplyr::select_at(vars(subtotal, contains("date"))) %>% 
   head() %>% 
   dplyr::mutate(today = now()) %>%
   dplyr::collect()
 ```
 
 ```
-## # A tibble: 6 x 4
-##   jobtitle                 vacationhours sickleavehours today              
-##   <chr>                            <int>          <int> <dttm>             
-## 1 Chief Executive Officer             99             69 2019-09-02 11:51:40
-## 2 Vice President of Engin…             1             20 2019-09-02 11:51:40
-## 3 Engineering Manager                  2             21 2019-09-02 11:51:40
-## 4 Senior Tool Designer                48             80 2019-09-02 11:51:40
-## 5 Design Engineer                      5             22 2019-09-02 11:51:40
-## 6 Design Engineer                      6             23 2019-09-02 11:51:40
+## # A tibble: 6 x 6
+##   subtotal orderdate           duedate             shipdate           
+##      <dbl> <dttm>              <dttm>              <dttm>             
+## 1   20566. 2011-05-31 00:00:00 2011-06-12 00:00:00 2011-06-07 00:00:00
+## 2    1294. 2011-05-31 00:00:00 2011-06-12 00:00:00 2011-06-07 00:00:00
+## 3   32726. 2011-05-31 00:00:00 2011-06-12 00:00:00 2011-06-07 00:00:00
+## 4   28833. 2011-05-31 00:00:00 2011-06-12 00:00:00 2011-06-07 00:00:00
+## 5     419. 2011-05-31 00:00:00 2011-06-12 00:00:00 2011-06-07 00:00:00
+## 6   24433. 2011-05-31 00:00:00 2011-06-12 00:00:00 2011-06-07 00:00:00
+## # … with 2 more variables: modifieddate <dttm>, today <dttm>
 ```
 
 
@@ -410,26 +460,36 @@ Dealing with a large, complex database highlights the utility of specific tools 
 `str` is a workhorse function that lists variables, their type and a sample of the first few variable values.
 
 ```r
-str(employee_tibble)
+str(salesorderheader_tibble)
 ```
 
 ```
-## 'data.frame':	290 obs. of  15 variables:
-##  $ businessentityid: int  1 2 3 4 5 6 7 8 9 10 ...
-##  $ nationalidnumber: chr  "295847284" "245797967" "509647174" "112457891" ...
-##  $ loginid         : chr  "adventure-works\\ken0" "adventure-works\\terri0" "adventure-works\\roberto0" "adventure-works\\rob0" ...
-##  $ jobtitle        : chr  "Chief Executive Officer" "Vice President of Engineering" "Engineering Manager" "Senior Tool Designer" ...
-##  $ birthdate       : Date, format: "1969-01-29" "1971-08-01" ...
-##  $ maritalstatus   : chr  "S" "S" "M" "S" ...
-##  $ gender          : chr  "M" "F" "M" "M" ...
-##  $ hiredate        : Date, format: "2009-01-14" "2008-01-31" ...
-##  $ salariedflag    : logi  TRUE TRUE TRUE FALSE TRUE TRUE ...
-##  $ vacationhours   : int  99 1 2 48 5 6 61 62 63 16 ...
-##  $ sickleavehours  : int  69 20 21 80 22 23 50 51 51 64 ...
-##  $ currentflag     : logi  TRUE TRUE TRUE TRUE TRUE TRUE ...
-##  $ rowguid         : chr  "f01251e5-96a3-448d-981e-0f99d789110d" "45e8f437-670d-4409-93cb-f9424a40d6ee" "9bbbfb2c-efbb-4217-9ab7-f97689328841" "59747955-87b8-443f-8ed4-f8ad3afdf3a9" ...
-##  $ modifieddate    : POSIXct, format: "2014-06-30 00:00:00" "2014-06-30 00:00:00" ...
-##  $ organizationnode: chr  "/" "/1/" "/1/1/" "/1/1/1/" ...
+## 'data.frame':	31465 obs. of  25 variables:
+##  $ salesorderid          : int  43659 43660 43661 43662 43663 43664 43665 43666 43667 43668 ...
+##  $ revisionnumber        : int  8 8 8 8 8 8 8 8 8 8 ...
+##  $ orderdate             : POSIXct, format: "2011-05-31" "2011-05-31" ...
+##  $ duedate               : POSIXct, format: "2011-06-12" "2011-06-12" ...
+##  $ shipdate              : POSIXct, format: "2011-06-07" "2011-06-07" ...
+##  $ status                : int  5 5 5 5 5 5 5 5 5 5 ...
+##  $ onlineorderflag       : logi  FALSE FALSE FALSE FALSE FALSE FALSE ...
+##  $ purchaseordernumber   : chr  "PO522145787" "PO18850127500" "PO18473189620" "PO18444174044" ...
+##  $ accountnumber         : chr  "10-4020-000676" "10-4020-000117" "10-4020-000442" "10-4020-000227" ...
+##  $ customerid            : int  29825 29672 29734 29994 29565 29898 29580 30052 29974 29614 ...
+##  $ salespersonid         : int  279 279 282 282 276 280 283 276 277 282 ...
+##  $ territoryid           : int  5 5 6 6 4 1 1 4 3 6 ...
+##  $ billtoaddressid       : int  985 921 517 482 1073 876 849 1074 629 529 ...
+##  $ shiptoaddressid       : int  985 921 517 482 1073 876 849 1074 629 529 ...
+##  $ shipmethodid          : int  5 5 5 5 5 5 5 5 5 5 ...
+##  $ creditcardid          : int  16281 5618 1346 10456 4322 806 15232 13349 10370 1566 ...
+##  $ creditcardapprovalcode: chr  "105041Vi84182" "115213Vi29411" "85274Vi6854" "125295Vi53935" ...
+##  $ currencyrateid        : int  NA NA 4 4 NA NA NA NA NA 4 ...
+##  $ subtotal              : num  20566 1294 32726 28833 419 ...
+##  $ taxamt                : num  1971.5 124.2 3153.8 2775.2 40.3 ...
+##  $ freight               : num  616.1 38.8 985.6 867.2 12.6 ...
+##  $ totaldue              : num  23153 1457 36866 32475 472 ...
+##  $ comment               : chr  NA NA NA NA ...
+##  $ rowguid               : chr  "79b65321-39ca-4115-9cba-8fe0903e12e6" "738dc42d-d03b-48a1-9822-f95a67ea7389" "d91b9131-18a4-4a11-bc3a-90b6f53e9d74" "4a1ecfc0-cc3a-4740-b028-1c50bb48711c" ...
+##  $ modifieddate          : POSIXct, format: "2011-06-07" "2011-06-07" ...
 ```
 
 ### Always **look** at your data with `head`, `View`, or `kable`
@@ -437,59 +497,88 @@ str(employee_tibble)
 There is no substitute for looking at your data and R provides several ways to just browse it.  The `head` function controls the number of rows that are displayed.  Note that tail does not work against a database object.  In every-day practice you would look at more than the default 6 rows, but here we wrap `head` around the data frame: 
 
 ```r
-sqlpetr::sp_print_df(head(employee_tibble))
+sqlpetr::sp_print_df(head(salesorderheader_tibble))
 ```
 
-<!--html_preserve--><div id="htmlwidget-ffc4f25ab85bf888dc62" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-ffc4f25ab85bf888dc62">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[1,2,3,4,5,6],["295847284","245797967","509647174","112457891","695256908","998320692"],["adventure-works\\ken0","adventure-works\\terri0","adventure-works\\roberto0","adventure-works\\rob0","adventure-works\\gail0","adventure-works\\jossef0"],["Chief Executive Officer","Vice President of Engineering","Engineering Manager","Senior Tool Designer","Design Engineer","Design Engineer"],["1969-01-29","1971-08-01","1974-11-12","1974-12-23","1952-09-27","1959-03-11"],["S","S","M","S","M","M"],["M","F","M","M","F","M"],["2009-01-14","2008-01-31","2007-11-11","2007-12-05","2008-01-06","2008-01-24"],[true,true,true,false,true,true],[99,1,2,48,5,6],[69,20,21,80,22,23],[true,true,true,true,true,true],["f01251e5-96a3-448d-981e-0f99d789110d","45e8f437-670d-4409-93cb-f9424a40d6ee","9bbbfb2c-efbb-4217-9ab7-f97689328841","59747955-87b8-443f-8ed4-f8ad3afdf3a9","ec84ae09-f9b8-4a15-b4a9-6ccbab919b08","e39056f1-9cd5-478d-8945-14aca7fbdcdd"],["2014-06-30T07:00:00Z","2014-06-30T07:00:00Z","2014-06-30T07:00:00Z","2014-06-30T07:00:00Z","2014-06-30T07:00:00Z","2014-06-30T07:00:00Z"],["/","/1/","/1/1/","/1/1/1/","/1/1/2/","/1/1/3/"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>businessentityid<\/th>\n      <th>nationalidnumber<\/th>\n      <th>loginid<\/th>\n      <th>jobtitle<\/th>\n      <th>birthdate<\/th>\n      <th>maritalstatus<\/th>\n      <th>gender<\/th>\n      <th>hiredate<\/th>\n      <th>salariedflag<\/th>\n      <th>vacationhours<\/th>\n      <th>sickleavehours<\/th>\n      <th>currentflag<\/th>\n      <th>rowguid<\/th>\n      <th>modifieddate<\/th>\n      <th>organizationnode<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,10,11]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-88fdd2a34d502a66744b" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-88fdd2a34d502a66744b">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[43659,43660,43661,43662,43663,43664],[8,8,8,8,8,8],["2011-05-31T07:00:00Z","2011-05-31T07:00:00Z","2011-05-31T07:00:00Z","2011-05-31T07:00:00Z","2011-05-31T07:00:00Z","2011-05-31T07:00:00Z"],["2011-06-12T07:00:00Z","2011-06-12T07:00:00Z","2011-06-12T07:00:00Z","2011-06-12T07:00:00Z","2011-06-12T07:00:00Z","2011-06-12T07:00:00Z"],["2011-06-07T07:00:00Z","2011-06-07T07:00:00Z","2011-06-07T07:00:00Z","2011-06-07T07:00:00Z","2011-06-07T07:00:00Z","2011-06-07T07:00:00Z"],[5,5,5,5,5,5],[false,false,false,false,false,false],["PO522145787","PO18850127500","PO18473189620","PO18444174044","PO18009186470","PO16617121983"],["10-4020-000676","10-4020-000117","10-4020-000442","10-4020-000227","10-4020-000510","10-4020-000397"],[29825,29672,29734,29994,29565,29898],[279,279,282,282,276,280],[5,5,6,6,4,1],[985,921,517,482,1073,876],[985,921,517,482,1073,876],[5,5,5,5,5,5],[16281,5618,1346,10456,4322,806],["105041Vi84182","115213Vi29411","85274Vi6854","125295Vi53935","45303Vi22691","95555Vi4081"],[null,null,4,4,null,null],[20565.6206,1294.2529,32726.4786,28832.5289,419.4589,24432.6088],[1971.5149,124.2483,3153.7696,2775.1646,40.2681,2344.9921],[616.0984,38.8276,985.553,867.2389,12.5838,732.81],[23153.2339,1457.3288,36865.8012,32474.9324,472.3108,27510.4109],[null,null,null,null,null,null],["79b65321-39ca-4115-9cba-8fe0903e12e6","738dc42d-d03b-48a1-9822-f95a67ea7389","d91b9131-18a4-4a11-bc3a-90b6f53e9d74","4a1ecfc0-cc3a-4740-b028-1c50bb48711c","9b1e7a40-6ae0-4ad3-811c-a64951857c4b","22a8a5da-8c22-42ad-9241-839489b6ef0d"],["2011-06-07T07:00:00Z","2011-06-07T07:00:00Z","2011-06-07T07:00:00Z","2011-06-07T07:00:00Z","2011-06-07T07:00:00Z","2011-06-07T07:00:00Z"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>salesorderid<\/th>\n      <th>revisionnumber<\/th>\n      <th>orderdate<\/th>\n      <th>duedate<\/th>\n      <th>shipdate<\/th>\n      <th>status<\/th>\n      <th>onlineorderflag<\/th>\n      <th>purchaseordernumber<\/th>\n      <th>accountnumber<\/th>\n      <th>customerid<\/th>\n      <th>salespersonid<\/th>\n      <th>territoryid<\/th>\n      <th>billtoaddressid<\/th>\n      <th>shiptoaddressid<\/th>\n      <th>shipmethodid<\/th>\n      <th>creditcardid<\/th>\n      <th>creditcardapprovalcode<\/th>\n      <th>currencyrateid<\/th>\n      <th>subtotal<\/th>\n      <th>taxamt<\/th>\n      <th>freight<\/th>\n      <th>totaldue<\/th>\n      <th>comment<\/th>\n      <th>rowguid<\/th>\n      <th>modifieddate<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,6,10,11,12,13,14,15,16,18,19,20,21,22]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ### The `summary` function in `base`
 
 The `base` package's `summary` function provides basic statistics that serve a unique diagnostic purpose in this context. For example, the following output shows that:
 
-    * `businessentityid` is a number from 1 to 16,049. In a previous section, we ran the `str` function and saw that there are 16,044 observations in this table. Therefore, the `businessentityid` seems to be sequential from 1:16049, but there are 5 values missing from that sequence. _Exercise for the Reader_: Which 5 values from 1:16049 are missing from `businessentityid` values in the `employee` table? (_Hint_: In the chapter on SQL Joins, you will learn the functions needed to answer this question.)
+    * `businessentityid` is a number from 1 to 16,049. In a previous section, we ran the `str` function and saw that there are 16,044 observations in this table. Therefore, the `businessentityid` seems to be sequential from 1:16049, but there are 5 values missing from that sequence. _Exercise for the Reader_: Which 5 values from 1:16049 are missing from `businessentityid` values in the `salesorderheader` table? (_Hint_: In the chapter on SQL Joins, you will learn the functions needed to answer this question.)
     * The number of NA's in the `return_date` column is a good first guess as to the number of DVDs rented out or lost as of 2005-09-02 02:35:22.
 
 
 ```r
-summary(employee_tibble)
+summary(salesorderheader_tibble)
 ```
 
 ```
-##  businessentityid nationalidnumber     loginid            jobtitle        
-##  Min.   :  1.00   Length:290         Length:290         Length:290        
-##  1st Qu.: 73.25   Class :character   Class :character   Class :character  
-##  Median :145.50   Mode  :character   Mode  :character   Mode  :character  
-##  Mean   :145.50                                                           
-##  3rd Qu.:217.75                                                           
-##  Max.   :290.00                                                           
-##    birthdate          maritalstatus         gender         
-##  Min.   :1951-10-17   Length:290         Length:290        
-##  1st Qu.:1973-09-21   Class :character   Class :character  
-##  Median :1978-10-19   Mode  :character   Mode  :character  
-##  Mean   :1978-07-04                                        
-##  3rd Qu.:1986-05-27                                        
-##  Max.   :1991-05-31                                        
-##     hiredate          salariedflag    vacationhours   sickleavehours 
-##  Min.   :2006-06-30   Mode :logical   Min.   : 0.00   Min.   :20.00  
-##  1st Qu.:2008-12-26   FALSE:238       1st Qu.:26.25   1st Qu.:33.00  
-##  Median :2009-02-02   TRUE :52        Median :51.00   Median :46.00  
-##  Mean   :2009-05-19                   Mean   :50.61   Mean   :45.31  
-##  3rd Qu.:2009-10-09                   3rd Qu.:75.00   3rd Qu.:58.00  
-##  Max.   :2013-05-30                   Max.   :99.00   Max.   :80.00  
-##  currentflag      rowguid           modifieddate                
-##  Mode:logical   Length:290         Min.   :2014-06-30 00:00:00  
-##  TRUE:290       Class :character   1st Qu.:2014-06-30 00:00:00  
-##                 Mode  :character   Median :2014-06-30 00:00:00  
-##                                    Mean   :2014-07-01 20:32:52  
-##                                    3rd Qu.:2014-06-30 00:00:00  
-##                                    Max.   :2014-12-26 09:17:08  
-##  organizationnode  
-##  Length:290        
-##  Class :character  
-##  Mode  :character  
-##                    
-##                    
+##   salesorderid   revisionnumber    orderdate                  
+##  Min.   :43659   Min.   :8.000   Min.   :2011-05-31 00:00:00  
+##  1st Qu.:51525   1st Qu.:8.000   1st Qu.:2013-06-20 00:00:00  
+##  Median :59391   Median :8.000   Median :2013-11-03 00:00:00  
+##  Mean   :59391   Mean   :8.001   Mean   :2013-08-21 12:05:04  
+##  3rd Qu.:67257   3rd Qu.:8.000   3rd Qu.:2014-02-28 00:00:00  
+##  Max.   :75123   Max.   :9.000   Max.   :2014-06-30 00:00:00  
+##                                                               
+##     duedate                       shipdate                       status 
+##  Min.   :2011-06-12 00:00:00   Min.   :2011-06-07 00:00:00   Min.   :5  
+##  1st Qu.:2013-07-02 00:00:00   1st Qu.:2013-06-27 00:00:00   1st Qu.:5  
+##  Median :2013-11-15 00:00:00   Median :2013-11-10 00:00:00   Median :5  
+##  Mean   :2013-09-02 12:05:41   Mean   :2013-08-28 12:06:06   Mean   :5  
+##  3rd Qu.:2014-03-13 00:00:00   3rd Qu.:2014-03-08 00:00:00   3rd Qu.:5  
+##  Max.   :2014-07-12 00:00:00   Max.   :2014-07-07 00:00:00   Max.   :5  
+##                                                                         
+##  onlineorderflag purchaseordernumber accountnumber        customerid   
+##  Mode :logical   Length:31465        Length:31465       Min.   :11000  
+##  FALSE:3806      Class :character    Class :character   1st Qu.:14432  
+##  TRUE :27659     Mode  :character    Mode  :character   Median :19452  
+##                                                         Mean   :20170  
+##                                                         3rd Qu.:25994  
+##                                                         Max.   :30118  
+##                                                                        
+##  salespersonid    territoryid     billtoaddressid shiptoaddressid
+##  Min.   :274.0   Min.   : 1.000   Min.   :  405   Min.   :    9  
+##  1st Qu.:277.0   1st Qu.: 4.000   1st Qu.:14080   1st Qu.:14063  
+##  Median :279.0   Median : 6.000   Median :19449   Median :19438  
+##  Mean   :280.6   Mean   : 6.091   Mean   :18263   Mean   :18249  
+##  3rd Qu.:284.0   3rd Qu.: 9.000   3rd Qu.:24678   3rd Qu.:24672  
+##  Max.   :290.0   Max.   :10.000   Max.   :29883   Max.   :29883  
+##  NA's   :27659                                                   
+##   shipmethodid    creditcardid   creditcardapprovalcode currencyrateid 
+##  Min.   :1.000   Min.   :    1   Length:31465           Min.   :    2  
+##  1st Qu.:1.000   1st Qu.: 4894   Class :character       1st Qu.: 8510  
+##  Median :1.000   Median : 9720   Mode  :character       Median :10074  
+##  Mean   :1.484   Mean   : 9684                          Mean   : 9192  
+##  3rd Qu.:1.000   3rd Qu.:14511                          3rd Qu.:11282  
+##  Max.   :5.000   Max.   :19237                          Max.   :12431  
+##                  NA's   :1131                           NA's   :17489  
+##     subtotal             taxamt             freight        
+##  Min.   :     1.37   Min.   :    0.110   Min.   :   0.034  
+##  1st Qu.:    56.97   1st Qu.:    4.558   1st Qu.:   1.424  
+##  Median :   782.99   Median :   62.639   Median :  19.575  
+##  Mean   :  3491.07   Mean   :  323.756   Mean   : 101.174  
+##  3rd Qu.:  2366.96   3rd Qu.:  189.598   3rd Qu.:  59.249  
+##  Max.   :163930.39   Max.   :17948.519   Max.   :5608.912  
+##                                                            
+##     totaldue           comment            rowguid         
+##  Min.   :     1.52   Length:31465       Length:31465      
+##  1st Qu.:    62.95   Class :character   Class :character  
+##  Median :   865.20   Mode  :character   Mode  :character  
+##  Mean   :  3916.00                                        
+##  3rd Qu.:  2615.49                                        
+##  Max.   :187487.83                                        
+##                                                           
+##   modifieddate                
+##  Min.   :2011-06-07 00:00:00  
+##  1st Qu.:2013-06-27 00:00:00  
+##  Median :2013-11-10 00:00:00  
+##  Mean   :2013-08-28 12:06:06  
+##  3rd Qu.:2014-03-08 00:00:00  
+##  Max.   :2014-07-07 00:00:00  
 ## 
 ```
 
@@ -500,27 +589,37 @@ So the `summary` function is surprisingly useful as we first start to look at th
 The `tibble` package's `glimpse` function is a more compact version of `str`:
 
 ```r
-tibble::glimpse(employee_tibble)
+tibble::glimpse(salesorderheader_tibble)
 ```
 
 ```
-## Observations: 290
-## Variables: 15
-## $ businessentityid <int> 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, …
-## $ nationalidnumber <chr> "295847284", "245797967", "509647174", "1124578…
-## $ loginid          <chr> "adventure-works\\ken0", "adventure-works\\terr…
-## $ jobtitle         <chr> "Chief Executive Officer", "Vice President of E…
-## $ birthdate        <date> 1969-01-29, 1971-08-01, 1974-11-12, 1974-12-23…
-## $ maritalstatus    <chr> "S", "S", "M", "S", "M", "M", "M", "S", "M", "M…
-## $ gender           <chr> "M", "F", "M", "M", "F", "M", "M", "F", "F", "M…
-## $ hiredate         <date> 2009-01-14, 2008-01-31, 2007-11-11, 2007-12-05…
-## $ salariedflag     <lgl> TRUE, TRUE, TRUE, FALSE, TRUE, TRUE, TRUE, TRUE…
-## $ vacationhours    <int> 99, 1, 2, 48, 5, 6, 61, 62, 63, 16, 7, 9, 8, 3,…
-## $ sickleavehours   <int> 69, 20, 21, 80, 22, 23, 50, 51, 51, 64, 23, 24,…
-## $ currentflag      <lgl> TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE,…
-## $ rowguid          <chr> "f01251e5-96a3-448d-981e-0f99d789110d", "45e8f4…
-## $ modifieddate     <dttm> 2014-06-30, 2014-06-30, 2014-06-30, 2014-06-30…
-## $ organizationnode <chr> "/", "/1/", "/1/1/", "/1/1/1/", "/1/1/2/", "/1/…
+## Observations: 31,465
+## Variables: 25
+## $ salesorderid           <int> 43659, 43660, 43661, 43662, 43663, 43664,…
+## $ revisionnumber         <int> 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,…
+## $ orderdate              <dttm> 2011-05-31, 2011-05-31, 2011-05-31, 2011…
+## $ duedate                <dttm> 2011-06-12, 2011-06-12, 2011-06-12, 2011…
+## $ shipdate               <dttm> 2011-06-07, 2011-06-07, 2011-06-07, 2011…
+## $ status                 <int> 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,…
+## $ onlineorderflag        <lgl> FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,…
+## $ purchaseordernumber    <chr> "PO522145787", "PO18850127500", "PO184731…
+## $ accountnumber          <chr> "10-4020-000676", "10-4020-000117", "10-4…
+## $ customerid             <int> 29825, 29672, 29734, 29994, 29565, 29898,…
+## $ salespersonid          <int> 279, 279, 282, 282, 276, 280, 283, 276, 2…
+## $ territoryid            <int> 5, 5, 6, 6, 4, 1, 1, 4, 3, 6, 1, 3, 1, 6,…
+## $ billtoaddressid        <int> 985, 921, 517, 482, 1073, 876, 849, 1074,…
+## $ shiptoaddressid        <int> 985, 921, 517, 482, 1073, 876, 849, 1074,…
+## $ shipmethodid           <int> 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,…
+## $ creditcardid           <int> 16281, 5618, 1346, 10456, 4322, 806, 1523…
+## $ creditcardapprovalcode <chr> "105041Vi84182", "115213Vi29411", "85274V…
+## $ currencyrateid         <int> NA, NA, 4, 4, NA, NA, NA, NA, NA, 4, NA, …
+## $ subtotal               <dbl> 20565.6206, 1294.2529, 32726.4786, 28832.…
+## $ taxamt                 <dbl> 1971.5149, 124.2483, 3153.7696, 2775.1646…
+## $ freight                <dbl> 616.0984, 38.8276, 985.5530, 867.2389, 12…
+## $ totaldue               <dbl> 23153.2339, 1457.3288, 36865.8012, 32474.…
+## $ comment                <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+## $ rowguid                <chr> "79b65321-39ca-4115-9cba-8fe0903e12e6", "…
+## $ modifieddate           <dttm> 2011-06-07, 2011-06-07, 2011-06-07, 2011…
 ```
 ### The `skim` function in the `skimr` package
 
@@ -548,76 +647,98 @@ library(skimr)
 ```
 
 ```r
-skimr::skim(employee_tibble)
+skimr::skim(salesorderheader_tibble)
 ```
 
 ```
 ## Skim summary statistics
-##  n obs: 290 
-##  n variables: 15 
+##  n obs: 31465 
+##  n variables: 25 
 ## 
-## ── Variable type:character ───────────────────────────────────────────────────────────────────────
-##          variable missing complete   n min max empty n_unique
-##            gender       0      290 290   1   1     0        2
-##          jobtitle       0      290 290   5  40     0       67
-##           loginid       0      290 290  19  28     0      290
-##     maritalstatus       0      290 290   1   1     0        2
-##  nationalidnumber       0      290 290   5   9     0      290
-##  organizationnode       0      290 290   1  11     0      290
-##           rowguid       0      290 290  36  36     0      290
+## ── Variable type:character ──────────────────────────────────────────────────────────────────────────────────────────────
+##                variable missing complete     n min max empty n_unique
+##           accountnumber       0    31465 31465  14  14     0    19119
+##                 comment   31465        0 31465  NA  NA     0        0
+##  creditcardapprovalcode    1131    30334 31465   9  15     0    30334
+##     purchaseordernumber   27659     3806 31465  10  13     0     3806
+##                 rowguid       0    31465 31465  36  36     0    31465
 ## 
-## ── Variable type:Date ────────────────────────────────────────────────────────────────────────────
-##   variable missing complete   n        min        max     median n_unique
-##  birthdate       0      290 290 1951-10-17 1991-05-31 1978-10-19      275
-##   hiredate       0      290 290 2006-06-30 2013-05-30 2009-02-02      164
+## ── Variable type:integer ────────────────────────────────────────────────────────────────────────────────────────────────
+##         variable missing complete     n     mean       sd    p0      p25
+##  billtoaddressid       0    31465 31465 18263.15 8210.07    405 14080   
+##     creditcardid    1131    30334 31465  9684.1  5566.3       1  4894.25
+##   currencyrateid   17489    13976 31465  9191.5  2945.17      2  8510   
+##       customerid       0    31465 31465 20170.18 6261.73  11000 14432   
+##   revisionnumber       0    31465 31465     8       0.031     8     8   
+##     salesorderid       0    31465 31465 59391    9083.31  43659 51525   
+##    salespersonid   27659     3806 31465   280.61    4.85    274   277   
+##     shipmethodid       0    31465 31465     1.48    1.3       1     1   
+##  shiptoaddressid       0    31465 31465 18249.19 8218.43      9 14063   
+##           status       0    31465 31465     5       0         5     5   
+##      territoryid       0    31465 31465     6.09    2.96      1     4   
+##      p50      p75  p100     hist
+##  19449   24678    29883 ▆▁▁▇▇▇▇▇
+##   9719.5 14510.75 19237 ▇▇▇▇▇▇▇▇
+##  10074   11282    12431 ▁▁▁▁▂▃▇▇
+##  19452   25994    30118 ▇▆▅▅▃▃▅▇
+##      8       8        9 ▇▁▁▁▁▁▁▁
+##  59391   67257    75123 ▇▇▇▇▇▇▇▇
+##    279     284      290 ▇▆▅▅▃▁▂▅
+##      1       1        5 ▇▁▁▁▁▁▁▁
+##  19438   24672    29883 ▆▁▁▇▇▇▇▇
+##      5       5        5 ▁▁▁▇▁▁▁▁
+##      6       9       10 ▃▁▅▁▃▂▂▇
 ## 
-## ── Variable type:integer ─────────────────────────────────────────────────────────────────────────
-##          variable missing complete   n   mean    sd p0   p25   p50    p75
-##  businessentityid       0      290 290 145.5  83.86  1 73.25 145.5 217.75
-##    sickleavehours       0      290 290  45.31 14.54 20 33     46    58   
-##     vacationhours       0      290 290  50.61 28.79  0 26.25  51    75   
-##  p100     hist
-##   290 ▇▇▇▇▇▇▇▇
-##    80 ▇▇▇▇▇▇▃▁
-##    99 ▇▆▇▇▇▇▇▇
+## ── Variable type:logical ────────────────────────────────────────────────────────────────────────────────────────────────
+##         variable missing complete     n mean                        count
+##  onlineorderflag       0    31465 31465 0.88 TRU: 27659, FAL: 3806, NA: 0
 ## 
-## ── Variable type:logical ─────────────────────────────────────────────────────────────────────────
-##      variable missing complete   n mean                    count
-##   currentflag       0      290 290 1             TRU: 290, NA: 0
-##  salariedflag       0      290 290 0.18 FAL: 238, TRU: 52, NA: 0
+## ── Variable type:numeric ────────────────────────────────────────────────────────────────────────────────────────────────
+##  variable missing complete     n    mean       sd    p0   p25    p50
+##   freight       0    31465 31465  101.17   339.08 0.034  1.42  19.57
+##  subtotal       0    31465 31465 3491.07 11093.45 1.37  56.97 782.99
+##    taxamt       0    31465 31465  323.76  1085.05 0.11   4.56  62.64
+##  totaldue       0    31465 31465 3916    12515.46 1.52  62.95 865.2 
+##      p75      p100     hist
+##    59.25   5608.91 ▇▁▁▁▁▁▁▁
+##  2366.96 163930.39 ▇▁▁▁▁▁▁▁
+##   189.6   17948.52 ▇▁▁▁▁▁▁▁
+##  2615.49 187487.83 ▇▁▁▁▁▁▁▁
 ## 
-## ── Variable type:POSIXct ─────────────────────────────────────────────────────────────────────────
-##      variable missing complete   n        min        max     median
-##  modifieddate       0      290 290 2014-06-30 2014-12-26 2014-06-30
+## ── Variable type:POSIXct ────────────────────────────────────────────────────────────────────────────────────────────────
+##      variable missing complete     n        min        max     median
+##       duedate       0    31465 31465 2011-06-12 2014-07-12 2013-11-15
+##  modifieddate       0    31465 31465 2011-06-07 2014-07-07 2013-11-10
+##     orderdate       0    31465 31465 2011-05-31 2014-06-30 2013-11-03
+##      shipdate       0    31465 31465 2011-06-07 2014-07-07 2013-11-10
 ##  n_unique
-##         2
+##      1124
+##      1124
+##      1124
+##      1124
 ```
 
 ```r
-skimr::skim_to_wide(employee_tibble) #skimr doesn't like certain kinds of columns
+skimr::skim_to_wide(salesorderheader_tibble) #skimr doesn't like certain kinds of columns
 ```
 
 ```
-## # A tibble: 15 x 19
-##    type  variable missing complete n     min   max   empty n_unique median
-##    <chr> <chr>    <chr>   <chr>    <chr> <chr> <chr> <chr> <chr>    <chr> 
-##  1 char… gender   0       290      290   1     1     0     2        <NA>  
-##  2 char… jobtitle 0       290      290   5     40    0     67       <NA>  
-##  3 char… loginid  0       290      290   19    28    0     290      <NA>  
-##  4 char… marital… 0       290      290   1     1     0     2        <NA>  
-##  5 char… nationa… 0       290      290   5     9     0     290      <NA>  
-##  6 char… organiz… 0       290      290   1     11    0     290      <NA>  
-##  7 char… rowguid  0       290      290   36    36    0     290      <NA>  
-##  8 Date  birthda… 0       290      290   1951… 1991… <NA>  275      1978-…
-##  9 Date  hiredate 0       290      290   2006… 2013… <NA>  164      2009-…
-## 10 inte… busines… 0       290      290   <NA>  <NA>  <NA>  <NA>     <NA>  
-## 11 inte… sicklea… 0       290      290   <NA>  <NA>  <NA>  <NA>     <NA>  
-## 12 inte… vacatio… 0       290      290   <NA>  <NA>  <NA>  <NA>     <NA>  
-## 13 logi… current… 0       290      290   <NA>  <NA>  <NA>  <NA>     <NA>  
-## 14 logi… salarie… 0       290      290   <NA>  <NA>  <NA>  <NA>     <NA>  
-## 15 POSI… modifie… 0       290      290   2014… 2014… <NA>  2        2014-…
-## # … with 9 more variables: mean <chr>, sd <chr>, p0 <chr>, p25 <chr>,
-## #   p50 <chr>, p75 <chr>, p100 <chr>, hist <chr>, count <chr>
+## # A tibble: 25 x 19
+##    type  variable missing complete n     min   max   empty n_unique mean 
+##    <chr> <chr>    <chr>   <chr>    <chr> <chr> <chr> <chr> <chr>    <chr>
+##  1 char… account… 0       31465    31465 14    14    0     19119    <NA> 
+##  2 char… comment  31465   0        31465 NA    NA    0     0        <NA> 
+##  3 char… creditc… 1131    30334    31465 9     15    0     30334    <NA> 
+##  4 char… purchas… 27659   3806     31465 10    13    0     3806     <NA> 
+##  5 char… rowguid  0       31465    31465 36    36    0     31465    <NA> 
+##  6 inte… billtoa… 0       31465    31465 <NA>  <NA>  <NA>  <NA>     1826…
+##  7 inte… creditc… 1131    30334    31465 <NA>  <NA>  <NA>  <NA>     " 96…
+##  8 inte… currenc… 17489   13976    31465 <NA>  <NA>  <NA>  <NA>     " 91…
+##  9 inte… custome… 0       31465    31465 <NA>  <NA>  <NA>  <NA>     2017…
+## 10 inte… revisio… 0       31465    31465 <NA>  <NA>  <NA>  <NA>     "   …
+## # … with 15 more rows, and 9 more variables: sd <chr>, p0 <chr>,
+## #   p25 <chr>, p50 <chr>, p75 <chr>, p100 <chr>, hist <chr>, count <chr>,
+## #   median <chr>
 ```
 
 ### Close the connection and shut down adventureworks
