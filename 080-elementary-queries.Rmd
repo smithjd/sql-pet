@@ -46,11 +46,10 @@ There are many different methods of getting data from a DBMS, and we'll explore 
 
 `DBI::dbReadTable` will download an entire table into an R [tibble](https://tibble.tidyverse.org/).  
 ```{r}
-dbExecute(con, "set search_path to humanresources, public;") # watch for duplicates!
+dbExecute(con, "set search_path to sales, humanresources;") # watch for duplicates!
 
-employee_tibble <- DBI::dbReadTable(con, "employee")
-# employee_tibble <- DBI::dbReadTable(con, in_schema("humanresources", "employee"))
-str(employee_tibble)
+salesorderheader_tibble <- DBI::dbReadTable(con, "salesorderheader")
+str(salesorderheader_tibble)
 ```
 That's very simple, but if the table is large it may not be a good idea, since R is designed to keep the entire table in memory.  Note that the first line of the str() output reports the total number of observations.  
 
@@ -59,8 +58,8 @@ That's very simple, but if the table is large it may not be a good idea, since R
 The `dplyr::tbl` function gives us more control over access to a table by enabling  control over which columns and rows to download.  It creates  an object that might **look** like a data frame, but it's actually a list object that `dplyr` uses for constructing queries and retrieving data from the DBMS.  
 
 ```{r}
-employee_table <- dplyr::tbl(con, "employee")
-class(employee_table)
+salesorderheader_table <- dplyr::tbl(con, "salesorderheader")
+class(salesorderheader_table)
 ```
 
 
@@ -68,9 +67,9 @@ class(employee_table)
 
 The `collect` function triggers the creation of a tibble and controls the number of rows that the DBMS sends to R.  For more complex queries, the `dplyr::collect()` function provides a mechanism to indicate what's processed on on the dbms server and what's processed by R on the local machine. The chapter on [Lazy Evaluation and Execution Environment](#chapter_lazy-evaluation-and-timing) discusses this issue in detail.
 ```{r}
-employee_table %>% dplyr::collect(n = 3) %>% dim
+salesorderheader_table %>% dplyr::collect(n = 3) %>% dim
 
-employee_table %>% dplyr::collect(n = 500) %>% dim
+salesorderheader_table %>% dplyr::collect(n = 500) %>% dim
 ```
 
 ### Random rows from the dbms
@@ -80,40 +79,41 @@ When the dbms contains many rows, a sample of the data may be plenty for your pu
 ```{r}
 one_percent_sample <- DBI::dbGetQuery(
   con,
-  "SELECT businessentityid, jobtitle, birthdate
-  FROM employee TABLESAMPLE BERNOULLI(3) LIMIT 20;
+  "SELECT orderdate, subtotal, taxamt, freight, totaldue
+  FROM salesorderheader TABLESAMPLE BERNOULLI(3) LIMIT 20;
   "
 )
+
 
 one_percent_sample
 ```
 **Exact sample of 100 records**
 
-This technique depends on knowing the range of a record index, such as the `businessentityid` in the `employee` table of our `adventureworks` database.
+This technique depends on knowing the range of a record index, such as the `businessentityid` in the `salesorderheader` table of our `adventureworks` database.
 
 Start by finding the min and max values.
 ```{r}
-DBI::dbListFields(con, "employee")
-employee_df <- DBI::dbReadTable(con, "employee")
+DBI::dbListFields(con, "salesorderheader")
+salesorderheader_df <- DBI::dbReadTable(con, "salesorderheader")
 
-max(employee_df$businessentityid)
-min(employee_df$businessentityid)
+(max_id <- max(salesorderheader_df$salesorderid))
+(min_id <- min(salesorderheader_df$salesorderid))
 ```
 
 Set the random number seed and draw the sample.
 ```{r}
 set.seed(123)
-sample_rows <- sample(1:max(employee_df$businessentityid), 10)
-employee_table <- dplyr::tbl(con, "employee")
+sample_rows <- sample(1:max(salesorderheader_df$salesorderid), 10)
+salesorderheader_table <- dplyr::tbl(con, "salesorderheader")
 ```
 
 Run query with the filter verb listing the randomly sampled rows to be retrieved:
 ```{r}
-employee_sample <- employee_table %>% 
-  dplyr::filter(businessentityid %in% sample_rows) %>% 
+salesorderheader_sample <- salesorderheader_table %>% 
+  dplyr::filter(salesorderid %in% sample_rows) %>% 
   dplyr::collect()
 
-str(employee_sample)
+str(salesorderheader_sample)
 
 ```
 
@@ -122,16 +122,17 @@ str(employee_sample)
 
 A table in the dbms may not only have many more rows than you want, but also many more columns.  The `select` command controls which columns are retrieved.
 ```{r}
-employee_table %>% dplyr::select(businessentityid, jobtitle, birthdate) %>% head()
+salesorderheader_table %>% dplyr::select(orderdate, subtotal, taxamt, freight, totaldue) %>% 
+  head() 
 
 ```
 That's exactly equivalent to submitting the following SQL commands dirctly:
 ```{r}
 DBI::dbGetQuery(
   con,
-  'SELECT "businessentityid", "jobtitle", "birthdate"
-FROM "employee"
-LIMIT 6') 
+  'SELECT "orderdate", "subtotal", "taxamt", "freight", "totaldue"
+    FROM "salesorderheader"
+    LIMIT 6') 
 ```
 
 
@@ -143,10 +144,10 @@ We won't discuss `dplyr` methods for sub-setting variables, deriving new ones, o
 In practice we find that, **renaming variables** is often quite important because the names in an SQL database might not meet your needs as an analyst.  In "the wild", you will find names that are ambiguous or overly specified, with spaces in them, and other problems that will make them difficult to use in R.  It is good practice to do whatever renaming you are going to do in a predictable place like at the top of your code.  The names in the `adventureworks` database are simple and clear, but if they were not, you might rename them for subsequent use in this way:
 
 ```{r}
-tbl(con, "employee") %>%
-  dplyr::rename(businessentity_id_number = businessentityid, 
-                employee_job_title = jobtitle) %>% 
-  dplyr::select(businessentity_id_number, employee_job_title, birthdate) %>%
+tbl(con, "salesorderheader") %>%
+  dplyr::rename(order_date = orderdate, sub_total_amount = subtotal,
+              tax_amount = taxamt, freight_amount = freight, total_due_amount = totaldue) %>% 
+  dplyr::select(order_date, sub_total_amount, tax_amount, freight_amount, total_due_amount ) %>%
   # head()
 show_query()
 ```
@@ -154,9 +155,12 @@ That's equivalent to the following SQL code:
 ```{r}
 DBI::dbGetQuery(
   con,
-  'SELECT "businessentityid" AS "businessentity_id_number", "jobtitle" AS "employee_job_title", "birthdate"
-FROM "employee" 
-LIMIT 6' )
+    'SELECT "orderdate" AS "order_date", 
+    "subtotal" AS "sub_total_amount", 
+    "taxamt" AS "tax_amount", 
+    "freight" AS "freight_amount", 
+    "totaldue" AS "total_due_amount"
+    FROM "salesorderheader"' ) %>% head()
 ```
 The one difference is that the `SQL` code returns a regular data frame and the `dplyr` code returns a `tibble`.  Notice that the seconds are greyed out in the `tibble` display.
 
@@ -164,7 +168,7 @@ The one difference is that the `SQL` code returns a regular data frame and the `
 
 Where did the translations we've shown above come from?  The `show_query` function shows how `dplyr` is translating your query to the dialect of the target dbms:
 ```{r}
-employee_table %>%
+salesorderheader_table %>%
   dplyr::tally() %>%
   dplyr::show_query()
 ```
@@ -177,7 +181,7 @@ If you prefer to use SQL directly, rather than `dplyr`, you can submit SQL code 
 DBI::dbGetQuery(
   con,
   'SELECT COUNT(*) AS "n"
-     FROM "employee"   '
+     FROM "salesorderheader"   '
 )
 ```
 
@@ -187,7 +191,7 @@ When you create a report to run repeatedly, you might want to put that query int
 
 ```{sql, connection=con, output.var = "query_results"}
 SELECT COUNT(*) AS "n"
-     FROM "employee";
+     FROM "salesorderheader";
 ```
 Rmarkdown stores that query result in a tibble which can be printed by referring to it:
 ```{r}
@@ -199,8 +203,8 @@ query_results
 When dplyr finds code that it does not know how to translate into SQL, it will simply pass it along to the dbms. Therefore you can interleave native commands that your dbms will understand in the middle of dplyr code.  Consider this example that's derived from [@Ruiz2019]:
 
 ```{r}
-employee_table %>%
-  dplyr::select_at(vars(jobtitle, contains("hours"))) %>% 
+salesorderheader_table %>%
+  dplyr::select_at(vars(subtotal, contains("date"))) %>% 
   dplyr::mutate(today = now()) %>%
   dplyr::show_query()
 ```
@@ -208,8 +212,8 @@ That is native to PostgreSQL, not [ANSI standard](https://en.wikipedia.org/wiki/
 
 Verify that it works:
 ```{r}
-employee_table %>%
-  dplyr::select_at(vars(jobtitle, contains("hours"))) %>% 
+salesorderheader_table %>%
+  dplyr::select_at(vars(subtotal, contains("date"))) %>% 
   head() %>% 
   dplyr::mutate(today = now()) %>%
   dplyr::collect()
@@ -230,25 +234,25 @@ Dealing with a large, complex database highlights the utility of specific tools 
 
 `str` is a workhorse function that lists variables, their type and a sample of the first few variable values.
 ```{r}
-str(employee_tibble)
+str(salesorderheader_tibble)
 ```
 
 ### Always **look** at your data with `head`, `View`, or `kable`
 
 There is no substitute for looking at your data and R provides several ways to just browse it.  The `head` function controls the number of rows that are displayed.  Note that tail does not work against a database object.  In every-day practice you would look at more than the default 6 rows, but here we wrap `head` around the data frame: 
 ```{r}
-sqlpetr::sp_print_df(head(employee_tibble))
+sqlpetr::sp_print_df(head(salesorderheader_tibble))
 ```
 
 ### The `summary` function in `base`
 
 The `base` package's `summary` function provides basic statistics that serve a unique diagnostic purpose in this context. For example, the following output shows that:
 
-    * `businessentityid` is a number from 1 to 16,049. In a previous section, we ran the `str` function and saw that there are 16,044 observations in this table. Therefore, the `businessentityid` seems to be sequential from 1:16049, but there are 5 values missing from that sequence. _Exercise for the Reader_: Which 5 values from 1:16049 are missing from `businessentityid` values in the `employee` table? (_Hint_: In the chapter on SQL Joins, you will learn the functions needed to answer this question.)
+    * `businessentityid` is a number from 1 to 16,049. In a previous section, we ran the `str` function and saw that there are 16,044 observations in this table. Therefore, the `businessentityid` seems to be sequential from 1:16049, but there are 5 values missing from that sequence. _Exercise for the Reader_: Which 5 values from 1:16049 are missing from `businessentityid` values in the `salesorderheader` table? (_Hint_: In the chapter on SQL Joins, you will learn the functions needed to answer this question.)
     * The number of NA's in the `return_date` column is a good first guess as to the number of DVDs rented out or lost as of 2005-09-02 02:35:22.
 
 ```{r}
-summary(employee_tibble)
+summary(salesorderheader_tibble)
 ```
 
 So the `summary` function is surprisingly useful as we first start to look at the table contents.
@@ -257,7 +261,7 @@ So the `summary` function is surprisingly useful as we first start to look at th
 
 The `tibble` package's `glimpse` function is a more compact version of `str`:
 ```{r}
-tibble::glimpse(employee_tibble)
+tibble::glimpse(salesorderheader_tibble)
 ```
 ### The `skim` function in the `skimr` package
 
@@ -265,9 +269,9 @@ The `skimr` package has several functions that make it easy to examine an unknow
 ```{r}
 library(skimr)
 
-skimr::skim(employee_tibble)
+skimr::skim(salesorderheader_tibble)
 
-skimr::skim_to_wide(employee_tibble) #skimr doesn't like certain kinds of columns
+skimr::skim_to_wide(salesorderheader_tibble) #skimr doesn't like certain kinds of columns
 
 ```
 
