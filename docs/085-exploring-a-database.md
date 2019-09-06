@@ -46,7 +46,7 @@ We've already seen how the connections tab is the easiest way to explore a datab
 
 ![Adventureworks connections tab](screenshots/adventureworks-schema-connections-tab.png)
 
-It's a little more complex than the typical `SQLite` examples found in many tutorials because we have additional structure: the `adventureworks` [database contains schemas](https://en.wikipedia.org/wiki/Database_schema), which contain tables.  The `hr` schema is the same as the `humanresources` schema, but with nicknames (the `d` table in `hr` is the same as the `department` table in the `humanresources` schema).  Schemas are used to control access and to set up shortcuts.  Clicking on the the right opens up the table view of the `d` table:
+It's a little more complex than the typical `SQLite` examples found in many tutorials because we have additional structure: the `adventureworks` [database contains schemas](https://en.wikipedia.org/wiki/Database_schema), which contain tables.  The `hr` schema is the same as the `sales` schema, but with nicknames (the `d` table in `hr` is the same as the `department` table in the `sales` schema).  Schemas are used to control access and to set up shortcuts.  Clicking on the the right opens up the table view of the `d` table:
 
 ![Adventureworks connections tab](screenshots/adventureworks-hr-dept-table.png)
 
@@ -64,7 +64,7 @@ tables
 We need to to tell the database which schemas to search
 
 ```r
-dbExecute(con, "set search_path to hr, humanresources;")
+dbExecute(con, "set search_path to sales, sa;")
 ```
 
 ```
@@ -76,34 +76,72 @@ DBI::dbListTables(con)
 ```
 
 ```
-##  [1] "employee"                   "d"                         
-##  [3] "shift"                      "e"                         
-##  [5] "employeepayhistory"         "edh"                       
-##  [7] "eph"                        "jc"                        
-##  [9] "jobcandidate"               "s"                         
-## [11] "department"                 "vemployee"                 
-## [13] "vemployeedepartment"        "vemployeedepartmenthistory"
-## [15] "vjobcandidate"              "vjobcandidateeducation"    
-## [17] "vjobcandidateemployment"    "employeedepartmenthistory"
+##  [1] "countryregioncurrency"             
+##  [2] "c"                                 
+##  [3] "cc"                                
+##  [4] "customer"                          
+##  [5] "cr"                                
+##  [6] "crc"                               
+##  [7] "currencyrate"                      
+##  [8] "creditcard"                        
+##  [9] "cu"                                
+## [10] "pcc"                               
+## [11] "personcreditcard"                  
+## [12] "s"                                 
+## [13] "specialoffer"                      
+## [14] "sci"                               
+## [15] "sohsr"                             
+## [16] "so"                                
+## [17] "specialofferproduct"               
+## [18] "sod"                               
+## [19] "salesorderheadersalesreason"       
+## [20] "soh"                               
+## [21] "sop"                               
+## [22] "shoppingcartitem"                  
+## [23] "salespersonquotahistory"           
+## [24] "sp"                                
+## [25] "spqh"                              
+## [26] "salesperson"                       
+## [27] "sr"                                
+## [28] "currency"                          
+## [29] "store"                             
+## [30] "salesorderheader"                  
+## [31] "salesorderdetail"                  
+## [32] "salesreason"                       
+## [33] "st"                                
+## [34] "sth"                               
+## [35] "salesterritoryhistory"             
+## [36] "tr"                                
+## [37] "vindividualcustomer"               
+## [38] "vpersondemographics"               
+## [39] "vsalesperson"                      
+## [40] "vsalespersonsalesbyfiscalyears"    
+## [41] "vsalespersonsalesbyfiscalyearsdata"
+## [42] "vstorewithaddresses"               
+## [43] "vstorewithcontacts"                
+## [44] "vstorewithdemographics"            
+## [45] "salestaxrate"                      
+## [46] "salesterritory"
 ```
 Notice the way the database designers have abbreviated table names for your convenience.
 
 ```r
-DBI::dbListFields(con, "d")
+DBI::dbListFields(con, "so")
 ```
 
 ```
-## [1] "id"           "departmentid" "name"         "groupname"   
-## [5] "modifieddate"
+##  [1] "id"             "specialofferid" "description"    "discountpct"   
+##  [5] "type"           "category"       "startdate"      "enddate"       
+##  [9] "minqty"         "maxqty"         "rowguid"        "modifieddate"
 ```
 
 ### Listing all the fields for all the tables
 
-The first example, `DBI::dbListTables(con)` returned 22 tables and the second example, `DBI::dbListFields(con, "employee")` returns 7 fields.  Here we combine the two calls to return a list of tables which has a list of all the fields in the table.  The code block just shows the first two tables.
+The first example, `DBI::dbListTables(con)` returned 46 tables and the second example, `DBI::dbListFields(con, "salesorderheader")` returns 12 fields.  Here we combine the two calls to return a list of tables which has a list of all the fields in the table.  The code block just shows the first two tables.
 
 
 ```r
-table_columns <- purrr::map(tables, ~ dbListFields(.,conn = con) )
+table_columns <- purrr::map(tables, ~ dbListFields(.,con = con) )
 ```
 Rename each list [[1]] ... [[43]] to meaningful table name
 
@@ -130,8 +168,8 @@ The `dplyr::tbl` function gives us more control over access to a table by enabli
 
 
 ```r
-employee_table <- dplyr::tbl(con, "employee")
-class(employee_table)
+salesorderheader_table <- dplyr::tbl(con, "salesorderheader")
+class(salesorderheader_table)
 ```
 
 ```
@@ -143,91 +181,75 @@ class(employee_table)
 To illustrate the different issues involved in data retrieval, we create more connection objects to link to two other tables.  
 
 ```r
-employee_table <- tbl(con, in_schema("humanresources", "employee")) %>% 
-  select(-modifieddate, -rowguid)
+salesorderheader_table <- tbl(con, in_schema("sales", "salesorderheader")) %>% 
+  select(-rowguid, -modifieddate)
 ```
-The 'employee' table has 290 rows and 13 columns because we dropped `modifieddate` which is a column name that appears in more than one table.  To get the data we want we will usually want to drop or rename duplicates as we connect to each table.
+The 'salesorderheader' table has 31,465 obs. of  23 columns because we dropped `modifieddate` which is a column name that appears in more than one table.  To get the data we want we will usually want to drop or rename duplicates as we connect to each table.
 
 
 ```r
-sales_person_table <- tbl(con, in_schema("sales", "salesperson")) %>% 
+address_table <- tbl(con, in_schema("person", "address")) %>% 
   select(-rowguid) %>% 
-  rename(sale_info_updated = modifieddate)
+  rename(address_info_updated = modifieddate)
 ```
-The 'salesperson' table has 17 rows.
-
-Discuss the *person* table here:
-
-```r
-person_table <- tbl(con, in_schema("person", "person")) %>% 
-  select(-modifieddate, -rowguid)
-```
-### merge this into the above:
-Define two tables to use in a simple query to use in the following discussion.
-
-```r
-sales_person_table <- tbl(con, in_schema("sales", "salesperson")) %>% 
-  select(-rowguid) %>% 
-  rename(sale_info_updated = modifieddate)
-
-employee_table <- tbl(con, in_schema("humanresources", "employee")) %>% 
-  select(-modifieddate, -rowguid)
-```
+The 'address' table has 19,614 rows and 8 columns.
 
 Here is a simple string of `dplyr` verbs similar to the query used to illustrate issues in the last chapter:
 
 
 ```r
-Q <- tbl(con, in_schema("sales", "salesperson")) %>%
-  left_join(tbl(con, in_schema("humanresources", "employee")), 
-            by = c("businessentityid" = "businessentityid")) %>%
-  dplyr::select(birthdate, saleslastyear)
+Q <- salesorderheader_table %>% 
+  left_join(address_table, 
+            by = c("shiptoaddressid" = "addressid")) %>%
+  dplyr::select(orderdate, shipdate, addressline1, city)
 
 Q
 ```
 
 ```
-## # Source:   lazy query [?? x 2]
+## # Source:   lazy query [?? x 4]
 ## # Database: postgres [postgres@localhost:5432/adventureworks]
-##    birthdate  saleslastyear
-##    <date>             <dbl>
-##  1 1951-10-17            0 
-##  2 1968-12-25      1750406.
-##  3 1980-02-27      1439156.
-##  4 1962-08-29      1997186.
-##  5 1975-02-04      1620277.
-##  6 1974-01-18      1849641.
-##  7 1974-12-06      1927059.
-##  8 1968-03-09      2073506.
-##  9 1963-12-11      2038235.
-## 10 1974-02-11      1371635.
+##    orderdate           shipdate            addressline1          city      
+##    <dttm>              <dttm>              <chr>                 <chr>     
+##  1 2011-05-31 00:00:00 2011-06-07 00:00:00 42525 Austell Road    Austell   
+##  2 2011-05-31 00:00:00 2011-06-07 00:00:00 6055 Shawnee Industr… Suwanee   
+##  3 2011-05-31 00:00:00 2011-06-07 00:00:00 2573 Dufferin Street  Toronto   
+##  4 2011-05-31 00:00:00 2011-06-07 00:00:00 2500 University Aven… Toronto   
+##  5 2011-05-31 00:00:00 2011-06-07 00:00:00 3065 Santa Margarita… Trabuco C…
+##  6 2011-05-31 00:00:00 2011-06-07 00:00:00 765 Delridge Way Sw   Seattle   
+##  7 2011-05-31 00:00:00 2011-06-07 00:00:00 4251 First Avenue     Seattle   
+##  8 2011-05-31 00:00:00 2011-06-07 00:00:00 9920 Bridgepointe Pa… San Mateo 
+##  9 2011-05-31 00:00:00 2011-06-07 00:00:00 St. Louis Marketplace Saint Lou…
+## 10 2011-05-31 00:00:00 2011-06-07 00:00:00 254480 River Rd       Richmond  
 ## # … with more rows
 ```
 Note that in the previous example we follow this book's convention of creating a connection object to each table and fully qualifying function names (e.g., specifying the package).  In practice, it's possible and convenient to use more abbreviated notation.
 
 ```r
-Q <- tbl(con, in_schema("sales", "salesperson")) %>%
-  left_join(tbl(con, in_schema("humanresources", "employee")),  by = c("businessentityid" = "businessentityid")) %>%
-  select(birthdate, saleslastyear)
+Q <- tbl(con, in_schema("sales", "salesorderheader")) %>% 
+  select(-rowguid, -modifieddate) %>% 
+  left_join(tbl(con, in_schema("person", "address")), 
+            by = c("shiptoaddressid" = "addressid")) %>%
+  dplyr::select(orderdate, shipdate, addressline1, city)
 
 Q
 ```
 
 ```
-## # Source:   lazy query [?? x 2]
+## # Source:   lazy query [?? x 4]
 ## # Database: postgres [postgres@localhost:5432/adventureworks]
-##    birthdate  saleslastyear
-##    <date>             <dbl>
-##  1 1951-10-17            0 
-##  2 1968-12-25      1750406.
-##  3 1980-02-27      1439156.
-##  4 1962-08-29      1997186.
-##  5 1975-02-04      1620277.
-##  6 1974-01-18      1849641.
-##  7 1974-12-06      1927059.
-##  8 1968-03-09      2073506.
-##  9 1963-12-11      2038235.
-## 10 1974-02-11      1371635.
+##    orderdate           shipdate            addressline1          city      
+##    <dttm>              <dttm>              <chr>                 <chr>     
+##  1 2011-05-31 00:00:00 2011-06-07 00:00:00 42525 Austell Road    Austell   
+##  2 2011-05-31 00:00:00 2011-06-07 00:00:00 6055 Shawnee Industr… Suwanee   
+##  3 2011-05-31 00:00:00 2011-06-07 00:00:00 2573 Dufferin Street  Toronto   
+##  4 2011-05-31 00:00:00 2011-06-07 00:00:00 2500 University Aven… Toronto   
+##  5 2011-05-31 00:00:00 2011-06-07 00:00:00 3065 Santa Margarita… Trabuco C…
+##  6 2011-05-31 00:00:00 2011-06-07 00:00:00 765 Delridge Way Sw   Seattle   
+##  7 2011-05-31 00:00:00 2011-06-07 00:00:00 4251 First Avenue     Seattle   
+##  8 2011-05-31 00:00:00 2011-06-07 00:00:00 9920 Bridgepointe Pa… San Mateo 
+##  9 2011-05-31 00:00:00 2011-06-07 00:00:00 St. Louis Marketplace Saint Lou…
+## 10 2011-05-31 00:00:00 2011-06-07 00:00:00 254480 River Rd       Richmond  
 ## # … with more rows
 ```
 
