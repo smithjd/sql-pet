@@ -59,7 +59,7 @@ sp_docker_start("adventureworks")
 ```
 
 
-## Connect to PostgreSQL with R
+## Connect to PostgreSQL again
 
 *CHECK for `sqlpetr` update!`  The `sp_make_simple_pg` function we called above created a container from the
 `postgres:11` library image downloaded from Docker Hub. As part of the process, it set the password for the PostgreSQL database superuser `postgres` to the value 
@@ -136,22 +136,22 @@ dbListTables(con)
 ```
 
 ```
-##  [1] "countryregioncurrency"             
+##  [1] "currencyrate"                      
 ##  [2] "customer"                          
-##  [3] "currencyrate"                      
-##  [4] "creditcard"                        
+##  [3] "creditcard"                        
+##  [4] "store"                             
 ##  [5] "personcreditcard"                  
 ##  [6] "specialoffer"                      
 ##  [7] "specialofferproduct"               
 ##  [8] "salesorderheadersalesreason"       
-##  [9] "shoppingcartitem"                  
-## [10] "salespersonquotahistory"           
+##  [9] "salespersonquotahistory"           
+## [10] "shoppingcartitem"                  
 ## [11] "salesperson"                       
-## [12] "currency"                          
-## [13] "store"                             
+## [12] "countryregioncurrency"             
+## [13] "currency"                          
 ## [14] "salesorderheader"                  
-## [15] "salesorderdetail"                  
-## [16] "salesreason"                       
+## [15] "salesreason"                       
+## [16] "salestaxrate"                      
 ## [17] "salesterritoryhistory"             
 ## [18] "vindividualcustomer"               
 ## [19] "vpersondemographics"               
@@ -161,8 +161,8 @@ dbListTables(con)
 ## [23] "vstorewithaddresses"               
 ## [24] "vstorewithcontacts"                
 ## [25] "vstorewithdemographics"            
-## [26] "salestaxrate"                      
-## [27] "salesterritory"
+## [26] "salesterritory"                    
+## [27] "salesorderdetail"
 ```
 Notice there are several tables that start with the letter *v*: they are actually *views* which will turn out to be important.  They are clearly distinguished in the connections tab, but the naming is a matter of convention.
 
@@ -420,97 +420,16 @@ Disconnect from the database:
 ```r
 dbDisconnect(con)
 ```
-## Stop and start to demonstrate persistence
-
-Stop the container:
-
-```r
-sp_docker_stop("adventureworks")
-sp_docker_containers_tibble()
-```
-
-```
-## # A tibble: 0 x 0
-```
-
-When we stopped `adventureworks`, it no longer appeared in the tibble. But the
-container is still there. `sp_docker_containers_tibble` by default only lists
-the *running* containers. But we can use the `list_all` option and see it:
-
-
-```r
-sp_docker_containers_tibble(list_all = TRUE)
-```
-
-```
-## # A tibble: 1 x 12
-##   container_id image command created_at created ports status size  names
-##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 dd6f353c7881 post… docker… 2019-09-0… 27 sec… <NA>  Exite… 0B (… adve…
-## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
-```
-
-
-Restart the container and verify that the adventureworks tables are still there:
-
-```r
-sp_docker_start("adventureworks")
-sp_docker_containers_tibble()
-```
-
-```
-## # A tibble: 1 x 12
-##   container_id image command created_at created ports status size  names
-##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 dd6f353c7881 post… docker… 2019-09-0… 28 sec… 0.0.… Up Le… 63B … adve…
-## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
-```
-Connect to the `adventureworks` database in PostgreSQL:
-
-```r
-con <- sp_get_postgres_connection(
-  host = "localhost",
-  port = 5432,
-  user = "postgres",
-  password = "postgres",
-  dbname = "adventureworks",
-  seconds_to_test = 30
-)
-```
-
-Check that you can still see the first few rows of the `salesorderheader` table:
-
-```r
-tbl(con, in_schema("sales", "salesorderheader")) %>%
-  head()
-```
-
-```
-## # Source:   lazy query [?? x 25]
-## # Database: postgres [postgres@localhost:5432/adventureworks]
-##   salesorderid revisionnumber orderdate           duedate            
-##          <int>          <int> <dttm>              <dttm>             
-## 1        43659              8 2011-05-31 00:00:00 2011-06-12 00:00:00
-## 2        43660              8 2011-05-31 00:00:00 2011-06-12 00:00:00
-## 3        43661              8 2011-05-31 00:00:00 2011-06-12 00:00:00
-## 4        43662              8 2011-05-31 00:00:00 2011-06-12 00:00:00
-## 5        43663              8 2011-05-31 00:00:00 2011-06-12 00:00:00
-## 6        43664              8 2011-05-31 00:00:00 2011-06-12 00:00:00
-## # … with 21 more variables: shipdate <dttm>, status <int>,
-## #   onlineorderflag <lgl>, purchaseordernumber <chr>, accountnumber <chr>,
-## #   customerid <int>, salespersonid <int>, territoryid <int>,
-## #   billtoaddressid <int>, shiptoaddressid <int>, shipmethodid <int>,
-## #   creditcardid <int>, creditcardapprovalcode <chr>,
-## #   currencyrateid <int>, subtotal <dbl>, taxamt <dbl>, freight <dbl>,
-## #   totaldue <dbl>, comment <chr>, rowguid <chr>, modifieddate <dttm>
-```
-
 ## Cleaning up
 
 Always have R disconnect from the database when you're done.
 
 ```r
 dbDisconnect(con)
+```
+
+```
+## Warning in connection_release(conn@ptr): Already disconnected
 ```
 
 Stop the `adventureworks` container:
@@ -527,7 +446,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## dd6f353c7881        postgres:11         "docker-entrypoint.s…"   29 seconds ago      Exited (0) Less than a second ago                       adventureworks
+## b16dcc051093        postgres:11         "docker-entrypoint.s…"   25 seconds ago      Exited (0) Less than a second ago                       adventureworks
 ```
 
 Next time, you can just use this command to start the container: 

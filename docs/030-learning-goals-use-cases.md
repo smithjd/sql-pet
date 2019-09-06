@@ -59,12 +59,16 @@ Using an enterprise database to create meaningful management insights requires a
 
 ### Book structure
 
-The book explores R techniques and behaviors using progressively more complex queries, exploring this scenario: There is a new Executive VP of Sales at Adventure Works. She wants an overview of sales and the sales organization's performance at AW.
+The book explores R techniques and and investigation strategies using progressively more complex queries, that lead to this scenario: There is a new Executive VP of Sales at Adventure Works. She wants an overview of sales and the sales organization's performance at _Adventure Works_.  Once her questions are satisfied, a monthly report is developed that can run automatically and appear in her mailbox.
 
-* Early chapters use just one table from the database: the `salesordedrheader` table in the `sales` schema.  The motivating question might be: "How many sales persons does the _Adventure Works_ company have?"
+* Early chapters demonstrate now to connect to a database and find your way around it, with a pause to discuss how to secure your credentials.
+* Both Rstudio and R script methods are shown for the same database overview.
+* The `salesordedrheader` table in the `sales` schema is used to demonstrate packages and functions that show what a single table contains.
+* Then the same table is used but the investigation adopts a business perspective, demonstrating R techniques that are motivated by questions like "How sales for the _Adventure Works_ company?" 
 * Starting with base tables, then use views (that contain knowledge about the application)
 * More involved queries join three tables in three different schemas: `salesperson`, `employee`, and `person`. The relevant question might be "Who is my top salesperson?  Are the 3 top salespersons older or younger?"
 * Finally, we build a series of queries that explore the sales workflow: sales territories, sales people, top customers by product, product mixture that gives top 80% of sales.  What are they producing in detail?  Seasonal? Type of product, region, etc.?
+* The book ends by demonstrating how R code can be used for standard reports from the database that are emailed to a list of recipients.
 
 ## Making your way through the book
 

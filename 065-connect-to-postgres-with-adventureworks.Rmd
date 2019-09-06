@@ -53,7 +53,7 @@ sp_docker_start("adventureworks")
 ```
 
 
-## Connect to PostgreSQL with R
+## Connect to PostgreSQL again
 
 *CHECK for `sqlpetr` update!`  The `sp_make_simple_pg` function we called above created a container from the
 `postgres:11` library image downloaded from Docker Hub. As part of the process, it set the password for the PostgreSQL database superuser `postgres` to the value 
@@ -166,47 +166,6 @@ Disconnect from the database:
 dbDisconnect(con)
 
 ```
-## Stop and start to demonstrate persistence
-
-Stop the container:
-```{r}
-sp_docker_stop("adventureworks")
-sp_docker_containers_tibble()
-```
-
-When we stopped `adventureworks`, it no longer appeared in the tibble. But the
-container is still there. `sp_docker_containers_tibble` by default only lists
-the *running* containers. But we can use the `list_all` option and see it:
-
-```{r}
-sp_docker_containers_tibble(list_all = TRUE)
-```
-
-
-Restart the container and verify that the adventureworks tables are still there:
-```{r}
-sp_docker_start("adventureworks")
-sp_docker_containers_tibble()
-```
-Connect to the `adventureworks` database in PostgreSQL:
-```{r}
-con <- sp_get_postgres_connection(
-  host = "localhost",
-  port = 5432,
-  user = "postgres",
-  password = "postgres",
-  dbname = "adventureworks",
-  seconds_to_test = 30
-)
-```
-
-Check that you can still see the first few rows of the `salesorderheader` table:
-```{r}
-tbl(con, in_schema("sales", "salesorderheader")) %>%
-  head()
-
-```
-
 ## Cleaning up
 
 Always have R disconnect from the database when you're done.

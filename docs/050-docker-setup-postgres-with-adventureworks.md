@@ -99,7 +99,7 @@ sp_docker_start("adventureworks")
 ```
 
 
-## Connect to PostgreSQL with R
+## Connect to PostgreSQL
 
 *CHECK for `sqlpetr` update!`  The `sp_make_simple_pg` function we called above created a container from the
 `postgres:11` library image downloaded from Docker Hub. As part of the process, it set the password for the PostgreSQL database superuser `postgres` to the value 
@@ -142,85 +142,21 @@ Or a view may have data from a primary/driving table and joined to other tables 
 
 ## Investigate the database using Rstudio 
 
-The Rstudio Connections tab shows that you are connected to Postgres and that the `adventureworks` database has a many schemas each of which has multiple tables in it:
+The Rstudio Connections tab shows that you are connected to Postgres and that the `adventureworks` database has a many schemas each of which has multiple tables  and views in it.  The drop-down icon to the left of a table lists the table's columns.
 
-![Connections tab - adventureworks](screenshots/connections-tab-adventureworks-annotated.png)
+![Connections tab - adventureworks](screenshots/connections-tab-adventureworks-sales-sm.png)
 
 Clicking on the icon to the left of a `schema` expands the list of `tables` and `views` in that `schema`.  Clicking on the `View` or `Table` icon opens up Rstudio's `View` pane to get a peek at the data:
 
-![View of employee table](screenshots/view-tab-adventureworks-employee.png)
+![View of employee table](screenshots/view-adventureworks-special-offer-sm.png)
 
 The number of rows and columns shown in the View pane depends on the size of the window.
-
-Back on the Rstudio Connections tab, clicking on the icon to the left of a `table` or `view` displays a list of columns and their corresponding data types:
-
-![adventureworks employee table columns](screenshots/connections-tab-emloyee-column-info.png)
-
 
 Disconnect from the database:
 
 ```r
 dbDisconnect(con)
 ```
-## Stop and start to demonstrate persistence
-
-Stop the container:
-
-```r
-sp_docker_stop("adventureworks")
-sp_docker_containers_tibble()
-```
-
-```
-## # A tibble: 0 x 0
-```
-
-When we stopped `adventureworks`, it no longer appeared in the tibble. But the
-container is still there. `sp_docker_containers_tibble` by default only lists
-the *running* containers. But we can use the `list_all` option and see it:
-
-
-```r
-sp_docker_containers_tibble(list_all = TRUE)
-```
-
-```
-## # A tibble: 1 x 12
-##   container_id image command created_at created ports status size  names
-##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 dd6f353c7881 post… docker… 2019-09-0… 17 sec… <NA>  Exite… 0B (… adve…
-## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
-```
-
-
-Restart the container and verify that the adventureworks tables are still there:
-
-```r
-sp_docker_start("adventureworks")
-sp_docker_containers_tibble()
-```
-
-```
-## # A tibble: 1 x 12
-##   container_id image command created_at created ports status size  names
-##   <chr>        <chr> <chr>   <chr>      <chr>   <chr> <chr>  <chr> <chr>
-## 1 dd6f353c7881 post… docker… 2019-09-0… 18 sec… 0.0.… Up Le… 63B … adve…
-## # … with 3 more variables: labels <chr>, mounts <chr>, networks <chr>
-```
-Connect to the `adventureworks` database in PostgreSQL:
-
-```r
-con <- sp_get_postgres_connection(
-  host = "localhost",
-  port = 5432,
-  user = "postgres",
-  password = "postgres",
-  dbname = "adventureworks",
-  seconds_to_test = 30
-)
-```
-
-The database is still there, in the same state as it was when it was originally built.
 
 ## Cleaning up
 
@@ -228,6 +164,10 @@ Always have R disconnect from the database when you're done.
 
 ```r
 dbDisconnect(con)
+```
+
+```
+## Warning in connection_release(conn@ptr): Already disconnected
 ```
 
 Stop the `adventureworks` container:
@@ -244,7 +184,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## dd6f353c7881        postgres:11         "docker-entrypoint.s…"   19 seconds ago      Exited (0) Less than a second ago                       adventureworks
+## b16dcc051093        postgres:11         "docker-entrypoint.s…"   16 seconds ago      Exited (0) Less than a second ago                       adventureworks
 ```
 
 Next time, you can just use this command to start the container: 

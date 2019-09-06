@@ -271,8 +271,8 @@ adventureworks   information_schema   columns                                 VI
 adventureworks   information_schema   column_udt_usage                        VIEW       
 adventureworks   information_schema   constraint_column_usage                 VIEW       
 adventureworks   information_schema   constraint_table_usage                  VIEW       
-adventureworks   pe                   cr                                      VIEW       
 adventureworks   sa                   cr                                      VIEW       
+adventureworks   pe                   cr                                      VIEW       
 adventureworks   sa                   crc                                     VIEW       
 adventureworks   pe                   ct                                      VIEW       
 adventureworks   sa                   cu                                      VIEW       
@@ -380,8 +380,8 @@ adventureworks   pr                   pmpdc                                   VI
 adventureworks   pe                   pnt                                     VIEW       
 adventureworks   pu                   pod                                     VIEW       
 adventureworks   pu                   poh                                     VIEW       
-adventureworks   pr                   pp                                      VIEW       
 adventureworks   pe                   pp                                      VIEW       
+adventureworks   pr                   pp                                      VIEW       
 adventureworks   pr                   ppp                                     VIEW       
 adventureworks   pr                   pr                                      VIEW       
 adventureworks   pr                   psc                                     VIEW       
@@ -405,8 +405,8 @@ adventureworks   sa                   sod                                     VI
 adventureworks   sa                   soh                                     VIEW       
 adventureworks   sa                   sohsr                                   VIEW       
 adventureworks   sa                   sop                                     VIEW       
-adventureworks   pe                   sp                                      VIEW       
 adventureworks   sa                   sp                                      VIEW       
+adventureworks   pe                   sp                                      VIEW       
 adventureworks   sa                   spqh                                    VIEW       
 adventureworks   sa                   sr                                      VIEW       
 adventureworks   pr                   sr                                      VIEW       
@@ -557,10 +557,10 @@ adventureworks   pe               cr                                      VIEW
 adventureworks   sa               crc                                     VIEW       
 adventureworks   pe               ct                                      VIEW       
 adventureworks   sa               cu                                      VIEW       
-adventureworks   hr               d                                       VIEW       
 adventureworks   pr               d                                       VIEW       
-adventureworks   pe               e                                       VIEW       
+adventureworks   hr               d                                       VIEW       
 adventureworks   hr               e                                       VIEW       
+adventureworks   pe               e                                       VIEW       
 adventureworks   hr               edh                                     VIEW       
 adventureworks   hr               eph                                     VIEW       
 adventureworks   pr               i                                       VIEW       
@@ -588,8 +588,8 @@ adventureworks   pr               ppp                                     VIEW
 adventureworks   pr               pr                                      VIEW       
 adventureworks   pr               psc                                     VIEW       
 adventureworks   pu               pv                                      VIEW       
-adventureworks   hr               s                                       VIEW       
 adventureworks   sa               s                                       VIEW       
+adventureworks   hr               s                                       VIEW       
 adventureworks   sa               sci                                     VIEW       
 adventureworks   pu               sm                                      VIEW       
 adventureworks   sa               so                                      VIEW       
@@ -597,8 +597,8 @@ adventureworks   sa               sod                                     VIEW
 adventureworks   sa               soh                                     VIEW       
 adventureworks   sa               sohsr                                   VIEW       
 adventureworks   sa               sop                                     VIEW       
-adventureworks   pe               sp                                      VIEW       
 adventureworks   sa               sp                                      VIEW       
+adventureworks   pe               sp                                      VIEW       
 adventureworks   sa               spqh                                    VIEW       
 adventureworks   pr               sr                                      VIEW       
 adventureworks   sa               sr                                      VIEW       
