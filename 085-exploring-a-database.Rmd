@@ -43,7 +43,7 @@ We've already seen how the connections tab is the easiest way to explore a datab
 
 ![Adventureworks connections tab](screenshots/adventureworks-schema-connections-tab.png)
 
-It's a little more complex than the typical `SQLite` examples found in many tutorials because we have additional structure: the `adventureworks` [database contains schemas](https://en.wikipedia.org/wiki/Database_schema), which contain tables.  The `hr` schema is the same as the `humanresources` schema, but with nicknames (the `d` table in `hr` is the same as the `department` table in the `humanresources` schema).  Schemas are used to control access and to set up shortcuts.  Clicking on the the right opens up the table view of the `d` table:
+It's a little more complex than the typical `SQLite` examples found in many tutorials because we have additional structure: the `adventureworks` [database contains schemas](https://en.wikipedia.org/wiki/Database_schema), which contain tables.  The `hr` schema is the same as the `sales` schema, but with nicknames (the `d` table in `hr` is the same as the `department` table in the `sales` schema).  Schemas are used to control access and to set up shortcuts.  Clicking on the the right opens up the table view of the `d` table:
 
 ![Adventureworks connections tab](screenshots/adventureworks-hr-dept-table.png)
 
@@ -55,20 +55,20 @@ tables
 
 We need to to tell the database which schemas to search
 ```{r}
-dbExecute(con, "set search_path to hr, humanresources;")
+dbExecute(con, "set search_path to sales, sa;")
 DBI::dbListTables(con)
 ```
 Notice the way the database designers have abbreviated table names for your convenience.
 ```{r}
-DBI::dbListFields(con, "d")
+DBI::dbListFields(con, "so")
 ```
 
 ### Listing all the fields for all the tables
 
-The first example, `DBI::dbListTables(con)` returned 22 tables and the second example, `DBI::dbListFields(con, "employee")` returns 7 fields.  Here we combine the two calls to return a list of tables which has a list of all the fields in the table.  The code block just shows the first two tables.
+The first example, `DBI::dbListTables(con)` returned 46 tables and the second example, `DBI::dbListFields(con, "salesorderheader")` returns 12 fields.  Here we combine the two calls to return a list of tables which has a list of all the fields in the table.  The code block just shows the first two tables.
 
 ```{r combine table and column data - purr}
-table_columns <- purrr::map(tables, ~ dbListFields(.,conn = con) )
+table_columns <- purrr::map(tables, ~ dbListFields(.,con = con) )
 ```
 Rename each list [[1]] ... [[43]] to meaningful table name
 ```{r combine table and column data}
@@ -90,59 +90,44 @@ There are different ways of just **looking at the data**, which we explore below
 The `dplyr::tbl` function gives us more control over access to a table by enabling  control over which columns and rows to download.  It creates  an object that might **look** like a data frame, but it's actually a list object that `dplyr` uses for constructing queries and retrieving data from the DBMS.  
 
 ```{r}
-employee_table <- dplyr::tbl(con, "employee")
-class(employee_table)
+salesorderheader_table <- dplyr::tbl(con, "salesorderheader")
+class(salesorderheader_table)
 ```
 ### Table links for queries
 
 To illustrate the different issues involved in data retrieval, we create more connection objects to link to two other tables.  
 ```{r define connections to more tables}
-employee_table <- tbl(con, in_schema("humanresources", "employee")) %>% 
-  select(-modifieddate, -rowguid)
+salesorderheader_table <- tbl(con, in_schema("sales", "salesorderheader")) %>% 
+  select(-rowguid, -modifieddate)
 
 ```
-The 'employee' table has 290 rows and 13 columns because we dropped `modifieddate` which is a column name that appears in more than one table.  To get the data we want we will usually want to drop or rename duplicates as we connect to each table.
+The 'salesorderheader' table has 31,465 obs. of  23 columns because we dropped `modifieddate` which is a column name that appears in more than one table.  To get the data we want we will usually want to drop or rename duplicates as we connect to each table.
 
 ```{r}
-sales_person_table <- tbl(con, in_schema("sales", "salesperson")) %>% 
+address_table <- tbl(con, in_schema("person", "address")) %>% 
   select(-rowguid) %>% 
-  rename(sale_info_updated = modifieddate)
+  rename(address_info_updated = modifieddate)
 
 ```
-The 'salesperson' table has 17 rows.
-
-Discuss the *person* table here:
-```{r}
-person_table <- tbl(con, in_schema("person", "person")) %>% 
-  select(-modifieddate, -rowguid)
-
-```
-### merge this into the above:
-Define two tables to use in a simple query to use in the following discussion.
-```{r connect to two tables}
-sales_person_table <- tbl(con, in_schema("sales", "salesperson")) %>% 
-  select(-rowguid) %>% 
-  rename(sale_info_updated = modifieddate)
-
-employee_table <- tbl(con, in_schema("humanresources", "employee")) %>% 
-  select(-modifieddate, -rowguid)
-```
+The 'address' table has 19,614 rows and 8 columns.
 
 Here is a simple string of `dplyr` verbs similar to the query used to illustrate issues in the last chapter:
 
 ```{r create simple join}
-Q <- tbl(con, in_schema("sales", "salesperson")) %>%
-  left_join(tbl(con, in_schema("humanresources", "employee")), 
-            by = c("businessentityid" = "businessentityid")) %>%
-  dplyr::select(birthdate, saleslastyear)
+Q <- salesorderheader_table %>% 
+  left_join(address_table, 
+            by = c("shiptoaddressid" = "addressid")) %>%
+  dplyr::select(orderdate, shipdate, addressline1, city)
 
 Q
 ```
 Note that in the previous example we follow this book's convention of creating a connection object to each table and fully qualifying function names (e.g., specifying the package).  In practice, it's possible and convenient to use more abbreviated notation.
 ```{r simplify the simpe join}
-Q <- tbl(con, in_schema("sales", "salesperson")) %>%
-  left_join(tbl(con, in_schema("humanresources", "employee")),  by = c("businessentityid" = "businessentityid")) %>%
-  select(birthdate, saleslastyear)
+Q <- tbl(con, in_schema("sales", "salesorderheader")) %>% 
+  select(-rowguid, -modifieddate) %>% 
+  left_join(tbl(con, in_schema("person", "address")), 
+            by = c("shiptoaddressid" = "addressid")) %>%
+  dplyr::select(orderdate, shipdate, addressline1, city)
 
 Q
 ```
