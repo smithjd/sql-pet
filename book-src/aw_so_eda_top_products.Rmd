@@ -2,7 +2,7 @@
 title: "AW SO EDA"
 author: "Sophie Yang"
 date: "July 19, 2019"
-output: html_document
+output: md_document
 ---
 
 ```{r setup, include=FALSE}
@@ -79,7 +79,8 @@ group by date_part('year'::text,case when EXTRACT(DAY FROM soh.orderdate) = 1
 where rn <= 10
 order by yymm, extprice desc 
 ")
-View(top10_products_by_month)
+# View(top10_products_by_month)
+sp_print_df(top10_products_by_month)
 ```
 
 ```{r}
@@ -130,51 +131,9 @@ group by date_part('year'::text,case when EXTRACT(DAY FROM soh.orderdate) = 1
         ,unitprice
 order by yymm,rn
 ")
-View(x)
+# View(x)
+sp_print_df(x)
 
-```
-
-
-```{r}
-x <- dbGetQuery(con,
-"
-CREATE OR REPLACE FUNCTION sales.adj_so_date (p_orderdate date)
-RETURNS integer LANGUAGE plpgsql AS
-$function$
-DECLARE
-    ret_val  date;
-BEGIN
-    select case when EXTRACT(DAY FROM p_orderdate) = 1 
-           THEN p_orderdate - '1 day'::interval 
-           ELSE p_orderdate END INTO ret_val;
-END;
-return ret_val;
-$function$
-")
-```
-
-
-
-
-```{r}
-x <- dbGetQuery(con,
-"
-CREATE OR REPLACE FUNCTION sales.adj_so_date (p_orderdate date)
-RETURNS integer LANGUAGE plpgsql AS
-$function$
-DECLARE
-    ret_val  date;
-BEGIN
-    IF EXTRACT(DAY FROM soh.orderdate) = 1 
-    THEN 
-        ret_val = p_orderdate - '1 day'::interval 
-    ELSE 
-       ret_val = p_orderdate 
-    END 
-    return (retval)
-END;
-$function$
-")
 ```
 
 
