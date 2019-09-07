@@ -26,7 +26,7 @@ library(scales)  # ggplot xy scales
 
 ```{r, start adventureworks}
 sp_docker_start('adventureworks')
-Sys.sleep(10)
+# Sys.sleep(10)
 con <- sp_get_postgres_connection(
   host = "localhost",
   port = 5432,
@@ -241,7 +241,7 @@ x
 
 ```
 
-```{r Sales Rep Orders Adjusted PLot, fig.width=16}
+```{r Sales Rep Orders Adjusted PLot, fig.width=10}
 x$yymm <- as.factor(x$yymm)
 x$mo <- as.factor(x$mo)
 x$yr <- as.factor(x$yr)
@@ -273,10 +273,104 @@ ggplot(data=NULL) +
 
 ```
 
+## Sales Rep Orders By Fiscal Year
+
+
 ```{r}
-x
+SalesRepOrders_Fiscal_Year <- dbGetQuery(con,
+"
+select to_char(orderdate_adj,'YYMM') yymm
+      ,fiscalyear_adj
+      ,YR_adj yr,mo_adj mo
+      ,sales_type
+      ,sum(so_cnt) so_cnt
+      ,sum(so_dollars) so_dollars
+  from (
+SELECT date_part('year'::text, soh.orderdate + '6 mons'::interval) AS fiscalyear
+     , EXTRACT(YEAR FROM soh.orderdate) yr
+     , EXTRACT(MONTH FROM soh.orderdate) mo
+     , EXTRACT(DAY FROM soh.orderdate) dd
+     , date_part('year'::text,case when EXTRACT(DAY FROM soh.orderdate) = 1
+                                   THEN  soh.orderdate - '1 day'::interval
+                                   ELSE  soh.orderdate
+                              END+ '6 months'::interval) AS fiscalyear_adj 
+     , case when EXTRACT(DAY FROM soh.orderdate) = 1
+            THEN  soh.orderdate - '1 day'::interval
+            ELSE  soh.orderdate
+       END AS orderdate_adj
+     , case when EXTRACT(DAY FROM soh.orderdate) = 1
+            THEN EXTRACT(YEAR FROM soh.orderdate - '1 day'::interval)
+            ELSE  EXTRACT(YEAR FROM soh.orderdate) 
+       END AS YR_adj
+
+     , case when EXTRACT(DAY FROM soh.orderdate) = 1
+            THEN EXTRACT(MONTH FROM soh.orderdate - '1 day'::interval)
+            ELSE EXTRACT(MONTH FROM soh.orderdate) 
+       END mo_adj
+     , case when EXTRACT(DAY FROM soh.orderdate) = 1
+            THEN EXTRACT(DAY FROM soh.orderdate - '1 day'::interval)
+            ELSE EXTRACT(DAY FROM soh.orderdate) 
+       END dd_adj
+     , COUNT(*) * 1.0 so_cnt 
+     , ROUND(sum(subtotal),2) so_dollars
+     , min(soh.orderdate) min_dt
+     , max(soh.orderdate) max_dt
+     , EXTRACT(DAY FROM max(soh.orderdate)) - EXTRACT(DAY FROM min(soh.orderdate)) + 1 days
+     , count(distinct soh.orderdate) unique_days
+     , case when soh.onlineorderflag then 'online' else 'sales rep' end sales_type
+  FROM sales.salesorderheader soh
+ where not onlineorderflag
+group by date_part('year'::text, soh.orderdate + '6 mons'::interval) 
+     , EXTRACT(YEAR FROM soh.orderdate)
+     , EXTRACT(MONTH FROM soh.orderdate)
+     , EXTRACT(DAY FROM soh.orderdate)
+     , date_part('year'::text,case when EXTRACT(DAY FROM soh.orderdate) = 1
+                                   THEN  soh.orderdate - '1 day'::interval
+                                   ELSE  soh.orderdate
+                              END+ '6 months'::interval)
+     , case when EXTRACT(DAY FROM soh.orderdate) = 1
+            THEN  soh.orderdate - '1 day'::interval
+            ELSE  soh.orderdate
+       END
+     , case when EXTRACT(DAY FROM soh.orderdate) = 1
+            THEN EXTRACT(YEAR FROM soh.orderdate - '1 day'::interval)
+            ELSE  EXTRACT(YEAR FROM soh.orderdate) 
+       END
+     , case when EXTRACT(DAY FROM soh.orderdate) = 1
+            THEN EXTRACT(MONTH FROM soh.orderdate - '1 day'::interval)
+            ELSE EXTRACT(MONTH FROM soh.orderdate) 
+       END
+     , case when EXTRACT(DAY FROM soh.orderdate) = 1
+            THEN EXTRACT(DAY FROM soh.orderdate - '1 day'::interval)
+            ELSE EXTRACT(DAY FROM soh.orderdate) 
+       END
+     , case when onlineorderflag then 'online' else 'sales rep' end
+) as src
+group by yymm,fiscalyear_adj,YR_adj ,mo_adj ,sales_type
+ORDER BY case when mo_adj > 6 then mo_adj - 6 else mo_adj + 6 end,fiscalyear_adj
+--ORDER BY fiscalyear_adj,case when mo_adj > 6 then mo_adj - 6 else mo_adj + 6 end
+--ORDER BY mo, yr, sales_type
+")
+
 ```
 
+
+```{r fig.width=16}
+SalesRepOrders_Fiscal_Year$mo <- factor(SalesRepOrders_Fiscal_Year$mo,levels=c('7','8','9','10','11','12','1','2','3','4','5','6'))
+
+ggplot(data=SalesRepOrders_Fiscal_Year
+       ,aes(x=mo,y=so_cnt,color=as.factor(fiscalyear_adj),group = as.factor(fiscalyear_adj))) + 
+  geom_line() +
+  geom_point() +
+  geom_text(aes(x=mo,y=so_cnt,label=so_dollars)
+           ,color = 'black'
+           ,vjust = -1.5) +
+  labs(color='Fiscal Year') +
+  xlab("Month") + 
+  ylab("Orders") +
+  theme(plot.title = element_text(hjust = .50)) +  
+  ggtitle(paste("Sales Rep Orders by Month\nUsing Adjusted Order Dates "))
+```
 
 ```{r}
 mo_so_mo_dt_dist_det <- dbGetQuery(con,
@@ -302,3 +396,5 @@ ggplot(data = long_online, aes(x=orderdate,y=sum_amt,color=sum_type)) +
   geom_line() 
 
 ```
+
+
