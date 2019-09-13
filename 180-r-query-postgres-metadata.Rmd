@@ -32,6 +32,23 @@ con <- sqlpetr::sp_get_postgres_connection(
   connection_tab = TRUE
 )
 ```
+## Views trick parked here for the time being
+
+### Explore the vsalelsperson and vsalespersonsalesbyfiscalyearsdata views
+
+The following trick goes later in the book, where it's used to prove the finding that to make sense of othe data you need to 
+```{r}
+cat(unlist(dbGetQuery(con, "select pg_get_viewdef('sales.vsalesperson', true)")))
+```
+
+
+```{r,echo=FALSE}
+dbGetQuery(con, "select pg_get_viewdef('sales.vsalespersonsalesbyfiscalyearsdata', true)")
+
+# cat(unlist(dbGetQuery(con,"select pg_get_viewdef('sa.soh', true)")))
+```
+
+
 
 ## Database contents and structure
 
@@ -56,8 +73,7 @@ schema_list <- tbl(con, in_schema("information_schema", "schemata")) %>%
   select(catalog_name, schema_name, schema_owner) %>%
   collect()
 
-
-kable(schema_list)
+sp_print_df(head(schema_list))
 ```
 ### Digging into the `information_schema`
 
@@ -77,13 +93,13 @@ table_info <- table_info_schema_table %>%
   arrange(table_type, table_name) %>%
   collect()
 
-kable(table_info)
+sp_print_df(head(table_info))
 ```
 In this context `table_catalog` is synonymous with `database`.
 
 Notice that *VIEWS* are composites made up of one or more *BASE TABLES*.
 
-The SQL world has its own terminology.  For example `rs` is shorthand for `result set`.  That's equivalent to using `df` for a `data frame`.  The following SQL query returns the same information as the previous one.
+The SQL world has its own terminology.  For example `rs` is shorthand for `result set`.  That's equivalent to using `df` for a `data frame`.  The following SQL query returns the same information as the previous dplyr code.
 ```{r}
 rs <- dbGetQuery(
   con,
@@ -93,7 +109,7 @@ rs <- dbGetQuery(
   order by table_type, table_name 
   ;"
 )
-kable(rs)
+sp_print_df(head(rs))
 ```
 
 ## What columns do those tables contain?
@@ -127,7 +143,7 @@ columns_info_schema_info <- columns_info_schema_table %>%
 
 glimpse(columns_info_schema_info)
 
-kable(columns_info_schema_info)
+sp_print_df(head(columns_info_schema_info))
 ```
 
 ### What is the difference between a `VIEW` and a `BASE TABLE`?
@@ -145,7 +161,8 @@ table_info_schema_table %>%
   ) %>%
   collect(n = Inf) %>%
   filter(str_detect(table_name, "cust")) %>%
-  kable()
+  head() %>% 
+  sp_print_df()
 ```
 
 Probably should explore how the `VIEW` is made up of data from BASE TABLEs.
@@ -161,13 +178,17 @@ table_info_schema_table %>%
   ) %>%
   collect(n = Inf) %>%
   filter(str_detect(table_name, "cust")) %>%
-  kable()
+  head() %>% 
+  sp_print_df()
 ```
 
 ### What data types are found in the database?
 ```{r}
 
-columns_info_schema_info %>% count(data_type) %>% kable()
+columns_info_schema_info %>% 
+  count(data_type) %>% 
+  head() %>% 
+  sp_print_df()
 ```
 
 ## Characterizing how things are named
@@ -186,19 +207,26 @@ public_tables <- columns_info_schema_table %>%
   collect()
 
 public_tables %>%
-  count(table_name, sort = TRUE) %>% head(n = 15) %>% 
-  kable()
+  count(table_name, sort = TRUE) %>% 
+  head(n = 15) %>% 
+  sp_print_df()
 ```
 
 How many *column names* are shared across tables (or duplicated)?
 ```{r}
 
-public_tables %>% count(column_name, sort = TRUE) %>% filter(n > 1)
+public_tables %>% count(column_name, sort = TRUE) %>% 
+  filter(n > 1) %>% 
+  head()
 ```
 
 How many column names are unique?
 ```{r}
-public_tables %>% count(column_name) %>% filter(n == 1) %>% count()
+public_tables %>% 
+  count(column_name) %>% 
+  filter(n == 1) %>% 
+  count() %>% 
+  head()
 ```
 
 ## Database keys
@@ -219,7 +247,7 @@ WHERE 1 = 1 --r.conrelid = '16485'
 ;"
 )
 glimpse(rs)
-kable(head(rs))
+sp_print_df(head(rs))
 ```
 The following is more compact and looks more useful.  What is the difference between the two?
 ```{r}
@@ -236,7 +264,7 @@ order by conrelid::regclass::text, contype DESC;
 "
 )
 glimpse(rs)
-kable(head(rs))
+sp_print_df(head(rs))
 dim(rs)[1]
 ```
 
@@ -273,7 +301,7 @@ keys <- tables %>%
   arrange(table_name) %>%
   collect()
 glimpse(keys)
-kable(keys)
+sp_print_df(head(keys))
 ```
 
 What do we learn from the following query?  How is it useful? 
@@ -305,7 +333,7 @@ If you are going to work with a database for an extended period it can be useful
 # 
 # glimpse(all_meta)
 # 
-# kable(head(all_meta))
+# sp_print_df(head(all_meta))
 ```
 ## Save your work!
 

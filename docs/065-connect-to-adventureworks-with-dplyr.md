@@ -1,30 +1,9 @@
-# Connect to the adventureworks database in PostgreSQL{#chapter_connect-to-adventureworks-db}
+# Connecting to the database with R code{#chapter_connect-to-db-with-r-code}
 
 > This chapter demonstrates how to:
 >
->  * Create and connect to the PostgreSQL `adventureworks` database in Docker
->  * Keep necessary credentials secret while being available to R when it executes.
 >  * Connect to and disconnect R from the `adventureworks` database
->  * Set up the environment for subsequent chapters
-
-## Overview
-
-Docker commands can be run from a terminal (e.g., the Rstudio Terminal pane) or with a `system2()` command.  The necessary functions to start, stop Docker containers and do other busy work are provided in the `sqlpetr` package.  
-
-> Note: The functions in the package are designed to help you focus on interacting with a dbms from R.  You can ignore how they work until you are ready to delve into the details.  They are all named to begin with `sp_`.  The first time a function is called in the book, we provide a note explaining its use.
-
-
-Please install the `sqlpetr` package if not already installed:
-
-```r
-library(devtools)
-if (!require(sqlpetr)) {
-    remotes::install_github(
-      "smithjd/sqlpetr",
-      force = TRUE, build = FALSE, quiet = TRUE)
-}
-```
-Note that when you install this package the first time, it will ask you to update the packages it uses and that may take some time.
+>  * Use dplyr to get an overview of the database, replicating the facilities provided by RStudio
 
 These packages are called in this Chapter:
 
@@ -40,7 +19,7 @@ library(bookdown)
 library(here)
 ```
 
-## Verify that Docker is up, running, and clean up if necessary
+## Verify that Docker is up and running, and start the database
 
 > The `sp_check_that_docker_is_up` function from the `sqlpetr` package checks whether Docker is up and running.  If it's not, then you need to install, launch or re-install Docker.
 
@@ -59,7 +38,7 @@ sp_docker_start("adventureworks")
 ```
 
 
-## Connect to PostgreSQL again
+## Connect to PostgreSQL 
 
 *CHECK for `sqlpetr` update!`  The `sp_make_simple_pg` function we called above created a container from the
 `postgres:11` library image downloaded from Docker Hub. As part of the process, it set the password for the PostgreSQL database superuser `postgres` to the value 
@@ -88,42 +67,13 @@ con <- sp_get_postgres_connection(
   seconds_to_test = 20, connection_tab = TRUE
 )
 ```
-That's equivalent to excuting this code to download the table from the DBMS to a local data frame:
 
-For the moment we by-pass some complexity that results from the fact that the `adventureworks` database has multiple *schemas* and that we are interested in only one of them, named `information_schema`.  
-
-```r
-tbl(con, in_schema("information_schema", "schemata")) %>%
-  select(catalog_name, schema_name, schema_owner) %>%
-  collect()
-```
-
-```
-## # A tibble: 16 x 3
-##    catalog_name   schema_name        schema_owner
-##    <chr>          <chr>              <chr>       
-##  1 adventureworks sales              postgres    
-##  2 adventureworks sa                 postgres    
-##  3 adventureworks purchasing         postgres    
-##  4 adventureworks pu                 postgres    
-##  5 adventureworks production         postgres    
-##  6 adventureworks pr                 postgres    
-##  7 adventureworks person             postgres    
-##  8 adventureworks pe                 postgres    
-##  9 adventureworks humanresources     postgres    
-## 10 adventureworks hr                 postgres    
-## 11 adventureworks information_schema postgres    
-## 12 adventureworks public             postgres    
-## 13 adventureworks pg_catalog         postgres    
-## 14 adventureworks pg_toast_temp_1    postgres    
-## 15 adventureworks pg_temp_1          postgres    
-## 16 adventureworks pg_toast           postgres
-```
+## Set schema search path and list its contents
 
 Schemas will be discussed later on because multiple schemas are the norm in an enterprise database environment, but they are a side issue at this point.  So we switch the order in which PostgreSQL searches for objects with the following SQL code:
 
 ```r
-dbExecute(con, "set search_path to sales, public;")
+dbExecute(con, "set search_path to sales;")
 ```
 
 ```
@@ -136,22 +86,22 @@ dbListTables(con)
 ```
 
 ```
-##  [1] "currencyrate"                      
+##  [1] "countryregioncurrency"             
 ##  [2] "customer"                          
-##  [3] "creditcard"                        
-##  [4] "store"                             
+##  [3] "currencyrate"                      
+##  [4] "creditcard"                        
 ##  [5] "personcreditcard"                  
 ##  [6] "specialoffer"                      
 ##  [7] "specialofferproduct"               
 ##  [8] "salesorderheadersalesreason"       
-##  [9] "salespersonquotahistory"           
-## [10] "shoppingcartitem"                  
+##  [9] "shoppingcartitem"                  
+## [10] "salespersonquotahistory"           
 ## [11] "salesperson"                       
-## [12] "countryregioncurrency"             
-## [13] "currency"                          
+## [12] "currency"                          
+## [13] "store"                             
 ## [14] "salesorderheader"                  
-## [15] "salesreason"                       
-## [16] "salestaxrate"                      
+## [15] "salesorderdetail"                  
+## [16] "salesreason"                       
 ## [17] "salesterritoryhistory"             
 ## [18] "vindividualcustomer"               
 ## [19] "vpersondemographics"               
@@ -161,8 +111,8 @@ dbListTables(con)
 ## [23] "vstorewithaddresses"               
 ## [24] "vstorewithcontacts"                
 ## [25] "vstorewithdemographics"            
-## [26] "salesterritory"                    
-## [27] "salesorderdetail"
+## [26] "salestaxrate"                      
+## [27] "salesterritory"
 ```
 Notice there are several tables that start with the letter *v*: they are actually *views* which will turn out to be important.  They are clearly distinguished in the connections tab, but the naming is a matter of convention.
 
@@ -240,7 +190,8 @@ tbl(con, "salesorderheader") %>%
 ## #   totaldue <dbl>, comment <chr>, rowguid <chr>, modifieddate <dttm>
 ```
 
-## `dplyr` connection objects
+## Anatomy of a `dplyr` connection object
+
 As introduced in the previous chapter, the `dplyr::tbl` function creates an object that might **look** like a data frame in that when you enter it on the command line, it prints a bunch of rows from the dbms table.  But it is actually a **list** object that `dplyr` uses for constructing queries and retrieving data from the DBMS.  
 
 The following code illustrates these issues.  The `dplyr::tbl` function creates the connection object that we store in an object named `salesorderheader_table`:
@@ -304,18 +255,13 @@ class(salesorderheader_table)
 It is not just a normal `tbl` of data. We can see that from the structure of `salesorderheader_table`:
 
 ```r
-str(salesorderheader_table)
+str(salesorderheader_table, max.level = 3)
 ```
 
 ```
 ## List of 2
 ##  $ src:List of 2
 ##   ..$ con  :Formal class 'PqConnection' [package "RPostgres"] with 3 slots
-##   .. .. ..@ ptr     :<externalptr> 
-##   .. .. ..@ bigint  : chr "integer64"
-##   .. .. ..@ typnames:'data.frame':	796 obs. of  2 variables:
-##   .. .. .. ..$ oid    : int [1:796] 16 17 18 19 20 21 22 23 24 25 ...
-##   .. .. .. ..$ typname: chr [1:796] "bool" "bytea" "char" "name" ...
 ##   ..$ disco: NULL
 ##   ..- attr(*, "class")= chr [1:4] "src_PqConnection" "src_dbi" "src_sql" "src"
 ##  $ ops:List of 4
@@ -327,70 +273,33 @@ str(salesorderheader_table)
 ##   ..$ dots: list()
 ##   ..$ args:List of 1
 ##   .. ..$ vars:List of 24
-##   .. .. ..$ salesorderid                    : symbol salesorderid
-##   .. .. ..$ revisionnumber                  : symbol revisionnumber
-##   .. .. ..$ orderdate                       : symbol orderdate
-##   .. .. ..$ duedate                         : symbol duedate
-##   .. .. ..$ shipdate                        : symbol shipdate
-##   .. .. ..$ status                          : symbol status
-##   .. .. ..$ onlineorderflag                 : symbol onlineorderflag
-##   .. .. ..$ purchaseordernumber             : symbol purchaseordernumber
-##   .. .. ..$ accountnumber                   : symbol accountnumber
-##   .. .. ..$ customerid                      : symbol customerid
-##   .. .. ..$ salespersonid                   : symbol salespersonid
-##   .. .. ..$ territoryid                     : symbol territoryid
-##   .. .. ..$ billtoaddressid                 : symbol billtoaddressid
-##   .. .. ..$ shiptoaddressid                 : symbol shiptoaddressid
-##   .. .. ..$ shipmethodid                    : symbol shipmethodid
-##   .. .. ..$ creditcardid                    : symbol creditcardid
-##   .. .. ..$ creditcardapprovalcode          : symbol creditcardapprovalcode
-##   .. .. ..$ currencyrateid                  : symbol currencyrateid
-##   .. .. ..$ subtotal                        : symbol subtotal
-##   .. .. ..$ taxamt                          : symbol taxamt
-##   .. .. ..$ freight                         : symbol freight
-##   .. .. ..$ totaldue                        : symbol totaldue
-##   .. .. ..$ comment                         : symbol comment
-##   .. .. ..$ salesorderheader_details_updated: symbol modifieddate
 ##   ..- attr(*, "class")= chr [1:3] "op_select" "op_single" "op"
 ##  - attr(*, "class")= chr [1:5] "tbl_PqConnection" "tbl_dbi" "tbl_sql" "tbl_lazy" ...
 ```
 
-It has only _two_ rows!  The first row contains all the information in the `con` object, which contains information about all the tables and objects in the database:
+It has only _two_ rows!  The first row contains all the information in the `con` object, which contains information about all the tables and objects in the database.  Here is a sample:
 
 ```r
-salesorderheader_table$src$con@typnames$typname[380:437]
+salesorderheader_table$src$con@typnames$typname[387:418]
 ```
 
 ```
-##  [1] "user_mappings"                   "tablefunc_crosstab_2"           
-##  [3] "_tablefunc_crosstab_2"           "tablefunc_crosstab_3"           
-##  [5] "_tablefunc_crosstab_3"           "tablefunc_crosstab_4"           
-##  [7] "_tablefunc_crosstab_4"           "AccountNumber"                  
-##  [9] "_AccountNumber"                  "Flag"                           
-## [11] "_Flag"                           "Name"                           
-## [13] "_Name"                           "NameStyle"                      
-## [15] "_NameStyle"                      "OrderNumber"                    
-## [17] "_OrderNumber"                    "Phone"                          
-## [19] "_Phone"                          "department"                     
-## [21] "_department"                     "pg_toast_16439"                 
-## [23] "d"                               "_d"                             
-## [25] "employee"                        "_employee"                      
-## [27] "pg_toast_16450"                  "e"                              
-## [29] "_e"                              "employeedepartmenthistory"      
-## [31] "_employeedepartmenthistory"      "edh"                            
-## [33] "_edh"                            "employeepayhistory"             
-## [35] "_employeepayhistory"             "pg_toast_16482"                 
-## [37] "eph"                             "_eph"                           
-## [39] "jobcandidate"                    "_jobcandidate"                  
-## [41] "pg_toast_16495"                  "jc"                             
-## [43] "_jc"                             "shift"                          
-## [45] "_shift"                          "pg_toast_16506"                 
-## [47] "s"                               "_s"                             
-## [49] "department_departmentid_seq"     "jobcandidate_jobcandidateid_seq"
-## [51] "shift_shiftid_seq"               "address"                        
-## [53] "_address"                        "businessentityaddress"          
-## [55] "_businessentityaddress"          "countryregion"                  
-## [57] "_countryregion"                  "pg_toast_16533"
+##  [1] "AccountNumber"              "_AccountNumber"            
+##  [3] "Flag"                       "_Flag"                     
+##  [5] "Name"                       "_Name"                     
+##  [7] "NameStyle"                  "_NameStyle"                
+##  [9] "OrderNumber"                "_OrderNumber"              
+## [11] "Phone"                      "_Phone"                    
+## [13] "department"                 "_department"               
+## [15] "pg_toast_16439"             "d"                         
+## [17] "_d"                         "employee"                  
+## [19] "_employee"                  "pg_toast_16450"            
+## [21] "e"                          "_e"                        
+## [23] "employeedepartmenthistory"  "_employeedepartmenthistory"
+## [25] "edh"                        "_edh"                      
+## [27] "employeepayhistory"         "_employeepayhistory"       
+## [29] "pg_toast_16482"             "eph"                       
+## [31] "_eph"                       "jobcandidate"
 ```
 The second row contains a list of the columns in the `salesorderheader` table, among other things:
 
@@ -437,29 +346,3 @@ Stop the `adventureworks` container:
 ```r
 sp_docker_stop("adventureworks")
 ```
-Show that the container still exists even though it's not running
-
-
-```r
-sp_show_all_docker_containers()
-```
-
-```
-## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## b16dcc051093        postgres:11         "docker-entrypoint.s…"   25 seconds ago      Exited (0) Less than a second ago                       adventureworks
-```
-
-Next time, you can just use this command to start the container: 
-
-> `sp_docker_start("adventureworks")`
-
-And once stopped, the container can be removed with:
-
-> `sp_check_that_docker_is_up("adventureworks")`
-
-## Using the `adventureworks` container in the rest of the book
-
-After this point in the book, we assume that Docker is up and that we can always start up our *adventureworks database* with:
-
-> `sp_docker_start("adventureworks")`
-
