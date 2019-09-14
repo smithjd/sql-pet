@@ -4,7 +4,7 @@
 >
 >  * Create and connect to the PostgreSQL `adventureworks` database in Docker
 >  * Keep necessary credentials secret while being available to R when it executes.
->  * Leverage Rstudio features to get a peek at your data,
+>  * Leverage Rstudio features to get an overview of the database
 >  * Set up the environment for subsequent chapters
 
 ## Overview
@@ -184,7 +184,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## b16dcc051093        postgres:11         "docker-entrypoint.s…"   16 seconds ago      Exited (0) Less than a second ago                       adventureworks
+## f3fb82099bcb        postgres:11         "docker-entrypoint.s…"   17 seconds ago      Exited (0) Less than a second ago                       adventureworks
 ```
 
 Next time, you can just use this command to start the container: 
