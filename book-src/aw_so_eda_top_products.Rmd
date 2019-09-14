@@ -2,7 +2,7 @@
 title: "AW SO EDA"
 author: "Sophie Yang"
 date: "July 19, 2019"
-output: md_document
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
@@ -37,8 +37,143 @@ con <- sp_get_postgres_connection(
 )
 ```
 
-```{r connection status,echo=FALSE}
-con
+```{r so_adj_date function}
+#
+# This code block creates a SQL function to correct the sales order dates for sales rep orders.  If the passed order date
+# is the 1'st, the sales order date is adjusted back one day.  No adjustment is made for on-line orders
+#
+dbExecute(con,
+"CREATE OR REPLACE FUNCTION so_adj_date(so_date timestamp, ONLINE_ORDER boolean) RETURNS timestamp AS $$
+     BEGIN
+        IF (ONLINE_ORDER) THEN
+            RETURN (SELECT so_date);
+        ELSE
+            RETURN(SELECT CASE WHEN EXTRACT(DAY FROM so_date) = 1
+                               THEN  so_date - '1 day'::interval
+                               ELSE  so_date
+                          END
+                  );
+        END IF;
+ END; $$
+LANGUAGE PLPGSQL;
+")
+```
+
+```{r Dry Version so_adj_date function}
+SalesRepOrders_Fiscal_Year <- dbGetQuery(con,
+"
+with adj_so_dates as
+       (SELECT date_part('year'::text, soh.orderdate + '6 mons'::interval) AS fiscalyear
+             , soh.orderdate
+             , EXTRACT(YEAR FROM soh.orderdate) yr
+             , EXTRACT(MONTH FROM soh.orderdate) mo
+             , EXTRACT(DAY FROM soh.orderdate) dd
+             , date_part('year'::text,so_adj_date(soh.orderdate, onlineorderflag) + '6 months'::interval) AS fiscalyear_adj
+             , so_adj_date(soh.orderdate, onlineorderflag) orderdate_adj
+             , EXTRACT(YEAR FROM so_adj_date(soh.orderdate, onlineorderflag)) YR_adj
+             , EXTRACT(MONTH FROM so_adj_date(soh.orderdate, onlineorderflag)) mo_adj
+             , EXTRACT(DAY FROM so_adj_date(soh.orderdate, onlineorderflag)) dd_adj
+             , COUNT(*) * 1.0 so_cnt 
+             , ROUND(sum(subtotal),2) so_dollars
+             , min(soh.orderdate) min_dt
+             , max(soh.orderdate) max_dt
+             , EXTRACT(DAY FROM max(soh.orderdate)) - EXTRACT(DAY FROM min(soh.orderdate)) + 1 days
+             , count(distinct soh.orderdate) unique_days
+             , case when soh.onlineorderflag then 'online' else 'sales rep' end sales_type
+          FROM sales.salesorderheader soh
+         where not onlineorderflag
+        group by date_part('year'::text, soh.orderdate + '6 mons'::interval) 
+             , soh.orderdate
+             , EXTRACT(YEAR FROM soh.orderdate)
+             , EXTRACT(MONTH FROM soh.orderdate)
+             , EXTRACT(DAY FROM soh.orderdate)
+             , case when onlineorderflag then 'online' else 'sales rep' end
+             , so_adj_date(soh.orderdate, onlineorderflag)
+             , date_part('year'::text,so_adj_date(soh.orderdate, onlineorderflag) + '6 months'::interval) 
+             , EXTRACT(YEAR FROM so_adj_date(soh.orderdate, onlineorderflag))
+             , EXTRACT(MONTH FROM so_adj_date(soh.orderdate, onlineorderflag))
+             , EXTRACT(DAY FROM so_adj_date(soh.orderdate, onlineorderflag))
+        ) 
+--select * from adj_so_dates
+select to_char(orderdate_adj,'YYMM') yymm
+      ,fiscalyear_adj,YR_adj yr,mo_adj mo
+      ,sales_type
+      ,sum(so_cnt) so_cnt
+      ,sum(so_dollars) so_dollars
+  from adj_so_dates
+group by yymm,fiscalyear_adj,YR_adj ,mo_adj ,sales_type
+ORDER BY case when mo_adj > 6 then mo_adj - 6 else mo_adj + 6 end,fiscalyear_adj
+")
+sp_print_df(SalesRepOrders_Fiscal_Year)
+```
+
+
+```{r fig.width=16}
+SalesRepOrders_Fiscal_Year$mo <- factor(SalesRepOrders_Fiscal_Year$mo,levels=c('7','8','9','10','11','12','1','2','3','4','5','6'))
+
+ggplot(data=SalesRepOrders_Fiscal_Year
+       ,aes(x=mo,y=so_cnt,color=as.factor(fiscalyear_adj),group = as.factor(fiscalyear_adj))) + 
+  geom_line() +
+  geom_point() +
+  geom_text(aes(x=mo,y=so_cnt,label=so_dollars)
+           ,color = 'black'
+           ,vjust = -1.5) +
+  labs(color='Fiscal Year') +
+  xlab("Month") + 
+  ylab("Orders") +
+  theme(plot.title = element_text(hjust = .50)) +  
+  ggtitle(paste("Sales Rep Orders by Month\nUsing Adjusted Order Dates "))
+```
+
+
+```{r}
+product_count <- dbGetQuery(con,"select makeflag,finishedgoodsflag,discontinueddate
+                                       ,max(daystomanufacture) daysToMfg,count(*) 
+                                   from production.product p 
+                                   group by makeflag,finishedgoodsflag,discontinueddate")
+product_count
+```
+
+```{r How many sellable items have never sold}
+x <- dbGetQuery(con,
+"select makeflag,finishedgoodsflag
+       ,max(daystomanufacture) daysToMfg,count(distinct p.productid) prod_cnt,count(distinct sod.productid) sold_prod_cnt
+       ,count(distinct p.productid) -count(distinct sod.productid) never_sold_prod_cnt
+   from production.product p left join sales.salesorderdetail sod on p.productid = sod.productid
+  group by makeflag,finishedgoodsflag
+  order by finishedgoodsflag
+")
+x
+```
+
+```{r What sellable items have never sold}
+x <- dbGetQuery(con,
+"select makeflag,p.productid,name,standardcost,sellstartdate,sellenddate
+       ,sum(coalesce(pi.quantity,0)) pi_qty
+   from production.product p 
+        left join production.productinventory pi on p.productid = pi.productid
+        left join sales.salesorderdetail sod on p.productid = sod.productid
+  where finishedgoodsflag and sod.productid is null
+ group by makeflag,p.productid,name,standardcost,sellstartdate,sellenddate
+")
+x
+```
+
+```{r What sellable items have never sold exist in inventory}
+x <- dbGetQuery(con,
+"select makeflag,p.productid,name,standardcost
+       ,sum(coalesce(pi.quantity,0)) qty
+       ,sum(coalesce(pi.quantity,0)*standardcost) extcost
+       ,pi.modifieddate,sellstartdate,sellenddate
+   from production.product p 
+        left join production.productinventory pi on p.productid = pi.productid
+        left join sales.salesorderdetail sod on p.productid = sod.productid
+  where finishedgoodsflag and sod.productid is null
+    and coalesce(pi.quantity,0) > 0
+ group by makeflag,p.productid,name,standardcost,pi.modifieddate,sellstartdate,sellenddate
+")
+x
+```
 ```
 
 
@@ -46,42 +181,80 @@ con
 ```{r}
 top10_products_by_month <- dbGetQuery(con,
 "
-select yymm
+With product_details as
+(
+        select so_adj_date(soh.orderdate, onlineorderflag) orderdate_adj
+              ,date_part('year'::text,so_adj_date(soh.orderdate, onlineorderflag)+ '6 months'::interval) AS fiscalyear_adj 
+              ,to_char(so_adj_date(soh.orderdate, onlineorderflag),'YYMM') AS YYMM
+              ,sod.productid,name
+              ,orderqty
+              ,unitprice
+              ,orderqty * unitprice ext_price
+              ,onlineorderflag
+          from sales.salesorderheader soh,sales.salesorderdetail sod
+              ,production.product p
+         where soh.salesorderid = sod.salesorderid
+           and sod.productid = p.productid 
+--and sod.productid between 740 and 750
+and to_char(so_adj_date(soh.orderdate, onlineorderflag),'YYMM') = '1105'
+)
+--select * from product_details limit 100 
+/*
+select yymm,productid,sum(orderqty),unitprice,sum(ext_price),onlineorderflag from product_details
+group by yymm,productid,unitprice,onlineorderflag
+order by yymm
+*/
+
+select yymm,productid,name
+      ,sum(orderqty) orderqty
+      ,sum(ext_price) ext_price
+      ,sum(case when onlineorderflag then orderqty else 0 end) online_orders
+      ,sum(case when onlineorderflag then ext_price else 0 end) olo_ext_price
+      ,sum(case when not onlineorderflag then orderqty else 0 end) sales_rep_orders
+      ,sum(case when not onlineorderflag then ext_price else 0 end) sro_ext_price
+  from product_details
+group by yymm,productid,name
+order by yymm
+"
+)
+sp_print_df(top10_products_by_month)
+```
+
+
+```{r}
+top10_products_by_month <- dbGetQuery(con,
+"
+select orderdate,fiscalyear_adj,yymm
       ,productid,name
       ,orderqty
       ,extprice 
-      ,rn
+      --,rn
   from (
-select date_part('year'::text,case when EXTRACT(DAY FROM soh.orderdate) = 1
-                                   THEN  soh.orderdate - '1 day'::interval
-                                   ELSE  soh.orderdate
-                              END+ '6 months'::interval) AS fiscalyear_adj 
-      ,to_char(case when EXTRACT(DAY FROM soh.orderdate) = 1 THEN  soh.orderdate - '1 day'::interval ELSE soh.orderdate END,'YY') AS YYMM
-      ,sod.productid,name
-      ,unitprice
-      ,sum(orderqty) orderqty,sum(unitprice*orderqty) extprice 
-      ,ROW_NUMBER () OVER (PARTITION BY to_char(case when EXTRACT(DAY FROM soh.orderdate) = 1 
-                                                     THEN soh.orderdate - '1 day'::interval 
-                                                     ELSE soh.orderdate 
-                                                END,'YY')
-                           ORDER BY sum(unitprice*orderqty) desc) rn
-  from sales.salesorderheader soh,sales.salesorderdetail sod, production.vproductanddescription p
- where soh.salesorderid = sod.salesorderid
-   and sod.productid = p.productid 
-group by date_part('year'::text,case when EXTRACT(DAY FROM soh.orderdate) = 1
-                                   THEN  soh.orderdate - '1 day'::interval
-                                   ELSE  soh.orderdate
-                              END+ '6 months'::interval)
-        ,to_char(case when EXTRACT(DAY FROM soh.orderdate) = 1 THEN  soh.orderdate - '1 day'::interval ELSE soh.orderdate END,'YY')
-        ,sod.productid,name
-        ,unitprice
-) as src
-where rn <= 10
-order by yymm, extprice desc 
+        select soh.orderdate
+              ,date_part('year'::text,so_adj_date(soh.orderdate, onlineorderflag)+ '6 months'::interval) AS fiscalyear_adj 
+              ,to_char(so_adj_date(soh.orderdate, onlineorderflag),'YYMM') AS YYMM
+              ,sod.productid,name
+              ,sum(orderqty) orderqty,sum(unitprice*orderqty) extprice 
+ --             ,ROW_NUMBER () OVER (PARTITION BY to_char(so_adj_date(soh.orderdate, onlineorderflag),'YYDD'), sod.productid
+  --                                 ORDER BY sum(unitprice*orderqty) desc) rn
+          from sales.salesorderheader soh,sales.salesorderdetail sod
+             , production.product p
+         where soh.salesorderid = sod.salesorderid
+           and sod.productid = p.productid 
+and sod.productid = 749
+        group by soh.orderdate
+                ,date_part('year'::text,so_adj_date(soh.orderdate, onlineorderflag)+ '6 months'::interval)
+                ,to_char(so_adj_date(soh.orderdate, onlineorderflag),'YYMM')
+                ,sod.productid,name
+        ) as src
+ --where rn <= 10
+order by yymm, productid    
 ")
-# View(top10_products_by_month)
 sp_print_df(top10_products_by_month)
 ```
+
+
+
 
 ```{r}
 x <- top10_products_by_month %>% filter(yymm %in% c('1105'))
@@ -104,15 +277,21 @@ ggplot(data=x,aes(x=extprice,y=reorder(productid,extprice)) ) +
 
 
 
-```{r}
+```{r top 10 Sales Rep Products By Month}
 x <- dbGetQuery(con,
 "
+select yymm
+      ,productid,name
+      ,orderqty
+      ,extprice 
+      ,rn
+  from (
 select date_part('year'::text,case when EXTRACT(DAY FROM soh.orderdate) = 1
                                    THEN  soh.orderdate - '1 day'::interval
                                    ELSE  soh.orderdate
                               END+ '6 months'::interval) AS fiscalyear_adj 
       ,to_char(case when EXTRACT(DAY FROM soh.orderdate) = 1 THEN  soh.orderdate - '1 day'::interval ELSE soh.orderdate END,'YYMM') AS YYMM
-      ,productid
+      ,sod.productid,p.name
       ,unitprice
       ,sum(orderqty) orderqty,sum(unitprice*orderqty) extprice 
       ,ROW_NUMBER () OVER (PARTITION BY to_char(case when EXTRACT(DAY FROM soh.orderdate) = 1 
@@ -121,19 +300,185 @@ select date_part('year'::text,case when EXTRACT(DAY FROM soh.orderdate) = 1
                                                 END,'YYMM')
                            ORDER BY sum(unitprice*orderqty) desc) rn
   from sales.salesorderheader soh,sales.salesorderdetail sod
+     , production.product p
+--     , production.vproductanddescription p
  where soh.salesorderid = sod.salesorderid
+   and sod.productid = p.productid
+   and not onlineorderflag
 group by date_part('year'::text,case when EXTRACT(DAY FROM soh.orderdate) = 1
                                    THEN  soh.orderdate - '1 day'::interval
                                    ELSE  soh.orderdate
                               END+ '6 months'::interval)
         ,to_char(case when EXTRACT(DAY FROM soh.orderdate) = 1 THEN  soh.orderdate - '1 day'::interval ELSE soh.orderdate END,'YYMM')
-        ,productid
+        ,sod.productid,p.name
         ,unitprice
-order by yymm,rn
+) as src
+where rn <= 10
+order by yymm, extprice desc 
 ")
-# View(x)
-sp_print_df(x)
 
+
+```
+How many products are sold
+
+```{r}
+dbGetQuery(con,
+"select p.*
+--  from production.productmodel p
+  from production.vproductanddescription p
+
+")
+```
+
+
+```{r}
+prod_sales_onl_sr <- dbGetQuery(con,
+"select p.productid,p.name
+       ,sum(case when onlineorderflag then 1 else 0 end) onl
+       ,sum(case when not onlineorderflag then 1 else 0 end) salesrep
+       ,count(*) cnt
+  from sales.salesorderheader soh,sales.salesorderdetail sod, production.vproductanddescription p
+ where soh.salesorderid = sod.salesorderid
+   and sod.productid = p.productid
+group by p.productid,p.name
+")
+
+```
+
+Which items have only sold on line
+
+```{r}
+prod_sales_onl_sr %>% 
+  filter(onl > 0 & salesrep == 0)
+```
+
+Which items have only been sold via a sales rep
+
+```{r}
+prod_sales_onl_sr %>% 
+  filter(onl == 0 & salesrep > 0)
+```
+
+Which items have been sold both online and via a sales rep
+
+```{r}
+prod_sales_onl_sr %>% 
+  filter(onl > 0 & salesrep > 0)
+```
+
+
+```{r}
+dbGetQuery(con,
+"with x as
+(select soh.salesorderid,soh.subtotal
+       ,sum(sod.orderqty*sod.unitprice) det_subtotal1
+       ,sum(sod.orderqty*(sod.unitprice-(1.0-sod.unitpricediscount))) det_subtotal2
+       ,sum(sod.orderqty*(sod.unitprice-sod.unitpricediscount)) det_subtotal3
+       ,count(*) lines
+  from sales.salesorderheader soh,sales.salesorderdetail sod
+     , production.product p
+--     , production.vproductanddescription p
+ where soh.salesorderid = sod.salesorderid
+   and sod.productid = p.productid 
+--   and sod.salesorderid = 43659
+group by soh.salesorderid,soh.subtotal)
+
+select * from x where subtotal <> det_subtotal2
+")
+```
+
+```{r}
+dbGetQuery(con,
+"with x as
+(select soh.salesorderid,soh.subtotal,sod.orderqty,sod.unitprice,sod.unitpricediscount
+,sod.orderqty*(sod.unitprice) ext_subtot
+,sod.orderqty*(sod.unitprice* (1.0-sod.unitpricediscount)) ext_subtot_Pct
+,sod.orderqty*(sod.unitprice-sod.unitpricediscount) ext_subtot_dsc
+
+,sod.specialofferid
+  from sales.salesorderheader soh,sales.salesorderdetail sod
+     , production.product p
+ where soh.salesorderid = sod.salesorderid
+   and sod.productid = p.productid 
+   and sod.salesorderid = 44098
+)
+select * from x 
+")
+
+```
+
+
+
+
+
+```{r}
+x1 <- dbGetQuery(con,
+"
+select date_part('year'::text,case when EXTRACT(DAY FROM soh.orderdate) = 1
+                                   THEN  soh.orderdate - '1 day'::interval
+                                   ELSE  soh.orderdate
+                              END+ '6 months'::interval) AS fiscalyear_adj 
+      ,to_char(case when EXTRACT(DAY FROM soh.orderdate) = 1 THEN  soh.orderdate - '1 day'::interval ELSE soh.orderdate END,'YYDD') AS YYMM
+      ,sod.productid,name
+      ,unitprice
+      ,sum(orderqty) orderqty,sum(unitprice*orderqty) extprice 
+      ,ROW_NUMBER () OVER (PARTITION BY to_char(case when EXTRACT(DAY FROM soh.orderdate) = 1 
+                                                     THEN soh.orderdate - '1 day'::interval 
+                                                     ELSE soh.orderdate 
+                                                END,'YYDD')
+                           ORDER BY sum(unitprice*orderqty) desc) rn
+  from sales.salesorderheader soh,sales.salesorderdetail sod, production.vproductanddescription p
+ where soh.salesorderid = sod.salesorderid
+   and sod.productid = p.productid 
+group by date_part('year'::text,case when EXTRACT(DAY FROM soh.orderdate) = 1
+                                   THEN  soh.orderdate - '1 day'::interval
+                                   ELSE  soh.orderdate
+                              END+ '6 months'::interval)
+        ,to_char(case when EXTRACT(DAY FROM soh.orderdate) = 1 THEN  soh.orderdate - '1 day'::interval ELSE soh.orderdate END,'YYDD')
+        ,sod.productid,name
+        ,unitprice
+")
+```
+
+
+
+
+
+```{r}
+head(dbGetQuery(con,
+"
+select orderdate,onlineorderflag,so_adj_date(orderdate,onlineorderflag),count(*),sum(subtotal)
+  from sales.salesorderheader 
+ where EXTRACT(DAY FROM orderdate) = 1
+  and not onlineorderflag
+group by orderdate,onlineorderflag,so_adj_date(orderdate,onlineorderflag)
+"))
+```
+
+```{r}
+dbGetQuery(con,
+"select n.nspname as function_schema,
+       p.proname as function_name,
+       l.lanname as function_language,
+       case when l.lanname = 'internal' then p.prosrc
+            else pg_get_functiondef(p.oid)
+            end as definition,
+       pg_get_function_arguments(p.oid) as function_arguments,
+       t.typname as return_type
+from pg_proc p
+left join pg_namespace n on p.pronamespace = n.oid
+left join pg_language l on p.prolang = l.oid
+left join pg_type t on t.oid = p.prorettype 
+where n.nspname not in ('pg_catalog', 'information_schema')
+  and p.proname = 'so_adj_date'
+order by function_schema,
+         function_name;
+")
+```
+```{r drop previous date function attempts}
+# dbGetQuery(con,'drop function public.so_adj_date(so_date date)')
+
+# dbGetQuery(con,'drop function  public.so_adj_date(so_date timestamp without time zone)')
 ```
 
 
