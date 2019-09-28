@@ -71,7 +71,8 @@ annual_sales <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
     soh_count = n()
   ) %>%
   arrange(year) %>%
-  select(year, min_soh_orderdate, max_soh_orderdate, soh_dollars, avg_soh_dollars, soh_count) %>%
+  select(year, min_soh_orderdate, max_soh_orderdate, soh_dollars, 
+         avg_soh_dollars, soh_count) %>%
   collect() 
 
 annual_sales 
@@ -88,7 +89,8 @@ ggplot(data = annual_sales, aes(x = year, y = soh_dollars)) +
   xlab("Year") +
   ylab("Sales $") +
   scale_y_continuous(labels = scales::dollar_format()) + 
-  ggtitle(paste("Adventure Works Sales Dollars by Year\n  ", min_soh_dt, " - ", max_soh_dt))
+  ggtitle(paste("Adventure Works Sales Dollars by Year\n  ", 
+                min_soh_dt, " - ", max_soh_dt))
 ```
 
 From 2011 through 2013, sales are trending up and the growth between years is slowing down.  2014 sales dollars look a little behind 2013.  Are sales dollars for 2014 really down or are sales dollars seasonal?  To see if the sales dollars are seasonal, we will drill in and look at the monthly sales.
@@ -104,7 +106,8 @@ ggplot(data = annual_sales, aes(x = year, y = avg_soh_dollars)) +
   xlab("Year") +
   ylab("Average sale amount") +
   scale_y_continuous(labels = scales::dollar_format()) + 
-  ggtitle(paste("Average Dollars per Sale\n", min_soh_dt, " - ", max_soh_dt))
+  ggtitle(paste("Average Dollars per Sale\n", 
+                min_soh_dt, " - ", max_soh_dt))
 ```
 
 Look at number of orders per year:
@@ -113,7 +116,8 @@ ggplot(data = annual_sales, aes(x = year, y = as.numeric(soh_count))) +
   geom_col() +  
   xlab("Year") +
   ylab("Total number of orders") +
-  ggtitle(paste("Number of Orders per Year\n", min_soh_dt, " - ", max_soh_dt))
+  ggtitle(paste("Number of Orders per Year\n", 
+                min_soh_dt, " - ", max_soh_dt))
 ```
 
 Look at number of orders by the the average sales per order for the four years:
@@ -127,7 +131,8 @@ ggplot(aes(x = avg_soh_dollars, y = as.numeric(soh_count))) +
   ylab("Total number of orders") +
   scale_y_continuous(labels = scales::dollar_format()) + 
   scale_x_continuous(labels = scales::dollar_format()) + 
-  ggtitle(paste("Number of Orders by Average Order Amount\n", min_soh_dt, " - ", max_soh_dt))
+  ggtitle(paste("Number of Orders by Average Order Amount\n", 
+                min_soh_dt, " - ", max_soh_dt))
 ```
 
 From 2012 to 2013 the average dollars per order dropped from more than $8,500 to nearly $3,000 while the total number of order shot up from less than 4,000 to more than 14,000.  **Why are the number of orders increasing, but the average order dollar amount dropping?  **
@@ -196,7 +201,8 @@ normalized_monthly_sales <-  monthly_sales %>%
 
 normalized_monthly_sales <- normalized_monthly_sales %>% 
   select(orderdate, dollars, number_of_orders) %>% 
-  pivot_longer(-orderdate, names_to = "relative_to_2011_average", values_to = "amount" )
+  pivot_longer(-orderdate, names_to = "relative_to_2011_average", 
+               values_to = "amount" )
 
 normalized_monthly_sales %>% 
   ggplot(aes(orderdate, amount, color = relative_to_2011_average)) +
@@ -205,7 +211,9 @@ normalized_monthly_sales %>%
   xlab("Date") +
   ylab("") +
   scale_x_date(date_labels = "%Y-%m", date_breaks = "6 months") +
-  ggtitle(paste("Adventureworks Normalized Monthly Sales\nNumber of Sales Orders and Dollar Totals\n", min_soh_dt, " to ", max_soh_dt))
+  ggtitle(paste("Adventureworks Normalized Monthly Sales\n",
+                "Number of Sales Orders and Dollar Totals\n", 
+                min_soh_dt, " to ", max_soh_dt))
 ```
 
 ### Annual sales by sale type (online sales?)
@@ -218,7 +226,8 @@ annual_sales <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
    collect() %>% 
   mutate(orderdate = date(orderdate), 
          orderdate = round_date(orderdate, "year"),
-         onlineorderflag = if_else(onlineorderflag == FALSE, "Sales Rep", "Online"),
+         onlineorderflag = if_else(onlineorderflag == FALSE, 
+                                   "Sales Rep", "Online"),
          onlineorderflag = as.factor(onlineorderflag)) %>%
   group_by(orderdate, onlineorderflag) %>%
   summarize(
@@ -228,13 +237,15 @@ annual_sales <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
     avg_soh_dollars = round(mean(subtotal, na.rm = TRUE),2),
     soh_count = n()
   ) %>%
-  select(orderdate, onlineorderflag, min_soh_orderdate, max_soh_orderdate, soh_dollars, avg_soh_dollars, soh_count)
+  select(orderdate, onlineorderflag, min_soh_orderdate, 
+         max_soh_orderdate, soh_dollars, avg_soh_dollars, soh_count)
 ```
 
 
 ```{r Calculate time period and annual sales dollars- 4}
 annual_sales %>%
-  mutate(onlineorderflag = if_else(onlineorderflag == FALSE, "Sales Rep", "Online"),
+  mutate(onlineorderflag = if_else(onlineorderflag == FALSE, 
+                                   "Sales Rep", "Online"),
          onlineorderflag = as.factor(onlineorderflag))
 
          # onlineorderflag = as.factor(onlineorderflag, levels(FALSE = "Sales Rep", TRUE = "Online"))
@@ -252,7 +263,8 @@ ggplot(data = annual_sales, aes(x = orderdate, y = soh_dollars)) +
   ylab("Sales $") +
   scale_y_continuous(labels = scales::dollar_format()) + 
   facet_wrap("onlineorderflag") +
-  ggtitle(paste("Adventure Works Sales Dollars by Year\n  ", min_soh_dt, " - ", max_soh_dt))
+  ggtitle(paste("Adventure Works Sales Dollars by Year\n  ", 
+                min_soh_dt, " - ", max_soh_dt))
 ```
 
 From 2011 through 2013, sales are trending up and the growth between years is slowing down.  2014 sales dollars look a little behind 2013.  Are sales dollars for 2014 really down or are sales dollars seasonal?  To see if the sales dollars are seasonal, we will drill in and look at the monthly sales.
@@ -269,7 +281,8 @@ ggplot(data = annual_sales, aes(x = orderdate, y = avg_soh_dollars)) +
   ylab("Average sale amount") +
   facet_wrap("onlineorderflag") +
   scale_y_continuous(labels = scales::dollar_format()) + 
-  ggtitle(paste("Average Dollars per Sale\n", min_soh_dt, " - ", max_soh_dt))
+  ggtitle(paste("Average Dollars per Sale\n", 
+                min_soh_dt, " - ", max_soh_dt))
 ```
 
 Look at number of orders per year:
@@ -279,7 +292,8 @@ ggplot(data = annual_sales, aes(x = orderdate, y = as.numeric(soh_count))) +
   xlab("Year") +
   facet_wrap("onlineorderflag") +
   ylab("Total number of orders") +
-  ggtitle(paste("Number of Orders per Year\n", min_soh_dt, " - ", max_soh_dt))
+  ggtitle(paste("Number of Orders per Year\n", 
+                min_soh_dt, " - ", max_soh_dt))
 ```
 
 Look at number of orders by the the average sales per order for the four years:
@@ -294,7 +308,8 @@ ggplot(aes(x = avg_soh_dollars, y = as.numeric(soh_count))) +
     facet_wrap("onlineorderflag", scales = "free") +
   scale_y_continuous(labels = scales::dollar_format()) + 
   scale_x_continuous(labels = scales::dollar_format()) + 
-  ggtitle(paste("Number of Orders by Average Order Amount\n", min_soh_dt, " - ", max_soh_dt))
+  ggtitle(paste("Number of Orders by Average Order Amount\n", 
+                min_soh_dt, " - ", max_soh_dt))
 ```
 
 From 2012 to 2013 the average dollars per order dropped from more than $8,500 to nearly $3,000 while the total number of order shot up from less than 4,000 to more than 14,000.  **Why are the number of orders increasing, but the average order dollar amount dropping?  **
@@ -325,7 +340,8 @@ ggplot(
 #     position = position_dodge(.5)
 #   ) + # orders => avg so $ amt
   theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
-  ggtitle(paste("Sales by Month by Year\nWith Number of Sales Orders\nAnd Average SO $ Amount\n", min_soh_dt, " - ", max_soh_dt))
+  ggtitle(paste("Sales by Month by Year\nWith Number of Sales Orders\n",
+                "And Average SO $ Amount\n", min_soh_dt, " - ", max_soh_dt))
 ```
 
 A couple of things jump out from the graph.
@@ -353,7 +369,9 @@ ggplot(
   scale_y_continuous(labels = dollar) +
   scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
   theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
-  ggtitle(paste("Sales by Month by Year\nWith Number of Sales Orders\nAnd Average SO $ Amount\n", min_soh_dt, " - ", max_soh_dt))
+  ggtitle(paste("Sales by Month by Year\n",
+                "With Number of Sales Orders\nAnd Average SO $ Amount\n", 
+                min_soh_dt, " - ", max_soh_dt))
 ```
 
 A couple of things jump out from the graph.
@@ -364,8 +382,10 @@ A couple of things jump out from the graph.
 
 ```{r}
 lagged <- monthly_sales %>% 
-  mutate(pct_yearly_soh_dollar_change = soh_dollars / (lag(soh_dollars, 12)) * 100,
-         pct_yearly_soh_count_change = soh_count / (lag(soh_count, 12)) * 100)
+  mutate(pct_yearly_soh_dollar_change = 
+           soh_dollars / (lag(soh_dollars, 12)) * 100,
+         pct_yearly_soh_count_change = 
+           soh_count / (lag(soh_count, 12)) * 100)
 
 ggplot(lagged, aes(x = orderdate, y = pct_yearly_soh_dollar_change)) +
   geom_line()
@@ -387,7 +407,8 @@ monthly_sales <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
    collect() %>% 
   mutate(orderdate = date(orderdate), 
          orderdate = round_date(orderdate, "month"),
-         onlineorderflag = if_else(onlineorderflag == FALSE, "Sales Rep", "Online"),
+         onlineorderflag = if_else(onlineorderflag == FALSE, 
+                                   "Sales Rep", "Online"),
          onlineorderflag = as.factor(onlineorderflag)) %>%
   group_by(onlineorderflag, orderdate) %>%
   summarize(
@@ -397,20 +418,25 @@ monthly_sales <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
     avg_soh_dollars = round(mean(subtotal, na.rm = TRUE),2),
     soh_count = n()
   ) %>%
-  select(orderdate, onlineorderflag, min_soh_orderdate, max_soh_orderdate, soh_dollars, avg_soh_dollars, soh_count)
+  select(orderdate, onlineorderflag, min_soh_orderdate, max_soh_orderdate, 
+         soh_dollars, avg_soh_dollars, soh_count)
 ```
 
 
 ```{r}
 lagged <- monthly_sales %>% 
   group_by(onlineorderflag) %>% 
-  mutate(pct_yearly_soh_dollar_change = soh_dollars / (lag(soh_dollars, 12)) * 100,
-         pct_yearly_soh_count_change = soh_count / (lag(soh_count, 12)) * 100)
+  mutate(pct_yearly_soh_dollar_change = soh_dollars / 
+           (lag(soh_dollars, 12)) * 100,
+         pct_yearly_soh_count_change = soh_count / 
+           (lag(soh_count, 12)) * 100)
 
-ggplot(lagged, aes(x = orderdate, y = pct_yearly_soh_dollar_change, color = onlineorderflag)) +
+ggplot(lagged, aes(x = orderdate, y = pct_yearly_soh_dollar_change, 
+                   color = onlineorderflag)) +
   geom_line() 
 
-ggplot(lagged, aes(x = orderdate, y = pct_yearly_soh_count_change,  color = onlineorderflag)) +
+ggplot(lagged, aes(x = orderdate, y = pct_yearly_soh_count_change,  
+                   color = onlineorderflag)) +
   geom_line()
 
 ```
@@ -550,7 +576,9 @@ ORDER BY mo, yr
 
 sp_print_df(head(monthly_sales_online))
 
-ggplot(data = monthly_sales_online, aes(x = factor(mo), y = sales_dollars, fill = factor(yr))) +
+ggplot(data = monthly_sales_online, 
+       aes(x = factor(mo), 
+           y = sales_dollars, fill = factor(yr))) +
   geom_col(position = "dodge", color = "black") + # unstack columns and outline in black
   xlab("Month") +
   ylab("Sales Dollars") +
@@ -710,7 +738,8 @@ monthly_sales <- tbl(con, in_schema("sales", "salesorderheader")) %>%
     soh_dollars = round(sum(subtotal, na.rm = TRUE), 2)
   ) %>%
   arrange(order_date) %>%
-  select(order_date, min_soh_orderdate, max_soh_orderdate, nbr_of_orders, soh_dollars) %>%
+  select(order_date, min_soh_orderdate, max_soh_orderdate, 
+         nbr_of_orders, soh_dollars) %>%
   collect() %>%
   as.data.frame()
 
@@ -736,5 +765,22 @@ ggplot(data = monthly_sales, aes(x = min_soh_orderdate, y = soh_dollars)) +
 ```{r}
 dbDisconnect(con)
 sp_docker_stop("adventureworks")
+```
+
+```{r}
+monthly_sales <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
+select(orderdate, subtotal, onlineorderflag) %>%
+collect()
+
+
+sales_date <- monthly_sales %>% 
+  mutate(day = day(orderdate)) %>%  
+  count(onlineorderflag, day)
+
+  ggplot(sales_date, aes(x = as.factor(day), y = n)) +
+  geom_col() +
+    facet_grid(~ onlineorderflag)
+
+
 ```
 
