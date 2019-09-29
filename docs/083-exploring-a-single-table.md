@@ -5,7 +5,7 @@
 >   * Dig into a single Adventureworks table containing sales data
 >   * Investigate the data from a business value perspective
 
-This chapter explores one table, illustrating the kind of detective work that's often involved in understand a single table.  We'll investigate the `salesorderheader` table in the `sales` schema in this example.
+The previous chapter has demonstrated some of the automated techniques for showing what's in the table using specific R functions and packages.  Now we demonstrate a step-by-step process of making sense of what's in a table from a business perspective.  We explore one table, illustrating the kind of detective work that's often involved in understand the meaning of the data in a single table.  We'll investigate the `salesorderheader` table in the `sales` schema in this example with an eye on the AdventureWorks busieness' sales.
 
 ## Setup our standard working environment
 
@@ -44,19 +44,17 @@ con <- sp_get_postgres_connection(
 )
 ```
 
-The previous chapter has demonstrated some of the automated techniques for showing what's in the table using specific functions and packages.  Now we demonstrate a step-by-step process of making sense of what's in a table from a business perspective.
+## The overall AdventureWorks sales picture
 
-## Is this company making any money?
+On an annual basis, are sales dollars trending up, down or flat? We begin with total revenue and number of orders at different levels of detail.  
 
-We begin with counts and totals at different levels of detail.  On an annual basis, are sales dollars trending up, down or flat?
-
->> You will find that many columns have the same name in an enterprise database.  For example, in the adventureworks database, many tables have columns named `rowguid` and `modifieddate`.
+>> You will find that many columns have the same name in an enterprise database.  For example, in the adventureworks database, almost all tables have columns named `rowguid` and `modifieddate`.
 >>
->> Renaming columns (both retrieved from the database and calculated) carefully will pay off as our queries become more complex. Using `soh` to tag statistics that are derived from the `salesorderheader` table is one example of careful naming.  A naming convention that helps you figure out the original source of a column is a matter of applying some logic to how things are named; you, future you, and your collaborators will appreciate it although different naming conventions are completely valid.
+>> Naming columns carefully (whether retrieved from the database or calculated)  will pay off as our queries become more complex. Using `soh` to tag statistics that are derived from the `salesorderheader` table is one example of careful naming.  A naming convention that reminds you  of the original source of a column is a matter of applying some logic to how things are named; you, future you, and your collaborators will appreciate it although different naming conventions are completely valid.
 >>
->> In the following example soh appears in different positions in the column name but it is easy to guess that the data comes from `salesorderheader.`
+>> In the following example `soh` appears in different positions in the column name but it is easy to guess at a glance that the data comes from the `salesorderheader` table.
 
-### Annual sales
+## Annual sales
 
 ```r
 annual_sales <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
@@ -65,12 +63,13 @@ annual_sales <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
   summarize(
     min_soh_orderdate = min(orderdate, na.rm = TRUE),
     max_soh_orderdate = max(orderdate, na.rm = TRUE),
-    soh_dollars = round(sum(subtotal, na.rm = TRUE), 2),
-    avg_soh_dollars = round(mean(subtotal, na.rm = TRUE),2),
+    total_soh_dollars = round(sum(subtotal, na.rm = TRUE), 2),
+    avg_total_soh_dollars = round(mean(subtotal, na.rm = TRUE),2),
     soh_count = n()
   ) %>%
   arrange(year) %>%
-  select(year, min_soh_orderdate, max_soh_orderdate, soh_dollars, avg_soh_dollars, soh_count) %>%
+  select(year, min_soh_orderdate, max_soh_orderdate, total_soh_dollars, 
+         avg_total_soh_dollars, soh_count) %>%
   collect() 
 
 annual_sales 
@@ -78,50 +77,38 @@ annual_sales
 
 ```
 ## # A tibble: 4 x 6
-##   year  min_soh_orderdate   max_soh_orderdate   soh_dollars avg_soh_dollars
-##   <chr> <dttm>              <dttm>                    <dbl>           <dbl>
-## 1 2011  2011-05-31 00:00:00 2011-12-31 00:00:00   12641672.           7867.
-## 2 2012  2012-01-01 00:00:00 2012-12-31 00:00:00   33524301.           8563.
-## 3 2013  2013-01-01 00:00:00 2013-12-31 00:00:00   43622479.           3076.
-## 4 2014  2014-01-01 00:00:00 2014-06-30 00:00:00   20057929.           1705.
-## # … with 1 more variable: soh_count <int64>
+##   year  min_soh_orderdate   max_soh_orderdate   total_soh_dolla…
+##   <chr> <dttm>              <dttm>                         <dbl>
+## 1 2011  2011-05-31 00:00:00 2011-12-31 00:00:00        12641672.
+## 2 2012  2012-01-01 00:00:00 2012-12-31 00:00:00        33524301.
+## 3 2013  2013-01-01 00:00:00 2013-12-31 00:00:00        43622479.
+## 4 2014  2014-01-01 00:00:00 2014-06-30 00:00:00        20057929.
+## # … with 2 more variables: avg_total_soh_dollars <dbl>, soh_count <int64>
 ```
 
 Both 2011 and 2014 are shorter time spans than the other two years, making comparison across the years more difficult. 
+
+### Total sales by year
 
 
 ```r
 min_soh_dt <- min(annual_sales$min_soh_orderdate)
 max_soh_dt <- max(annual_sales$max_soh_orderdate)
 
-ggplot(data = annual_sales, aes(x = year, y = soh_dollars)) +
+ggplot(data = annual_sales, aes(x = year, y = total_soh_dollars)) +
   geom_col() +
   xlab("Year") +
   ylab("Sales $") +
   scale_y_continuous(labels = scales::dollar_format()) + 
-  ggtitle(paste("Adventure Works Sales Dollars by Year\n  ", min_soh_dt, " - ", max_soh_dt))
+  ggtitle(paste("Adventure Works Sales Dollars by Year\n  ", 
+                min_soh_dt, " - ", max_soh_dt))
 ```
 
 <img src="083-exploring-a-single-table_files/figure-html/Calculate time period and annual sales dollars - 2-1.png" width="672" />
 
-From 2011 through 2013, sales are trending up and the growth between years is slowing down.  2014 sales dollars look a little behind 2013.  Are sales dollars for 2014 really down or are sales dollars seasonal?  To see if the sales dollars are seasonal, we will drill in and look at the monthly sales.
+From 2011 through 2013, sales are trending up. Are sales dollars for 2014 really down, is it a shorter year (are sales seasonal)?  To see if the sales dollars are seasonal, we will drill in and look at the monthly sales.  But first, let's look at the number of orders and whether there's a pattern in the sales data.  
 
-How are the sales dollars related to the number of orders and what is the average order amount?  In the next plot, the title is centered, the y-axis is re-scaled, and number of orders and average order dollar amount is added to the top of each bar. 
-
-The following 3 plots show how odd the sales data is:
-
-Look at average dollars per sale sale by year:
-
-```r
-ggplot(data = annual_sales, aes(x = year, y = avg_soh_dollars)) +
-  geom_col() +
-  xlab("Year") +
-  ylab("Average sale amount") +
-  scale_y_continuous(labels = scales::dollar_format()) + 
-  ggtitle(paste("Average Dollars per Sale\n", min_soh_dt, " - ", max_soh_dt))
-```
-
-<img src="083-exploring-a-single-table_files/figure-html/average dollars per sale --1.png" width="672" />
+### Total  order volume
 
 Look at number of orders per year:
 
@@ -130,16 +117,37 @@ ggplot(data = annual_sales, aes(x = year, y = as.numeric(soh_count))) +
   geom_col() +  
   xlab("Year") +
   ylab("Total number of orders") +
-  ggtitle(paste("Number of Orders per Year\n", min_soh_dt, " - ", max_soh_dt))
+  ggtitle(paste("Number of Orders per Year\n", 
+                min_soh_dt, " - ", max_soh_dt))
 ```
 
 <img src="083-exploring-a-single-table_files/figure-html/average dollars per sale - v2-1.png" width="672" />
+That's a huge jump in the number of orders between 2012 and 2013.  Given the total annual dollars, we ask whether the size of a sale has changed.
 
-Look at number of orders by the the average sales per order for the four years:
+### Average dollars per sale
+
+
+```r
+ggplot(data = annual_sales, aes(x = year, y = avg_total_soh_dollars)) +
+  geom_col() +
+  xlab("Year") +
+  ylab("Average sale amount") +
+  scale_y_continuous(labels = scales::dollar_format()) + 
+  ggtitle(paste("Average Dollars per Sale\n", 
+                min_soh_dt, " - ", max_soh_dt))
+```
+
+<img src="083-exploring-a-single-table_files/figure-html/average dollars per sale --1.png" width="672" />
+That's a remarkable drop between average sale of more than $7,000 to less than $3,000.
+
+### Order volume and average sale together
+
+Looking at order volume and average sales size together suggests that indeed something big happened between 2012 and 2013.
+
 
 ```r
 annual_sales %>% arrange(min_soh_orderdate) %>% 
-ggplot(aes(x = avg_soh_dollars, y = as.numeric(soh_count))) +
+ggplot(aes(x = avg_total_soh_dollars, y = as.numeric(soh_count))) +
   geom_point() +
   geom_text(aes(label = year, hjust = .5, vjust = 0)) +
   geom_path() +
@@ -147,48 +155,44 @@ ggplot(aes(x = avg_soh_dollars, y = as.numeric(soh_count))) +
   ylab("Total number of orders") +
   scale_y_continuous(labels = scales::dollar_format()) + 
   scale_x_continuous(labels = scales::dollar_format()) + 
-  ggtitle(paste("Number of Orders by Average Order Amount\n", min_soh_dt, " - ", max_soh_dt))
+  ggtitle(paste("Number of Orders by Average Order Amount\n", 
+                min_soh_dt, " - ", max_soh_dt))
 ```
 
 <img src="083-exploring-a-single-table_files/figure-html/number of orders by the the average sales per order 1-1.png" width="672" />
 
-From 2012 to 2013 the average dollars per order dropped from more than $8,500 to nearly $3,000 while the total number of order shot up from less than 4,000 to more than 14,000.  **Why are the number of orders increasing, but the average order dollar amount dropping?  **
+From 2012 to 2013 the average dollars per order dropped from more than $8,500 to nearly $3,000 while the total number of order shot up from less than 4,000 to more than 14,000.  **Why are the number of orders increasing, but the average dollar amount of a sale is dropping?  **
 
 We need to drill down to look at monthly sales, adapting the first query to group by month and year.
 
-### Monthly Sales
+## Monthly Sales
 
 The next code block drills down from annual sales dollars to monthly sales dollars. We adopt a more R-like strategy; rather than `yr` as a character variable, we just download the orderdate.  R handles the coversion from the postgres date-time to an R date-time.  We then convert it to a simple date with a `lubridate` function.
 
+(We're throwing `onlineorderflag` right up front because we'll want it later on.)
 
 ```r
 monthly_sales <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
   select(orderdate, subtotal) %>% 
-  collect() %>% 
+  
+  collect() %>% # From here on we're in R
+  
   mutate(orderdate = date(orderdate), 
-         orderdate = round_date(orderdate, "month")) %>%
-  group_by(orderdate) %>%
+         orderdate = round_date(orderdate, "month")) %>%  # 
+  group_by( orderdate) %>%
   summarize(
     min_soh_orderdate = min(orderdate, na.rm = TRUE),
     max_soh_orderdate = max(orderdate, na.rm = TRUE),
-    soh_dollars = round(sum(subtotal, na.rm = TRUE), 2),
-    avg_soh_dollars = round(mean(subtotal, na.rm = TRUE), 2),
+    total_soh_dollars = round(sum(subtotal, na.rm = TRUE), 2),
+    avg_total_soh_dollars = round(mean(subtotal, na.rm = TRUE), 2),
     soh_count = n()
   ) 
-
-sp_print_df(head(monthly_sales))
 ```
-
-<!--html_preserve--><div id="htmlwidget-1b4ff99564eb6e8884a5" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-1b4ff99564eb6e8884a5">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["2011-06-01","2011-07-01","2011-08-01","2011-09-01","2011-10-01","2011-11-01"],["2011-06-01","2011-07-01","2011-08-01","2011-09-01","2011-10-01","2011-11-01"],["2011-06-01","2011-07-01","2011-08-01","2011-09-01","2011-10-01","2011-11-01"],[702605.02,2044293.44,1665352.81,1372096.01,2877015.5,2317272.69],[6821.41,8849.76,7818.56,6725.96,10939.22,9232.16],[103,231,213,204,263,251]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>orderdate<\/th>\n      <th>min_soh_orderdate<\/th>\n      <th>max_soh_orderdate<\/th>\n      <th>soh_dollars<\/th>\n      <th>avg_soh_dollars<\/th>\n      <th>soh_count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[4,5,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 
 
 ```r
-min_soh_dt <- min(monthly_sales$min_soh_orderdate)
-max_soh_dt <- max(monthly_sales$max_soh_orderdate)
-
-ggplot(data = monthly_sales, aes(x = orderdate, y = soh_dollars)) +
+ggplot(data = monthly_sales, aes(x = orderdate, y = total_soh_dollars)) +
   geom_col() +
   xlab("Month") +
   ylab("Sales Dollars") +
@@ -197,22 +201,36 @@ ggplot(data = monthly_sales, aes(x = orderdate, y = soh_dollars)) +
   ggtitle(paste("Sales by Month\n", min_soh_dt, " - ", max_soh_dt))
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/monthly_sales graphs-1.png" width="672" />
-
-
+<img src="083-exploring-a-single-table_files/figure-html/Total monthly sales bar chart-1.png" width="672" />
 
 
 ```r
-min_soh_dt <- min(monthly_sales$min_soh_orderdate)
-max_soh_dt <- max(monthly_sales$max_soh_orderdate)
+lagged_monthly_sales <- monthly_sales %>% 
+  mutate(monthly_sales_change = (lag(total_soh_dollars, 1)) -
+           total_soh_dollars)
 
+summary(lagged_monthly_sales$monthly_sales_change)
+```
+
+```
+##        Min.     1st Qu.      Median        Mean     3rd Qu.        Max. 
+## -1667368.56 -1082792.47    52892.65    18287.07   816048.02  4399378.90 
+##        NA's 
+##           1
+```
+Although the median and mean monthly change numbers are positive, it's curious that in one fourth of the months the drop between one month and the next is between $1,082,792 is $1,667,368.  Sales are *very* uneven.
+
+### Comparing dollars and orders to a baseline
+
+
+```r
 start_year <- monthly_sales %>% 
   mutate(yr = year(orderdate)) %>% 
   group_by(yr) %>%
-  summarize(soh_dollars = sum(soh_dollars), 
+  summarize(total_soh_dollars = sum(total_soh_dollars), 
             soh_count = sum(soh_count), 
             n_months = n(),
-            avg_dollars = soh_dollars / n_months,
+            avg_dollars = total_soh_dollars / n_months,
             avg_count = soh_count / n_months) %>% 
     filter(yr == min(yr)) 
 
@@ -221,36 +239,42 @@ start_year
 
 ```
 ## # A tibble: 1 x 6
-##      yr soh_dollars soh_count n_months avg_dollars avg_count
-##   <dbl>       <dbl>     <int>    <int>       <dbl>     <dbl>
-## 1  2011   12354206.      1513        7    1764887.      216.
+##      yr total_soh_dollars soh_count n_months avg_dollars avg_count
+##   <dbl>             <dbl>     <int>    <int>       <dbl>     <dbl>
+## 1  2011         12354206.      1513        7    1764887.      216.
 ```
 
 ```r
 normalized_monthly_sales <-  monthly_sales %>% 
-  mutate(dollars = (100 * soh_dollars) / start_year$avg_dollars,
+  mutate(dollars = (100 * total_soh_dollars) / start_year$avg_dollars,
          number_of_orders = (100 * soh_count) / start_year$avg_count) %>% 
   ungroup()
 
 normalized_monthly_sales <- normalized_monthly_sales %>% 
   select(orderdate, dollars, number_of_orders) %>% 
-  pivot_longer(-orderdate, names_to = "relative_to_2011_average", values_to = "amount" )
+  pivot_longer(-orderdate, names_to = "relative_to_2011_average", 
+               values_to = "amount" )
 
 normalized_monthly_sales %>% 
   ggplot(aes(orderdate, amount, color = relative_to_2011_average)) +
   geom_line() +
   geom_hline(yintercept = 100) +
   xlab("Date") +
+  # facet_grid(~onlineorderflag) +
   ylab("") +
   scale_x_date(date_labels = "%Y-%m", date_breaks = "6 months") +
-  ggtitle(paste("Adventureworks Normalized Monthly Sales\nNumber of Sales Orders and Dollar Totals\n", min_soh_dt, " to ", max_soh_dt))
+  ggtitle(paste("Adventureworks Normalized Monthly Sales\n",
+                "Number of Sales Orders and Dollar Totals\n", 
+                min_soh_dt, " to ", max_soh_dt))
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-1-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-2-1.png" width="672" />
 
-### Annual sales by sale type (online sales?)
+## The effect of online sales
 
-We suspect that the business has changed a lot with the adventn of online orders.
+We suspect that the business has changed a lot with the advent of online orders so we go back to the database and add `onlineorderflag` to our query.
+
+### Retrieve `onlineorderflag` from the database
 
 
 ```r
@@ -259,84 +283,40 @@ annual_sales <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
    collect() %>% 
   mutate(orderdate = date(orderdate), 
          orderdate = round_date(orderdate, "year"),
-         onlineorderflag = if_else(onlineorderflag == FALSE, "Sales Rep", "Online"),
+         onlineorderflag = if_else(onlineorderflag == FALSE, 
+                                   "Sales Rep", "Online"),
          onlineorderflag = as.factor(onlineorderflag)) %>%
   group_by(orderdate, onlineorderflag) %>%
   summarize(
     min_soh_orderdate = min(orderdate, na.rm = TRUE),
     max_soh_orderdate = max(orderdate, na.rm = TRUE),
-    soh_dollars = round(sum(subtotal, na.rm = TRUE), 2),
-    avg_soh_dollars = round(mean(subtotal, na.rm = TRUE),2),
+    total_soh_dollars = round(sum(subtotal, na.rm = TRUE), 2),
+    avg_total_soh_dollars = round(mean(subtotal, na.rm = TRUE),2),
     soh_count = n()
   ) %>%
-  select(orderdate, onlineorderflag, min_soh_orderdate, max_soh_orderdate, soh_dollars, avg_soh_dollars, soh_count)
+  select(orderdate, onlineorderflag, min_soh_orderdate, 
+         max_soh_orderdate, total_soh_dollars, avg_total_soh_dollars, soh_count)
 ```
 
+### Annual Sales comparison
+
+Start by looking at total sales.
 
 
 ```r
-annual_sales %>%
-  mutate(onlineorderflag = if_else(onlineorderflag == FALSE, "Sales Rep", "Online"),
-         onlineorderflag = as.factor(onlineorderflag))
-```
-
-```
-## # A tibble: 8 x 7
-## # Groups:   orderdate [4]
-##   orderdate  onlineorderflag min_soh_orderda… max_soh_orderda… soh_dollars
-##   <date>     <fct>           <date>           <date>                 <dbl>
-## 1 2011-01-01 Online          2011-01-01       2011-01-01           502014.
-## 2 2011-01-01 Online          2011-01-01       2011-01-01          2027737.
-## 3 2012-01-01 Online          2012-01-01       2012-01-01          7100344.
-## 4 2012-01-01 Online          2012-01-01       2012-01-01         20255585.
-## 5 2013-01-01 Online          2013-01-01       2013-01-01          6193477.
-## 6 2013-01-01 Online          2013-01-01       2013-01-01         28815142.
-## 7 2014-01-01 Online          2014-01-01       2014-01-01         15562842.
-## 8 2014-01-01 Online          2014-01-01       2014-01-01         29389240.
-## # … with 2 more variables: avg_soh_dollars <dbl>, soh_count <int>
-```
-
-```r
-         # onlineorderflag = as.factor(onlineorderflag, levels(FALSE = "Sales Rep", TRUE = "Online"))
-```
-
-Both 2011 and 2014 are shorter time spans than the other two years, making comparison across the years more difficult. 
-
-
-```r
-min_soh_dt <- min(annual_sales$min_soh_orderdate)
-max_soh_dt <- max(annual_sales$max_soh_orderdate)
-
-ggplot(data = annual_sales, aes(x = orderdate, y = soh_dollars)) +
+ggplot(data = annual_sales, aes(x = orderdate, y = total_soh_dollars)) +
   geom_col() +
   xlab("Year") +
   ylab("Sales $") +
   scale_y_continuous(labels = scales::dollar_format()) + 
   facet_wrap("onlineorderflag") +
-  ggtitle(paste("Adventure Works Sales Dollars by Year\n  ", min_soh_dt, " - ", max_soh_dt))
+  ggtitle(paste("Adventure Works Sales Dollars by Year\n  ", 
+                min_soh_dt, " - ", max_soh_dt))
 ```
 
 <img src="083-exploring-a-single-table_files/figure-html/Calculate time period and annual sales dollars - 5-1.png" width="672" />
 
-From 2011 through 2013, sales are trending up and the growth between years is slowing down.  2014 sales dollars look a little behind 2013.  Are sales dollars for 2014 really down or are sales dollars seasonal?  To see if the sales dollars are seasonal, we will drill in and look at the monthly sales.
-
-How are the sales dollars related to the number of orders and what is the average order amount?  In the next plot, the title is centered, the y-axis is re-scaled, and number of orders and average order dollar amount is added to the top of each bar. 
-
-The following 3 plots show how odd the sales data is:
-
-Look at average dollars per sale sale by year:
-
-```r
-ggplot(data = annual_sales, aes(x = orderdate, y = avg_soh_dollars)) +
-  geom_col() +
-  xlab("Year") +
-  ylab("Average sale amount") +
-  facet_wrap("onlineorderflag") +
-  scale_y_continuous(labels = scales::dollar_format()) + 
-  ggtitle(paste("Average Dollars per Sale\n", min_soh_dt, " - ", max_soh_dt))
-```
-
-<img src="083-exploring-a-single-table_files/figure-html/average dollars per sale 3-1.png" width="672" />
+### Order volume comparison
 
 Look at number of orders per year:
 
@@ -346,16 +326,36 @@ ggplot(data = annual_sales, aes(x = orderdate, y = as.numeric(soh_count))) +
   xlab("Year") +
   facet_wrap("onlineorderflag") +
   ylab("Total number of orders") +
-  ggtitle(paste("Number of Orders per Year\n", min_soh_dt, " - ", max_soh_dt))
+  ggtitle(paste("Number of Orders per Year\n", 
+                min_soh_dt, " - ", max_soh_dt))
 ```
 
 <img src="083-exploring-a-single-table_files/figure-html/average dollars per sale - v4-1.png" width="672" />
+
+### Average sale comparison
+
+
+
+```r
+ggplot(data = annual_sales, aes(x = orderdate, y = avg_total_soh_dollars)) +
+  geom_col() +
+  xlab("Year") +
+  ylab("Average sale amount") +
+  facet_wrap("onlineorderflag") +
+  scale_y_continuous(labels = scales::dollar_format()) + 
+  ggtitle(paste("Average Dollars per Sale\n", 
+                min_soh_dt, " - ", max_soh_dt))
+```
+
+<img src="083-exploring-a-single-table_files/figure-html/average dollars per sale 3-1.png" width="672" />
+
+### Comparing order volume and average sale together
 
 Look at number of orders by the the average sales per order for the four years:
 
 ```r
 annual_sales %>% arrange(orderdate) %>% 
-ggplot(aes(x = avg_soh_dollars, y = as.numeric(soh_count))) +
+ggplot(aes(x = avg_total_soh_dollars, y = as.numeric(soh_count))) +
   geom_point() +
   geom_text(aes(label = orderdate, hjust = .5, vjust = 0)) +
   geom_path() +
@@ -364,54 +364,40 @@ ggplot(aes(x = avg_soh_dollars, y = as.numeric(soh_count))) +
     facet_wrap("onlineorderflag", scales = "free") +
   scale_y_continuous(labels = scales::dollar_format()) + 
   scale_x_continuous(labels = scales::dollar_format()) + 
-  ggtitle(paste("Number of Orders by Average Order Amount\n", min_soh_dt, " - ", max_soh_dt))
+  ggtitle(paste("Number of Orders by Average Order Amount\n", 
+                min_soh_dt, " - ", max_soh_dt))
 ```
 
 <img src="083-exploring-a-single-table_files/figure-html/number of orders by the the average sales per order 2-1.png" width="672" />
 
 From 2012 to 2013 the average dollars per order dropped from more than $8,500 to nearly $3,000 while the total number of order shot up from less than 4,000 to more than 14,000.  **Why are the number of orders increasing, but the average order dollar amount dropping?  **
 
-We need to drill down to look at monthly sales, adapting the first query to group by month and year.
+## Separating sales data by `onlineorderflag`
+
+### Retrieve monthly sales with the `onlineorderflag` 
 
 
 ```r
-# sp_print_df(monthly_sales)
-
-ggplot(
-  data = monthly_sales,
-  aes(
-    x = orderdate, y = soh_dollars
-    # x = orderdate, y = soh_dollars, color = as.factor(yr),
-    # group = as.factor(yr)
-  )
-) + # Removes msg: Each group consists of only one observation. Do you need to adjust the group aesthetic?
-  geom_line() +
-  geom_point() +
-  xlab("Month") +
-  ylab("Sales Dollars") +
-  scale_y_continuous(labels = dollar) +
-#   geom_text(aes(label = paste(soh_count, "
-# ", avg_soh_dollars)),
-#     size = 2.5,
-#     color = "black",
-#     vjust = 1.5,
-#     position = position_dodge(.5)
-#   ) + # orders => avg so $ amt
-  theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
-  ggtitle(paste("Sales by Month by Year\nWith Number of Sales Orders\nAnd Average SO $ Amount\n", min_soh_dt, " - ", max_soh_dt))
+monthly_sales <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
+  select(orderdate, subtotal, onlineorderflag) %>% 
+  
+  collect() %>% # From here on we're in R
+  
+  mutate(orderdate = date(orderdate), 
+         orderdate = round_date(orderdate, "month"),
+          onlineorderflag = if_else(onlineorderflag == FALSE, 
+                                   "Sales Rep", "Online"),) %>%  # 
+  group_by(orderdate, onlineorderflag) %>%
+  summarize(
+    min_soh_orderdate = min(orderdate, na.rm = TRUE),
+    max_soh_orderdate = max(orderdate, na.rm = TRUE),
+    total_soh_dollars = round(sum(subtotal, na.rm = TRUE), 2),
+    avg_total_soh_dollars = round(mean(subtotal, na.rm = TRUE), 2),
+    soh_count = n()
+  ) 
 ```
 
-<div class="figure">
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-2-1.png" alt="SO, SO Dollars, and Average SO Dollars" width="1536" />
-<p class="caption">(\#fig:unnamed-chunk-2)SO, SO Dollars, and Average SO Dollars</p>
-</div>
-
-A couple of things jump out from the graph.
-
-1.  2012 and 2013 have similar sales dollar plots and peak every three months.  This may reflect the closing as many sales orders as possible to make the quarterly sales numbers look good.
-2.  2011 has more variation than 2012 and 2013 and peaks every two months.
-3.  2014 has the most variation and also peaks every two months.  Both the number of sales, 939, and the average sales order size, $52.19 plummet in June 2014.
-
+### Monthly variation compared to a trend line
 
 
 ```r
@@ -420,19 +406,18 @@ A couple of things jump out from the graph.
 ggplot(
   data = monthly_sales,
   aes(
-    x = orderdate, y = soh_dollars)
-  # , color = as.factor(yr),
-  #   group = as.factor(yr)
-  # )
-) +
+    x = orderdate, y = total_soh_dollars)) +
   geom_line() +
   geom_smooth(se = FALSE) +
   xlab("Month") +
   ylab("Sales Dollars") +
+  facet_grid("onlineorderflag") +
   scale_y_continuous(labels = dollar) +
   scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
   theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
-  ggtitle(paste("Sales by Month by Year\nWith Number of Sales Orders\nAnd Average SO $ Amount\n", min_soh_dt, " - ", max_soh_dt))
+  ggtitle(paste("Sales by Month by Year\n",
+                "With Number of Sales Orders\nAnd Average SO $ Amount\n", 
+                min_soh_dt, " - ", max_soh_dt))
 ```
 
 ```
@@ -440,8 +425,8 @@ ggplot(
 ```
 
 <div class="figure">
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-3-1.png" alt="SO, SO Dollars, and Average SO Dollars-b " width="1536" />
-<p class="caption">(\#fig:unnamed-chunk-3)SO, SO Dollars, and Average SO Dollars-b </p>
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-4-1.png" alt="SO, SO Dollars, and Average SO Dollars-b " width="1536" />
+<p class="caption">(\#fig:unnamed-chunk-4)SO, SO Dollars, and Average SO Dollars-b </p>
 </div>
 
 A couple of things jump out from the graph.
@@ -450,13 +435,19 @@ A couple of things jump out from the graph.
 2.  2011 has more variation than 2012 and 2013 and peaks every two months.
 3.  2014 has the most variation and also peaks every two months.  Both the number of sales, 939, and the average sales order size, $52.19 plummet in June 2014.
 
+### Looking at lagged data
+
 
 ```r
 lagged <- monthly_sales %>% 
-  mutate(pct_yearly_soh_dollar_change = soh_dollars / (lag(soh_dollars, 12)) * 100,
-         pct_yearly_soh_count_change = soh_count / (lag(soh_count, 12)) * 100)
+  group_by(onlineorderflag) %>% 
+  mutate(pct_yearly_soh_dollar_change = 
+           total_soh_dollars / (lag(total_soh_dollars, 12)) * 100,
+         pct_yearly_soh_count_change = 
+           soh_count / (lag(soh_count, 12)) * 100)
 
 ggplot(lagged, aes(x = orderdate, y = pct_yearly_soh_dollar_change)) +
+  facet_grid("onlineorderflag") +
   geom_line()
 ```
 
@@ -464,10 +455,11 @@ ggplot(lagged, aes(x = orderdate, y = pct_yearly_soh_dollar_change)) +
 ## Warning: Removed 12 rows containing missing values (geom_path).
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-4-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-5-1.png" width="672" />
 
 ```r
 ggplot(lagged, aes(x = orderdate, y = pct_yearly_soh_count_change)) +
+  facet_grid("onlineorderflag") +
   geom_line()
 ```
 
@@ -475,7 +467,7 @@ ggplot(lagged, aes(x = orderdate, y = pct_yearly_soh_count_change)) +
 ## Warning: Removed 12 rows containing missing values (geom_path).
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-4-2.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-5-2.png" width="672" />
 
 Comparing the number of sales orders year over year by month for 2013 and 2012, one can see that the 2013 sales are between 1.2 and 1.8 times larger than the corresponding month of 2012 from January through June.  In July the 2013 sales are 5 to 6 times the 2012 sales orders.
 
@@ -484,56 +476,7 @@ This trend continues into 2014 before the number of sales plummet to just 1.3 ti
 We suspect that the business has changed a lot with the adventn of online orders.
 
 
-```r
-monthly_sales <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
-   select(orderdate, subtotal, onlineorderflag) %>% 
-   collect() %>% 
-  mutate(orderdate = date(orderdate), 
-         orderdate = round_date(orderdate, "month"),
-         onlineorderflag = if_else(onlineorderflag == FALSE, "Sales Rep", "Online"),
-         onlineorderflag = as.factor(onlineorderflag)) %>%
-  group_by(onlineorderflag, orderdate) %>%
-  summarize(
-    min_soh_orderdate = min(orderdate, na.rm = TRUE),
-    max_soh_orderdate = max(orderdate, na.rm = TRUE),
-    soh_dollars = round(sum(subtotal, na.rm = TRUE), 2),
-    avg_soh_dollars = round(mean(subtotal, na.rm = TRUE),2),
-    soh_count = n()
-  ) %>%
-  select(orderdate, onlineorderflag, min_soh_orderdate, max_soh_orderdate, soh_dollars, avg_soh_dollars, soh_count)
-```
-
-
-
-```r
-lagged <- monthly_sales %>% 
-  group_by(onlineorderflag) %>% 
-  mutate(pct_yearly_soh_dollar_change = soh_dollars / (lag(soh_dollars, 12)) * 100,
-         pct_yearly_soh_count_change = soh_count / (lag(soh_count, 12)) * 100)
-
-ggplot(lagged, aes(x = orderdate, y = pct_yearly_soh_dollar_change, color = onlineorderflag)) +
-  geom_line() 
-```
-
-```
-## Warning: Removed 24 rows containing missing values (geom_path).
-```
-
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-5-1.png" width="672" />
-
-```r
-ggplot(lagged, aes(x = orderdate, y = pct_yearly_soh_count_change,  color = onlineorderflag)) +
-  geom_line()
-```
-
-```
-## Warning: Removed 24 rows containing missing values (geom_path).
-```
-
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-5-2.png" width="672" />
-
-
-## **What happened in July 2013?**
+### Something happend in July 2013
 
 
 ```r
@@ -563,12 +506,10 @@ ORDER BY mo, yr, sales_type
 sp_print_df(head(mo_onl_pct))
 ```
 
-<!--html_preserve--><div id="htmlwidget-8f836166d559454ecd73" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-8f836166d559454ecd73">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[1,1,1,1,1,1],[2012,2012,2013,2013,2014,2014],["2012-01-01","2012-01-01","2013-01-01","2013-01-28","2014-01-01","2014-01-28"],["2012-01-31","2012-01-29","2013-01-31","2013-01-28","2014-01-31","2014-01-29"],[614557.94,3356069.34,523917.38,1563955.08,1551065.56,2738752.39],[3970627.28,3970627.28,2087872.46,2087872.46,4289817.95,4289817.95],[193,143,294,106,1966,175],[336,336,400,400,2141,2141],["online","sales rep","online","sales rep","online","sales rep"],[57.44,42.56,73.5,26.5,91.83,8.17],[15.48,84.52,25.09,74.91,36.16,63.84]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>mo<\/th>\n      <th>yr<\/th>\n      <th>min_soh_orderdate<\/th>\n      <th>max_soh_orderdate<\/th>\n      <th>sales_dollars<\/th>\n      <th>mo_sales<\/th>\n      <th>orders<\/th>\n      <th>mo_orders<\/th>\n      <th>sales_type<\/th>\n      <th>mo_pct<\/th>\n      <th>mo_dlr_pct<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,5,6,7,8,10,11]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-1b4ff99564eb6e8884a5" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1b4ff99564eb6e8884a5">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[1,1,1,1,1,1],[2012,2012,2013,2013,2014,2014],["2012-01-01","2012-01-01","2013-01-01","2013-01-28","2014-01-01","2014-01-28"],["2012-01-31","2012-01-29","2013-01-31","2013-01-28","2014-01-31","2014-01-29"],[614557.94,3356069.34,523917.38,1563955.08,1551065.56,2738752.39],[3970627.28,3970627.28,2087872.46,2087872.46,4289817.95,4289817.95],[193,143,294,106,1966,175],[336,336,400,400,2141,2141],["online","sales rep","online","sales rep","online","sales rep"],[57.44,42.56,73.5,26.5,91.83,8.17],[15.48,84.52,25.09,74.91,36.16,63.84]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>mo<\/th>\n      <th>yr<\/th>\n      <th>min_soh_orderdate<\/th>\n      <th>max_soh_orderdate<\/th>\n      <th>sales_dollars<\/th>\n      <th>mo_sales<\/th>\n      <th>orders<\/th>\n      <th>mo_orders<\/th>\n      <th>sales_type<\/th>\n      <th>mo_pct<\/th>\n      <th>mo_dlr_pct<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,5,6,7,8,10,11]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ```r
-min_soh_dt <- min(monthly_sales$min_soh_orderdate)
-max_soh_dt <- max(monthly_sales$max_soh_orderdate)
 mo_onl_pct$mo <- as.factor(mo_onl_pct$mo)
 mo_onl_pct$yr <- as.factor(mo_onl_pct$yr)
 mo_onl_pct$sales_type <- as.factor(mo_onl_pct$sales_type)
@@ -655,8 +596,8 @@ ORDER BY mo, yr, sales_type
 sp_print_df(head(mo_soh_sreps))
 ```
 
-<!--html_preserve--><div id="htmlwidget-0d7db73d03839427d3b7" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-0d7db73d03839427d3b7">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[1,1,1,2,2,2],[2012,2013,2014,2012,2013,2014],["2012-01-01","2013-01-28","2014-01-28","2012-02-29","2013-02-28","2014-02-28"],["2012-01-29","2013-01-28","2014-01-29","2012-02-29","2013-02-28","2014-02-28"],[50403482.88,40081731.5,66924961.04,15335522.48,71803004.54,11658.08],[50403482.88,40081731.5,66924961.04,15335522.48,71803004.54,11658.08],[1519,1215,2180,494,1449,8],[1519,1215,2180,494,1449,8],["sales rep","sales rep","sales rep","sales rep","sales rep","sales rep"],[100,100,100,100,100,100],[100,100,100,100,100,100]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>mo<\/th>\n      <th>yr<\/th>\n      <th>min_soh_orderdate<\/th>\n      <th>max_soh_orderdate<\/th>\n      <th>sales_dollars<\/th>\n      <th>mo_sales<\/th>\n      <th>orders<\/th>\n      <th>mo_orders<\/th>\n      <th>sales_type<\/th>\n      <th>mo_pct<\/th>\n      <th>mo_dlr_pct<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,5,6,7,8,10,11]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-8f836166d559454ecd73" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-8f836166d559454ecd73">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[1,1,1,2,2,2],[2012,2013,2014,2012,2013,2014],["2012-01-01","2013-01-28","2014-01-28","2012-02-29","2013-02-28","2014-02-28"],["2012-01-29","2013-01-28","2014-01-29","2012-02-29","2013-02-28","2014-02-28"],[50403482.88,40081731.5,66924961.04,15335522.48,71803004.54,11658.08],[50403482.88,40081731.5,66924961.04,15335522.48,71803004.54,11658.08],[1519,1215,2180,494,1449,8],[1519,1215,2180,494,1449,8],["sales rep","sales rep","sales rep","sales rep","sales rep","sales rep"],[100,100,100,100,100,100],[100,100,100,100,100,100]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>mo<\/th>\n      <th>yr<\/th>\n      <th>min_soh_orderdate<\/th>\n      <th>max_soh_orderdate<\/th>\n      <th>sales_dollars<\/th>\n      <th>mo_sales<\/th>\n      <th>orders<\/th>\n      <th>mo_orders<\/th>\n      <th>sales_type<\/th>\n      <th>mo_pct<\/th>\n      <th>mo_dlr_pct<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,5,6,7,8,10,11]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 
 
@@ -682,13 +623,15 @@ sp_print_df(head(monthly_sales_online))
 ```
 
 <div class="figure">
-<!--html_preserve--><div id="htmlwidget-c2e3fede5c798441fdae" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-c2e3fede5c798441fdae">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[1,1,1,1,1,1],[2012,2012,2013,2013,2014,2014],["2012-01-01","2012-01-01","2013-01-01","2013-01-01","2014-01-01","2014-01-01"],["2012-01-31","2012-01-29","2013-01-31","2013-01-29","2014-01-31","2014-01-31"],["No Discount","Reseller","No Discount","Reseller","No Discount","Reseller"],[50814178.74,203862.08,40032506.6,573142.28,69742390.8,1582808.9],[1708,4,1455,54,6867,178]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>mo<\/th>\n      <th>yr<\/th>\n      <th>min_soh_orderdate<\/th>\n      <th>max_soh_orderdate<\/th>\n      <th>category<\/th>\n      <th>sales_dollars<\/th>\n      <th>orders<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-0d7db73d03839427d3b7" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-0d7db73d03839427d3b7">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[1,1,1,1,1,1],[2012,2012,2013,2013,2014,2014],["2012-01-01","2012-01-01","2013-01-01","2013-01-01","2014-01-01","2014-01-01"],["2012-01-31","2012-01-29","2013-01-31","2013-01-29","2014-01-31","2014-01-31"],["No Discount","Reseller","No Discount","Reseller","No Discount","Reseller"],[50814178.74,203862.08,40032506.6,573142.28,69742390.8,1582808.9],[1708,4,1455,54,6867,178]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>mo<\/th>\n      <th>yr<\/th>\n      <th>min_soh_orderdate<\/th>\n      <th>max_soh_orderdate<\/th>\n      <th>category<\/th>\n      <th>sales_dollars<\/th>\n      <th>orders<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 <p class="caption">(\#fig:unnamed-chunk-7)caption goes here</p>
 </div>
 
 ```r
-ggplot(data = monthly_sales_online, aes(x = factor(mo), y = sales_dollars, fill = factor(yr))) +
+ggplot(data = monthly_sales_online, 
+       aes(x = factor(mo), 
+           y = sales_dollars, fill = factor(yr))) +
   geom_col(position = "dodge", color = "black") + # unstack columns and outline in black
   xlab("Month") +
   ylab("Sales Dollars") +
@@ -744,8 +687,8 @@ order by mo,yr
 sp_print_df(head(monthly_sales_onl_pct))
 ```
 
-<!--html_preserve--><div id="htmlwidget-a77ad32f6b82562872f5" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-a77ad32f6b82562872f5">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[1,1,1,1,1,1],[2012,2012,2013,2013,2014,2014],[3774,193,3860,294,6598,4865],[0,193,0,294,0,4865],[1519,0,1215,0,2180,0],[0,100,0,100,0,100],[100,0,100,0,100,0],[false,true,false,true,false,true],[1519,193,1215,294,2180,4865]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>mo<\/th>\n      <th>yr<\/th>\n      <th>sum<\/th>\n      <th>onl<\/th>\n      <th>sp<\/th>\n      <th>onl_pct<\/th>\n      <th>sp_pct<\/th>\n      <th>onlineorderflag<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6,7,9]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-c2e3fede5c798441fdae" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-c2e3fede5c798441fdae">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[1,1,1,1,1,1],[2012,2012,2013,2013,2014,2014],[3774,193,3860,294,6598,4865],[0,193,0,294,0,4865],[1519,0,1215,0,2180,0],[0,100,0,100,0,100],[100,0,100,0,100,0],[false,true,false,true,false,true],[1519,193,1215,294,2180,4865]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>mo<\/th>\n      <th>yr<\/th>\n      <th>sum<\/th>\n      <th>onl<\/th>\n      <th>sp<\/th>\n      <th>onl_pct<\/th>\n      <th>sp_pct<\/th>\n      <th>onlineorderflag<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6,7,9]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 
 ```r
@@ -775,12 +718,10 @@ ORDER BY mo, yr, sales_type
 sp_print_df(head(mo_onl_pct))
 ```
 
-<!--html_preserve--><div id="htmlwidget-e3479f292a01744eb530" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-e3479f292a01744eb530">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[1,1,1,1,1,1],[2012,2012,2013,2013,2014,2014],["2012-01-01","2012-01-01","2013-01-01","2013-01-28","2014-01-01","2014-01-28"],["2012-01-31","2012-01-29","2013-01-31","2013-01-28","2014-01-31","2014-01-29"],[614557.94,3356069.34,523917.38,1563955.08,1551065.56,2738752.39],[3970627.28,3970627.28,2087872.46,2087872.46,4289817.95,4289817.95],[193,143,294,106,1966,175],[336,336,400,400,2141,2141],["online","sales rep","online","sales rep","online","sales rep"],[57.44,42.56,73.5,26.5,91.83,8.17],[15.48,84.52,25.09,74.91,36.16,63.84]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>mo<\/th>\n      <th>yr<\/th>\n      <th>min_soh_orderdate<\/th>\n      <th>max_soh_orderdate<\/th>\n      <th>sales_dollars<\/th>\n      <th>mo_sales<\/th>\n      <th>orders<\/th>\n      <th>mo_orders<\/th>\n      <th>sales_type<\/th>\n      <th>mo_pct<\/th>\n      <th>mo_dlr_pct<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,5,6,7,8,10,11]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-a77ad32f6b82562872f5" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-a77ad32f6b82562872f5">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[1,1,1,1,1,1],[2012,2012,2013,2013,2014,2014],["2012-01-01","2012-01-01","2013-01-01","2013-01-28","2014-01-01","2014-01-28"],["2012-01-31","2012-01-29","2013-01-31","2013-01-28","2014-01-31","2014-01-29"],[614557.94,3356069.34,523917.38,1563955.08,1551065.56,2738752.39],[3970627.28,3970627.28,2087872.46,2087872.46,4289817.95,4289817.95],[193,143,294,106,1966,175],[336,336,400,400,2141,2141],["online","sales rep","online","sales rep","online","sales rep"],[57.44,42.56,73.5,26.5,91.83,8.17],[15.48,84.52,25.09,74.91,36.16,63.84]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>mo<\/th>\n      <th>yr<\/th>\n      <th>min_soh_orderdate<\/th>\n      <th>max_soh_orderdate<\/th>\n      <th>sales_dollars<\/th>\n      <th>mo_sales<\/th>\n      <th>orders<\/th>\n      <th>mo_orders<\/th>\n      <th>sales_type<\/th>\n      <th>mo_pct<\/th>\n      <th>mo_dlr_pct<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,5,6,7,8,10,11]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ```r
-min_soh_dt <- min(monthly_sales$min_soh_orderdate)
-max_soh_dt <- max(monthly_sales$max_soh_orderdate)
 mo_onl_pct$mo <- as.factor(mo_onl_pct$mo)
 mo_onl_pct$yr <- as.factor(mo_onl_pct$yr)
 mo_onl_pct$sales_type <- as.factor(mo_onl_pct$sales_type)
@@ -863,10 +804,11 @@ monthly_sales <- tbl(con, in_schema("sales", "salesorderheader")) %>%
     min_soh_orderdate = min(orderdate),
     max_soh_orderdate = max(orderdate),
     nbr_of_orders = n(),
-    soh_dollars = round(sum(subtotal, na.rm = TRUE), 2)
+    total_soh_dollars = round(sum(subtotal, na.rm = TRUE), 2)
   ) %>%
   arrange(order_date) %>%
-  select(order_date, min_soh_orderdate, max_soh_orderdate, nbr_of_orders, soh_dollars) %>%
+  select(order_date, min_soh_orderdate, max_soh_orderdate, 
+         nbr_of_orders, total_soh_dollars) %>%
   collect() %>%
   as.data.frame()
 ```
@@ -888,13 +830,20 @@ head(monthly_sales)
 ```
 
 ```
-##   order_date min_soh_orderdate max_soh_orderdate nbr_of_orders soh_dollars
-## 1    2011-05        2011-05-31        2011-05-31            43   503805.92
-## 2    2011-06        2011-06-01        2011-06-30           141   458910.82
-## 3    2011-07        2011-07-01        2011-07-31           231  2044600.00
-## 4    2011-08        2011-08-01        2011-08-31           250  2495816.73
-## 5    2011-09        2011-09-01        2011-09-30           157   502073.85
-## 6    2011-10        2011-10-01        2011-10-31           327  4588761.82
+##   order_date min_soh_orderdate max_soh_orderdate nbr_of_orders
+## 1    2011-05        2011-05-31        2011-05-31            43
+## 2    2011-06        2011-06-01        2011-06-30           141
+## 3    2011-07        2011-07-01        2011-07-31           231
+## 4    2011-08        2011-08-01        2011-08-31           250
+## 5    2011-09        2011-09-01        2011-09-30           157
+## 6    2011-10        2011-10-01        2011-10-31           327
+##   total_soh_dollars
+## 1         503805.92
+## 2         458910.82
+## 3        2044600.00
+## 4        2495816.73
+## 5         502073.85
+## 6        4588761.82
 ```
 
 
@@ -902,11 +851,11 @@ head(monthly_sales)
 sp_print_df(head(monthly_sales))
 ```
 
-<!--html_preserve--><div id="htmlwidget-65b7328530dcdf303887" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-65b7328530dcdf303887">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["2011-05","2011-06","2011-07","2011-08","2011-09","2011-10"],["2011-05-31T07:00:00Z","2011-06-01T07:00:00Z","2011-07-01T07:00:00Z","2011-08-01T07:00:00Z","2011-09-01T07:00:00Z","2011-10-01T07:00:00Z"],["2011-05-31T07:00:00Z","2011-06-30T07:00:00Z","2011-07-31T07:00:00Z","2011-08-31T07:00:00Z","2011-09-30T07:00:00Z","2011-10-31T07:00:00Z"],[43,141,231,250,157,327],[503805.92,458910.82,2044600,2495816.73,502073.85,4588761.82]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>order_date<\/th>\n      <th>min_soh_orderdate<\/th>\n      <th>max_soh_orderdate<\/th>\n      <th>nbr_of_orders<\/th>\n      <th>soh_dollars<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[4,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-e3479f292a01744eb530" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-e3479f292a01744eb530">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["2011-05","2011-06","2011-07","2011-08","2011-09","2011-10"],["2011-05-31T07:00:00Z","2011-06-01T07:00:00Z","2011-07-01T07:00:00Z","2011-08-01T07:00:00Z","2011-09-01T07:00:00Z","2011-10-01T07:00:00Z"],["2011-05-31T07:00:00Z","2011-06-30T07:00:00Z","2011-07-31T07:00:00Z","2011-08-31T07:00:00Z","2011-09-30T07:00:00Z","2011-10-31T07:00:00Z"],[43,141,231,250,157,327],[503805.92,458910.82,2044600,2495816.73,502073.85,4588761.82]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>order_date<\/th>\n      <th>min_soh_orderdate<\/th>\n      <th>max_soh_orderdate<\/th>\n      <th>nbr_of_orders<\/th>\n      <th>total_soh_dollars<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[4,5]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ```r
-ggplot(data = monthly_sales, aes(x = min_soh_orderdate, y = soh_dollars)) +
+ggplot(data = monthly_sales, aes(x = min_soh_orderdate, y = total_soh_dollars)) +
   geom_line() + # fill = 'green', color = 'blue') +
   xlab("Year") +
   ylab("Sales") +
