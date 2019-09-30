@@ -2,10 +2,18 @@
 
 > This chapter demonstrates how to:
 >
+>   * Begin the process of investigating a database from a business perspective
 >   * Dig into a single Adventureworks table containing sales data
 >   * Investigate the data from a business value perspective
 
 The previous chapter has demonstrated some of the automated techniques for showing what's in the table using specific R functions and packages.  Now we demonstrate a step-by-step process of making sense of what's in a table from a business perspective.  We explore one table, illustrating the kind of detective work that's often involved in understand the meaning of the data in a single table.  We'll investigate the `salesorderheader` table in the `sales` schema in this example with an eye on the AdventureWorks busieness' sales.
+
+For this kind of detective work we are seeking to undertand the following elements separately and as they interact with each other (and they all do):
+
+  * The data that's stored in the database
+  * The overall structure of the data (how different tables connect with each other and affect how to interpet each other)
+  * How the data is entered at a day-to-day level to represent business activities
+  * How the business itself is changing
 
 ## Setup our standard working environment
 
@@ -48,11 +56,11 @@ con <- sp_get_postgres_connection(
 
 On an annual basis, are sales dollars trending up, down or flat? We begin with total revenue and number of orders at different levels of detail.  
 
->> You will find that many columns have the same name in an enterprise database.  For example, in the adventureworks database, almost all tables have columns named `rowguid` and `modifieddate`.
->>
+> You will find that many columns have the same name in an enterprise database.  For example, in the adventureworks database, almost all tables have columns named `rowguid` and `modifieddate`.
+>
 >> Naming columns carefully (whether retrieved from the database or calculated)  will pay off as our queries become more complex. Using `soh` to tag statistics that are derived from the `salesorderheader` table is one example of careful naming.  A naming convention that reminds you  of the original source of a column is a matter of applying some logic to how things are named; you, future you, and your collaborators will appreciate it although different naming conventions are completely valid.
->>
->> In the following example `soh` appears in different positions in the column name but it is easy to guess at a glance that the data comes from the `salesorderheader` table.
+>
+> In the following example `soh` appears in different positions in the column name but it is easy to guess at a glance that the data comes from the `salesorderheader` table.
 
 ## Annual sales
 
@@ -69,10 +77,23 @@ annual_sales <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
   ) %>%
   arrange(year) %>%
   select(year, min_soh_orderdate, max_soh_orderdate, total_soh_dollars, 
-         avg_total_soh_dollars, soh_count) %>%
+         avg_total_soh_dollars, soh_count) %>% show_query %>% 
   collect() 
+```
 
-annual_sales 
+```
+## <SQL>
+## SELECT "year", "min_soh_orderdate", "max_soh_orderdate", "total_soh_dollars", "avg_total_soh_dollars", "soh_count"
+## FROM (SELECT *
+## FROM (SELECT "year", MIN("orderdate") AS "min_soh_orderdate", MAX("orderdate") AS "max_soh_orderdate", ROUND((SUM("subtotal")) :: numeric, 2) AS "total_soh_dollars", ROUND((AVG("subtotal")) :: numeric, 2) AS "avg_total_soh_dollars", COUNT(*) AS "soh_count"
+## FROM (SELECT "salesorderid", "revisionnumber", "orderdate", "duedate", "shipdate", "status", "onlineorderflag", "purchaseordernumber", "accountnumber", "customerid", "salespersonid", "territoryid", "billtoaddressid", "shiptoaddressid", "shipmethodid", "creditcardid", "creditcardapprovalcode", "currencyrateid", "subtotal", "taxamt", "freight", "totaldue", "comment", "rowguid", "modifieddate", SUBSTR(CAST("orderdate" AS TEXT), 1, 4) AS "year"
+## FROM sales.salesorderheader) "dbplyr_001"
+## GROUP BY "year") "dbplyr_002"
+## ORDER BY "year") "dbplyr_003"
+```
+
+```r
+annual_sales
 ```
 
 ```
@@ -86,7 +107,7 @@ annual_sales
 ## # … with 2 more variables: avg_total_soh_dollars <dbl>, soh_count <int64>
 ```
 
-Both 2011 and 2014 are shorter time spans than the other two years, making comparison across the years more difficult. 
+Both 2011 and 2014 are shorter time spans than the other two years, making comparison across the years more difficult. We might normalize the totals based on the number of months in each year, but we first graph total dollars:
 
 ### Total sales by year
 
@@ -122,6 +143,7 @@ ggplot(data = annual_sales, aes(x = year, y = as.numeric(soh_count))) +
 ```
 
 <img src="083-exploring-a-single-table_files/figure-html/average dollars per sale - v2-1.png" width="672" />
+
 That's a huge jump in the number of orders between 2012 and 2013.  Given the total annual dollars, we ask whether the size of a sale has changed.
 
 ### Average dollars per sale
@@ -138,6 +160,7 @@ ggplot(data = annual_sales, aes(x = year, y = avg_total_soh_dollars)) +
 ```
 
 <img src="083-exploring-a-single-table_files/figure-html/average dollars per sale --1.png" width="672" />
+
 That's a remarkable drop between average sale of more than $7,000 to less than $3,000.
 
 ### Order volume and average sale together
@@ -169,7 +192,6 @@ We need to drill down to look at monthly sales, adapting the first query to grou
 
 The next code block drills down from annual sales dollars to monthly sales dollars. We adopt a more R-like strategy; rather than `yr` as a character variable, we just download the orderdate.  R handles the coversion from the postgres date-time to an R date-time.  We then convert it to a simple date with a `lubridate` function.
 
-(We're throwing `onlineorderflag` right up front because we'll want it later on.)
 
 ```r
 monthly_sales <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
@@ -189,6 +211,7 @@ monthly_sales <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
   ) 
 ```
 
+Plotting the monthly sales data:
 
 
 ```r
@@ -202,6 +225,8 @@ ggplot(data = monthly_sales, aes(x = orderdate, y = total_soh_dollars)) +
 ```
 
 <img src="083-exploring-a-single-table_files/figure-html/Total monthly sales bar chart-1.png" width="672" />
+
+The total sales are trending up but suspiciously uneven.  Looking at lags might confirm just how much month-to-month difference there is:
 
 
 ```r
@@ -218,9 +243,11 @@ summary(lagged_monthly_sales$monthly_sales_change)
 ##        NA's 
 ##           1
 ```
-Although the median and mean monthly change numbers are positive, it's curious that in one fourth of the months the drop between one month and the next is between $1,082,792 is $1,667,368.  Sales are *very* uneven.
+Although median monthly sales rise by about $53 thousand, it's curious that in one fourth of the months the drop between one month and the next is between fifteen hundred and a million dollars. AventureWorks sales are *very* uneven.
 
 ### Comparing dollars and orders to a baseline
+
+To look at dollars and the number of orders together, we compare the monthly data to the yearly average for 2011.
 
 
 ```r
@@ -232,8 +259,13 @@ start_year <- monthly_sales %>%
             n_months = n(),
             avg_dollars = total_soh_dollars / n_months,
             avg_count = soh_count / n_months) %>% 
-    filter(yr == min(yr)) 
+    filter(yr == min(yr))
+```
 
+Use 2011 as a baseline:
+
+
+```r
 start_year
 ```
 
@@ -243,6 +275,9 @@ start_year
 ##   <dbl>             <dbl>     <int>    <int>       <dbl>     <dbl>
 ## 1  2011         12354206.      1513        7    1764887.      216.
 ```
+
+Re express monthly data in terms of the baseline and plot:
+
 
 ```r
 normalized_monthly_sales <-  monthly_sales %>% 
@@ -260,7 +295,6 @@ normalized_monthly_sales %>%
   geom_line() +
   geom_hline(yintercept = 100) +
   xlab("Date") +
-  # facet_grid(~onlineorderflag) +
   ylab("") +
   scale_x_date(date_labels = "%Y-%m", date_breaks = "6 months") +
   ggtitle(paste("Adventureworks Normalized Monthly Sales\n",
@@ -268,13 +302,13 @@ normalized_monthly_sales %>%
                 min_soh_dt, " to ", max_soh_dt))
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-2-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-4-1.png" width="672" />
 
 ## The effect of online sales
 
-We suspect that the business has changed a lot with the advent of online orders so we go back to the database and add `onlineorderflag` to our query.
+We have suspected that the business has changed a lot with the advent of online orders so we check the impact of `onlineorderflag` on annual sales.
 
-### Retrieve `onlineorderflag` from the database
+### Add `onlineorderflag` to our query
 
 
 ```r
@@ -315,6 +349,8 @@ ggplot(data = annual_sales, aes(x = orderdate, y = total_soh_dollars)) +
 ```
 
 <img src="083-exploring-a-single-table_files/figure-html/Calculate time period and annual sales dollars - 5-1.png" width="672" />
+
+Indeed the total sales are quite different as are the number of orders and the average order size!
 
 ### Order volume comparison
 
@@ -372,9 +408,13 @@ ggplot(aes(x = avg_total_soh_dollars, y = as.numeric(soh_count))) +
 
 From 2012 to 2013 the average dollars per order dropped from more than $8,500 to nearly $3,000 while the total number of order shot up from less than 4,000 to more than 14,000.  **Why are the number of orders increasing, but the average order dollar amount dropping?  **
 
-## Separating sales data by `onlineorderflag`
+## Impact of order type on monthly sales
+
+Digging into the difference between *Sales Rep* and *Online* sales. 
 
 ### Retrieve monthly sales with the `onlineorderflag` 
+
+This query puts the `collect` statement earlier than the previous queries.
 
 
 ```r
@@ -399,6 +439,8 @@ monthly_sales <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
 
 ### Monthly variation compared to a trend line
 
+Jumping to the trend line comparison, we see that the variation 
+
 
 ```r
 # sp_print_df(monthly_sales)
@@ -411,7 +453,7 @@ ggplot(
   geom_smooth(se = FALSE) +
   xlab("Month") +
   ylab("Sales Dollars") +
-  facet_grid("onlineorderflag") +
+  facet_wrap("onlineorderflag") +
   scale_y_continuous(labels = dollar) +
   scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
   theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
@@ -425,8 +467,8 @@ ggplot(
 ```
 
 <div class="figure">
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-4-1.png" alt="SO, SO Dollars, and Average SO Dollars-b " width="1536" />
-<p class="caption">(\#fig:unnamed-chunk-4)SO, SO Dollars, and Average SO Dollars-b </p>
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-6-1.png" alt="SO, SO Dollars, and Average SO Dollars-b " width="1536" />
+<p class="caption">(\#fig:unnamed-chunk-6)SO, SO Dollars, and Average SO Dollars-b </p>
 </div>
 
 A couple of things jump out from the graph.
@@ -447,7 +489,7 @@ lagged <- monthly_sales %>%
            soh_count / (lag(soh_count, 12)) * 100)
 
 ggplot(lagged, aes(x = orderdate, y = pct_yearly_soh_dollar_change)) +
-  facet_grid("onlineorderflag") +
+  facet_wrap("onlineorderflag") +
   geom_line()
 ```
 
@@ -455,11 +497,11 @@ ggplot(lagged, aes(x = orderdate, y = pct_yearly_soh_dollar_change)) +
 ## Warning: Removed 12 rows containing missing values (geom_path).
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-5-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-7-1.png" width="672" />
 
 ```r
 ggplot(lagged, aes(x = orderdate, y = pct_yearly_soh_count_change)) +
-  facet_grid("onlineorderflag") +
+  facet_wrap("onlineorderflag") +
   geom_line()
 ```
 
@@ -467,7 +509,7 @@ ggplot(lagged, aes(x = orderdate, y = pct_yearly_soh_count_change)) +
 ## Warning: Removed 12 rows containing missing values (geom_path).
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-5-2.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-7-2.png" width="672" />
 
 Comparing the number of sales orders year over year by month for 2013 and 2012, one can see that the 2013 sales are between 1.2 and 1.8 times larger than the corresponding month of 2012 from January through June.  In July the 2013 sales are 5 to 6 times the 2012 sales orders.
 
@@ -625,7 +667,7 @@ sp_print_df(head(monthly_sales_online))
 <div class="figure">
 <!--html_preserve--><div id="htmlwidget-0d7db73d03839427d3b7" style="width:100%;height:auto;" class="datatables html-widget"></div>
 <script type="application/json" data-for="htmlwidget-0d7db73d03839427d3b7">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[1,1,1,1,1,1],[2012,2012,2013,2013,2014,2014],["2012-01-01","2012-01-01","2013-01-01","2013-01-01","2014-01-01","2014-01-01"],["2012-01-31","2012-01-29","2013-01-31","2013-01-29","2014-01-31","2014-01-31"],["No Discount","Reseller","No Discount","Reseller","No Discount","Reseller"],[50814178.74,203862.08,40032506.6,573142.28,69742390.8,1582808.9],[1708,4,1455,54,6867,178]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>mo<\/th>\n      <th>yr<\/th>\n      <th>min_soh_orderdate<\/th>\n      <th>max_soh_orderdate<\/th>\n      <th>category<\/th>\n      <th>sales_dollars<\/th>\n      <th>orders<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
-<p class="caption">(\#fig:unnamed-chunk-7)caption goes here</p>
+<p class="caption">(\#fig:unnamed-chunk-9)caption goes here</p>
 </div>
 
 ```r
@@ -647,8 +689,8 @@ ggplot(data = monthly_sales_online,
 ```
 
 <div class="figure">
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-7-2.png" alt="caption goes here" width="1536" />
-<p class="caption">(\#fig:unnamed-chunk-7)caption goes here</p>
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-9-2.png" alt="caption goes here" width="1536" />
+<p class="caption">(\#fig:unnamed-chunk-9)caption goes here</p>
 </div>
 
 
@@ -772,7 +814,7 @@ ggplot(data = NULL) +
   ))
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-9-2.png" width="1536" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-11-2.png" width="1536" />
 
 
 This plot is much easier to read, but the sales orders => avg_s
@@ -865,7 +907,7 @@ ggplot(data = monthly_sales, aes(x = min_soh_orderdate, y = total_soh_dollars)) 
   theme(axis.text.x = element_text(angle = 60, hjust = 1))
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-11-2.png" width="1440" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-13-2.png" width="1440" />
 
 
 ## Close and clean up

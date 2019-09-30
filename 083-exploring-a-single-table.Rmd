@@ -58,11 +58,11 @@ con <- sp_get_postgres_connection(
 
 On an annual basis, are sales dollars trending up, down or flat? We begin with total revenue and number of orders at different levels of detail.  
 
->> You will find that many columns have the same name in an enterprise database.  For example, in the adventureworks database, almost all tables have columns named `rowguid` and `modifieddate`.
->>
->> Naming columns carefully (whether retrieved from the database or calculated)  will pay off as our queries become more complex. Using `soh` to tag statistics that are derived from the `salesorderheader` table is one example of careful naming.  A naming convention that reminds you  of the original source of a column is a matter of applying some logic to how things are named; you, future you, and your collaborators will appreciate it although different naming conventions are completely valid.
->>
->> In the following example `soh` appears in different positions in the column name but it is easy to guess at a glance that the data comes from the `salesorderheader` table.
+> You will find that many columns have the same name in an enterprise database.  For example, in the adventureworks database, almost all tables have columns named `rowguid` and `modifieddate`.
+>
+> Naming columns carefully (whether retrieved from the database or calculated)  will pay off as our queries become more complex. Using `soh` to tag statistics that are derived from the `salesorderheader` table is one example of careful naming.  A naming convention that reminds you  of the original source of a column is a matter of applying some logic to how things are named; you, future you, and your collaborators will appreciate it although different naming conventions are completely valid.
+>
+> In the following example `soh` appears in different positions in the column name but it is easy to guess at a glance that the data comes from the `salesorderheader` table.
 
 ## Annual sales
 ```{r Calculate time period and annual sales dollars- 1}
@@ -78,13 +78,13 @@ annual_sales <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
   ) %>%
   arrange(year) %>%
   select(year, min_soh_orderdate, max_soh_orderdate, total_soh_dollars, 
-         avg_total_soh_dollars, soh_count) %>%
+         avg_total_soh_dollars, soh_count) %>% show_query %>% 
   collect() 
 
 annual_sales
 ```
 
-Both 2011 and 2014 are shorter time spans than the other two years, making comparison across the years more difficult. 
+Both 2011 and 2014 are shorter time spans than the other two years, making comparison across the years more difficult. We might normalize the totals based on the number of months in each year, but we first graph total dollars:
 
 ### Total sales by year
 
@@ -114,6 +114,7 @@ ggplot(data = annual_sales, aes(x = year, y = as.numeric(soh_count))) +
   ggtitle(paste("Number of Orders per Year\n", 
                 min_soh_dt, " - ", max_soh_dt))
 ```
+
 That's a huge jump in the number of orders between 2012 and 2013.  Given the total annual dollars, we ask whether the size of a sale has changed.
 
 ### Average dollars per sale
@@ -127,6 +128,7 @@ ggplot(data = annual_sales, aes(x = year, y = avg_total_soh_dollars)) +
   ggtitle(paste("Average Dollars per Sale\n", 
                 min_soh_dt, " - ", max_soh_dt))
 ```
+
 That's a remarkable drop between average sale of more than $7,000 to less than $3,000.
 
 ### Order volume and average sale together
@@ -155,7 +157,6 @@ We need to drill down to look at monthly sales, adapting the first query to grou
 
 The next code block drills down from annual sales dollars to monthly sales dollars. We adopt a more R-like strategy; rather than `yr` as a character variable, we just download the orderdate.  R handles the coversion from the postgres date-time to an R date-time.  We then convert it to a simple date with a `lubridate` function.
 
-(We're throwing `onlineorderflag` right up front because we'll want it later on.)
 ```{r monthly sales retrieval}
 monthly_sales <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
   select(orderdate, subtotal) %>% 
@@ -175,6 +176,7 @@ monthly_sales <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
 
 ```
 
+Plotting the monthly sales data:
 
 ```{r Total monthly sales bar chart}
 
@@ -187,6 +189,8 @@ ggplot(data = monthly_sales, aes(x = orderdate, y = total_soh_dollars)) +
   ggtitle(paste("Sales by Month\n", min_soh_dt, " - ", max_soh_dt))
 ```
 
+The total sales are trending up but suspiciously uneven.  Looking at lags might confirm just how much month-to-month difference there is:
+
 ```{r}
 lagged_monthly_sales <- monthly_sales %>% 
   mutate(monthly_sales_change = (lag(total_soh_dollars, 1)) -
@@ -194,12 +198,13 @@ lagged_monthly_sales <- monthly_sales %>%
 
 summary(lagged_monthly_sales$monthly_sales_change)
 ```
-Although the median and mean monthly change numbers are positive, it's curious that in one fourth of the months the drop between one month and the next is between $1,082,792 is $1,667,368.  Sales are *very* uneven.
+Although median monthly sales rise by about $53 thousand, it's curious that in one fourth of the months the drop between one month and the next is between fifteen hundred and a million dollars. AventureWorks sales are *very* uneven.
 
 ### Comparing dollars and orders to a baseline
 
-```{r}
+To look at dollars and the number of orders together, we compare the monthly data to the yearly average for 2011.
 
+```{r}
 start_year <- monthly_sales %>% 
   mutate(yr = year(orderdate)) %>% 
   group_by(yr) %>%
@@ -208,10 +213,18 @@ start_year <- monthly_sales %>%
             n_months = n(),
             avg_dollars = total_soh_dollars / n_months,
             avg_count = soh_count / n_months) %>% 
-    filter(yr == min(yr)) 
+    filter(yr == min(yr))
+```
 
+Use 2011 as a baseline:
+
+```{r}
 start_year
+```
 
+Re express monthly data in terms of the baseline and plot:
+
+```{r}
 normalized_monthly_sales <-  monthly_sales %>% 
   mutate(dollars = (100 * total_soh_dollars) / start_year$avg_dollars,
          number_of_orders = (100 * soh_count) / start_year$avg_count) %>% 
@@ -227,7 +240,6 @@ normalized_monthly_sales %>%
   geom_line() +
   geom_hline(yintercept = 100) +
   xlab("Date") +
-  # facet_grid(~onlineorderflag) +
   ylab("") +
   scale_x_date(date_labels = "%Y-%m", date_breaks = "6 months") +
   ggtitle(paste("Adventureworks Normalized Monthly Sales\n",
@@ -237,9 +249,9 @@ normalized_monthly_sales %>%
 
 ## The effect of online sales
 
-We suspect that the business has changed a lot with the advent of online orders so we go back to the database and add `onlineorderflag` to our query.
+We have suspected that the business has changed a lot with the advent of online orders so we check the impact of `onlineorderflag` on annual sales.
 
-### Retrieve `onlineorderflag` from the database
+### Add `onlineorderflag` to our query
 
 ```{r Calculate time period and annual sales dollars- 3}
 annual_sales <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
@@ -278,6 +290,8 @@ ggplot(data = annual_sales, aes(x = orderdate, y = total_soh_dollars)) +
   ggtitle(paste("Adventure Works Sales Dollars by Year\n  ", 
                 min_soh_dt, " - ", max_soh_dt))
 ```
+
+Indeed the total sales are quite different as are the number of orders and the average order size!
 
 ### Order volume comparison
 
@@ -326,9 +340,13 @@ ggplot(aes(x = avg_total_soh_dollars, y = as.numeric(soh_count))) +
 
 From 2012 to 2013 the average dollars per order dropped from more than $8,500 to nearly $3,000 while the total number of order shot up from less than 4,000 to more than 14,000.  **Why are the number of orders increasing, but the average order dollar amount dropping?  **
 
-## Separating sales data by `onlineorderflag`
+## Impact of order type on monthly sales
+
+Digging into the difference between *Sales Rep* and *Online* sales. 
 
 ### Retrieve monthly sales with the `onlineorderflag` 
+
+This query puts the `collect` statement earlier than the previous queries.
 
 ```{r}
 monthly_sales <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
@@ -352,6 +370,8 @@ monthly_sales <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
 
 ### Monthly variation compared to a trend line
 
+Jumping to the trend line comparison, we see that the variation 
+
 ```{r fig.cap='SO, SO Dollars, and Average SO Dollars-b ',fig.width=16}
 
 # sp_print_df(monthly_sales)
@@ -364,7 +384,7 @@ ggplot(
   geom_smooth(se = FALSE) +
   xlab("Month") +
   ylab("Sales Dollars") +
-  facet_grid("onlineorderflag") +
+  facet_wrap("onlineorderflag") +
   scale_y_continuous(labels = dollar) +
   scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
   theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
@@ -390,11 +410,11 @@ lagged <- monthly_sales %>%
            soh_count / (lag(soh_count, 12)) * 100)
 
 ggplot(lagged, aes(x = orderdate, y = pct_yearly_soh_dollar_change)) +
-  facet_grid("onlineorderflag") +
+  facet_wrap("onlineorderflag") +
   geom_line()
 
 ggplot(lagged, aes(x = orderdate, y = pct_yearly_soh_count_change)) +
-  facet_grid("onlineorderflag") +
+  facet_wrap("onlineorderflag") +
   geom_line()
 
 ```
