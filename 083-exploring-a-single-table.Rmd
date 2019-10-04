@@ -407,16 +407,32 @@ lagged <- monthly_sales %>%
   mutate(pct_yearly_soh_dollar_change = 
            total_soh_dollars / (lag(total_soh_dollars, 12)) * 100,
          pct_yearly_soh_count_change = 
-           soh_count / (lag(soh_count, 12)) * 100)
-
+           soh_count / (lag(soh_count, 12)) * 100) 
+ 
 ggplot(lagged, aes(x = orderdate, y = pct_yearly_soh_dollar_change)) +
+  scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
   facet_wrap("onlineorderflag") +
-  geom_line()
+  geom_line() +
+  xlab("Month") +
+  ylab("% Dollar Change") +
+  theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
+  ggtitle(paste("Year on Year Total Monthly Sales Change \n",
+                "Comparing Online to Sales Rep Sales\n",
+                min_soh_dt, " - ", max_soh_dt))
+```
 
+
+```{r}
 ggplot(lagged, aes(x = orderdate, y = pct_yearly_soh_count_change)) +
+  scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
   facet_wrap("onlineorderflag") +
-  geom_line()
-
+  geom_line() +
+  xlab("Month") +
+  ylab("% Dollar Change") +
+  theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
+  ggtitle(paste("Year on Year Monthly Order Volume Change \n",
+                "Comparing Online to Sales Rep Sales\n",
+                min_soh_dt, " - ", max_soh_dt))
 ```
 
 Comparing the number of sales orders year over year by month for 2013 and 2012, one can see that the 2013 sales are between 1.2 and 1.8 times larger than the corresponding month of 2012 from January through June.  In July the 2013 sales are 5 to 6 times the 2012 sales orders.
@@ -425,8 +441,44 @@ This trend continues into 2014 before the number of sales plummet to just 1.3 ti
 
 We suspect that the business has changed a lot with the adventn of online orders.
 
+## Variation over time
 
-### Something happend in July 2013
+```{r}
+sales_by_day_of_month <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
+  mutate(day_of_month = day(orderdate)) %>%
+  group_by(onlineorderflag, day_of_month) %>%
+  summarize(
+    total_soh_dollars = round(sum(subtotal, na.rm = TRUE), 2),
+    avg_total_soh_dollars = round(mean(subtotal, na.rm = TRUE),2),
+    soh_count = n()
+  ) %>%
+  arrange(day_of_month) %>%
+  collect() %>% 
+  ungroup() %>% 
+  mutate(onlineorderflag = if_else(onlineorderflag == FALSE, 
+                                   "Sales Rep", "Online"),
+         onlineorderflag = as.factor(onlineorderflag),
+         day_of_month = as.numeric(day_of_month),
+         soh_count = as.numeric(soh_count)
+         )
+
+```
+
+```{r}
+ggplot(sales_by_day_of_month, aes(x = day_of_month, y = soh_count)) +
+  # scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
+  facet_wrap("onlineorderflag") +
+  geom_col() +
+  xlab("Day of the Month") +
+  ylab("Recorded Sales") +
+  theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
+  ggtitle(paste("Transactions Entered by Day of Month \n",
+                "Comparing Online to Sales Rep Sales\n",
+                min_soh_dt, " - ", max_soh_dt))
+```
+
+
+## These queries and graphs may be redundant
 
 ```{r On-Line Orders Versus Sales Rep Orders,fig.width=16}
 mo_onl_pct <- dbGetQuery(
@@ -575,6 +627,11 @@ ggplot(data = monthly_sales_online,
   ggtitle(paste("Sales by Month\nBy Online Flag"))
 ```
 
+### Effect of Late Entries on Sales Rep data
+
+Correcting for the first of the month makes the Sales Rep data look more **normal**.
+
+That could be the end of this chapter.
 
 ```{r}
 monthly_sales_onl_pct <- dbGetQuery(
@@ -700,43 +757,6 @@ The gather command throws the following warning:
 
     attributes are not identical across measure variables;
     they will be dropped
-
-
-## Adventure Works Monthly Sales
-
-Instead of annual sales, we drill into the monthly sales to see how sales dollars are generated over the year.  We also clean up our next graph a bit.  The y-axis is re-scaled to make it easier to read and center the title.
-
-
-```{r}
-monthly_sales <- tbl(con, in_schema("sales", "salesorderheader")) %>%
-  mutate(order_date = substr(as.character(orderdate), 1, 7)) %>%
-  group_by(order_date) %>%
-  summarize(
-    min_soh_orderdate = min(orderdate),
-    max_soh_orderdate = max(orderdate),
-    nbr_of_orders = n(),
-    total_soh_dollars = round(sum(subtotal, na.rm = TRUE), 2)
-  ) %>%
-  arrange(order_date) %>%
-  select(order_date, min_soh_orderdate, max_soh_orderdate, 
-         nbr_of_orders, total_soh_dollars) %>%
-  collect() %>%
-  as.data.frame()
-
-head(monthly_sales)
-```
-
-```{r fig.width=15}
-sp_print_df(head(monthly_sales))
-ggplot(data = monthly_sales, aes(x = min_soh_orderdate, y = total_soh_dollars)) +
-  geom_line() + # fill = 'green', color = 'blue') +
-  xlab("Year") +
-  ylab("Sales") +
-  scale_y_continuous(labels = dollar) + # see scales library
-  ggtitle(paste("Sales by Month\n", min_soh_dt, " - ", max_soh_dt)) +
-  theme(plot.title = element_text(hjust = 0.5)) + # Center ggplot title
-  theme(axis.text.x = element_text(angle = 60, hjust = 1))
-```
 
 
 ## Close and clean up
