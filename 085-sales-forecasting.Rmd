@@ -82,6 +82,20 @@ First, let's look at orders for online and sales representative sales:
 
 ```{r}
 monthly_tsibble %>% autoplot(orders)
+Disconnect from the database:
+```{r }
+dbDisconnect(con)
+
+```
+
+## Cleaning up
+
+Always have R disconnect from the database when you're done.
+```{r}
+
+dbDisconnect(con)
+
+```
 
 ```
 
@@ -103,3 +117,10 @@ monthly_tsibble %>% autoplot(total_revenue / orders)
 ```
 
 For the sales representatives, there's still a month-to-month variation but the revenue per order appears to be bounded both below and above. However, the online revenue per order is decreasing. Note that this decline appears to be in steps between May and June each year; that could mean it's an artifact of the database creation process and not a "natural" phenomenon.
+
+## Disconnect from the database and stop Docker
+
+```{r}
+dbDisconnect(con)
+sp_docker_stop("adventureworks")
+```

@@ -324,15 +324,17 @@ ggplot(data = annual_sales, aes(x = orderdate, y = avg_total_soh_dollars)) +
 
 Look at number of orders by the the average sales per order for the four years:
 ```{r number of orders by the the average sales per order 2}
-annual_sales %>% arrange(orderdate) %>% 
-ggplot(aes(x = avg_total_soh_dollars, y = as.numeric(soh_count))) +
+sales <- annual_sales %>% arrange(orderdate) %>% 
+  ungroup() %>% 
+  mutate(year = year(orderdate), year = as.factor(year)) 
+  
+sales %>% ggplot(aes(x = avg_total_soh_dollars, y = as.numeric(soh_count), color = year)) +
   geom_point() +
-  geom_text(aes(label = orderdate, hjust = .5, vjust = 0)) +
+  geom_text(aes(label = year, hjust = .5, vjust = 0)) +
   geom_path() +
   xlab("Average dollars per order") +
   ylab("Total number of orders") +
-    facet_wrap("onlineorderflag", scales = "free") +
-  scale_y_continuous(labels = scales::dollar_format()) + 
+  facet_wrap("onlineorderflag", scales = "free") +     
   scale_x_continuous(labels = scales::dollar_format()) + 
   ggtitle(paste("Number of Orders by Average Order Amount\n", 
                 min_soh_dt, " - ", max_soh_dt))
@@ -398,6 +400,86 @@ A couple of things jump out from the graph.
 1.  2012 and 2013 have similar sales dollar plots and peak every three months.  This may reflect the closing as many sales orders as possible to make the quarterly sales numbers look good.
 2.  2011 has more variation than 2012 and 2013 and peaks every two months.
 3.  2014 has the most variation and also peaks every two months.  Both the number of sales, 939, and the average sales order size, $52.19 plummet in June 2014.
+
+## define the one-off function
+
+```{r}
+monthly_sales <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
+  select(orderdate, subtotal, onlineorderflag) %>% 
+  # mutate(day = day(as.Date(orderdate))) %>% 
+  mutate(
+    orderdate = as.Date(orderdate),
+    day = day(orderdate)) %>% 
+     show_query() %>% 
+  collect() %>% # From here on we're in R
+    mutate(   
+    correct_orderdate = case_when(
+      # onlineorderflag == FALSE & day == 1 ~ NA,
+      onlineorderflag == FALSE & day == 1L ~ orderdate - 1 ,
+      TRUE ~ orderdate
+  ))
+
+```
+
+Here's the magic:
+
+```{r}
+dbExecute(con,
+"CREATE OR REPLACE FUNCTION so_adj_date(so_date timestamp, ONLINE_ORDER boolean) RETURNS timestamp AS $$
+     BEGIN
+        IF (ONLINE_ORDER) THEN
+            RETURN (SELECT so_date);
+        ELSE
+            RETURN(SELECT CASE WHEN EXTRACT(DAY FROM so_date) = 1
+                               THEN  so_date - '1 day'::interval
+                               ELSE  so_date
+                          END
+                  );
+        END IF;
+ END; $$
+LANGUAGE PLPGSQL;
+")
+```
+
+this is a big lesson!  Using the magic.
+
+```{r}
+monthly_sales <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
+  select(orderdate, subtotal, onlineorderflag) %>% 
+  # mutate(day = day(as.Date(orderdate))) %>% 
+  mutate(
+    # orderdate = as.Date(orderdate),
+    adjusted_date = so_adj_date(orderdate, onlineorderflag),
+    day = day(orderdate)) %>% 
+     show_query() %>% 
+  # collect() %>% # From here on we're in R
+    collect()
+
+```
+
+```{r}
+monthly_sales %>% filter(day==1 & onlineorderflag == FALSE) %>% 
+  count(orderdate) %>% as.data.frame()
+```
+
+```{r}
+mutate(orderdate = date(orderdate), 
+         orderdate = round_date(orderdate, "month"),
+          onlineorderflag = if_else(onlineorderflag == FALSE, 
+                                   "Sales Rep", "Online"),) %>%  # 
+  group_by(orderdate, onlineorderflag) %>%
+  summarize(
+    min_soh_orderdate = min(orderdate, na.rm = TRUE),
+    max_soh_orderdate = max(orderdate, na.rm = TRUE),
+    total_soh_dollars = round(sum(subtotal, na.rm = TRUE), 2),
+    avg_total_soh_dollars = round(mean(subtotal, na.rm = TRUE), 2),
+    soh_count = n()
+  ) 
+
+```
+
+
+
 
 ### Looking at lagged data
 
@@ -759,11 +841,9 @@ The gather command throws the following warning:
     they will be dropped
 
 
-## Close and clean up
-
+## Disconnect from the database and stop Docker
 
 ```{r}
 dbDisconnect(con)
 sp_docker_stop("adventureworks")
 ```
-

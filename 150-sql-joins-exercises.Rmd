@@ -318,3 +318,9 @@ In the next code block, change the function parameter to different table names t
 #dbListTables(con)
 sp_tbl_pk_fk_sql('customer')
 ```
+## Disconnect from the database and stop Docker
+
+```{r}
+dbDisconnect(con)
+sp_docker_stop("adventureworks")
+```
