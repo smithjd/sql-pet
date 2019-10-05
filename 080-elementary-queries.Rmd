@@ -283,12 +283,11 @@ skimr::skim_to_wide(salesorderheader_tibble) #skimr doesn't like certain kinds o
 
 ```
 
-### Close the connection and shut down adventureworks
+## Disconnect from the database and stop Docker
 
-Where you place the `collect` function matters.
 ```{r}
-DBI::dbDisconnect(con)
-sqlpetr::sp_docker_stop("adventureworks")
+dbDisconnect(con)
+sp_docker_stop("adventureworks")
 ```
 
 ## Additional reading

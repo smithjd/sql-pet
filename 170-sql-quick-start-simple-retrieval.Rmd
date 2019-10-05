@@ -509,3 +509,14 @@ The SEQ column shows the standard order of SQL execution.  One take away for thi
       
   6.  SQL for View table dependencies.
   7.  Add cartesian join exercise.
+
+```
+## Cleaning up
+
+Always have R disconnect from the database when you're done and stop the Adventureworks Container
+```{r}
+
+dbDisconnect(con)
+sp_docker_stop("adventureworks")
+
+```

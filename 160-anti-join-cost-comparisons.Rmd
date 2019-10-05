@@ -173,3 +173,12 @@ select c.customer_id,count(*) lojs
 print(glue("sql_aj1 loj-null costs=", sql_aj1[1, 1]))
 print(glue("sql_aj3 not exist costs=", sql_aj3[1, 1]))
 ```
+## Cleaning up
+
+Always have R disconnect from the database when you're done and stop the Adventureworks Container
+```{r}
+
+dbDisconnect(con)
+sp_docker_stop("adventureworks")
+
+```

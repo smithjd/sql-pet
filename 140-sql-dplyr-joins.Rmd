@@ -928,11 +928,11 @@ The explanation below is from [here](https://stackoverflow.com/questions/4748577
 
 In `by = c("col1" = "col2")`,  `=` is _not_ the equality operator, but an assignment operator (the equality operator in R is `==`). The expression inside `c(...)` creates a _named character vector_ (name: col1 value: col2) that `dplyr` uses for the join. Nowhere do you define the kind of comparison that is made during the join. The comparison is hard-coded in `dplyr`. I don't think `dplyr` supports non-equi joins (yet).
 
-```{r}
-# disconnect from the db
- dbDisconnect(con)
+## Disconnect from the database and stop Docker
 
- sp_docker_stop("sql-pet")
+```{r}
+dbDisconnect(con)
+sp_docker_stop("adventureworks")
 ```
 
 ```{r}

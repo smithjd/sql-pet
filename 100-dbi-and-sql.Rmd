@@ -261,7 +261,10 @@ GQ <- dbGetQuery(
 But because `Q` hasn't been executed, we can add to it.  This behavior is the basis for a useful debugging and development process where queries are built up incrementally.
 
 Where you place the `collect` function matters.
+
+## Disconnect from the database and stop Docker
+
 ```{r}
-DBI::dbDisconnect(con)
-sqlpetr::sp_docker_stop("sql-pet")
+dbDisconnect(con)
+sp_docker_stop("sql-pet")
 ```
