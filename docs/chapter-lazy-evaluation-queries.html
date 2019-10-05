@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 9 Lazy Evaluation and Lazy Queries | r-database-docker.utf8</title>
+  <title>Chapter 9 Lazy Evaluation and Lazy Queries | Exploring Enterprise Databases with R: A Tidyverse Approach</title>
   <meta name="description" content="An introduction to Docker and PostgreSQL for R users to simulate use cases behind corporate walls." />
-  <meta name="generator" content="bookdown 0.12 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.14 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 9 Lazy Evaluation and Lazy Queries | r-database-docker.utf8" />
+  <meta property="og:title" content="Chapter 9 Lazy Evaluation and Lazy Queries | Exploring Enterprise Databases with R: A Tidyverse Approach" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 9 Lazy Evaluation and Lazy Queries | r-database-docker.utf8" />
+  <meta name="twitter:title" content="Chapter 9 Lazy Evaluation and Lazy Queries | Exploring Enterprise Databases with R: A Tidyverse Approach" />
   
   <meta name="twitter:description" content="An introduction to Docker and PostgreSQL for R users to simulate use cases behind corporate walls." />
   
@@ -24,15 +24,15 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, and Ian Frantz" />
 
 
-<meta name="date" content="2019-09-13" />
+<meta name="date" content="2019-10-04" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="chapter-exploring-a-single-table.html">
-<link rel="next" href="chapter-lazy-evaluation-and-timing.html">
+<link rel="prev" href="chapter-exploring-a-single-table.html"/>
+<link rel="next" href="chapter-lazy-evaluation-and-timing.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -40,6 +40,7 @@
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
 
 
 
@@ -47,36 +48,39 @@
 
 
 
-<script src="libs/htmlwidgets-1.3/htmlwidgets.js"></script>
+
+
+<script src="libs/htmlwidgets-1.5/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.8/datatables.js"></script>
-<link href="libs/dt-core-1.10.16/css/jquery.dataTables.min.css" rel="stylesheet" />
-<link href="libs/dt-core-1.10.16/css/jquery.dataTables.extra.css" rel="stylesheet" />
-<script src="libs/dt-core-1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="libs/datatables-binding-0.9/datatables.js"></script>
+<link href="libs/dt-core-1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.10.19/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.10.19/js/jquery.dataTables.min.js"></script>
 <link href="libs/crosstalk-1.0.0/css/crosstalk.css" rel="stylesheet" />
 <script src="libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -85,9 +89,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -193,34 +197,57 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.4" data-path="chapter-connect-to-db-with-r-code.html"><a href="chapter-connect-to-db-with-r-code.html#anatomy-of-a-dplyr-connection-object"><i class="fa fa-check"></i><b>6.4</b> Anatomy of a <code>dplyr</code> connection object</a></li>
 <li class="chapter" data-level="6.5" data-path="chapter-connect-to-db-with-r-code.html"><a href="chapter-connect-to-db-with-r-code.html#cleaning-up-1"><i class="fa fa-check"></i><b>6.5</b> Cleaning up</a></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="chapter-DBMS-queries-intro.html"><a href="chapter-DBMS-queries-intro.html"><i class="fa fa-check"></i><b>7</b> Introduction to DBMS queries</a><ul>
-<li class="chapter" data-level="7.1" data-path="chapter-DBMS-queries-intro.html"><a href="chapter-DBMS-queries-intro.html#setup"><i class="fa fa-check"></i><b>7.1</b> Setup</a></li>
-<li class="chapter" data-level="7.2" data-path="chapter-DBMS-queries-intro.html"><a href="chapter-DBMS-queries-intro.html#methods-for-downloading-a-single-table"><i class="fa fa-check"></i><b>7.2</b> Methods for downloading a single table</a><ul>
-<li class="chapter" data-level="7.2.1" data-path="chapter-DBMS-queries-intro.html"><a href="chapter-DBMS-queries-intro.html#read-the-entire-table"><i class="fa fa-check"></i><b>7.2.1</b> Read the entire table</a></li>
-<li class="chapter" data-level="7.2.2" data-path="chapter-DBMS-queries-intro.html"><a href="chapter-DBMS-queries-intro.html#create-a-pointer-to-a-table-that-can-be-reused"><i class="fa fa-check"></i><b>7.2.2</b> Create a pointer to a table that can be reused</a></li>
-<li class="chapter" data-level="7.2.3" data-path="chapter-DBMS-queries-intro.html"><a href="chapter-DBMS-queries-intro.html#controlling-the-number-of-rows-returned-with-collect"><i class="fa fa-check"></i><b>7.2.3</b> Controlling the number of rows returned with <code>collect()</code></a></li>
-<li class="chapter" data-level="7.2.4" data-path="chapter-DBMS-queries-intro.html"><a href="chapter-DBMS-queries-intro.html#retrieving-random-rows-from-the-dbms"><i class="fa fa-check"></i><b>7.2.4</b> Retrieving random rows from the DBMS</a></li>
-<li class="chapter" data-level="7.2.5" data-path="chapter-DBMS-queries-intro.html"><a href="chapter-DBMS-queries-intro.html#sub-setting-variables"><i class="fa fa-check"></i><b>7.2.5</b> Sub-setting variables</a></li>
+<li class="chapter" data-level="7" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html"><i class="fa fa-check"></i><b>7</b> Introduction to DBMS queries</a><ul>
+<li class="chapter" data-level="7.1" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#setup"><i class="fa fa-check"></i><b>7.1</b> Setup</a></li>
+<li class="chapter" data-level="7.2" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#methods-for-downloading-a-single-table"><i class="fa fa-check"></i><b>7.2</b> Methods for downloading a single table</a><ul>
+<li class="chapter" data-level="7.2.1" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#read-the-entire-table"><i class="fa fa-check"></i><b>7.2.1</b> Read the entire table</a></li>
+<li class="chapter" data-level="7.2.2" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#create-a-pointer-to-a-table-that-can-be-reused"><i class="fa fa-check"></i><b>7.2.2</b> Create a pointer to a table that can be reused</a></li>
+<li class="chapter" data-level="7.2.3" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#controlling-the-number-of-rows-returned-with-collect"><i class="fa fa-check"></i><b>7.2.3</b> Controlling the number of rows returned with <code>collect()</code></a></li>
+<li class="chapter" data-level="7.2.4" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#retrieving-random-rows-from-the-dbms"><i class="fa fa-check"></i><b>7.2.4</b> Retrieving random rows from the DBMS</a></li>
+<li class="chapter" data-level="7.2.5" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#sub-setting-variables"><i class="fa fa-check"></i><b>7.2.5</b> Sub-setting variables</a></li>
 </ul></li>
-<li class="chapter" data-level="7.3" data-path="chapter-DBMS-queries-intro.html"><a href="chapter-DBMS-queries-intro.html#translating-dplyr-code-to-sql-queries"><i class="fa fa-check"></i><b>7.3</b> Translating <code>dplyr</code> code to <code>SQL</code> queries</a></li>
-<li class="chapter" data-level="7.4" data-path="chapter-DBMS-queries-intro.html"><a href="chapter-DBMS-queries-intro.html#mixing-dplyr-and-sql"><i class="fa fa-check"></i><b>7.4</b> Mixing dplyr and SQL</a></li>
-<li class="chapter" data-level="7.5" data-path="chapter-DBMS-queries-intro.html"><a href="chapter-DBMS-queries-intro.html#examining-a-single-table-with-r"><i class="fa fa-check"></i><b>7.5</b> Examining a single table with R</a><ul>
-<li class="chapter" data-level="7.5.1" data-path="chapter-DBMS-queries-intro.html"><a href="chapter-DBMS-queries-intro.html#str---a-base-package-workhorse"><i class="fa fa-check"></i><b>7.5.1</b> <code>str</code> - a base package workhorse</a></li>
-<li class="chapter" data-level="7.5.2" data-path="chapter-DBMS-queries-intro.html"><a href="chapter-DBMS-queries-intro.html#always-look-at-your-data-with-head-view-or-kable"><i class="fa fa-check"></i><b>7.5.2</b> Always <strong>look</strong> at your data with <code>head</code>, <code>View</code>, or <code>kable</code></a></li>
-<li class="chapter" data-level="7.5.3" data-path="chapter-DBMS-queries-intro.html"><a href="chapter-DBMS-queries-intro.html#the-summary-function-in-base"><i class="fa fa-check"></i><b>7.5.3</b> The <code>summary</code> function in <code>base</code></a></li>
-<li class="chapter" data-level="7.5.4" data-path="chapter-DBMS-queries-intro.html"><a href="chapter-DBMS-queries-intro.html#the-glimpse-function-in-the-tibble-package"><i class="fa fa-check"></i><b>7.5.4</b> The <code>glimpse</code> function in the <code>tibble</code> package</a></li>
-<li class="chapter" data-level="7.5.5" data-path="chapter-DBMS-queries-intro.html"><a href="chapter-DBMS-queries-intro.html#the-skim-function-in-the-skimr-package"><i class="fa fa-check"></i><b>7.5.5</b> The <code>skim</code> function in the <code>skimr</code> package</a></li>
-<li class="chapter" data-level="7.5.6" data-path="chapter-DBMS-queries-intro.html"><a href="chapter-DBMS-queries-intro.html#close-the-connection-and-shut-down-adventureworks"><i class="fa fa-check"></i><b>7.5.6</b> Close the connection and shut down adventureworks</a></li>
+<li class="chapter" data-level="7.3" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#translating-dplyr-code-to-sql-queries"><i class="fa fa-check"></i><b>7.3</b> Translating <code>dplyr</code> code to <code>SQL</code> queries</a></li>
+<li class="chapter" data-level="7.4" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#mixing-dplyr-and-sql"><i class="fa fa-check"></i><b>7.4</b> Mixing dplyr and SQL</a></li>
+<li class="chapter" data-level="7.5" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#examining-a-single-table-with-r"><i class="fa fa-check"></i><b>7.5</b> Examining a single table with R</a><ul>
+<li class="chapter" data-level="7.5.1" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#str---a-base-package-workhorse"><i class="fa fa-check"></i><b>7.5.1</b> <code>str</code> - a base package workhorse</a></li>
+<li class="chapter" data-level="7.5.2" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#always-look-at-your-data-with-head-view-or-kable"><i class="fa fa-check"></i><b>7.5.2</b> Always <strong>look</strong> at your data with <code>head</code>, <code>View</code>, or <code>kable</code></a></li>
+<li class="chapter" data-level="7.5.3" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#the-summary-function-in-base"><i class="fa fa-check"></i><b>7.5.3</b> The <code>summary</code> function in <code>base</code></a></li>
+<li class="chapter" data-level="7.5.4" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#the-glimpse-function-in-the-tibble-package"><i class="fa fa-check"></i><b>7.5.4</b> The <code>glimpse</code> function in the <code>tibble</code> package</a></li>
+<li class="chapter" data-level="7.5.5" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#the-skim-function-in-the-skimr-package"><i class="fa fa-check"></i><b>7.5.5</b> The <code>skim</code> function in the <code>skimr</code> package</a></li>
+<li class="chapter" data-level="7.5.6" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#close-the-connection-and-shut-down-adventureworks"><i class="fa fa-check"></i><b>7.5.6</b> Close the connection and shut down adventureworks</a></li>
 </ul></li>
-<li class="chapter" data-level="7.6" data-path="chapter-DBMS-queries-intro.html"><a href="chapter-DBMS-queries-intro.html#additional-reading"><i class="fa fa-check"></i><b>7.6</b> Additional reading</a></li>
+<li class="chapter" data-level="7.6" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#additional-reading"><i class="fa fa-check"></i><b>7.6</b> Additional reading</a></li>
 </ul></li>
-<li class="chapter" data-level="8" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html"><i class="fa fa-check"></i><b>8</b> Exploring a Single Table (with a Business Perspective)</a><ul>
+<li class="chapter" data-level="8" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html"><i class="fa fa-check"></i><b>8</b> Exploring a Single Table (asking Business Questions)</a><ul>
 <li class="chapter" data-level="8.1" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#setup-our-standard-working-environment"><i class="fa fa-check"></i><b>8.1</b> Setup our standard working environment</a></li>
-<li class="chapter" data-level="8.2" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#sales-orders-and-dollars"><i class="fa fa-check"></i><b>8.2</b> Sales Orders and Dollars</a></li>
-<li class="chapter" data-level="8.3" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#adventure-works-monthly-sales"><i class="fa fa-check"></i><b>8.3</b> Adventure Works Monthly Sales</a></li>
-<li class="chapter" data-level="8.4" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#monthly-sales-rep-performance-analysis"><i class="fa fa-check"></i><b>8.4</b> Monthly Sales Rep Performance Analysis</a></li>
-<li class="chapter" data-level="8.5" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#adventure-works-monthly-sales-1"><i class="fa fa-check"></i><b>8.5</b> Adventure Works Monthly Sales</a></li>
-<li class="chapter" data-level="8.6" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#close-and-clean-up"><i class="fa fa-check"></i><b>8.6</b> Close and clean up</a></li>
+<li class="chapter" data-level="8.2" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#the-overall-adventureworks-sales-picture"><i class="fa fa-check"></i><b>8.2</b> The overall AdventureWorks sales picture</a></li>
+<li class="chapter" data-level="8.3" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#annual-sales"><i class="fa fa-check"></i><b>8.3</b> Annual sales</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#total-sales-by-year"><i class="fa fa-check"></i><b>8.3.1</b> Total sales by year</a></li>
+<li class="chapter" data-level="8.3.2" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#total-order-volume"><i class="fa fa-check"></i><b>8.3.2</b> Total order volume</a></li>
+<li class="chapter" data-level="8.3.3" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#average-dollars-per-sale"><i class="fa fa-check"></i><b>8.3.3</b> Average dollars per sale</a></li>
+<li class="chapter" data-level="8.3.4" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#order-volume-and-average-sale-together"><i class="fa fa-check"></i><b>8.3.4</b> Order volume and average sale together</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#monthly-sales"><i class="fa fa-check"></i><b>8.4</b> Monthly Sales</a><ul>
+<li class="chapter" data-level="8.4.1" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#comparing-dollars-and-orders-to-a-baseline"><i class="fa fa-check"></i><b>8.4.1</b> Comparing dollars and orders to a baseline</a></li>
+</ul></li>
+<li class="chapter" data-level="8.5" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#the-effect-of-online-sales"><i class="fa fa-check"></i><b>8.5</b> The effect of online sales</a><ul>
+<li class="chapter" data-level="8.5.1" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#add-onlineorderflag-to-our-query"><i class="fa fa-check"></i><b>8.5.1</b> Add <code>onlineorderflag</code> to our query</a></li>
+<li class="chapter" data-level="8.5.2" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#annual-sales-comparison"><i class="fa fa-check"></i><b>8.5.2</b> Annual Sales comparison</a></li>
+<li class="chapter" data-level="8.5.3" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#order-volume-comparison"><i class="fa fa-check"></i><b>8.5.3</b> Order volume comparison</a></li>
+<li class="chapter" data-level="8.5.4" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#average-sale-comparison"><i class="fa fa-check"></i><b>8.5.4</b> Average sale comparison</a></li>
+<li class="chapter" data-level="8.5.5" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#comparing-order-volume-and-average-sale-together"><i class="fa fa-check"></i><b>8.5.5</b> Comparing order volume and average sale together</a></li>
+</ul></li>
+<li class="chapter" data-level="8.6" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#impact-of-order-type-on-monthly-sales"><i class="fa fa-check"></i><b>8.6</b> Impact of order type on monthly sales</a><ul>
+<li class="chapter" data-level="8.6.1" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#retrieve-monthly-sales-with-the-onlineorderflag"><i class="fa fa-check"></i><b>8.6.1</b> Retrieve monthly sales with the <code>onlineorderflag</code></a></li>
+<li class="chapter" data-level="8.6.2" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#monthly-variation-compared-to-a-trend-line"><i class="fa fa-check"></i><b>8.6.2</b> Monthly variation compared to a trend line</a></li>
+<li class="chapter" data-level="8.6.3" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#looking-at-lagged-data"><i class="fa fa-check"></i><b>8.6.3</b> Looking at lagged data</a></li>
+</ul></li>
+<li class="chapter" data-level="8.7" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#variation-over-time"><i class="fa fa-check"></i><b>8.7</b> Variation over time</a></li>
+<li class="chapter" data-level="8.8" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#these-queries-and-graphs-may-be-redundant"><i class="fa fa-check"></i><b>8.8</b> These queries and graphs may be redundant</a></li>
+<li class="chapter" data-level="8.9" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#monthly-sales-rep-performance-analysis"><i class="fa fa-check"></i><b>8.9</b> Monthly Sales Rep Performance Analysis</a><ul>
+<li class="chapter" data-level="8.9.1" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#effect-of-late-entries-on-sales-rep-data"><i class="fa fa-check"></i><b>8.9.1</b> Effect of Late Entries on Sales Rep data</a></li>
+</ul></li>
+<li class="chapter" data-level="8.10" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#close-and-clean-up"><i class="fa fa-check"></i><b>8.10</b> Close and clean up</a></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html"><i class="fa fa-check"></i><b>9</b> Lazy Evaluation and Lazy Queries</a><ul>
 <li class="chapter" data-level="9.1" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#setup-1"><i class="fa fa-check"></i><b>9.1</b> Setup</a></li>
@@ -374,8 +401,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./"><div class="line-block">Exploring Enterprise Databases with R<br />
-A Tidyverse Approach</div></a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Exploring Enterprise Databases with R: A Tidyverse Approach</a>
           </h1>
         </div>
 
@@ -396,29 +422,29 @@ A Tidyverse Approach</div></a>
 <div id="setup-1" class="section level2">
 <h2><span class="header-section-number">9.1</span> Setup</h2>
 <p>The following packages are used in this chapter:</p>
-<div class="sourceCode" id="cb156"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb156-1" data-line-number="1"><span class="kw">library</span>(tidyverse)</a>
-<a class="sourceLine" id="cb156-2" data-line-number="2"><span class="kw">library</span>(DBI)</a>
-<a class="sourceLine" id="cb156-3" data-line-number="3"><span class="kw">library</span>(RPostgres)</a>
-<a class="sourceLine" id="cb156-4" data-line-number="4"><span class="kw">library</span>(dbplyr)</a>
-<a class="sourceLine" id="cb156-5" data-line-number="5"><span class="kw">require</span>(knitr)</a>
-<a class="sourceLine" id="cb156-6" data-line-number="6"><span class="kw">library</span>(bookdown)</a>
-<a class="sourceLine" id="cb156-7" data-line-number="7"><span class="kw">library</span>(sqlpetr)</a></code></pre></div>
+<div class="sourceCode" id="cb160"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb160-1"><a href="chapter-lazy-evaluation-queries.html#cb160-1"></a><span class="kw">library</span>(tidyverse)</span>
+<span id="cb160-2"><a href="chapter-lazy-evaluation-queries.html#cb160-2"></a><span class="kw">library</span>(DBI)</span>
+<span id="cb160-3"><a href="chapter-lazy-evaluation-queries.html#cb160-3"></a><span class="kw">library</span>(RPostgres)</span>
+<span id="cb160-4"><a href="chapter-lazy-evaluation-queries.html#cb160-4"></a><span class="kw">library</span>(dbplyr)</span>
+<span id="cb160-5"><a href="chapter-lazy-evaluation-queries.html#cb160-5"></a><span class="kw">require</span>(knitr)</span>
+<span id="cb160-6"><a href="chapter-lazy-evaluation-queries.html#cb160-6"></a><span class="kw">library</span>(bookdown)</span>
+<span id="cb160-7"><a href="chapter-lazy-evaluation-queries.html#cb160-7"></a><span class="kw">library</span>(sqlpetr)</span></code></pre></div>
 <p>Start your <code>adventureworks</code> container:</p>
-<div class="sourceCode" id="cb157"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb157-1" data-line-number="1">sqlpetr<span class="op">::</span><span class="kw">sp_docker_start</span>(<span class="st">&quot;adventureworks&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb161"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb161-1"><a href="chapter-lazy-evaluation-queries.html#cb161-1"></a>sqlpetr<span class="op">::</span><span class="kw">sp_docker_start</span>(<span class="st">&quot;adventureworks&quot;</span>)</span></code></pre></div>
 <p>Connect to the database:</p>
-<div class="sourceCode" id="cb158"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb158-1" data-line-number="1">con &lt;-<span class="st"> </span>sqlpetr<span class="op">::</span><span class="kw">sp_get_postgres_connection</span>(</a>
-<a class="sourceLine" id="cb158-2" data-line-number="2">  <span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),</a>
-<a class="sourceLine" id="cb158-3" data-line-number="3">  <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),</a>
-<a class="sourceLine" id="cb158-4" data-line-number="4">  <span class="dt">dbname =</span> <span class="st">&quot;adventureworks&quot;</span>,</a>
-<a class="sourceLine" id="cb158-5" data-line-number="5">  <span class="dt">port =</span> <span class="dv">5432</span>, </a>
-<a class="sourceLine" id="cb158-6" data-line-number="6">  <span class="dt">seconds_to_test =</span> <span class="dv">20</span>, </a>
-<a class="sourceLine" id="cb158-7" data-line-number="7">  <span class="dt">connection_tab =</span> <span class="ot">TRUE</span></a>
-<a class="sourceLine" id="cb158-8" data-line-number="8">)</a></code></pre></div>
+<div class="sourceCode" id="cb162"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb162-1"><a href="chapter-lazy-evaluation-queries.html#cb162-1"></a>con &lt;-<span class="st"> </span>sqlpetr<span class="op">::</span><span class="kw">sp_get_postgres_connection</span>(</span>
+<span id="cb162-2"><a href="chapter-lazy-evaluation-queries.html#cb162-2"></a>  <span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),</span>
+<span id="cb162-3"><a href="chapter-lazy-evaluation-queries.html#cb162-3"></a>  <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),</span>
+<span id="cb162-4"><a href="chapter-lazy-evaluation-queries.html#cb162-4"></a>  <span class="dt">dbname =</span> <span class="st">&quot;adventureworks&quot;</span>,</span>
+<span id="cb162-5"><a href="chapter-lazy-evaluation-queries.html#cb162-5"></a>  <span class="dt">port =</span> <span class="dv">5432</span>, </span>
+<span id="cb162-6"><a href="chapter-lazy-evaluation-queries.html#cb162-6"></a>  <span class="dt">seconds_to_test =</span> <span class="dv">20</span>, </span>
+<span id="cb162-7"><a href="chapter-lazy-evaluation-queries.html#cb162-7"></a>  <span class="dt">connection_tab =</span> <span class="ot">TRUE</span></span>
+<span id="cb162-8"><a href="chapter-lazy-evaluation-queries.html#cb162-8"></a>)</span></code></pre></div>
 </div>
 <div id="r-is-lazy-and-comes-with-guardrails" class="section level2">
 <h2><span class="header-section-number">9.2</span> R is lazy and comes with guardrails</h2>
-<p>By design, R is both a language and an interactive development environment (IDE). As a language, R tries to be as efficient as possible. As an IDE, R creates some guardrails to make it easy and safe to work with your data. For example <code>getOption(&quot;max.print&quot;)</code> prevents R from printing more rows of data than you want to handle in an interactive session, with a default of 99999 lines, which may or may not suit you.</p>
-<p>On the other hand SQL is a <em>“Structured Query Language (SQL): a standard computer language for relational database management and data manipulation.”</em>.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> SQL has various database-specific Interactive Development Environments (IDEs), such as <a href="https://www.pgadmin.org/">pgAdmin</a> for PostgreSQL. Roger Peng explains in <a href="https://bookdown.org/rdpeng/rprogdatascience/history-and-overview-of-r.html#basic-features-of-r">R Programming for Data Science</a> that:</p>
+<p>By design, R is both a language and an interactive development environment (IDE). As a language, R tries to be as efficient as possible. As an IDE, R creates some guardrails to make it easy and safe to work with your data. For example <code>getOption("max.print")</code> prevents R from printing more rows of data than you want to handle in an interactive session, with a default of 99999 lines, which may or may not suit you.</p>
+<p>On the other hand SQL is a <em>“Structured Query Language (SQL): a standard computer language for relational database management and data manipulation.”</em>.<a href="references.html#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> SQL has various database-specific Interactive Development Environments (IDEs), such as <a href="https://www.pgadmin.org/">pgAdmin</a> for PostgreSQL. Roger Peng explains in <a href="https://bookdown.org/rdpeng/rprogdatascience/history-and-overview-of-r.html#basic-features-of-r">R Programming for Data Science</a> that:</p>
 <blockquote>
 <p>R has maintained the original S philosophy, which is that it provides a language that is both useful for interactive work, but contains a powerful programming language for developing new tools.</p>
 </blockquote>
@@ -434,15 +460,15 @@ A Tidyverse Approach</div></a>
 <p>Eventually, if you are interacting with a dbms from R you will need to understand the differences between lazy loading, lazy evaluation, and lazy queries.</p>
 <div id="lazy-loading" class="section level3">
 <h3><span class="header-section-number">9.2.1</span> Lazy loading</h3>
-<p>“<em>Lazy loading is always used for code in packages but is optional (selected by the package maintainer) for datasets in packages.</em>”<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> Lazy loading means that the code for a particular function doesn’t actually get loaded into memory until the last minute – when it’s actually being used.</p>
+<p>“<em>Lazy loading is always used for code in packages but is optional (selected by the package maintainer) for datasets in packages.</em>”<a href="references.html#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> Lazy loading means that the code for a particular function doesn’t actually get loaded into memory until the last minute – when it’s actually being used.</p>
 </div>
 <div id="lazy-evaluation" class="section level3">
 <h3><span class="header-section-number">9.2.2</span> Lazy evaluation</h3>
-<p>Essentially “Lazy evaluation is a programming strategy that allows a symbol to be evaluated only when needed.”<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a> That means that lazy evaluation is about <strong>symbols</strong> such as function arguments<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a> when they are evaluated. Tidy evaluation complicates lazy evaluation.<a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a></p>
+<p>Essentially “Lazy evaluation is a programming strategy that allows a symbol to be evaluated only when needed.”<a href="references.html#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a> That means that lazy evaluation is about <strong>symbols</strong> such as function arguments<a href="references.html#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a> when they are evaluated. Tidy evaluation complicates lazy evaluation.<a href="references.html#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a></p>
 </div>
 <div id="lazy-queries" class="section level3">
 <h3><span class="header-section-number">9.2.3</span> Lazy Queries</h3>
-<p>“<em>When you create a &quot;lazy&quot; query, you’re creating a pointer to a set of conditions on the database, but the query isn’t actually run and the data isn’t actually loaded until you call &quot;next&quot; or some similar method to actually fetch the data and load it into an object.</em>”<a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a></p>
+<p>“<em>When you create a "lazy" query, you’re creating a pointer to a set of conditions on the database, but the query isn’t actually run and the data isn’t actually loaded until you call "next" or some similar method to actually fetch the data and load it into an object.</em>”<a href="references.html#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a></p>
 </div>
 </div>
 <div id="lazy-evaluation-and-lazy-queries" class="section level2">
@@ -451,22 +477,22 @@ A Tidyverse Approach</div></a>
 <div id="create-a-black-box-query-for-experimentation" class="section level3">
 <h3><span class="header-section-number">9.3.1</span> Create a black box query for experimentation</h3>
 <p>Define the three tables discussed in the previous chapter to build a <em>black box</em> query:</p>
-<div class="sourceCode" id="cb159"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb159-1" data-line-number="1">sales_person_table &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;sales&quot;</span>, <span class="st">&quot;salesperson&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb159-2" data-line-number="2"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>rowguid) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb159-3" data-line-number="3"><span class="st">  </span><span class="kw">rename</span>(<span class="dt">sale_info_updated =</span> modifieddate)</a>
-<a class="sourceLine" id="cb159-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb159-5" data-line-number="5">employee_table &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;humanresources&quot;</span>, <span class="st">&quot;employee&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb159-6" data-line-number="6"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>modifieddate, <span class="op">-</span>rowguid)</a>
-<a class="sourceLine" id="cb159-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb159-8" data-line-number="8">person_table &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;person&quot;</span>, <span class="st">&quot;person&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb159-9" data-line-number="9"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>modifieddate, <span class="op">-</span>rowguid)</a></code></pre></div>
+<div class="sourceCode" id="cb163"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb163-1"><a href="chapter-lazy-evaluation-queries.html#cb163-1"></a>sales_person_table &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;sales&quot;</span>, <span class="st">&quot;salesperson&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb163-2"><a href="chapter-lazy-evaluation-queries.html#cb163-2"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>rowguid) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb163-3"><a href="chapter-lazy-evaluation-queries.html#cb163-3"></a><span class="st">  </span><span class="kw">rename</span>(<span class="dt">sale_info_updated =</span> modifieddate)</span>
+<span id="cb163-4"><a href="chapter-lazy-evaluation-queries.html#cb163-4"></a></span>
+<span id="cb163-5"><a href="chapter-lazy-evaluation-queries.html#cb163-5"></a>employee_table &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;humanresources&quot;</span>, <span class="st">&quot;employee&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb163-6"><a href="chapter-lazy-evaluation-queries.html#cb163-6"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>modifieddate, <span class="op">-</span>rowguid)</span>
+<span id="cb163-7"><a href="chapter-lazy-evaluation-queries.html#cb163-7"></a></span>
+<span id="cb163-8"><a href="chapter-lazy-evaluation-queries.html#cb163-8"></a>person_table &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;person&quot;</span>, <span class="st">&quot;person&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb163-9"><a href="chapter-lazy-evaluation-queries.html#cb163-9"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>modifieddate, <span class="op">-</span>rowguid)</span></code></pre></div>
 <p>Here is a typical string of <code>dplyr</code> verbs strung together with the magrittr <code>%&gt;%</code> pipe command that will be used to tease out the several different behaviors that a lazy query has when passed to different R functions. This query joins three connection objects into a query we’ll call <code>Q</code>:</p>
-<div class="sourceCode" id="cb160"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb160-1" data-line-number="1">Q &lt;-<span class="st"> </span>sales_person_table <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb160-2" data-line-number="2"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">left_join</span>(employee_table, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;businessentityid&quot;</span> =<span class="st"> &quot;businessentityid&quot;</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb160-3" data-line-number="3"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">left_join</span>(person_table , <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;businessentityid&quot;</span> =<span class="st"> &quot;businessentityid&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb160-4" data-line-number="4"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(firstname, lastname, salesytd, birthdate) </a></code></pre></div>
+<div class="sourceCode" id="cb164"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb164-1"><a href="chapter-lazy-evaluation-queries.html#cb164-1"></a>Q &lt;-<span class="st"> </span>sales_person_table <span class="op">%&gt;%</span></span>
+<span id="cb164-2"><a href="chapter-lazy-evaluation-queries.html#cb164-2"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">left_join</span>(employee_table, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;businessentityid&quot;</span> =<span class="st"> &quot;businessentityid&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb164-3"><a href="chapter-lazy-evaluation-queries.html#cb164-3"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">left_join</span>(person_table , <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;businessentityid&quot;</span> =<span class="st"> &quot;businessentityid&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb164-4"><a href="chapter-lazy-evaluation-queries.html#cb164-4"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(firstname, lastname, salesytd, birthdate) </span></code></pre></div>
 <p>The <code>str</code> function gives us a hint at how R is collecting information that can be used to construct and execute a query later on:</p>
-<div class="sourceCode" id="cb161"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb161-1" data-line-number="1"><span class="kw">str</span>(Q, <span class="dt">max.level =</span> <span class="dv">2</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb165"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb165-1"><a href="chapter-lazy-evaluation-queries.html#cb165-1"></a><span class="kw">str</span>(Q, <span class="dt">max.level =</span> <span class="dv">2</span>)</span></code></pre></div>
 <pre><code>## List of 2
 ##  $ src:List of 2
 ##   ..$ con  :Formal class &#39;PqConnection&#39; [package &quot;RPostgres&quot;] with 3 slots
@@ -555,7 +581,7 @@ A Tidyverse Approach</div></a>
 <div id="lazy_q_print" class="section level3">
 <h3><span class="header-section-number">9.3.3</span> Q %&gt;% print()</h3>
 <p>Remember that <code>Q %&gt;% print()</code> is equivalent to <code>print(Q)</code> and the same as just entering <code>Q</code> on the command line. We use the magrittr pipe operator here, because chaining functions highlights how the same object behaves differently in each use.</p>
-<div class="sourceCode" id="cb163"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb163-1" data-line-number="1">Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">print</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb167"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb167-1"><a href="chapter-lazy-evaluation-queries.html#cb167-1"></a>Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">print</span>()</span></code></pre></div>
 <pre><code>## # Source:   lazy query [?? x 4]
 ## # Database: postgres [postgres@localhost:5432/adventureworks]
 ##    firstname lastname     salesytd birthdate 
@@ -583,7 +609,7 @@ A Tidyverse Approach</div></a>
 <div id="lazy_q_as-tibble" class="section level3">
 <h3><span class="header-section-number">9.3.4</span> Q %&gt;% dplyr::as_tibble()</h3>
 <p><img src="screenshots/green-check.png" /> <img src="screenshots/green-check.png" /> In contrast to <code>print()</code>, the <code>as_tibble()</code> function causes R to download the whole table, using tibble’s default of displaying only the first 10 rows.</p>
-<div class="sourceCode" id="cb165"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb165-1" data-line-number="1">Q <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">as_tibble</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb169"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb169-1"><a href="chapter-lazy-evaluation-queries.html#cb169-1"></a>Q <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">as_tibble</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 17 x 4
 ##    firstname lastname          salesytd birthdate 
 ##    &lt;chr&gt;     &lt;chr&gt;                &lt;dbl&gt; &lt;date&gt;    
@@ -608,7 +634,7 @@ A Tidyverse Approach</div></a>
 <div id="lazy_q_head" class="section level3">
 <h3><span class="header-section-number">9.3.5</span> Q %&gt;% head()</h3>
 <p><img src="screenshots/green-check.png" /> The <code>head()</code> function is very similar to print but has a different “<code>max.print</code>” value.</p>
-<div class="sourceCode" id="cb167"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb167-1" data-line-number="1">Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb171"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb171-1"><a href="chapter-lazy-evaluation-queries.html#cb171-1"></a>Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>()</span></code></pre></div>
 <pre><code>## # Source:   lazy query [?? x 4]
 ## # Database: postgres [postgres@localhost:5432/adventureworks]
 ##   firstname lastname salesytd birthdate 
@@ -623,23 +649,23 @@ A Tidyverse Approach</div></a>
 <div id="lazy_q_tail" class="section level3">
 <h3><span class="header-section-number">9.3.6</span> Q %&gt;% tail()</h3>
 <p><img src="screenshots/red-x.png" /> Produces an error, because <code>Q</code> does not hold all of the data, so it is not possible to list the last few items from the table:</p>
-<div class="sourceCode" id="cb169"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb169-1" data-line-number="1"><span class="kw">try</span>(</a>
-<a class="sourceLine" id="cb169-2" data-line-number="2">  Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">tail</span>(),</a>
-<a class="sourceLine" id="cb169-3" data-line-number="3">  <span class="dt">silent =</span> <span class="ot">FALSE</span>,</a>
-<a class="sourceLine" id="cb169-4" data-line-number="4">  <span class="dt">outFile =</span> <span class="kw">stdout</span>()</a>
-<a class="sourceLine" id="cb169-5" data-line-number="5">)</a></code></pre></div>
+<div class="sourceCode" id="cb173"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb173-1"><a href="chapter-lazy-evaluation-queries.html#cb173-1"></a><span class="kw">try</span>(</span>
+<span id="cb173-2"><a href="chapter-lazy-evaluation-queries.html#cb173-2"></a>  Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">tail</span>(),</span>
+<span id="cb173-3"><a href="chapter-lazy-evaluation-queries.html#cb173-3"></a>  <span class="dt">silent =</span> <span class="ot">FALSE</span>,</span>
+<span id="cb173-4"><a href="chapter-lazy-evaluation-queries.html#cb173-4"></a>  <span class="dt">outFile =</span> <span class="kw">stdout</span>()</span>
+<span id="cb173-5"><a href="chapter-lazy-evaluation-queries.html#cb173-5"></a>)</span></code></pre></div>
 <pre><code>## Error : tail() is not supported by sql sources</code></pre>
 </div>
 <div id="lazy_q_length" class="section level3">
 <h3><span class="header-section-number">9.3.7</span> Q %&gt;% length()</h3>
 <p><img src="screenshots/red-x.png" /> Because the <code>Q</code> object is relatively complex, using <code>str()</code> on it prints many lines. You can glimpse what’s going on with <code>length()</code>:</p>
-<div class="sourceCode" id="cb171"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb171-1" data-line-number="1">Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">length</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb175"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb175-1"><a href="chapter-lazy-evaluation-queries.html#cb175-1"></a>Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">length</span>()</span></code></pre></div>
 <pre><code>## [1] 2</code></pre>
 </div>
 <div id="lazy_q_str" class="section level3">
 <h3><span class="header-section-number">9.3.8</span> Q %&gt;% str()</h3>
 <p><img src="screenshots/red-x.png" /> Looking inside shows some of what’s going on (three levels deep):</p>
-<div class="sourceCode" id="cb173"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb173-1" data-line-number="1">Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">str</span>(<span class="dt">max.level =</span> <span class="dv">3</span>) </a></code></pre></div>
+<div class="sourceCode" id="cb177"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb177-1"><a href="chapter-lazy-evaluation-queries.html#cb177-1"></a>Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">str</span>(<span class="dt">max.level =</span> <span class="dv">3</span>) </span></code></pre></div>
 <pre><code>## List of 2
 ##  $ src:List of 2
 ##   ..$ con  :Formal class &#39;PqConnection&#39; [package &quot;RPostgres&quot;] with 3 slots
@@ -664,13 +690,13 @@ A Tidyverse Approach</div></a>
 <div id="lazy_q_nrow" class="section level3">
 <h3><span class="header-section-number">9.3.9</span> Q %&gt;% nrow()</h3>
 <p><img src="screenshots/red-x.png" /> Notice the difference between <code>nrow()</code> and <code>tally()</code>. The <code>nrow</code> functions returns <code>NA</code> and does not execute a query:</p>
-<div class="sourceCode" id="cb175"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb175-1" data-line-number="1">Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">nrow</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb179"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb179-1"><a href="chapter-lazy-evaluation-queries.html#cb179-1"></a>Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">nrow</span>()</span></code></pre></div>
 <pre><code>## [1] NA</code></pre>
 </div>
 <div id="lazy_q_tally" class="section level3">
 <h3><span class="header-section-number">9.3.10</span> Q %&gt;% dplyr::tally()</h3>
 <p><img src="screenshots/green-check.png" /> The <code>tally</code> function actually counts all the rows.</p>
-<div class="sourceCode" id="cb177"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb177-1" data-line-number="1">Q <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">tally</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb181-1"><a href="chapter-lazy-evaluation-queries.html#cb181-1"></a>Q <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">tally</span>()</span></code></pre></div>
 <pre><code>## # Source:   lazy query [?? x 1]
 ## # Database: postgres [postgres@localhost:5432/adventureworks]
 ##   n      
@@ -681,7 +707,7 @@ A Tidyverse Approach</div></a>
 <div id="lazy_q_collect" class="section level3">
 <h3><span class="header-section-number">9.3.11</span> Q %&gt;% dplyr::collect()</h3>
 <p><img src="screenshots/green-check.png" /> The dplyr::<a href="https://dplyr.tidyverse.org/reference/compute.html">collect</a> function triggers a call to the <code>DBI:dbFetch()</code> function behind the scenes, which forces R to download a specified number of rows:</p>
-<div class="sourceCode" id="cb179"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb179-1" data-line-number="1">Q <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="dv">20</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb183"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb183-1"><a href="chapter-lazy-evaluation-queries.html#cb183-1"></a>Q <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="dv">20</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 17 x 4
 ##    firstname lastname          salesytd birthdate 
 ##    &lt;chr&gt;     &lt;chr&gt;                &lt;dbl&gt; &lt;date&gt;    
@@ -702,7 +728,7 @@ A Tidyverse Approach</div></a>
 ## 15 Rachel    Valdez            1827067. 1975-07-09
 ## 16 Jae       Pak               4116871. 1968-03-17
 ## 17 Ranjit    Varkey Chudukatil 3121616. 1975-09-30</code></pre>
-<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb181-1" data-line-number="1">Q <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="dv">20</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb185"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb185-1"><a href="chapter-lazy-evaluation-queries.html#cb185-1"></a>Q <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="dv">20</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>()</span></code></pre></div>
 <pre><code>## # A tibble: 6 x 4
 ##   firstname lastname salesytd birthdate 
 ##   &lt;chr&gt;     &lt;chr&gt;       &lt;dbl&gt; &lt;date&gt;    
@@ -718,14 +744,14 @@ A Tidyverse Approach</div></a>
 <div id="lazy_q_plot-categories" class="section level3">
 <h3><span class="header-section-number">9.3.12</span> Q %&gt;% ggplot</h3>
 <p>Passing the <code>Q</code> object to <code>ggplot</code> executes the query and plots the result.</p>
-<div class="sourceCode" id="cb183"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb183-1" data-line-number="1">Q <span class="op">%&gt;%</span><span class="st"> </span>ggplot2<span class="op">::</span><span class="kw">ggplot</span>(<span class="kw">aes</span>(birthdate, salesytd)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() </a></code></pre></div>
+<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb187-1"><a href="chapter-lazy-evaluation-queries.html#cb187-1"></a>Q <span class="op">%&gt;%</span><span class="st"> </span>ggplot2<span class="op">::</span><span class="kw">ggplot</span>(<span class="kw">aes</span>(birthdate, salesytd)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() </span></code></pre></div>
 <p><img src="090-lazy-evalutation-intro_files/figure-html/unnamed-chunk-13-1.png" width="672" />
 * Rewrite previous query and this comment with adventureworks in mind.</p>
 <p>Comment on the plot…</p>
 </div>
 <div id="lazy_q_show-query" class="section level3">
 <h3><span class="header-section-number">9.3.13</span> Q %&gt;% dplyr::show_query()</h3>
-<div class="sourceCode" id="cb184"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb184-1" data-line-number="1">Q <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">show_query</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb188-1"><a href="chapter-lazy-evaluation-queries.html#cb188-1"></a>Q <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">show_query</span>()</span></code></pre></div>
 <pre><code>## &lt;SQL&gt;
 ## SELECT &quot;firstname&quot;, &quot;lastname&quot;, &quot;salesytd&quot;, &quot;birthdate&quot;
 ## FROM (SELECT &quot;LHS&quot;.&quot;businessentityid&quot; AS &quot;businessentityid&quot;, &quot;LHS&quot;.&quot;territoryid&quot; AS &quot;territoryid&quot;, &quot;LHS&quot;.&quot;salesquota&quot; AS &quot;salesquota&quot;, &quot;LHS&quot;.&quot;bonus&quot; AS &quot;bonus&quot;, &quot;LHS&quot;.&quot;commissionpct&quot; AS &quot;commissionpct&quot;, &quot;LHS&quot;.&quot;salesytd&quot; AS &quot;salesytd&quot;, &quot;LHS&quot;.&quot;saleslastyear&quot; AS &quot;saleslastyear&quot;, &quot;LHS&quot;.&quot;sale_info_updated&quot; AS &quot;sale_info_updated&quot;, &quot;LHS&quot;.&quot;nationalidnumber&quot; AS &quot;nationalidnumber&quot;, &quot;LHS&quot;.&quot;loginid&quot; AS &quot;loginid&quot;, &quot;LHS&quot;.&quot;jobtitle&quot; AS &quot;jobtitle&quot;, &quot;LHS&quot;.&quot;birthdate&quot; AS &quot;birthdate&quot;, &quot;LHS&quot;.&quot;maritalstatus&quot; AS &quot;maritalstatus&quot;, &quot;LHS&quot;.&quot;gender&quot; AS &quot;gender&quot;, &quot;LHS&quot;.&quot;hiredate&quot; AS &quot;hiredate&quot;, &quot;LHS&quot;.&quot;salariedflag&quot; AS &quot;salariedflag&quot;, &quot;LHS&quot;.&quot;vacationhours&quot; AS &quot;vacationhours&quot;, &quot;LHS&quot;.&quot;sickleavehours&quot; AS &quot;sickleavehours&quot;, &quot;LHS&quot;.&quot;currentflag&quot; AS &quot;currentflag&quot;, &quot;LHS&quot;.&quot;organizationnode&quot; AS &quot;organizationnode&quot;, &quot;RHS&quot;.&quot;persontype&quot; AS &quot;persontype&quot;, &quot;RHS&quot;.&quot;namestyle&quot; AS &quot;namestyle&quot;, &quot;RHS&quot;.&quot;title&quot; AS &quot;title&quot;, &quot;RHS&quot;.&quot;firstname&quot; AS &quot;firstname&quot;, &quot;RHS&quot;.&quot;middlename&quot; AS &quot;middlename&quot;, &quot;RHS&quot;.&quot;lastname&quot; AS &quot;lastname&quot;, &quot;RHS&quot;.&quot;suffix&quot; AS &quot;suffix&quot;, &quot;RHS&quot;.&quot;emailpromotion&quot; AS &quot;emailpromotion&quot;, &quot;RHS&quot;.&quot;additionalcontactinfo&quot; AS &quot;additionalcontactinfo&quot;, &quot;RHS&quot;.&quot;demographics&quot; AS &quot;demographics&quot;
@@ -741,8 +767,8 @@ A Tidyverse Approach</div></a>
 ## ON (&quot;LHS&quot;.&quot;businessentityid&quot; = &quot;RHS&quot;.&quot;businessentityid&quot;)
 ## ) &quot;dbplyr_009&quot;</code></pre>
 <p>Hand-written SQL code to do the same job will probably look a lot nicer and could be more efficient, but functionally <code>dplyr</code> does the job.</p>
-<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb186-1" data-line-number="1">DBI<span class="op">::</span><span class="kw">dbDisconnect</span>(con)</a>
-<a class="sourceLine" id="cb186-2" data-line-number="2">sqlpetr<span class="op">::</span><span class="kw">sp_docker_stop</span>(<span class="st">&quot;adventureworks&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb190-1"><a href="chapter-lazy-evaluation-queries.html#cb190-1"></a>DBI<span class="op">::</span><span class="kw">dbDisconnect</span>(con)</span>
+<span id="cb190-2"><a href="chapter-lazy-evaluation-queries.html#cb190-2"></a>sqlpetr<span class="op">::</span><span class="kw">sp_docker_stop</span>(<span class="st">&quot;adventureworks&quot;</span>)</span></code></pre></div>
 </div>
 </div>
 <div id="other-resources" class="section level2">
@@ -755,17 +781,6 @@ A Tidyverse Approach</div></a>
 
 </div>
 </div>
-<div class="footnotes">
-<hr />
-<ol start="1">
-<li id="fn1"><p><a href="https://www.techopedia.com/definition/1245/structured-query-language-sql" class="uri">https://www.techopedia.com/definition/1245/structured-query-language-sql</a><a href="chapter-lazy-evaluation-queries.html#fnref1" class="footnote-back">↩</a></p></li>
-<li id="fn2"><p><a href="https://cran.r-project.org/doc/manuals/r-release/R-ints.html#Lazy-loading" class="uri">https://cran.r-project.org/doc/manuals/r-release/R-ints.html#Lazy-loading</a><a href="chapter-lazy-evaluation-queries.html#fnref2" class="footnote-back">↩</a></p></li>
-<li id="fn3"><p><a href="https://colinfay.me/lazyeval/" class="uri">https://colinfay.me/lazyeval/</a><a href="chapter-lazy-evaluation-queries.html#fnref3" class="footnote-back">↩</a></p></li>
-<li id="fn4"><p><a href="http://adv-r.had.co.nz/Functions.html#function-arguments" class="uri">http://adv-r.had.co.nz/Functions.html#function-arguments</a><a href="chapter-lazy-evaluation-queries.html#fnref4" class="footnote-back">↩</a></p></li>
-<li id="fn5"><p><a href="https://colinfay.me/tidyeval-1/" class="uri">https://colinfay.me/tidyeval-1/</a><a href="chapter-lazy-evaluation-queries.html#fnref5" class="footnote-back">↩</a></p></li>
-<li id="fn6"><p><a href="https://www.quora.com/What-is-a-lazy-query" class="uri">https://www.quora.com/What-is-a-lazy-query</a><a href="chapter-lazy-evaluation-queries.html#fnref6" class="footnote-back">↩</a></p></li>
-</ol>
-</div>
             </section>
 
           </div>
@@ -777,11 +792,13 @@ A Tidyverse Approach</div></a>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({

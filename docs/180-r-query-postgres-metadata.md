@@ -116,8 +116,8 @@ schema_list <- tbl(con, in_schema("information_schema", "schemata")) %>%
 sp_print_df(head(schema_list))
 ```
 
-<!--html_preserve--><div id="htmlwidget-1b4ff99564eb6e8884a5" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-1b4ff99564eb6e8884a5">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["adventureworks","adventureworks","adventureworks","adventureworks","adventureworks","adventureworks"],["sales","sa","purchasing","pu","production","pr"],["postgres","postgres","postgres","postgres","postgres","postgres"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>catalog_name<\/th>\n      <th>schema_name<\/th>\n      <th>schema_owner<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-bd9f33edc946b7e4ab1e" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-bd9f33edc946b7e4ab1e">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["adventureworks","adventureworks","adventureworks","adventureworks","adventureworks","adventureworks"],["sales","sa","purchasing","pu","production","pr"],["postgres","postgres","postgres","postgres","postgres","postgres"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>catalog_name<\/th>\n      <th>schema_name<\/th>\n      <th>schema_owner<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 ### Digging into the `information_schema`
 
 We usually need more detail than just a list of tables. Most SQL databases have an `information_schema` that has a standard structure to describe and control the database.
@@ -141,8 +141,8 @@ table_info <- table_info_schema_table %>%
 sp_print_df(head(table_info))
 ```
 
-<!--html_preserve--><div id="htmlwidget-8f836166d559454ecd73" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-8f836166d559454ecd73">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["adventureworks","adventureworks","adventureworks","adventureworks","adventureworks","adventureworks"],["person","person","production","person","person","person"],["address","addresstype","billofmaterials","businessentity","businessentityaddress","businessentitycontact"],["BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_catalog<\/th>\n      <th>table_schema<\/th>\n      <th>table_name<\/th>\n      <th>table_type<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-e42da8c92a8e625ded5e" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-e42da8c92a8e625ded5e">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["adventureworks","adventureworks","adventureworks","adventureworks","adventureworks","adventureworks"],["person","person","production","person","person","person"],["address","addresstype","billofmaterials","businessentity","businessentityaddress","businessentitycontact"],["BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_catalog<\/th>\n      <th>table_schema<\/th>\n      <th>table_name<\/th>\n      <th>table_type<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 In this context `table_catalog` is synonymous with `database`.
 
 Notice that *VIEWS* are composites made up of one or more *BASE TABLES*.
@@ -161,8 +161,8 @@ rs <- dbGetQuery(
 sp_print_df(head(rs))
 ```
 
-<!--html_preserve--><div id="htmlwidget-0d7db73d03839427d3b7" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-0d7db73d03839427d3b7">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["adventureworks","adventureworks","adventureworks","adventureworks","adventureworks","adventureworks"],["person","person","production","person","person","person"],["address","addresstype","billofmaterials","businessentity","businessentityaddress","businessentitycontact"],["BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_catalog<\/th>\n      <th>table_schema<\/th>\n      <th>table_name<\/th>\n      <th>table_type<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-f08e2cc390f42f954ff7" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-f08e2cc390f42f954ff7">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["adventureworks","adventureworks","adventureworks","adventureworks","adventureworks","adventureworks"],["person","person","production","person","person","person"],["address","addresstype","billofmaterials","businessentity","businessentityaddress","businessentitycontact"],["BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_catalog<\/th>\n      <th>table_schema<\/th>\n      <th>table_name<\/th>\n      <th>table_type<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ## What columns do those tables contain?
 
@@ -215,8 +215,8 @@ glimpse(columns_info_schema_info)
 sp_print_df(head(columns_info_schema_info))
 ```
 
-<!--html_preserve--><div id="htmlwidget-c2e3fede5c798441fdae" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-c2e3fede5c798441fdae">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["adventureworks","adventureworks","adventureworks","adventureworks","adventureworks","adventureworks"],["pg_proc","pg_proc","pg_proc","pg_proc","pg_proc","pg_proc"],["proname","pronamespace","proowner","prolang","procost","prorows"],["name","oid","oid","oid","real (24,2)","real (24,2)"],[1,2,3,4,5,6],[null,null,null,null,null,null],[null,null,null,null,null,null]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_catalog<\/th>\n      <th>table_name<\/th>\n      <th>column_name<\/th>\n      <th>data_type<\/th>\n      <th>ordinal_position<\/th>\n      <th>character_maximum_length<\/th>\n      <th>column_default<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[5,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-88432095f91f0bc002d4" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-88432095f91f0bc002d4">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["adventureworks","adventureworks","adventureworks","adventureworks","adventureworks","adventureworks"],["pg_proc","pg_proc","pg_proc","pg_proc","pg_proc","pg_proc"],["proname","pronamespace","proowner","prolang","procost","prorows"],["name","oid","oid","oid","real (24,2)","real (24,2)"],[1,2,3,4,5,6],[null,null,null,null,null,null],[null,null,null,null,null,null]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_catalog<\/th>\n      <th>table_name<\/th>\n      <th>column_name<\/th>\n      <th>data_type<\/th>\n      <th>ordinal_position<\/th>\n      <th>character_maximum_length<\/th>\n      <th>column_default<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[5,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ### What is the difference between a `VIEW` and a `BASE TABLE`?
 
@@ -238,8 +238,8 @@ table_info_schema_table %>%
   sp_print_df()
 ```
 
-<!--html_preserve--><div id="htmlwidget-a77ad32f6b82562872f5" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-a77ad32f6b82562872f5">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE"],["customer","customer","customer","customer","customer","customer"],["personid","storeid","territoryid","rowguid","modifieddate","customerid"],["integer","integer","integer","uuid","timestamp without time zone","integer"],[2,3,4,5,6,1],[null,null,null,"uuid_generate_v1()","now()","nextval('sales.customer_customerid_seq'::regclass)"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_type<\/th>\n      <th>table_name<\/th>\n      <th>column_name<\/th>\n      <th>data_type<\/th>\n      <th>ordinal_position<\/th>\n      <th>column_default<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":5},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-70debf4c3a27abf3cc16" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-70debf4c3a27abf3cc16">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE"],["customer","customer","customer","customer","customer","customer"],["personid","storeid","territoryid","rowguid","modifieddate","customerid"],["integer","integer","integer","uuid","timestamp without time zone","integer"],[2,3,4,5,6,1],[null,null,null,"uuid_generate_v1()","now()","nextval('sales.customer_customerid_seq'::regclass)"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_type<\/th>\n      <th>table_name<\/th>\n      <th>column_name<\/th>\n      <th>data_type<\/th>\n      <th>ordinal_position<\/th>\n      <th>column_default<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":5},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 Probably should explore how the `VIEW` is made up of data from BASE TABLEs.
 
@@ -259,8 +259,8 @@ table_info_schema_table %>%
   sp_print_df()
 ```
 
-<!--html_preserve--><div id="htmlwidget-e3479f292a01744eb530" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-e3479f292a01744eb530">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["VIEW","VIEW","VIEW","VIEW","VIEW","VIEW"],["vindividualcustomer","vindividualcustomer","vindividualcustomer","vindividualcustomer","vindividualcustomer","vindividualcustomer"],["businessentityid","title","firstname","middlename","lastname","suffix"],["integer","character varying","character varying","character varying","character varying","character varying"],[1,2,3,4,5,6],[null,null,null,null,null,null]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_type<\/th>\n      <th>table_name<\/th>\n      <th>column_name<\/th>\n      <th>data_type<\/th>\n      <th>ordinal_position<\/th>\n      <th>column_default<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":5},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-e3670ecfb5434c56352d" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-e3670ecfb5434c56352d">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["VIEW","VIEW","VIEW","VIEW","VIEW","VIEW"],["vindividualcustomer","vindividualcustomer","vindividualcustomer","vindividualcustomer","vindividualcustomer","vindividualcustomer"],["businessentityid","title","firstname","middlename","lastname","suffix"],["integer","character varying","character varying","character varying","character varying","character varying"],[1,2,3,4,5,6],[null,null,null,null,null,null]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_type<\/th>\n      <th>table_name<\/th>\n      <th>column_name<\/th>\n      <th>data_type<\/th>\n      <th>ordinal_position<\/th>\n      <th>column_default<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":5},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ### What data types are found in the database?
 
@@ -271,8 +271,8 @@ columns_info_schema_info %>%
   sp_print_df()
 ```
 
-<!--html_preserve--><div id="htmlwidget-65b7328530dcdf303887" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-65b7328530dcdf303887">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["\"char\"","abstime","anyarray","ARRAY","bigint","boolean"],[38,2,9,75,161,136]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>data_type<\/th>\n      <th>n<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":2},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-4c6121933f5b741b6877" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-4c6121933f5b741b6877">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["\"char\"","abstime","anyarray","ARRAY","bigint","boolean"],[38,2,9,75,161,136]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>data_type<\/th>\n      <th>n<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":2},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ## Characterizing how things are named
 
@@ -296,8 +296,8 @@ public_tables %>%
   sp_print_df()
 ```
 
-<!--html_preserve--><div id="htmlwidget-1990be7a07e95fee1522" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-1990be7a07e95fee1522">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"],["routines","columns","p","pg_class","parameters","attributes","pg_type","element_types","user_defined_types","pg_proc","domains","pg_statistic","soh","pg_constraint","product"],[82,44,40,33,32,31,30,29,29,28,27,26,26,25,25]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_name<\/th>\n      <th>n<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":2},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-dc6e03065ee5ece97bde" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-dc6e03065ee5ece97bde">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"],["routines","columns","p","pg_class","parameters","attributes","pg_type","element_types","user_defined_types","pg_proc","domains","pg_statistic","soh","pg_constraint","product"],[82,44,40,33,32,31,30,29,29,28,27,26,26,25,25]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_name<\/th>\n      <th>n<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":2},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 How many *column names* are shared across tables (or duplicated)?
 
@@ -369,8 +369,8 @@ glimpse(rs)
 sp_print_df(head(rs))
 ```
 
-<!--html_preserve--><div id="htmlwidget-28cf82553809b695f76c" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-28cf82553809b695f76c">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["adventureworks.hr.d","adventureworks.hr.d","adventureworks.hr.d","adventureworks.hr.d","adventureworks.hr.d","adventureworks.hr.d"],["FK_SalesOrderDetail_SpecialOfferProduct_SpecialOfferIDProductID","FK_SalesOrderDetail_SpecialOfferProduct_SpecialOfferIDProductID","FK_SalesOrderHeader_Address_BillToAddressID","FK_SalesOrderHeader_Address_BillToAddressID","FK_SalesOrderHeader_Address_BillToAddressID","FK_SalesOrderHeader_Address_BillToAddressID"],["FOREIGN KEY (specialofferid, productid) REFERENCES sales.specialofferproduct(specialofferid, productid)","FOREIGN KEY (specialofferid, productid) REFERENCES sales.specialofferproduct(specialofferid, productid)","FOREIGN KEY (billtoaddressid) REFERENCES person.address(addressid)","FOREIGN KEY (billtoaddressid) REFERENCES person.address(addressid)","FOREIGN KEY (billtoaddressid) REFERENCES person.address(addressid)","FOREIGN KEY (billtoaddressid) REFERENCES person.address(addressid)"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_name<\/th>\n      <th>conname<\/th>\n      <th>condef<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-f9aee8403baf9b89728b" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-f9aee8403baf9b89728b">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["adventureworks.hr.d","adventureworks.hr.d","adventureworks.hr.d","adventureworks.hr.d","adventureworks.hr.d","adventureworks.hr.d"],["FK_SalesOrderDetail_SpecialOfferProduct_SpecialOfferIDProductID","FK_SalesOrderDetail_SpecialOfferProduct_SpecialOfferIDProductID","FK_SalesOrderHeader_Address_BillToAddressID","FK_SalesOrderHeader_Address_BillToAddressID","FK_SalesOrderHeader_Address_BillToAddressID","FK_SalesOrderHeader_Address_BillToAddressID"],["FOREIGN KEY (specialofferid, productid) REFERENCES sales.specialofferproduct(specialofferid, productid)","FOREIGN KEY (specialofferid, productid) REFERENCES sales.specialofferproduct(specialofferid, productid)","FOREIGN KEY (billtoaddressid) REFERENCES person.address(addressid)","FOREIGN KEY (billtoaddressid) REFERENCES person.address(addressid)","FOREIGN KEY (billtoaddressid) REFERENCES person.address(addressid)","FOREIGN KEY (billtoaddressid) REFERENCES person.address(addressid)"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_name<\/th>\n      <th>conname<\/th>\n      <th>condef<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 The following is more compact and looks more useful.  What is the difference between the two?
 
 ```r
@@ -401,8 +401,8 @@ glimpse(rs)
 sp_print_df(head(rs))
 ```
 
-<!--html_preserve--><div id="htmlwidget-988252b1f4f7d9d645fb" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-988252b1f4f7d9d645fb">{"x":{"filter":"none","data":[[],[],[],[]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_from<\/th>\n      <th>conname<\/th>\n      <th>pg_get_constraintdef<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-fe9f4c8eebe2b74f37fc" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-fe9f4c8eebe2b74f37fc">{"x":{"filter":"none","data":[[],[],[],[]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_from<\/th>\n      <th>conname<\/th>\n      <th>pg_get_constraintdef<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ```r
 dim(rs)[1]
@@ -463,8 +463,8 @@ glimpse(keys)
 sp_print_df(head(keys))
 ```
 
-<!--html_preserve--><div id="htmlwidget-13a8be463c5fb2457ee4" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-13a8be463c5fb2457ee4">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["address","address","addresstype","billofmaterials","billofmaterials","billofmaterials"],["BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE"],["FK_Address_StateProvince_StateProvinceID","PK_Address_AddressID","PK_AddressType_AddressTypeID","FK_BillOfMaterials_Product_ComponentID","FK_BillOfMaterials_Product_ProductAssemblyID","FK_BillOfMaterials_UnitMeasure_UnitMeasureCode"],["FOREIGN KEY","PRIMARY KEY","PRIMARY KEY","FOREIGN KEY","FOREIGN KEY","FOREIGN KEY"],["stateprovinceid","addressid","addresstypeid","componentid","productassemblyid","unitmeasurecode"],[1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_name<\/th>\n      <th>table_type<\/th>\n      <th>constraint_name<\/th>\n      <th>constraint_type<\/th>\n      <th>column_name<\/th>\n      <th>ordinal_position<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":6},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-3df244dd338979a84828" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-3df244dd338979a84828">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["address","address","addresstype","billofmaterials","billofmaterials","billofmaterials"],["BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE"],["FK_Address_StateProvince_StateProvinceID","PK_Address_AddressID","PK_AddressType_AddressTypeID","FK_BillOfMaterials_Product_ComponentID","FK_BillOfMaterials_Product_ProductAssemblyID","FK_BillOfMaterials_UnitMeasure_UnitMeasureCode"],["FOREIGN KEY","PRIMARY KEY","PRIMARY KEY","FOREIGN KEY","FOREIGN KEY","FOREIGN KEY"],["stateprovinceid","addressid","addresstypeid","componentid","productassemblyid","unitmeasurecode"],[1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_name<\/th>\n      <th>table_type<\/th>\n      <th>constraint_name<\/th>\n      <th>constraint_type<\/th>\n      <th>column_name<\/th>\n      <th>ordinal_position<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":6},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 What do we learn from the following query?  How is it useful? 
 
@@ -561,12 +561,11 @@ ls()
 ```
 ##  [1] "columns_info_schema_info"  "columns_info_schema_table"
 ##  [3] "con"                       "constraint_column_usage"  
-##  [5] "cranex"                    "key_column_usage"         
-##  [7] "keys"                      "public_tables"            
-##  [9] "referential_constraints"   "rs"                       
-## [11] "schema_list"               "table_constraints"        
-## [13] "table_info"                "table_info_schema_table"  
-## [15] "tables"
+##  [5] "key_column_usage"          "keys"                     
+##  [7] "public_tables"             "referential_constraints"  
+##  [9] "rs"                        "schema_list"              
+## [11] "table_constraints"         "table_info"               
+## [13] "table_info_schema_table"   "tables"
 ```
 
 

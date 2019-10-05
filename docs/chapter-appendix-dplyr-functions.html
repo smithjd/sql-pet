@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>F Dplyr functions and SQL cross-walk | r-database-docker.utf8</title>
+  <title>F Dplyr functions and SQL cross-walk | Exploring Enterprise Databases with R: A Tidyverse Approach</title>
   <meta name="description" content="An introduction to Docker and PostgreSQL for R users to simulate use cases behind corporate walls." />
-  <meta name="generator" content="bookdown 0.12 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.14 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="F Dplyr functions and SQL cross-walk | r-database-docker.utf8" />
+  <meta property="og:title" content="F Dplyr functions and SQL cross-walk | Exploring Enterprise Databases with R: A Tidyverse Approach" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="F Dplyr functions and SQL cross-walk | r-database-docker.utf8" />
+  <meta name="twitter:title" content="F Dplyr functions and SQL cross-walk | Exploring Enterprise Databases with R: A Tidyverse Approach" />
   
   <meta name="twitter:description" content="An introduction to Docker and PostgreSQL for R users to simulate use cases behind corporate walls." />
   
@@ -24,15 +24,15 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, and Ian Frantz" />
 
 
-<meta name="date" content="2019-09-13" />
+<meta name="date" content="2019-10-04" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="chapter-appendix-postresql-authentication.html">
-<link rel="next" href="chapter-appendix-dbi-index.html">
+<link rel="prev" href="chapter-appendix-postresql-authentication.html"/>
+<link rel="next" href="chapter-appendix-dbi-index.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -40,6 +40,7 @@
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
 
 
 
@@ -47,36 +48,39 @@
 
 
 
-<script src="libs/htmlwidgets-1.3/htmlwidgets.js"></script>
+
+
+<script src="libs/htmlwidgets-1.5/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.8/datatables.js"></script>
-<link href="libs/dt-core-1.10.16/css/jquery.dataTables.min.css" rel="stylesheet" />
-<link href="libs/dt-core-1.10.16/css/jquery.dataTables.extra.css" rel="stylesheet" />
-<script src="libs/dt-core-1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="libs/datatables-binding-0.9/datatables.js"></script>
+<link href="libs/dt-core-1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.10.19/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.10.19/js/jquery.dataTables.min.js"></script>
 <link href="libs/crosstalk-1.0.0/css/crosstalk.css" rel="stylesheet" />
 <script src="libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -85,9 +89,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -193,34 +197,57 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.4" data-path="chapter-connect-to-db-with-r-code.html"><a href="chapter-connect-to-db-with-r-code.html#anatomy-of-a-dplyr-connection-object"><i class="fa fa-check"></i><b>6.4</b> Anatomy of a <code>dplyr</code> connection object</a></li>
 <li class="chapter" data-level="6.5" data-path="chapter-connect-to-db-with-r-code.html"><a href="chapter-connect-to-db-with-r-code.html#cleaning-up-1"><i class="fa fa-check"></i><b>6.5</b> Cleaning up</a></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="chapter-DBMS-queries-intro.html"><a href="chapter-DBMS-queries-intro.html"><i class="fa fa-check"></i><b>7</b> Introduction to DBMS queries</a><ul>
-<li class="chapter" data-level="7.1" data-path="chapter-DBMS-queries-intro.html"><a href="chapter-DBMS-queries-intro.html#setup"><i class="fa fa-check"></i><b>7.1</b> Setup</a></li>
-<li class="chapter" data-level="7.2" data-path="chapter-DBMS-queries-intro.html"><a href="chapter-DBMS-queries-intro.html#methods-for-downloading-a-single-table"><i class="fa fa-check"></i><b>7.2</b> Methods for downloading a single table</a><ul>
-<li class="chapter" data-level="7.2.1" data-path="chapter-DBMS-queries-intro.html"><a href="chapter-DBMS-queries-intro.html#read-the-entire-table"><i class="fa fa-check"></i><b>7.2.1</b> Read the entire table</a></li>
-<li class="chapter" data-level="7.2.2" data-path="chapter-DBMS-queries-intro.html"><a href="chapter-DBMS-queries-intro.html#create-a-pointer-to-a-table-that-can-be-reused"><i class="fa fa-check"></i><b>7.2.2</b> Create a pointer to a table that can be reused</a></li>
-<li class="chapter" data-level="7.2.3" data-path="chapter-DBMS-queries-intro.html"><a href="chapter-DBMS-queries-intro.html#controlling-the-number-of-rows-returned-with-collect"><i class="fa fa-check"></i><b>7.2.3</b> Controlling the number of rows returned with <code>collect()</code></a></li>
-<li class="chapter" data-level="7.2.4" data-path="chapter-DBMS-queries-intro.html"><a href="chapter-DBMS-queries-intro.html#retrieving-random-rows-from-the-dbms"><i class="fa fa-check"></i><b>7.2.4</b> Retrieving random rows from the DBMS</a></li>
-<li class="chapter" data-level="7.2.5" data-path="chapter-DBMS-queries-intro.html"><a href="chapter-DBMS-queries-intro.html#sub-setting-variables"><i class="fa fa-check"></i><b>7.2.5</b> Sub-setting variables</a></li>
+<li class="chapter" data-level="7" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html"><i class="fa fa-check"></i><b>7</b> Introduction to DBMS queries</a><ul>
+<li class="chapter" data-level="7.1" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#setup"><i class="fa fa-check"></i><b>7.1</b> Setup</a></li>
+<li class="chapter" data-level="7.2" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#methods-for-downloading-a-single-table"><i class="fa fa-check"></i><b>7.2</b> Methods for downloading a single table</a><ul>
+<li class="chapter" data-level="7.2.1" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#read-the-entire-table"><i class="fa fa-check"></i><b>7.2.1</b> Read the entire table</a></li>
+<li class="chapter" data-level="7.2.2" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#create-a-pointer-to-a-table-that-can-be-reused"><i class="fa fa-check"></i><b>7.2.2</b> Create a pointer to a table that can be reused</a></li>
+<li class="chapter" data-level="7.2.3" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#controlling-the-number-of-rows-returned-with-collect"><i class="fa fa-check"></i><b>7.2.3</b> Controlling the number of rows returned with <code>collect()</code></a></li>
+<li class="chapter" data-level="7.2.4" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#retrieving-random-rows-from-the-dbms"><i class="fa fa-check"></i><b>7.2.4</b> Retrieving random rows from the DBMS</a></li>
+<li class="chapter" data-level="7.2.5" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#sub-setting-variables"><i class="fa fa-check"></i><b>7.2.5</b> Sub-setting variables</a></li>
 </ul></li>
-<li class="chapter" data-level="7.3" data-path="chapter-DBMS-queries-intro.html"><a href="chapter-DBMS-queries-intro.html#translating-dplyr-code-to-sql-queries"><i class="fa fa-check"></i><b>7.3</b> Translating <code>dplyr</code> code to <code>SQL</code> queries</a></li>
-<li class="chapter" data-level="7.4" data-path="chapter-DBMS-queries-intro.html"><a href="chapter-DBMS-queries-intro.html#mixing-dplyr-and-sql"><i class="fa fa-check"></i><b>7.4</b> Mixing dplyr and SQL</a></li>
-<li class="chapter" data-level="7.5" data-path="chapter-DBMS-queries-intro.html"><a href="chapter-DBMS-queries-intro.html#examining-a-single-table-with-r"><i class="fa fa-check"></i><b>7.5</b> Examining a single table with R</a><ul>
-<li class="chapter" data-level="7.5.1" data-path="chapter-DBMS-queries-intro.html"><a href="chapter-DBMS-queries-intro.html#str---a-base-package-workhorse"><i class="fa fa-check"></i><b>7.5.1</b> <code>str</code> - a base package workhorse</a></li>
-<li class="chapter" data-level="7.5.2" data-path="chapter-DBMS-queries-intro.html"><a href="chapter-DBMS-queries-intro.html#always-look-at-your-data-with-head-view-or-kable"><i class="fa fa-check"></i><b>7.5.2</b> Always <strong>look</strong> at your data with <code>head</code>, <code>View</code>, or <code>kable</code></a></li>
-<li class="chapter" data-level="7.5.3" data-path="chapter-DBMS-queries-intro.html"><a href="chapter-DBMS-queries-intro.html#the-summary-function-in-base"><i class="fa fa-check"></i><b>7.5.3</b> The <code>summary</code> function in <code>base</code></a></li>
-<li class="chapter" data-level="7.5.4" data-path="chapter-DBMS-queries-intro.html"><a href="chapter-DBMS-queries-intro.html#the-glimpse-function-in-the-tibble-package"><i class="fa fa-check"></i><b>7.5.4</b> The <code>glimpse</code> function in the <code>tibble</code> package</a></li>
-<li class="chapter" data-level="7.5.5" data-path="chapter-DBMS-queries-intro.html"><a href="chapter-DBMS-queries-intro.html#the-skim-function-in-the-skimr-package"><i class="fa fa-check"></i><b>7.5.5</b> The <code>skim</code> function in the <code>skimr</code> package</a></li>
-<li class="chapter" data-level="7.5.6" data-path="chapter-DBMS-queries-intro.html"><a href="chapter-DBMS-queries-intro.html#close-the-connection-and-shut-down-adventureworks"><i class="fa fa-check"></i><b>7.5.6</b> Close the connection and shut down adventureworks</a></li>
+<li class="chapter" data-level="7.3" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#translating-dplyr-code-to-sql-queries"><i class="fa fa-check"></i><b>7.3</b> Translating <code>dplyr</code> code to <code>SQL</code> queries</a></li>
+<li class="chapter" data-level="7.4" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#mixing-dplyr-and-sql"><i class="fa fa-check"></i><b>7.4</b> Mixing dplyr and SQL</a></li>
+<li class="chapter" data-level="7.5" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#examining-a-single-table-with-r"><i class="fa fa-check"></i><b>7.5</b> Examining a single table with R</a><ul>
+<li class="chapter" data-level="7.5.1" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#str---a-base-package-workhorse"><i class="fa fa-check"></i><b>7.5.1</b> <code>str</code> - a base package workhorse</a></li>
+<li class="chapter" data-level="7.5.2" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#always-look-at-your-data-with-head-view-or-kable"><i class="fa fa-check"></i><b>7.5.2</b> Always <strong>look</strong> at your data with <code>head</code>, <code>View</code>, or <code>kable</code></a></li>
+<li class="chapter" data-level="7.5.3" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#the-summary-function-in-base"><i class="fa fa-check"></i><b>7.5.3</b> The <code>summary</code> function in <code>base</code></a></li>
+<li class="chapter" data-level="7.5.4" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#the-glimpse-function-in-the-tibble-package"><i class="fa fa-check"></i><b>7.5.4</b> The <code>glimpse</code> function in the <code>tibble</code> package</a></li>
+<li class="chapter" data-level="7.5.5" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#the-skim-function-in-the-skimr-package"><i class="fa fa-check"></i><b>7.5.5</b> The <code>skim</code> function in the <code>skimr</code> package</a></li>
+<li class="chapter" data-level="7.5.6" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#close-the-connection-and-shut-down-adventureworks"><i class="fa fa-check"></i><b>7.5.6</b> Close the connection and shut down adventureworks</a></li>
 </ul></li>
-<li class="chapter" data-level="7.6" data-path="chapter-DBMS-queries-intro.html"><a href="chapter-DBMS-queries-intro.html#additional-reading"><i class="fa fa-check"></i><b>7.6</b> Additional reading</a></li>
+<li class="chapter" data-level="7.6" data-path="chapter-dbms-queries-intro.html"><a href="chapter-dbms-queries-intro.html#additional-reading"><i class="fa fa-check"></i><b>7.6</b> Additional reading</a></li>
 </ul></li>
-<li class="chapter" data-level="8" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html"><i class="fa fa-check"></i><b>8</b> Exploring a Single Table (with a Business Perspective)</a><ul>
+<li class="chapter" data-level="8" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html"><i class="fa fa-check"></i><b>8</b> Exploring a Single Table (asking Business Questions)</a><ul>
 <li class="chapter" data-level="8.1" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#setup-our-standard-working-environment"><i class="fa fa-check"></i><b>8.1</b> Setup our standard working environment</a></li>
-<li class="chapter" data-level="8.2" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#sales-orders-and-dollars"><i class="fa fa-check"></i><b>8.2</b> Sales Orders and Dollars</a></li>
-<li class="chapter" data-level="8.3" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#adventure-works-monthly-sales"><i class="fa fa-check"></i><b>8.3</b> Adventure Works Monthly Sales</a></li>
-<li class="chapter" data-level="8.4" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#monthly-sales-rep-performance-analysis"><i class="fa fa-check"></i><b>8.4</b> Monthly Sales Rep Performance Analysis</a></li>
-<li class="chapter" data-level="8.5" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#adventure-works-monthly-sales-1"><i class="fa fa-check"></i><b>8.5</b> Adventure Works Monthly Sales</a></li>
-<li class="chapter" data-level="8.6" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#close-and-clean-up"><i class="fa fa-check"></i><b>8.6</b> Close and clean up</a></li>
+<li class="chapter" data-level="8.2" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#the-overall-adventureworks-sales-picture"><i class="fa fa-check"></i><b>8.2</b> The overall AdventureWorks sales picture</a></li>
+<li class="chapter" data-level="8.3" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#annual-sales"><i class="fa fa-check"></i><b>8.3</b> Annual sales</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#total-sales-by-year"><i class="fa fa-check"></i><b>8.3.1</b> Total sales by year</a></li>
+<li class="chapter" data-level="8.3.2" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#total-order-volume"><i class="fa fa-check"></i><b>8.3.2</b> Total order volume</a></li>
+<li class="chapter" data-level="8.3.3" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#average-dollars-per-sale"><i class="fa fa-check"></i><b>8.3.3</b> Average dollars per sale</a></li>
+<li class="chapter" data-level="8.3.4" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#order-volume-and-average-sale-together"><i class="fa fa-check"></i><b>8.3.4</b> Order volume and average sale together</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#monthly-sales"><i class="fa fa-check"></i><b>8.4</b> Monthly Sales</a><ul>
+<li class="chapter" data-level="8.4.1" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#comparing-dollars-and-orders-to-a-baseline"><i class="fa fa-check"></i><b>8.4.1</b> Comparing dollars and orders to a baseline</a></li>
+</ul></li>
+<li class="chapter" data-level="8.5" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#the-effect-of-online-sales"><i class="fa fa-check"></i><b>8.5</b> The effect of online sales</a><ul>
+<li class="chapter" data-level="8.5.1" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#add-onlineorderflag-to-our-query"><i class="fa fa-check"></i><b>8.5.1</b> Add <code>onlineorderflag</code> to our query</a></li>
+<li class="chapter" data-level="8.5.2" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#annual-sales-comparison"><i class="fa fa-check"></i><b>8.5.2</b> Annual Sales comparison</a></li>
+<li class="chapter" data-level="8.5.3" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#order-volume-comparison"><i class="fa fa-check"></i><b>8.5.3</b> Order volume comparison</a></li>
+<li class="chapter" data-level="8.5.4" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#average-sale-comparison"><i class="fa fa-check"></i><b>8.5.4</b> Average sale comparison</a></li>
+<li class="chapter" data-level="8.5.5" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#comparing-order-volume-and-average-sale-together"><i class="fa fa-check"></i><b>8.5.5</b> Comparing order volume and average sale together</a></li>
+</ul></li>
+<li class="chapter" data-level="8.6" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#impact-of-order-type-on-monthly-sales"><i class="fa fa-check"></i><b>8.6</b> Impact of order type on monthly sales</a><ul>
+<li class="chapter" data-level="8.6.1" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#retrieve-monthly-sales-with-the-onlineorderflag"><i class="fa fa-check"></i><b>8.6.1</b> Retrieve monthly sales with the <code>onlineorderflag</code></a></li>
+<li class="chapter" data-level="8.6.2" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#monthly-variation-compared-to-a-trend-line"><i class="fa fa-check"></i><b>8.6.2</b> Monthly variation compared to a trend line</a></li>
+<li class="chapter" data-level="8.6.3" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#looking-at-lagged-data"><i class="fa fa-check"></i><b>8.6.3</b> Looking at lagged data</a></li>
+</ul></li>
+<li class="chapter" data-level="8.7" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#variation-over-time"><i class="fa fa-check"></i><b>8.7</b> Variation over time</a></li>
+<li class="chapter" data-level="8.8" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#these-queries-and-graphs-may-be-redundant"><i class="fa fa-check"></i><b>8.8</b> These queries and graphs may be redundant</a></li>
+<li class="chapter" data-level="8.9" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#monthly-sales-rep-performance-analysis"><i class="fa fa-check"></i><b>8.9</b> Monthly Sales Rep Performance Analysis</a><ul>
+<li class="chapter" data-level="8.9.1" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#effect-of-late-entries-on-sales-rep-data"><i class="fa fa-check"></i><b>8.9.1</b> Effect of Late Entries on Sales Rep data</a></li>
+</ul></li>
+<li class="chapter" data-level="8.10" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#close-and-clean-up"><i class="fa fa-check"></i><b>8.10</b> Close and clean up</a></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html"><i class="fa fa-check"></i><b>9</b> Lazy Evaluation and Lazy Queries</a><ul>
 <li class="chapter" data-level="9.1" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#setup-1"><i class="fa fa-check"></i><b>9.1</b> Setup</a></li>
@@ -374,8 +401,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./"><div class="line-block">Exploring Enterprise Databases with R<br />
-A Tidyverse Approach</div></a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Exploring Enterprise Databases with R: A Tidyverse Approach</a>
           </h1>
         </div>
 
@@ -776,11 +802,13 @@ A Tidyverse Approach</div></a>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
