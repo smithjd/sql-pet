@@ -184,7 +184,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## 8560590d15b5        postgres:11         "docker-entrypoint.s…"   29 seconds ago      Exited (0) Less than a second ago                       adventureworks
+## ee0f6ee5a1cc        postgres:11         "docker-entrypoint.s…"   30 seconds ago      Exited (0) Less than a second ago                       adventureworks
 ## 8435d4b7ee78        znmeb/postgis       "docker-entrypoint.s…"   9 days ago          Exited (0) 8 days ago                                   containers_postgis_1
 ## da60e11b3727        6b2784b116df        "/bin/sh -c 'mkdir /…"   9 days ago          Exited (2) 9 days ago                                   condescending_carson
 ## 4bbb083cba07        443540ec5848        "/bin/sh -c 'R -e 'i…"   9 days ago          Exited (1) 9 days ago                                   trusting_euler
