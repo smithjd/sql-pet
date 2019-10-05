@@ -255,7 +255,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="9.2.1" data-path="chapter-sales-forecasting.html"><a href="chapter-sales-forecasting.html#creating-a-tsibble"><i class="fa fa-check"></i><b>9.2.1</b> Creating a tsibble</a></li>
 <li class="chapter" data-level="9.2.2" data-path="chapter-sales-forecasting.html"><a href="chapter-sales-forecasting.html#exploring-the-data"><i class="fa fa-check"></i><b>9.2.2</b> Exploring the data</a></li>
 </ul></li>
-<li class="chapter" data-level="9.3" data-path="chapter-sales-forecasting.html"><a href="chapter-sales-forecasting.html#forecasting"><i class="fa fa-check"></i><b>9.3</b> Forecasting</a></li>
 </ul></li>
 <li class="chapter" data-level="10" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html"><i class="fa fa-check"></i><b>10</b> Lazy Evaluation and Lazy Queries</a><ul>
 <li class="chapter" data-level="10.1" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#setup-2"><i class="fa fa-check"></i><b>10.1</b> Setup</a></li>
@@ -522,26 +521,26 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb75-7"><a href="chapter-dbms-queries-intro.html#cb75-7"></a></span>
 <span id="cb75-8"><a href="chapter-dbms-queries-intro.html#cb75-8"></a>one_percent_sample</span></code></pre></div>
 <pre><code>##     orderdate   subtotal    taxamt  freight   totaldue
-## 1  2011-05-31  5716.3102  546.8759 170.8987  6434.0848
-## 2  2011-05-31 20541.4072 1969.5564 615.4864 23126.4500
-## 3  2011-06-08  3399.9900  271.9992  84.9998  3756.9890
-## 4  2011-06-10  3578.2700  286.2616  89.4568  3953.9884
-## 5  2011-06-21  3399.9900  271.9992  84.9998  3756.9890
-## 6  2011-06-27  3578.2700  286.2616  89.4568  3953.9884
-## 7  2011-07-01  4049.9880  388.7988 121.4996  4560.2864
-## 8  2011-07-07  3578.2700  286.2616  89.4568  3953.9884
-## 9  2011-07-07  3578.2700  286.2616  89.4568  3953.9884
-## 10 2011-07-13   699.0982   55.9279  17.4775   772.5036
-## 11 2011-07-30  3399.9900  271.9992  84.9998  3756.9890
-## 12 2011-08-16   699.0982   55.9279  17.4775   772.5036
-## 13 2011-08-19  3578.2700  286.2616  89.4568  3953.9884
-## 14 2011-08-20  3578.2700  286.2616  89.4568  3953.9884
-## 15 2011-08-31 32383.1098 3108.9064 971.5333 36463.5495
-## 16 2011-09-03  3578.2700  286.2616  89.4568  3953.9884
-## 17 2011-09-09  3578.2700  286.2616  89.4568  3953.9884
-## 18 2011-09-15  3578.2700  286.2616  89.4568  3953.9884
-## 19 2011-10-01 22817.6077 2197.4479 686.7025 25701.7581
-## 20 2011-10-01  2146.9620  206.1084  64.4089  2417.4793</code></pre>
+## 1  2011-06-03  3578.2700  286.2616  89.4568  3953.9884
+## 2  2011-06-07  3578.2700  286.2616  89.4568  3953.9884
+## 3  2011-06-10  3578.2700  286.2616  89.4568  3953.9884
+## 4  2011-06-16  3578.2700  286.2616  89.4568  3953.9884
+## 5  2011-06-18  3578.2700  286.2616  89.4568  3953.9884
+## 6  2011-06-24   699.0982   55.9279  17.4775   772.5036
+## 7  2011-06-29  3578.2700  286.2616  89.4568  3953.9884
+## 8  2011-07-01 32459.9278 3121.4886 975.4652 36556.8816
+## 9  2011-07-24   699.0982   55.9279  17.4775   772.5036
+## 10 2011-07-28  3578.2700  286.2616  89.4568  3953.9884
+## 11 2011-08-01  4075.0341  393.8955 123.0923  4592.0219
+## 12 2011-08-01  2604.0653  249.8450  78.0766  2931.9869
+## 13 2011-08-02  3578.2700  286.2616  89.4568  3953.9884
+## 14 2011-08-09  3578.2700  286.2616  89.4568  3953.9884
+## 15 2011-08-15  3578.2700  286.2616  89.4568  3953.9884
+## 16 2011-08-27   699.0982   55.9279  17.4775   772.5036
+## 17 2011-08-31  3578.2700  286.2616  89.4568  3953.9884
+## 18 2011-09-06  3578.2700  286.2616  89.4568  3953.9884
+## 19 2011-09-06  3578.2700  286.2616  89.4568  3953.9884
+## 20 2011-09-11  3374.9900  269.9992  84.3748  3729.3640</code></pre>
 <p><strong>Exact sample of 100 records</strong></p>
 <p>This technique depends on knowing the range of a record index, such as the <code>businessentityid</code> in the <code>salesorderheader</code> table of our <code>adventureworks</code> database.</p>
 <p>Start by finding the min and max values.</p>
@@ -826,12 +825,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##  n obs: 31465 
 ##  n variables: 13 
 ## 
-## ── Variable type:character ─────────────────────────────────────────────────────────
+## ── Variable type:character ────────────────────────────────────────────────────
 ##             variable missing complete     n min max empty n_unique
 ##        accountnumber       0    31465 31465  14  14     0    19119
 ##  purchaseordernumber   27659     3806 31465  10  13     0     3806
 ## 
-## ── Variable type:integer ───────────────────────────────────────────────────────────
+## ── Variable type:integer ──────────────────────────────────────────────────────
 ##         variable missing complete     n     mean       sd    p0   p25
 ##  billtoaddressid       0    31465 31465 18263.15 8210.07    405 14080
 ##       customerid       0    31465 31465 20170.18 6261.73  11000 14432
@@ -849,11 +848,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##      5     5     5 ▁▁▁▇▁▁▁▁
 ##      6     9    10 ▃▁▅▁▃▂▂▇
 ## 
-## ── Variable type:logical ───────────────────────────────────────────────────────────
+## ── Variable type:logical ──────────────────────────────────────────────────────
 ##         variable missing complete     n mean                        count
 ##  onlineorderflag       0    31465 31465 0.88 TRU: 27659, FAL: 3806, NA: 0
 ## 
-## ── Variable type:POSIXct ───────────────────────────────────────────────────────────
+## ── Variable type:POSIXct ──────────────────────────────────────────────────────
 ##   variable missing complete     n        min        max     median
 ##    duedate       0    31465 31465 2011-06-12 2014-07-12 2013-11-15
 ##  orderdate       0    31465 31465 2011-05-31 2014-06-30 2013-11-03

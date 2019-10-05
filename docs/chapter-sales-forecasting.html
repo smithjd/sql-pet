@@ -255,7 +255,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="9.2.1" data-path="chapter-sales-forecasting.html"><a href="chapter-sales-forecasting.html#creating-a-tsibble"><i class="fa fa-check"></i><b>9.2.1</b> Creating a tsibble</a></li>
 <li class="chapter" data-level="9.2.2" data-path="chapter-sales-forecasting.html"><a href="chapter-sales-forecasting.html#exploring-the-data"><i class="fa fa-check"></i><b>9.2.2</b> Exploring the data</a></li>
 </ul></li>
-<li class="chapter" data-level="9.3" data-path="chapter-sales-forecasting.html"><a href="chapter-sales-forecasting.html#forecasting"><i class="fa fa-check"></i><b>9.3</b> Forecasting</a></li>
 </ul></li>
 <li class="chapter" data-level="10" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html"><i class="fa fa-check"></i><b>10</b> Lazy Evaluation and Lazy Queries</a><ul>
 <li class="chapter" data-level="10.1" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#setup-2"><i class="fa fa-check"></i><b>10.1</b> Setup</a></li>
@@ -435,7 +434,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb160-5"><a href="chapter-sales-forecasting.html#cb160-5"></a><span class="kw">library</span>(bookdown)</span>
 <span id="cb160-6"><a href="chapter-sales-forecasting.html#cb160-6"></a><span class="kw">library</span>(sqlpetr)</span>
 <span id="cb160-7"><a href="chapter-sales-forecasting.html#cb160-7"></a><span class="kw">library</span>(tsibble)</span>
-<span id="cb160-8"><a href="chapter-sales-forecasting.html#cb160-8"></a><span class="kw">library</span>(fable)</span></code></pre></div>
+<span id="cb160-8"><a href="chapter-sales-forecasting.html#cb160-8"></a><span class="kw">library</span>(fable)</span>
+<span id="cb160-9"><a href="chapter-sales-forecasting.html#cb160-9"></a><span class="kw">library</span>(zoo)</span></code></pre></div>
 <p>Analyzing sales time series, in particular determining seasonality and forecasting future sales, is a common activty in business management. A collection of packages called <code>tidyverst</code> is designed to do this in a tidy data framework.</p>
 <p>First, we make sure the Docker container is ready and connect to the <code>adventureworks</code> database.</p>
 <div class="sourceCode" id="cb161"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb161-1"><a href="chapter-sales-forecasting.html#cb161-1"></a>sqlpetr<span class="op">::</span><span class="kw">sp_docker_start</span>(<span class="st">&quot;adventureworks&quot;</span>)</span>
@@ -443,12 +443,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb161-3"><a href="chapter-sales-forecasting.html#cb161-3"></a>  <span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),</span>
 <span id="cb161-4"><a href="chapter-sales-forecasting.html#cb161-4"></a>  <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),</span>
 <span id="cb161-5"><a href="chapter-sales-forecasting.html#cb161-5"></a>  <span class="dt">dbname =</span> <span class="st">&quot;adventureworks&quot;</span>,</span>
-<span id="cb161-6"><a href="chapter-sales-forecasting.html#cb161-6"></a>  <span class="dt">port =</span> <span class="dv">5432</span>, </span>
-<span id="cb161-7"><a href="chapter-sales-forecasting.html#cb161-7"></a>  <span class="dt">seconds_to_test =</span> <span class="dv">20</span>, </span>
+<span id="cb161-6"><a href="chapter-sales-forecasting.html#cb161-6"></a>  <span class="dt">port =</span> <span class="dv">5432</span>,</span>
+<span id="cb161-7"><a href="chapter-sales-forecasting.html#cb161-7"></a>  <span class="dt">seconds_to_test =</span> <span class="dv">20</span>,</span>
 <span id="cb161-8"><a href="chapter-sales-forecasting.html#cb161-8"></a>  <span class="dt">connection_tab =</span> <span class="ot">FALSE</span></span>
 <span id="cb161-9"><a href="chapter-sales-forecasting.html#cb161-9"></a>)</span></code></pre></div>
 <p>Next, we retrieve the “sales order header” table from the database, close the connection and stop the container.</p>
-<div class="sourceCode" id="cb162"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb162-1"><a href="chapter-sales-forecasting.html#cb162-1"></a><span class="kw">dbExecute</span>(con, <span class="st">&quot;set search_path to sales;&quot;</span>) </span></code></pre></div>
+<div class="sourceCode" id="cb162"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb162-1"><a href="chapter-sales-forecasting.html#cb162-1"></a><span class="kw">dbExecute</span>(con, <span class="st">&quot;set search_path to sales;&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] 0</code></pre>
 <div class="sourceCode" id="cb164"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb164-1"><a href="chapter-sales-forecasting.html#cb164-1"></a>salesorderheader_tibble &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbReadTable</span>(con, <span class="st">&quot;salesorderheader&quot;</span>)</span>
 <span id="cb164-2"><a href="chapter-sales-forecasting.html#cb164-2"></a>DBI<span class="op">::</span><span class="kw">dbDisconnect</span>(con)</span>
@@ -466,33 +466,38 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb165"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb165-1"><a href="chapter-sales-forecasting.html#cb165-1"></a>monthly_tsibble &lt;-<span class="st"> </span>salesorderheader_tibble <span class="op">%&gt;%</span></span>
 <span id="cb165-2"><a href="chapter-sales-forecasting.html#cb165-2"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(</span>
 <span id="cb165-3"><a href="chapter-sales-forecasting.html#cb165-3"></a>    <span class="dt">origin =</span> <span class="kw">ifelse</span>(onlineorderflag, <span class="st">&quot;online&quot;</span>, <span class="st">&quot;sales_rep&quot;</span>),</span>
-<span id="cb165-4"><a href="chapter-sales-forecasting.html#cb165-4"></a>    <span class="dt">month_start =</span> lubridate<span class="op">::</span><span class="kw">floor_date</span>(shipdate, <span class="dt">unit =</span> <span class="st">&quot;months&quot;</span>)</span>
-<span id="cb165-5"><a href="chapter-sales-forecasting.html#cb165-5"></a>  ) <span class="op">%&gt;%</span></span>
-<span id="cb165-6"><a href="chapter-sales-forecasting.html#cb165-6"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">group_by</span>(origin, month_start) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb165-7"><a href="chapter-sales-forecasting.html#cb165-7"></a><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">summarize</span>(<span class="dt">orders =</span> <span class="kw">n</span>(), <span class="dt">total_revenue =</span> <span class="kw">sum</span>(subtotal)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb165-8"><a href="chapter-sales-forecasting.html#cb165-8"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb165-9"><a href="chapter-sales-forecasting.html#cb165-9"></a><span class="st">  </span>tsibble<span class="op">::</span><span class="kw">as_tsibble</span>(<span class="dt">key =</span> origin, <span class="dt">index =</span> month_start)</span></code></pre></div>
-<p>Note that there are two more months - June and July of 2014 - for the online data, and the revenue values are suspiciously low. We remove them for consistency.</p>
-<div class="sourceCode" id="cb166"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb166-1"><a href="chapter-sales-forecasting.html#cb166-1"></a>monthly_tsibble &lt;-<span class="st"> </span>monthly_tsibble <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">filter</span>(month_start <span class="op">&lt;</span><span class="st"> &#39;2014-06-01&#39;</span>)</span></code></pre></div>
+<span id="cb165-4"><a href="chapter-sales-forecasting.html#cb165-4"></a>    <span class="dt">month =</span> lubridate<span class="op">::</span><span class="kw">floor_date</span>(shipdate, <span class="dt">unit =</span> <span class="st">&quot;months&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb165-5"><a href="chapter-sales-forecasting.html#cb165-5"></a><span class="st">      </span><span class="kw">as.yearmon</span>()</span>
+<span id="cb165-6"><a href="chapter-sales-forecasting.html#cb165-6"></a>  ) <span class="op">%&gt;%</span></span>
+<span id="cb165-7"><a href="chapter-sales-forecasting.html#cb165-7"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">group_by</span>(origin, month) <span class="op">%&gt;%</span></span>
+<span id="cb165-8"><a href="chapter-sales-forecasting.html#cb165-8"></a><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">summarize</span>(<span class="dt">orders =</span> <span class="kw">n</span>(), <span class="dt">total_revenue =</span> <span class="kw">sum</span>(subtotal)) <span class="op">%&gt;%</span></span>
+<span id="cb165-9"><a href="chapter-sales-forecasting.html#cb165-9"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">ungroup</span>()</span>
+<span id="cb165-10"><a href="chapter-sales-forecasting.html#cb165-10"></a></span>
+<span id="cb165-11"><a href="chapter-sales-forecasting.html#cb165-11"></a><span class="co"># Note that there are two more months - June and July of 2014 - for the</span></span>
+<span id="cb165-12"><a href="chapter-sales-forecasting.html#cb165-12"></a><span class="co"># online data, and the revenue values are suspiciously low.</span></span>
+<span id="cb165-13"><a href="chapter-sales-forecasting.html#cb165-13"></a><span class="co"># We remove them for consistency.</span></span>
+<span id="cb165-14"><a href="chapter-sales-forecasting.html#cb165-14"></a>monthly_tsibble &lt;-<span class="st"> </span>monthly_tsibble <span class="op">%&gt;%</span></span>
+<span id="cb165-15"><a href="chapter-sales-forecasting.html#cb165-15"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(month <span class="op">&lt;</span><span class="st"> &#39;2014-06-01&#39;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb165-16"><a href="chapter-sales-forecasting.html#cb165-16"></a><span class="st">  </span>tsibble<span class="op">::</span><span class="kw">as_tsibble</span>(<span class="dt">key =</span> origin, <span class="dt">index =</span> month)</span></code></pre></div>
 </div>
 <div id="exploring-the-data" class="section level3">
 <h3><span class="header-section-number">9.2.2</span> Exploring the data</h3>
 <p>First, let’s look at orders for online and sales representative sales:</p>
-<div class="sourceCode" id="cb167"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb167-1"><a href="chapter-sales-forecasting.html#cb167-1"></a>monthly_tsibble <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">autoplot</span>(orders)</span></code></pre></div>
-<p><img src="085-sales-forecasting_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<div class="sourceCode" id="cb166"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb166-1"><a href="chapter-sales-forecasting.html#cb166-1"></a>monthly_tsibble <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">autoplot</span>(orders)</span></code></pre></div>
+<pre><code>## Don&#39;t know how to automatically pick scale for object of type yearmon. Defaulting to continuous.</code></pre>
+<p><img src="085-sales-forecasting_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
 <p>Wow! Online orders really took off in the late spring - early summer of 2013! How about revenues?</p>
 <div class="sourceCode" id="cb168"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb168-1"><a href="chapter-sales-forecasting.html#cb168-1"></a>monthly_tsibble <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">autoplot</span>(total_revenue)</span></code></pre></div>
-<p><img src="085-sales-forecasting_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<pre><code>## Don&#39;t know how to automatically pick scale for object of type yearmon. Defaulting to continuous.</code></pre>
+<p><img src="085-sales-forecasting_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 <p>There’s an increase, but the sales representatives always brought in more revenue than the online platform. And there’s a pronounced variation in the revenue from sales representatives on a month-to-month basis.</p>
 <p>Before moving on, let’s look at revenue per order.</p>
-<div class="sourceCode" id="cb169"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb169-1"><a href="chapter-sales-forecasting.html#cb169-1"></a>monthly_tsibble <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">autoplot</span>(total_revenue <span class="op">/</span><span class="st"> </span>orders)</span></code></pre></div>
-<p><img src="085-sales-forecasting_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
-<p>For the sales representatives, there’s still a month-to-month variation but the revenue per order appears to be bounded both below and above. However, the online revenue per order is decreasing.</p>
-</div>
-</div>
-<div id="forecasting" class="section level2">
-<h2><span class="header-section-number">9.3</span> Forecasting</h2>
+<div class="sourceCode" id="cb170"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb170-1"><a href="chapter-sales-forecasting.html#cb170-1"></a>monthly_tsibble <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">autoplot</span>(total_revenue <span class="op">/</span><span class="st"> </span>orders)</span></code></pre></div>
+<pre><code>## Don&#39;t know how to automatically pick scale for object of type yearmon. Defaulting to continuous.</code></pre>
+<p><img src="085-sales-forecasting_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>For the sales representatives, there’s still a month-to-month variation but the revenue per order appears to be bounded both below and above. However, the online revenue per order is decreasing. Note that this decline appears to be in steps between May and June each year; that could mean it’s an artifact of the database creation process and not a “natural” phenomenon.</p>
 
+</div>
 </div>
 </div>
             </section>

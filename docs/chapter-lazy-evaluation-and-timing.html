@@ -255,7 +255,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="9.2.1" data-path="chapter-sales-forecasting.html"><a href="chapter-sales-forecasting.html#creating-a-tsibble"><i class="fa fa-check"></i><b>9.2.1</b> Creating a tsibble</a></li>
 <li class="chapter" data-level="9.2.2" data-path="chapter-sales-forecasting.html"><a href="chapter-sales-forecasting.html#exploring-the-data"><i class="fa fa-check"></i><b>9.2.2</b> Exploring the data</a></li>
 </ul></li>
-<li class="chapter" data-level="9.3" data-path="chapter-sales-forecasting.html"><a href="chapter-sales-forecasting.html#forecasting"><i class="fa fa-check"></i><b>9.3</b> Forecasting</a></li>
 </ul></li>
 <li class="chapter" data-level="10" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html"><i class="fa fa-check"></i><b>10</b> Lazy Evaluation and Lazy Queries</a><ul>
 <li class="chapter" data-level="10.1" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#setup-2"><i class="fa fa-check"></i><b>10.1</b> Setup</a></li>
@@ -429,31 +428,31 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="setup-3" class="section level2">
 <h2><span class="header-section-number">11.1</span> Setup</h2>
 <p>The following packages are used in this chapter:</p>
-<div class="sourceCode" id="cb201"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb201-1"><a href="chapter-lazy-evaluation-and-timing.html#cb201-1"></a><span class="kw">library</span>(tidyverse)</span>
-<span id="cb201-2"><a href="chapter-lazy-evaluation-and-timing.html#cb201-2"></a><span class="kw">library</span>(DBI)</span>
-<span id="cb201-3"><a href="chapter-lazy-evaluation-and-timing.html#cb201-3"></a><span class="kw">library</span>(RPostgres)</span>
-<span id="cb201-4"><a href="chapter-lazy-evaluation-and-timing.html#cb201-4"></a><span class="kw">library</span>(dbplyr)</span>
-<span id="cb201-5"><a href="chapter-lazy-evaluation-and-timing.html#cb201-5"></a><span class="kw">require</span>(knitr)</span>
-<span id="cb201-6"><a href="chapter-lazy-evaluation-and-timing.html#cb201-6"></a><span class="kw">library</span>(bookdown)</span>
-<span id="cb201-7"><a href="chapter-lazy-evaluation-and-timing.html#cb201-7"></a><span class="kw">library</span>(sqlpetr)</span></code></pre></div>
+<div class="sourceCode" id="cb203"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb203-1"><a href="chapter-lazy-evaluation-and-timing.html#cb203-1"></a><span class="kw">library</span>(tidyverse)</span>
+<span id="cb203-2"><a href="chapter-lazy-evaluation-and-timing.html#cb203-2"></a><span class="kw">library</span>(DBI)</span>
+<span id="cb203-3"><a href="chapter-lazy-evaluation-and-timing.html#cb203-3"></a><span class="kw">library</span>(RPostgres)</span>
+<span id="cb203-4"><a href="chapter-lazy-evaluation-and-timing.html#cb203-4"></a><span class="kw">library</span>(dbplyr)</span>
+<span id="cb203-5"><a href="chapter-lazy-evaluation-and-timing.html#cb203-5"></a><span class="kw">require</span>(knitr)</span>
+<span id="cb203-6"><a href="chapter-lazy-evaluation-and-timing.html#cb203-6"></a><span class="kw">library</span>(bookdown)</span>
+<span id="cb203-7"><a href="chapter-lazy-evaluation-and-timing.html#cb203-7"></a><span class="kw">library</span>(sqlpetr)</span></code></pre></div>
 <p>If you have not yet set up the Docker container with PostgreSQL and the dvdrental database, go back to [those instructions][Build the pet-sql Docker Image] to configure your environment. Otherwise, start your <code>adventureworks</code> container:</p>
-<div class="sourceCode" id="cb202"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb202-1"><a href="chapter-lazy-evaluation-and-timing.html#cb202-1"></a>sqlpetr<span class="op">::</span><span class="kw">sp_docker_start</span>(<span class="st">&quot;adventureworks&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb204"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb204-1"><a href="chapter-lazy-evaluation-and-timing.html#cb204-1"></a>sqlpetr<span class="op">::</span><span class="kw">sp_docker_start</span>(<span class="st">&quot;adventureworks&quot;</span>)</span></code></pre></div>
 <p>Connect to the database:</p>
-<div class="sourceCode" id="cb203"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb203-1"><a href="chapter-lazy-evaluation-and-timing.html#cb203-1"></a>con &lt;-<span class="st"> </span>sqlpetr<span class="op">::</span><span class="kw">sp_get_postgres_connection</span>(</span>
-<span id="cb203-2"><a href="chapter-lazy-evaluation-and-timing.html#cb203-2"></a>  <span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),</span>
-<span id="cb203-3"><a href="chapter-lazy-evaluation-and-timing.html#cb203-3"></a>  <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),</span>
-<span id="cb203-4"><a href="chapter-lazy-evaluation-and-timing.html#cb203-4"></a>  <span class="dt">dbname =</span> <span class="st">&quot;adventureworks&quot;</span>,</span>
-<span id="cb203-5"><a href="chapter-lazy-evaluation-and-timing.html#cb203-5"></a>  <span class="dt">port =</span> <span class="dv">5432</span>, </span>
-<span id="cb203-6"><a href="chapter-lazy-evaluation-and-timing.html#cb203-6"></a>  <span class="dt">seconds_to_test =</span> <span class="dv">20</span>, </span>
-<span id="cb203-7"><a href="chapter-lazy-evaluation-and-timing.html#cb203-7"></a>  <span class="dt">connection_tab =</span> <span class="ot">TRUE</span></span>
-<span id="cb203-8"><a href="chapter-lazy-evaluation-and-timing.html#cb203-8"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb205"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb205-1"><a href="chapter-lazy-evaluation-and-timing.html#cb205-1"></a>con &lt;-<span class="st"> </span>sqlpetr<span class="op">::</span><span class="kw">sp_get_postgres_connection</span>(</span>
+<span id="cb205-2"><a href="chapter-lazy-evaluation-and-timing.html#cb205-2"></a>  <span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),</span>
+<span id="cb205-3"><a href="chapter-lazy-evaluation-and-timing.html#cb205-3"></a>  <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),</span>
+<span id="cb205-4"><a href="chapter-lazy-evaluation-and-timing.html#cb205-4"></a>  <span class="dt">dbname =</span> <span class="st">&quot;adventureworks&quot;</span>,</span>
+<span id="cb205-5"><a href="chapter-lazy-evaluation-and-timing.html#cb205-5"></a>  <span class="dt">port =</span> <span class="dv">5432</span>, </span>
+<span id="cb205-6"><a href="chapter-lazy-evaluation-and-timing.html#cb205-6"></a>  <span class="dt">seconds_to_test =</span> <span class="dv">20</span>, </span>
+<span id="cb205-7"><a href="chapter-lazy-evaluation-and-timing.html#cb205-7"></a>  <span class="dt">connection_tab =</span> <span class="ot">TRUE</span></span>
+<span id="cb205-8"><a href="chapter-lazy-evaluation-and-timing.html#cb205-8"></a>)</span></code></pre></div>
 <p>Here is a simple string of <code>dplyr</code> verbs similar to the query used to illustrate issues in the last chapter:</p>
 <p>Note that in the previous example we follow this book’s convention of creating a connection object to each table and fully qualifying function names (e.g., specifying the package). In practice, it’s possible and convenient to use more abbreviated notation.</p>
-<div class="sourceCode" id="cb204"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb204-1"><a href="chapter-lazy-evaluation-and-timing.html#cb204-1"></a>Q &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;sales&quot;</span>, <span class="st">&quot;salesperson&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb204-2"><a href="chapter-lazy-evaluation-and-timing.html#cb204-2"></a><span class="st">  </span><span class="kw">left_join</span>(<span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;humanresources&quot;</span>, <span class="st">&quot;employee&quot;</span>)),  <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;businessentityid&quot;</span> =<span class="st"> &quot;businessentityid&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb204-3"><a href="chapter-lazy-evaluation-and-timing.html#cb204-3"></a><span class="st">  </span><span class="kw">select</span>(birthdate, saleslastyear)</span>
-<span id="cb204-4"><a href="chapter-lazy-evaluation-and-timing.html#cb204-4"></a></span>
-<span id="cb204-5"><a href="chapter-lazy-evaluation-and-timing.html#cb204-5"></a>Q</span></code></pre></div>
+<div class="sourceCode" id="cb206"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb206-1"><a href="chapter-lazy-evaluation-and-timing.html#cb206-1"></a>Q &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;sales&quot;</span>, <span class="st">&quot;salesperson&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb206-2"><a href="chapter-lazy-evaluation-and-timing.html#cb206-2"></a><span class="st">  </span><span class="kw">left_join</span>(<span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;humanresources&quot;</span>, <span class="st">&quot;employee&quot;</span>)),  <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;businessentityid&quot;</span> =<span class="st"> &quot;businessentityid&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb206-3"><a href="chapter-lazy-evaluation-and-timing.html#cb206-3"></a><span class="st">  </span><span class="kw">select</span>(birthdate, saleslastyear)</span>
+<span id="cb206-4"><a href="chapter-lazy-evaluation-and-timing.html#cb206-4"></a></span>
+<span id="cb206-5"><a href="chapter-lazy-evaluation-and-timing.html#cb206-5"></a>Q</span></code></pre></div>
 <pre><code>## # Source:   lazy query [?? x 2]
 ## # Database: postgres [postgres@localhost:5432/adventureworks]
 ##    birthdate  saleslastyear
@@ -537,8 +536,8 @@ Q_query &lt;- Q %&gt;% sum(saleslastyear)</p>
 <h3><span class="header-section-number">11.1.3</span> Q %&gt;% <code>more dplyr</code></h3>
 <p><img src="screenshots/green-check.png" /> Because the following statement implies a <code>print()</code> function at the end, we can run it repeatedly, adding dplyr expressions, and only get 10 rows back. Every time we add a dplyr expression to a chain, R will rewrite the SQL code. For example:
 As we understand more about the data, we simply add dplyr expressions to pinpoint what we are looking for:</p>
-<div class="sourceCode" id="cb206"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb206-1"><a href="chapter-lazy-evaluation-and-timing.html#cb206-1"></a>Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(saleslastyear <span class="op">&gt;</span><span class="st"> </span><span class="dv">40</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb206-2"><a href="chapter-lazy-evaluation-and-timing.html#cb206-2"></a><span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(saleslastyear))</span></code></pre></div>
+<div class="sourceCode" id="cb208"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb208-1"><a href="chapter-lazy-evaluation-and-timing.html#cb208-1"></a>Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(saleslastyear <span class="op">&gt;</span><span class="st"> </span><span class="dv">40</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb208-2"><a href="chapter-lazy-evaluation-and-timing.html#cb208-2"></a><span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(saleslastyear))</span></code></pre></div>
 <pre><code>## # Source:     lazy query [?? x 2]
 ## # Database:   postgres [postgres@localhost:5432/adventureworks]
 ## # Ordered by: desc(saleslastyear)
@@ -555,7 +554,7 @@ As we understand more about the data, we simply add dplyr expressions to pinpoin
 ##  9 1968-03-17      1635823.
 ## 10 1975-02-04      1620277.
 ## # … with more rows</code></pre>
-<div class="sourceCode" id="cb208"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb208-1"><a href="chapter-lazy-evaluation-and-timing.html#cb208-1"></a>Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarize</span>(<span class="dt">total_sales =</span> <span class="kw">sum</span>(saleslastyear, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dt">sales_persons_count =</span> <span class="kw">n</span>()) </span></code></pre></div>
+<div class="sourceCode" id="cb210"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb210-1"><a href="chapter-lazy-evaluation-and-timing.html#cb210-1"></a>Q <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarize</span>(<span class="dt">total_sales =</span> <span class="kw">sum</span>(saleslastyear, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dt">sales_persons_count =</span> <span class="kw">n</span>()) </span></code></pre></div>
 <pre><code>## # Source:   lazy query [?? x 2]
 ## # Database: postgres [postgres@localhost:5432/adventureworks]
 ##   total_sales sales_persons_count
@@ -563,9 +562,9 @@ As we understand more about the data, we simply add dplyr expressions to pinpoin
 ## 1   23685964. 17</code></pre>
 <p><img src="screenshots/green-check.png" /> When all the accumulated <code>dplyr</code> verbs are executed, they are submitted to the dbms and the number of rows that are returned follow the same rules as discussed above.
 ### Interspersing SQL and dplyr</p>
-<div class="sourceCode" id="cb210"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb210-1"><a href="chapter-lazy-evaluation-and-timing.html#cb210-1"></a>Q <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb210-2"><a href="chapter-lazy-evaluation-and-timing.html#cb210-2"></a><span class="st">  </span><span class="co"># mutate(birthdate = date(birthdate)) %&gt;% </span></span>
-<span id="cb210-3"><a href="chapter-lazy-evaluation-and-timing.html#cb210-3"></a><span class="st">  </span><span class="kw">show_query</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb212"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb212-1"><a href="chapter-lazy-evaluation-and-timing.html#cb212-1"></a>Q <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb212-2"><a href="chapter-lazy-evaluation-and-timing.html#cb212-2"></a><span class="st">  </span><span class="co"># mutate(birthdate = date(birthdate)) %&gt;% </span></span>
+<span id="cb212-3"><a href="chapter-lazy-evaluation-and-timing.html#cb212-3"></a><span class="st">  </span><span class="kw">show_query</span>()</span></code></pre></div>
 <pre><code>## &lt;SQL&gt;
 ## SELECT &quot;birthdate&quot;, &quot;saleslastyear&quot;
 ## FROM (SELECT &quot;LHS&quot;.&quot;businessentityid&quot; AS &quot;businessentityid&quot;, &quot;LHS&quot;.&quot;territoryid&quot; AS &quot;territoryid&quot;, &quot;LHS&quot;.&quot;salesquota&quot; AS &quot;salesquota&quot;, &quot;LHS&quot;.&quot;bonus&quot; AS &quot;bonus&quot;, &quot;LHS&quot;.&quot;commissionpct&quot; AS &quot;commissionpct&quot;, &quot;LHS&quot;.&quot;salesytd&quot; AS &quot;salesytd&quot;, &quot;LHS&quot;.&quot;saleslastyear&quot; AS &quot;saleslastyear&quot;, &quot;LHS&quot;.&quot;rowguid&quot; AS &quot;rowguid.x&quot;, &quot;LHS&quot;.&quot;modifieddate&quot; AS &quot;modifieddate.x&quot;, &quot;RHS&quot;.&quot;nationalidnumber&quot; AS &quot;nationalidnumber&quot;, &quot;RHS&quot;.&quot;loginid&quot; AS &quot;loginid&quot;, &quot;RHS&quot;.&quot;jobtitle&quot; AS &quot;jobtitle&quot;, &quot;RHS&quot;.&quot;birthdate&quot; AS &quot;birthdate&quot;, &quot;RHS&quot;.&quot;maritalstatus&quot; AS &quot;maritalstatus&quot;, &quot;RHS&quot;.&quot;gender&quot; AS &quot;gender&quot;, &quot;RHS&quot;.&quot;hiredate&quot; AS &quot;hiredate&quot;, &quot;RHS&quot;.&quot;salariedflag&quot; AS &quot;salariedflag&quot;, &quot;RHS&quot;.&quot;vacationhours&quot; AS &quot;vacationhours&quot;, &quot;RHS&quot;.&quot;sickleavehours&quot; AS &quot;sickleavehours&quot;, &quot;RHS&quot;.&quot;currentflag&quot; AS &quot;currentflag&quot;, &quot;RHS&quot;.&quot;rowguid&quot; AS &quot;rowguid.y&quot;, &quot;RHS&quot;.&quot;modifieddate&quot; AS &quot;modifieddate.y&quot;, &quot;RHS&quot;.&quot;organizationnode&quot; AS &quot;organizationnode&quot;
@@ -573,44 +572,44 @@ As we understand more about the data, we simply add dplyr expressions to pinpoin
 ## LEFT JOIN humanresources.employee AS &quot;RHS&quot;
 ## ON (&quot;LHS&quot;.&quot;businessentityid&quot; = &quot;RHS&quot;.&quot;businessentityid&quot;)
 ## ) &quot;dbplyr_006&quot;</code></pre>
-<div class="sourceCode" id="cb212"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb212-1"><a href="chapter-lazy-evaluation-and-timing.html#cb212-1"></a><span class="co"># Need to come up with a different example illustrating where</span></span>
-<span id="cb212-2"><a href="chapter-lazy-evaluation-and-timing.html#cb212-2"></a><span class="co">#  the `collect` statement goes.</span></span>
-<span id="cb212-3"><a href="chapter-lazy-evaluation-and-timing.html#cb212-3"></a></span>
-<span id="cb212-4"><a href="chapter-lazy-evaluation-and-timing.html#cb212-4"></a><span class="co"># sales_person_table %&gt;% </span></span>
-<span id="cb212-5"><a href="chapter-lazy-evaluation-and-timing.html#cb212-5"></a><span class="co">#   mutate(birthdate = date(birthdate))</span></span>
-<span id="cb212-6"><a href="chapter-lazy-evaluation-and-timing.html#cb212-6"></a><span class="co"># </span></span>
-<span id="cb212-7"><a href="chapter-lazy-evaluation-and-timing.html#cb212-7"></a><span class="co"># try(sales_person_table %&gt;% </span></span>
-<span id="cb212-8"><a href="chapter-lazy-evaluation-and-timing.html#cb212-8"></a><span class="co">#   mutate(birthdate = lubridate::date(birthdate))</span></span>
-<span id="cb212-9"><a href="chapter-lazy-evaluation-and-timing.html#cb212-9"></a><span class="co"># )</span></span>
-<span id="cb212-10"><a href="chapter-lazy-evaluation-and-timing.html#cb212-10"></a><span class="co"># </span></span>
-<span id="cb212-11"><a href="chapter-lazy-evaluation-and-timing.html#cb212-11"></a><span class="co"># sales_person_table %&gt;% collect() %&gt;% </span></span>
-<span id="cb212-12"><a href="chapter-lazy-evaluation-and-timing.html#cb212-12"></a><span class="co">#   mutate(birthdate = lubridate::date(birthdate)) </span></span></code></pre></div>
+<div class="sourceCode" id="cb214"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb214-1"><a href="chapter-lazy-evaluation-and-timing.html#cb214-1"></a><span class="co"># Need to come up with a different example illustrating where</span></span>
+<span id="cb214-2"><a href="chapter-lazy-evaluation-and-timing.html#cb214-2"></a><span class="co">#  the `collect` statement goes.</span></span>
+<span id="cb214-3"><a href="chapter-lazy-evaluation-and-timing.html#cb214-3"></a></span>
+<span id="cb214-4"><a href="chapter-lazy-evaluation-and-timing.html#cb214-4"></a><span class="co"># sales_person_table %&gt;% </span></span>
+<span id="cb214-5"><a href="chapter-lazy-evaluation-and-timing.html#cb214-5"></a><span class="co">#   mutate(birthdate = date(birthdate))</span></span>
+<span id="cb214-6"><a href="chapter-lazy-evaluation-and-timing.html#cb214-6"></a><span class="co"># </span></span>
+<span id="cb214-7"><a href="chapter-lazy-evaluation-and-timing.html#cb214-7"></a><span class="co"># try(sales_person_table %&gt;% </span></span>
+<span id="cb214-8"><a href="chapter-lazy-evaluation-and-timing.html#cb214-8"></a><span class="co">#   mutate(birthdate = lubridate::date(birthdate))</span></span>
+<span id="cb214-9"><a href="chapter-lazy-evaluation-and-timing.html#cb214-9"></a><span class="co"># )</span></span>
+<span id="cb214-10"><a href="chapter-lazy-evaluation-and-timing.html#cb214-10"></a><span class="co"># </span></span>
+<span id="cb214-11"><a href="chapter-lazy-evaluation-and-timing.html#cb214-11"></a><span class="co"># sales_person_table %&gt;% collect() %&gt;% </span></span>
+<span id="cb214-12"><a href="chapter-lazy-evaluation-and-timing.html#cb214-12"></a><span class="co">#   mutate(birthdate = lubridate::date(birthdate)) </span></span></code></pre></div>
 <p>This may not be relevant in the context where it turns out that dates in adventureworks come through as date!</p>
 <p>The idea is to show how functions are interpreted BEFORE sending to the SQL translator.</p>
-<div class="sourceCode" id="cb213"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb213-1"><a href="chapter-lazy-evaluation-and-timing.html#cb213-1"></a>to_char &lt;-<span class="st"> </span><span class="cf">function</span>(date, fmt) {<span class="kw">return</span>(fmt)}</span>
-<span id="cb213-2"><a href="chapter-lazy-evaluation-and-timing.html#cb213-2"></a></span>
-<span id="cb213-3"><a href="chapter-lazy-evaluation-and-timing.html#cb213-3"></a><span class="co"># sales_person_table %&gt;% </span></span>
-<span id="cb213-4"><a href="chapter-lazy-evaluation-and-timing.html#cb213-4"></a><span class="co">#   mutate(birthdate = to_char(birthdate, &quot;YYYY-MM&quot;)) %&gt;% </span></span>
-<span id="cb213-5"><a href="chapter-lazy-evaluation-and-timing.html#cb213-5"></a><span class="co">#   show_query()</span></span>
-<span id="cb213-6"><a href="chapter-lazy-evaluation-and-timing.html#cb213-6"></a><span class="co"># </span></span>
-<span id="cb213-7"><a href="chapter-lazy-evaluation-and-timing.html#cb213-7"></a><span class="co"># sales_person_table %&gt;% </span></span>
-<span id="cb213-8"><a href="chapter-lazy-evaluation-and-timing.html#cb213-8"></a><span class="co">#   mutate(birthdate = to_char(birthdate, &quot;YYYY-MM&quot;)) </span></span></code></pre></div>
+<div class="sourceCode" id="cb215"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb215-1"><a href="chapter-lazy-evaluation-and-timing.html#cb215-1"></a>to_char &lt;-<span class="st"> </span><span class="cf">function</span>(date, fmt) {<span class="kw">return</span>(fmt)}</span>
+<span id="cb215-2"><a href="chapter-lazy-evaluation-and-timing.html#cb215-2"></a></span>
+<span id="cb215-3"><a href="chapter-lazy-evaluation-and-timing.html#cb215-3"></a><span class="co"># sales_person_table %&gt;% </span></span>
+<span id="cb215-4"><a href="chapter-lazy-evaluation-and-timing.html#cb215-4"></a><span class="co">#   mutate(birthdate = to_char(birthdate, &quot;YYYY-MM&quot;)) %&gt;% </span></span>
+<span id="cb215-5"><a href="chapter-lazy-evaluation-and-timing.html#cb215-5"></a><span class="co">#   show_query()</span></span>
+<span id="cb215-6"><a href="chapter-lazy-evaluation-and-timing.html#cb215-6"></a><span class="co"># </span></span>
+<span id="cb215-7"><a href="chapter-lazy-evaluation-and-timing.html#cb215-7"></a><span class="co"># sales_person_table %&gt;% </span></span>
+<span id="cb215-8"><a href="chapter-lazy-evaluation-and-timing.html#cb215-8"></a><span class="co">#   mutate(birthdate = to_char(birthdate, &quot;YYYY-MM&quot;)) </span></span></code></pre></div>
 </div>
 <div id="many-handy-r-functions-cant-be-translated-to-sql" class="section level3">
 <h3><span class="header-section-number">11.1.4</span> Many handy R functions can’t be translated to SQL</h3>
 <p><img src="screenshots/green-check.png" /> It just so happens that PostgreSQL has a <code>date</code> function that does the same thing as the <code>date</code> function in the <code>lubridate</code> package. In the following code the <code>date</code> function is executed by PostreSQL.</p>
-<div class="sourceCode" id="cb214"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb214-1"><a href="chapter-lazy-evaluation-and-timing.html#cb214-1"></a><span class="co"># sales_person_table %&gt;% mutate(birthdate = date(birthdate))</span></span></code></pre></div>
+<div class="sourceCode" id="cb216"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb216-1"><a href="chapter-lazy-evaluation-and-timing.html#cb216-1"></a><span class="co"># sales_person_table %&gt;% mutate(birthdate = date(birthdate))</span></span></code></pre></div>
 <p><img src="screenshots/green-check.png" /> <img src="screenshots/green-check.png" /> If we specify that we want to use the <code>lubridate</code> version (or any number of other R functions) they are passed to the dbms unless we explicitly tell <code>dplyr</code> to stop translating and bring the results back to the R environment for local processing.</p>
-<div class="sourceCode" id="cb215"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb215-1"><a href="chapter-lazy-evaluation-and-timing.html#cb215-1"></a><span class="kw">try</span>(sales_person_table <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">collect</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb215-2"><a href="chapter-lazy-evaluation-and-timing.html#cb215-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">birthdate =</span> lubridate<span class="op">::</span><span class="kw">date</span>(birthdate)))</span></code></pre></div>
+<div class="sourceCode" id="cb217"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb217-1"><a href="chapter-lazy-evaluation-and-timing.html#cb217-1"></a><span class="kw">try</span>(sales_person_table <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">collect</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb217-2"><a href="chapter-lazy-evaluation-and-timing.html#cb217-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">birthdate =</span> lubridate<span class="op">::</span><span class="kw">date</span>(birthdate)))</span></code></pre></div>
 <pre><code>## Error in eval(lhs, parent, parent) : 
 ##   object &#39;sales_person_table&#39; not found</code></pre>
 </div>
 <div id="further-lazy-execution-examples" class="section level3">
 <h3><span class="header-section-number">11.1.5</span> Further lazy execution examples</h3>
 <p>See more examples of lazy execution <a href="https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html">here</a>.</p>
-<div class="sourceCode" id="cb217"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb217-1"><a href="chapter-lazy-evaluation-and-timing.html#cb217-1"></a>DBI<span class="op">::</span><span class="kw">dbDisconnect</span>(con)</span>
-<span id="cb217-2"><a href="chapter-lazy-evaluation-and-timing.html#cb217-2"></a>sqlpetr<span class="op">::</span><span class="kw">sp_docker_stop</span>(<span class="st">&quot;adventureworks&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb219"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb219-1"><a href="chapter-lazy-evaluation-and-timing.html#cb219-1"></a>DBI<span class="op">::</span><span class="kw">dbDisconnect</span>(con)</span>
+<span id="cb219-2"><a href="chapter-lazy-evaluation-and-timing.html#cb219-2"></a>sqlpetr<span class="op">::</span><span class="kw">sp_docker_stop</span>(<span class="st">&quot;adventureworks&quot;</span>)</span></code></pre></div>
 </div>
 </div>
 <div id="other-resources-1" class="section level2">

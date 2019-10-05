@@ -255,7 +255,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="9.2.1" data-path="chapter-sales-forecasting.html"><a href="chapter-sales-forecasting.html#creating-a-tsibble"><i class="fa fa-check"></i><b>9.2.1</b> Creating a tsibble</a></li>
 <li class="chapter" data-level="9.2.2" data-path="chapter-sales-forecasting.html"><a href="chapter-sales-forecasting.html#exploring-the-data"><i class="fa fa-check"></i><b>9.2.2</b> Exploring the data</a></li>
 </ul></li>
-<li class="chapter" data-level="9.3" data-path="chapter-sales-forecasting.html"><a href="chapter-sales-forecasting.html#forecasting"><i class="fa fa-check"></i><b>9.3</b> Forecasting</a></li>
 </ul></li>
 <li class="chapter" data-level="10" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html"><i class="fa fa-check"></i><b>10</b> Lazy Evaluation and Lazy Queries</a><ul>
 <li class="chapter" data-level="10.1" data-path="chapter-lazy-evaluation-queries.html"><a href="chapter-lazy-evaluation-queries.html#setup-2"><i class="fa fa-check"></i><b>10.1</b> Setup</a></li>
@@ -444,67 +443,67 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="setting-up-docker" class="section level3">
 <h3><span class="header-section-number">E.3.1</span> Setting up Docker</h3>
 <p>First, we need to make sure we don’t have any other databases listening on the default port <code>5439</code>.</p>
-<div class="sourceCode" id="cb281"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb281-1"><a href="chapter-appendix-postresql-authentication.html#cb281-1"></a>sqlpetr<span class="op">::</span><span class="kw">sp_check_that_docker_is_up</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb283"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb283-1"><a href="chapter-appendix-postresql-authentication.html#cb283-1"></a>sqlpetr<span class="op">::</span><span class="kw">sp_check_that_docker_is_up</span>()</span></code></pre></div>
 <pre><code>## [1] &quot;Docker is up, running these containers:&quot;                                                                                                            
 ## [2] &quot;CONTAINER ID        IMAGE               COMMAND                  CREATED              STATUS              PORTS                    NAMES&quot;           
-## [3] &quot;ee0f6ee5a1cc        postgres:11         \&quot;docker-entrypoint.s…\&quot;   About a minute ago   Up 14 seconds       0.0.0.0:5432-&gt;5432/tcp   adventureworks&quot;</code></pre>
-<div class="sourceCode" id="cb283"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb283-1"><a href="chapter-appendix-postresql-authentication.html#cb283-1"></a>sqlpetr<span class="op">::</span><span class="kw">sp_docker_remove_container</span>(<span class="st">&quot;cattle&quot;</span>)</span></code></pre></div>
+## [3] &quot;15b7a525bdee        postgres:11         \&quot;docker-entrypoint.s…\&quot;   About a minute ago   Up 14 seconds       0.0.0.0:5432-&gt;5432/tcp   adventureworks&quot;</code></pre>
+<div class="sourceCode" id="cb285"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb285-1"><a href="chapter-appendix-postresql-authentication.html#cb285-1"></a>sqlpetr<span class="op">::</span><span class="kw">sp_docker_remove_container</span>(<span class="st">&quot;cattle&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] 0</code></pre>
-<div class="sourceCode" id="cb285"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb285-1"><a href="chapter-appendix-postresql-authentication.html#cb285-1"></a><span class="co"># in case you&#39;ve been doing things out of order, stop a container named &#39;adventureworks&#39; if it exists:</span></span>
-<span id="cb285-2"><a href="chapter-appendix-postresql-authentication.html#cb285-2"></a>sqlpetr<span class="op">::</span><span class="kw">sp_docker_stop</span>(<span class="st">&quot;adventureworks&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb287"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb287-1"><a href="chapter-appendix-postresql-authentication.html#cb287-1"></a><span class="co"># in case you&#39;ve been doing things out of order, stop a container named &#39;adventureworks&#39; if it exists:</span></span>
+<span id="cb287-2"><a href="chapter-appendix-postresql-authentication.html#cb287-2"></a>sqlpetr<span class="op">::</span><span class="kw">sp_docker_stop</span>(<span class="st">&quot;adventureworks&quot;</span>)</span></code></pre></div>
 </div>
 <div id="creating-a-new-container" class="section level3">
 <h3><span class="header-section-number">E.3.2</span> Creating a new container</h3>
 <p>We’ll create a “cattle” container with a default PostgreSQL 10 database cluster.</p>
-<div class="sourceCode" id="cb286"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb286-1"><a href="chapter-appendix-postresql-authentication.html#cb286-1"></a>sqlpetr<span class="op">::</span><span class="kw">sp_make_simple_pg</span>(<span class="st">&quot;cattle&quot;</span>)</span>
-<span id="cb286-2"><a href="chapter-appendix-postresql-authentication.html#cb286-2"></a></span>
-<span id="cb286-3"><a href="chapter-appendix-postresql-authentication.html#cb286-3"></a>con &lt;-<span class="st"> </span>sqlpetr<span class="op">::</span><span class="kw">sp_get_postgres_connection</span>(</span>
-<span id="cb286-4"><a href="chapter-appendix-postresql-authentication.html#cb286-4"></a>  <span class="dt">host =</span> <span class="st">&quot;localhost&quot;</span>,</span>
-<span id="cb286-5"><a href="chapter-appendix-postresql-authentication.html#cb286-5"></a>  <span class="dt">port =</span> <span class="dv">5439</span>,</span>
-<span id="cb286-6"><a href="chapter-appendix-postresql-authentication.html#cb286-6"></a>  <span class="dt">dbname =</span> <span class="st">&quot;postgres&quot;</span>,</span>
-<span id="cb286-7"><a href="chapter-appendix-postresql-authentication.html#cb286-7"></a>  <span class="dt">user =</span> <span class="st">&quot;postgres&quot;</span>,</span>
-<span id="cb286-8"><a href="chapter-appendix-postresql-authentication.html#cb286-8"></a>  <span class="dt">password =</span> <span class="st">&quot;postgres&quot;</span>,</span>
-<span id="cb286-9"><a href="chapter-appendix-postresql-authentication.html#cb286-9"></a>  <span class="dt">seconds_to_test =</span> <span class="dv">30</span></span>
-<span id="cb286-10"><a href="chapter-appendix-postresql-authentication.html#cb286-10"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb288"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb288-1"><a href="chapter-appendix-postresql-authentication.html#cb288-1"></a>sqlpetr<span class="op">::</span><span class="kw">sp_make_simple_pg</span>(<span class="st">&quot;cattle&quot;</span>)</span>
+<span id="cb288-2"><a href="chapter-appendix-postresql-authentication.html#cb288-2"></a></span>
+<span id="cb288-3"><a href="chapter-appendix-postresql-authentication.html#cb288-3"></a>con &lt;-<span class="st"> </span>sqlpetr<span class="op">::</span><span class="kw">sp_get_postgres_connection</span>(</span>
+<span id="cb288-4"><a href="chapter-appendix-postresql-authentication.html#cb288-4"></a>  <span class="dt">host =</span> <span class="st">&quot;localhost&quot;</span>,</span>
+<span id="cb288-5"><a href="chapter-appendix-postresql-authentication.html#cb288-5"></a>  <span class="dt">port =</span> <span class="dv">5439</span>,</span>
+<span id="cb288-6"><a href="chapter-appendix-postresql-authentication.html#cb288-6"></a>  <span class="dt">dbname =</span> <span class="st">&quot;postgres&quot;</span>,</span>
+<span id="cb288-7"><a href="chapter-appendix-postresql-authentication.html#cb288-7"></a>  <span class="dt">user =</span> <span class="st">&quot;postgres&quot;</span>,</span>
+<span id="cb288-8"><a href="chapter-appendix-postresql-authentication.html#cb288-8"></a>  <span class="dt">password =</span> <span class="st">&quot;postgres&quot;</span>,</span>
+<span id="cb288-9"><a href="chapter-appendix-postresql-authentication.html#cb288-9"></a>  <span class="dt">seconds_to_test =</span> <span class="dv">30</span></span>
+<span id="cb288-10"><a href="chapter-appendix-postresql-authentication.html#cb288-10"></a>)</span></code></pre></div>
 </div>
 <div id="adding-a-role" class="section level3">
 <h3><span class="header-section-number">E.3.3</span> Adding a role</h3>
 <p>Now, let’s add a role. We’ll add a role that can log in and create databases, but isn’t a superuser. Since this is a demo and not a real production database cluster, we’ll specify a password in plaintext. And we’ll create a database for our new user.</p>
 <p>Create the role:</p>
-<div class="sourceCode" id="cb287"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb287-1"><a href="chapter-appendix-postresql-authentication.html#cb287-1"></a>DBI<span class="op">::</span><span class="kw">dbExecute</span>(</span>
-<span id="cb287-2"><a href="chapter-appendix-postresql-authentication.html#cb287-2"></a>  con,</span>
-<span id="cb287-3"><a href="chapter-appendix-postresql-authentication.html#cb287-3"></a>  <span class="st">&quot;CREATE ROLE charlie LOGIN CREATEDB PASSWORD &#39;chaplin&#39;;&quot;</span></span>
-<span id="cb287-4"><a href="chapter-appendix-postresql-authentication.html#cb287-4"></a>)</span></code></pre></div>
-<pre><code>## [1] 0</code></pre>
-<p>Create the database:</p>
 <div class="sourceCode" id="cb289"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb289-1"><a href="chapter-appendix-postresql-authentication.html#cb289-1"></a>DBI<span class="op">::</span><span class="kw">dbExecute</span>(</span>
 <span id="cb289-2"><a href="chapter-appendix-postresql-authentication.html#cb289-2"></a>  con,</span>
-<span id="cb289-3"><a href="chapter-appendix-postresql-authentication.html#cb289-3"></a> <span class="st">&quot;CREATE DATABASE charlie OWNER = charlie&quot;</span>)</span></code></pre></div>
+<span id="cb289-3"><a href="chapter-appendix-postresql-authentication.html#cb289-3"></a>  <span class="st">&quot;CREATE ROLE charlie LOGIN CREATEDB PASSWORD &#39;chaplin&#39;;&quot;</span></span>
+<span id="cb289-4"><a href="chapter-appendix-postresql-authentication.html#cb289-4"></a>)</span></code></pre></div>
+<pre><code>## [1] 0</code></pre>
+<p>Create the database:</p>
+<div class="sourceCode" id="cb291"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb291-1"><a href="chapter-appendix-postresql-authentication.html#cb291-1"></a>DBI<span class="op">::</span><span class="kw">dbExecute</span>(</span>
+<span id="cb291-2"><a href="chapter-appendix-postresql-authentication.html#cb291-2"></a>  con,</span>
+<span id="cb291-3"><a href="chapter-appendix-postresql-authentication.html#cb291-3"></a> <span class="st">&quot;CREATE DATABASE charlie OWNER = charlie&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] 0</code></pre>
 </div>
 <div id="did-it-work" class="section level3">
 <h3><span class="header-section-number">E.3.4</span> Did it work?</h3>
-<div class="sourceCode" id="cb291"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb291-1"><a href="chapter-appendix-postresql-authentication.html#cb291-1"></a>DBI<span class="op">::</span><span class="kw">dbDisconnect</span>(con)</span>
-<span id="cb291-2"><a href="chapter-appendix-postresql-authentication.html#cb291-2"></a></span>
-<span id="cb291-3"><a href="chapter-appendix-postresql-authentication.html#cb291-3"></a>con &lt;-<span class="st"> </span>sqlpetr<span class="op">::</span><span class="kw">sp_get_postgres_connection</span>(</span>
-<span id="cb291-4"><a href="chapter-appendix-postresql-authentication.html#cb291-4"></a>  <span class="dt">host =</span> <span class="st">&quot;localhost&quot;</span>,</span>
-<span id="cb291-5"><a href="chapter-appendix-postresql-authentication.html#cb291-5"></a>  <span class="dt">port =</span> <span class="dv">5439</span>,</span>
-<span id="cb291-6"><a href="chapter-appendix-postresql-authentication.html#cb291-6"></a>  <span class="dt">dbname =</span> <span class="st">&quot;postgres&quot;</span>,</span>
-<span id="cb291-7"><a href="chapter-appendix-postresql-authentication.html#cb291-7"></a>  <span class="dt">user =</span> <span class="st">&quot;charlie&quot;</span>,</span>
-<span id="cb291-8"><a href="chapter-appendix-postresql-authentication.html#cb291-8"></a>  <span class="dt">password =</span> <span class="st">&quot;chaplin&quot;</span>,</span>
-<span id="cb291-9"><a href="chapter-appendix-postresql-authentication.html#cb291-9"></a>  <span class="dt">seconds_to_test =</span> <span class="dv">30</span></span>
-<span id="cb291-10"><a href="chapter-appendix-postresql-authentication.html#cb291-10"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb293"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb293-1"><a href="chapter-appendix-postresql-authentication.html#cb293-1"></a>DBI<span class="op">::</span><span class="kw">dbDisconnect</span>(con)</span>
+<span id="cb293-2"><a href="chapter-appendix-postresql-authentication.html#cb293-2"></a></span>
+<span id="cb293-3"><a href="chapter-appendix-postresql-authentication.html#cb293-3"></a>con &lt;-<span class="st"> </span>sqlpetr<span class="op">::</span><span class="kw">sp_get_postgres_connection</span>(</span>
+<span id="cb293-4"><a href="chapter-appendix-postresql-authentication.html#cb293-4"></a>  <span class="dt">host =</span> <span class="st">&quot;localhost&quot;</span>,</span>
+<span id="cb293-5"><a href="chapter-appendix-postresql-authentication.html#cb293-5"></a>  <span class="dt">port =</span> <span class="dv">5439</span>,</span>
+<span id="cb293-6"><a href="chapter-appendix-postresql-authentication.html#cb293-6"></a>  <span class="dt">dbname =</span> <span class="st">&quot;postgres&quot;</span>,</span>
+<span id="cb293-7"><a href="chapter-appendix-postresql-authentication.html#cb293-7"></a>  <span class="dt">user =</span> <span class="st">&quot;charlie&quot;</span>,</span>
+<span id="cb293-8"><a href="chapter-appendix-postresql-authentication.html#cb293-8"></a>  <span class="dt">password =</span> <span class="st">&quot;chaplin&quot;</span>,</span>
+<span id="cb293-9"><a href="chapter-appendix-postresql-authentication.html#cb293-9"></a>  <span class="dt">seconds_to_test =</span> <span class="dv">30</span></span>
+<span id="cb293-10"><a href="chapter-appendix-postresql-authentication.html#cb293-10"></a>)</span></code></pre></div>
 <p>OK, we can connect. Let’s do some stuff!</p>
-<div class="sourceCode" id="cb292"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb292-1"><a href="chapter-appendix-postresql-authentication.html#cb292-1"></a><span class="kw">data</span>(<span class="st">&quot;iris&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb294"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb294-1"><a href="chapter-appendix-postresql-authentication.html#cb294-1"></a><span class="kw">data</span>(<span class="st">&quot;iris&quot;</span>)</span></code></pre></div>
 <p><code>dbCreateTable</code> creates the table with columns matching the data frame. But it does not send data to the table.</p>
-<div class="sourceCode" id="cb293"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb293-1"><a href="chapter-appendix-postresql-authentication.html#cb293-1"></a>DBI<span class="op">::</span><span class="kw">dbCreateTable</span>(con, <span class="st">&quot;iris&quot;</span>, iris)</span></code></pre></div>
+<div class="sourceCode" id="cb295"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb295-1"><a href="chapter-appendix-postresql-authentication.html#cb295-1"></a>DBI<span class="op">::</span><span class="kw">dbCreateTable</span>(con, <span class="st">&quot;iris&quot;</span>, iris)</span></code></pre></div>
 <p>To send data, we use <code>dbAppendTable</code>.</p>
-<div class="sourceCode" id="cb294"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb294-1"><a href="chapter-appendix-postresql-authentication.html#cb294-1"></a>DBI<span class="op">::</span><span class="kw">dbAppendTable</span>(con, <span class="st">&quot;iris&quot;</span>, iris)</span></code></pre></div>
+<div class="sourceCode" id="cb296"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb296-1"><a href="chapter-appendix-postresql-authentication.html#cb296-1"></a>DBI<span class="op">::</span><span class="kw">dbAppendTable</span>(con, <span class="st">&quot;iris&quot;</span>, iris)</span></code></pre></div>
 <pre><code>## Warning: Factors converted to character</code></pre>
 <pre><code>## [1] 150</code></pre>
-<div class="sourceCode" id="cb297"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb297-1"><a href="chapter-appendix-postresql-authentication.html#cb297-1"></a>DBI<span class="op">::</span><span class="kw">dbListTables</span>(con)</span></code></pre></div>
+<div class="sourceCode" id="cb299"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb299-1"><a href="chapter-appendix-postresql-authentication.html#cb299-1"></a>DBI<span class="op">::</span><span class="kw">dbListTables</span>(con)</span></code></pre></div>
 <pre><code>## [1] &quot;iris&quot;</code></pre>
-<div class="sourceCode" id="cb299"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb299-1"><a href="chapter-appendix-postresql-authentication.html#cb299-1"></a><span class="kw">head</span>(DBI<span class="op">::</span><span class="kw">dbReadTable</span>(con, <span class="st">&quot;iris&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb301"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb301-1"><a href="chapter-appendix-postresql-authentication.html#cb301-1"></a><span class="kw">head</span>(DBI<span class="op">::</span><span class="kw">dbReadTable</span>(con, <span class="st">&quot;iris&quot;</span>))</span></code></pre></div>
 <pre><code>##   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
 ## 1          5.1         3.5          1.4         0.2  setosa
 ## 2          4.9         3.0          1.4         0.2  setosa
@@ -512,11 +511,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 4          4.6         3.1          1.5         0.2  setosa
 ## 5          5.0         3.6          1.4         0.2  setosa
 ## 6          5.4         3.9          1.7         0.4  setosa</code></pre>
-<div class="sourceCode" id="cb301"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb301-1"><a href="chapter-appendix-postresql-authentication.html#cb301-1"></a>DBI<span class="op">::</span><span class="kw">dbDisconnect</span>(con)</span></code></pre></div>
+<div class="sourceCode" id="cb303"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb303-1"><a href="chapter-appendix-postresql-authentication.html#cb303-1"></a>DBI<span class="op">::</span><span class="kw">dbDisconnect</span>(con)</span></code></pre></div>
 </div>
 <div id="remove-the-container" class="section level3">
 <h3><span class="header-section-number">E.3.5</span> Remove the container</h3>
-<div class="sourceCode" id="cb302"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb302-1"><a href="chapter-appendix-postresql-authentication.html#cb302-1"></a>sqlpetr<span class="op">::</span><span class="kw">sp_docker_remove_container</span>(<span class="st">&quot;cattle&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb304"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb304-1"><a href="chapter-appendix-postresql-authentication.html#cb304-1"></a>sqlpetr<span class="op">::</span><span class="kw">sp_docker_remove_container</span>(<span class="st">&quot;cattle&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] 0</code></pre>
 
 </div>
