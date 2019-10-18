@@ -170,9 +170,10 @@ Looking at order volume and average sales size together suggests that indeed som
 
 ```r
 annual_sales %>% arrange(min_soh_orderdate) %>% 
+  # mutate(year = year(orderdate)) %>% 
 ggplot(aes(x = avg_total_soh_dollars, y = as.numeric(soh_count))) +
   geom_point() +
-  geom_text(aes(label = year, hjust = .5, vjust = 0)) +
+  geom_text(aes(label = year(min_soh_orderdate), hjust = .5, vjust = 0, color = year)) +
   geom_path() +
   xlab("Average dollars per order") +
   ylab("Total number of orders") +
@@ -225,25 +226,6 @@ ggplot(data = monthly_sales, aes(x = orderdate, y = total_soh_dollars)) +
 ```
 
 <img src="083-exploring-a-single-table_files/figure-html/Total monthly sales bar chart-1.png" width="672" />
-
-The total sales are trending up but suspiciously uneven.  Looking at lags might confirm just how much month-to-month difference there is:
-
-
-```r
-lagged_monthly_sales <- monthly_sales %>% 
-  mutate(monthly_sales_change = (lag(total_soh_dollars, 1)) -
-           total_soh_dollars)
-
-summary(lagged_monthly_sales$monthly_sales_change)
-```
-
-```
-##        Min.     1st Qu.      Median        Mean     3rd Qu.        Max. 
-## -1667368.56 -1082792.47    52892.65    18287.07   816048.02  4399378.90 
-##        NA's 
-##           1
-```
-Although median monthly sales rise by about $53 thousand, it's curious that in one fourth of the months the drop between one month and the next is between fifteen hundred and a million dollars. AventureWorks sales are *very* uneven.
 
 ### Comparing dollars and orders to a baseline
 
@@ -302,7 +284,29 @@ normalized_monthly_sales %>%
                 min_soh_dt, " to ", max_soh_dt))
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-4-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-3-1.png" width="672" />
+
+
+### Check lagged monthly data
+
+The total sales are trending up but suspiciously uneven.  Looking at lags might confirm just how much month-to-month difference there is:
+
+
+```r
+lagged_monthly_sales <- monthly_sales %>% 
+  mutate(monthly_sales_change = (lag(total_soh_dollars, 1)) -
+           total_soh_dollars)
+
+summary(lagged_monthly_sales$monthly_sales_change)
+```
+
+```
+##        Min.     1st Qu.      Median        Mean     3rd Qu.        Max. 
+## -1667368.56 -1082792.47    52892.65    18287.07   816048.02  4399378.90 
+##        NA's 
+##           1
+```
+Although median monthly sales rise by about $53 thousand, it's curious that in one fourth of the months the drop between one month and the next is between fifteen hundred and a million dollars. AventureWorks sales are *very* uneven.
 
 ## The effect of online sales
 
@@ -371,7 +375,6 @@ ggplot(data = annual_sales, aes(x = orderdate, y = as.numeric(soh_count))) +
 ### Average sale comparison
 
 
-
 ```r
 ggplot(data = annual_sales, aes(x = orderdate, y = avg_total_soh_dollars)) +
   geom_col() +
@@ -390,15 +393,17 @@ ggplot(data = annual_sales, aes(x = orderdate, y = avg_total_soh_dollars)) +
 Look at number of orders by the the average sales per order for the four years:
 
 ```r
-annual_sales %>% arrange(orderdate) %>% 
-ggplot(aes(x = avg_total_soh_dollars, y = as.numeric(soh_count))) +
+sales <- annual_sales %>% arrange(orderdate) %>% 
+  ungroup() %>% 
+  mutate(year = year(orderdate), year = as.factor(year)) 
+  
+sales %>% ggplot(aes(x = avg_total_soh_dollars, y = as.numeric(soh_count), color = year)) +
+  geom_text(aes(label = year, hjust = .5, vjust = 0)) +
   geom_point() +
-  geom_text(aes(label = orderdate, hjust = .5, vjust = 0)) +
-  geom_path() +
+  # geom_path() +
   xlab("Average dollars per order") +
   ylab("Total number of orders") +
-    facet_wrap("onlineorderflag", scales = "free") +
-  scale_y_continuous(labels = scales::dollar_format()) + 
+  facet_wrap("onlineorderflag", scales = "free") +     
   scale_x_continuous(labels = scales::dollar_format()) + 
   ggtitle(paste("Number of Orders by Average Order Amount\n", 
                 min_soh_dt, " - ", max_soh_dt))
@@ -477,7 +482,8 @@ A couple of things jump out from the graph.
 2.  2011 has more variation than 2012 and 2013 and peaks every two months.
 3.  2014 has the most variation and also peaks every two months.  Both the number of sales, 939, and the average sales order size, $52.19 plummet in June 2014.
 
-### Looking at lagged data
+
+### Compare monthly lagged data by order type
 
 
 ```r
@@ -533,32 +539,146 @@ This trend continues into 2014 before the number of sales plummet to just 1.3 ti
 
 We suspect that the business has changed a lot with the adventn of online orders.
 
-## Variation over time
+## Correcting the order date for Sales Reps
+
+### Define a date correction function in R
 
 
 ```r
-sales_by_day_of_month <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
+monthly_sales <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
+  select(orderdate, subtotal, onlineorderflag) %>% 
+  # mutate(day = day(as.Date(orderdate))) %>% 
+  mutate(
+    orderdate = as.Date(orderdate),
+    day = day(orderdate)) %>% 
+     show_query() %>% 
+  collect() %>% # From here on we're in R
+    mutate(   
+    correct_orderdate = case_when(
+      # onlineorderflag == FALSE & day == 1 ~ NA,
+      onlineorderflag == FALSE & day == 1L ~ orderdate - 1 ,
+      TRUE ~ orderdate
+  ))
+```
+
+```
+## <SQL>
+## SELECT "orderdate", "subtotal", "onlineorderflag", EXTRACT(day FROM "orderdate") AS "day"
+## FROM (SELECT CAST("orderdate" AS DATE) AS "orderdate", "subtotal", "onlineorderflag"
+## FROM sales.salesorderheader) "dbplyr_007"
+```
+
+### Define and store a Postgres function to correct the date
+
+
+```r
+dbExecute(con,
+"CREATE OR REPLACE FUNCTION so_adj_date(so_date timestamp, ONLINE_ORDER boolean) RETURNS timestamp AS $$
+     BEGIN
+        IF (ONLINE_ORDER) THEN
+            RETURN (SELECT so_date);
+        ELSE
+            RETURN(SELECT CASE WHEN EXTRACT(DAY FROM so_date) = 1
+                               THEN  so_date - '1 day'::interval
+                               ELSE  so_date
+                          END
+                  );
+        END IF;
+ END; $$
+LANGUAGE PLPGSQL;
+")
+```
+
+```
+## [1] 0
+```
+
+### Use the Postgres function
+
+
+```r
+monthly_sales <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
+  select(orderdate, subtotal, onlineorderflag) %>% 
+  # mutate(day = day(as.Date(orderdate))) %>% 
+  mutate(
+    # orderdate = as.Date(orderdate),
+    adjusted_date = so_adj_date(orderdate, onlineorderflag),
+    day = day(orderdate)) %>% 
+     show_query() %>% 
+    collect()
+```
+
+```
+## <SQL>
+## SELECT "orderdate", "subtotal", "onlineorderflag", so_adj_date("orderdate", "onlineorderflag") AS "adjusted_date", EXTRACT(day FROM "orderdate") AS "day"
+## FROM sales.salesorderheader
+```
+
+
+```r
+monthly_sales %>% filter(day == 1 & onlineorderflag == FALSE) %>% 
+  count(orderdate) %>% as.data.frame()
+```
+
+```
+##    orderdate   n
+## 1 2011-07-01  75
+## 2 2011-08-01  60
+## 3 2011-10-01  90
+## 4 2011-12-01  40
+## 5 2012-01-01  79
+## 6 2014-03-01  91
+## 7 2014-05-01 179
+```
+
+
+```r
+monthly_sales <- monthly_sales %>% 
+mutate(orderdate = date(orderdate), 
+         orderdate = round_date(orderdate, "month"),
+          onlineorderflag = if_else(onlineorderflag == FALSE, 
+                                   "Sales Rep", "Online"),) %>%  # 
+  group_by(orderdate, onlineorderflag) %>%
+  summarize(
+    min_soh_orderdate = min(orderdate, na.rm = TRUE),
+    max_soh_orderdate = max(orderdate, na.rm = TRUE),
+    total_soh_dollars = round(sum(subtotal, na.rm = TRUE), 2),
+    avg_total_soh_dollars = round(mean(subtotal, na.rm = TRUE), 2),
+    soh_count = n()
+  ) 
+```
+
+### Sales Rep data entered at the end of the month
+
+```r
+sales_by_corrected_day_of_month <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
   mutate(day_of_month = day(orderdate)) %>%
-  group_by(onlineorderflag, day_of_month) %>%
+  group_by(onlineorderflag, day_of_month, orderdate) %>%
   summarize(
     total_soh_dollars = round(sum(subtotal, na.rm = TRUE), 2),
     avg_total_soh_dollars = round(mean(subtotal, na.rm = TRUE),2),
     soh_count = n()
   ) %>%
-  arrange(day_of_month) %>%
+  # arrange(day_of_month) %>%
   collect() %>% 
-  ungroup() %>% 
-  mutate(onlineorderflag = if_else(onlineorderflag == FALSE, 
+  ungroup() %>%
+  mutate(correct_orderdate = case_when(
+           onlineorderflag == FALSE & day_of_month == 1L ~ orderdate - days(1),
+           TRUE ~ orderdate
+          ),
+         day_of_month = day(correct_orderdate),
+         onlineorderflag = if_else(onlineorderflag == FALSE, 
                                    "Sales Rep", "Online"),
          onlineorderflag = as.factor(onlineorderflag),
-         day_of_month = as.numeric(day_of_month),
+         # day_of_month = as.numeric(day_of_month),
          soh_count = as.numeric(soh_count)
-         )
+         ) 
 ```
 
 
+
 ```r
-ggplot(sales_by_day_of_month, aes(x = day_of_month, y = soh_count)) +
+ggplot(sales_by_corrected_day_of_month, aes(x = day_of_month, y = soh_count)) +
   # scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
   facet_wrap("onlineorderflag") +
   geom_col() +
@@ -570,7 +690,247 @@ ggplot(sales_by_day_of_month, aes(x = day_of_month, y = soh_count)) +
                 min_soh_dt, " - ", max_soh_dt))
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-10-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-15-1.png" width="672" />
+
+## Monthly Sales Rep Performance Analysis
+
+### Monthly Sales by Order Type with corrected dates
+
+
+### Monthly Sales by Order Type with corrected dates -- relative to a trend line
+
+### Monthly sales lag with corrected dates
+
+Monthly sa
+
+
+```r
+mo_soh_sreps <- dbGetQuery(
+  con,
+  "
+SELECT *
+      ,round(orders/mo_orders * 100.0,2) mo_pct
+      ,round(sales_dollars/mo_sales * 100.0,2) mo_dlr_pct
+  FROM (SELECT EXTRACT(MONTH FROM orderdate) mo, EXTRACT(YEAR FROM orderdate) yr
+             , min(orderdate)::DATE min_soh_orderdate, max(orderdate)::DATE max_soh_orderdate
+             , round(sum(subtotal), 2) sales_dollars
+             , round(sum(sum(subtotal)) over (partition by EXTRACT(MONTH FROM orderdate),EXTRACT(YEAR FROM orderdate)
+                             order by EXTRACT(YEAR FROM orderdate)),2) mo_sales
+             , count(*) * 1.0 orders
+             , sum(count(*)) over (partition by EXTRACT(MONTH FROM orderdate),EXTRACT(YEAR FROM orderdate)
+                             order by EXTRACT(YEAR FROM orderdate)) mo_orders
+             , case when sh.onlineorderflag then 'online' else 'sales rep' end sales_type
+        FROM sales.salesorderheader sh
+             INNER JOIN sales.salesorderdetail sd
+                ON sh.salesorderid = sd.salesorderid
+       WHERE not sh.onlineorderflag
+        GROUP BY EXTRACT(MONTH FROM orderdate), EXTRACT(YEAR FROM orderdate), 
+                 case when sh.onlineorderflag then 'online' else 'sales rep' end
+       ) as src
+ORDER BY mo, yr, sales_type
+"
+)
+
+sp_print_df(head(mo_soh_sreps))
+```
+
+<!--html_preserve--><div id="htmlwidget-1b4ff99564eb6e8884a5" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1b4ff99564eb6e8884a5">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[1,1,1,2,2,2],[2012,2013,2014,2012,2013,2014],["2012-01-01","2013-01-28","2014-01-28","2012-02-29","2013-02-28","2014-02-28"],["2012-01-29","2013-01-28","2014-01-29","2012-02-29","2013-02-28","2014-02-28"],[50403482.88,40081731.5,66924961.04,15335522.48,71803004.54,11658.08],[50403482.88,40081731.5,66924961.04,15335522.48,71803004.54,11658.08],[1519,1215,2180,494,1449,8],[1519,1215,2180,494,1449,8],["sales rep","sales rep","sales rep","sales rep","sales rep","sales rep"],[100,100,100,100,100,100],[100,100,100,100,100,100]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>mo<\/th>\n      <th>yr<\/th>\n      <th>min_soh_orderdate<\/th>\n      <th>max_soh_orderdate<\/th>\n      <th>sales_dollars<\/th>\n      <th>mo_sales<\/th>\n      <th>orders<\/th>\n      <th>mo_orders<\/th>\n      <th>sales_type<\/th>\n      <th>mo_pct<\/th>\n      <th>mo_dlr_pct<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,5,6,7,8,10,11]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
+
+
+
+```r
+monthly_sales_online <- dbGetQuery(
+  con,
+  "
+SELECT EXTRACT(MONTH FROM orderdate) mo, EXTRACT(YEAR FROM orderdate) yr
+     , min(orderdate)::DATE min_soh_orderdate, max(orderdate)::DATE max_soh_orderdate
+     , so.category
+     , round(sum(subtotal), 2) sales_dollars
+     , count(*) * 1.0 orders
+ FROM sales.salesorderheader sh
+      JOIN sales.salesorderdetail sd ON SH.salesorderid = sd.salesorderid
+      JOIN sales.specialoffer so ON Sd.specialofferid = so.specialofferid
+GROUP BY EXTRACT(MONTH FROM orderdate), EXTRACT(YEAR FROM orderdate), so.category
+ORDER BY mo, yr
+"
+)
+
+sp_print_df(head(monthly_sales_online))
+```
+
+<div class="figure">
+<!--html_preserve--><div id="htmlwidget-8f836166d559454ecd73" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-8f836166d559454ecd73">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[1,1,1,1,1,1],[2012,2012,2013,2013,2014,2014],["2012-01-01","2012-01-01","2013-01-01","2013-01-01","2014-01-01","2014-01-01"],["2012-01-31","2012-01-29","2013-01-31","2013-01-29","2014-01-31","2014-01-31"],["No Discount","Reseller","No Discount","Reseller","No Discount","Reseller"],[50814178.74,203862.08,40032506.6,573142.28,69742390.8,1582808.9],[1708,4,1455,54,6867,178]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>mo<\/th>\n      <th>yr<\/th>\n      <th>min_soh_orderdate<\/th>\n      <th>max_soh_orderdate<\/th>\n      <th>category<\/th>\n      <th>sales_dollars<\/th>\n      <th>orders<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<p class="caption">(\#fig:unnamed-chunk-17)caption goes here</p>
+</div>
+
+```r
+ggplot(data = monthly_sales_online, 
+       aes(x = factor(mo), 
+           y = sales_dollars, fill = factor(yr))) +
+  geom_col(position = "dodge", color = "black") + # unstack columns and outline in black
+  xlab("Month") +
+  ylab("Sales Dollars") +
+  scale_y_continuous(labels = dollar) +
+  geom_text(aes(label = category),
+    size = 2.5
+    #           ,color = 'black'
+    , vjust = 1.5,
+    position = position_dodge(.9)
+  ) + # orders => avg so $ amt
+  theme(plot.title = element_text(hjust = .50)) + # Center ggplot title
+  ggtitle(paste("Sales by Month\nBy Online Flag"))
+```
+
+<div class="figure">
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-17-2.png" alt="caption goes here" width="1536" />
+<p class="caption">(\#fig:unnamed-chunk-17)caption goes here</p>
+</div>
+
+### Effect of Late Entries on Sales Rep data
+
+Correcting for the first of the month makes the Sales Rep data look more **normal**.
+
+That could be the end of this chapter.
+
+
+```r
+monthly_sales_onl_pct <- dbGetQuery(
+  con,
+  "
+select EXTRACT(MONTH FROM orderdate) mo
+      ,EXTRACT(YEAR FROM orderdate) yr
+      ,sum(ORDERQTY)
+      ,sum(case when salespersonid is null and onlineorderflag then 1 else 0 end) onl
+      ,sum(case when salespersonid is not null and not onlineorderflag then 1 else 0 end) sp
+      ,round(sum(case when onlineorderflag then 1 else 0 end )*1.0/count(*) * 100.0,2) onl_pct
+      ,round(sum(case when not onlineorderflag then 1 else 0 end )*1.0/count(*) * 100.0,2) sp_pct
+      ,onlineorderflag
+      ,count(*)
+  FROM sales.salesorderheader sh
+  INNER JOIN sales.salesorderdetail sd
+          ON sh.salesorderid = sd.salesorderid
+  INNER JOIN production.product p
+          ON sd.productid = p.productid
+  INNER JOIN sales.specialoffer so
+          ON sd.specialofferid = so.specialofferid
+  LEFT OUTER JOIN sales.specialofferproduct sop
+          ON sd.specialofferid = sop.specialofferid
+         and sd.productid = sop.productid
+ WHERE sop.productid is not null
+group by EXTRACT(MONTH FROM orderdate) 
+        ,EXTRACT(YEAR FROM orderdate) 
+        ,onlineorderflag
+order by mo,yr
+"
+)
+
+sp_print_df(head(monthly_sales_onl_pct))
+```
+
+<!--html_preserve--><div id="htmlwidget-0d7db73d03839427d3b7" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-0d7db73d03839427d3b7">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[1,1,1,1,1,1],[2012,2012,2013,2013,2014,2014],[3774,193,3860,294,6598,4865],[0,193,0,294,0,4865],[1519,0,1215,0,2180,0],[0,100,0,100,0,100],[100,0,100,0,100,0],[false,true,false,true,false,true],[1519,193,1215,294,2180,4865]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>mo<\/th>\n      <th>yr<\/th>\n      <th>sum<\/th>\n      <th>onl<\/th>\n      <th>sp<\/th>\n      <th>onl_pct<\/th>\n      <th>sp_pct<\/th>\n      <th>onlineorderflag<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6,7,9]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
+
+```r
+mo_onl_pct <- dbGetQuery(
+  con,
+  "
+SELECT *
+      ,round(orders/mo_orders * 100.0,2) mo_pct
+      ,round(sales_dollars/mo_sales * 100.0,2) mo_dlr_pct
+  FROM (SELECT EXTRACT(MONTH FROM orderdate) mo, EXTRACT(YEAR FROM orderdate) yr
+             , min(orderdate)::DATE min_soh_orderdate, max(orderdate)::DATE max_soh_orderdate
+             , round(sum(subtotal), 2) sales_dollars
+             , round(sum(sum(subtotal)) over (partition by EXTRACT(MONTH FROM orderdate),EXTRACT(YEAR FROM orderdate)
+                             order by EXTRACT(YEAR FROM orderdate)),2) mo_sales
+             , count(*) * 1.0 orders
+             , sum(count(*)) over (partition by EXTRACT(MONTH FROM orderdate),EXTRACT(YEAR FROM orderdate)
+                             order by EXTRACT(YEAR FROM orderdate)) mo_orders
+             , case when sh.onlineorderflag then 'online' else 'sales rep' end sales_type
+        FROM sales.salesorderheader sh
+        GROUP BY EXTRACT(MONTH FROM orderdate), EXTRACT(YEAR FROM orderdate), 
+                 case when sh.onlineorderflag then 'online' else 'sales rep' end
+       ) as src
+ORDER BY mo, yr, sales_type
+"
+)
+
+sp_print_df(head(mo_onl_pct))
+```
+
+<!--html_preserve--><div id="htmlwidget-c2e3fede5c798441fdae" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-c2e3fede5c798441fdae">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[1,1,1,1,1,1],[2012,2012,2013,2013,2014,2014],["2012-01-01","2012-01-01","2013-01-01","2013-01-28","2014-01-01","2014-01-28"],["2012-01-31","2012-01-29","2013-01-31","2013-01-28","2014-01-31","2014-01-29"],[614557.94,3356069.34,523917.38,1563955.08,1551065.56,2738752.39],[3970627.28,3970627.28,2087872.46,2087872.46,4289817.95,4289817.95],[193,143,294,106,1966,175],[336,336,400,400,2141,2141],["online","sales rep","online","sales rep","online","sales rep"],[57.44,42.56,73.5,26.5,91.83,8.17],[15.48,84.52,25.09,74.91,36.16,63.84]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>mo<\/th>\n      <th>yr<\/th>\n      <th>min_soh_orderdate<\/th>\n      <th>max_soh_orderdate<\/th>\n      <th>sales_dollars<\/th>\n      <th>mo_sales<\/th>\n      <th>orders<\/th>\n      <th>mo_orders<\/th>\n      <th>sales_type<\/th>\n      <th>mo_pct<\/th>\n      <th>mo_dlr_pct<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,5,6,7,8,10,11]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
+```r
+mo_onl_pct$mo <- as.factor(mo_onl_pct$mo)
+mo_onl_pct$yr <- as.factor(mo_onl_pct$yr)
+mo_onl_pct$sales_type <- as.factor(mo_onl_pct$sales_type)
+mo_2011 <- mo_onl_pct %>% filter(yr == 2011)
+mo_2012 <- mo_onl_pct %>% filter(yr == 2012)
+mo_2013 <- mo_onl_pct %>% filter(yr == 2013)
+mo_2014 <- mo_onl_pct %>% filter(yr == 2014)
+
+
+ggplot(data = NULL) +
+  # data=mo_2011 first results in the x axis months out of order.
+  geom_line(data = mo_2012, aes(x = mo, y = mo_pct, color = yr, group = sales_type)) +
+  geom_line(data = mo_2011, aes(x = mo, y = mo_pct, color = yr, group = sales_type)) +
+  geom_line(data = mo_2013, aes(x = mo, y = mo_pct, color = yr, group = sales_type)) +
+  geom_line(data = mo_2014, aes(x = mo, y = mo_pct, color = yr, group = sales_type)) +
+
+  geom_point(data = mo_2011, aes(x = mo, y = mo_pct, color = sales_type)) +
+  geom_point(data = mo_2012, aes(x = mo, y = mo_pct, color = sales_type)) +
+  geom_point(data = mo_2013, aes(x = mo, y = mo_pct, color = sales_type)) +
+  geom_point(data = mo_2014, aes(x = mo, y = mo_pct, color = sales_type)) +
+
+  geom_text(
+    data = mo_2011, aes(x = mo, y = mo_pct, label = paste(orders, ":$", sales_dollars, ":", mo_dlr_pct, "%")),
+    position = position_dodge(.3), size = 2.25, hjust = 1.0
+  ) +
+  geom_text(
+    data = mo_2012, aes(x = mo, y = mo_pct, label = paste(orders, ":$", sales_dollars, ":", mo_dlr_pct, "%")),
+    position = position_dodge(.3), size = 2.25, hjust = 1.0
+  ) +
+  geom_text(
+    data = mo_2013, aes(x = mo, y = mo_pct, label = paste(orders, ":$", sales_dollars, ":", mo_dlr_pct, "%")),
+    position = position_dodge(.3), size = 2.25, hjust = 1.0
+  ) +
+  geom_text(
+    data = mo_2014, aes(x = mo, y = mo_pct, label = paste(orders, ":$", sales_dollars, ":", mo_dlr_pct, "%")), color = "lightblue",
+    position = position_dodge(.3), size = 2.25, hjust = 1.0, vjust = 1.5
+  ) +
+
+  xlab("Month") +
+  ylab("% Online Sales\nvs\n%Rep Sales") +
+  theme(plot.title = element_text(hjust = .50)) +
+  ggtitle(paste(
+    "Sales by Month\n",
+    "Online Orders Versus Rep Orders\n",
+    min_soh_dt, " - ", max_soh_dt, "
+",
+    "Each Point shows Number of Orders: $ Amount: % of Total $ For the Month"
+  ))
+```
+
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-19-2.png" width="1536" />
+
+
+This plot is much easier to read, but the sales orders => avg_s
+From the tidy point of view  overview, https://tidyr.tidyverse.org/:
+
+Tidy data is data where:
+
+*  Each variable is in a column.
+*  Each observation is a row.
+*  Each value is a cell.
+
+The gather command throws the following warning:
+
+    attributes are not identical across measure variables;
+    they will be dropped
 
 
 ## These queries and graphs may be redundant
@@ -603,8 +963,8 @@ ORDER BY mo, yr, sales_type
 sp_print_df(head(mo_onl_pct))
 ```
 
-<!--html_preserve--><div id="htmlwidget-170a8a8981f2e37f7978" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-170a8a8981f2e37f7978">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[1,1,1,1,1,1],[2012,2012,2013,2013,2014,2014],["2012-01-01","2012-01-01","2013-01-01","2013-01-28","2014-01-01","2014-01-28"],["2012-01-31","2012-01-29","2013-01-31","2013-01-28","2014-01-31","2014-01-29"],[614557.94,3356069.34,523917.38,1563955.08,1551065.56,2738752.39],[3970627.28,3970627.28,2087872.46,2087872.46,4289817.95,4289817.95],[193,143,294,106,1966,175],[336,336,400,400,2141,2141],["online","sales rep","online","sales rep","online","sales rep"],[57.44,42.56,73.5,26.5,91.83,8.17],[15.48,84.52,25.09,74.91,36.16,63.84]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>mo<\/th>\n      <th>yr<\/th>\n      <th>min_soh_orderdate<\/th>\n      <th>max_soh_orderdate<\/th>\n      <th>sales_dollars<\/th>\n      <th>mo_sales<\/th>\n      <th>orders<\/th>\n      <th>mo_orders<\/th>\n      <th>sales_type<\/th>\n      <th>mo_pct<\/th>\n      <th>mo_dlr_pct<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,5,6,7,8,10,11]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-a77ad32f6b82562872f5" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-a77ad32f6b82562872f5">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[1,1,1,1,1,1],[2012,2012,2013,2013,2014,2014],["2012-01-01","2012-01-01","2013-01-01","2013-01-28","2014-01-01","2014-01-28"],["2012-01-31","2012-01-29","2013-01-31","2013-01-28","2014-01-31","2014-01-29"],[614557.94,3356069.34,523917.38,1563955.08,1551065.56,2738752.39],[3970627.28,3970627.28,2087872.46,2087872.46,4289817.95,4289817.95],[193,143,294,106,1966,175],[336,336,400,400,2141,2141],["online","sales rep","online","sales rep","online","sales rep"],[57.44,42.56,73.5,26.5,91.83,8.17],[15.48,84.52,25.09,74.91,36.16,63.84]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>mo<\/th>\n      <th>yr<\/th>\n      <th>min_soh_orderdate<\/th>\n      <th>max_soh_orderdate<\/th>\n      <th>sales_dollars<\/th>\n      <th>mo_sales<\/th>\n      <th>orders<\/th>\n      <th>mo_orders<\/th>\n      <th>sales_type<\/th>\n      <th>mo_pct<\/th>\n      <th>mo_dlr_pct<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,5,6,7,8,10,11]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ```r
 mo_onl_pct$mo <- as.factor(mo_onl_pct$mo)
@@ -660,244 +1020,11 @@ ggplot(data = NULL) +
 <img src="083-exploring-a-single-table_files/figure-html/On-Line Orders Versus Sales Rep Orders-2.png" width="1536" />
 The sales rep orders brought in over half the monthly sales dollars for every month except three, February, April, and June of 2014.  The monthly sales rep orders for those months are 3, 2, and 0 respectively. 
 
-## Monthly Sales Rep Performance Analysis
 
-
-```r
-mo_soh_sreps <- dbGetQuery(
-  con,
-  "
-SELECT *
-      ,round(orders/mo_orders * 100.0,2) mo_pct
-      ,round(sales_dollars/mo_sales * 100.0,2) mo_dlr_pct
-  FROM (SELECT EXTRACT(MONTH FROM orderdate) mo, EXTRACT(YEAR FROM orderdate) yr
-             , min(orderdate)::DATE min_soh_orderdate, max(orderdate)::DATE max_soh_orderdate
-             , round(sum(subtotal), 2) sales_dollars
-             , round(sum(sum(subtotal)) over (partition by EXTRACT(MONTH FROM orderdate),EXTRACT(YEAR FROM orderdate)
-                             order by EXTRACT(YEAR FROM orderdate)),2) mo_sales
-             , count(*) * 1.0 orders
-             , sum(count(*)) over (partition by EXTRACT(MONTH FROM orderdate),EXTRACT(YEAR FROM orderdate)
-                             order by EXTRACT(YEAR FROM orderdate)) mo_orders
-             , case when sh.onlineorderflag then 'online' else 'sales rep' end sales_type
-        FROM sales.salesorderheader sh
-             INNER JOIN sales.salesorderdetail sd
-                ON sh.salesorderid = sd.salesorderid
-       WHERE not sh.onlineorderflag
-        GROUP BY EXTRACT(MONTH FROM orderdate), EXTRACT(YEAR FROM orderdate), 
-                 case when sh.onlineorderflag then 'online' else 'sales rep' end
-       ) as src
-ORDER BY mo, yr, sales_type
-"
-)
-
-sp_print_df(head(mo_soh_sreps))
-```
-
-<!--html_preserve--><div id="htmlwidget-696ddc5c8cc4f514f376" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-696ddc5c8cc4f514f376">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[1,1,1,2,2,2],[2012,2013,2014,2012,2013,2014],["2012-01-01","2013-01-28","2014-01-28","2012-02-29","2013-02-28","2014-02-28"],["2012-01-29","2013-01-28","2014-01-29","2012-02-29","2013-02-28","2014-02-28"],[50403482.88,40081731.5,66924961.04,15335522.48,71803004.54,11658.08],[50403482.88,40081731.5,66924961.04,15335522.48,71803004.54,11658.08],[1519,1215,2180,494,1449,8],[1519,1215,2180,494,1449,8],["sales rep","sales rep","sales rep","sales rep","sales rep","sales rep"],[100,100,100,100,100,100],[100,100,100,100,100,100]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>mo<\/th>\n      <th>yr<\/th>\n      <th>min_soh_orderdate<\/th>\n      <th>max_soh_orderdate<\/th>\n      <th>sales_dollars<\/th>\n      <th>mo_sales<\/th>\n      <th>orders<\/th>\n      <th>mo_orders<\/th>\n      <th>sales_type<\/th>\n      <th>mo_pct<\/th>\n      <th>mo_dlr_pct<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,5,6,7,8,10,11]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
-
-
-
-
-```r
-monthly_sales_online <- dbGetQuery(
-  con,
-  "
-SELECT EXTRACT(MONTH FROM orderdate) mo, EXTRACT(YEAR FROM orderdate) yr
-     , min(orderdate)::DATE min_soh_orderdate, max(orderdate)::DATE max_soh_orderdate
-     , so.category
-     , round(sum(subtotal), 2) sales_dollars
-     , count(*) * 1.0 orders
- FROM sales.salesorderheader sh
-      JOIN sales.salesorderdetail sd ON SH.salesorderid = sd.salesorderid
-      JOIN sales.specialoffer so ON Sd.specialofferid = so.specialofferid
-GROUP BY EXTRACT(MONTH FROM orderdate), EXTRACT(YEAR FROM orderdate), so.category
-ORDER BY mo, yr
-"
-)
-
-sp_print_df(head(monthly_sales_online))
-```
-
-<div class="figure">
-<!--html_preserve--><div id="htmlwidget-b9c9581000df031ab913" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-b9c9581000df031ab913">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[1,1,1,1,1,1],[2012,2012,2013,2013,2014,2014],["2012-01-01","2012-01-01","2013-01-01","2013-01-01","2014-01-01","2014-01-01"],["2012-01-31","2012-01-29","2013-01-31","2013-01-29","2014-01-31","2014-01-31"],["No Discount","Reseller","No Discount","Reseller","No Discount","Reseller"],[50814178.74,203862.08,40032506.6,573142.28,69742390.8,1582808.9],[1708,4,1455,54,6867,178]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>mo<\/th>\n      <th>yr<\/th>\n      <th>min_soh_orderdate<\/th>\n      <th>max_soh_orderdate<\/th>\n      <th>category<\/th>\n      <th>sales_dollars<\/th>\n      <th>orders<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
-<p class="caption">(\#fig:unnamed-chunk-12)caption goes here</p>
-</div>
-
-```r
-ggplot(data = monthly_sales_online, 
-       aes(x = factor(mo), 
-           y = sales_dollars, fill = factor(yr))) +
-  geom_col(position = "dodge", color = "black") + # unstack columns and outline in black
-  xlab("Month") +
-  ylab("Sales Dollars") +
-  scale_y_continuous(labels = dollar) +
-  geom_text(aes(label = category),
-    size = 2.5
-    #           ,color = 'black'
-    , vjust = 1.5,
-    position = position_dodge(.9)
-  ) + # orders => avg so $ amt
-  theme(plot.title = element_text(hjust = .50)) + # Center ggplot title
-  ggtitle(paste("Sales by Month\nBy Online Flag"))
-```
-
-<div class="figure">
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-12-2.png" alt="caption goes here" width="1536" />
-<p class="caption">(\#fig:unnamed-chunk-12)caption goes here</p>
-</div>
-
-### Effect of Late Entries on Sales Rep data
-
-Correcting for the first of the month makes the Sales Rep data look more **normal**.
-
-That could be the end of this chapter.
-
-
-```r
-monthly_sales_onl_pct <- dbGetQuery(
-  con,
-  "
-select EXTRACT(MONTH FROM orderdate) mo
-      ,EXTRACT(YEAR FROM orderdate) yr
-      ,sum(ORDERQTY)
-      ,sum(case when salespersonid is null and onlineorderflag then 1 else 0 end) onl
-      ,sum(case when salespersonid is not null and not onlineorderflag then 1 else 0 end) sp
-      ,round(sum(case when onlineorderflag then 1 else 0 end )*1.0/count(*) * 100.0,2) onl_pct
-      ,round(sum(case when not onlineorderflag then 1 else 0 end )*1.0/count(*) * 100.0,2) sp_pct
-      ,onlineorderflag
-      ,count(*)
-  FROM sales.salesorderheader sh
-  INNER JOIN sales.salesorderdetail sd
-          ON sh.salesorderid = sd.salesorderid
-  INNER JOIN production.product p
-          ON sd.productid = p.productid
-  INNER JOIN sales.specialoffer so
-          ON sd.specialofferid = so.specialofferid
-  LEFT OUTER JOIN sales.specialofferproduct sop
-          ON sd.specialofferid = sop.specialofferid
-         and sd.productid = sop.productid
- WHERE sop.productid is not null
-group by EXTRACT(MONTH FROM orderdate) 
-        ,EXTRACT(YEAR FROM orderdate) 
-        ,onlineorderflag
-order by mo,yr
-"
-)
-
-sp_print_df(head(monthly_sales_onl_pct))
-```
-
-<!--html_preserve--><div id="htmlwidget-06290dba2a01ad394207" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-06290dba2a01ad394207">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[1,1,1,1,1,1],[2012,2012,2013,2013,2014,2014],[193,3774,294,3860,6598,4865],[193,0,294,0,0,4865],[0,1519,0,1215,2180,0],[100,0,100,0,0,100],[0,100,0,100,100,0],[true,false,true,false,false,true],[193,1519,294,1215,2180,4865]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>mo<\/th>\n      <th>yr<\/th>\n      <th>sum<\/th>\n      <th>onl<\/th>\n      <th>sp<\/th>\n      <th>onl_pct<\/th>\n      <th>sp_pct<\/th>\n      <th>onlineorderflag<\/th>\n      <th>count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,3,4,5,6,7,9]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
-
-
-```r
-mo_onl_pct <- dbGetQuery(
-  con,
-  "
-SELECT *
-      ,round(orders/mo_orders * 100.0,2) mo_pct
-      ,round(sales_dollars/mo_sales * 100.0,2) mo_dlr_pct
-  FROM (SELECT EXTRACT(MONTH FROM orderdate) mo, EXTRACT(YEAR FROM orderdate) yr
-             , min(orderdate)::DATE min_soh_orderdate, max(orderdate)::DATE max_soh_orderdate
-             , round(sum(subtotal), 2) sales_dollars
-             , round(sum(sum(subtotal)) over (partition by EXTRACT(MONTH FROM orderdate),EXTRACT(YEAR FROM orderdate)
-                             order by EXTRACT(YEAR FROM orderdate)),2) mo_sales
-             , count(*) * 1.0 orders
-             , sum(count(*)) over (partition by EXTRACT(MONTH FROM orderdate),EXTRACT(YEAR FROM orderdate)
-                             order by EXTRACT(YEAR FROM orderdate)) mo_orders
-             , case when sh.onlineorderflag then 'online' else 'sales rep' end sales_type
-        FROM sales.salesorderheader sh
-        GROUP BY EXTRACT(MONTH FROM orderdate), EXTRACT(YEAR FROM orderdate), 
-                 case when sh.onlineorderflag then 'online' else 'sales rep' end
-       ) as src
-ORDER BY mo, yr, sales_type
-"
-)
-
-sp_print_df(head(mo_onl_pct))
-```
-
-<!--html_preserve--><div id="htmlwidget-edb662ff7931dcb6630b" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-edb662ff7931dcb6630b">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[1,1,1,1,1,1],[2012,2012,2013,2013,2014,2014],["2012-01-01","2012-01-01","2013-01-01","2013-01-28","2014-01-01","2014-01-28"],["2012-01-31","2012-01-29","2013-01-31","2013-01-28","2014-01-31","2014-01-29"],[614557.94,3356069.34,523917.38,1563955.08,1551065.56,2738752.39],[3970627.28,3970627.28,2087872.46,2087872.46,4289817.95,4289817.95],[193,143,294,106,1966,175],[336,336,400,400,2141,2141],["online","sales rep","online","sales rep","online","sales rep"],[57.44,42.56,73.5,26.5,91.83,8.17],[15.48,84.52,25.09,74.91,36.16,63.84]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>mo<\/th>\n      <th>yr<\/th>\n      <th>min_soh_orderdate<\/th>\n      <th>max_soh_orderdate<\/th>\n      <th>sales_dollars<\/th>\n      <th>mo_sales<\/th>\n      <th>orders<\/th>\n      <th>mo_orders<\/th>\n      <th>sales_type<\/th>\n      <th>mo_pct<\/th>\n      <th>mo_dlr_pct<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,5,6,7,8,10,11]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
-
-```r
-mo_onl_pct$mo <- as.factor(mo_onl_pct$mo)
-mo_onl_pct$yr <- as.factor(mo_onl_pct$yr)
-mo_onl_pct$sales_type <- as.factor(mo_onl_pct$sales_type)
-mo_2011 <- mo_onl_pct %>% filter(yr == 2011)
-mo_2012 <- mo_onl_pct %>% filter(yr == 2012)
-mo_2013 <- mo_onl_pct %>% filter(yr == 2013)
-mo_2014 <- mo_onl_pct %>% filter(yr == 2014)
-
-
-ggplot(data = NULL) +
-  # data=mo_2011 first results in the x axis months out of order.
-  geom_line(data = mo_2012, aes(x = mo, y = mo_pct, color = yr, group = sales_type)) +
-  geom_line(data = mo_2011, aes(x = mo, y = mo_pct, color = yr, group = sales_type)) +
-  geom_line(data = mo_2013, aes(x = mo, y = mo_pct, color = yr, group = sales_type)) +
-  geom_line(data = mo_2014, aes(x = mo, y = mo_pct, color = yr, group = sales_type)) +
-
-  geom_point(data = mo_2011, aes(x = mo, y = mo_pct, color = sales_type)) +
-  geom_point(data = mo_2012, aes(x = mo, y = mo_pct, color = sales_type)) +
-  geom_point(data = mo_2013, aes(x = mo, y = mo_pct, color = sales_type)) +
-  geom_point(data = mo_2014, aes(x = mo, y = mo_pct, color = sales_type)) +
-
-  geom_text(
-    data = mo_2011, aes(x = mo, y = mo_pct, label = paste(orders, ":$", sales_dollars, ":", mo_dlr_pct, "%")),
-    position = position_dodge(.3), size = 2.25, hjust = 1.0
-  ) +
-  geom_text(
-    data = mo_2012, aes(x = mo, y = mo_pct, label = paste(orders, ":$", sales_dollars, ":", mo_dlr_pct, "%")),
-    position = position_dodge(.3), size = 2.25, hjust = 1.0
-  ) +
-  geom_text(
-    data = mo_2013, aes(x = mo, y = mo_pct, label = paste(orders, ":$", sales_dollars, ":", mo_dlr_pct, "%")),
-    position = position_dodge(.3), size = 2.25, hjust = 1.0
-  ) +
-  geom_text(
-    data = mo_2014, aes(x = mo, y = mo_pct, label = paste(orders, ":$", sales_dollars, ":", mo_dlr_pct, "%")), color = "lightblue",
-    position = position_dodge(.3), size = 2.25, hjust = 1.0, vjust = 1.5
-  ) +
-
-  xlab("Month") +
-  ylab("% Online Sales\nvs\n%Rep Sales") +
-  theme(plot.title = element_text(hjust = .50)) +
-  ggtitle(paste(
-    "Sales by Month\n",
-    "Online Orders Versus Rep Orders\n",
-    min_soh_dt, " - ", max_soh_dt, "
-",
-    "Each Point shows Number of Orders: $ Amount: % of Total $ For the Month"
-  ))
-```
-
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-14-2.png" width="1536" />
-
-
-This plot is much easier to read, but the sales orders => avg_s
-From the tidy point of view  overview, https://tidyr.tidyverse.org/:
-
-Tidy data is data where:
-
-*  Each variable is in a column.
-*  Each observation is a row.
-*  Each value is a cell.
-
-The gather command throws the following warning:
-
-    attributes are not identical across measure variables;
-    they will be dropped
-
-
-## Close and clean up
-
+## Disconnect from the database and stop Docker
 
 
 ```r
 dbDisconnect(con)
 sp_docker_stop("adventureworks")
 ```
-
