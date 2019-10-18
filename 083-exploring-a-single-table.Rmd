@@ -137,9 +137,10 @@ Looking at order volume and average sales size together suggests that indeed som
 
 ```{r number of orders by the the average sales per order 1}
 annual_sales %>% arrange(min_soh_orderdate) %>% 
+  # mutate(year = year(orderdate)) %>% 
 ggplot(aes(x = avg_total_soh_dollars, y = as.numeric(soh_count))) +
   geom_point() +
-  geom_text(aes(label = year, hjust = .5, vjust = 0)) +
+  geom_text(aes(label = year(min_soh_orderdate), hjust = .5, vjust = 0, color = year)) +
   geom_path() +
   xlab("Average dollars per order") +
   ylab("Total number of orders") +
@@ -189,17 +190,6 @@ ggplot(data = monthly_sales, aes(x = orderdate, y = total_soh_dollars)) +
   ggtitle(paste("Sales by Month\n", min_soh_dt, " - ", max_soh_dt))
 ```
 
-The total sales are trending up but suspiciously uneven.  Looking at lags might confirm just how much month-to-month difference there is:
-
-```{r}
-lagged_monthly_sales <- monthly_sales %>% 
-  mutate(monthly_sales_change = (lag(total_soh_dollars, 1)) -
-           total_soh_dollars)
-
-summary(lagged_monthly_sales$monthly_sales_change)
-```
-Although median monthly sales rise by about $53 thousand, it's curious that in one fourth of the months the drop between one month and the next is between fifteen hundred and a million dollars. AventureWorks sales are *very* uneven.
-
 ### Comparing dollars and orders to a baseline
 
 To look at dollars and the number of orders together, we compare the monthly data to the yearly average for 2011.
@@ -246,6 +236,20 @@ normalized_monthly_sales %>%
                 "Number of Sales Orders and Dollar Totals\n", 
                 min_soh_dt, " to ", max_soh_dt))
 ```
+
+
+### Check lagged monthly data
+
+The total sales are trending up but suspiciously uneven.  Looking at lags might confirm just how much month-to-month difference there is:
+
+```{r}
+lagged_monthly_sales <- monthly_sales %>% 
+  mutate(monthly_sales_change = (lag(total_soh_dollars, 1)) -
+           total_soh_dollars)
+
+summary(lagged_monthly_sales$monthly_sales_change)
+```
+Although median monthly sales rise by about $53 thousand, it's curious that in one fourth of the months the drop between one month and the next is between fifteen hundred and a million dollars. AventureWorks sales are *very* uneven.
 
 ## The effect of online sales
 
@@ -308,7 +312,6 @@ ggplot(data = annual_sales, aes(x = orderdate, y = as.numeric(soh_count))) +
 
 ### Average sale comparison
 
-
 ```{r average dollars per sale 3}
 ggplot(data = annual_sales, aes(x = orderdate, y = avg_total_soh_dollars)) +
   geom_col() +
@@ -329,9 +332,9 @@ sales <- annual_sales %>% arrange(orderdate) %>%
   mutate(year = year(orderdate), year = as.factor(year)) 
   
 sales %>% ggplot(aes(x = avg_total_soh_dollars, y = as.numeric(soh_count), color = year)) +
-  geom_point() +
   geom_text(aes(label = year, hjust = .5, vjust = 0)) +
-  geom_path() +
+  geom_point() +
+  # geom_path() +
   xlab("Average dollars per order") +
   ylab("Total number of orders") +
   facet_wrap("onlineorderflag", scales = "free") +     
@@ -401,87 +404,8 @@ A couple of things jump out from the graph.
 2.  2011 has more variation than 2012 and 2013 and peaks every two months.
 3.  2014 has the most variation and also peaks every two months.  Both the number of sales, 939, and the average sales order size, $52.19 plummet in June 2014.
 
-## define the one-off function
 
-```{r}
-monthly_sales <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
-  select(orderdate, subtotal, onlineorderflag) %>% 
-  # mutate(day = day(as.Date(orderdate))) %>% 
-  mutate(
-    orderdate = as.Date(orderdate),
-    day = day(orderdate)) %>% 
-     show_query() %>% 
-  collect() %>% # From here on we're in R
-    mutate(   
-    correct_orderdate = case_when(
-      # onlineorderflag == FALSE & day == 1 ~ NA,
-      onlineorderflag == FALSE & day == 1L ~ orderdate - 1 ,
-      TRUE ~ orderdate
-  ))
-
-```
-
-Here's the magic:
-
-```{r}
-dbExecute(con,
-"CREATE OR REPLACE FUNCTION so_adj_date(so_date timestamp, ONLINE_ORDER boolean) RETURNS timestamp AS $$
-     BEGIN
-        IF (ONLINE_ORDER) THEN
-            RETURN (SELECT so_date);
-        ELSE
-            RETURN(SELECT CASE WHEN EXTRACT(DAY FROM so_date) = 1
-                               THEN  so_date - '1 day'::interval
-                               ELSE  so_date
-                          END
-                  );
-        END IF;
- END; $$
-LANGUAGE PLPGSQL;
-")
-```
-
-this is a big lesson!  Using the magic.
-
-```{r}
-monthly_sales <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
-  select(orderdate, subtotal, onlineorderflag) %>% 
-  # mutate(day = day(as.Date(orderdate))) %>% 
-  mutate(
-    # orderdate = as.Date(orderdate),
-    adjusted_date = so_adj_date(orderdate, onlineorderflag),
-    day = day(orderdate)) %>% 
-     show_query() %>% 
-  # collect() %>% # From here on we're in R
-    collect()
-
-```
-
-```{r}
-monthly_sales %>% filter(day==1 & onlineorderflag == FALSE) %>% 
-  count(orderdate) %>% as.data.frame()
-```
-
-```{r}
-mutate(orderdate = date(orderdate), 
-         orderdate = round_date(orderdate, "month"),
-          onlineorderflag = if_else(onlineorderflag == FALSE, 
-                                   "Sales Rep", "Online"),) %>%  # 
-  group_by(orderdate, onlineorderflag) %>%
-  summarize(
-    min_soh_orderdate = min(orderdate, na.rm = TRUE),
-    max_soh_orderdate = max(orderdate, na.rm = TRUE),
-    total_soh_dollars = round(sum(subtotal, na.rm = TRUE), 2),
-    avg_total_soh_dollars = round(mean(subtotal, na.rm = TRUE), 2),
-    soh_count = n()
-  ) 
-
-```
-
-
-
-
-### Looking at lagged data
+### Compare monthly lagged data by order type
 
 ```{r}
 lagged <- monthly_sales %>% 
@@ -523,31 +447,115 @@ This trend continues into 2014 before the number of sales plummet to just 1.3 ti
 
 We suspect that the business has changed a lot with the adventn of online orders.
 
-## Variation over time
+## Correcting the order date for Sales Reps
+
+### Define a date correction function in R
 
 ```{r}
-sales_by_day_of_month <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
+monthly_sales <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
+  select(orderdate, subtotal, onlineorderflag) %>% 
+  # mutate(day = day(as.Date(orderdate))) %>% 
+  mutate(
+    orderdate = as.Date(orderdate),
+    day = day(orderdate)) %>% 
+     show_query() %>% 
+  collect() %>% # From here on we're in R
+    mutate(   
+    correct_orderdate = case_when(
+      # onlineorderflag == FALSE & day == 1 ~ NA,
+      onlineorderflag == FALSE & day == 1L ~ orderdate - 1 ,
+      TRUE ~ orderdate
+  ))
+
+```
+
+### Define and store a Postgres function to correct the date
+
+```{r}
+dbExecute(con,
+"CREATE OR REPLACE FUNCTION so_adj_date(so_date timestamp, ONLINE_ORDER boolean) RETURNS timestamp AS $$
+     BEGIN
+        IF (ONLINE_ORDER) THEN
+            RETURN (SELECT so_date);
+        ELSE
+            RETURN(SELECT CASE WHEN EXTRACT(DAY FROM so_date) = 1
+                               THEN  so_date - '1 day'::interval
+                               ELSE  so_date
+                          END
+                  );
+        END IF;
+ END; $$
+LANGUAGE PLPGSQL;
+")
+```
+
+### Use the Postgres function
+
+```{r}
+monthly_sales <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
+  select(orderdate, subtotal, onlineorderflag) %>% 
+  # mutate(day = day(as.Date(orderdate))) %>% 
+  mutate(
+    # orderdate = as.Date(orderdate),
+    adjusted_date = so_adj_date(orderdate, onlineorderflag),
+    day = day(orderdate)) %>% 
+     show_query() %>% 
+    collect()
+
+```
+
+```{r}
+monthly_sales %>% filter(day == 1 & onlineorderflag == FALSE) %>% 
+  count(orderdate) %>% as.data.frame()
+```
+
+```{r}
+monthly_sales <- monthly_sales %>% 
+mutate(orderdate = date(orderdate), 
+         orderdate = round_date(orderdate, "month"),
+          onlineorderflag = if_else(onlineorderflag == FALSE, 
+                                   "Sales Rep", "Online"),) %>%  # 
+  group_by(orderdate, onlineorderflag) %>%
+  summarize(
+    min_soh_orderdate = min(orderdate, na.rm = TRUE),
+    max_soh_orderdate = max(orderdate, na.rm = TRUE),
+    total_soh_dollars = round(sum(subtotal, na.rm = TRUE), 2),
+    avg_total_soh_dollars = round(mean(subtotal, na.rm = TRUE), 2),
+    soh_count = n()
+  ) 
+
+```
+
+### Sales Rep data entered at the end of the month
+```{r}
+sales_by_corrected_day_of_month <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
   mutate(day_of_month = day(orderdate)) %>%
-  group_by(onlineorderflag, day_of_month) %>%
+  group_by(onlineorderflag, day_of_month, orderdate) %>%
   summarize(
     total_soh_dollars = round(sum(subtotal, na.rm = TRUE), 2),
     avg_total_soh_dollars = round(mean(subtotal, na.rm = TRUE),2),
     soh_count = n()
   ) %>%
-  arrange(day_of_month) %>%
+  # arrange(day_of_month) %>%
   collect() %>% 
-  ungroup() %>% 
-  mutate(onlineorderflag = if_else(onlineorderflag == FALSE, 
+  ungroup() %>%
+  mutate(correct_orderdate = case_when(
+           onlineorderflag == FALSE & day_of_month == 1L ~ orderdate - days(1),
+           TRUE ~ orderdate
+          ),
+         day_of_month = day(correct_orderdate),
+         onlineorderflag = if_else(onlineorderflag == FALSE, 
                                    "Sales Rep", "Online"),
          onlineorderflag = as.factor(onlineorderflag),
-         day_of_month = as.numeric(day_of_month),
+         # day_of_month = as.numeric(day_of_month),
          soh_count = as.numeric(soh_count)
-         )
+         ) 
 
 ```
 
+
 ```{r}
-ggplot(sales_by_day_of_month, aes(x = day_of_month, y = soh_count)) +
+ggplot(sales_by_corrected_day_of_month, aes(x = day_of_month, y = soh_count)) +
   # scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
   facet_wrap("onlineorderflag") +
   geom_col() +
@@ -559,87 +567,16 @@ ggplot(sales_by_day_of_month, aes(x = day_of_month, y = soh_count)) +
                 min_soh_dt, " - ", max_soh_dt))
 ```
 
-
-## These queries and graphs may be redundant
-
-```{r On-Line Orders Versus Sales Rep Orders,fig.width=16}
-mo_onl_pct <- dbGetQuery(
-  con,
-  "
-SELECT *
-      ,round(orders/mo_orders * 100.0,2) mo_pct
-      ,round(sales_dollars/mo_sales * 100.0,2) mo_dlr_pct
-  FROM (SELECT EXTRACT(MONTH FROM orderdate) mo, EXTRACT(YEAR FROM orderdate) yr
-             , min(orderdate)::DATE min_soh_orderdate, max(orderdate)::DATE max_soh_orderdate
-             , round(sum(subtotal), 2) sales_dollars
-             , round(sum(sum(subtotal)) over (partition by EXTRACT(MONTH FROM orderdate),EXTRACT(YEAR FROM orderdate)
-                             order by EXTRACT(YEAR FROM orderdate)),2) mo_sales
-             , count(*) * 1.0 orders
-             , sum(count(*)) over (partition by EXTRACT(MONTH FROM orderdate),EXTRACT(YEAR FROM orderdate)
-                             order by EXTRACT(YEAR FROM orderdate)) mo_orders
-             , case when sh.onlineorderflag then 'online' else 'sales rep' end sales_type
-        FROM sales.salesorderheader sh
-        GROUP BY EXTRACT(MONTH FROM orderdate), EXTRACT(YEAR FROM orderdate), 
-                 case when sh.onlineorderflag then 'online' else 'sales rep' end
-       ) as src
-ORDER BY mo, yr, sales_type
-"
-)
-
-sp_print_df(head(mo_onl_pct))
-
-mo_onl_pct$mo <- as.factor(mo_onl_pct$mo)
-mo_onl_pct$yr <- as.factor(mo_onl_pct$yr)
-mo_onl_pct$sales_type <- as.factor(mo_onl_pct$sales_type)
-mo_2011 <- mo_onl_pct %>% filter(yr == 2011)
-mo_2012 <- mo_onl_pct %>% filter(yr == 2012)
-mo_2013 <- mo_onl_pct %>% filter(yr == 2013)
-mo_2014 <- mo_onl_pct %>% filter(yr == 2014)
-
-
-ggplot(data = NULL) +
-  # data=mo_2011 first results in the x axis months out of order.
-  geom_line(data = mo_2012, aes(x = mo, y = mo_pct, color = yr, group = sales_type)) +
-  geom_line(data = mo_2011, aes(x = mo, y = mo_pct, color = yr, group = sales_type)) +
-  geom_line(data = mo_2013, aes(x = mo, y = mo_pct, color = yr, group = sales_type)) +
-  geom_line(data = mo_2014, aes(x = mo, y = mo_pct, color = yr, group = sales_type)) +
-
-  geom_point(data = mo_2011, aes(x = mo, y = mo_pct, color = sales_type)) +
-  geom_point(data = mo_2012, aes(x = mo, y = mo_pct, color = sales_type)) +
-  geom_point(data = mo_2013, aes(x = mo, y = mo_pct, color = sales_type)) +
-  geom_point(data = mo_2014, aes(x = mo, y = mo_pct, color = sales_type)) +
-
-  geom_text(
-    data = mo_2011, aes(x = mo, y = mo_pct, label = paste(orders, ":$", sales_dollars, ":", mo_dlr_pct, "%")),
-    position = position_dodge(.3), size = 2.5, hjust = 0
-  ) +
-  geom_text(
-    data = mo_2012, aes(x = mo, y = mo_pct, label = paste(orders, ":$", sales_dollars, ":", mo_dlr_pct, "%")),
-    position = position_dodge(.3), size = 2.5, hjust = 0
-  ) +
-  geom_text(
-    data = mo_2013, aes(x = mo, y = mo_pct, label = paste(orders, ":$", sales_dollars, ":", mo_dlr_pct, "%")),
-    position = position_dodge(.3), size = 2.5, hjust = 0
-  ) +
-  geom_text(
-    data = mo_2014, aes(x = mo, y = mo_pct, label = paste(orders, ":$", sales_dollars, ":", mo_dlr_pct, "%")), color = "lightblue",
-    position = position_dodge(.3), size = 2.5, hjust = 0, vjust = 1.5
-  ) +
-
-  xlab("Month") +
-  ylab("% Online Sales\nvs\n%Rep Sales") +
-  theme(plot.title = element_text(hjust = .50)) +
-  ggtitle(paste(
-    "Sales by Month\n",
-    "Online Orders Versus Rep Orders\n",
-    min_soh_dt, " - ", max_soh_dt, "
-",
-    "Each Point shows Number of Orders: $ Amount: % of Total $ For the Month"
-  ))
-```
-The sales rep orders brought in over half the monthly sales dollars for every month except three, February, April, and June of 2014.  The monthly sales rep orders for those months are 3, 2, and 0 respectively. 
-
 ## Monthly Sales Rep Performance Analysis
+
+### Monthly Sales by Order Type with corrected dates
+
+
+### Monthly Sales by Order Type with corrected dates -- relative to a trend line
+
+### Monthly sales lag with corrected dates
+
+Monthly sa
 
 ```{r}
 mo_soh_sreps <- dbGetQuery(
@@ -839,6 +776,86 @@ The gather command throws the following warning:
 
     attributes are not identical across measure variables;
     they will be dropped
+
+
+## These queries and graphs may be redundant
+
+```{r On-Line Orders Versus Sales Rep Orders,fig.width=16}
+mo_onl_pct <- dbGetQuery(
+  con,
+  "
+SELECT *
+      ,round(orders/mo_orders * 100.0,2) mo_pct
+      ,round(sales_dollars/mo_sales * 100.0,2) mo_dlr_pct
+  FROM (SELECT EXTRACT(MONTH FROM orderdate) mo, EXTRACT(YEAR FROM orderdate) yr
+             , min(orderdate)::DATE min_soh_orderdate, max(orderdate)::DATE max_soh_orderdate
+             , round(sum(subtotal), 2) sales_dollars
+             , round(sum(sum(subtotal)) over (partition by EXTRACT(MONTH FROM orderdate),EXTRACT(YEAR FROM orderdate)
+                             order by EXTRACT(YEAR FROM orderdate)),2) mo_sales
+             , count(*) * 1.0 orders
+             , sum(count(*)) over (partition by EXTRACT(MONTH FROM orderdate),EXTRACT(YEAR FROM orderdate)
+                             order by EXTRACT(YEAR FROM orderdate)) mo_orders
+             , case when sh.onlineorderflag then 'online' else 'sales rep' end sales_type
+        FROM sales.salesorderheader sh
+        GROUP BY EXTRACT(MONTH FROM orderdate), EXTRACT(YEAR FROM orderdate), 
+                 case when sh.onlineorderflag then 'online' else 'sales rep' end
+       ) as src
+ORDER BY mo, yr, sales_type
+"
+)
+
+sp_print_df(head(mo_onl_pct))
+
+mo_onl_pct$mo <- as.factor(mo_onl_pct$mo)
+mo_onl_pct$yr <- as.factor(mo_onl_pct$yr)
+mo_onl_pct$sales_type <- as.factor(mo_onl_pct$sales_type)
+mo_2011 <- mo_onl_pct %>% filter(yr == 2011)
+mo_2012 <- mo_onl_pct %>% filter(yr == 2012)
+mo_2013 <- mo_onl_pct %>% filter(yr == 2013)
+mo_2014 <- mo_onl_pct %>% filter(yr == 2014)
+
+
+ggplot(data = NULL) +
+  # data=mo_2011 first results in the x axis months out of order.
+  geom_line(data = mo_2012, aes(x = mo, y = mo_pct, color = yr, group = sales_type)) +
+  geom_line(data = mo_2011, aes(x = mo, y = mo_pct, color = yr, group = sales_type)) +
+  geom_line(data = mo_2013, aes(x = mo, y = mo_pct, color = yr, group = sales_type)) +
+  geom_line(data = mo_2014, aes(x = mo, y = mo_pct, color = yr, group = sales_type)) +
+
+  geom_point(data = mo_2011, aes(x = mo, y = mo_pct, color = sales_type)) +
+  geom_point(data = mo_2012, aes(x = mo, y = mo_pct, color = sales_type)) +
+  geom_point(data = mo_2013, aes(x = mo, y = mo_pct, color = sales_type)) +
+  geom_point(data = mo_2014, aes(x = mo, y = mo_pct, color = sales_type)) +
+
+  geom_text(
+    data = mo_2011, aes(x = mo, y = mo_pct, label = paste(orders, ":$", sales_dollars, ":", mo_dlr_pct, "%")),
+    position = position_dodge(.3), size = 2.5, hjust = 0
+  ) +
+  geom_text(
+    data = mo_2012, aes(x = mo, y = mo_pct, label = paste(orders, ":$", sales_dollars, ":", mo_dlr_pct, "%")),
+    position = position_dodge(.3), size = 2.5, hjust = 0
+  ) +
+  geom_text(
+    data = mo_2013, aes(x = mo, y = mo_pct, label = paste(orders, ":$", sales_dollars, ":", mo_dlr_pct, "%")),
+    position = position_dodge(.3), size = 2.5, hjust = 0
+  ) +
+  geom_text(
+    data = mo_2014, aes(x = mo, y = mo_pct, label = paste(orders, ":$", sales_dollars, ":", mo_dlr_pct, "%")), color = "lightblue",
+    position = position_dodge(.3), size = 2.5, hjust = 0, vjust = 1.5
+  ) +
+
+  xlab("Month") +
+  ylab("% Online Sales\nvs\n%Rep Sales") +
+  theme(plot.title = element_text(hjust = .50)) +
+  ggtitle(paste(
+    "Sales by Month\n",
+    "Online Orders Versus Rep Orders\n",
+    min_soh_dt, " - ", max_soh_dt, "
+",
+    "Each Point shows Number of Orders: $ Amount: % of Total $ For the Month"
+  ))
+```
+The sales rep orders brought in over half the monthly sales dollars for every month except three, February, April, and June of 2014.  The monthly sales rep orders for those months are 3, 2, and 0 respectively. 
 
 
 ## Disconnect from the database and stop Docker
