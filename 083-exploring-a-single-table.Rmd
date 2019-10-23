@@ -20,7 +20,7 @@ For this kind of detective work we are seeking to undertand the following elemen
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 options(digits = 10)
-sleep_default <- 4
+sleep_default <- 3
 ```
 
 Use these libraries:
@@ -73,7 +73,7 @@ annual_sales <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
     min_soh_orderdate = min(orderdate, na.rm = TRUE),
     max_soh_orderdate = max(orderdate, na.rm = TRUE),
     total_soh_dollars = round(sum(subtotal, na.rm = TRUE), 2),
-    avg_total_soh_dollars = round(mean(subtotal, na.rm = TRUE),2),
+    avg_total_soh_dollars = round(mean(subtotal, na.rm = TRUE), 2),
     soh_count = n()
   ) %>%
   arrange(year) %>%
@@ -184,11 +184,13 @@ Plotting the monthly sales data:
 
 ggplot(data = monthly_sales, aes(x = orderdate, y = total_soh_dollars)) +
   geom_col() +
-  xlab("Month") +
-  ylab("Sales Dollars") +
-  scale_y_continuous(labels = dollar) +
+    scale_y_continuous(labels = dollar) +
   theme(plot.title = element_text(hjust = 0.5)) + # Center the title
-  ggtitle(paste("Sales by Month\n", min_soh_dt, " - ", max_soh_dt))
+  labs(
+    title = paste("Sales by Month\n", min_soh_dt, " - ", max_soh_dt), 
+    x = "Month", 
+    y = "Sales Dollars") 
+
 ```
 
 ### Comparing dollars and orders to a baseline
@@ -288,12 +290,12 @@ Start by looking at total sales.
 
 ggplot(data = annual_sales, aes(x = orderdate, y = total_soh_dollars)) +
   geom_col() +
-  xlab("Year") +
-  ylab("Sales $") +
   scale_y_continuous(labels = scales::dollar_format()) + 
   facet_wrap("onlineorderflag") +
-  ggtitle(paste("Adventure Works Sales Dollars by Year\n  ", 
-                min_soh_dt, " - ", max_soh_dt))
+  labs(title = paste("Adventure Works Sales Dollars by Year\n  ", 
+                     min_soh_dt, " - ", max_soh_dt),
+       x = "Year",
+       y = "Sales $")
 ```
 
 Indeed the total sales are quite different as are the number of orders and the average order size!
@@ -316,12 +318,12 @@ ggplot(data = annual_sales, aes(x = orderdate, y = as.numeric(soh_count))) +
 ```{r average dollars per sale 3}
 ggplot(data = annual_sales, aes(x = orderdate, y = avg_total_soh_dollars)) +
   geom_col() +
-  xlab("Year") +
-  ylab("Average sale amount") +
   facet_wrap("onlineorderflag") +
   scale_y_continuous(labels = scales::dollar_format()) + 
-  ggtitle(paste("Average Dollars per Sale\n", 
-                min_soh_dt, " - ", max_soh_dt))
+  labs(title = paste("Average Dollars per Sale\n", 
+                min_soh_dt, " - ", max_soh_dt),
+       x = "Year",
+       y = "Average sale amount")
 ```
 
 ### Comparing order volume and average sale together
@@ -336,12 +338,12 @@ sales %>% ggplot(aes(x = avg_total_soh_dollars, y = as.numeric(soh_count), color
   geom_text(aes(label = year, hjust = .5, vjust = 0)) +
   geom_point() +
   # geom_path() +
-  xlab("Average dollars per order") +
-  ylab("Total number of orders") +
   facet_wrap("onlineorderflag", scales = "free") +     
   scale_x_continuous(labels = scales::dollar_format()) + 
-  ggtitle(paste("Number of Orders by Average Order Amount\n", 
-                min_soh_dt, " - ", max_soh_dt))
+  labs(title = paste("Number of Orders by Average Order Amount\n", 
+                min_soh_dt, " - ", max_soh_dt),
+       x = "Average dollars per order",
+       y = "Total number of orders")
 ```
 
 From 2012 to 2013 the average dollars per order dropped from more than $8,500 to nearly $3,000 while the total number of order shot up from less than 4,000 to more than 14,000.  **Why are the number of orders increasing, but the average order dollar amount dropping?  **
@@ -386,15 +388,15 @@ ggplot(
     x = orderdate, y = total_soh_dollars)) +
   geom_line() +
   geom_smooth(se = FALSE) +
-  xlab("Month") +
-  ylab("Sales Dollars") +
-  facet_wrap("onlineorderflag") +
+    facet_wrap("onlineorderflag") +
   scale_y_continuous(labels = dollar) +
   scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
   theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
-  ggtitle(paste("Sales by Month by Year\n",
+  labs( title = paste("Sales by Month by Year\n",
                 "With Number of Sales Orders\nAnd Average SO $ Amount\n", 
-                min_soh_dt, " - ", max_soh_dt))
+                min_soh_dt, " - ", max_soh_dt), 
+        x = "Month",
+        y = "Sales Dollars") 
 ```
 
 A couple of things jump out from the graph.
@@ -418,12 +420,12 @@ ggplot(lagged, aes(x = orderdate, y = pct_yearly_soh_dollar_change)) +
   scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
   facet_wrap("onlineorderflag") +
   geom_line() +
-  xlab("Month") +
-  ylab("% Dollar Change") +
   theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
-  ggtitle(paste("Year on Year Total Monthly Sales Change \n",
+  labs(title = paste("Year on Year Total Monthly Sales Change \n",
                 "Comparing Online to Sales Rep Sales\n",
-                min_soh_dt, " - ", max_soh_dt))
+                min_soh_dt, " - ", max_soh_dt),
+       x = "Month", 
+       y = "% Dollar Change")
 ```
 
 
@@ -432,12 +434,12 @@ ggplot(lagged, aes(x = orderdate, y = pct_yearly_soh_count_change)) +
   scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
   facet_wrap("onlineorderflag") +
   geom_line() +
-  xlab("Month") +
-  ylab("Change number of orders") +
   theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
-  ggtitle(paste("Year on Year Monthly Order Volume Change \n",
+  labs(title = paste("Year on Year Monthly Order Volume Change \n",
                 "Comparing Online to Sales Rep Sales\n",
-                min_soh_dt, " - ", max_soh_dt))
+                min_soh_dt, " - ", max_soh_dt),
+       x =  "Month",
+       y = "Change number of orders")
 ```
 
 Comparing the number of sales orders year over year by month for 2013 and 2012, one can see that the 2013 sales are between 1.2 and 1.8 times larger than the corresponding month of 2012 from January through June.  In July the 2013 sales are 5 to 6 times the 2012 sales orders.
@@ -461,18 +463,28 @@ sales_rep_day_of_month_sales <-  tbl(con, in_schema("sales", "salesorderheader")
   ) %>% 
   count(year, month, day, name = "orders") %>%
   group_by(year, month) %>%
-  summarize(days_with_orders = n(), total_orders = sum(orders, na.rm = TRUE)) %>%
+  summarize(days_with_orders = n(), 
+            total_orders = sum(orders, na.rm = TRUE), 
+            min_day = min(day, na.rm = FALSE)) %>%
   show_query() %>% 
   collect() %>%
   mutate(days_with_orders = as.numeric(days_with_orders),
-    order_month = as.Date(paste0(year,"-",month,"-01"))) %>% 
+    order_month = as.Date(paste0(year,"-",month,"-01")),
+    min_day_factor = if_else(min_day < 2, "Month start", "Month end")) %>% 
   complete(order_month = seq(min(order_month), max(order_month), by = "month")) %>% 
   mutate(days_with_orders = replace_na(days_with_orders, 0))
 
 sales_rep_day_of_month_sales %>% 
-  ggplot(aes(order_month, days_with_orders)) +
+  ggplot(aes(order_month, days_with_orders,  fill = min_day_factor)) +
   geom_col() +
-  coord_flip()
+  coord_flip() +
+  labs(
+    title = "How many days had Sales Rep orders posted",
+    subtitle = "At the beginning or end of the month?",
+    fill = "Day Sales were posted",
+    y = "Number of days with transactions",
+    x = "Date"
+  )
 ```
 
 Maybe we don't have the complete picture yet
@@ -505,12 +517,12 @@ mo_so_mo_dt_dist_sum
 
 ggplot(data=mo_so_mo_dt_dist_sum,aes(x=yymm,y=unique_days)) +
   geom_col(fill = 'blue') +
-  xlab("YYMM") +
-  ylab("Unique Order Days in Month") +
-  ggtitle("Sale Rep Order Days By Month") +
   theme(plot.title = element_text(hjust = 0.5)) +           # Center ggplot title
-  theme(axis.text.x=element_text(angle=60, hjust=1)) +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
   coord_flip()
+  labs(title = "Sale Rep Order Days By Month",
+       x = "YYMM",
+       y = "Unique Order Days in Month")
 ```
 
 That is unexpected.  A couple of  things immediately jump out from the first page of data:
@@ -755,8 +767,6 @@ ggplot(data = monthly_sales_online,
        aes(x = factor(mo), 
            y = sales_dollars, fill = factor(yr))) +
   geom_col(position = "dodge", color = "black") + # unstack columns and outline in black
-  xlab("Month") +
-  ylab("Sales Dollars") +
   scale_y_continuous(labels = dollar) +
   geom_text(aes(label = category),
     size = 2.5
@@ -765,7 +775,9 @@ ggplot(data = monthly_sales_online,
     position = position_dodge(.9)
   ) + # orders => avg so $ amt
   theme(plot.title = element_text(hjust = .50)) + # Center ggplot title
-  ggtitle(paste("Sales by Month\nBy Online Flag"))
+  labs(title = "Sales by Month\nBy Online Flag",
+       x = "Month", 
+       y = "Sales Dollars")
 ```
 
 ### Effect of Late Entries on Sales Rep data
