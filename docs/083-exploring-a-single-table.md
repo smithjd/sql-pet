@@ -72,7 +72,7 @@ annual_sales <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
     min_soh_orderdate = min(orderdate, na.rm = TRUE),
     max_soh_orderdate = max(orderdate, na.rm = TRUE),
     total_soh_dollars = round(sum(subtotal, na.rm = TRUE), 2),
-    avg_total_soh_dollars = round(mean(subtotal, na.rm = TRUE),2),
+    avg_total_soh_dollars = round(mean(subtotal, na.rm = TRUE), 2),
     soh_count = n()
   ) %>%
   arrange(year) %>%
@@ -218,11 +218,12 @@ Plotting the monthly sales data:
 ```r
 ggplot(data = monthly_sales, aes(x = orderdate, y = total_soh_dollars)) +
   geom_col() +
-  xlab("Month") +
-  ylab("Sales Dollars") +
-  scale_y_continuous(labels = dollar) +
+    scale_y_continuous(labels = dollar) +
   theme(plot.title = element_text(hjust = 0.5)) + # Center the title
-  ggtitle(paste("Sales by Month\n", min_soh_dt, " - ", max_soh_dt))
+  labs(
+    title = paste("Sales by Month\n", min_soh_dt, " - ", max_soh_dt), 
+    x = "Month", 
+    y = "Sales Dollars") 
 ```
 
 <img src="083-exploring-a-single-table_files/figure-html/Total monthly sales bar chart-1.png" width="672" />
@@ -344,12 +345,12 @@ Start by looking at total sales.
 ```r
 ggplot(data = annual_sales, aes(x = orderdate, y = total_soh_dollars)) +
   geom_col() +
-  xlab("Year") +
-  ylab("Sales $") +
   scale_y_continuous(labels = scales::dollar_format()) + 
   facet_wrap("onlineorderflag") +
-  ggtitle(paste("Adventure Works Sales Dollars by Year\n  ", 
-                min_soh_dt, " - ", max_soh_dt))
+  labs(title = paste("Adventure Works Sales Dollars by Year\n  ", 
+                     min_soh_dt, " - ", max_soh_dt),
+       x = "Year",
+       y = "Sales $")
 ```
 
 <img src="083-exploring-a-single-table_files/figure-html/Calculate time period and annual sales dollars - 5-1.png" width="672" />
@@ -378,12 +379,12 @@ ggplot(data = annual_sales, aes(x = orderdate, y = as.numeric(soh_count))) +
 ```r
 ggplot(data = annual_sales, aes(x = orderdate, y = avg_total_soh_dollars)) +
   geom_col() +
-  xlab("Year") +
-  ylab("Average sale amount") +
   facet_wrap("onlineorderflag") +
   scale_y_continuous(labels = scales::dollar_format()) + 
-  ggtitle(paste("Average Dollars per Sale\n", 
-                min_soh_dt, " - ", max_soh_dt))
+  labs(title = paste("Average Dollars per Sale\n", 
+                min_soh_dt, " - ", max_soh_dt),
+       x = "Year",
+       y = "Average sale amount")
 ```
 
 <img src="083-exploring-a-single-table_files/figure-html/average dollars per sale 3-1.png" width="672" />
@@ -401,12 +402,12 @@ sales %>% ggplot(aes(x = avg_total_soh_dollars, y = as.numeric(soh_count), color
   geom_text(aes(label = year, hjust = .5, vjust = 0)) +
   geom_point() +
   # geom_path() +
-  xlab("Average dollars per order") +
-  ylab("Total number of orders") +
   facet_wrap("onlineorderflag", scales = "free") +     
   scale_x_continuous(labels = scales::dollar_format()) + 
-  ggtitle(paste("Number of Orders by Average Order Amount\n", 
-                min_soh_dt, " - ", max_soh_dt))
+  labs(title = paste("Number of Orders by Average Order Amount\n", 
+                min_soh_dt, " - ", max_soh_dt),
+       x = "Average dollars per order",
+       y = "Total number of orders")
 ```
 
 <img src="083-exploring-a-single-table_files/figure-html/number of orders by the the average sales per order 2-1.png" width="672" />
@@ -454,15 +455,15 @@ ggplot(
     x = orderdate, y = total_soh_dollars)) +
   geom_line() +
   geom_smooth(se = FALSE) +
-  xlab("Month") +
-  ylab("Sales Dollars") +
-  facet_wrap("onlineorderflag") +
+    facet_wrap("onlineorderflag") +
   scale_y_continuous(labels = dollar) +
   scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
   theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
-  ggtitle(paste("Sales by Month by Year\n",
+  labs( title = paste("Sales by Month by Year\n",
                 "With Number of Sales Orders\nAnd Average SO $ Amount\n", 
-                min_soh_dt, " - ", max_soh_dt))
+                min_soh_dt, " - ", max_soh_dt), 
+        x = "Month",
+        y = "Sales Dollars") 
 ```
 
 ```
@@ -496,12 +497,12 @@ ggplot(lagged, aes(x = orderdate, y = pct_yearly_soh_dollar_change)) +
   scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
   facet_wrap("onlineorderflag") +
   geom_line() +
-  xlab("Month") +
-  ylab("% Dollar Change") +
   theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
-  ggtitle(paste("Year on Year Total Monthly Sales Change \n",
+  labs(title = paste("Year on Year Total Monthly Sales Change \n",
                 "Comparing Online to Sales Rep Sales\n",
-                min_soh_dt, " - ", max_soh_dt))
+                min_soh_dt, " - ", max_soh_dt),
+       x = "Month", 
+       y = "% Dollar Change")
 ```
 
 ```
@@ -517,12 +518,12 @@ ggplot(lagged, aes(x = orderdate, y = pct_yearly_soh_count_change)) +
   scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
   facet_wrap("onlineorderflag") +
   geom_line() +
-  xlab("Month") +
-  ylab("Change number of orders") +
   theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
-  ggtitle(paste("Year on Year Monthly Order Volume Change \n",
+  labs(title = paste("Year on Year Monthly Order Volume Change \n",
                 "Comparing Online to Sales Rep Sales\n",
-                min_soh_dt, " - ", max_soh_dt))
+                min_soh_dt, " - ", max_soh_dt),
+       x =  "Month",
+       y = "Change number of orders")
 ```
 
 ```
@@ -553,18 +554,30 @@ sales_rep_day_of_month_sales <-  tbl(con, in_schema("sales", "salesorderheader")
   ) %>% 
   count(year, month, day, name = "orders") %>%
   group_by(year, month) %>%
-  summarize(days_with_orders = n(), total_orders = sum(orders, na.rm = TRUE)) %>%
+  summarize(days_with_orders = n(), 
+            total_orders = sum(orders, na.rm = TRUE), 
+            min_day = min(day, na.rm = FALSE)) %>%
   show_query() %>% 
   collect() %>%
   mutate(days_with_orders = as.numeric(days_with_orders),
-    order_month = as.Date(paste0(year,"-",month,"-01"))) %>% 
+    order_month = as.Date(paste0(year,"-",month,"-01")),
+    min_day_factor = if_else(min_day < 2, "Month start", "Month end")) %>% 
   complete(order_month = seq(min(order_month), max(order_month), by = "month")) %>% 
   mutate(days_with_orders = replace_na(days_with_orders, 0))
 ```
 
 ```
 ## <SQL>
-## SELECT "year", "month", COUNT(*) AS "days_with_orders", SUM("orders") AS "total_orders"
+```
+
+```
+## Warning: Missing values are always removed in SQL.
+## Use `MIN(x, na.rm = TRUE)` to silence this warning
+## This warning is displayed only once per session.
+```
+
+```
+## SELECT "year", "month", COUNT(*) AS "days_with_orders", SUM("orders") AS "total_orders", MIN("day") AS "min_day"
 ## FROM (SELECT "year", "month", "day", COUNT(*) AS "orders"
 ## FROM (SELECT "orderdate", "subtotal", EXTRACT(year FROM "orderdate") AS "year", EXTRACT(MONTH FROM "orderdate") AS "month", EXTRACT(day FROM "orderdate") AS "day"
 ## FROM (SELECT *
@@ -576,9 +589,16 @@ sales_rep_day_of_month_sales <-  tbl(con, in_schema("sales", "salesorderheader")
 
 ```r
 sales_rep_day_of_month_sales %>% 
-  ggplot(aes(order_month, days_with_orders)) +
+  ggplot(aes(order_month, days_with_orders,  fill = min_day_factor)) +
   geom_col() +
-  coord_flip()
+  coord_flip() +
+  labs(
+    title = "How many days had Sales Rep orders posted",
+    subtitle = "At the beginning or end of the month?",
+    fill = "Day Sales were posted",
+    y = "Number of days with transactions",
+    x = "Date"
+  )
 ```
 
 <img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-9-1.png" width="672" />
@@ -591,13 +611,14 @@ sales_rep_day_of_month_sales %>% filter(days_with_orders == 0)
 ```
 
 ```
-## # A tibble: 3 x 5
+## # A tibble: 3 x 7
 ## # Groups:   year [1]
-##    year order_month month days_with_orders total_orders
-##   <dbl> <date>      <dbl>            <dbl>        <dbl>
-## 1  2011 2011-06-01     NA                0           NA
-## 2  2011 2011-09-01     NA                0           NA
-## 3  2011 2011-11-01     NA                0           NA
+##    year order_month month days_with_orders total_orders min_day
+##   <dbl> <date>      <dbl>            <dbl>        <dbl>   <dbl>
+## 1  2011 2011-06-01     NA                0           NA      NA
+## 2  2011 2011-09-01     NA                0           NA      NA
+## 3  2011 2011-11-01     NA                0           NA      NA
+## # … with 1 more variable: min_day_factor <chr>
 ```
 
 
@@ -665,15 +686,32 @@ mo_so_mo_dt_dist_sum
 ```r
 ggplot(data=mo_so_mo_dt_dist_sum,aes(x=yymm,y=unique_days)) +
   geom_col(fill = 'blue') +
-  xlab("YYMM") +
-  ylab("Unique Order Days in Month") +
-  ggtitle("Sale Rep Order Days By Month") +
   theme(plot.title = element_text(hjust = 0.5)) +           # Center ggplot title
-  theme(axis.text.x=element_text(angle=60, hjust=1)) +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
   coord_flip()
 ```
 
 <img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-11-1.png" width="1440" />
+
+```r
+  labs(title = "Sale Rep Order Days By Month",
+       x = "YYMM",
+       y = "Unique Order Days in Month")
+```
+
+```
+## $x
+## [1] "YYMM"
+## 
+## $y
+## [1] "Unique Order Days in Month"
+## 
+## $title
+## [1] "Sale Rep Order Days By Month"
+## 
+## attr(,"class")
+## [1] "labels"
+```
 
 That is unexpected.  A couple of  things immediately jump out from the first page of data:
 
@@ -1017,8 +1055,6 @@ ggplot(data = monthly_sales_online,
        aes(x = factor(mo), 
            y = sales_dollars, fill = factor(yr))) +
   geom_col(position = "dodge", color = "black") + # unstack columns and outline in black
-  xlab("Month") +
-  ylab("Sales Dollars") +
   scale_y_continuous(labels = dollar) +
   geom_text(aes(label = category),
     size = 2.5
@@ -1027,7 +1063,9 @@ ggplot(data = monthly_sales_online,
     position = position_dodge(.9)
   ) + # orders => avg so $ amt
   theme(plot.title = element_text(hjust = .50)) + # Center ggplot title
-  ggtitle(paste("Sales by Month\nBy Online Flag"))
+  labs(title = "Sales by Month\nBy Online Flag",
+       x = "Month", 
+       y = "Sales Dollars")
 ```
 
 <div class="figure">
