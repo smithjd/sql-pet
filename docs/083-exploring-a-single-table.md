@@ -298,7 +298,7 @@ lagged_monthly_sales <- monthly_sales %>%
   mutate(monthly_sales_change = (lag(total_soh_dollars, 1)) -
            total_soh_dollars)
 
-summary(lagged_monthly_sales$monthly_sales_change)
+(sum_lags <- summary(lagged_monthly_sales$monthly_sales_change))
 ```
 
 ```
@@ -307,7 +307,30 @@ summary(lagged_monthly_sales$monthly_sales_change)
 ##        NA's 
 ##           1
 ```
-Although median monthly sales rise by about $53 thousand, it's curious that in one fourth of the months the drop between one month and the next is between fifteen hundred and a million dollars. AventureWorks sales are *very* uneven.
+
+The trend is positive on average {r sum_lags[["Mean"]]} but half of the months have swings great than {r sum_lags[["3rd Qu."]] - sum_lags[["1st Qu."]]}!
+
+
+```r
+ggplot(lagged_monthly_sales, aes(x = orderdate, y = monthly_sales_change)) +
+  scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
+  # facet_wrap("onlineorderflag") +
+  geom_line() +
+  scale_y_continuous(labels = scales::dollar_format()) +
+  theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
+  labs(title = paste("Monthly Sales Change \n",
+               "Between ", min_soh_dt, " and ", max_soh_dt),
+       x = "Month", 
+       y = "Dollar Change")
+```
+
+```
+## Warning: Removed 1 rows containing missing values (geom_path).
+```
+
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-5-1.png" width="672" />
+
+AventureWorks sales are *very* uneven.
 
 ## The effect of online sales
 
@@ -373,7 +396,7 @@ ggplot(data = annual_sales, aes(x = orderdate, y = as.numeric(soh_count))) +
 
 <img src="083-exploring-a-single-table_files/figure-html/average dollars per sale - v4-1.png" width="672" />
 
-### Average sale comparison
+### Average Sales Rep sale is huge compared to online orders
 
 
 ```r
@@ -389,30 +412,6 @@ ggplot(data = annual_sales, aes(x = orderdate, y = avg_total_soh_dollars)) +
 
 <img src="083-exploring-a-single-table_files/figure-html/average dollars per sale 3-1.png" width="672" />
 
-### Comparing order volume and average sale together
-
-Look at number of orders by the the average sales per order for the four years:
-
-```r
-sales <- annual_sales %>% arrange(orderdate) %>% 
-  ungroup() %>% 
-  mutate(year = year(orderdate), year = as.factor(year)) 
-  
-sales %>% ggplot(aes(x = avg_total_soh_dollars, y = as.numeric(soh_count), color = year)) +
-  geom_text(aes(label = year, hjust = .5, vjust = 0)) +
-  geom_point() +
-  # geom_path() +
-  facet_wrap("onlineorderflag", scales = "free") +     
-  scale_x_continuous(labels = scales::dollar_format()) + 
-  labs(title = paste("Number of Orders by Average Order Amount\n", 
-                min_soh_dt, " - ", max_soh_dt),
-       x = "Average dollars per order",
-       y = "Total number of orders")
-```
-
-<img src="083-exploring-a-single-table_files/figure-html/number of orders by the the average sales per order 2-1.png" width="672" />
-
-From 2012 to 2013 the average dollars per order dropped from more than $8,500 to nearly $3,000 while the total number of order shot up from less than 4,000 to more than 14,000.  **Why are the number of orders increasing, but the average order dollar amount dropping?  **
 
 ## Impact of order type on monthly sales
 
@@ -471,29 +470,75 @@ ggplot(
 ```
 
 <div class="figure">
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-6-1.png" alt="SO, SO Dollars, and Average SO Dollars-b " width="1536" />
-<p class="caption">(\#fig:unnamed-chunk-6)SO, SO Dollars, and Average SO Dollars-b </p>
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-7-1.png" alt="SO, SO Dollars, and Average SO Dollars-b " width="1536" />
+<p class="caption">(\#fig:unnamed-chunk-7)SO, SO Dollars, and Average SO Dollars-b </p>
 </div>
 
-A couple of things jump out from the graph.
-
-1.  2012 and 2013 have similar sales dollar plots and peak every three months.  This may reflect the closing as many sales orders as possible to make the quarterly sales numbers look good.
-2.  2011 has more variation than 2012 and 2013 and peaks every two months.
-3.  2014 has the most variation and also peaks every two months.  Both the number of sales, 939, and the average sales order size, $52.19 plummet in June 2014.
-
+The monthly variation is happening on the Sales Rep side.
 
 ### Compare monthly lagged data by order type
 
+First consider month-to-month change.
 
 ```r
-lagged <- monthly_sales %>% 
+lagged_month_to_month <- monthly_sales %>% 
+  group_by(onlineorderflag) %>% 
+  mutate(pct_yearly_soh_dollar_change = 
+           total_soh_dollars / (lag(total_soh_dollars, 1)) * 100,
+         pct_yearly_soh_count_change = 
+           soh_count / (lag(soh_count, 1)) * 100) 
+ 
+ggplot(lagged_month_to_month, aes(x = orderdate, y = pct_yearly_soh_dollar_change)) +
+  scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
+  facet_wrap("onlineorderflag") +
+  geom_line() +
+  theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
+  labs(title = paste("Monthly Percent Sales Change \n",
+                "Comparing Online to Sales Rep Sales\n",
+                min_soh_dt, " - ", max_soh_dt),
+       x = "Month", 
+       y = "% Dollar Change")
+```
+
+```
+## Warning: Removed 1 rows containing missing values (geom_path).
+```
+
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-8-1.png" width="672" />
+
+For Sales Reps it looks like the variation is in the number of orders, not just dollars.
+
+```r
+ggplot(lagged_month_to_month, aes(x = orderdate, y = pct_yearly_soh_count_change)) +
+  scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
+  facet_wrap("onlineorderflag") +
+  geom_line() +
+  theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
+  labs(title = paste("Monthly Order Volume Change \n",
+                "Comparing Online to Sales Rep Sales\n",
+                min_soh_dt, " - ", max_soh_dt),
+       x =  "Month",
+       y = "Change number of orders")
+```
+
+```
+## Warning: Removed 1 rows containing missing values (geom_path).
+```
+
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-9-1.png" width="672" />
+
+
+Let's examine whether there is a large year-to-year change.
+
+```r
+lagged_year_to_year <- monthly_sales %>% 
   group_by(onlineorderflag) %>% 
   mutate(pct_yearly_soh_dollar_change = 
            total_soh_dollars / (lag(total_soh_dollars, 12)) * 100,
          pct_yearly_soh_count_change = 
            soh_count / (lag(soh_count, 12)) * 100) 
  
-ggplot(lagged, aes(x = orderdate, y = pct_yearly_soh_dollar_change)) +
+ggplot(lagged_year_to_year, aes(x = orderdate, y = pct_yearly_soh_dollar_change)) +
   scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
   facet_wrap("onlineorderflag") +
   geom_line() +
@@ -509,12 +554,12 @@ ggplot(lagged, aes(x = orderdate, y = pct_yearly_soh_dollar_change)) +
 ## Warning: Removed 12 rows containing missing values (geom_path).
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-7-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-10-1.png" width="672" />
 
 
 
 ```r
-ggplot(lagged, aes(x = orderdate, y = pct_yearly_soh_count_change)) +
+ggplot(lagged_month_to_month, aes(x = orderdate, y = pct_yearly_soh_count_change)) +
   scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
   facet_wrap("onlineorderflag") +
   geom_line() +
@@ -527,10 +572,10 @@ ggplot(lagged, aes(x = orderdate, y = pct_yearly_soh_count_change)) +
 ```
 
 ```
-## Warning: Removed 12 rows containing missing values (geom_path).
+## Warning: Removed 1 rows containing missing values (geom_path).
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-8-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-11-1.png" width="672" />
 
 Comparing the number of sales orders year over year by month for 2013 and 2012, one can see that the 2013 sales are between 1.2 and 1.8 times larger than the corresponding month of 2012 from January through June.  In July the 2013 sales are 5 to 6 times the 2012 sales orders.
 
@@ -538,7 +583,9 @@ This trend continues into 2014 before the number of sales plummet to just 1.3 ti
 
 We suspect that the business has changed a lot with the adventn of online orders.
 
-### Detect and diagnose the day of the month problem
+## Detect and diagnose the day of the month problem
+
+Looking at the raw data leads us to suspct that there is a problem with the dates on which Sales Rep orders are entered.
 
 ### Sales Rep Orderdate Distribution
 
@@ -601,23 +648,28 @@ sales_rep_day_of_month_sales %>%
   )
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-9-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-12-1.png" width="672" />
 
 Maybe we don't have the complete picture yet
 
 
 ```r
-sales_rep_day_of_month_sales %>% filter(days_with_orders == 0)
+sales_rep_day_of_month_sales %>% filter(days_with_orders == 0 | days_with_orders > 1)
 ```
 
 ```
-## # A tibble: 3 x 7
-## # Groups:   year [1]
+## # A tibble: 8 x 7
+## # Groups:   year [3]
 ##    year order_month month days_with_orders total_orders min_day
 ##   <dbl> <date>      <dbl>            <dbl>        <dbl>   <dbl>
 ## 1  2011 2011-06-01     NA                0           NA      NA
-## 2  2011 2011-09-01     NA                0           NA      NA
-## 3  2011 2011-11-01     NA                0           NA      NA
+## 2  2011 2011-08-01      8                2          100       1
+## 3  2011 2011-09-01     NA                0           NA      NA
+## 4  2011 2011-10-01     10                2          153       1
+## 5  2011 2011-11-01     NA                0           NA      NA
+## 6  2012 2012-01-01      1                2          143       1
+## 7  2014 2014-01-01      1                2          175      28
+## 8  2014 2014-03-01      3                3          271       1
 ## # … with 1 more variable: min_day_factor <chr>
 ```
 
@@ -642,45 +694,17 @@ group by to_char(orderdate,'YYMM')
 ORDER BY to_char(orderdate,'YYMM')
 ")
 
-mo_so_mo_dt_dist_sum
+head(mo_so_mo_dt_dist_sum)
 ```
 
 ```
-##    yymm   yr mo unique_days so_cnt   so_dollars
-## 1  1105 2011  5           1     38  489328.5787
-## 2  1107 2011  7           1     75 1538408.3122
-## 3  1108 2011  8           2    100 2010618.0741
-## 4  1110 2011 10           2    153 4027080.3402
-## 5  1112 2011 12           1     40  713116.6943
-## 6  1201 2012  1           2    143 3356069.3440
-## 7  1202 2012  2           1     37  882899.9424
-## 8  1203 2012  3           1     85 2269116.7117
-## 9  1204 2012  4           1     68 1001803.7670
-## 10 1205 2012  5           1     72 2393689.5232
-## 11 1206 2012  6           1    139 3601190.7136
-## 12 1207 2012  7           1    111 2885359.1991
-## 13 1208 2012  8           1     73 1802154.2126
-## 14 1209 2012  9           1    133 3053816.3260
-## 15 1210 2012 10           1    114 2185213.2149
-## 16 1211 2012 11           1     65 1317541.8334
-## 17 1212 2012 12           1    132 2384846.5908
-## 18 1301 2013  1           1    106 1563955.0808
-## 19 1302 2013  2           1     74 1865278.4340
-## 20 1303 2013  3           1    134 2880752.6805
-## 21 1304 2013  4           1    102 1987872.7063
-## 22 1305 2013  5           1     95 2667423.4773
-## 23 1306 2013  6           1    186 4220928.0019
-## 24 1307 2013  7           1    176 4049215.0886
-## 25 1308 2013  8           1     99 2284056.6777
-## 26 1309 2013  9           1    179 3486885.9354
-## 27 1310 2013 10           1    176 3511220.3598
-## 28 1311 2013 11           1     96 1668952.4657
-## 29 1312 2013 12           1    175 2703810.8157
-## 30 1401 2014  1           2    175 2738752.3914
-## 31 1402 2014  2           1      3    3230.6456
-## 32 1403 2014  3           3    271 5526352.1820
-## 33 1404 2014  4           1      2    1284.7930
-## 34 1405 2014  5           1    179 3415479.0693
+##   yymm   yr mo unique_days so_cnt   so_dollars
+## 1 1105 2011  5           1     38  489328.5787
+## 2 1107 2011  7           1     75 1538408.3122
+## 3 1108 2011  8           2    100 2010618.0741
+## 4 1110 2011 10           2    153 4027080.3402
+## 5 1112 2011 12           1     40  713116.6943
+## 6 1201 2012  1           2    143 3356069.3440
 ```
 
 ```r
@@ -691,7 +715,7 @@ ggplot(data=mo_so_mo_dt_dist_sum,aes(x=yymm,y=unique_days)) +
   coord_flip()
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-11-1.png" width="1440" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-14-1.png" width="1440" />
 
 ```r
   labs(title = "Sale Rep Order Days By Month",
@@ -723,6 +747,7 @@ The plot clearly shows that two months with multiple sales rep order days for 20
 
 In the next code block, we flesh out the dates associatd with the sales reps' orders.  Since 4 out of the 5 months with multiple order days only have two dates, the code block captures them with a min/max orderdate.
 
+## Correcting the order date for Sales Reps
 
 
 ```r
@@ -759,6 +784,7 @@ monthly_sales %>% filter(day == 1 & onlineorderflag == FALSE) %>%
 ## 6 2014-03-01  91
 ## 7 2014-05-01 179
 ```
+
 
 
 
@@ -803,8 +829,6 @@ order by orderdate
 ## 10 2014-03-30     2
 ## 11 2014-03-31   178
 ```
-
-## Correcting the order date for Sales Reps
 
 ### Define a date correction function in R
 
@@ -885,7 +909,8 @@ monthly_sales <-  tbl(con, in_schema("sales", "salesorderheader")) %>%
 
 ```r
 monthly_sales %>% filter(day == 1 & onlineorderflag == FALSE) %>% 
-  count(adjusted_date) %>% as.data.frame()
+  count(adjusted_date) %>% as.data.frame() %>% 
+  arrange(orderdate)
 ```
 
 ```
@@ -951,7 +976,7 @@ ggplot(sales_by_corrected_day_of_month, aes(x = day_of_month, y = soh_count)) +
         y = "Recorded Sales") 
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-21-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-24-1.png" width="672" />
 
 ```r
   theme(plot.title = element_text(hjust = .5)) # Center ggplot title
@@ -1047,7 +1072,7 @@ sp_print_df(head(monthly_sales_online))
 <div class="figure">
 <!--html_preserve--><div id="htmlwidget-8f836166d559454ecd73" style="width:100%;height:auto;" class="datatables html-widget"></div>
 <script type="application/json" data-for="htmlwidget-8f836166d559454ecd73">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],[1,1,1,1,1,1],[2012,2012,2013,2013,2014,2014],["2012-01-01","2012-01-01","2013-01-01","2013-01-01","2014-01-01","2014-01-01"],["2012-01-31","2012-01-29","2013-01-31","2013-01-29","2014-01-31","2014-01-31"],["No Discount","Reseller","No Discount","Reseller","No Discount","Reseller"],[50814178.74,203862.08,40032506.6,573142.28,69742390.8,1582808.9],[1708,4,1455,54,6867,178]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>mo<\/th>\n      <th>yr<\/th>\n      <th>min_soh_orderdate<\/th>\n      <th>max_soh_orderdate<\/th>\n      <th>category<\/th>\n      <th>sales_dollars<\/th>\n      <th>orders<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[1,2,6,7]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
-<p class="caption">(\#fig:unnamed-chunk-23)caption goes here</p>
+<p class="caption">(\#fig:unnamed-chunk-26)caption goes here</p>
 </div>
 
 ```r
@@ -1069,8 +1094,8 @@ ggplot(data = monthly_sales_online,
 ```
 
 <div class="figure">
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-23-2.png" alt="caption goes here" width="1536" />
-<p class="caption">(\#fig:unnamed-chunk-23)caption goes here</p>
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-26-2.png" alt="caption goes here" width="1536" />
+<p class="caption">(\#fig:unnamed-chunk-26)caption goes here</p>
 </div>
 
 ### Effect of Late Entries on Sales Rep data
@@ -1199,7 +1224,7 @@ ggplot(data = NULL) +
   ))
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-25-2.png" width="1536" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-28-2.png" width="1536" />
 
 
 This plot is much easier to read, but the sales orders => avg_s
