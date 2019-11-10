@@ -18,8 +18,8 @@
 
 ## Book
 
-* Tutorial materials from this repo go in the online book, "[R, Databases and Docker](https://smithjd.github.io/sql-pet/)".
-* Each chapter is written so it can be executed independently (once the Docker container is built in Chapter 5). We are using a [Knit-then-Merge](https://bookdown.org/yihui/bookdown/new-session.html) approach, so each chapter of the book can be Knitted separately.  
+* Tutorial materials from this repo go in the online book, "[Exploring Enterprise Databases with R: A Tidyverse Approach](https://smithjd.github.io/sql-pet/)".
+* Each chapter is written so it can be executed independently once the Docker container is built in Chapter 5. We are using a [Knit-then-Merge](https://bookdown.org/yihui/bookdown/new-session.html) approach, so each chapter of the book can be Knitted separately.  
 * The book depends on the [sqlpetr](https://github.com/smithjd/sqlpetr) package, which can be installed using:
 
     `remotes::install_github("smithjd/sqlpetr", force = TRUE, quiet = TRUE, build = TRUE, build_opts = "")`
@@ -27,10 +27,10 @@
 ## Prerequisites
 You will need:
 
-* A computer running 
-  + Windows (Windows 7 64-bit or late - Windows 10-Pro is recommended)
-  + macOS
-  + Linux (any Linux distro that will run [Docker Community Edition](https://hub.docker.com/search/?type=edition&offering=community), [R](https://ftp.osuosl.org/pub/cran/), and [RStudio](https://www.rstudio.com/products/rstudio/download/) will work)
+* A computer running running one of:
+  + macOS; or
+  + Any Linux distribution that will run [Docker Community Edition](https://hub.docker.com/search/?type=edition&offering=community), [R](https://ftp.osuosl.org/pub/cran/), and [RStudio](https://www.rstudio.com/products/rstudio/download/); or
+  + Windows, where version 10-Pro is recommended, but at least Windows 7 64-bit or later.
 * Current versions of [R and RStudio](https://www.datacamp.com/community/tutorials/installing-R-windows-mac-ubuntu)
 * [Docker](https://www.docker.com/)
 
@@ -62,14 +62,14 @@ If you don't see your idea listed, and you think it fits into the goals of this 
 
 We provide more guidelines for coding style and developer's workflow in the [Contributing](https://github.com/smithjd/sql-pet/blob/master/Contributing.md) document. The [project wiki](https://github.com/smithjd/sql-pet/wiki) is also a good source of information for developers.
 
-To compile the book, you need to additionally [install webshot](https://bookdown.org/yihui/bookdown/html-widgets.html), so that HTMLwidgets are displayed properly:
+To compile the book, you need to [install webshot](https://bookdown.org/yihui/bookdown/html-widgets.html), so that HTMLwidgets are displayed properly:
 
 ```
    install.packages("webshot")
    webshot::install_phantomjs()
 ```
 
-Then run the `build_book.R` script to compile the book.
+Then run the [build_book.R](./build_book.R) script to compile the book.
 
 ## Code of Conduct
 If you plan to participate in the project in any way, such as a developer, reviewer, contributor, committer, or student, you are expected to follow the project's [Code of Conduct](https://github.com/smithjd/sql-pet/blob/master/CODE_OF_CONDUCT.md). Please review those guidelines before choosing to participate in the project.
