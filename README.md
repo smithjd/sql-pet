@@ -27,7 +27,7 @@
 ## Prerequisites
 You will need:
 
-* A computer running running one of:
+* A computer running one of:
   + macOS; or
   + Any Linux distribution that will run [Docker Community Edition](https://hub.docker.com/search/?type=edition&offering=community), [R](https://ftp.osuosl.org/pub/cran/), and [RStudio](https://www.rstudio.com/products/rstudio/download/); or
   + Windows, where version 10-Pro is recommended, but at least Windows 7 64-bit or later.
