@@ -1,15 +1,15 @@
-# Exploring a Single Table (asking Business Questions) {#chapter_exploring-a-single-table}
+# Asking Business Questions From a Single Table {#chapter_exploring-a-single-table}
 
 > This chapter demonstrates how to:
 >
 >   * Investigate a database from a business perspective
->   * Show the multiple data anomalies found in a single Advenureworks table
 >   * Dig into a single Adventureworks table containing sales data
->   * Investigate the data from a business value perspective
+>   * Show the multiple data anomalies found in a single AdventureWorks table
+>   * Suggest the interplay between "data questions" and "business questions"
 
-The previous chapter has demonstrated some of the automated techniques for showing what's in a table using specific R functions and packages.  Now we demonstrate a step-by-step process of making sense of what's in one table with more of a business perspective.  We illustrate the kind of detective work that's often involved as we investigate the meaning of the meaning in a table.  We'll investigate the `salesorderheader` table in the `sales` schema in this example with an eye on the AdventureWorks busieness' sales.  We show that there are quite a few interpretation issues even when we are examining just 3 out of the 25 columns in the `salesorderheader` table.
+The previous chapter has demonstrated some of the automated techniques for showing what's in a table using specific R functions and packages.  Now we demonstrate a step-by-step process of making sense of what's in one table with more of a business perspective.  We illustrate the kind of detective work that's often involved as we investigate the meaning of the data in a table.  We'll investigate the `salesorderheader` table in the `sales` schema in this example with an eye on the AdventureWorks business' sales.  We show that there are quite a few interpretation issues even when we are examining just 3 out of the 25 columns in the `salesorderheader` table.
 
-For this kind of detective work we are seeking to undertand the following elements separately and as they interact with each other (and they all do):
+For this kind of detective work we are seeking to understand the following elements separately and as they interact with each other (and they all do):
 
   * The data that's stored in the database and how information is represented
   * How the data is entered at a day-to-day level to represent business activities
@@ -57,9 +57,9 @@ con <- sp_get_postgres_connection(
 
 ## A word on naming 
 
-> You will find that many columns have the same name in an enterprise database.  For example, in the adventureworks database, almost all tables have columns named `rowguid` and `modifieddate` and there are many other examples of names that are reused.  The meaning of a columns depends on the table that contains it, so as you pull a column out of a table, naming its provenance is important.
+> You will find that many columns have the same name in an enterprise database.  For example, in the adventureworks database, almost all tables have columns named `rowguid` and `modifieddate` and there are many other examples of names that are reused.  The meaning of a column depends on the table that contains it, so as you pull a column out of a table, naming its provenance is important.
 >
-> Naming columns carefully (whether retrieved from the database or calculated)  will pay off, especially as our queries become more complex. Using `soh` to tag statistics that are derived from the `salesorderheader` table as we do in this book is one example of an intentional naming strategy: it reminds you  of the original source of a column.  You, future you, and your collaborators will appreciate the effort although different naming conventions are completely valid.  And a naming convention when rigidly applied can yield some long and uggly names.
+> Naming columns carefully (whether retrieved from the database or calculated)  will pay off, especially as our queries become more complex. Using `soh` to tag statistics that are derived from the `salesorderheader` table as we do in this book is one example of an intentional naming strategy: it reminds you  of the original source of a column.  You, future you, and your collaborators will appreciate the effort although different naming conventions are completely valid.  And a naming convention when rigidly applied can yield some long and ugly names.
 >
 > In the following example `soh` appears in different positions in the column name but it is easy to guess at a glance that the data comes from the `salesorderheader` table.
 >
@@ -91,27 +91,29 @@ annual_sales <- tbl(con, in_schema("sales", "salesorderheader")) %>%
   collect()
 
 annual_sales
+
+min_soh_dt <- min(annual_sales$min_soh_orderdate)
+max_soh_dt <- max(annual_sales$max_soh_orderdate)
+
 ```
 
-Both 2011 and 2014 are shorter time spans than the other two years, making comparison across the years more difficult. We might normalize the totals based on the number of months in each year, but we first graph total dollars:
+Both 2011 and 2014 are shorter time spans than the other two years, making comparison across the years more difficult. We might normalize the totals based on the number of months in each year, but we first graph total dollars.
 
 ### Total sales by year
 
 ```{r Calculate time period and annual sales dollars - 2}
-min_soh_dt <- min(annual_sales$min_soh_orderdate)
-max_soh_dt <- max(annual_sales$max_soh_orderdate)
 
 ggplot(data = annual_sales, aes(x = year, y = total_soh_dollars)) +
   geom_col() +
   scale_y_continuous(labels = scales::dollar_format()) +
   labs(
     title = "Adventure Works Sales Dollars by Year",
-    x = paste("Year - between ", min_soh_dt, " - ", max_soh_dt),
+    x = glue("Year - between ", min_soh_dt, " - ", max_soh_dt),
     y = "Sales $"
   )
 ```
 
-From 2011 through 2013, sales are trending up. Are sales dollars for 2014 really down, is it a shorter year (are sales seasonal)?  To see if the sales dollars are seasonal, we will drill in and look at the monthly sales.  But first, let's look at the number of orders and whether there's a pattern in the sales data.  
+From 2011 through 2013, sales are trending up. Are sales dollars for 2014 really down? We only have a half year of data, but the 2014 total is less than half of the 2013 total. Could it be that sales are seasonal? Maybe AdventureWorks has larger sales volumes in the fourth quarter.  To see if the sales dollars are seasonal, we drill down and look at the monthly sales.  But first, let's look at the number of orders and whether there's a pattern in the sales data.  
 
 ### Total order volume
 
@@ -119,9 +121,10 @@ Look at number of orders per year:
 ```{r average dollars per sale - v2}
 ggplot(data = annual_sales, aes(x = year, y = as.numeric(soh_count))) +
   geom_col() +
+  geom_text(aes(label = round(as.numeric(soh_count), digits = 0)), vjust = -0.25) +
   labs(
     title = "Number of orders per year",
-    x = paste("Years between ", min_soh_dt, " - ", max_soh_dt),
+    x = glue("Years between ", min_soh_dt, " - ", max_soh_dt),
     y = "Total Number of Orders"
   )
 ```
@@ -134,22 +137,23 @@ That's a huge jump in the number of orders between 2012 and 2013.  Given the tot
 ggplot(data = annual_sales, aes(x = year, y = avg_total_soh_dollars)) +
   geom_col() +
   scale_y_continuous(labels = scales::dollar_format()) +
+  geom_text(aes(label = round(avg_total_soh_dollars, digits = 0)), vjust = -0.25) +
   labs(
     title = "Average Dollars per Sale",
-    x = paste("Year - between ", min_soh_dt, " - ", max_soh_dt),
+    x = glue("Year - between ", min_soh_dt, " - ", max_soh_dt),
     y = "Average Sale Amount"
   )
 ```
 
 That's a remarkable drop between average sale of more than $7,000 to less than $3,000.  Some kind of remarkable change has taken place in this business.
 
-From 2012 to 2013 the average dollars per order dropped from more than $8,500 to nearly $3,000 while the total number of order shot up from less than 4,000 to more than 14,000.  **Why are the number of orders increasing, but the average dollar amount of a sale is dropping?  **
+From 2012 to 2013 the average dollars per order dropped from more than $8,500 to nearly $3,000 while the total number of orders shot up from less than 4,000 to more than 14,000.  **Why are the number of orders increasing, but the average dollar amount of a sale is dropping?  **
 
 We need to drill down to look at monthly sales, adapting the first query to group by month and year.
 
 ## Monthly Sales
 
-Our next investigation drills down from annual sales dollars to monthly sales dollars. For that we download the orderdate, rather than a character variable for the year.  R handles the coversion from the PostgreSQL date-time to an R date-time.  We then convert it to a simple date with a `lubridate` function.
+Our next investigation drills down from annual sales dollars to monthly sales dollars. For that we download the orderdate, rather than a character variable for the year.  R handles the conversion from the PostgreSQL date-time to an R date-time.  We then convert it to a simple date with a `lubridate` function.
 
 ```{r monthly sales retrieval}
 monthly_sales <- tbl(con, in_schema("sales", "salesorderheader")) %>%
@@ -179,7 +183,7 @@ ggplot(data = monthly_sales, aes(x = orderdate, y = total_soh_dollars)) +
   scale_y_continuous(labels = dollar) +
   theme(plot.title = element_text(hjust = 0.5)) + # Center the title
   labs(
-    title = paste("Sales by Month\n", min_soh_dt, " - ", max_soh_dt),
+    title = glue("Sales by Month\n", min_soh_dt, " - ", max_soh_dt),
     x = "Month",
     y = "Sales Dollars"
   )
@@ -199,7 +203,7 @@ monthly_sales_lagged <- monthly_sales %>%
 (sum_lags <- summary(monthly_sales_lagged$monthly_sales_change))
 ```
 
-The trend is positive on average `r prettyNum(sum_lags[["Mean"]], big.mark = ",", format = "f", digits = 0)` but half of the months have swings great than `r prettyNum(sum_lags[["3rd Qu."]] - sum_lags[["1st Qu."]], big.mark = ",", format = "f", digits = 0)`!
+The trend is positive on average `r prettyNum(sum_lags[["Mean"]], big.mark = ",", format = "f", digits = 0)` but half of the months have swings greater than `r prettyNum(sum_lags[["3rd Qu."]] - sum_lags[["1st Qu."]], big.mark = ",", format = "f", digits = 0)`!
 
 
 ```{r}
@@ -209,7 +213,7 @@ ggplot(monthly_sales_lagged, aes(x = orderdate, y = monthly_sales_change)) +
   scale_y_continuous(labels = scales::dollar_format()) +
   theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
   labs(
-    title = paste(
+    title = glue(
       "Monthly Sales Change \n",
       "Between ", min_soh_dt, " and ", max_soh_dt
     ),
@@ -218,7 +222,7 @@ ggplot(monthly_sales_lagged, aes(x = orderdate, y = monthly_sales_change)) +
   )
 ```
 
-AventureWorks sales are *very* uneven.
+AdventureWorks sales are *very* uneven.
 
 ### Comparing dollars and orders to a base year
 
@@ -267,7 +271,7 @@ monthly_sales_base_year_normalized_to_2011 %>%
   geom_hline(yintercept = 100) +
   scale_x_date(date_labels = "%Y-%m", date_breaks = "6 months") +
   labs(
-    title = paste(
+    title = glue(
       "Adventureworks Normalized Monthly Sales\n",
       "Number of Sales Orders and Dollar Totals\n",
       min_soh_dt, " to ", max_soh_dt
@@ -280,7 +284,7 @@ monthly_sales_base_year_normalized_to_2011 %>%
 
 ## The effect of online sales
 
-We have suspected that the business has changed a lot with the advent of online orders so we check the impact of `onlineorderflag` on annual sales.  The `onlineorderflag` indicates which sales channel accounted for the sale, **Sales Reps** or **Online**.
+We suspect that the business has changed a lot with the advent of online orders so we check the impact of `onlineorderflag` on annual sales.  The `onlineorderflag` indicates which sales channel accounted for the sale, **Sales Reps** or **Online**.
 
 ### Add `onlineorderflag` to our annual sales query
 
@@ -323,7 +327,7 @@ ggplot(data = annual_sales_w_channel, aes(x = orderdate, y = total_soh_dollars))
   facet_wrap("onlineorderflag") +
   labs(
     title = "Adventure Works Sales Dollars by Year",
-    caption = paste("Between", min_soh_dt, " an ", max_soh_dt),
+    caption = glue("Between", min_soh_dt, " and ", max_soh_dt),
     subtitle = "Comparing Online and Sales Rep sales channels",
     x = "Year",
     y = "Sales $"
@@ -341,14 +345,14 @@ ggplot(data = annual_sales_w_channel, aes(x = orderdate, y = as.numeric(soh_coun
   facet_wrap("onlineorderflag") +
   labs(
     title = "Adventure Works Number of orders per Year",
-    caption = paste("Between", min_soh_dt, " an ", max_soh_dt),
+    caption = glue("Between", min_soh_dt, " and ", max_soh_dt),
     subtitle = "Comparing Online and Sales Rep sales channels",
     x = "Year",
     y = "Total number of orders"
   )
 ```
 
-### Comparing Sales Rep sales to Online Orders
+### Comparing **Sales Rep** sales to **Online** Orders
 
 ```{r average dollars per sale 3}
 ggplot(data = annual_sales_w_channel, aes(x = orderdate, y = avg_total_soh_dollars)) +
@@ -357,7 +361,7 @@ ggplot(data = annual_sales_w_channel, aes(x = orderdate, y = avg_total_soh_dolla
   scale_y_continuous(labels = scales::dollar_format()) +
   labs(
     title = "Average Dollars per Sale",
-    x = paste("Year, between", min_soh_dt, " and ", max_soh_dt),
+    x = glue("Year, between", min_soh_dt, " and ", max_soh_dt),
     y = "Average sale amount"
   )
 ```
@@ -365,7 +369,7 @@ ggplot(data = annual_sales_w_channel, aes(x = orderdate, y = avg_total_soh_dolla
 
 ## Impact of order type on monthly sales
 
-Digging into the difference between *Sales Rep* and *Online* sales. 
+Digging into the difference between **Sales Rep** and **Online** sales. 
 
 ### Retrieve monthly sales with the `onlineorderflag` 
 
@@ -399,7 +403,7 @@ monthly_sales_w_channel <- tbl(con, in_schema("sales", "salesorderheader")) %>%
 monthly_sales_w_channel %>%
   rename(`Sales Channel` = onlineorderflag) %>%
   group_by(`Sales Channel`) %>%
-  summarise(
+  summarize(
     unique_dates = n(),
     start_date = min(min_soh_orderdate),
     end_date = max(max_soh_orderdate),
@@ -408,11 +412,11 @@ monthly_sales_w_channel %>%
   gt()
 ```
 
-As we will see later on, the Sales Rep data doesn't match the Online data.  The Online data includes 2 months that are not included in the main sales channel.
+As we will see later on, the **Sales Rep** data doesn't match the **Online** data.  The **Online** data includes 2 months that are not included in the main sales channel.
 
 ### Monthly variation compared to a trend line
 
-Jumping to the trend line comparison, we see that the variation 
+Jumping to the trend line comparison, we see the source of the variation.
 
 ```{r fig.cap='SO, SO Dollars, and Average SO Dollars-b ',fig.width=16}
 
@@ -431,11 +435,9 @@ ggplot(
   scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
   theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
   labs(
-    title = paste(
-      "Sales by Month by Year\n",
-      "With Number of Sales Orders\nAnd Average SO $ Amount"
-    ),
-    x = paste("Month - between ", min_soh_dt, " - ", max_soh_dt),
+    title = glue(
+      "Sales by Month by Year"),
+    x = paste0("Month - between ", min_soh_dt, " - ", max_soh_dt),
     y = "Sales Dollars"
   )
 ```
@@ -449,36 +451,36 @@ First consider month-to-month change.
 monthly_sales_w_channel_lagged_by_month <- monthly_sales_w_channel %>%
   group_by(onlineorderflag) %>%
   mutate(
-    pct_yearly_soh_dollar_change =
+    pct_monthly_soh_dollar_change =
       total_soh_dollars / (lag(total_soh_dollars, 1)) * 100,
-    pct_yearly_soh_count_change =
+    pct_monthly_soh_count_change =
       soh_count / (lag(soh_count, 1)) * 100
   )
 
-ggplot(monthly_sales_w_channel_lagged_by_month, aes(x = orderdate, y = pct_yearly_soh_dollar_change)) +
+ggplot(monthly_sales_w_channel_lagged_by_month, aes(x = orderdate, y = pct_monthly_soh_dollar_change)) +
   scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
   facet_wrap("onlineorderflag") +
   geom_line() +
   theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
   labs(
-    title = paste(
+    title = glue(
       "Monthly Percent Sales Change \n",
       "Comparing Online to Sales Rep Sales"
     ),
-    x = paste("Month - between ", min_soh_dt, " - ", max_soh_dt),
+    x = paste0("Month - between ", min_soh_dt, " - ", max_soh_dt),
     y = "% Dollar Change"
   )
 ```
 
-For Sales Reps it looks like the variation is in the number of orders, not just dollars.
+For **Sales Reps** it looks like the variation is in the number of orders, not just dollars, as shown in the following plot.
 ```{r}
-ggplot(monthly_sales_w_channel_lagged_by_month, aes(x = orderdate, y = pct_yearly_soh_count_change)) +
+ggplot(monthly_sales_w_channel_lagged_by_month, aes(x = orderdate, y = pct_monthly_soh_count_change)) +
   scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
   facet_wrap("onlineorderflag") +
   geom_line() +
   theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
   labs(
-    title = paste(
+    title = glue(
       "Monthly Order Volume Change \n",
       "Comparing Online to Sales Rep Sales\n",
       min_soh_dt, " - ", max_soh_dt
@@ -494,44 +496,44 @@ Let's examine whether there is a large year-to-year change.
 monthly_sales_w_channel_lagged_by_year <- monthly_sales_w_channel %>%
   group_by(onlineorderflag) %>%
   mutate(
-    pct_yearly_soh_dollar_change =
+    pct_monthly_soh_dollar_change =
       total_soh_dollars / (lag(total_soh_dollars, 12)) * 100,
-    pct_yearly_soh_count_change =
+    pct_monthly_soh_count_change =
       soh_count / (lag(soh_count, 12)) * 100
   )
 
-ggplot(monthly_sales_w_channel_lagged_by_year, aes(x = orderdate, y = pct_yearly_soh_dollar_change)) +
-  scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
+ggplot(monthly_sales_w_channel_lagged_by_year, 
+       aes(x = orderdate, y = pct_monthly_soh_dollar_change)) +
+  scale_x_date(date_breaks = "year", date_labels = "%Y", 
+               date_minor_breaks = "3 months") +
   scale_y_continuous(limits = c(-10, 300)) +
   facet_wrap("onlineorderflag") +
   geom_line() +
   theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
   labs(
-    title = paste(
+    title = glue(
       "Year-on-Year Total Monthly Sales Change \n",
-      "Comparing Online to Sales Rep Sales\n",
-      min_soh_dt, " - ", max_soh_dt
-    ),
-    x = paste("Month - between ", min_soh_dt, " - ", max_soh_dt),
+      "Comparing Online to Sales Rep Sales"),
+    x = paste0("Month - between ", min_soh_dt, " - ", max_soh_dt),
     y = "% Dollar Change"
   )
 ```
 
 That's much smaller than the month-to-month change.
 
-Comparing the number of sales orders year over year by month for 2013 and 2012, one can see that the 2013 sales are between 1.2 and 1.8 times larger than the corresponding month of 2012 from January through June.  In July the 2013 sales are 5 to 6 times the 2012 sales orders.
+> ??? Comparing the number of sales orders year over year by month for 2013 and 2012, one can see that the 2013 sales are between 1.2 and 1.8 times larger than the corresponding month of 2012 from January through June.  In July the 2013 sales are 5 to 6 times the 2012 sales orders. ???
 
 This trend continues into 2014 before the number of sales plummet to just 1.3 time in June.
 
-We suspect that the business has changed a lot with the adventn of online orders.
+We suspect that the business has changed a lot with the advent of **Online** orders.
 
 ## Detect and diagnose the day of the month problem
 
-Looking at the raw data leads us to suspct that there is a problem with the dates on which Sales Rep orders are entered.
+Looking at the raw data leads us to suspect that there is a problem with the dates on which Sales Rep orders are entered.
 
 ### Sales Rep Orderdate Distribution
 
-Look at the dates when sales are entered for sales by Sales Reps.  The following query merits some discussion.
+Look at the dates when sales are entered for sales by **Sales Reps**.  The following query merits some discussion.
 
 ```{r}
 sales_rep_day_of_month_sales <- tbl(con, in_schema("sales", "salesorderheader")) %>%
@@ -585,7 +587,7 @@ suspicious_months <- sales_rep_day_of_month_sales %>%
   unique()
 ```
 
-Here are the `r nrow(suspicious_months)` suspicious months:
+Here are the `r nrow(suspicious_months)` **suspicious months**:
 ```{r}
 suspicious_months
 ```
@@ -603,7 +605,7 @@ months_to_inspect <- tibble(target_month = suspicious_months) %>%
   select(value) %>%
   distinct()
 ```
-We have `r nrow(months_to_inspect)` months when we add the month before and the month afterwards -- and eliminate duplicates.
+We have `r nrow(months_to_inspect)` months when we add the month before and the month after the **suspicious months**.  We don't know whether the problem postings have been carried forward or backward.  We check for and eliminate duplicates as well.
 
 ```{r}
 monthly_sales_w_channel_to_inspect <- monthly_sales_w_channel %>%
@@ -618,14 +620,14 @@ monthly_sales_w_channel_to_inspect
 That is unexpected.  A couple of  things immediately jump out from the first page of data:
 
 *  July, September, and November are missing for 2011. 
-*  Most of the sales reps' orders are entered on a single day of the month, unique days = 1. It is possible that these are monthly recurring orders that get released on a given day of the month.  If that is the case, what are the sales reps doing the rest of the month?
-*  The lines with multiple days, unique_days > 1, have a noticeable higher number of orders, so_cnt, and associated so dollars.
+*  Most of the **Sales Reps**' orders are entered on a single day of the month, unique days = 1. It is possible that these are monthly recurring orders that get released on a given day of the month.  If that is the case, what are the **Sales Reps** doing the rest of the month?
+*  ** ?? The lines with multiple days, unique_days > 1, have a noticeable higher number of orders, so_cnt, and associated so dollars.?? **
 
-The plot clearly shows that two months with multiple sales rep order days for 2011, (1108 and 1110), one for 2012, (1201), and two in 2014, (1401 and 1403).  The 1403 is the only three day sales rep order month.
+The plot clearly shows that two months with multiple sales rep order days for 2011, (11/08 and 11/10), one for 2012, (1201), and two in 2014, (14/01 and 14/03).  The 14/03 is the only three day sales rep order month.
 
-In the next code block, we flesh out the dates associatd with the sales reps' orders.  Since 4 out of the 5 months with multiple order days only have two dates, the code block captures them with a min/max orderdate.
+In the next code block, we flesh out the dates associated with the **Sales Reps**' orders.  Since 4 out of the 5 months with multiple order days only have two dates, the code block captures them with a min/max orderdate.
 
-## Correcting the order date for Sales Reps
+## Correcting the order date for **Sales Reps**
 
 ```{r}
 monthly_sales_rep_adjusted <- tbl(con, in_schema("sales", "salesorderheader")) %>%
@@ -708,7 +710,7 @@ monthly_sales_rep_adjusted <- tbl(con, in_schema("sales", "salesorderheader")) %
   ungroup()
 ```
 
-### Define and store a Postgres function to correct the date
+### Define and store a PostgreSQL function to correct the date
 
 ```{r}
 dbExecute(
@@ -730,7 +732,7 @@ LANGUAGE PLPGSQL;
 )
 ```
 
-### Use the Postgres function
+### Use the PostgreSQL function
 
 If you can do the heavy lifting on the database side, that's good.  R can do it, but it's best for finding the issues.
 
@@ -768,7 +770,7 @@ ggplot( aes(x = day_of_month, y = soh_count)) +
   geom_col() +
   scale_x_continuous(limits = c(1, 32)) +
   labs(
-    title = paste(
+    title = glue(
       "Transactions Entered by Day of Month \n",
       "Comparing Online to Sales Rep Sales\n",
       min_soh_dt, " - ", max_soh_dt
@@ -800,11 +802,11 @@ ggplot(
   se = FALSE) +
   theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
   labs(
-    title = paste(
+    title = glue(
       "Number of Sales per month using corrected dates\n",
       "Counting Sales Order Header records"
     ),
-    x = paste("Monthly - between ", min_soh_dt, " - ", max_soh_dt),
+    x = paste0("Monthly - between ", min_soh_dt, " - ", max_soh_dt),
     y = "Number of Sales Recorded"
   )
 ```
