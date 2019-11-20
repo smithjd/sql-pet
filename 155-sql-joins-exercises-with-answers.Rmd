@@ -2191,11 +2191,11 @@ compute(smy_customer_details_dplyr,name='smy_compute_exercise',temporary = FALSE
 
 ```
 
-```{r}
-# diconnect from the db
-dbDisconnect(con)
+## Disconnect from the database and stop Docker
 
-sp_docker_stop("sql-pet")
+```{r}
+dbDisconnect(con)
+sp_docker_stop("adventureworks")
 ```
 
 ```{r}

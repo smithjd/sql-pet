@@ -1,5 +1,5 @@
 ---
-title: "AW SO EDA"
+title: "AW SO EDA - # 3"
 author: "Sophie Yang"
 date: "July 19, 2019"
 output: html_document
@@ -41,6 +41,10 @@ con <- sp_get_postgres_connection(
 #
 # This code block creates a SQL function to correct the sales order dates for sales rep orders.  If the passed order date
 # is the 1'st, the sales order date is adjusted back one day.  No adjustment is made for on-line orders
+
+# adventureworks schema vs public schma?  
+# assumes root privileges for adventureworks
+
 #
 dbExecute(con,
 "CREATE OR REPLACE FUNCTION so_adj_date(so_date timestamp, ONLINE_ORDER boolean) RETURNS timestamp AS $$

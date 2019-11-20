@@ -393,8 +393,13 @@ create_graph(
 ) %>%
 render_graph()
 ```
+```
+## Cleaning up
 
+Always have R disconnect from the database when you're done and stop the Adventureworks Container
 ```{r}
+
 dbDisconnect(con)
-# system2('docker','stop sql-pet')
+sp_docker_stop("adventureworks")
+
 ```
