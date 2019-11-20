@@ -393,4 +393,24 @@ ggplot(data = long_online, aes(x=orderdate,y=sum_amt,color=sum_type)) +
 
 ```
 
+```{r missing sales rep order dates}
+dbGetQuery(con,
+"
+with all_yymm as (
+  select distinct to_char(orderdate,'YYMM') yymm
+
+  FROM sales.salesorderheader soh
+)
+, salesrep_orders as (
+  SELECT distinct to_char(orderdate,'YYMM') yymm
+  FROM sales.salesorderheader soh
+  where not onlineorderflag
+)
+select * 
+  from all_yymm left outer join salesrep_orders on all_yymm.yymm = salesrep_orders.yymm
+ where salesrep_orders.yymm is null
+ order by all_yymm.yymm desc
+")
+```
+
 
