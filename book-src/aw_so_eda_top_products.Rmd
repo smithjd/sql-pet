@@ -130,12 +130,53 @@ ggplot(data=SalesRepOrders_Fiscal_Year
 ```
 
 
-```{r}
+```{r days to mfg product}
 product_count <- dbGetQuery(con,"select makeflag,finishedgoodsflag,discontinueddate
                                        ,max(daystomanufacture) daysToMfg,count(*) 
                                    from production.product p 
                                    group by makeflag,finishedgoodsflag,discontinueddate")
 product_count
+```
+
+All orders are shipped 7 days after their order date except for 9 orders
+
+```{r  }
+dbGetQuery(con,"select date(shipdate) - date(orderdate) ship_order_delta,date(duedate)-date(shipdate) due_ship_delta,count(*) 
+           from sales.salesorderheader  
+           group by date(shipdate) - date(orderdate),date(duedate)-date(shipdate) 
+          -- order by orderdate  desc
+          ") 
+```
+Sales order details for orders that shipped on 8'th day instead of 7'th day after order date. 
+
+```{r Orders that shipped 8 days after orderdate instead of usual 7 days}
+dbGetQuery(con,"select *
+           from sales.salesorderheader  
+           where date(shipdate) - date(orderdate)  = 8
+")
+```
+
+```{r}
+dbGetQuery(con,"
+SELECT *
+  FROM sales.salesorderheader soh
+where NOT onlineorderflag
+  AND to_char(orderdate,'YYMM') = '1108'
+")
+```
+
+```{r}
+dbGetQuery(con,"select *
+           from sales.salesreason")
+```
+
+```{r sales type dollars}
+dbGetQuery(con,"select sr.salesreasonid,sr.name,sr.reasontype,count(*),sum(subtotal) sales_dollars
+           from sales.salesorderheader soh 
+           join sales.salesorderheadersalesreason sor on soh.salesorderid = sor.salesorderid
+           join sales.salesreason sr on sor.salesreasonid = sr.salesreasonid
+           group by sr.salesreasonid,sr.name,sr.reasontype
+")
 ```
 
 ```{r How many sellable items have never sold}
@@ -178,8 +219,6 @@ x <- dbGetQuery(con,
 ")
 x
 ```
-```
-
 
 
 ```{r}
@@ -232,26 +271,27 @@ select orderdate,fiscalyear_adj,yymm
       ,productid,name
       ,orderqty
       ,extprice 
-      --,rn
+      ,rn
   from (
         select soh.orderdate
               ,date_part('year'::text,so_adj_date(soh.orderdate, onlineorderflag)+ '6 months'::interval) AS fiscalyear_adj 
               ,to_char(so_adj_date(soh.orderdate, onlineorderflag),'YYMM') AS YYMM
               ,sod.productid,name
               ,sum(orderqty) orderqty,sum(unitprice*orderqty) extprice 
- --             ,ROW_NUMBER () OVER (PARTITION BY to_char(so_adj_date(soh.orderdate, onlineorderflag),'YYDD'), sod.productid
-  --                                 ORDER BY sum(unitprice*orderqty) desc) rn
+              ,ROW_NUMBER () OVER (PARTITION BY to_char(so_adj_date(soh.orderdate, onlineorderflag),'YYDD'), sod.productid
+                                   ORDER BY sum(unitprice*orderqty) desc) rn
           from sales.salesorderheader soh,sales.salesorderdetail sod
              , production.product p
          where soh.salesorderid = sod.salesorderid
            and sod.productid = p.productid 
-and sod.productid = 749
+--           and sod.productid = 749
         group by soh.orderdate
                 ,date_part('year'::text,so_adj_date(soh.orderdate, onlineorderflag)+ '6 months'::interval)
                 ,to_char(so_adj_date(soh.orderdate, onlineorderflag),'YYMM')
                 ,sod.productid,name
+                ,soh.onlineorderflag
         ) as src
- --where rn <= 10
+ where rn <= 10
 order by yymm, productid    
 ")
 sp_print_df(top10_products_by_month)
@@ -479,6 +519,7 @@ order by function_schema,
          function_name;
 ")
 ```
+
 ```{r drop previous date function attempts}
 # dbGetQuery(con,'drop function public.so_adj_date(so_date date)')
 
