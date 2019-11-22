@@ -72,7 +72,7 @@ con <- sp_get_postgres_connection(
 On an annual basis, are sales dollars trending up, down or flat? We begin with total revenue and number of orders at different levels of detail.  
 
 ```{r Calculate time period and annual sales dollars- 1}
-annual_sales <- tbl(con, in_schema("sales", "salesorderheader")) %>% 
+annual_sales <- tbl(con, in_schema("sales", "salesorderheader")) %>%
   mutate(year = substr(as.character(orderdate), 1, 4)) %>%
   group_by(year) %>%
   summarize(
@@ -94,7 +94,6 @@ annual_sales
 
 min_soh_dt <- min(annual_sales$min_soh_orderdate)
 max_soh_dt <- max(annual_sales$max_soh_orderdate)
-
 ```
 
 Both 2011 and 2014 are shorter time spans than the other two years, making comparison across the years more difficult. We might normalize the totals based on the number of months in each year, but we first graph total dollars.
@@ -418,7 +417,7 @@ As we will see later on, the **Sales Rep** data doesn't match the **Online** dat
 
 Jumping to the trend line comparison, we see the source of the variation.
 
-```{r fig.cap='SO, SO Dollars, and Average SO Dollars-b ',fig.width=16}
+```{r average dollars, fig.cap='SO, SO Dollars, and Average SO Dollars-b ',fig.width=16}
 
 # sp_print_df(monthly_sales_w_channel)
 
@@ -436,7 +435,8 @@ ggplot(
   theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
   labs(
     title = glue(
-      "Sales by Month by Year"),
+      "Sales by Month by Year"
+    ),
     x = paste0("Month - between ", min_soh_dt, " - ", max_soh_dt),
     y = "Sales Dollars"
   )
@@ -502,10 +502,14 @@ monthly_sales_w_channel_lagged_by_year <- monthly_sales_w_channel %>%
       soh_count / (lag(soh_count, 12)) * 100
   )
 
-ggplot(monthly_sales_w_channel_lagged_by_year, 
-       aes(x = orderdate, y = pct_monthly_soh_dollar_change)) +
-  scale_x_date(date_breaks = "year", date_labels = "%Y", 
-               date_minor_breaks = "3 months") +
+ggplot(
+  monthly_sales_w_channel_lagged_by_year,
+  aes(x = orderdate, y = pct_monthly_soh_dollar_change)
+) +
+  scale_x_date(
+    date_breaks = "year", date_labels = "%Y",
+    date_minor_breaks = "3 months"
+  ) +
   scale_y_continuous(limits = c(-10, 300)) +
   facet_wrap("onlineorderflag") +
   geom_line() +
@@ -513,7 +517,8 @@ ggplot(monthly_sales_w_channel_lagged_by_year,
   labs(
     title = glue(
       "Year-on-Year Total Monthly Sales Change \n",
-      "Comparing Online to Sales Rep Sales"),
+      "Comparing Online to Sales Rep Sales"
+    ),
     x = paste0("Month - between ", min_soh_dt, " - ", max_soh_dt),
     y = "% Dollar Change"
   )
@@ -764,9 +769,9 @@ all_equal(monthly_sales_rep_adjusted, monthly_sales_rep_adjusted_with_psql_funct
 
 
 ```{r}
-monthly_sales_rep_adjusted %>% 
-  mutate(day_of_month = day(adjusted_orderdate)) %>% 
-ggplot( aes(x = day_of_month, y = soh_count)) +
+monthly_sales_rep_adjusted %>%
+  mutate(day_of_month = day(adjusted_orderdate)) %>%
+  ggplot(aes(x = day_of_month, y = soh_count)) +
   geom_col() +
   scale_x_continuous(limits = c(1, 32)) +
   labs(
@@ -786,9 +791,9 @@ ggplot( aes(x = day_of_month, y = soh_count)) +
 
 ```{r}
 
-monthly_sales_rep_as_is <- monthly_sales_w_channel %>% 
+monthly_sales_rep_as_is <- monthly_sales_w_channel %>%
   filter(onlineorderflag == "Sales Rep")
-  
+
 
 ggplot(
   data = monthly_sales_rep_adjusted,
@@ -796,10 +801,12 @@ ggplot(
 ) +
   geom_line(alpha = .5) +
   geom_smooth(se = FALSE) +
-  geom_smooth(data = monthly_sales_rep_as_is, aes(
-    orderdate, soh_count
-  ), color = "red", alpha = .5,
-  se = FALSE) +
+  geom_smooth(
+    data = monthly_sales_rep_as_is, aes(
+      orderdate, soh_count
+    ), color = "red", alpha = .5,
+    se = FALSE
+  ) +
   theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
   labs(
     title = glue(

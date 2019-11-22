@@ -98,17 +98,10 @@ dbListTables(con)
 ##  [9] "vjobcandidate"              "vjobcandidateeducation"    
 ## [11] "vjobcandidateemployment"    "employeedepartmenthistory"
 ```
+## Disconnect from the database and stop Docker
 
-## Clean up
-
-Afterwards, always disconnect from the dbms:
 
 ```r
 dbDisconnect(con)
-```
-Tell Docker to stop the `adventureworks` container:
-
-```r
 sp_docker_stop("adventureworks")
 ```
-
