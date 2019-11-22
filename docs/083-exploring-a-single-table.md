@@ -71,7 +71,7 @@ On an annual basis, are sales dollars trending up, down or flat? We begin with t
 
 
 ```r
-annual_sales <- tbl(con, in_schema("sales", "salesorderheader")) %>% 
+annual_sales <- tbl(con, in_schema("sales", "salesorderheader")) %>%
   mutate(year = substr(as.character(orderdate), 1, 4)) %>%
   group_by(year) %>%
   summarize(
@@ -832,7 +832,8 @@ ggplot(
   theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
   labs(
     title = glue(
-      "Sales by Month by Year"),
+      "Sales by Month by Year"
+    ),
     x = paste0("Month - between ", min_soh_dt, " - ", max_soh_dt),
     y = "Sales Dollars"
   )
@@ -843,8 +844,8 @@ ggplot(
 ```
 
 <div class="figure">
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-9-1.png" alt="SO, SO Dollars, and Average SO Dollars-b " width="1536" />
-<p class="caption">(\#fig:unnamed-chunk-9)SO, SO Dollars, and Average SO Dollars-b </p>
+<img src="083-exploring-a-single-table_files/figure-html/average dollars-1.png" alt="SO, SO Dollars, and Average SO Dollars-b " width="1536" />
+<p class="caption">(\#fig:average dollars)SO, SO Dollars, and Average SO Dollars-b </p>
 </div>
 
 The monthly variation is happening on the Sales Rep side.
@@ -882,7 +883,7 @@ ggplot(monthly_sales_w_channel_lagged_by_month, aes(x = orderdate, y = pct_month
 ## Warning: Removed 1 rows containing missing values (geom_path).
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-10-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-9-1.png" width="672" />
 
 For **Sales Reps** it looks like the variation is in the number of orders, not just dollars, as shown in the following plot.
 
@@ -907,7 +908,7 @@ ggplot(monthly_sales_w_channel_lagged_by_month, aes(x = orderdate, y = pct_month
 ## Warning: Removed 1 rows containing missing values (geom_path).
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-11-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-10-1.png" width="672" />
 
 
 Let's examine whether there is a large year-to-year change.
@@ -922,10 +923,14 @@ monthly_sales_w_channel_lagged_by_year <- monthly_sales_w_channel %>%
       soh_count / (lag(soh_count, 12)) * 100
   )
 
-ggplot(monthly_sales_w_channel_lagged_by_year, 
-       aes(x = orderdate, y = pct_monthly_soh_dollar_change)) +
-  scale_x_date(date_breaks = "year", date_labels = "%Y", 
-               date_minor_breaks = "3 months") +
+ggplot(
+  monthly_sales_w_channel_lagged_by_year,
+  aes(x = orderdate, y = pct_monthly_soh_dollar_change)
+) +
+  scale_x_date(
+    date_breaks = "year", date_labels = "%Y",
+    date_minor_breaks = "3 months"
+  ) +
   scale_y_continuous(limits = c(-10, 300)) +
   facet_wrap("onlineorderflag") +
   geom_line() +
@@ -933,7 +938,8 @@ ggplot(monthly_sales_w_channel_lagged_by_year,
   labs(
     title = glue(
       "Year-on-Year Total Monthly Sales Change \n",
-      "Comparing Online to Sales Rep Sales"),
+      "Comparing Online to Sales Rep Sales"
+    ),
     x = paste0("Month - between ", min_soh_dt, " - ", max_soh_dt),
     y = "% Dollar Change"
   )
@@ -943,7 +949,7 @@ ggplot(monthly_sales_w_channel_lagged_by_year,
 ## Warning: Removed 12 rows containing missing values (geom_path).
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-12-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-11-1.png" width="672" />
 
 That's much smaller than the month-to-month change.
 
@@ -1027,7 +1033,7 @@ sales_rep_day_of_month_sales %>%
   )
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-14-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-13-1.png" width="672" />
 
 Suspicious months are those where sales were recorded on more than one day or there were no sales recorded in the month at all.
 
@@ -1324,9 +1330,9 @@ all_equal(monthly_sales_rep_adjusted, monthly_sales_rep_adjusted_with_psql_funct
 
 
 ```r
-monthly_sales_rep_adjusted %>% 
-  mutate(day_of_month = day(adjusted_orderdate)) %>% 
-ggplot( aes(x = day_of_month, y = soh_count)) +
+monthly_sales_rep_adjusted %>%
+  mutate(day_of_month = day(adjusted_orderdate)) %>%
+  ggplot(aes(x = day_of_month, y = soh_count)) +
   geom_col() +
   scale_x_continuous(limits = c(1, 32)) +
   labs(
@@ -1341,16 +1347,16 @@ ggplot( aes(x = day_of_month, y = soh_count)) +
   theme(plot.title = element_text(hjust = .5)) # Center ggplot title
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-26-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-25-1.png" width="672" />
 
 ### Monthly Sales by Order Type with corrected dates -- relative to a trend line
 
 
 
 ```r
-monthly_sales_rep_as_is <- monthly_sales_w_channel %>% 
+monthly_sales_rep_as_is <- monthly_sales_w_channel %>%
   filter(onlineorderflag == "Sales Rep")
-  
+
 
 ggplot(
   data = monthly_sales_rep_adjusted,
@@ -1358,10 +1364,12 @@ ggplot(
 ) +
   geom_line(alpha = .5) +
   geom_smooth(se = FALSE) +
-  geom_smooth(data = monthly_sales_rep_as_is, aes(
-    orderdate, soh_count
-  ), color = "red", alpha = .5,
-  se = FALSE) +
+  geom_smooth(
+    data = monthly_sales_rep_as_is, aes(
+      orderdate, soh_count
+    ), color = "red", alpha = .5,
+    se = FALSE
+  ) +
   theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
   labs(
     title = glue(
@@ -1378,7 +1386,7 @@ ggplot(
 ## `geom_smooth()` using method = 'loess' and formula 'y ~ x'
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-27-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-26-1.png" width="672" />
 
 
 ## Disconnect from the database and stop Docker

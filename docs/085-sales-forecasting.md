@@ -99,6 +99,29 @@ monthly_tsibble %>% autoplot(orders)
 ```
 
 <img src="085-sales-forecasting_files/figure-html/unnamed-chunk-1-1.png" width="672" />
+Disconnect from the database:
+
+```r
+dbDisconnect(con)
+```
+
+```
+## Warning in connection_release(conn@ptr): Already disconnected
+```
+
+## Cleaning up
+
+Always have R disconnect from the database when you're done.
+
+```r
+dbDisconnect(con)
+```
+
+```
+## Warning in connection_release(conn@ptr): Already disconnected
+```
+
+```
 
 Wow! Online orders really took off in the late spring - early summer of 2013! How about revenues?
 
@@ -111,7 +134,7 @@ monthly_tsibble %>% autoplot(total_revenue)
 ## Don't know how to automatically pick scale for object of type yearmon. Defaulting to continuous.
 ```
 
-<img src="085-sales-forecasting_files/figure-html/unnamed-chunk-2-1.png" width="672" />
+<img src="085-sales-forecasting_files/figure-html/unnamed-chunk-4-1.png" width="672" />
 
 There's an increase, but the sales representatives always brought in more revenue than the online platform. And there's a pronounced variation in the revenue from sales representatives on a month-to-month basis.
 
@@ -126,6 +149,21 @@ monthly_tsibble %>% autoplot(total_revenue / orders)
 ## Don't know how to automatically pick scale for object of type yearmon. Defaulting to continuous.
 ```
 
-<img src="085-sales-forecasting_files/figure-html/unnamed-chunk-3-1.png" width="672" />
+<img src="085-sales-forecasting_files/figure-html/unnamed-chunk-5-1.png" width="672" />
 
 For the sales representatives, there's still a month-to-month variation but the revenue per order appears to be bounded both below and above. However, the online revenue per order is decreasing. Note that this decline appears to be in steps between May and June each year; that could mean it's an artifact of the database creation process and not a "natural" phenomenon.
+
+## Disconnect from the database and stop Docker
+
+
+```r
+dbDisconnect(con)
+```
+
+```
+## Warning in connection_release(conn@ptr): Already disconnected
+```
+
+```r
+sp_docker_stop("adventureworks")
+```

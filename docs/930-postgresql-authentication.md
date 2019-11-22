@@ -32,9 +32,7 @@ sqlpetr::sp_check_that_docker_is_up()
 ```
 
 ```
-## [1] "Docker is up, running these containers:"                                                                                                            
-## [2] "CONTAINER ID        IMAGE               COMMAND                  CREATED              STATUS              PORTS                    NAMES"           
-## [3] "15b7a525bdee        postgres:11         \"docker-entrypoint.s…\"   About a minute ago   Up 14 seconds       0.0.0.0:5432->5432/tcp   adventureworks"
+## [1] "Docker is up but running no containers"
 ```
 
 ```r
@@ -47,7 +45,7 @@ sqlpetr::sp_docker_remove_container("cattle")
 
 ```r
 # in case you've been doing things out of order, stop a container named 'adventureworks' if it exists:
-sqlpetr::sp_docker_stop("adventureworks")
+# sqlpetr::sp_docker_stop("adventureworks")
 ```
 
 ### Creating a new container
@@ -115,12 +113,16 @@ OK, we can connect. Let's do some stuff!
 ```r
 data("iris")
 ```
+
 `dbCreateTable` creates the table with columns matching the data frame. But it does not send data to the table.
+
 
 ```r
 DBI::dbCreateTable(con, "iris", iris)
 ```
+
 To send data, we use `dbAppendTable`.
+
 
 ```r
 DBI::dbAppendTable(con, "iris", iris)
@@ -156,16 +158,16 @@ head(DBI::dbReadTable(con, "iris"))
 ## 6          5.4         3.9          1.7         0.4  setosa
 ```
 
+### Disconnect and remove the container
+
+
 ```r
 DBI::dbDisconnect(con)
-```
 
-### Remove the container
-
-```r
 sqlpetr::sp_docker_remove_container("cattle")
 ```
 
 ```
 ## [1] 0
 ```
+ 

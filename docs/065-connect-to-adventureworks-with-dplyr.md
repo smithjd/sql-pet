@@ -324,25 +324,10 @@ salesorderheader_table$ops$x$vars
 ```
 `salesorderheader_table` holds information needed to get the data from the 'salesorderheader' table, but `salesorderheader_table` does not hold the data itself. In the following sections, we will examine more closely this relationship between the `salesorderheader_table` object and the data in the database's 'salesorderheader' table.
 
-Disconnect from the database:
+## Disconnect from the database and stop Docker
+
 
 ```r
 dbDisconnect(con)
-```
-## Cleaning up
-
-Always have R disconnect from the database when you're done.
-
-```r
-dbDisconnect(con)
-```
-
-```
-## Warning in connection_release(conn@ptr): Already disconnected
-```
-
-Stop the `adventureworks` container:
-
-```r
 sp_docker_stop("adventureworks")
 ```

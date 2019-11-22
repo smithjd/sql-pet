@@ -31,7 +31,7 @@ sqlpetr::sp_check_that_docker_is_up()
 sqlpetr::sp_docker_remove_container("cattle")
 
 # in case you've been doing things out of order, stop a container named 'adventureworks' if it exists:
-sqlpetr::sp_docker_stop("adventureworks")
+# sqlpetr::sp_docker_stop("adventureworks")
 ```
 
 ### Creating a new container
@@ -88,11 +88,15 @@ OK, we can connect. Let's do some stuff!
 ```{r}
 data("iris")
 ```
+
 `dbCreateTable` creates the table with columns matching the data frame. But it does not send data to the table.
+
 ```{r}
 DBI::dbCreateTable(con, "iris", iris)
 ```
+
 To send data, we use `dbAppendTable`.
+
 ```{r}
 DBI::dbAppendTable(con, "iris", iris)
 
@@ -100,21 +104,13 @@ DBI::dbListTables(con)
 
 head(DBI::dbReadTable(con, "iris"))
 
-DBI::dbDisconnect(con)
 ```
 
-### Remove the container
+### Disconnect and remove the container
+
 ```{r}
+DBI::dbDisconnect(con)
+
 sqlpetr::sp_docker_remove_container("cattle")
 ```
-
-```
-## Cleaning up
-
-Always have R disconnect from the database when you're done and stop the Adventureworks Container
-```{r}
-
-dbDisconnect(con)
-sp_docker_stop("adventureworks")
-
-```
+ 

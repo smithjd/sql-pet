@@ -50,7 +50,9 @@ sp_check_that_docker_is_up()
 ```
 
 ```
-## [1] "Docker is up but running no containers"
+## [1] "Docker is up, running these containers:"                                                                                                            
+## [2] "CONTAINER ID        IMAGE               COMMAND                  CREATED              STATUS              PORTS                    NAMES"           
+## [3] "d45c4f2f42f4        postgres:11         \"docker-entrypoint.s…\"   About a minute ago   Up About a minute   0.0.0.0:5432->5432/tcp   adventureworks"
 ```
 
 ## Clean up if appropriate
@@ -83,7 +85,7 @@ source(here("book-src", "restore-adventureworks-postgres-on-docker.R"))
 ```
 
 ```
-## docker  run --detach  --name adventureworks --publish 5432:5432 --mount type=bind,source="/home/znmeb/Projects/sql-pet",target=/petdir postgres:11
+## docker  run --detach  --name adventureworks --publish 5432:5432 --mount type=bind,source="/Users/jds/Documents/Library/R/r-system/sql-pet",target=/petdir postgres:11
 ```
 
 ## Run the adventureworks Docker Image
@@ -158,7 +160,7 @@ Disconnect from the database:
 dbDisconnect(con)
 ```
 
-## Cleaning up
+## Cleaning up: diconnect from the database and stop Docker
 
 Always have R disconnect from the database when you're done.
 
@@ -184,12 +186,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## 15b7a525bdee        postgres:11         "docker-entrypoint.s…"   30 seconds ago      Exited (0) Less than a second ago                       adventureworks
-## 8435d4b7ee78        znmeb/postgis       "docker-entrypoint.s…"   9 days ago          Exited (0) 8 days ago                                   containers_postgis_1
-## da60e11b3727        6b2784b116df        "/bin/sh -c 'mkdir /…"   9 days ago          Exited (2) 9 days ago                                   condescending_carson
-## 4bbb083cba07        443540ec5848        "/bin/sh -c 'R -e 'i…"   9 days ago          Exited (1) 9 days ago                                   trusting_euler
-## 186b3ced7ad2        4ca242b1c323        "/bin/sh -c 'R -e 'i…"   10 days ago         Exited (1) 10 days ago                                  angry_varahamihira
-## 010df0104f51        znmeb/pgadmin4      "/entrypoint.sh"         10 days ago         Exited (0) 8 days ago                                   containers_pgadmin4_1
+## 5b43bd417b80        postgres:11         "docker-entrypoint.s…"   16 seconds ago      Exited (0) Less than a second ago                       adventureworks
 ```
 
 Next time, you can just use this command to start the container: 
