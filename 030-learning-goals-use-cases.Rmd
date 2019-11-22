@@ -1,4 +1,4 @@
-# Learning Goals and Use Cases {#chapter_learning-goals}
+# Chapter Learning Goals and Use Cases {#chapter_learning-goals}
 
 > This chapter sets the context for the book by:
 > 
@@ -14,16 +14,16 @@
 library(bookdown)
 ```
 
-## Challenge: goals, context and expectations
+## The Book's Challenge: goals, context and expectations
 
-* Working behind the corporate firewall -- the need to simulate it.  Important because that's where the data (and possibly your paycheck) are coming from.
+* Working with the data that's behind the enterprise firewall is challenging in a unique way.  Most of us R users are accustomed to a vast learning community that shares resources, discusses methods in public, and that can help each other trouble-shoot a problem. The very necessary enterprise firewall makes all of that difficult, if not impossible.  And yet enterprise database environment is very important  because in so many cases that's where the data (and possibly your paycheck) are coming from.
 * Differences between production and data warehouse environments.  We are simulating a production environment.  There are many similarities.  Data models are different.  Performance is a bigger deal in the OLTP.
 * Data in a organizational environment around the database.  Learning to keep your DBAs happy:
   + You are your own DBA in this simulation, so you can wreak havoc and learn from it, but you can learn to be DBA-friendly here.
   + In the end it's the subject-matter experts (people using the data every day) that really understand your data, but you have to work with your DBAs first.
   + You can't believe all the data you pull out of the database.
 
-## The Challenge: Investigating a question using an organization's database
+### The Challenge: Investigating a question using an organization's database
 
 Using an enterprise database to create meaningful management insights requires a combination of very different skills:
 
@@ -53,11 +53,28 @@ Using an enterprise database to create meaningful management insights requires a
   + R is a powerful tool for data access, manipulation, modeling and presentation
   + Different R packages and techniques are available for each of the elements involved in exploring, analyzing and reporting on enterprise behavior using the enterprise database.
 
+### Strategies
+
+  + Local, idiosyncratic optimization (entry and use of data). For example, different individuals might code a variable differently.
+  + Drifting use / bastardization of a column
+  + Turf wars and acquisitions
+  + Partial recollection / history: find the people who know where the skeletons are
+
+
 ### Problems that we address in the book
 
 * This book emphasizes database exploration and the R techniques that are needed.
 * We are emphasizing a tidyverse approach.  & graphics to really makes sense of what we find.
 * We can't call on real people in the adventureworks company, obviously, but we invent some characters to illustrate the investigation process as we have experienced it in various organizational settings.
+
+### Signposts
+
+> **Practice Tips**
+> 
+> _Here's how we do it.  
+>    + Conventions like always using the `labs()` function in ggplot  
+>    + Specifying the package the first time a function is used_  
+> 
 
 ### Book structure
 
@@ -77,7 +94,7 @@ The book explores R techniques and and investigation strategies using progressiv
 After working through the code in this book, you can expect to be able to:
 
 * R, SQL and PostgreSQL
-  * Run queries against PostgreSQL in an environment that simulates what is found in a corporate setting.
+  * Run queries against PostgreSQL in an environment that simulates what is found in a enterprise setting.
   * Understand techniques and some of the trade-offs between:
       * queries aimed at exploration or informal investigation using [dplyr](https://cran.r-project.org/package=dplyr)    [@Wickham2018]; and 
       * queries that should be written in SQL, because performance is important due to the size of the database or the frequency  with which a query is to be run.
