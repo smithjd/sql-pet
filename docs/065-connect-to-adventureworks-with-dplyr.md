@@ -86,32 +86,19 @@ dbListTables(con)
 ```
 
 ```
-##  [1] "countryregioncurrency"             
-##  [2] "customer"                          
-##  [3] "currencyrate"                      
-##  [4] "creditcard"                        
-##  [5] "personcreditcard"                  
-##  [6] "specialoffer"                      
-##  [7] "specialofferproduct"               
-##  [8] "salesorderheadersalesreason"       
-##  [9] "shoppingcartitem"                  
-## [10] "salespersonquotahistory"           
-## [11] "salesperson"                       
-## [12] "currency"                          
-## [13] "store"                             
-## [14] "salesorderheader"                  
-## [15] "salesorderdetail"                  
-## [16] "salesreason"                       
-## [17] "salesterritoryhistory"             
-## [18] "vindividualcustomer"               
-## [19] "vpersondemographics"               
-## [20] "vsalesperson"                      
-## [21] "vsalespersonsalesbyfiscalyears"    
-## [22] "vsalespersonsalesbyfiscalyearsdata"
-## [23] "vstorewithaddresses"               
-## [24] "vstorewithcontacts"                
-## [25] "vstorewithdemographics"            
-## [26] "salestaxrate"                      
+##  [1] "countryregioncurrency"              "customer"                          
+##  [3] "currencyrate"                       "creditcard"                        
+##  [5] "personcreditcard"                   "specialoffer"                      
+##  [7] "specialofferproduct"                "salesorderheadersalesreason"       
+##  [9] "shoppingcartitem"                   "salespersonquotahistory"           
+## [11] "salesperson"                        "currency"                          
+## [13] "store"                              "salesorderheader"                  
+## [15] "salesorderdetail"                   "salesreason"                       
+## [17] "salesterritoryhistory"              "vindividualcustomer"               
+## [19] "vpersondemographics"                "vsalesperson"                      
+## [21] "vsalespersonsalesbyfiscalyears"     "vsalespersonsalesbyfiscalyearsdata"
+## [23] "vstorewithaddresses"                "vstorewithcontacts"                
+## [25] "vstorewithdemographics"             "salestaxrate"                      
 ## [27] "salesterritory"
 ```
 Notice there are several tables that start with the letter *v*: they are actually *views* which will turn out to be important.  They are clearly distinguished in the connections tab, but the naming is a matter of convention.
@@ -123,18 +110,14 @@ dbListFields(con, "salesorderheader")
 ```
 
 ```
-##  [1] "salesorderid"           "revisionnumber"        
-##  [3] "orderdate"              "duedate"               
-##  [5] "shipdate"               "status"                
-##  [7] "onlineorderflag"        "purchaseordernumber"   
-##  [9] "accountnumber"          "customerid"            
-## [11] "salespersonid"          "territoryid"           
-## [13] "billtoaddressid"        "shiptoaddressid"       
-## [15] "shipmethodid"           "creditcardid"          
-## [17] "creditcardapprovalcode" "currencyrateid"        
-## [19] "subtotal"               "taxamt"                
-## [21] "freight"                "totaldue"              
-## [23] "comment"                "rowguid"               
+##  [1] "salesorderid"           "revisionnumber"         "orderdate"             
+##  [4] "duedate"                "shipdate"               "status"                
+##  [7] "onlineorderflag"        "purchaseordernumber"    "accountnumber"         
+## [10] "customerid"             "salespersonid"          "territoryid"           
+## [13] "billtoaddressid"        "shiptoaddressid"        "shipmethodid"          
+## [16] "creditcardid"           "creditcardapprovalcode" "currencyrateid"        
+## [19] "subtotal"               "taxamt"                 "freight"               
+## [22] "totaldue"               "comment"                "rowguid"               
 ## [25] "modifieddate"
 ```
 
@@ -160,9 +143,9 @@ tbl(con, in_schema("sales", "salesorderheader")) %>%
 ## #   onlineorderflag <lgl>, purchaseordernumber <chr>, accountnumber <chr>,
 ## #   customerid <int>, salespersonid <int>, territoryid <int>,
 ## #   billtoaddressid <int>, shiptoaddressid <int>, shipmethodid <int>,
-## #   creditcardid <int>, creditcardapprovalcode <chr>,
-## #   currencyrateid <int>, subtotal <dbl>, taxamt <dbl>, freight <dbl>,
-## #   totaldue <dbl>, comment <chr>, rowguid <chr>, modifieddate <dttm>
+## #   creditcardid <int>, creditcardapprovalcode <chr>, currencyrateid <int>,
+## #   subtotal <dbl>, taxamt <dbl>, freight <dbl>, totaldue <dbl>, comment <chr>,
+## #   rowguid <chr>, modifieddate <dttm>
 ```
 
 ```r
@@ -185,9 +168,9 @@ tbl(con, "salesorderheader") %>%
 ## #   onlineorderflag <lgl>, purchaseordernumber <chr>, accountnumber <chr>,
 ## #   customerid <int>, salespersonid <int>, territoryid <int>,
 ## #   billtoaddressid <int>, shiptoaddressid <int>, shipmethodid <int>,
-## #   creditcardid <int>, creditcardapprovalcode <chr>,
-## #   currencyrateid <int>, subtotal <dbl>, taxamt <dbl>, freight <dbl>,
-## #   totaldue <dbl>, comment <chr>, rowguid <chr>, modifieddate <dttm>
+## #   creditcardid <int>, creditcardapprovalcode <chr>, currencyrateid <int>,
+## #   subtotal <dbl>, taxamt <dbl>, freight <dbl>, totaldue <dbl>, comment <chr>,
+## #   rowguid <chr>, modifieddate <dttm>
 ```
 
 ## Anatomy of a `dplyr` connection object
@@ -227,9 +210,9 @@ salesorderheader_table
 ## #   onlineorderflag <lgl>, purchaseordernumber <chr>, accountnumber <chr>,
 ## #   customerid <int>, salespersonid <int>, territoryid <int>,
 ## #   billtoaddressid <int>, shiptoaddressid <int>, shipmethodid <int>,
-## #   creditcardid <int>, creditcardapprovalcode <chr>,
-## #   currencyrateid <int>, subtotal <dbl>, taxamt <dbl>, freight <dbl>,
-## #   totaldue <dbl>, comment <chr>, salesorderheader_details_updated <dttm>
+## #   creditcardid <int>, creditcardapprovalcode <chr>, currencyrateid <int>,
+## #   subtotal <dbl>, taxamt <dbl>, freight <dbl>, totaldue <dbl>, comment <chr>,
+## #   salesorderheader_details_updated <dttm>
 ```
 
 However, notice that the first output line shows `??`, rather than providing the number of rows in the table. Similarly, the next to last line shows:
@@ -248,8 +231,8 @@ class(salesorderheader_table)
 ```
 
 ```
-## [1] "tbl_PqConnection" "tbl_dbi"          "tbl_sql"         
-## [4] "tbl_lazy"         "tbl"
+## [1] "tbl_PqConnection" "tbl_dbi"          "tbl_sql"          "tbl_lazy"        
+## [5] "tbl"
 ```
 
 It is not just a normal `tbl` of data. We can see that from the structure of `salesorderheader_table`:
@@ -308,18 +291,14 @@ salesorderheader_table$ops$x$vars
 ```
 
 ```
-##  [1] "salesorderid"           "revisionnumber"        
-##  [3] "orderdate"              "duedate"               
-##  [5] "shipdate"               "status"                
-##  [7] "onlineorderflag"        "purchaseordernumber"   
-##  [9] "accountnumber"          "customerid"            
-## [11] "salespersonid"          "territoryid"           
-## [13] "billtoaddressid"        "shiptoaddressid"       
-## [15] "shipmethodid"           "creditcardid"          
-## [17] "creditcardapprovalcode" "currencyrateid"        
-## [19] "subtotal"               "taxamt"                
-## [21] "freight"                "totaldue"              
-## [23] "comment"                "rowguid"               
+##  [1] "salesorderid"           "revisionnumber"         "orderdate"             
+##  [4] "duedate"                "shipdate"               "status"                
+##  [7] "onlineorderflag"        "purchaseordernumber"    "accountnumber"         
+## [10] "customerid"             "salespersonid"          "territoryid"           
+## [13] "billtoaddressid"        "shiptoaddressid"        "shipmethodid"          
+## [16] "creditcardid"           "creditcardapprovalcode" "currencyrateid"        
+## [19] "subtotal"               "taxamt"                 "freight"               
+## [22] "totaldue"               "comment"                "rowguid"               
 ## [25] "modifieddate"
 ```
 `salesorderheader_table` holds information needed to get the data from the 'salesorderheader' table, but `salesorderheader_table` does not hold the data itself. In the following sections, we will examine more closely this relationship between the `salesorderheader_table` object and the data in the database's 'salesorderheader' table.

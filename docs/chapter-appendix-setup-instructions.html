@@ -24,7 +24,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, and Ian Frantz" />
 
 
-<meta name="date" content="2019-11-21" />
+<meta name="date" content="2019-11-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -47,9 +47,9 @@
 
 
 
-<script src="libs/htmlwidgets-1.3/htmlwidgets.js"></script>
+<script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.9/datatables.js"></script>
+<script src="libs/datatables-binding-0.10/datatables.js"></script>
 <link href="libs/dt-core-1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" />
 <link href="libs/dt-core-1.10.19/css/jquery.dataTables.extra.css" rel="stylesheet" />
 <script src="libs/dt-core-1.10.19/js/jquery.dataTables.min.js"></script>
@@ -297,13 +297,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="12" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html"><i class="fa fa-check"></i><b>12</b> Leveraging Database Views</a><ul>
 <li class="chapter" data-level="12.1" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#setup-our-standard-working-environment-1"><i class="fa fa-check"></i><b>12.1</b> Setup our standard working environment</a></li>
-<li class="chapter" data-level="12.2" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#existing-views-as-a-resource"><i class="fa fa-check"></i><b>12.2</b> Existing views as a resource</a><ul>
-<li class="chapter" data-level="12.2.1" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#define-a-database-view"><i class="fa fa-check"></i><b>12.2.1</b> Define a database <code>view</code></a></li>
-<li class="chapter" data-level="12.2.2" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#unpack-and-inspect-a-view"><i class="fa fa-check"></i><b>12.2.2</b> Unpack and inspect a view</a></li>
-<li class="chapter" data-level="12.2.3" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#we-recommend-leverageing-them"><i class="fa fa-check"></i><b>12.2.3</b> We recommend leverageing them</a></li>
+<li class="chapter" data-level="12.2" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#define-a-database-view"><i class="fa fa-check"></i><b>12.2</b> Define a database <code>view</code></a><ul>
+<li class="chapter" data-level="12.2.1" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#why-views-are-useful"><i class="fa fa-check"></i><b>12.2.1</b> Why views are useful</a></li>
 </ul></li>
-<li class="chapter" data-level="12.3" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#modifying-a-view"><i class="fa fa-check"></i><b>12.3</b> Modifying a view</a><ul>
-<li class="chapter" data-level="12.3.1" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#first-draft-with-dplyr"><i class="fa fa-check"></i><b>12.3.1</b> First draft with dplyr</a></li>
+<li class="chapter" data-level="12.3" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#existing-views-as-a-resource"><i class="fa fa-check"></i><b>12.3</b> Existing views as a resource</a><ul>
+<li class="chapter" data-level="12.3.1" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#how-to-unpack-and-inspect-a-view"><i class="fa fa-check"></i><b>12.3.1</b> How to unpack and inspect a view</a></li>
+<li class="chapter" data-level="12.3.2" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#we-recommend-leverageing-them"><i class="fa fa-check"></i><b>12.3.2</b> We recommend leverageing them</a></li>
+</ul></li>
+<li class="chapter" data-level="12.4" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#writing-your-own-or-modifying-a-view"><i class="fa fa-check"></i><b>12.4</b> Writing your own or modifying a view</a><ul>
+<li class="chapter" data-level="12.4.1" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#first-draft-with-dplyr"><i class="fa fa-check"></i><b>12.4.1</b> First draft with dplyr</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="13" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html"><i class="fa fa-check"></i><b>13</b> Getting metadata about and from PostgreSQL</a><ul>
@@ -466,8 +468,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><code>glue</code> <span class="citation">(Hester <a href="#ref-R-glue">2019</a>)</span></li>
 <li><code>here</code> <span class="citation">(Müller <a href="#ref-R-here">2017</a>)</span></li>
 <li><code>knitr</code> <span class="citation">(Xie <a href="#ref-R-knitr">2019</a><a href="#ref-R-knitr">b</a>)</span></li>
-<li><code>skimr</code> <span class="citation">(Quinn et al. <a href="#ref-R-skimr">2019</a>)</span></li>
-<li><p><code>tidyverse</code> <span class="citation">(Wickham <a href="#ref-R-tidyverse">2017</a>)</span></p></li>
+<li><code>skimr</code> <span class="citation">(Waring et al. <a href="#ref-R-skimr">2019</a>)</span></li>
+<li><p><code>tidyverse</code> <span class="citation">(Wickham <a href="#ref-R-tidyverse">2019</a>)</span></p></li>
 <li><p><code>bookdown</code> <span class="citation">(Xie <a href="#ref-R-bookdown">2019</a><a href="#ref-R-bookdown">a</a>)</span> (for compiling the book, if you want to)</p></li>
 </ul>
 </div>
@@ -537,9 +539,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="ref-R-here">
 <p>Müller, Kirill. 2017. <em>Here: A Simpler Way to Find Your Files</em>. <a href="https://CRAN.R-project.org/package=here">https://CRAN.R-project.org/package=here</a>.</p>
 </div>
-<div id="ref-R-skimr">
-<p>Quinn, Michael, Amelia McNamara, Eduardo Arino de la Rubia, Hao Zhu, and Shannon Ellis. 2019. <em>Skimr: Compact and Flexible Summaries of Data</em>. <a href="https://CRAN.R-project.org/package=skimr">https://CRAN.R-project.org/package=skimr</a>.</p>
-</div>
 <div id="ref-RCT2018">
 <p>R Core Team. 2018. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org/">https://www.R-project.org/</a>.</p>
 </div>
@@ -549,8 +548,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="ref-Vargas2018">
 <p>Vargas, Mauricio. 2018. “How to Install R on Windows, Mac Os X and Ubuntu.” May 17, 2018. <a href="https://www.datacamp.com/community/tutorials/installing-R-windows-mac-ubuntu">https://www.datacamp.com/community/tutorials/installing-R-windows-mac-ubuntu</a>.</p>
 </div>
+<div id="ref-R-skimr">
+<p>Waring, Elin, Michael Quinn, Amelia McNamara, Eduardo Arino de la Rubia, Hao Zhu, and Shannon Ellis. 2019. <em>Skimr: Compact and Flexible Summaries of Data</em>. <a href="https://CRAN.R-project.org/package=skimr">https://CRAN.R-project.org/package=skimr</a>.</p>
+</div>
 <div id="ref-R-tidyverse">
-<p>Wickham, Hadley. 2017. <em>Tidyverse: Easily Install and Load the ’Tidyverse’</em>. <a href="https://CRAN.R-project.org/package=tidyverse">https://CRAN.R-project.org/package=tidyverse</a>.</p>
+<p>Wickham, Hadley. 2019. <em>Tidyverse: Easily Install and Load the ’Tidyverse’</em>. <a href="https://CRAN.R-project.org/package=tidyverse">https://CRAN.R-project.org/package=tidyverse</a>.</p>
 </div>
 <div id="ref-R-devtools">
 <p>Wickham, Hadley, Jim Hester, and Winston Chang. 2019. <em>Devtools: Tools to Make Developing R Packages Easier</em>. <a href="https://CRAN.R-project.org/package=devtools">https://CRAN.R-project.org/package=devtools</a>.</p>

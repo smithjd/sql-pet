@@ -24,7 +24,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, and Ian Frantz" />
 
 
-<meta name="date" content="2019-11-21" />
+<meta name="date" content="2019-11-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -47,9 +47,9 @@
 
 
 
-<script src="libs/htmlwidgets-1.3/htmlwidgets.js"></script>
+<script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.9/datatables.js"></script>
+<script src="libs/datatables-binding-0.10/datatables.js"></script>
 <link href="libs/dt-core-1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" />
 <link href="libs/dt-core-1.10.19/css/jquery.dataTables.extra.css" rel="stylesheet" />
 <script src="libs/dt-core-1.10.19/js/jquery.dataTables.min.js"></script>
@@ -297,13 +297,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="12" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html"><i class="fa fa-check"></i><b>12</b> Leveraging Database Views</a><ul>
 <li class="chapter" data-level="12.1" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#setup-our-standard-working-environment-1"><i class="fa fa-check"></i><b>12.1</b> Setup our standard working environment</a></li>
-<li class="chapter" data-level="12.2" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#existing-views-as-a-resource"><i class="fa fa-check"></i><b>12.2</b> Existing views as a resource</a><ul>
-<li class="chapter" data-level="12.2.1" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#define-a-database-view"><i class="fa fa-check"></i><b>12.2.1</b> Define a database <code>view</code></a></li>
-<li class="chapter" data-level="12.2.2" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#unpack-and-inspect-a-view"><i class="fa fa-check"></i><b>12.2.2</b> Unpack and inspect a view</a></li>
-<li class="chapter" data-level="12.2.3" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#we-recommend-leverageing-them"><i class="fa fa-check"></i><b>12.2.3</b> We recommend leverageing them</a></li>
+<li class="chapter" data-level="12.2" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#define-a-database-view"><i class="fa fa-check"></i><b>12.2</b> Define a database <code>view</code></a><ul>
+<li class="chapter" data-level="12.2.1" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#why-views-are-useful"><i class="fa fa-check"></i><b>12.2.1</b> Why views are useful</a></li>
 </ul></li>
-<li class="chapter" data-level="12.3" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#modifying-a-view"><i class="fa fa-check"></i><b>12.3</b> Modifying a view</a><ul>
-<li class="chapter" data-level="12.3.1" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#first-draft-with-dplyr"><i class="fa fa-check"></i><b>12.3.1</b> First draft with dplyr</a></li>
+<li class="chapter" data-level="12.3" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#existing-views-as-a-resource"><i class="fa fa-check"></i><b>12.3</b> Existing views as a resource</a><ul>
+<li class="chapter" data-level="12.3.1" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#how-to-unpack-and-inspect-a-view"><i class="fa fa-check"></i><b>12.3.1</b> How to unpack and inspect a view</a></li>
+<li class="chapter" data-level="12.3.2" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#we-recommend-leverageing-them"><i class="fa fa-check"></i><b>12.3.2</b> We recommend leverageing them</a></li>
+</ul></li>
+<li class="chapter" data-level="12.4" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#writing-your-own-or-modifying-a-view"><i class="fa fa-check"></i><b>12.4</b> Writing your own or modifying a view</a><ul>
+<li class="chapter" data-level="12.4.1" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#first-draft-with-dplyr"><i class="fa fa-check"></i><b>12.4.1</b> First draft with dplyr</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="13" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html"><i class="fa fa-check"></i><b>13</b> Getting metadata about and from PostgreSQL</a><ul>
@@ -491,48 +493,31 @@ are kept private.</p>
 <pre><code>## [1] 0</code></pre>
 <p>With the custom <code>search_path</code>, the following command shows the tables in the <code>sales</code> schema. In the <code>adventureworks</code> database, there are no tables in the <code>public</code> schema.</p>
 <div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" data-line-number="1"><span class="kw">dbListTables</span>(con)</a></code></pre></div>
-<pre><code>##  [1] &quot;countryregioncurrency&quot;             
-##  [2] &quot;customer&quot;                          
-##  [3] &quot;currencyrate&quot;                      
-##  [4] &quot;creditcard&quot;                        
-##  [5] &quot;personcreditcard&quot;                  
-##  [6] &quot;specialoffer&quot;                      
-##  [7] &quot;specialofferproduct&quot;               
-##  [8] &quot;salesorderheadersalesreason&quot;       
-##  [9] &quot;shoppingcartitem&quot;                  
-## [10] &quot;salespersonquotahistory&quot;           
-## [11] &quot;salesperson&quot;                       
-## [12] &quot;currency&quot;                          
-## [13] &quot;store&quot;                             
-## [14] &quot;salesorderheader&quot;                  
-## [15] &quot;salesorderdetail&quot;                  
-## [16] &quot;salesreason&quot;                       
-## [17] &quot;salesterritoryhistory&quot;             
-## [18] &quot;vindividualcustomer&quot;               
-## [19] &quot;vpersondemographics&quot;               
-## [20] &quot;vsalesperson&quot;                      
-## [21] &quot;vsalespersonsalesbyfiscalyears&quot;    
-## [22] &quot;vsalespersonsalesbyfiscalyearsdata&quot;
-## [23] &quot;vstorewithaddresses&quot;               
-## [24] &quot;vstorewithcontacts&quot;                
-## [25] &quot;vstorewithdemographics&quot;            
-## [26] &quot;salestaxrate&quot;                      
+<pre><code>##  [1] &quot;countryregioncurrency&quot;              &quot;customer&quot;                          
+##  [3] &quot;currencyrate&quot;                       &quot;creditcard&quot;                        
+##  [5] &quot;personcreditcard&quot;                   &quot;specialoffer&quot;                      
+##  [7] &quot;specialofferproduct&quot;                &quot;salesorderheadersalesreason&quot;       
+##  [9] &quot;shoppingcartitem&quot;                   &quot;salespersonquotahistory&quot;           
+## [11] &quot;salesperson&quot;                        &quot;currency&quot;                          
+## [13] &quot;store&quot;                              &quot;salesorderheader&quot;                  
+## [15] &quot;salesorderdetail&quot;                   &quot;salesreason&quot;                       
+## [17] &quot;salesterritoryhistory&quot;              &quot;vindividualcustomer&quot;               
+## [19] &quot;vpersondemographics&quot;                &quot;vsalesperson&quot;                      
+## [21] &quot;vsalespersonsalesbyfiscalyears&quot;     &quot;vsalespersonsalesbyfiscalyearsdata&quot;
+## [23] &quot;vstorewithaddresses&quot;                &quot;vstorewithcontacts&quot;                
+## [25] &quot;vstorewithdemographics&quot;             &quot;salestaxrate&quot;                      
 ## [27] &quot;salesterritory&quot;</code></pre>
 <p>Notice there are several tables that start with the letter <em>v</em>: they are actually <em>views</em> which will turn out to be important. They are clearly distinguished in the connections tab, but the naming is a matter of convention.</p>
 <p>Same for <code>dbListFields</code>:</p>
 <div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" data-line-number="1"><span class="kw">dbListFields</span>(con, <span class="st">&quot;salesorderheader&quot;</span>)</a></code></pre></div>
-<pre><code>##  [1] &quot;salesorderid&quot;           &quot;revisionnumber&quot;        
-##  [3] &quot;orderdate&quot;              &quot;duedate&quot;               
-##  [5] &quot;shipdate&quot;               &quot;status&quot;                
-##  [7] &quot;onlineorderflag&quot;        &quot;purchaseordernumber&quot;   
-##  [9] &quot;accountnumber&quot;          &quot;customerid&quot;            
-## [11] &quot;salespersonid&quot;          &quot;territoryid&quot;           
-## [13] &quot;billtoaddressid&quot;        &quot;shiptoaddressid&quot;       
-## [15] &quot;shipmethodid&quot;           &quot;creditcardid&quot;          
-## [17] &quot;creditcardapprovalcode&quot; &quot;currencyrateid&quot;        
-## [19] &quot;subtotal&quot;               &quot;taxamt&quot;                
-## [21] &quot;freight&quot;                &quot;totaldue&quot;              
-## [23] &quot;comment&quot;                &quot;rowguid&quot;               
+<pre><code>##  [1] &quot;salesorderid&quot;           &quot;revisionnumber&quot;         &quot;orderdate&quot;             
+##  [4] &quot;duedate&quot;                &quot;shipdate&quot;               &quot;status&quot;                
+##  [7] &quot;onlineorderflag&quot;        &quot;purchaseordernumber&quot;    &quot;accountnumber&quot;         
+## [10] &quot;customerid&quot;             &quot;salespersonid&quot;          &quot;territoryid&quot;           
+## [13] &quot;billtoaddressid&quot;        &quot;shiptoaddressid&quot;        &quot;shipmethodid&quot;          
+## [16] &quot;creditcardid&quot;           &quot;creditcardapprovalcode&quot; &quot;currencyrateid&quot;        
+## [19] &quot;subtotal&quot;               &quot;taxamt&quot;                 &quot;freight&quot;               
+## [22] &quot;totaldue&quot;               &quot;comment&quot;                &quot;rowguid&quot;               
 ## [25] &quot;modifieddate&quot;</code></pre>
 <p>Thus with this search order, the following two produce identical results:</p>
 <div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb39-1" data-line-number="1"><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;sales&quot;</span>, <span class="st">&quot;salesorderheader&quot;</span>)) <span class="op">%&gt;%</span></a>
@@ -551,9 +536,9 @@ are kept private.</p>
 ## #   onlineorderflag &lt;lgl&gt;, purchaseordernumber &lt;chr&gt;, accountnumber &lt;chr&gt;,
 ## #   customerid &lt;int&gt;, salespersonid &lt;int&gt;, territoryid &lt;int&gt;,
 ## #   billtoaddressid &lt;int&gt;, shiptoaddressid &lt;int&gt;, shipmethodid &lt;int&gt;,
-## #   creditcardid &lt;int&gt;, creditcardapprovalcode &lt;chr&gt;,
-## #   currencyrateid &lt;int&gt;, subtotal &lt;dbl&gt;, taxamt &lt;dbl&gt;, freight &lt;dbl&gt;,
-## #   totaldue &lt;dbl&gt;, comment &lt;chr&gt;, rowguid &lt;chr&gt;, modifieddate &lt;dttm&gt;</code></pre>
+## #   creditcardid &lt;int&gt;, creditcardapprovalcode &lt;chr&gt;, currencyrateid &lt;int&gt;,
+## #   subtotal &lt;dbl&gt;, taxamt &lt;dbl&gt;, freight &lt;dbl&gt;, totaldue &lt;dbl&gt;, comment &lt;chr&gt;,
+## #   rowguid &lt;chr&gt;, modifieddate &lt;dttm&gt;</code></pre>
 <div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" data-line-number="1"><span class="kw">tbl</span>(con, <span class="st">&quot;salesorderheader&quot;</span>) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb41-2" data-line-number="2"><span class="st">  </span><span class="kw">head</span>()</a></code></pre></div>
 <pre><code>## # Source:   lazy query [?? x 25]
@@ -570,9 +555,9 @@ are kept private.</p>
 ## #   onlineorderflag &lt;lgl&gt;, purchaseordernumber &lt;chr&gt;, accountnumber &lt;chr&gt;,
 ## #   customerid &lt;int&gt;, salespersonid &lt;int&gt;, territoryid &lt;int&gt;,
 ## #   billtoaddressid &lt;int&gt;, shiptoaddressid &lt;int&gt;, shipmethodid &lt;int&gt;,
-## #   creditcardid &lt;int&gt;, creditcardapprovalcode &lt;chr&gt;,
-## #   currencyrateid &lt;int&gt;, subtotal &lt;dbl&gt;, taxamt &lt;dbl&gt;, freight &lt;dbl&gt;,
-## #   totaldue &lt;dbl&gt;, comment &lt;chr&gt;, rowguid &lt;chr&gt;, modifieddate &lt;dttm&gt;</code></pre>
+## #   creditcardid &lt;int&gt;, creditcardapprovalcode &lt;chr&gt;, currencyrateid &lt;int&gt;,
+## #   subtotal &lt;dbl&gt;, taxamt &lt;dbl&gt;, freight &lt;dbl&gt;, totaldue &lt;dbl&gt;, comment &lt;chr&gt;,
+## #   rowguid &lt;chr&gt;, modifieddate &lt;dttm&gt;</code></pre>
 </div>
 <div id="anatomy-of-a-dplyr-connection-object" class="section level2">
 <h2><span class="header-section-number">6.4</span> Anatomy of a <code>dplyr</code> connection object</h2>
@@ -601,17 +586,17 @@ are kept private.</p>
 ## #   onlineorderflag &lt;lgl&gt;, purchaseordernumber &lt;chr&gt;, accountnumber &lt;chr&gt;,
 ## #   customerid &lt;int&gt;, salespersonid &lt;int&gt;, territoryid &lt;int&gt;,
 ## #   billtoaddressid &lt;int&gt;, shiptoaddressid &lt;int&gt;, shipmethodid &lt;int&gt;,
-## #   creditcardid &lt;int&gt;, creditcardapprovalcode &lt;chr&gt;,
-## #   currencyrateid &lt;int&gt;, subtotal &lt;dbl&gt;, taxamt &lt;dbl&gt;, freight &lt;dbl&gt;,
-## #   totaldue &lt;dbl&gt;, comment &lt;chr&gt;, salesorderheader_details_updated &lt;dttm&gt;</code></pre>
+## #   creditcardid &lt;int&gt;, creditcardapprovalcode &lt;chr&gt;, currencyrateid &lt;int&gt;,
+## #   subtotal &lt;dbl&gt;, taxamt &lt;dbl&gt;, freight &lt;dbl&gt;, totaldue &lt;dbl&gt;, comment &lt;chr&gt;,
+## #   salesorderheader_details_updated &lt;dttm&gt;</code></pre>
 <p>However, notice that the first output line shows <code>??</code>, rather than providing the number of rows in the table. Similarly, the next to last line shows:</p>
 <pre><code>    … with more rows, and 20 more variables:</code></pre>
 <p>whereas the output for a normal <code>tbl</code> of this salesorderheader data would say:</p>
 <pre><code>    … with 31,455 more rows, and 20 more variables:</code></pre>
 <p>So even though <code>salesorderheader_table</code> is a <code>tbl</code>, it’s <strong>also</strong> a <code>tbl_PqConnection</code>:</p>
 <div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb48-1" data-line-number="1"><span class="kw">class</span>(salesorderheader_table)</a></code></pre></div>
-<pre><code>## [1] &quot;tbl_PqConnection&quot; &quot;tbl_dbi&quot;          &quot;tbl_sql&quot;         
-## [4] &quot;tbl_lazy&quot;         &quot;tbl&quot;</code></pre>
+<pre><code>## [1] &quot;tbl_PqConnection&quot; &quot;tbl_dbi&quot;          &quot;tbl_sql&quot;          &quot;tbl_lazy&quot;        
+## [5] &quot;tbl&quot;</code></pre>
 <p>It is not just a normal <code>tbl</code> of data. We can see that from the structure of <code>salesorderheader_table</code>:</p>
 <div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb50-1" data-line-number="1"><span class="kw">str</span>(salesorderheader_table, <span class="dt">max.level =</span> <span class="dv">3</span>)</a></code></pre></div>
 <pre><code>## List of 2
@@ -650,18 +635,14 @@ are kept private.</p>
 ## [31] &quot;_eph&quot;                       &quot;jobcandidate&quot;</code></pre>
 <p>The second row contains a list of the columns in the <code>salesorderheader</code> table, among other things:</p>
 <div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb54-1" data-line-number="1">salesorderheader_table<span class="op">$</span>ops<span class="op">$</span>x<span class="op">$</span>vars</a></code></pre></div>
-<pre><code>##  [1] &quot;salesorderid&quot;           &quot;revisionnumber&quot;        
-##  [3] &quot;orderdate&quot;              &quot;duedate&quot;               
-##  [5] &quot;shipdate&quot;               &quot;status&quot;                
-##  [7] &quot;onlineorderflag&quot;        &quot;purchaseordernumber&quot;   
-##  [9] &quot;accountnumber&quot;          &quot;customerid&quot;            
-## [11] &quot;salespersonid&quot;          &quot;territoryid&quot;           
-## [13] &quot;billtoaddressid&quot;        &quot;shiptoaddressid&quot;       
-## [15] &quot;shipmethodid&quot;           &quot;creditcardid&quot;          
-## [17] &quot;creditcardapprovalcode&quot; &quot;currencyrateid&quot;        
-## [19] &quot;subtotal&quot;               &quot;taxamt&quot;                
-## [21] &quot;freight&quot;                &quot;totaldue&quot;              
-## [23] &quot;comment&quot;                &quot;rowguid&quot;               
+<pre><code>##  [1] &quot;salesorderid&quot;           &quot;revisionnumber&quot;         &quot;orderdate&quot;             
+##  [4] &quot;duedate&quot;                &quot;shipdate&quot;               &quot;status&quot;                
+##  [7] &quot;onlineorderflag&quot;        &quot;purchaseordernumber&quot;    &quot;accountnumber&quot;         
+## [10] &quot;customerid&quot;             &quot;salespersonid&quot;          &quot;territoryid&quot;           
+## [13] &quot;billtoaddressid&quot;        &quot;shiptoaddressid&quot;        &quot;shipmethodid&quot;          
+## [16] &quot;creditcardid&quot;           &quot;creditcardapprovalcode&quot; &quot;currencyrateid&quot;        
+## [19] &quot;subtotal&quot;               &quot;taxamt&quot;                 &quot;freight&quot;               
+## [22] &quot;totaldue&quot;               &quot;comment&quot;                &quot;rowguid&quot;               
 ## [25] &quot;modifieddate&quot;</code></pre>
 <p><code>salesorderheader_table</code> holds information needed to get the data from the ‘salesorderheader’ table, but <code>salesorderheader_table</code> does not hold the data itself. In the following sections, we will examine more closely this relationship between the <code>salesorderheader_table</code> object and the data in the database’s ‘salesorderheader’ table.</p>
 </div>

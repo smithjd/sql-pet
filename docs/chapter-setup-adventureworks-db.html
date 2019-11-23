@@ -24,7 +24,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, and Ian Frantz" />
 
 
-<meta name="date" content="2019-11-21" />
+<meta name="date" content="2019-11-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -47,9 +47,9 @@
 
 
 
-<script src="libs/htmlwidgets-1.3/htmlwidgets.js"></script>
+<script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.9/datatables.js"></script>
+<script src="libs/datatables-binding-0.10/datatables.js"></script>
 <link href="libs/dt-core-1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" />
 <link href="libs/dt-core-1.10.19/css/jquery.dataTables.extra.css" rel="stylesheet" />
 <script src="libs/dt-core-1.10.19/js/jquery.dataTables.min.js"></script>
@@ -297,13 +297,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="12" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html"><i class="fa fa-check"></i><b>12</b> Leveraging Database Views</a><ul>
 <li class="chapter" data-level="12.1" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#setup-our-standard-working-environment-1"><i class="fa fa-check"></i><b>12.1</b> Setup our standard working environment</a></li>
-<li class="chapter" data-level="12.2" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#existing-views-as-a-resource"><i class="fa fa-check"></i><b>12.2</b> Existing views as a resource</a><ul>
-<li class="chapter" data-level="12.2.1" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#define-a-database-view"><i class="fa fa-check"></i><b>12.2.1</b> Define a database <code>view</code></a></li>
-<li class="chapter" data-level="12.2.2" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#unpack-and-inspect-a-view"><i class="fa fa-check"></i><b>12.2.2</b> Unpack and inspect a view</a></li>
-<li class="chapter" data-level="12.2.3" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#we-recommend-leverageing-them"><i class="fa fa-check"></i><b>12.2.3</b> We recommend leverageing them</a></li>
+<li class="chapter" data-level="12.2" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#define-a-database-view"><i class="fa fa-check"></i><b>12.2</b> Define a database <code>view</code></a><ul>
+<li class="chapter" data-level="12.2.1" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#why-views-are-useful"><i class="fa fa-check"></i><b>12.2.1</b> Why views are useful</a></li>
 </ul></li>
-<li class="chapter" data-level="12.3" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#modifying-a-view"><i class="fa fa-check"></i><b>12.3</b> Modifying a view</a><ul>
-<li class="chapter" data-level="12.3.1" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#first-draft-with-dplyr"><i class="fa fa-check"></i><b>12.3.1</b> First draft with dplyr</a></li>
+<li class="chapter" data-level="12.3" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#existing-views-as-a-resource"><i class="fa fa-check"></i><b>12.3</b> Existing views as a resource</a><ul>
+<li class="chapter" data-level="12.3.1" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#how-to-unpack-and-inspect-a-view"><i class="fa fa-check"></i><b>12.3.1</b> How to unpack and inspect a view</a></li>
+<li class="chapter" data-level="12.3.2" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#we-recommend-leverageing-them"><i class="fa fa-check"></i><b>12.3.2</b> We recommend leverageing them</a></li>
+</ul></li>
+<li class="chapter" data-level="12.4" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#writing-your-own-or-modifying-a-view"><i class="fa fa-check"></i><b>12.4</b> Writing your own or modifying a view</a><ul>
+<li class="chapter" data-level="12.4.1" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#first-draft-with-dplyr"><i class="fa fa-check"></i><b>12.4.1</b> First draft with dplyr</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="13" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html"><i class="fa fa-check"></i><b>13</b> Getting metadata about and from PostgreSQL</a><ul>
@@ -473,9 +475,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>The <code>sp_check_that_docker_is_up</code> function from the <code>sqlpetr</code> package checks whether Docker is up and running. If it’s not, then you need to install, launch or re-install Docker.</p>
 </blockquote>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">sp_check_that_docker_is_up</span>()</a></code></pre></div>
-<pre><code>## [1] &quot;Docker is up, running these containers:&quot;                                                                                                            
-## [2] &quot;CONTAINER ID        IMAGE               COMMAND                  CREATED              STATUS              PORTS                    NAMES&quot;           
-## [3] &quot;d45c4f2f42f4        postgres:11         \&quot;docker-entrypoint.s…\&quot;   About a minute ago   Up About a minute   0.0.0.0:5432-&gt;5432/tcp   adventureworks&quot;</code></pre>
+<pre><code>## [1] &quot;Docker is up, running these containers:&quot;                                                                                                           
+## [2] &quot;CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES&quot;           
+## [3] &quot;5b43bd417b80        postgres:11         \&quot;docker-entrypoint.s…\&quot;   42 hours ago        Up 22 hours         0.0.0.0:5432-&gt;5432/tcp   adventureworks&quot;</code></pre>
 </div>
 <div id="clean-up-if-appropriate" class="section level2">
 <h2><span class="header-section-number">4.3</span> Clean up if appropriate</h2>
@@ -562,7 +564,7 @@ are kept private.</p>
 <p>Show that the container still exists even though it’s not running</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="kw">sp_show_all_docker_containers</span>()</a></code></pre></div>
 <pre><code>## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## 5b43bd417b80        postgres:11         &quot;docker-entrypoint.s…&quot;   16 seconds ago      Exited (0) Less than a second ago                       adventureworks</code></pre>
+## f6f9da5ee4bc        postgres:11         &quot;docker-entrypoint.s…&quot;   17 seconds ago      Exited (0) Less than a second ago                       adventureworks</code></pre>
 <p>Next time, you can just use this command to start the container:</p>
 <blockquote>
 <p><code>sp_docker_start(&quot;adventureworks&quot;)</code></p>
