@@ -113,8 +113,8 @@ class(salesorderheader_table)
 ```
 
 ```
-## [1] "tbl_PqConnection" "tbl_dbi"          "tbl_sql"         
-## [4] "tbl_lazy"         "tbl"
+## [1] "tbl_PqConnection" "tbl_dbi"          "tbl_sql"          "tbl_lazy"        
+## [5] "tbl"
 ```
 
 ### Controlling the number of rows returned with `collect()`
@@ -154,27 +154,27 @@ one_percent_sample
 ```
 
 ```
-##     orderdate   subtotal    taxamt   freight   totaldue
-## 1  2011-05-31  5056.4896  486.3747  151.9921  5694.8564
-## 2  2011-06-01  3578.2700  286.2616   89.4568  3953.9884
-## 3  2011-06-27   699.0982   55.9279   17.4775   772.5036
-## 4  2011-07-01 20249.9400 1943.9942  607.4982 22801.4324
-## 5  2011-07-13  3578.2700  286.2616   89.4568  3953.9884
-## 6  2011-07-15  3399.9900  271.9992   84.9998  3756.9890
-## 7  2011-07-19   699.0982   55.9279   17.4775   772.5036
-## 8  2011-07-21  3578.2700  286.2616   89.4568  3953.9884
-## 9  2011-07-31  3578.2700  286.2616   89.4568  3953.9884
-## 10 2011-08-01  3578.2700  286.2616   89.4568  3953.9884
-## 11 2011-08-08  3578.2700  286.2616   89.4568  3953.9884
-## 12 2011-08-27  3578.2700  286.2616   89.4568  3953.9884
-## 13 2011-08-31 18880.6522 1814.8608  567.1440 21262.6570
-## 14 2011-08-31   699.0982   55.9279   17.4775   772.5036
-## 15 2011-09-01  3578.2700  286.2616   89.4568  3953.9884
-## 16 2011-09-05   699.0982   55.9279   17.4775   772.5036
-## 17 2011-09-07   699.0982   55.9279   17.4775   772.5036
-## 18 2011-09-25  3578.2700  286.2616   89.4568  3953.9884
-## 19 2011-09-29  3399.9900  271.9992   84.9998  3756.9890
-## 20 2011-10-01 41868.9060 4027.9405 1258.7314 47155.5779
+##     orderdate   subtotal    taxamt  freight   totaldue
+## 1  2011-05-31 14352.7713 1375.9427 429.9821 16158.6961
+## 2  2011-05-31  3399.9900  271.9992  84.9998  3756.9890
+## 3  2011-06-02  3578.2700  286.2616  89.4568  3953.9884
+## 4  2011-06-04  3578.2700  286.2616  89.4568  3953.9884
+## 5  2011-06-05  3578.2700  286.2616  89.4568  3953.9884
+## 6  2011-06-10  3578.2700  286.2616  89.4568  3953.9884
+## 7  2011-06-23  3578.2700  286.2616  89.4568  3953.9884
+## 8  2011-06-27  3578.2700  286.2616  89.4568  3953.9884
+## 9  2011-06-29  3374.9900  269.9992  84.3748  3729.3640
+## 10 2011-06-30   699.0982   55.9279  17.4775   772.5036
+## 11 2011-07-01 19734.8665 1896.6545 592.7045 22224.2255
+## 12 2011-07-01  3578.2700  286.2616  89.4568  3953.9884
+## 13 2011-07-04  3578.2700  286.2616  89.4568  3953.9884
+## 14 2011-07-06  3578.2700  286.2616  89.4568  3953.9884
+## 15 2011-07-12  3578.2700  286.2616  89.4568  3953.9884
+## 16 2011-07-18  3578.2700  286.2616  89.4568  3953.9884
+## 17 2011-07-18  3374.9900  269.9992  84.3748  3729.3640
+## 18 2011-07-19   699.0982   55.9279  17.4775   772.5036
+## 19 2011-08-01  6654.7023  634.7888 198.3715  7487.8626
+## 20 2011-08-01 10680.7251 1021.8926 319.3414 12021.9591
 ```
 **Exact sample of 100 records**
 
@@ -187,18 +187,14 @@ DBI::dbListFields(con, "salesorderheader")
 ```
 
 ```
-##  [1] "salesorderid"           "revisionnumber"        
-##  [3] "orderdate"              "duedate"               
-##  [5] "shipdate"               "status"                
-##  [7] "onlineorderflag"        "purchaseordernumber"   
-##  [9] "accountnumber"          "customerid"            
-## [11] "salespersonid"          "territoryid"           
-## [13] "billtoaddressid"        "shiptoaddressid"       
-## [15] "shipmethodid"           "creditcardid"          
-## [17] "creditcardapprovalcode" "currencyrateid"        
-## [19] "subtotal"               "taxamt"                
-## [21] "freight"                "totaldue"              
-## [23] "comment"                "rowguid"               
+##  [1] "salesorderid"           "revisionnumber"         "orderdate"             
+##  [4] "duedate"                "shipdate"               "status"                
+##  [7] "onlineorderflag"        "purchaseordernumber"    "accountnumber"         
+## [10] "customerid"             "salespersonid"          "territoryid"           
+## [13] "billtoaddressid"        "shiptoaddressid"        "shipmethodid"          
+## [16] "creditcardid"           "creditcardapprovalcode" "currencyrateid"        
+## [19] "subtotal"               "taxamt"                 "freight"               
+## [22] "totaldue"               "comment"                "rowguid"               
 ## [25] "modifieddate"
 ```
 
@@ -559,19 +555,19 @@ tibble::glimpse(salesorderheader_tibble)
 ```
 ## Observations: 31,465
 ## Variables: 13
-## $ salesorderid        <int> 43659, 43660, 43661, 43662, 43663, 43664, 43…
-## $ revisionnumber      <int> 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,…
-## $ orderdate           <dttm> 2011-05-31, 2011-05-31, 2011-05-31, 2011-05…
-## $ duedate             <dttm> 2011-06-12, 2011-06-12, 2011-06-12, 2011-06…
-## $ shipdate            <dttm> 2011-06-07, 2011-06-07, 2011-06-07, 2011-06…
-## $ status              <int> 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,…
-## $ onlineorderflag     <lgl> FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FA…
-## $ purchaseordernumber <chr> "PO522145787", "PO18850127500", "PO184731896…
-## $ accountnumber       <chr> "10-4020-000676", "10-4020-000117", "10-4020…
-## $ customerid          <int> 29825, 29672, 29734, 29994, 29565, 29898, 29…
-## $ salespersonid       <int> 279, 279, 282, 282, 276, 280, 283, 276, 277,…
-## $ territoryid         <int> 5, 5, 6, 6, 4, 1, 1, 4, 3, 6, 1, 3, 1, 6, 2,…
-## $ billtoaddressid     <int> 985, 921, 517, 482, 1073, 876, 849, 1074, 62…
+## $ salesorderid        <int> 43659, 43660, 43661, 43662, 43663, 43664, 43665, …
+## $ revisionnumber      <int> 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8…
+## $ orderdate           <dttm> 2011-05-31, 2011-05-31, 2011-05-31, 2011-05-31, …
+## $ duedate             <dttm> 2011-06-12, 2011-06-12, 2011-06-12, 2011-06-12, …
+## $ shipdate            <dttm> 2011-06-07, 2011-06-07, 2011-06-07, 2011-06-07, …
+## $ status              <int> 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5…
+## $ onlineorderflag     <lgl> FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, …
+## $ purchaseordernumber <chr> "PO522145787", "PO18850127500", "PO18473189620", …
+## $ accountnumber       <chr> "10-4020-000676", "10-4020-000117", "10-4020-0004…
+## $ customerid          <int> 29825, 29672, 29734, 29994, 29565, 29898, 29580, …
+## $ salespersonid       <int> 279, 279, 282, 282, 276, 280, 283, 276, 277, 282,…
+## $ territoryid         <int> 5, 5, 6, 6, 4, 1, 1, 4, 3, 6, 1, 3, 1, 6, 2, 6, 3…
+## $ billtoaddressid     <int> 985, 921, 517, 482, 1073, 876, 849, 1074, 629, 52…
 ```
 ### The `skim` function in the `skimr` package
 
@@ -581,73 +577,125 @@ The `skimr` package has several functions that make it easy to examine an unknow
 skimr::skim(salesorderheader_tibble)
 ```
 
-```
-## Skim summary statistics
-##  n obs: 31465 
-##  n variables: 13 
-## 
-## ── Variable type:character ───────────────────────────────
-##             variable missing complete     n min max empty n_unique
-##        accountnumber       0    31465 31465  14  14     0    19119
-##  purchaseordernumber   27659     3806 31465  10  13     0     3806
-## 
-## ── Variable type:integer ─────────────────────────────────
-##         variable missing complete     n     mean       sd    p0   p25
-##  billtoaddressid       0    31465 31465 18263.15 8210.07    405 14080
-##       customerid       0    31465 31465 20170.18 6261.73  11000 14432
-##   revisionnumber       0    31465 31465     8       0.031     8     8
-##     salesorderid       0    31465 31465 59391    9083.31  43659 51525
-##    salespersonid   27659     3806 31465   280.61    4.85    274   277
-##           status       0    31465 31465     5       0         5     5
-##      territoryid       0    31465 31465     6.09    2.96      1     4
-##    p50   p75  p100     hist
-##  19449 24678 29883 ▆▁▁▇▇▇▇▇
-##  19452 25994 30118 ▇▆▅▅▃▃▅▇
-##      8     8     9 ▇▁▁▁▁▁▁▁
-##  59391 67257 75123 ▇▇▇▇▇▇▇▇
-##    279   284   290 ▇▆▅▅▃▁▂▅
-##      5     5     5 ▁▁▁▇▁▁▁▁
-##      6     9    10 ▃▁▅▁▃▂▂▇
-## 
-## ── Variable type:logical ─────────────────────────────────
-##         variable missing complete     n mean                        count
-##  onlineorderflag       0    31465 31465 0.88 TRU: 27659, FAL: 3806, NA: 0
-## 
-## ── Variable type:POSIXct ─────────────────────────────────
-##   variable missing complete     n        min        max     median
-##    duedate       0    31465 31465 2011-06-12 2014-07-12 2013-11-15
-##  orderdate       0    31465 31465 2011-05-31 2014-06-30 2013-11-03
-##   shipdate       0    31465 31465 2011-06-07 2014-07-07 2013-11-10
-##  n_unique
-##      1124
-##      1124
-##      1124
-```
+
+Table: (\#tab:unnamed-chunk-24)Data summary
+
+                                                   
+-------------------------  ------------------------
+Name                       salesorderheader_tibble 
+Number of rows             31465                   
+Number of columns          13                      
+_______________________                            
+Column type frequency:                             
+character                  2                       
+logical                    1                       
+numeric                    7                       
+POSIXct                    3                       
+________________________                           
+Group variables            None                    
+-------------------------  ------------------------
+
+
+**Variable type: character**
+
+skim_variable          n_missing   complete_rate   min   max   empty   n_unique   whitespace
+--------------------  ----------  --------------  ----  ----  ------  ---------  -----------
+purchaseordernumber        27659            0.12    10    13       0       3806            0
+accountnumber                  0            1.00    14    14       0      19119            0
+
+
+**Variable type: logical**
+
+skim_variable      n_missing   complete_rate   mean  count                 
+----------------  ----------  --------------  -----  ----------------------
+onlineorderflag            0               1   0.88  TRU: 27659, FAL: 3806 
+
+
+**Variable type: numeric**
+
+skim_variable      n_missing   complete_rate       mean        sd      p0     p25     p50     p75    p100  hist  
+----------------  ----------  --------------  ---------  --------  ------  ------  ------  ------  ------  ------
+salesorderid               0            1.00   59391.00   9083.31   43659   51525   59391   67257   75123  ▇▇▇▇▇ 
+revisionnumber             0            1.00       8.00      0.03       8       8       8       8       9  ▇▁▁▁▁ 
+status                     0            1.00       5.00      0.00       5       5       5       5       5  ▁▁▇▁▁ 
+customerid                 0            1.00   20170.18   6261.73   11000   14432   19452   25994   30118  ▇▆▅▅▇ 
+salespersonid          27659            0.12     280.61      4.85     274     277     279     284     290  ▇▅▅▂▃ 
+territoryid                0            1.00       6.09      2.96       1       4       6       9      10  ▃▅▃▅▇ 
+billtoaddressid            0            1.00   18263.15   8210.07     405   14080   19449   24678   29883  ▃▁▇▇▇ 
+
+
+**Variable type: POSIXct**
+
+skim_variable    n_missing   complete_rate  min          max          median        n_unique
+--------------  ----------  --------------  -----------  -----------  -----------  ---------
+orderdate                0               1  2011-05-31   2014-06-30   2013-11-03        1124
+duedate                  0               1  2011-06-12   2014-07-12   2013-11-15        1124
+shipdate                 0               1  2011-06-07   2014-07-07   2013-11-10        1124
 
 ```r
 skimr::skim_to_wide(salesorderheader_tibble) #skimr doesn't like certain kinds of columns
 ```
 
 ```
-## # A tibble: 13 x 19
-##    type  variable missing complete n     min   max   empty n_unique mean 
-##    <chr> <chr>    <chr>   <chr>    <chr> <chr> <chr> <chr> <chr>    <chr>
-##  1 char… account… 0       31465    31465 14    14    0     19119    <NA> 
-##  2 char… purchas… 27659   3806     31465 10    13    0     3806     <NA> 
-##  3 inte… billtoa… 0       31465    31465 <NA>  <NA>  <NA>  <NA>     1826…
-##  4 inte… custome… 0       31465    31465 <NA>  <NA>  <NA>  <NA>     2017…
-##  5 inte… revisio… 0       31465    31465 <NA>  <NA>  <NA>  <NA>     "   …
-##  6 inte… salesor… 0       31465    31465 <NA>  <NA>  <NA>  <NA>     "593…
-##  7 inte… salespe… 27659   3806     31465 <NA>  <NA>  <NA>  <NA>     "  2…
-##  8 inte… status   0       31465    31465 <NA>  <NA>  <NA>  <NA>     "   …
-##  9 inte… territo… 0       31465    31465 <NA>  <NA>  <NA>  <NA>     "   …
-## 10 logi… onlineo… 0       31465    31465 <NA>  <NA>  <NA>  <NA>     0.88 
-## 11 POSI… duedate  0       31465    31465 2011… 2014… <NA>  1124     <NA> 
-## 12 POSI… orderda… 0       31465    31465 2011… 2014… <NA>  1124     <NA> 
-## 13 POSI… shipdate 0       31465    31465 2011… 2014… <NA>  1124     <NA> 
-## # … with 9 more variables: sd <chr>, p0 <chr>, p25 <chr>, p50 <chr>,
-## #   p75 <chr>, p100 <chr>, hist <chr>, count <chr>, median <chr>
+## Warning: 'skimr::skim_to_wide' is deprecated.
+## Use 'skim()' instead.
+## See help("Deprecated")
 ```
+
+
+Table: (\#tab:unnamed-chunk-24)Data summary
+
+                                 
+-------------------------  ------
+Name                       .data 
+Number of rows             31465 
+Number of columns          13    
+_______________________          
+Column type frequency:           
+character                  2     
+logical                    1     
+numeric                    7     
+POSIXct                    3     
+________________________         
+Group variables            None  
+-------------------------  ------
+
+
+**Variable type: character**
+
+skim_variable          n_missing   complete_rate   min   max   empty   n_unique   whitespace
+--------------------  ----------  --------------  ----  ----  ------  ---------  -----------
+purchaseordernumber        27659            0.12    10    13       0       3806            0
+accountnumber                  0            1.00    14    14       0      19119            0
+
+
+**Variable type: logical**
+
+skim_variable      n_missing   complete_rate   mean  count                 
+----------------  ----------  --------------  -----  ----------------------
+onlineorderflag            0               1   0.88  TRU: 27659, FAL: 3806 
+
+
+**Variable type: numeric**
+
+skim_variable      n_missing   complete_rate       mean        sd      p0     p25     p50     p75    p100  hist  
+----------------  ----------  --------------  ---------  --------  ------  ------  ------  ------  ------  ------
+salesorderid               0            1.00   59391.00   9083.31   43659   51525   59391   67257   75123  ▇▇▇▇▇ 
+revisionnumber             0            1.00       8.00      0.03       8       8       8       8       9  ▇▁▁▁▁ 
+status                     0            1.00       5.00      0.00       5       5       5       5       5  ▁▁▇▁▁ 
+customerid                 0            1.00   20170.18   6261.73   11000   14432   19452   25994   30118  ▇▆▅▅▇ 
+salespersonid          27659            0.12     280.61      4.85     274     277     279     284     290  ▇▅▅▂▃ 
+territoryid                0            1.00       6.09      2.96       1       4       6       9      10  ▃▅▃▅▇ 
+billtoaddressid            0            1.00   18263.15   8210.07     405   14080   19449   24678   29883  ▃▁▇▇▇ 
+
+
+**Variable type: POSIXct**
+
+skim_variable    n_missing   complete_rate  min          max          median        n_unique
+--------------  ----------  --------------  -----------  -----------  -----------  ---------
+orderdate                0               1  2011-05-31   2014-06-30   2013-11-03        1124
+duedate                  0               1  2011-06-12   2014-07-12   2013-11-15        1124
+shipdate                 0               1  2011-06-07   2014-07-07   2013-11-10        1124
 
 ## Disconnect from the database and stop Docker
 

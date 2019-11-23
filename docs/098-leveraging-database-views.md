@@ -59,6 +59,7 @@ Reasons for views:
   * Reuse: putting commonly used code in one place.
     * If you find any problems, it only needs to be fixed in one place.
     * Simplifies downstream code, so easier to read and maintain.
+  * Security: a view can give access to someone who does not have access to underlying tables.
   * Standardizes data provenance 
 
 ## Existing views as a resource
@@ -92,31 +93,39 @@ str(v_salesperson_sales_by_fiscal_years_data)
 skim(v_salesperson_sales_by_fiscal_years_data)
 ```
 
-```
-## Skim summary statistics
-##  n obs: 48 
-##  n variables: 6 
-## 
-## ── Variable type:character ──────────────────────────────────
-##        variable missing complete  n min max empty n_unique
-##        fullname       0       48 48   9  26     0       14
-##        jobtitle       0       48 48  20  20     0        1
-##  salesterritory       0       48 48   6  14     0       10
-## 
-## ── Variable type:integer ────────────────────────────────────
-##       variable missing complete  n   mean   sd  p0    p25   p50    p75
-##  salespersonid       0       48 48 281.19 4.57 275 277.75 280.5 283.25
-##  p100     hist
-##   290 ▇▇▇▇▆▂▂▆
-## 
-## ── Variable type:numeric ────────────────────────────────────
-##    variable missing complete  n       mean         sd      p0      p25
-##  fiscalyear       0       48 48    2012.69       1.09 2011      2012  
-##  salestotal       0       48 48 1635214.51 1243833.87 5475.95 533827.7
-##         p50        p75    p100     hist
-##     2013       2014       2014 ▅▁▆▁▁▇▁▇
-##  1371169.72 2409498.88 4188307 ▇▂▇▂▅▂▂▂
-```
+
+Table: (\#tab:unnamed-chunk-1)Data summary
+
+                                                        
+-------------------------  -----------------------------
+Name                       v_salesperson_sales_by_fi... 
+Number of rows             48                           
+Number of columns          6                            
+_______________________                                 
+Column type frequency:                                  
+character                  3                            
+numeric                    3                            
+________________________                                
+Group variables            None                         
+-------------------------  -----------------------------
+
+
+**Variable type: character**
+
+skim_variable     n_missing   complete_rate   min   max   empty   n_unique   whitespace
+---------------  ----------  --------------  ----  ----  ------  ---------  -----------
+fullname                  0               1     9    26       0         14            0
+jobtitle                  0               1    20    20       0          1            0
+salesterritory            0               1     6    14       0         10            0
+
+
+**Variable type: numeric**
+
+skim_variable    n_missing   complete_rate         mean           sd        p0         p25          p50          p75      p100  hist  
+--------------  ----------  --------------  -----------  -----------  --------  ----------  -----------  -----------  --------  ------
+salespersonid            0               1       281.19         4.57    275.00      277.75       280.50       283.25       290  ▇▆▅▁▃ 
+salestotal               0               1   1635214.51   1243833.87   5475.95   533827.70   1371169.72   2409498.88   4188307  ▇▇▆▃▃ 
+fiscalyear               0               1      2012.69         1.09   2011.00     2012.00      2013.00      2014.00      2014  ▅▆▁▇▇ 
 
 ```r
 v_salesperson_sales_by_fiscal_years_data %>% filter(salespersonid == 275)
@@ -124,12 +133,12 @@ v_salesperson_sales_by_fiscal_years_data %>% filter(salespersonid == 275)
 
 ```
 ## # A tibble: 4 x 6
-##   salespersonid fullname   jobtitle    salesterritory salestotal fiscalyear
-##           <int> <chr>      <chr>       <chr>               <dbl>      <dbl>
-## 1           275 Michael G… Sales Repr… Northeast          63763.       2011
-## 2           275 Michael G… Sales Repr… Northeast        2399593.       2012
-## 3           275 Michael G… Sales Repr… Northeast        3765459.       2013
-## 4           275 Michael G… Sales Repr… Northeast        3065088.       2014
+##   salespersonid fullname     jobtitle       salesterritory salestotal fiscalyear
+##           <int> <chr>        <chr>          <chr>               <dbl>      <dbl>
+## 1           275 Michael G B… Sales Represe… Northeast          63763.       2011
+## 2           275 Michael G B… Sales Represe… Northeast        2399593.       2012
+## 3           275 Michael G B… Sales Represe… Northeast        3765459.       2013
+## 4           275 Michael G B… Sales Represe… Northeast        3065088.       2014
 ```
 Local idioms for looking at a view itself will vary.  Here is the code that will work for PostgreSQL:
 
@@ -204,16 +213,20 @@ rm(t_salesperson_sales_by_fiscal_years_data)
 t_salesperson_sales_by_fiscal_years_data <- 
   tbl(con, in_schema("sales", "salesperson")) %>% 
   select(-territoryid) %>% 
+  
   left_join(tbl(con, in_schema("sales", "salesorderheader")), by = c("businessentityid" = "salespersonid")) %>%
   mutate(fiscalyear = year(orderdate)) %>% 
-  # mutate(fiscalyear = substr(as.character(orderdate), 1,5)) %>% 
-  left_join(tbl(con, in_schema("sales", "salesterritory")), by = c("territoryid" = "territoryid")) %>%
   
-  rename(sales_territory = name) %>% 
+  left_join(tbl(con, in_schema("sales", "salesterritory")), by = c("territoryid" = "territoryid")) %>%
+    rename(sales_territory = name) %>% 
+  
   left_join(tbl(con, in_schema("humanresources", "employee")), by = c("businessentityid" = "businessentityid")) %>%
-  left_join(tbl(con, in_schema("person", "person")), by = c("businessentityid" = "businessentityid")) %>%
+
+    left_join(tbl(con, in_schema("person", "person")), by = c("businessentityid" = "businessentityid")) %>%
   mutate(fullname = paste(firstname, middlename, lastname)) %>% 
+  
   group_by(businessentityid, fullname, jobtitle, sales_territory, fiscalyear) %>% 
+  
   summarize(subtotal = sum(subtotal) ) %>% 
 collect() %>% ungroup()
 ```
@@ -230,18 +243,18 @@ t_salesperson_sales_by_fiscal_years_data
 
 ```
 ## # A tibble: 108 x 6
-##    businessentityid fullname  jobtitle  sales_territory fiscalyear subtotal
-##               <int> <chr>     <chr>     <chr>                <dbl>    <dbl>
-##  1              274 Stephen … North Am… Canada                2011    2040.
-##  2              274 Stephen … North Am… Canada                2012   62250.
-##  3              274 Stephen … North Am… Canada                2013  100556.
-##  4              274 Stephen … North Am… Canada                2014   11803.
-##  5              274 Stephen … North Am… Central               2014   35332.
-##  6              274 Stephen … North Am… Northeast             2012   83216.
-##  7              274 Stephen … North Am… Northwest             2011   20545.
-##  8              274 Stephen … North Am… Northwest             2012    5810.
-##  9              274 Stephen … North Am… Northwest             2013  204390.
-## 10              274 Stephen … North Am… Northwest             2014    2321.
+##    businessentityid fullname   jobtitle      sales_territory fiscalyear subtotal
+##               <int> <chr>      <chr>         <chr>                <dbl>    <dbl>
+##  1              274 Stephen Y… North Americ… Canada                2011    2040.
+##  2              274 Stephen Y… North Americ… Canada                2012   62250.
+##  3              274 Stephen Y… North Americ… Canada                2013  100556.
+##  4              274 Stephen Y… North Americ… Canada                2014   11803.
+##  5              274 Stephen Y… North Americ… Central               2014   35332.
+##  6              274 Stephen Y… North Americ… Northeast             2012   83216.
+##  7              274 Stephen Y… North Americ… Northwest             2011   20545.
+##  8              274 Stephen Y… North Americ… Northwest             2012    5810.
+##  9              274 Stephen Y… North Americ… Northwest             2013  204390.
+## 10              274 Stephen Y… North Americ… Northwest             2014    2321.
 ## # … with 98 more rows
 ```
 
@@ -249,31 +262,39 @@ t_salesperson_sales_by_fiscal_years_data
 skim(t_salesperson_sales_by_fiscal_years_data)
 ```
 
-```
-## Skim summary statistics
-##  n obs: 108 
-##  n variables: 6 
-## 
-## ── Variable type:character ──────────────────────────────────
-##         variable missing complete   n min max empty n_unique
-##         fullname       0      108 108   9  26     0       17
-##         jobtitle       0      108 108  20  28     0        4
-##  sales_territory       0      108 108   6  14     0       10
-## 
-## ── Variable type:integer ────────────────────────────────────
-##          variable missing complete   n   mean   sd  p0 p25 p50 p75 p100
-##  businessentityid       0      108 108 279.36 4.79 274 275 278 282  290
-##      hist
-##  ▇▃▂▃▂▁▂▁
-## 
-## ── Variable type:numeric ────────────────────────────────────
-##    variable missing complete   n      mean        sd      p0       p25
-##  fiscalyear       0      108 108   2012.62      1.07 2011      2012   
-##    subtotal       0      108 108 745256.52 820632.09  672.29 116279.93
-##        p50        p75       p100     hist
-##    2013       2014       2014    ▅▁▇▁▁▇▁▇
-##  541771.55 1008421.64 4106064.01 ▇▅▂▁▁▁▁▁
-```
+
+Table: (\#tab:unnamed-chunk-3)Data summary
+
+                                                        
+-------------------------  -----------------------------
+Name                       t_salesperson_sales_by_fi... 
+Number of rows             108                          
+Number of columns          6                            
+_______________________                                 
+Column type frequency:                                  
+character                  3                            
+numeric                    3                            
+________________________                                
+Group variables            None                         
+-------------------------  -----------------------------
+
+
+**Variable type: character**
+
+skim_variable      n_missing   complete_rate   min   max   empty   n_unique   whitespace
+----------------  ----------  --------------  ----  ----  ------  ---------  -----------
+fullname                   0               1     9    26       0         17            0
+jobtitle                   0               1    20    28       0          4            0
+sales_territory            0               1     6    14       0         10            0
+
+
+**Variable type: numeric**
+
+skim_variable       n_missing   complete_rate        mean          sd        p0         p25         p50          p75         p100  hist  
+-----------------  ----------  --------------  ----------  ----------  --------  ----------  ----------  -----------  -----------  ------
+businessentityid            0               1      279.36        4.79    274.00      275.00      278.00       282.00       290.00  ▇▂▃▁▂ 
+fiscalyear                  0               1     2012.62        1.07   2011.00     2012.00     2013.00      2014.00      2014.00  ▅▇▁▇▇ 
+subtotal                    0               1   745256.52   820632.09    672.29   116279.93   541771.55   1008421.64   4106064.01  ▇▂▁▁▁ 
 
 ```r
 t_salesperson_sales_by_fiscal_years_data %>% filter(businessentityid == 275)
@@ -281,19 +302,19 @@ t_salesperson_sales_by_fiscal_years_data %>% filter(businessentityid == 275)
 
 ```
 ## # A tibble: 11 x 6
-##    businessentityid fullname  jobtitle  sales_territory fiscalyear subtotal
-##               <int> <chr>     <chr>     <chr>                <dbl>    <dbl>
-##  1              275 Michael … Sales Re… Central               2011  132244.
-##  2              275 Michael … Sales Re… Central               2012  593815.
-##  3              275 Michael … Sales Re… Central               2013 1371919.
-##  4              275 Michael … Sales Re… Central               2014  472698.
-##  5              275 Michael … Sales Re… Northeast             2011  626626.
-##  6              275 Michael … Sales Re… Northeast             2012 2302605.
-##  7              275 Michael … Sales Re… Southeast             2011  116954.
-##  8              275 Michael … Sales Re… Southeast             2012  171773.
-##  9              275 Michael … Sales Re… Southwest             2012  307263.
-## 10              275 Michael … Sales Re… Southwest             2013 2613456.
-## 11              275 Michael … Sales Re… Southwest             2014  584549.
+##    businessentityid fullname    jobtitle     sales_territory fiscalyear subtotal
+##               <int> <chr>       <chr>        <chr>                <dbl>    <dbl>
+##  1              275 Michael G … Sales Repre… Central               2011  132244.
+##  2              275 Michael G … Sales Repre… Central               2012  593815.
+##  3              275 Michael G … Sales Repre… Central               2013 1371919.
+##  4              275 Michael G … Sales Repre… Central               2014  472698.
+##  5              275 Michael G … Sales Repre… Northeast             2011  626626.
+##  6              275 Michael G … Sales Repre… Northeast             2012 2302605.
+##  7              275 Michael G … Sales Repre… Southeast             2011  116954.
+##  8              275 Michael G … Sales Repre… Southeast             2012  171773.
+##  9              275 Michael G … Sales Repre… Southwest             2012  307263.
+## 10              275 Michael G … Sales Repre… Southwest             2013 2613456.
+## 11              275 Michael G … Sales Repre… Southwest             2014  584549.
 ```
 
 Why 3 sales folks in vsalesperson don’t show up in 2014 vsalespersonsalesbyfiscalyearsdata

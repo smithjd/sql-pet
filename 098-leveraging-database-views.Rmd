@@ -61,6 +61,7 @@ Reasons for views:
   * Reuse: putting commonly used code in one place.
     * If you find any problems, it only needs to be fixed in one place.
     * Simplifies downstream code, so easier to read and maintain.
+  * Security: a view can give access to someone who does not have access to underlying tables.
   * Standardizes data provenance 
 
 ## Existing views as a resource
@@ -118,16 +119,20 @@ rm(t_salesperson_sales_by_fiscal_years_data)
 t_salesperson_sales_by_fiscal_years_data <- 
   tbl(con, in_schema("sales", "salesperson")) %>% 
   select(-territoryid) %>% 
+  
   left_join(tbl(con, in_schema("sales", "salesorderheader")), by = c("businessentityid" = "salespersonid")) %>%
   mutate(fiscalyear = year(orderdate)) %>% 
-  # mutate(fiscalyear = substr(as.character(orderdate), 1,5)) %>% 
-  left_join(tbl(con, in_schema("sales", "salesterritory")), by = c("territoryid" = "territoryid")) %>%
   
-  rename(sales_territory = name) %>% 
+  left_join(tbl(con, in_schema("sales", "salesterritory")), by = c("territoryid" = "territoryid")) %>%
+    rename(sales_territory = name) %>% 
+  
   left_join(tbl(con, in_schema("humanresources", "employee")), by = c("businessentityid" = "businessentityid")) %>%
-  left_join(tbl(con, in_schema("person", "person")), by = c("businessentityid" = "businessentityid")) %>%
+
+    left_join(tbl(con, in_schema("person", "person")), by = c("businessentityid" = "businessentityid")) %>%
   mutate(fullname = paste(firstname, middlename, lastname)) %>% 
+  
   group_by(businessentityid, fullname, jobtitle, sales_territory, fiscalyear) %>% 
+  
   summarize(subtotal = sum(subtotal) ) %>% 
 collect() %>% ungroup()
 
