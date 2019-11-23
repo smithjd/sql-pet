@@ -132,7 +132,7 @@ ggplot(data = annual_sales, aes(x = year, y = total_soh_dollars)) +
   scale_y_continuous(labels = scales::dollar_format()) +
   labs(
     title = "Adventure Works Sales Dollars by Year",
-    x = glue("Year - between ", min_soh_dt, " - ", max_soh_dt),
+    x = paste0("Year - between ", min_soh_dt, " - ", max_soh_dt),
     y = "Sales $"
   )
 ```
@@ -151,7 +151,7 @@ ggplot(data = annual_sales, aes(x = year, y = as.numeric(soh_count))) +
   geom_text(aes(label = round(as.numeric(soh_count), digits = 0)), vjust = -0.25) +
   labs(
     title = "Number of orders per year",
-    x = glue("Years between ", min_soh_dt, " - ", max_soh_dt),
+    x = paste0("Years between ", min_soh_dt, " - ", max_soh_dt),
     y = "Total Number of Orders"
   )
 ```
@@ -170,7 +170,7 @@ ggplot(data = annual_sales, aes(x = year, y = avg_total_soh_dollars)) +
   geom_text(aes(label = round(avg_total_soh_dollars, digits = 0)), vjust = -0.25) +
   labs(
     title = "Average Dollars per Sale",
-    x = glue("Year - between ", min_soh_dt, " - ", max_soh_dt),
+    x = paste0("Year - between ", min_soh_dt, " - ", max_soh_dt),
     y = "Average Sale Amount"
   )
 ```
@@ -216,7 +216,7 @@ ggplot(data = monthly_sales, aes(x = orderdate, y = total_soh_dollars)) +
   scale_y_continuous(labels = dollar) +
   theme(plot.title = element_text(hjust = 0.5)) + # Center the title
   labs(
-    title = glue("Sales by Month\n", min_soh_dt, " - ", max_soh_dt),
+    title = paste0("Sales by Month\n", min_soh_dt, " - ", max_soh_dt),
     x = "Month",
     y = "Sales Dollars"
   )
@@ -258,7 +258,7 @@ ggplot(monthly_sales_lagged, aes(x = orderdate, y = monthly_sales_change)) +
   scale_y_continuous(labels = scales::dollar_format()) +
   theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
   labs(
-    title = glue(
+    title = paste0(
       "Monthly Sales Change \n",
       "Between ", min_soh_dt, " and ", max_soh_dt
     ),
@@ -332,7 +332,7 @@ monthly_sales_base_year_normalized_to_2011 %>%
   geom_hline(yintercept = 100) +
   scale_x_date(date_labels = "%Y-%m", date_breaks = "6 months") +
   labs(
-    title = glue(
+    title = paste0(
       "Adventureworks Normalized Monthly Sales\n",
       "Number of Sales Orders and Dollar Totals\n",
       min_soh_dt, " to ", max_soh_dt
@@ -391,7 +391,7 @@ ggplot(data = annual_sales_w_channel, aes(x = orderdate, y = total_soh_dollars))
   facet_wrap("onlineorderflag") +
   labs(
     title = "Adventure Works Sales Dollars by Year",
-    caption = glue("Between", min_soh_dt, " and ", max_soh_dt),
+    caption = paste0("Between", min_soh_dt, " and ", max_soh_dt),
     subtitle = "Comparing Online and Sales Rep sales channels",
     x = "Year",
     y = "Sales $"
@@ -412,7 +412,7 @@ ggplot(data = annual_sales_w_channel, aes(x = orderdate, y = as.numeric(soh_coun
   facet_wrap("onlineorderflag") +
   labs(
     title = "Adventure Works Number of orders per Year",
-    caption = glue("Between", min_soh_dt, " and ", max_soh_dt),
+    caption = paste0("Between", min_soh_dt, " and ", max_soh_dt),
     subtitle = "Comparing Online and Sales Rep sales channels",
     x = "Year",
     y = "Total number of orders"
@@ -431,7 +431,7 @@ ggplot(data = annual_sales_w_channel, aes(x = orderdate, y = avg_total_soh_dolla
   scale_y_continuous(labels = scales::dollar_format()) +
   labs(
     title = "Average Dollars per Sale",
-    x = glue("Year, between", min_soh_dt, " and ", max_soh_dt),
+    x = paste0("Year, between", min_soh_dt, " and ", max_soh_dt),
     y = "Average sale amount"
   )
 ```
@@ -470,7 +470,7 @@ monthly_sales_w_channel <- tbl(con, in_schema("sales", "salesorderheader")) %>%
   ) %>%
   ungroup()
 ```
-
+  
 
 
 ```r
@@ -1039,7 +1039,7 @@ ggplot(monthly_sales_w_channel_lagged_by_month, aes(x = orderdate, y = pct_month
   geom_line() +
   theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
   labs(
-    title = glue(
+    title = paste0(
       "Monthly Order Volume Change \n",
       "Comparing Online to Sales Rep Sales\n",
       min_soh_dt, " - ", max_soh_dt
@@ -1161,8 +1161,7 @@ sales_rep_day_of_month_sales <- tbl(con, in_schema("sales", "salesorderheader"))
 ## GROUP BY "year", "month", "day") "dbplyr_009"
 ## GROUP BY "year", "month"
 ```
-
-
+  
 
 ```r
 sales_rep_day_of_month_sales %>%
@@ -1209,7 +1208,7 @@ suspicious_months
 ## 7 2014-01-01 
 ## 8 2014-03-01
 ```
-
+  
 
 
 ```r
@@ -1481,7 +1480,7 @@ monthly_sales_rep_adjusted %>%
   geom_col() +
   scale_x_continuous(limits = c(1, 32)) +
   labs(
-    title = glue(
+    title = paste0(
       "Transactions Entered by Day of Month \n",
       "Comparing Online to Sales Rep Sales\n",
       min_soh_dt, " - ", max_soh_dt
