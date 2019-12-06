@@ -11,7 +11,7 @@
 |9|Sales Forecasting |085-sales-forecasting.Rmd|chapter_sales-forecasting|
 |10|Lazy Evaluation and Lazy Queries |090-lazy-evalutation-intro.Rmd|chapter_lazy-evaluation-queries|
 |11|Lazy Evaluation and Execution Environment |095-lazy-evalutation-and-timing.Rmd|chapter_lazy-evaluation-and-timing|
-|12|Leveraging Database Views |098-leveraging-database-views.Rmd|chapter_leveraging-datbase-views|
+|12|Leveraging Database Views |098-leveraging-database-views.Rmd|chapter_leveraging-database-views|
 |13|DBI package and SQL |100-dbi-and-sql.Rmd|chapter_dbi-package-sql|
 |14|SQL & dplyr joins additional data |130-sql-dplyr-joins-data.Rmd|chapter_sql-dplyr-data|
 |15|SQL & `dplyr` joins |140-sql-dplyr-joins.Rmd|chapter_sql-dplyr-joins|
@@ -27,10 +27,11 @@
 |25|Background and Basic Concepts|905-background-basic-concepts.Rmd|appendix_background_basic-concepts|
 |26| - Setup instructions|910-setup-instructions.Rmd|chapter_appendix-setup-instructions|
 |27|Appendix E - Install `adventureworks` on your own machine |915-local-setup-with-adventureworks.Rmd|chapter_appendix-postgres-local-db-installation|
-|28|Appendix B - Additional technical details for Windows users |920-windows-tech-details.Rmd|chapter_windows-tech-details|
-|29|Appendix C - PostgreSQL Authentication |930-postgresql-authentication.Rmd|chapter_appendix-postresql-authentication|
-|30|Dplyr functions and SQL cross-walk |970-dplyr-sql-summary-table.Rmd|chapter_appendix-dplyr-functions|
-|31|DBI package functions - INDEX |980-dbi-summary-table.Rmd|chapter_appendix-dbi-index|
-|32|Appendix _ Dplyr to SQL translations |985-dbplyr-sql-translations.Rmd|chapter_appendix-dplyr-to-postres-translation|
-|33|Appendix Additional resources |997-additional-resources.Rmd|chapter_appendix-additional-resources|
-|34|NA|999-references.Rmd|NA|
+|28|Mapping your local environment diagram |920-environment-diagram.Rmd|chapter_environment-diagram|
+|29|Appendix B - Additional technical details for Windows users |920-windows-tech-details.Rmd|chapter_windows-tech-details|
+|30|Appendix C - PostgreSQL Authentication |930-postgresql-authentication.Rmd|chapter_appendix-postresql-authentication|
+|31|Dplyr functions and SQL cross-walk |970-dplyr-sql-summary-table.Rmd|chapter_appendix-dplyr-functions|
+|32|DBI package functions - INDEX |980-dbi-summary-table.Rmd|chapter_appendix-dbi-index|
+|33|Appendix _ Dplyr to SQL translations |985-dbplyr-sql-translations.Rmd|chapter_appendix-dplyr-to-postres-translation|
+|34|Appendix Additional resources |997-additional-resources.Rmd|chapter_appendix-additional-resources|
+|35|NA|999-references.Rmd|NA|
