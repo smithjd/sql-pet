@@ -28,6 +28,7 @@ library(bookdown)
 library(here)
 library(lubridate)
 library(skimr)
+library(DiagrammeR)
 
 library(scales) # ggplot xy scales
 theme_set(theme_light())
@@ -48,7 +49,6 @@ con <- sp_get_postgres_connection(
 ```
 
 
-<<<<<<< HEAD
 ## The role of database `views`
 
 A database `view` is an SQL query that is stored in the database.  Most `views` are used for data retrieval, since they usually denormalize the tables involved.  Because they are standardized and well-understood, they can save you a lot of work.
@@ -141,65 +141,8 @@ getnames(person)
 getnames(sales_person)
 getnames(sales_order_header)
 getnames(sales_territory)
+
 ```
-
-## Define a database `view`
-
-  * A `view` is query that is stored in the database 
-  * Can be used to read or write to the database in a standardized and well-understood way
-
-### Why views are useful
-
-=======
-## Define a database `view`
-
-  * A `view` is query that is stored in the database 
-  * Can be used to read or write to the database in a standardized and well-understood way
-
-### Why views are useful
-
->>>>>>> 2497c14095e324ad8478dc08fd2abb250b0ce801
-Reasons for views:
-
-  * Performance: aggregation calculations done on the server.
-  * Conceptual abstraction/simplification, e.g. looking at monthly subtotals, rather than having to do the aggregation in each of your   * queries.
-  * Reuse: putting commonly used code in one place.
-    * If you find any problems, it only needs to be fixed in one place.
-    * Simplifies downstream code, so easier to read and maintain.
-  * Security: a view can give access to someone who does not have access to underlying tables.
-  * Standardizes data provenance 
-
-## Existing views as a resource
-
-  * Authoritative
-  * They are boring, but very important
-
-
-### How to unpack and inspect a view
-
-Using a view to retireve data from the database will be completely standard across all flavors of SQL.
-
-<<<<<<< HEAD
-```{r}
-v_salesperson_sales_by_fiscal_years_data <- tbl(con, in_schema("sales","vsalespersonsalesbyfiscalyearsdata")) %>% collect()
-
-str(v_salesperson_sales_by_fiscal_years_data)
-
-skim(v_salesperson_sales_by_fiscal_years_data)
-
-v_salesperson_sales_by_fiscal_years_data %>% filter(salespersonid == 275)
-```
-Local idioms for looking at a view itself will vary.  Here is the code that will work for PostgreSQL:
-
-```{r}
-view_definition <- dbGetQuery(con, "select pg_get_viewdef('sales.vsalespersonsalesbyfiscalyearsdata', true)")
-str(view_definition)
-
-cat(str_replace_all(view_definition$pg_get_viewdef, "\\\\\\\\n", "\\\\n")) 
-  
-```
-
-Even if you don't intend to become fluent in SQL, it's useful to read as much of it as possible.  
 
 Join all of the data pertaining to a person.
 
@@ -211,28 +154,7 @@ salesperson_info <- sales_person %>%
   collect()
 
 str(salesperson_info)
-=======
-```{r}
-v_salesperson_sales_by_fiscal_years_data <- tbl(con, in_schema("sales","vsalespersonsalesbyfiscalyearsdata")) %>% collect()
-
-str(v_salesperson_sales_by_fiscal_years_data)
-
-skim(v_salesperson_sales_by_fiscal_years_data)
-
-v_salesperson_sales_by_fiscal_years_data %>% filter(salespersonid == 275)
->>>>>>> 2497c14095e324ad8478dc08fd2abb250b0ce801
 ```
-Local idioms for looking at a view itself will vary.  Here is the code that will work for PostgreSQL:
-
-```{r}
-view_definition <- dbGetQuery(con, "select pg_get_viewdef('sales.vsalespersonsalesbyfiscalyearsdata', true)")
-str(view_definition)
-
-cat(str_replace_all(view_definition$pg_get_viewdef, "\\\\\\\\n", "\\\\n")) 
-  
-```
-
-Even if you don't intend to become fluent in SQL, it's useful to read as much of it as possible.  
 
 Do a crude version with `sales_order_year`.  All of the work can be done on the database server.
 
@@ -258,7 +180,6 @@ sales_data_fiscal_year <- sales_person %>%
   
 ```
 
-<<<<<<< HEAD
 Put the two parts together: `sales_data_fiscal_year` and `person_info` to yeild the final query.
 
 ```{r}
@@ -295,10 +216,6 @@ Different environments / SQL dialects
 
 ### Revise the view
 
-=======
->>>>>>> 2497c14095e324ad8478dc08fd2abb250b0ce801
-## Writing your own or modifying a view
-
   * What about by month? This could be motivation for creating a new view that does aggregation in the database, rather than in R.
   * See SQL code for 'vsalespersonsalesbyfiscalyearsdata'. Consider:
   * Modifying that to include quantity of sales.
@@ -309,42 +226,7 @@ Different environments / SQL dialects
      * Syed Abbas
   * Making the change may not be your prerogative, but it's your responsibility to propose any reasonable changes to those who have the authority to make the make the change.
 
-Save and study the SQL
 
-<<<<<<< HEAD
-=======
-Save and study the SQL
-
-t_salesperson_sales_by_fiscal_years_data %>% 
-
-```{r}
-rm(t_salesperson_sales_by_fiscal_years_data)
-t_salesperson_sales_by_fiscal_years_data <- 
-  tbl(con, in_schema("sales", "salesperson")) %>% 
-  select(-territoryid) %>% 
-  
-  left_join(tbl(con, in_schema("sales", "salesorderheader")), by = c("businessentityid" = "salespersonid")) %>%
-  mutate(fiscalyear = year(orderdate)) %>% 
-  
-  left_join(tbl(con, in_schema("sales", "salesterritory")), by = c("territoryid" = "territoryid")) %>%
-    rename(sales_territory = name) %>% 
-  
-  left_join(tbl(con, in_schema("humanresources", "employee")), by = c("businessentityid" = "businessentityid")) %>%
-
-    left_join(tbl(con, in_schema("person", "person")), by = c("businessentityid" = "businessentityid")) %>%
-  mutate(fullname = paste(firstname, middlename, lastname)) %>% 
-  
-  group_by(businessentityid, fullname, jobtitle, sales_territory, fiscalyear) %>% 
-  
-  summarize(subtotal = sum(subtotal) ) %>% 
-collect() %>% ungroup()
-
-t_salesperson_sales_by_fiscal_years_data
-skim(t_salesperson_sales_by_fiscal_years_data)
-
-t_salesperson_sales_by_fiscal_years_data %>% filter(businessentityid == 275)
-```
->>>>>>> 2497c14095e324ad8478dc08fd2abb250b0ce801
 
 ## Save a `view` in the database
 
