@@ -1,9 +1,10 @@
-# Leveraging Database Views {#chapter_leveraging-datbase-views}
+# Leveraging Database Views {#chapter_leveraging-database-views}
 
 > This chapter demonstrates how to:
 >
->   * Investigate a database from a business perspective
->   * Dig into a single Adventureworks table containing sales data
+>   * Assess database views, understand their importance
+>   * Unpack a database view and check its assumptions
+>   * Create a database view either for personal use or for submittal to your enterprise DBA
 
 
 ## Setup our standard working environment
@@ -11,7 +12,7 @@
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 options(digits = 10)
-sleep_default <- 3
+sleep_default <- 1
 ```
 
 Use these libraries:
@@ -26,7 +27,7 @@ library(sqlpetr)
 library(bookdown)
 library(here)
 library(lubridate)
-library(gt)
+library(skimr)
 
 library(scales) # ggplot xy scales
 theme_set(theme_light())
@@ -46,32 +47,222 @@ con <- sp_get_postgres_connection(
 )
 ```
 
-## Existing views as a resource
 
-### Define a database `view`
+## The role of database `views`
 
-??
+A database `view` is an SQL query that is stored in the database.  Most `views` are used for data retrieval, since they usually denormalize the tables involved.  Because they are standardized and well-understood, they can save you a lot of work.
 
-Three reasons for views:
+### Why database `views` are useful
+
+Database `views` are useful for many reasons.
+
+  * **Authoritative**: database `views` are typically written by the business application vendor or DBA, so they contain authoritative knowledge about the structure and intended use of the database.
+  * **Performance**: `views` are designed to gather data in an efficient way, using all the indexes in an efficient sequence and doing as much work on the database server as possible.
+  * **Abstraction**: `views` are abstractions or simplifications of complex queries that provide customary (useful) aggregations.  Common examples would be monthly totals or aggregation of activity tied to one individual.
+  * **Reuse**: a `view` puts commonly used code in one place where it can be used for many purposes by many people. If there is a change or a problem found in a `view`, it only needs to be fixed in one place, rather than having to change many places downstream.
+  * **Security**: a view can give selective access to someone who does not have access to underlying tables or columns.
+  * **Provenance**: `views` standardize data provenance.  For example, the `AdventureWorks` database all of them are named in a consistent way that suggests the underlying tables that they query.  And they all start with a **v**.
+
+### Rely on **and** be critical of `views`
+
+Because they represent a conventional view of the database, a `view` may seem quite boring; remember why they are very important. Just because they are conventional and authorized, they may still need verification or auditing when used for a purpose other than the original intent. They can guide you toward what you need from the database but they could also mislead because they are easy to use and available.  People may forget why a specific view exists and who is using it. Therefore any given view might be a forgotten vestige or part of an production data pipeline or might a priceless nugget of insight.
+
+### How to unpack and inspect a `view`
+
+From a retrieval perspective a database `view` is just like any other table.  Using a view to retrieve data from the database will be completely standard across all flavors of SQL.  (To find out what a view does behind the scenes requires that you use functions that are **not** standard.)
+
+```{r}
+v_salesperson_sales_by_fiscal_years_data <- 
+  tbl(con, in_schema("sales","vsalespersonsalesbyfiscalyearsdata")) %>% 
+  collect()
+
+str(v_salesperson_sales_by_fiscal_years_data)
+
+skim(tbl(con, in_schema("sales","vsalespersonsalesbyfiscalyearsdata")))
+
+tbl(con, in_schema("sales","vsalespersonsalesbyfiscalyearsdata")) %>% filter(salespersonid == 275)
+```
+Local idioms for looking at a view itself will vary.  Here is the code to retrieve a PostgreSQL view (using the `pg_get_viewdef` function):
+
+```{r}
+view_definition <- dbGetQuery(con, "select 
+                   pg_get_viewdef('sales.vsalespersonsalesbyfiscalyearsdata', 
+                   true)")
+
+str(view_definition)
+
+cat(str_replace_all(view_definition$pg_get_viewdef, "\\\\\\\\n", "\\\\n")) 
+```
+
+Even if you don't intend to become fluent in SQL, it's useful to read as much of it as possible.  
+
+To understand this query, you really need to have the ERD handy.  The ERD for `AdventureWorks` is [here](https://i.stack.imgur.com/LMu4W.gif)
+
+![](https://i.stack.imgur.com/LMu4W.gif)
+
+
+## Reproduce the `view` with dplyr
+
+Save and study the SQL.
+
+Define each table that is involved and identify the columns that will be needed from that table.
+
+```{r}
+
+sales_order_header <- tbl(con, in_schema("sales", "salesorderheader")) %>% 
+  # Because we're lazy, we will keep both a crude `year` column and `orderdate` for later use
+  mutate(sales_order_year = year(orderdate)) %>% 
+  select(sales_order_year, salespersonid, subtotal, orderdate) 
+
+sales_territory <- tbl(con, in_schema("sales", "salesterritory")) %>% 
+    select(territoryid, territory_name = name) 
+  
+sales_person <- tbl(con, in_schema("sales", "salesperson")) %>% 
+  select(businessentityid, territoryid) 
+
+employee <- tbl(con, in_schema("humanresources", "employee")) %>% 
+  select(businessentityid, jobtitle)
+
+person <- tbl(con, in_schema("person", "person")) %>% 
+  mutate(fullname = paste(firstname, middlename, lastname)) %>% 
+  select(businessentityid, fullname)
+
+```
+
+Double check on the names that are defined in each `tbl` object.
+
+```{r}
+getnames <- function(table) {
+  {table} %>% collect(n = 5) %>% names()
+}
+getnames(employee)
+getnames(person)
+getnames(sales_person)
+getnames(sales_order_header)
+getnames(sales_territory)
+```
+
+## Define a database `view`
+
+  * A `view` is query that is stored in the database 
+  * Can be used to read or write to the database in a standardized and well-understood way
+
+### Why views are useful
+
+Reasons for views:
+
   * Performance: aggregation calculations done on the server.
   * Conceptual abstraction/simplification, e.g. looking at monthly subtotals, rather than having to do the aggregation in each of your   * queries.
   * Reuse: putting commonly used code in one place.
     * If you find any problems, it only needs to be fixed in one place.
-    * Simplifies downstream code, which will be simpler.
-  * Managing data provenance 
+    * Simplifies downstream code, so easier to read and maintain.
+  * Security: a view can give access to someone who does not have access to underlying tables.
+  * Standardizes data provenance 
 
+## Existing views as a resource
+
+  * Authoritative
   * They are boring, but very important
 
-### Unpack and inspect a view
-```{r}
-dbGetQuery(con, "select pg_get_viewdef('sales.vsalespersonsalesbyfiscalyearsdata', true)")
-x <- tbl(con, in_schema("sales","vsalespersonsalesbyfiscalyearsdata")) %>% collect()
 
+### How to unpack and inspect a view
+
+Using a view to retireve data from the database will be completely standard across all flavors of SQL.
+
+```{r}
+v_salesperson_sales_by_fiscal_years_data <- tbl(con, in_schema("sales","vsalespersonsalesbyfiscalyearsdata")) %>% collect()
+
+str(v_salesperson_sales_by_fiscal_years_data)
+
+skim(v_salesperson_sales_by_fiscal_years_data)
+
+v_salesperson_sales_by_fiscal_years_data %>% filter(salespersonid == 275)
+```
+Local idioms for looking at a view itself will vary.  Here is the code that will work for PostgreSQL:
+
+```{r}
+view_definition <- dbGetQuery(con, "select pg_get_viewdef('sales.vsalespersonsalesbyfiscalyearsdata', true)")
+str(view_definition)
+
+cat(str_replace_all(view_definition$pg_get_viewdef, "\\\\\\\\n", "\\\\n")) 
+  
 ```
 
-### We recommend leverageing them
+Even if you don't intend to become fluent in SQL, it's useful to read as much of it as possible.  
 
-## Modifying a view
+Join all of the data pertaining to a person.
+
+```{r}
+salesperson_info <- sales_person %>% 
+  left_join(employee) %>% 
+  left_join(person) %>% 
+  left_join(sales_territory) %>%
+  collect()
+
+str(salesperson_info)
+```
+
+Do a crude version with `sales_order_year`.  All of the work can be done on the database server.
+
+```{r}
+sales_data_year <- sales_person %>% 
+  left_join(sales_order_header, by = c("businessentityid" = "salespersonid")) %>% 
+  group_by(businessentityid, sales_order_year) %>% 
+  summarize(sales_total = sum(subtotal, na.rm = TRUE))  %>%
+  collect()
+  
+```
+
+Lubridate makes it very easy to convert `orderdate` to `fiscal_year`.  Doing that conversion interleaving dplyr and **ANSI-STANDARD** SQL is harder.  Too lazy!
+
+```{r}
+sales_data_fiscal_year <- sales_person %>% 
+  left_join(sales_order_header, by = c("businessentityid" = "salespersonid")) %>% 
+  collect() %>% 
+  mutate(fiscal_year = year(orderdate %m+% months(6))) %>% 
+  group_by(businessentityid, fiscal_year) %>%
+  summarize(sales_total = sum(subtotal, na.rm = TRUE)) %>% 
+  ungroup()
+  
+```
+
+Put the two parts together: `sales_data_fiscal_year` and `person_info` to yeild the final query.
+
+```{r}
+salesperson_sales_by_fiscal_years_dplyr <- sales_data_fiscal_year %>% 
+  left_join(salesperson_info) %>% 
+  filter(!is.na(territoryid))
+```
+ Notice that we're droping the Sales Managers -- who don't have a `territoryid`.
+
+### Compare the two versions
+
+Use `pivot_wider` to make it easier to compare the native view to our dplyr version.
+
+```{r}
+salesperson_sales_by_fiscal_years_dplyr %>% 
+  select(-jobtitle, - territoryid) %>% 
+  pivot_wider(names_from = fiscal_year, values_from = sales_total)
+
+v_salesperson_sales_by_fiscal_years_data %>% 
+  select(-jobtitle) %>%
+  pivot_wider(names_from = fiscalyear, values_from = salestotal)
+```
+
+The column names don't match up, partly because we are using snake case convention for derived elements.
+
+```{r}
+names(salesperson_sales_by_fiscal_years_dplyr) %>% sort()
+names(v_salesperson_sales_by_fiscal_years_data) %>% sort()
+```
+
+Why 3 sales folks in vsalesperson don’t show up in 2014 vsalespersonsalesbyfiscalyearsdata
+
+Different environments / SQL dialects
+
+### Revise the view
+
+## Writing your own or modifying a view
 
   * What about by month? This could be motivation for creating a new view that does aggregation in the database, rather than in R.
   * See SQL code for 'vsalespersonsalesbyfiscalyearsdata'. Consider:
@@ -81,11 +272,10 @@ x <- tbl(con, in_schema("sales","vsalespersonsalesbyfiscalyearsdata")) %>% colle
      * Amy Alberts
      * Stephen Jiang
      * Syed Abbas
+  * Making the change may not be your prerogative, but it's your responsibility to propose any reasonable changes to those who have the authority to make the make the change.
 
-### First draft with dplyr
+Save and study the SQL
 
-Save the SQL
 
-Why 3 sales folks in vsalesperson don’t show up in 2014 vsalespersonsalesbyfiscalyearsdata
+## Save a `view` in the database
 
-Different environments / SQL dialects

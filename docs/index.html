@@ -24,7 +24,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, and Ian Frantz" />
 
 
-<meta name="date" content="2019-11-21" />
+<meta name="date" content="2019-11-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -47,9 +47,9 @@
 
 
 
-<script src="libs/htmlwidgets-1.3/htmlwidgets.js"></script>
+<script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.9/datatables.js"></script>
+<script src="libs/datatables-binding-0.10/datatables.js"></script>
 <link href="libs/dt-core-1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" />
 <link href="libs/dt-core-1.10.19/css/jquery.dataTables.extra.css" rel="stylesheet" />
 <script src="libs/dt-core-1.10.19/js/jquery.dataTables.min.js"></script>
@@ -297,13 +297,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="12" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html"><i class="fa fa-check"></i><b>12</b> Leveraging Database Views</a><ul>
 <li class="chapter" data-level="12.1" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#setup-our-standard-working-environment-1"><i class="fa fa-check"></i><b>12.1</b> Setup our standard working environment</a></li>
-<li class="chapter" data-level="12.2" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#existing-views-as-a-resource"><i class="fa fa-check"></i><b>12.2</b> Existing views as a resource</a><ul>
-<li class="chapter" data-level="12.2.1" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#define-a-database-view"><i class="fa fa-check"></i><b>12.2.1</b> Define a database <code>view</code></a></li>
-<li class="chapter" data-level="12.2.2" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#unpack-and-inspect-a-view"><i class="fa fa-check"></i><b>12.2.2</b> Unpack and inspect a view</a></li>
-<li class="chapter" data-level="12.2.3" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#we-recommend-leverageing-them"><i class="fa fa-check"></i><b>12.2.3</b> We recommend leverageing them</a></li>
+<li class="chapter" data-level="12.2" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#define-a-database-view"><i class="fa fa-check"></i><b>12.2</b> Define a database <code>view</code></a><ul>
+<li class="chapter" data-level="12.2.1" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#why-views-are-useful"><i class="fa fa-check"></i><b>12.2.1</b> Why views are useful</a></li>
 </ul></li>
-<li class="chapter" data-level="12.3" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#modifying-a-view"><i class="fa fa-check"></i><b>12.3</b> Modifying a view</a><ul>
-<li class="chapter" data-level="12.3.1" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#first-draft-with-dplyr"><i class="fa fa-check"></i><b>12.3.1</b> First draft with dplyr</a></li>
+<li class="chapter" data-level="12.3" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#existing-views-as-a-resource"><i class="fa fa-check"></i><b>12.3</b> Existing views as a resource</a><ul>
+<li class="chapter" data-level="12.3.1" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#how-to-unpack-and-inspect-a-view"><i class="fa fa-check"></i><b>12.3.1</b> How to unpack and inspect a view</a></li>
+<li class="chapter" data-level="12.3.2" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#we-recommend-leverageing-them"><i class="fa fa-check"></i><b>12.3.2</b> We recommend leverageing them</a></li>
+</ul></li>
+<li class="chapter" data-level="12.4" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#writing-your-own-or-modifying-a-view"><i class="fa fa-check"></i><b>12.4</b> Writing your own or modifying a view</a><ul>
+<li class="chapter" data-level="12.4.1" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#first-draft-with-dplyr"><i class="fa fa-check"></i><b>12.4.1</b> First draft with dplyr</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="13" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html"><i class="fa fa-check"></i><b>13</b> Getting metadata about and from PostgreSQL</a><ul>
@@ -434,7 +436,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">Exploring Enterprise Databases with R: A Tidyverse Approach</h1>
 <p class="author"><em>John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, and Ian Frantz</em></p>
-<p class="date"><em>2019-11-21</em></p>
+<p class="date"><em>2019-11-23</em></p>
 </div>
 <div id="chapter_introduction" class="section level1">
 <h1><span class="header-section-number">Chapter 1</span> Introduction</h1>

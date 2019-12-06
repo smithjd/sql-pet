@@ -24,7 +24,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, and Ian Frantz" />
 
 
-<meta name="date" content="2019-11-21" />
+<meta name="date" content="2019-11-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -47,9 +47,9 @@
 
 
 
-<script src="libs/htmlwidgets-1.3/htmlwidgets.js"></script>
+<script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.9/datatables.js"></script>
+<script src="libs/datatables-binding-0.10/datatables.js"></script>
 <link href="libs/dt-core-1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" />
 <link href="libs/dt-core-1.10.19/css/jquery.dataTables.extra.css" rel="stylesheet" />
 <script src="libs/dt-core-1.10.19/js/jquery.dataTables.min.js"></script>
@@ -297,13 +297,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="12" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html"><i class="fa fa-check"></i><b>12</b> Leveraging Database Views</a><ul>
 <li class="chapter" data-level="12.1" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#setup-our-standard-working-environment-1"><i class="fa fa-check"></i><b>12.1</b> Setup our standard working environment</a></li>
-<li class="chapter" data-level="12.2" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#existing-views-as-a-resource"><i class="fa fa-check"></i><b>12.2</b> Existing views as a resource</a><ul>
-<li class="chapter" data-level="12.2.1" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#define-a-database-view"><i class="fa fa-check"></i><b>12.2.1</b> Define a database <code>view</code></a></li>
-<li class="chapter" data-level="12.2.2" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#unpack-and-inspect-a-view"><i class="fa fa-check"></i><b>12.2.2</b> Unpack and inspect a view</a></li>
-<li class="chapter" data-level="12.2.3" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#we-recommend-leverageing-them"><i class="fa fa-check"></i><b>12.2.3</b> We recommend leverageing them</a></li>
+<li class="chapter" data-level="12.2" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#define-a-database-view"><i class="fa fa-check"></i><b>12.2</b> Define a database <code>view</code></a><ul>
+<li class="chapter" data-level="12.2.1" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#why-views-are-useful"><i class="fa fa-check"></i><b>12.2.1</b> Why views are useful</a></li>
 </ul></li>
-<li class="chapter" data-level="12.3" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#modifying-a-view"><i class="fa fa-check"></i><b>12.3</b> Modifying a view</a><ul>
-<li class="chapter" data-level="12.3.1" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#first-draft-with-dplyr"><i class="fa fa-check"></i><b>12.3.1</b> First draft with dplyr</a></li>
+<li class="chapter" data-level="12.3" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#existing-views-as-a-resource"><i class="fa fa-check"></i><b>12.3</b> Existing views as a resource</a><ul>
+<li class="chapter" data-level="12.3.1" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#how-to-unpack-and-inspect-a-view"><i class="fa fa-check"></i><b>12.3.1</b> How to unpack and inspect a view</a></li>
+<li class="chapter" data-level="12.3.2" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#we-recommend-leverageing-them"><i class="fa fa-check"></i><b>12.3.2</b> We recommend leverageing them</a></li>
+</ul></li>
+<li class="chapter" data-level="12.4" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#writing-your-own-or-modifying-a-view"><i class="fa fa-check"></i><b>12.4</b> Writing your own or modifying a view</a><ul>
+<li class="chapter" data-level="12.4.1" data-path="chapter-leveraging-datbase-views.html"><a href="chapter-leveraging-datbase-views.html#first-draft-with-dplyr"><i class="fa fa-check"></i><b>12.4.1</b> First draft with dplyr</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="13" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html"><i class="fa fa-check"></i><b>13</b> Getting metadata about and from PostgreSQL</a><ul>
@@ -513,8 +515,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>The <code>dplyr::tbl</code> function gives us more control over access to a table by enabling control over which columns and rows to download. It creates an object that might <strong>look</strong> like a data frame, but it’s actually a list object that <code>dplyr</code> uses for constructing queries and retrieving data from the DBMS.</p>
 <div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb65-1" data-line-number="1">salesorderheader_table &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">tbl</span>(con, <span class="st">&quot;salesorderheader&quot;</span>)</a>
 <a class="sourceLine" id="cb65-2" data-line-number="2"><span class="kw">class</span>(salesorderheader_table)</a></code></pre></div>
-<pre><code>## [1] &quot;tbl_PqConnection&quot; &quot;tbl_dbi&quot;          &quot;tbl_sql&quot;         
-## [4] &quot;tbl_lazy&quot;         &quot;tbl&quot;</code></pre>
+<pre><code>## [1] &quot;tbl_PqConnection&quot; &quot;tbl_dbi&quot;          &quot;tbl_sql&quot;          &quot;tbl_lazy&quot;        
+## [5] &quot;tbl&quot;</code></pre>
 </div>
 <div id="controlling-the-number-of-rows-returned-with-collect" class="section level3">
 <h3><span class="header-section-number">7.2.3</span> Controlling the number of rows returned with <code>collect()</code></h3>
@@ -535,43 +537,39 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb71-6" data-line-number="6">)</a>
 <a class="sourceLine" id="cb71-7" data-line-number="7"></a>
 <a class="sourceLine" id="cb71-8" data-line-number="8">one_percent_sample</a></code></pre></div>
-<pre><code>##     orderdate   subtotal    taxamt   freight   totaldue
-## 1  2011-05-31  5056.4896  486.3747  151.9921  5694.8564
-## 2  2011-06-01  3578.2700  286.2616   89.4568  3953.9884
-## 3  2011-06-27   699.0982   55.9279   17.4775   772.5036
-## 4  2011-07-01 20249.9400 1943.9942  607.4982 22801.4324
-## 5  2011-07-13  3578.2700  286.2616   89.4568  3953.9884
-## 6  2011-07-15  3399.9900  271.9992   84.9998  3756.9890
-## 7  2011-07-19   699.0982   55.9279   17.4775   772.5036
-## 8  2011-07-21  3578.2700  286.2616   89.4568  3953.9884
-## 9  2011-07-31  3578.2700  286.2616   89.4568  3953.9884
-## 10 2011-08-01  3578.2700  286.2616   89.4568  3953.9884
-## 11 2011-08-08  3578.2700  286.2616   89.4568  3953.9884
-## 12 2011-08-27  3578.2700  286.2616   89.4568  3953.9884
-## 13 2011-08-31 18880.6522 1814.8608  567.1440 21262.6570
-## 14 2011-08-31   699.0982   55.9279   17.4775   772.5036
-## 15 2011-09-01  3578.2700  286.2616   89.4568  3953.9884
-## 16 2011-09-05   699.0982   55.9279   17.4775   772.5036
-## 17 2011-09-07   699.0982   55.9279   17.4775   772.5036
-## 18 2011-09-25  3578.2700  286.2616   89.4568  3953.9884
-## 19 2011-09-29  3399.9900  271.9992   84.9998  3756.9890
-## 20 2011-10-01 41868.9060 4027.9405 1258.7314 47155.5779</code></pre>
+<pre><code>##     orderdate   subtotal    taxamt  freight   totaldue
+## 1  2011-05-31 14352.7713 1375.9427 429.9821 16158.6961
+## 2  2011-05-31  3399.9900  271.9992  84.9998  3756.9890
+## 3  2011-06-02  3578.2700  286.2616  89.4568  3953.9884
+## 4  2011-06-04  3578.2700  286.2616  89.4568  3953.9884
+## 5  2011-06-05  3578.2700  286.2616  89.4568  3953.9884
+## 6  2011-06-10  3578.2700  286.2616  89.4568  3953.9884
+## 7  2011-06-23  3578.2700  286.2616  89.4568  3953.9884
+## 8  2011-06-27  3578.2700  286.2616  89.4568  3953.9884
+## 9  2011-06-29  3374.9900  269.9992  84.3748  3729.3640
+## 10 2011-06-30   699.0982   55.9279  17.4775   772.5036
+## 11 2011-07-01 19734.8665 1896.6545 592.7045 22224.2255
+## 12 2011-07-01  3578.2700  286.2616  89.4568  3953.9884
+## 13 2011-07-04  3578.2700  286.2616  89.4568  3953.9884
+## 14 2011-07-06  3578.2700  286.2616  89.4568  3953.9884
+## 15 2011-07-12  3578.2700  286.2616  89.4568  3953.9884
+## 16 2011-07-18  3578.2700  286.2616  89.4568  3953.9884
+## 17 2011-07-18  3374.9900  269.9992  84.3748  3729.3640
+## 18 2011-07-19   699.0982   55.9279  17.4775   772.5036
+## 19 2011-08-01  6654.7023  634.7888 198.3715  7487.8626
+## 20 2011-08-01 10680.7251 1021.8926 319.3414 12021.9591</code></pre>
 <p><strong>Exact sample of 100 records</strong></p>
 <p>This technique depends on knowing the range of a record index, such as the <code>businessentityid</code> in the <code>salesorderheader</code> table of our <code>adventureworks</code> database.</p>
 <p>Start by finding the min and max values.</p>
 <div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb73-1" data-line-number="1">DBI<span class="op">::</span><span class="kw">dbListFields</span>(con, <span class="st">&quot;salesorderheader&quot;</span>)</a></code></pre></div>
-<pre><code>##  [1] &quot;salesorderid&quot;           &quot;revisionnumber&quot;        
-##  [3] &quot;orderdate&quot;              &quot;duedate&quot;               
-##  [5] &quot;shipdate&quot;               &quot;status&quot;                
-##  [7] &quot;onlineorderflag&quot;        &quot;purchaseordernumber&quot;   
-##  [9] &quot;accountnumber&quot;          &quot;customerid&quot;            
-## [11] &quot;salespersonid&quot;          &quot;territoryid&quot;           
-## [13] &quot;billtoaddressid&quot;        &quot;shiptoaddressid&quot;       
-## [15] &quot;shipmethodid&quot;           &quot;creditcardid&quot;          
-## [17] &quot;creditcardapprovalcode&quot; &quot;currencyrateid&quot;        
-## [19] &quot;subtotal&quot;               &quot;taxamt&quot;                
-## [21] &quot;freight&quot;                &quot;totaldue&quot;              
-## [23] &quot;comment&quot;                &quot;rowguid&quot;               
+<pre><code>##  [1] &quot;salesorderid&quot;           &quot;revisionnumber&quot;         &quot;orderdate&quot;             
+##  [4] &quot;duedate&quot;                &quot;shipdate&quot;               &quot;status&quot;                
+##  [7] &quot;onlineorderflag&quot;        &quot;purchaseordernumber&quot;    &quot;accountnumber&quot;         
+## [10] &quot;customerid&quot;             &quot;salespersonid&quot;          &quot;territoryid&quot;           
+## [13] &quot;billtoaddressid&quot;        &quot;shiptoaddressid&quot;        &quot;shipmethodid&quot;          
+## [16] &quot;creditcardid&quot;           &quot;creditcardapprovalcode&quot; &quot;currencyrateid&quot;        
+## [19] &quot;subtotal&quot;               &quot;taxamt&quot;                 &quot;freight&quot;               
+## [22] &quot;totaldue&quot;               &quot;comment&quot;                &quot;rowguid&quot;               
 ## [25] &quot;modifieddate&quot;</code></pre>
 <div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb75-1" data-line-number="1">salesorderheader_df &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbReadTable</span>(con, <span class="st">&quot;salesorderheader&quot;</span>)</a>
 <a class="sourceLine" id="cb75-2" data-line-number="2"></a>
@@ -818,89 +816,556 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb107-1" data-line-number="1">tibble<span class="op">::</span><span class="kw">glimpse</span>(salesorderheader_tibble)</a></code></pre></div>
 <pre><code>## Observations: 31,465
 ## Variables: 13
-## $ salesorderid        &lt;int&gt; 43659, 43660, 43661, 43662, 43663, 43664, 43…
-## $ revisionnumber      &lt;int&gt; 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8,…
-## $ orderdate           &lt;dttm&gt; 2011-05-31, 2011-05-31, 2011-05-31, 2011-05…
-## $ duedate             &lt;dttm&gt; 2011-06-12, 2011-06-12, 2011-06-12, 2011-06…
-## $ shipdate            &lt;dttm&gt; 2011-06-07, 2011-06-07, 2011-06-07, 2011-06…
-## $ status              &lt;int&gt; 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,…
-## $ onlineorderflag     &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FA…
-## $ purchaseordernumber &lt;chr&gt; &quot;PO522145787&quot;, &quot;PO18850127500&quot;, &quot;PO184731896…
-## $ accountnumber       &lt;chr&gt; &quot;10-4020-000676&quot;, &quot;10-4020-000117&quot;, &quot;10-4020…
-## $ customerid          &lt;int&gt; 29825, 29672, 29734, 29994, 29565, 29898, 29…
-## $ salespersonid       &lt;int&gt; 279, 279, 282, 282, 276, 280, 283, 276, 277,…
-## $ territoryid         &lt;int&gt; 5, 5, 6, 6, 4, 1, 1, 4, 3, 6, 1, 3, 1, 6, 2,…
-## $ billtoaddressid     &lt;int&gt; 985, 921, 517, 482, 1073, 876, 849, 1074, 62…</code></pre>
+## $ salesorderid        &lt;int&gt; 43659, 43660, 43661, 43662, 43663, 43664, 43665, …
+## $ revisionnumber      &lt;int&gt; 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8…
+## $ orderdate           &lt;dttm&gt; 2011-05-31, 2011-05-31, 2011-05-31, 2011-05-31, …
+## $ duedate             &lt;dttm&gt; 2011-06-12, 2011-06-12, 2011-06-12, 2011-06-12, …
+## $ shipdate            &lt;dttm&gt; 2011-06-07, 2011-06-07, 2011-06-07, 2011-06-07, …
+## $ status              &lt;int&gt; 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5…
+## $ onlineorderflag     &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, …
+## $ purchaseordernumber &lt;chr&gt; &quot;PO522145787&quot;, &quot;PO18850127500&quot;, &quot;PO18473189620&quot;, …
+## $ accountnumber       &lt;chr&gt; &quot;10-4020-000676&quot;, &quot;10-4020-000117&quot;, &quot;10-4020-0004…
+## $ customerid          &lt;int&gt; 29825, 29672, 29734, 29994, 29565, 29898, 29580, …
+## $ salespersonid       &lt;int&gt; 279, 279, 282, 282, 276, 280, 283, 276, 277, 282,…
+## $ territoryid         &lt;int&gt; 5, 5, 6, 6, 4, 1, 1, 4, 3, 6, 1, 3, 1, 6, 2, 6, 3…
+## $ billtoaddressid     &lt;int&gt; 985, 921, 517, 482, 1073, 876, 849, 1074, 629, 52…</code></pre>
 </div>
 <div id="the-skim-function-in-the-skimr-package" class="section level3">
 <h3><span class="header-section-number">7.5.5</span> The <code>skim</code> function in the <code>skimr</code> package</h3>
 <p>The <code>skimr</code> package has several functions that make it easy to examine an unknown data frame and assess what it contains. It is also extensible.</p>
 <div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb109-1" data-line-number="1">skimr<span class="op">::</span><span class="kw">skim</span>(salesorderheader_tibble)</a></code></pre></div>
-<pre><code>## Skim summary statistics
-##  n obs: 31465 
-##  n variables: 13 
-## 
-## ── Variable type:character ───────────────────────────────
-##             variable missing complete     n min max empty n_unique
-##        accountnumber       0    31465 31465  14  14     0    19119
-##  purchaseordernumber   27659     3806 31465  10  13     0     3806
-## 
-## ── Variable type:integer ─────────────────────────────────
-##         variable missing complete     n     mean       sd    p0   p25
-##  billtoaddressid       0    31465 31465 18263.15 8210.07    405 14080
-##       customerid       0    31465 31465 20170.18 6261.73  11000 14432
-##   revisionnumber       0    31465 31465     8       0.031     8     8
-##     salesorderid       0    31465 31465 59391    9083.31  43659 51525
-##    salespersonid   27659     3806 31465   280.61    4.85    274   277
-##           status       0    31465 31465     5       0         5     5
-##      territoryid       0    31465 31465     6.09    2.96      1     4
-##    p50   p75  p100     hist
-##  19449 24678 29883 ▆▁▁▇▇▇▇▇
-##  19452 25994 30118 ▇▆▅▅▃▃▅▇
-##      8     8     9 ▇▁▁▁▁▁▁▁
-##  59391 67257 75123 ▇▇▇▇▇▇▇▇
-##    279   284   290 ▇▆▅▅▃▁▂▅
-##      5     5     5 ▁▁▁▇▁▁▁▁
-##      6     9    10 ▃▁▅▁▃▂▂▇
-## 
-## ── Variable type:logical ─────────────────────────────────
-##         variable missing complete     n mean                        count
-##  onlineorderflag       0    31465 31465 0.88 TRU: 27659, FAL: 3806, NA: 0
-## 
-## ── Variable type:POSIXct ─────────────────────────────────
-##   variable missing complete     n        min        max     median
-##    duedate       0    31465 31465 2011-06-12 2014-07-12 2013-11-15
-##  orderdate       0    31465 31465 2011-05-31 2014-06-30 2013-11-03
-##   shipdate       0    31465 31465 2011-06-07 2014-07-07 2013-11-10
-##  n_unique
-##      1124
-##      1124
-##      1124</code></pre>
-<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb111-1" data-line-number="1">skimr<span class="op">::</span><span class="kw">skim_to_wide</span>(salesorderheader_tibble) <span class="co">#skimr doesn&#39;t like certain kinds of columns</span></a></code></pre></div>
-<pre><code>## # A tibble: 13 x 19
-##    type  variable missing complete n     min   max   empty n_unique mean 
-##    &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;   &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;
-##  1 char… account… 0       31465    31465 14    14    0     19119    &lt;NA&gt; 
-##  2 char… purchas… 27659   3806     31465 10    13    0     3806     &lt;NA&gt; 
-##  3 inte… billtoa… 0       31465    31465 &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;     1826…
-##  4 inte… custome… 0       31465    31465 &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;     2017…
-##  5 inte… revisio… 0       31465    31465 &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;     &quot;   …
-##  6 inte… salesor… 0       31465    31465 &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;     &quot;593…
-##  7 inte… salespe… 27659   3806     31465 &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;     &quot;  2…
-##  8 inte… status   0       31465    31465 &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;     &quot;   …
-##  9 inte… territo… 0       31465    31465 &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;     &quot;   …
-## 10 logi… onlineo… 0       31465    31465 &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;     0.88 
-## 11 POSI… duedate  0       31465    31465 2011… 2014… &lt;NA&gt;  1124     &lt;NA&gt; 
-## 12 POSI… orderda… 0       31465    31465 2011… 2014… &lt;NA&gt;  1124     &lt;NA&gt; 
-## 13 POSI… shipdate 0       31465    31465 2011… 2014… &lt;NA&gt;  1124     &lt;NA&gt; 
-## # … with 9 more variables: sd &lt;chr&gt;, p0 &lt;chr&gt;, p25 &lt;chr&gt;, p50 &lt;chr&gt;,
-## #   p75 &lt;chr&gt;, p100 &lt;chr&gt;, hist &lt;chr&gt;, count &lt;chr&gt;, median &lt;chr&gt;</code></pre>
+<table>
+<caption><span id="tab:unnamed-chunk-24">Table 7.1: </span>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td align="left">Name</td>
+<td align="left">salesorderheader_tibble</td>
+</tr>
+<tr class="even">
+<td align="left">Number of rows</td>
+<td align="left">31465</td>
+</tr>
+<tr class="odd">
+<td align="left">Number of columns</td>
+<td align="left">13</td>
+</tr>
+<tr class="even">
+<td align="left">_______________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Column type frequency:</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">character</td>
+<td align="left">2</td>
+</tr>
+<tr class="odd">
+<td align="left">logical</td>
+<td align="left">1</td>
+</tr>
+<tr class="even">
+<td align="left">numeric</td>
+<td align="left">7</td>
+</tr>
+<tr class="odd">
+<td align="left">POSIXct</td>
+<td align="left">3</td>
+</tr>
+<tr class="even">
+<td align="left">________________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Group variables</td>
+<td align="left">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: character</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">min</th>
+<th align="right">max</th>
+<th align="right">empty</th>
+<th align="right">n_unique</th>
+<th align="right">whitespace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">purchaseordernumber</td>
+<td align="right">27659</td>
+<td align="right">0.12</td>
+<td align="right">10</td>
+<td align="right">13</td>
+<td align="right">0</td>
+<td align="right">3806</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">accountnumber</td>
+<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="right">14</td>
+<td align="right">14</td>
+<td align="right">0</td>
+<td align="right">19119</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: logical</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">mean</th>
+<th align="left">count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">onlineorderflag</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0.88</td>
+<td align="left">TRU: 27659, FAL: 3806</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">mean</th>
+<th align="right">sd</th>
+<th align="right">p0</th>
+<th align="right">p25</th>
+<th align="right">p50</th>
+<th align="right">p75</th>
+<th align="right">p100</th>
+<th align="left">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">salesorderid</td>
+<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="right">59391.00</td>
+<td align="right">9083.31</td>
+<td align="right">43659</td>
+<td align="right">51525</td>
+<td align="right">59391</td>
+<td align="right">67257</td>
+<td align="right">75123</td>
+<td align="left">▇▇▇▇▇</td>
+</tr>
+<tr class="even">
+<td align="left">revisionnumber</td>
+<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="right">8.00</td>
+<td align="right">0.03</td>
+<td align="right">8</td>
+<td align="right">8</td>
+<td align="right">8</td>
+<td align="right">8</td>
+<td align="right">9</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+<tr class="odd">
+<td align="left">status</td>
+<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="right">5.00</td>
+<td align="right">0.00</td>
+<td align="right">5</td>
+<td align="right">5</td>
+<td align="right">5</td>
+<td align="right">5</td>
+<td align="right">5</td>
+<td align="left">▁▁▇▁▁</td>
+</tr>
+<tr class="even">
+<td align="left">customerid</td>
+<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="right">20170.18</td>
+<td align="right">6261.73</td>
+<td align="right">11000</td>
+<td align="right">14432</td>
+<td align="right">19452</td>
+<td align="right">25994</td>
+<td align="right">30118</td>
+<td align="left">▇▆▅▅▇</td>
+</tr>
+<tr class="odd">
+<td align="left">salespersonid</td>
+<td align="right">27659</td>
+<td align="right">0.12</td>
+<td align="right">280.61</td>
+<td align="right">4.85</td>
+<td align="right">274</td>
+<td align="right">277</td>
+<td align="right">279</td>
+<td align="right">284</td>
+<td align="right">290</td>
+<td align="left">▇▅▅▂▃</td>
+</tr>
+<tr class="even">
+<td align="left">territoryid</td>
+<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="right">6.09</td>
+<td align="right">2.96</td>
+<td align="right">1</td>
+<td align="right">4</td>
+<td align="right">6</td>
+<td align="right">9</td>
+<td align="right">10</td>
+<td align="left">▃▅▃▅▇</td>
+</tr>
+<tr class="odd">
+<td align="left">billtoaddressid</td>
+<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="right">18263.15</td>
+<td align="right">8210.07</td>
+<td align="right">405</td>
+<td align="right">14080</td>
+<td align="right">19449</td>
+<td align="right">24678</td>
+<td align="right">29883</td>
+<td align="left">▃▁▇▇▇</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: POSIXct</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="left">min</th>
+<th align="left">max</th>
+<th align="left">median</th>
+<th align="right">n_unique</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">orderdate</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="left">2011-05-31</td>
+<td align="left">2014-06-30</td>
+<td align="left">2013-11-03</td>
+<td align="right">1124</td>
+</tr>
+<tr class="even">
+<td align="left">duedate</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="left">2011-06-12</td>
+<td align="left">2014-07-12</td>
+<td align="left">2013-11-15</td>
+<td align="right">1124</td>
+</tr>
+<tr class="odd">
+<td align="left">shipdate</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="left">2011-06-07</td>
+<td align="left">2014-07-07</td>
+<td align="left">2013-11-10</td>
+<td align="right">1124</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb110-1" data-line-number="1">skimr<span class="op">::</span><span class="kw">skim_to_wide</span>(salesorderheader_tibble) <span class="co">#skimr doesn&#39;t like certain kinds of columns</span></a></code></pre></div>
+<pre><code>## Warning: &#39;skimr::skim_to_wide&#39; is deprecated.
+## Use &#39;skim()&#39; instead.
+## See help(&quot;Deprecated&quot;)</code></pre>
+<table>
+<caption><span id="tab:unnamed-chunk-24">Table 7.1: </span>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td align="left">Name</td>
+<td align="left">.data</td>
+</tr>
+<tr class="even">
+<td align="left">Number of rows</td>
+<td align="left">31465</td>
+</tr>
+<tr class="odd">
+<td align="left">Number of columns</td>
+<td align="left">13</td>
+</tr>
+<tr class="even">
+<td align="left">_______________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Column type frequency:</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">character</td>
+<td align="left">2</td>
+</tr>
+<tr class="odd">
+<td align="left">logical</td>
+<td align="left">1</td>
+</tr>
+<tr class="even">
+<td align="left">numeric</td>
+<td align="left">7</td>
+</tr>
+<tr class="odd">
+<td align="left">POSIXct</td>
+<td align="left">3</td>
+</tr>
+<tr class="even">
+<td align="left">________________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Group variables</td>
+<td align="left">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: character</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">min</th>
+<th align="right">max</th>
+<th align="right">empty</th>
+<th align="right">n_unique</th>
+<th align="right">whitespace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">purchaseordernumber</td>
+<td align="right">27659</td>
+<td align="right">0.12</td>
+<td align="right">10</td>
+<td align="right">13</td>
+<td align="right">0</td>
+<td align="right">3806</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">accountnumber</td>
+<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="right">14</td>
+<td align="right">14</td>
+<td align="right">0</td>
+<td align="right">19119</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: logical</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">mean</th>
+<th align="left">count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">onlineorderflag</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0.88</td>
+<td align="left">TRU: 27659, FAL: 3806</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">mean</th>
+<th align="right">sd</th>
+<th align="right">p0</th>
+<th align="right">p25</th>
+<th align="right">p50</th>
+<th align="right">p75</th>
+<th align="right">p100</th>
+<th align="left">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">salesorderid</td>
+<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="right">59391.00</td>
+<td align="right">9083.31</td>
+<td align="right">43659</td>
+<td align="right">51525</td>
+<td align="right">59391</td>
+<td align="right">67257</td>
+<td align="right">75123</td>
+<td align="left">▇▇▇▇▇</td>
+</tr>
+<tr class="even">
+<td align="left">revisionnumber</td>
+<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="right">8.00</td>
+<td align="right">0.03</td>
+<td align="right">8</td>
+<td align="right">8</td>
+<td align="right">8</td>
+<td align="right">8</td>
+<td align="right">9</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+<tr class="odd">
+<td align="left">status</td>
+<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="right">5.00</td>
+<td align="right">0.00</td>
+<td align="right">5</td>
+<td align="right">5</td>
+<td align="right">5</td>
+<td align="right">5</td>
+<td align="right">5</td>
+<td align="left">▁▁▇▁▁</td>
+</tr>
+<tr class="even">
+<td align="left">customerid</td>
+<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="right">20170.18</td>
+<td align="right">6261.73</td>
+<td align="right">11000</td>
+<td align="right">14432</td>
+<td align="right">19452</td>
+<td align="right">25994</td>
+<td align="right">30118</td>
+<td align="left">▇▆▅▅▇</td>
+</tr>
+<tr class="odd">
+<td align="left">salespersonid</td>
+<td align="right">27659</td>
+<td align="right">0.12</td>
+<td align="right">280.61</td>
+<td align="right">4.85</td>
+<td align="right">274</td>
+<td align="right">277</td>
+<td align="right">279</td>
+<td align="right">284</td>
+<td align="right">290</td>
+<td align="left">▇▅▅▂▃</td>
+</tr>
+<tr class="even">
+<td align="left">territoryid</td>
+<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="right">6.09</td>
+<td align="right">2.96</td>
+<td align="right">1</td>
+<td align="right">4</td>
+<td align="right">6</td>
+<td align="right">9</td>
+<td align="right">10</td>
+<td align="left">▃▅▃▅▇</td>
+</tr>
+<tr class="odd">
+<td align="left">billtoaddressid</td>
+<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="right">18263.15</td>
+<td align="right">8210.07</td>
+<td align="right">405</td>
+<td align="right">14080</td>
+<td align="right">19449</td>
+<td align="right">24678</td>
+<td align="right">29883</td>
+<td align="left">▃▁▇▇▇</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: POSIXct</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="left">min</th>
+<th align="left">max</th>
+<th align="left">median</th>
+<th align="right">n_unique</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">orderdate</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="left">2011-05-31</td>
+<td align="left">2014-06-30</td>
+<td align="left">2013-11-03</td>
+<td align="right">1124</td>
+</tr>
+<tr class="even">
+<td align="left">duedate</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="left">2011-06-12</td>
+<td align="left">2014-07-12</td>
+<td align="left">2013-11-15</td>
+<td align="right">1124</td>
+</tr>
+<tr class="odd">
+<td align="left">shipdate</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="left">2011-06-07</td>
+<td align="left">2014-07-07</td>
+<td align="left">2013-11-10</td>
+<td align="right">1124</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div id="disconnect-from-the-database-and-stop-docker-2" class="section level2">
 <h2><span class="header-section-number">7.6</span> Disconnect from the database and stop Docker</h2>
-<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb113-1" data-line-number="1"><span class="kw">dbDisconnect</span>(con)</a>
-<a class="sourceLine" id="cb113-2" data-line-number="2"><span class="kw">sp_docker_stop</span>(<span class="st">&quot;adventureworks&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb112-1" data-line-number="1"><span class="kw">dbDisconnect</span>(con)</a>
+<a class="sourceLine" id="cb112-2" data-line-number="2"><span class="kw">sp_docker_stop</span>(<span class="st">&quot;adventureworks&quot;</span>)</a></code></pre></div>
 </div>
 <div id="additional-reading" class="section level2">
 <h2><span class="header-section-number">7.7</span> Additional reading</h2>

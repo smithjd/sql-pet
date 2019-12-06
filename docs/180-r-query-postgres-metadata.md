@@ -202,13 +202,13 @@ glimpse(columns_info_schema_info)
 ```
 ## Observations: 2,961
 ## Variables: 7
-## $ table_catalog            <chr> "adventureworks", "adventureworks", "ad…
-## $ table_name               <chr> "pg_proc", "pg_proc", "pg_proc", "pg_pr…
-## $ column_name              <chr> "proname", "pronamespace", "proowner", …
-## $ data_type                <chr> "name", "oid", "oid", "oid", "real (24,…
-## $ ordinal_position         <int> 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, …
-## $ character_maximum_length <int> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…
-## $ column_default           <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…
+## $ table_catalog            <chr> "adventureworks", "adventureworks", "adventu…
+## $ table_name               <chr> "pg_proc", "pg_proc", "pg_proc", "pg_proc", …
+## $ column_name              <chr> "proname", "pronamespace", "proowner", "prol…
+## $ data_type                <chr> "name", "oid", "oid", "oid", "real (24,2)", …
+## $ ordinal_position         <int> 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 1…
+## $ character_maximum_length <int> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+## $ column_default           <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
 ```
 
 ```r
@@ -360,9 +360,9 @@ glimpse(rs)
 ```
 ## Observations: 467,838
 ## Variables: 3
-## $ table_name <chr> "adventureworks.hr.d", "adventureworks.hr.d", "advent…
-## $ conname    <chr> "FK_SalesOrderDetail_SpecialOfferProduct_SpecialOffer…
-## $ condef     <chr> "FOREIGN KEY (specialofferid, productid) REFERENCES s…
+## $ table_name <chr> "adventureworks.hr.d", "adventureworks.hr.d", "adventurewo…
+## $ conname    <chr> "FK_SalesOrderDetail_SpecialOfferProduct_SpecialOfferIDPro…
+## $ condef     <chr> "FOREIGN KEY (specialofferid, productid) REFERENCES sales.…
 ```
 
 ```r
@@ -451,12 +451,12 @@ glimpse(keys)
 ```
 ## Observations: 190
 ## Variables: 6
-## $ table_name       <chr> "address", "address", "addresstype", "billofmat…
-## $ table_type       <chr> "BASE TABLE", "BASE TABLE", "BASE TABLE", "BASE…
-## $ constraint_name  <chr> "FK_Address_StateProvince_StateProvinceID", "PK…
-## $ constraint_type  <chr> "FOREIGN KEY", "PRIMARY KEY", "PRIMARY KEY", "F…
-## $ column_name      <chr> "stateprovinceid", "addressid", "addresstypeid"…
-## $ ordinal_position <int> 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 2, 1, 1,…
+## $ table_name       <chr> "address", "address", "addresstype", "billofmaterial…
+## $ table_type       <chr> "BASE TABLE", "BASE TABLE", "BASE TABLE", "BASE TABL…
+## $ constraint_name  <chr> "FK_Address_StateProvince_StateProvinceID", "PK_Addr…
+## $ constraint_type  <chr> "FOREIGN KEY", "PRIMARY KEY", "PRIMARY KEY", "FOREIG…
+## $ column_name      <chr> "stateprovinceid", "addressid", "addresstypeid", "co…
+## $ ordinal_position <int> 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 2, 1, 1, 1, 2…
 ```
 
 ```r
@@ -482,34 +482,34 @@ head(rs)
 ```
 
 ```
-##                        conname connamespace contype condeferrable
-## 1 cardinal_number_domain_check        12771       c         FALSE
-## 2              yes_or_no_check        12771       c         FALSE
-## 3        CK_Employee_BirthDate        16386       c         FALSE
-## 4           CK_Employee_Gender        16386       c         FALSE
-## 5         CK_Employee_HireDate        16386       c         FALSE
-## 6    CK_Employee_MaritalStatus        16386       c         FALSE
-##   condeferred convalidated conrelid contypid conindid conparentid
-## 1       FALSE         TRUE        0    12785        0           0
-## 2       FALSE         TRUE        0    12797        0           0
-## 3       FALSE         TRUE    16450        0        0           0
-## 4       FALSE         TRUE    16450        0        0           0
-## 5       FALSE         TRUE    16450        0        0           0
-## 6       FALSE         TRUE    16450        0        0           0
-##   confrelid confupdtype confdeltype confmatchtype conislocal coninhcount
-## 1         0                                             TRUE           0
-## 2         0                                             TRUE           0
-## 3         0                                             TRUE           0
-## 4         0                                             TRUE           0
-## 5         0                                             TRUE           0
-## 6         0                                             TRUE           0
-##   connoinherit conkey confkey conpfeqop conppeqop conffeqop conexclop
-## 1        FALSE   <NA>    <NA>      <NA>      <NA>      <NA>      <NA>
-## 2        FALSE   <NA>    <NA>      <NA>      <NA>      <NA>      <NA>
-## 3        FALSE    {5}    <NA>      <NA>      <NA>      <NA>      <NA>
-## 4        FALSE    {7}    <NA>      <NA>      <NA>      <NA>      <NA>
-## 5        FALSE    {8}    <NA>      <NA>      <NA>      <NA>      <NA>
-## 6        FALSE    {6}    <NA>      <NA>      <NA>      <NA>      <NA>
+##                        conname connamespace contype condeferrable condeferred
+## 1 cardinal_number_domain_check        12771       c         FALSE       FALSE
+## 2              yes_or_no_check        12771       c         FALSE       FALSE
+## 3        CK_Employee_BirthDate        16386       c         FALSE       FALSE
+## 4           CK_Employee_Gender        16386       c         FALSE       FALSE
+## 5         CK_Employee_HireDate        16386       c         FALSE       FALSE
+## 6    CK_Employee_MaritalStatus        16386       c         FALSE       FALSE
+##   convalidated conrelid contypid conindid conparentid confrelid confupdtype
+## 1         TRUE        0    12785        0           0         0            
+## 2         TRUE        0    12797        0           0         0            
+## 3         TRUE    16450        0        0           0         0            
+## 4         TRUE    16450        0        0           0         0            
+## 5         TRUE    16450        0        0           0         0            
+## 6         TRUE    16450        0        0           0         0            
+##   confdeltype confmatchtype conislocal coninhcount connoinherit conkey confkey
+## 1                                 TRUE           0        FALSE   <NA>    <NA>
+## 2                                 TRUE           0        FALSE   <NA>    <NA>
+## 3                                 TRUE           0        FALSE    {5}    <NA>
+## 4                                 TRUE           0        FALSE    {7}    <NA>
+## 5                                 TRUE           0        FALSE    {8}    <NA>
+## 6                                 TRUE           0        FALSE    {6}    <NA>
+##   conpfeqop conppeqop conffeqop conexclop
+## 1      <NA>      <NA>      <NA>      <NA>
+## 2      <NA>      <NA>      <NA>      <NA>
+## 3      <NA>      <NA>      <NA>      <NA>
+## 4      <NA>      <NA>      <NA>      <NA>
+## 5      <NA>      <NA>      <NA>      <NA>
+## 6      <NA>      <NA>      <NA>      <NA>
 ##                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    conbin
 ## 1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         {OPEXPR :opno 525 :opfuncid 150 :opresulttype 16 :opretset false :opcollid 0 :inputcollid 0 :args ({COERCETODOMAINVALUE :typeId 23 :typeMod -1 :collation 0 :location 195} {CONST :consttype 23 :consttypmod -1 :constcollid 0 :constlen 4 :constbyval true :constisnull false :location 204 :constvalue 4 [ 0 0 0 0 0 0 0 0 ]}) :location 201}
 ## 2                                                                                                                                                                                 {SCALARARRAYOPEXPR :opno 98 :opfuncid 67 :useOr true :inputcollid 100 :args ({RELABELTYPE :arg {COERCETODOMAINVALUE :typeId 1043 :typeMod 7 :collation 100 :location 121} :resulttype 25 :resulttypmod -1 :resultcollid 100 :relabelformat 2 :location -1} {ARRAYCOERCEEXPR :arg {ARRAY :array_typeid 1015 :array_collid 100 :element_typeid 1043 :elements ({CONST :consttype 1043 :consttypmod -1 :constcollid 100 :constlen -1 :constbyval false :constisnull false :location 131 :constvalue 7 [ 28 0 0 0 89 69 83 ]} {CONST :consttype 1043 :consttypmod -1 :constcollid 100 :constlen -1 :constbyval false :constisnull false :location 138 :constvalue 6 [ 24 0 0 0 78 79 ]}) :multidims false :location -1} :elemexpr {RELABELTYPE :arg {CASETESTEXPR :typeId 1043 :typeMod -1 :collation 0} :resulttype 25 :resulttypmod -1 :resultcollid 100 :relabelformat 2 :location -1} :resulttype 1009 :resulttypmod -1 :resultcollid 100 :coerceformat 2 :location -1}) :location 127}
