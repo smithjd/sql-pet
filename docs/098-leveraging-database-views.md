@@ -25,6 +25,7 @@ library(bookdown)
 library(here)
 library(lubridate)
 library(skimr)
+library(DiagrammeR)
 
 library(scales) # ggplot xy scales
 theme_set(theme_light())
@@ -46,7 +47,6 @@ con <- sp_get_postgres_connection(
 ```
 
 
-<<<<<<< HEAD
 ## The role of database `views`
 
 A database `view` is an SQL query that is stored in the database.  Most `views` are used for data retrieval, since they usually denormalize the tables involved.  Because they are standardized and well-understood, they can save you a lot of work.
@@ -184,17 +184,26 @@ cat(str_replace_all(view_definition$pg_get_viewdef, "\\\\\\\\n", "\\\\n"))
 
 Even if you don't intend to become fluent in SQL, it's useful to read as much of it as possible.  
 
-To understand this query, you really need to have the ERD handy.  The ERD for `AdventureWorks` is [here](https://i.stack.imgur.com/LMu4W.gif)
+To understand this query, you really need to have the Entity Relationship Diagram (ERD) handy.  The ERD for `AdventureWorks` is [here](https://i.stack.imgur.com/LMu4W.gif)
 
-![](https://i.stack.imgur.com/LMu4W.gif)
 
 
 ## Reproduce the `view` with dplyr
 
 Save and study the SQL.
 
-Define each table that is involved and identify the columns that will be needed from that table.
+It can be helpful to actually mark up the ERD to identify the specific tables that are involved in the view you are going to reproduce.
+![](screenshots/AW-2008-OLTP-ERD.gif)
 
+Define each table that is involved and identify the columns that will be needed from that table.  The tables that are involved are:
+
+  1. employee
+  2. person
+  3. sales_person
+  3. sales_order_header
+  3. sales_territory
+
+Select the columns and do any necessary changes or renaming.  In this case we follow the convention that any column that we change or create on the fly uses a snake case naming con vention.
 
 ```r
 sales_order_header <- tbl(con, in_schema("sales", "salesorderheader")) %>% 
@@ -212,17 +221,22 @@ employee <- tbl(con, in_schema("humanresources", "employee")) %>%
   select(businessentityid, jobtitle)
 
 person <- tbl(con, in_schema("person", "person")) %>% 
-  mutate(fullname = paste(firstname, middlename, lastname)) %>% 
-  select(businessentityid, fullname)
+  mutate(full_name = paste(firstname, middlename, lastname)) %>% 
+  select(businessentityid, full_name)
 ```
 
-Double check on the names that are defined in each `tbl` object.
+Double check on the names that are defined in each `tbl` object.  First define a function to show the names of columns you will retrieve.
 
 
 ```r
 getnames <- function(table) {
   {table} %>% collect(n = 5) %>% names()
 }
+```
+
+Verify the names selected:
+
+```r
 getnames(employee)
 ```
 
@@ -235,7 +249,7 @@ getnames(person)
 ```
 
 ```
-## [1] "businessentityid" "fullname"
+## [1] "businessentityid" "full_name"
 ```
 
 ```r
@@ -262,151 +276,6 @@ getnames(sales_territory)
 ## [1] "territoryid"    "territory_name"
 ```
 
-## Define a database `view`
-
-  * A `view` is query that is stored in the database 
-  * Can be used to read or write to the database in a standardized and well-understood way
-
-### Why views are useful
-
-=======
-## Define a database `view`
-
-  * A `view` is query that is stored in the database 
-  * Can be used to read or write to the database in a standardized and well-understood way
-
-### Why views are useful
-
->>>>>>> 2497c14095e324ad8478dc08fd2abb250b0ce801
-Reasons for views:
-
-  * Performance: aggregation calculations done on the server.
-  * Conceptual abstraction/simplification, e.g. looking at monthly subtotals, rather than having to do the aggregation in each of your   * queries.
-  * Reuse: putting commonly used code in one place.
-    * If you find any problems, it only needs to be fixed in one place.
-    * Simplifies downstream code, so easier to read and maintain.
-  * Security: a view can give access to someone who does not have access to underlying tables.
-  * Standardizes data provenance 
-
-## Existing views as a resource
-
-  * Authoritative
-  * They are boring, but very important
-
-
-### How to unpack and inspect a view
-
-Using a view to retireve data from the database will be completely standard across all flavors of SQL.
-
-<<<<<<< HEAD
-
-```r
-v_salesperson_sales_by_fiscal_years_data <- tbl(con, in_schema("sales","vsalespersonsalesbyfiscalyearsdata")) %>% collect()
-
-str(v_salesperson_sales_by_fiscal_years_data)
-```
-
-```
-## Classes 'tbl_df', 'tbl' and 'data.frame':	48 obs. of  6 variables:
-##  $ salespersonid : int  275 275 275 275 276 276 276 276 277 277 ...
-##  $ fullname      : chr  "Michael G Blythe" "Michael G Blythe" "Michael G Blythe" "Michael G Blythe" ...
-##  $ jobtitle      : chr  "Sales Representative" "Sales Representative" "Sales Representative" "Sales Representative" ...
-##  $ salesterritory: chr  "Northeast" "Northeast" "Northeast" "Northeast" ...
-##  $ salestotal    : num  63763 2399593 3765459 3065088 5476 ...
-##  $ fiscalyear    : num  2011 2012 2013 2014 2011 ...
-```
-
-```r
-skim(v_salesperson_sales_by_fiscal_years_data)
-```
-
-
-Table: (\#tab:unnamed-chunk-5)Data summary
-
-                                                        
--------------------------  -----------------------------
-Name                       v_salesperson_sales_by_fi... 
-Number of rows             48                           
-Number of columns          6                            
-_______________________                                 
-Column type frequency:                                  
-character                  3                            
-numeric                    3                            
-________________________                                
-Group variables            None                         
--------------------------  -----------------------------
-
-
-**Variable type: character**
-
-skim_variable     n_missing   complete_rate   min   max   empty   n_unique   whitespace
----------------  ----------  --------------  ----  ----  ------  ---------  -----------
-fullname                  0               1     9    26       0         14            0
-jobtitle                  0               1    20    20       0          1            0
-salesterritory            0               1     6    14       0         10            0
-
-
-**Variable type: numeric**
-
-skim_variable    n_missing   complete_rate         mean           sd        p0         p25          p50          p75      p100  hist  
---------------  ----------  --------------  -----------  -----------  --------  ----------  -----------  -----------  --------  ------
-salespersonid            0               1       281.19         4.57    275.00      277.75       280.50       283.25       290  ▇▆▅▁▃ 
-salestotal               0               1   1635214.51   1243833.87   5475.95   533827.70   1371169.72   2409498.88   4188307  ▇▇▆▃▃ 
-fiscalyear               0               1      2012.69         1.09   2011.00     2012.00      2013.00      2014.00      2014  ▅▆▁▇▇ 
-
-```r
-v_salesperson_sales_by_fiscal_years_data %>% filter(salespersonid == 275)
-```
-
-```
-## # A tibble: 4 x 6
-##   salespersonid fullname     jobtitle       salesterritory salestotal fiscalyear
-##           <int> <chr>        <chr>          <chr>               <dbl>      <dbl>
-## 1           275 Michael G B… Sales Represe… Northeast          63763.       2011
-## 2           275 Michael G B… Sales Represe… Northeast        2399593.       2012
-## 3           275 Michael G B… Sales Represe… Northeast        3765459.       2013
-## 4           275 Michael G B… Sales Represe… Northeast        3065088.       2014
-```
-Local idioms for looking at a view itself will vary.  Here is the code that will work for PostgreSQL:
-
-
-```r
-view_definition <- dbGetQuery(con, "select pg_get_viewdef('sales.vsalespersonsalesbyfiscalyearsdata', true)")
-str(view_definition)
-```
-
-```
-## 'data.frame':	1 obs. of  1 variable:
-##  $ pg_get_viewdef: chr " SELECT granular.salespersonid,\n    granular.fullname,\n    granular.jobtitle,\n    granular.salesterritory,\n"| __truncated__
-```
-
-```r
-cat(str_replace_all(view_definition$pg_get_viewdef, "\\\\\\\\n", "\\\\n")) 
-```
-
-```
-##  SELECT granular.salespersonid,
-##     granular.fullname,
-##     granular.jobtitle,
-##     granular.salesterritory,
-##     sum(granular.subtotal) AS salestotal,
-##     granular.fiscalyear
-##    FROM ( SELECT soh.salespersonid,
-##             ((p.firstname::text || ' '::text) || COALESCE(p.middlename::text || ' '::text, ''::text)) || p.lastname::text AS fullname,
-##             e.jobtitle,
-##             st.name AS salesterritory,
-##             soh.subtotal,
-##             date_part('year'::text, soh.orderdate + '6 mons'::interval) AS fiscalyear
-##            FROM sales.salesperson sp
-##              JOIN sales.salesorderheader soh ON sp.businessentityid = soh.salespersonid
-##              JOIN sales.salesterritory st ON sp.territoryid = st.territoryid
-##              JOIN humanresources.employee e ON soh.salespersonid = e.businessentityid
-##              JOIN person.person p ON p.businessentityid = sp.businessentityid) granular
-##   GROUP BY granular.salespersonid, granular.fullname, granular.jobtitle, granular.salesterritory, granular.fiscalyear;
-```
-
-Even if you don't intend to become fluent in SQL, it's useful to read as much of it as possible.  
-
 Join all of the data pertaining to a person.
 
 
@@ -432,7 +301,7 @@ str(salesperson_info)
 ##  $ businessentityid: int  274 275 276 277 278 279 280 281 282 283 ...
 ##  $ territoryid     : int  NA 2 4 3 6 5 1 4 6 1 ...
 ##  $ jobtitle        : chr  "North American Sales Manager" "Sales Representative" "Sales Representative" "Sales Representative" ...
-##  $ fullname        : chr  "Stephen Y Jiang" "Michael G Blythe" "Linda C Mitchell" "Jillian Carson" ...
+##  $ full_name       : chr  "Stephen Y Jiang" "Michael G Blythe" "Linda C Mitchell" "Jillian Carson" ...
 ##  $ territory_name  : chr  NA "Northeast" "Southwest" "Central" ...
 ```
 
@@ -447,7 +316,7 @@ sales_data_year <- sales_person %>%
   collect()
 ```
 
-Lubridate makes it very easy to convert `orderdate` to `fiscal_year`.  Doing that conversion interleaving dplyr and **ANSI-STANDARD** SQL is harder.  Too lazy!
+Lubridate makes it very easy to convert `orderdate` to `fiscal_year`.  Doing that conversion interleaving dplyr and **ANSI-STANDARD** SQL is harder.  Too lazy!  Therefore we just pull the data from the server after the `left_join` and do the rest of the job on the R side.
 
 
 ```r
@@ -487,7 +356,7 @@ salesperson_sales_by_fiscal_years_dplyr %>%
 
 ```
 ## # A tibble: 14 x 7
-##    businessentityid fullname       territory_name  `2011`   `2012` `2013` `2014`
+##    businessentityid full_name      territory_name  `2011`   `2012` `2013` `2014`
 ##               <int> <chr>          <chr>            <dbl>    <dbl>  <dbl>  <dbl>
 ##  1              275 Michael G Bly… Northeast       63763. 2399593. 3.77e6 3.07e6
 ##  2              276 Linda C Mitch… Southwest        5476. 3013884. 4.06e6 3.28e6
@@ -539,7 +408,7 @@ names(salesperson_sales_by_fiscal_years_dplyr) %>% sort()
 ```
 
 ```
-## [1] "businessentityid" "fiscal_year"      "fullname"         "jobtitle"        
+## [1] "businessentityid" "fiscal_year"      "full_name"        "jobtitle"        
 ## [5] "sales_total"      "territory_name"   "territoryid"
 ```
 
@@ -558,120 +427,6 @@ Different environments / SQL dialects
 
 ### Revise the view
 
-=======
-
-```r
-v_salesperson_sales_by_fiscal_years_data <- tbl(con, in_schema("sales","vsalespersonsalesbyfiscalyearsdata")) %>% collect()
-
-str(v_salesperson_sales_by_fiscal_years_data)
-```
-
-```
-## Classes 'tbl_df', 'tbl' and 'data.frame':	48 obs. of  6 variables:
-##  $ salespersonid : int  275 275 275 275 276 276 276 276 277 277 ...
-##  $ fullname      : chr  "Michael G Blythe" "Michael G Blythe" "Michael G Blythe" "Michael G Blythe" ...
-##  $ jobtitle      : chr  "Sales Representative" "Sales Representative" "Sales Representative" "Sales Representative" ...
-##  $ salesterritory: chr  "Northeast" "Northeast" "Northeast" "Northeast" ...
-##  $ salestotal    : num  63763 2399593 3765459 3065088 5476 ...
-##  $ fiscalyear    : num  2011 2012 2013 2014 2011 ...
-```
-
-```r
-skim(v_salesperson_sales_by_fiscal_years_data)
-```
-
-
-Table: (\#tab:unnamed-chunk-1)Data summary
-
-                                                        
--------------------------  -----------------------------
-Name                       v_salesperson_sales_by_fi... 
-Number of rows             48                           
-Number of columns          6                            
-_______________________                                 
-Column type frequency:                                  
-character                  3                            
-numeric                    3                            
-________________________                                
-Group variables            None                         
--------------------------  -----------------------------
-
-
-**Variable type: character**
-
-skim_variable     n_missing   complete_rate   min   max   empty   n_unique   whitespace
----------------  ----------  --------------  ----  ----  ------  ---------  -----------
-fullname                  0               1     9    26       0         14            0
-jobtitle                  0               1    20    20       0          1            0
-salesterritory            0               1     6    14       0         10            0
-
-
-**Variable type: numeric**
-
-skim_variable    n_missing   complete_rate         mean           sd        p0         p25          p50          p75      p100  hist  
---------------  ----------  --------------  -----------  -----------  --------  ----------  -----------  -----------  --------  ------
-salespersonid            0               1       281.19         4.57    275.00      277.75       280.50       283.25       290  ▇▆▅▁▃ 
-salestotal               0               1   1635214.51   1243833.87   5475.95   533827.70   1371169.72   2409498.88   4188307  ▇▇▆▃▃ 
-fiscalyear               0               1      2012.69         1.09   2011.00     2012.00      2013.00      2014.00      2014  ▅▆▁▇▇ 
-
-```r
-v_salesperson_sales_by_fiscal_years_data %>% filter(salespersonid == 275)
-```
-
-```
-## # A tibble: 4 x 6
-##   salespersonid fullname     jobtitle       salesterritory salestotal fiscalyear
-##           <int> <chr>        <chr>          <chr>               <dbl>      <dbl>
-## 1           275 Michael G B… Sales Represe… Northeast          63763.       2011
-## 2           275 Michael G B… Sales Represe… Northeast        2399593.       2012
-## 3           275 Michael G B… Sales Represe… Northeast        3765459.       2013
-## 4           275 Michael G B… Sales Represe… Northeast        3065088.       2014
-```
-Local idioms for looking at a view itself will vary.  Here is the code that will work for PostgreSQL:
-
-
-```r
-view_definition <- dbGetQuery(con, "select pg_get_viewdef('sales.vsalespersonsalesbyfiscalyearsdata', true)")
-str(view_definition)
-```
-
-```
-## 'data.frame':	1 obs. of  1 variable:
-##  $ pg_get_viewdef: chr " SELECT granular.salespersonid,\n    granular.fullname,\n    granular.jobtitle,\n    granular.salesterritory,\n"| __truncated__
-```
-
-```r
-cat(str_replace_all(view_definition$pg_get_viewdef, "\\\\\\\\n", "\\\\n")) 
-```
-
-```
-##  SELECT granular.salespersonid,
-##     granular.fullname,
-##     granular.jobtitle,
-##     granular.salesterritory,
-##     sum(granular.subtotal) AS salestotal,
-##     granular.fiscalyear
-##    FROM ( SELECT soh.salespersonid,
-##             ((p.firstname::text || ' '::text) || COALESCE(p.middlename::text || ' '::text, ''::text)) || p.lastname::text AS fullname,
-##             e.jobtitle,
-##             st.name AS salesterritory,
-##             soh.subtotal,
-##             date_part('year'::text, soh.orderdate + '6 mons'::interval) AS fiscalyear
-##            FROM sales.salesperson sp
-##              JOIN sales.salesorderheader soh ON sp.businessentityid = soh.salespersonid
-##              JOIN sales.salesterritory st ON sp.territoryid = st.territoryid
-##              JOIN humanresources.employee e ON soh.salespersonid = e.businessentityid
-##              JOIN person.person p ON p.businessentityid = sp.businessentityid) granular
-##   GROUP BY granular.salespersonid, granular.fullname, granular.jobtitle, granular.salesterritory, granular.fiscalyear;
-```
-
-Even if you don't intend to become fluent in SQL, it's useful to read as much of it as possible.  
-
-### We recommend leverageing them
-
->>>>>>> 2497c14095e324ad8478dc08fd2abb250b0ce801
-## Writing your own or modifying a view
-
   * What about by month? This could be motivation for creating a new view that does aggregation in the database, rather than in R.
   * See SQL code for 'vsalespersonsalesbyfiscalyearsdata'. Consider:
   * Modifying that to include quantity of sales.
@@ -682,132 +437,7 @@ Even if you don't intend to become fluent in SQL, it's useful to read as much of
      * Syed Abbas
   * Making the change may not be your prerogative, but it's your responsibility to propose any reasonable changes to those who have the authority to make the make the change.
 
-Save and study the SQL
 
-<<<<<<< HEAD
-=======
-Save and study the SQL
-
-t_salesperson_sales_by_fiscal_years_data %>% 
-
-
-```r
-rm(t_salesperson_sales_by_fiscal_years_data)
-```
-
-```
-## Warning in rm(t_salesperson_sales_by_fiscal_years_data): object
-## 't_salesperson_sales_by_fiscal_years_data' not found
-```
-
-```r
-t_salesperson_sales_by_fiscal_years_data <- 
-  tbl(con, in_schema("sales", "salesperson")) %>% 
-  select(-territoryid) %>% 
-  
-  left_join(tbl(con, in_schema("sales", "salesorderheader")), by = c("businessentityid" = "salespersonid")) %>%
-  mutate(fiscalyear = year(orderdate)) %>% 
-  
-  left_join(tbl(con, in_schema("sales", "salesterritory")), by = c("territoryid" = "territoryid")) %>%
-    rename(sales_territory = name) %>% 
-  
-  left_join(tbl(con, in_schema("humanresources", "employee")), by = c("businessentityid" = "businessentityid")) %>%
-
-    left_join(tbl(con, in_schema("person", "person")), by = c("businessentityid" = "businessentityid")) %>%
-  mutate(fullname = paste(firstname, middlename, lastname)) %>% 
-  
-  group_by(businessentityid, fullname, jobtitle, sales_territory, fiscalyear) %>% 
-  
-  summarize(subtotal = sum(subtotal) ) %>% 
-collect() %>% ungroup()
-```
-
-```
-## Warning: Missing values are always removed in SQL.
-## Use `SUM(x, na.rm = TRUE)` to silence this warning
-## This warning is displayed only once per session.
-```
-
-```r
-t_salesperson_sales_by_fiscal_years_data
-```
-
-```
-## # A tibble: 108 x 6
-##    businessentityid fullname   jobtitle      sales_territory fiscalyear subtotal
-##               <int> <chr>      <chr>         <chr>                <dbl>    <dbl>
-##  1              274 Stephen Y… North Americ… Canada                2011    2040.
-##  2              274 Stephen Y… North Americ… Canada                2012   62250.
-##  3              274 Stephen Y… North Americ… Canada                2013  100556.
-##  4              274 Stephen Y… North Americ… Canada                2014   11803.
-##  5              274 Stephen Y… North Americ… Central               2014   35332.
-##  6              274 Stephen Y… North Americ… Northeast             2012   83216.
-##  7              274 Stephen Y… North Americ… Northwest             2011   20545.
-##  8              274 Stephen Y… North Americ… Northwest             2012    5810.
-##  9              274 Stephen Y… North Americ… Northwest             2013  204390.
-## 10              274 Stephen Y… North Americ… Northwest             2014    2321.
-## # … with 98 more rows
-```
-
-```r
-skim(t_salesperson_sales_by_fiscal_years_data)
-```
-
-
-Table: (\#tab:unnamed-chunk-3)Data summary
-
-                                                        
--------------------------  -----------------------------
-Name                       t_salesperson_sales_by_fi... 
-Number of rows             108                          
-Number of columns          6                            
-_______________________                                 
-Column type frequency:                                  
-character                  3                            
-numeric                    3                            
-________________________                                
-Group variables            None                         
--------------------------  -----------------------------
-
-
-**Variable type: character**
-
-skim_variable      n_missing   complete_rate   min   max   empty   n_unique   whitespace
-----------------  ----------  --------------  ----  ----  ------  ---------  -----------
-fullname                   0               1     9    26       0         17            0
-jobtitle                   0               1    20    28       0          4            0
-sales_territory            0               1     6    14       0         10            0
-
-
-**Variable type: numeric**
-
-skim_variable       n_missing   complete_rate        mean          sd        p0         p25         p50          p75         p100  hist  
------------------  ----------  --------------  ----------  ----------  --------  ----------  ----------  -----------  -----------  ------
-businessentityid            0               1      279.36        4.79    274.00      275.00      278.00       282.00       290.00  ▇▂▃▁▂ 
-fiscalyear                  0               1     2012.62        1.07   2011.00     2012.00     2013.00      2014.00      2014.00  ▅▇▁▇▇ 
-subtotal                    0               1   745256.52   820632.09    672.29   116279.93   541771.55   1008421.64   4106064.01  ▇▂▁▁▁ 
-
-```r
-t_salesperson_sales_by_fiscal_years_data %>% filter(businessentityid == 275)
-```
-
-```
-## # A tibble: 11 x 6
-##    businessentityid fullname    jobtitle     sales_territory fiscalyear subtotal
-##               <int> <chr>       <chr>        <chr>                <dbl>    <dbl>
-##  1              275 Michael G … Sales Repre… Central               2011  132244.
-##  2              275 Michael G … Sales Repre… Central               2012  593815.
-##  3              275 Michael G … Sales Repre… Central               2013 1371919.
-##  4              275 Michael G … Sales Repre… Central               2014  472698.
-##  5              275 Michael G … Sales Repre… Northeast             2011  626626.
-##  6              275 Michael G … Sales Repre… Northeast             2012 2302605.
-##  7              275 Michael G … Sales Repre… Southeast             2011  116954.
-##  8              275 Michael G … Sales Repre… Southeast             2012  171773.
-##  9              275 Michael G … Sales Repre… Southwest             2012  307263.
-## 10              275 Michael G … Sales Repre… Southwest             2013 2613456.
-## 11              275 Michael G … Sales Repre… Southwest             2014  584549.
-```
->>>>>>> 2497c14095e324ad8478dc08fd2abb250b0ce801
 
 ## Save a `view` in the database
 
