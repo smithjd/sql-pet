@@ -97,17 +97,26 @@ cat(str_replace_all(view_definition$pg_get_viewdef, "\\\\\\\\n", "\\\\n"))
 
 Even if you don't intend to become fluent in SQL, it's useful to read as much of it as possible.  
 
-To understand this query, you really need to have the ERD handy.  The ERD for `AdventureWorks` is [here](https://i.stack.imgur.com/LMu4W.gif)
+To understand this query, you really need to have the Entity Relationship Diagram (ERD) handy.  The ERD for `AdventureWorks` is [here](https://i.stack.imgur.com/LMu4W.gif)
 
-![](https://i.stack.imgur.com/LMu4W.gif)
 
 
 ## Reproduce the `view` with dplyr
 
 Save and study the SQL.
 
-Define each table that is involved and identify the columns that will be needed from that table.
+It can be helpful to actually mark up the ERD to identify the specific tables that are involved in the view you are going to reproduce.
+![](screenshots/AW-2008-OLTP-ERD.gif)
 
+Define each table that is involved and identify the columns that will be needed from that table.  The tables that are involved are:
+
+  1. employee
+  2. person
+  3. sales_person
+  3. sales_order_header
+  3. sales_territory
+
+Select the columns and do any necessary changes or renaming.  In this case we follow the convention that any column that we change or create on the fly uses a snake case naming con vention.
 ```{r}
 
 sales_order_header <- tbl(con, in_schema("sales", "salesorderheader")) %>% 
@@ -125,17 +134,21 @@ employee <- tbl(con, in_schema("humanresources", "employee")) %>%
   select(businessentityid, jobtitle)
 
 person <- tbl(con, in_schema("person", "person")) %>% 
-  mutate(fullname = paste(firstname, middlename, lastname)) %>% 
-  select(businessentityid, fullname)
+  mutate(full_name = paste(firstname, middlename, lastname)) %>% 
+  select(businessentityid, full_name)
 
 ```
 
-Double check on the names that are defined in each `tbl` object.
+Double check on the names that are defined in each `tbl` object.  First define a function to show the names of columns you will retrieve.
 
 ```{r}
 getnames <- function(table) {
   {table} %>% collect(n = 5) %>% names()
 }
+```
+
+Verify the names selected:
+```{r}
 getnames(employee)
 getnames(person)
 getnames(sales_person)
@@ -167,7 +180,7 @@ sales_data_year <- sales_person %>%
   
 ```
 
-Lubridate makes it very easy to convert `orderdate` to `fiscal_year`.  Doing that conversion interleaving dplyr and **ANSI-STANDARD** SQL is harder.  Too lazy!
+Lubridate makes it very easy to convert `orderdate` to `fiscal_year`.  Doing that conversion interleaving dplyr and **ANSI-STANDARD** SQL is harder.  Too lazy!  Therefore we just pull the data from the server after the `left_join` and do the rest of the job on the R side.
 
 ```{r}
 sales_data_fiscal_year <- sales_person %>% 

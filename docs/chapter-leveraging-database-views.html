@@ -311,17 +311,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="12.2.2" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#rely-on-and-be-critical-of-views"><i class="fa fa-check"></i><b>12.2.2</b> Rely on <strong>and</strong> be critical of <code>views</code></a></li>
 <li class="chapter" data-level="12.2.3" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#how-to-unpack-and-inspect-a-view"><i class="fa fa-check"></i><b>12.2.3</b> How to unpack and inspect a <code>view</code></a></li>
 </ul></li>
-<li class="chapter" data-level="12.3" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#reproduce-the-view-with-dplyr"><i class="fa fa-check"></i><b>12.3</b> Reproduce the <code>view</code> with dplyr</a></li>
-<li class="chapter" data-level="12.4" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#define-a-database-view"><i class="fa fa-check"></i><b>12.4</b> Define a database <code>view</code></a><ul>
-<li class="chapter" data-level="12.4.1" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#why-views-are-useful"><i class="fa fa-check"></i><b>12.4.1</b> Why views are useful</a></li>
+<li class="chapter" data-level="12.3" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#reproduce-the-view-with-dplyr"><i class="fa fa-check"></i><b>12.3</b> Reproduce the <code>view</code> with dplyr</a><ul>
+<li class="chapter" data-level="12.3.1" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#compare-the-two-versions"><i class="fa fa-check"></i><b>12.3.1</b> Compare the two versions</a></li>
+<li class="chapter" data-level="12.3.2" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#revise-the-view"><i class="fa fa-check"></i><b>12.3.2</b> Revise the view</a></li>
 </ul></li>
-<li class="chapter" data-level="12.5" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#existing-views-as-a-resource"><i class="fa fa-check"></i><b>12.5</b> Existing views as a resource</a><ul>
-<li class="chapter" data-level="12.5.1" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#how-to-unpack-and-inspect-a-view-1"><i class="fa fa-check"></i><b>12.5.1</b> How to unpack and inspect a view</a></li>
-<li class="chapter" data-level="12.5.2" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#compare-the-two-versions"><i class="fa fa-check"></i><b>12.5.2</b> Compare the two versions</a></li>
-<li class="chapter" data-level="12.5.3" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#revise-the-view"><i class="fa fa-check"></i><b>12.5.3</b> Revise the view</a></li>
-</ul></li>
-<li class="chapter" data-level="12.6" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#writing-your-own-or-modifying-a-view"><i class="fa fa-check"></i><b>12.6</b> Writing your own or modifying a view</a></li>
-<li class="chapter" data-level="12.7" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#save-a-view-in-the-database"><i class="fa fa-check"></i><b>12.7</b> Save a <code>view</code> in the database</a></li>
+<li class="chapter" data-level="12.4" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#save-a-view-in-the-database"><i class="fa fa-check"></i><b>12.4</b> Save a <code>view</code> in the database</a></li>
 </ul></li>
 <li class="chapter" data-level="13" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html"><i class="fa fa-check"></i><b>13</b> Getting metadata about and from PostgreSQL</a><ul>
 <li class="chapter" data-level="13.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#views-trick-parked-here-for-the-time-being"><i class="fa fa-check"></i><b>13.1</b> Views trick parked here for the time being</a><ul>
@@ -607,9 +601,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb1-9" data-line-number="9"><span class="kw">library</span>(here)</a>
 <a class="sourceLine" id="cb1-10" data-line-number="10"><span class="kw">library</span>(lubridate)</a>
 <a class="sourceLine" id="cb1-11" data-line-number="11"><span class="kw">library</span>(skimr)</a>
-<a class="sourceLine" id="cb1-12" data-line-number="12"></a>
-<a class="sourceLine" id="cb1-13" data-line-number="13"><span class="kw">library</span>(scales) <span class="co"># ggplot xy scales</span></a>
-<a class="sourceLine" id="cb1-14" data-line-number="14"><span class="kw">theme_set</span>(<span class="kw">theme_light</span>())</a></code></pre></div>
+<a class="sourceLine" id="cb1-12" data-line-number="12"><span class="kw">library</span>(DiagrammeR)</a>
+<a class="sourceLine" id="cb1-13" data-line-number="13"></a>
+<a class="sourceLine" id="cb1-14" data-line-number="14"><span class="kw">library</span>(scales) <span class="co"># ggplot xy scales</span></a>
+<a class="sourceLine" id="cb1-15" data-line-number="15"><span class="kw">theme_set</span>(<span class="kw">theme_light</span>())</a></code></pre></div>
 <p>Connect to <code>adventureworks</code>:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">sp_docker_start</span>(<span class="st">&quot;adventureworks&quot;</span>)</a>
 <a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw">Sys.sleep</span>(sleep_default)</a>
@@ -841,14 +836,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##              JOIN person.person p ON p.businessentityid = sp.businessentityid) granular
 ##   GROUP BY granular.salespersonid, granular.fullname, granular.jobtitle, granular.salesterritory, granular.fiscalyear;</code></pre>
 <p>Even if you don’t intend to become fluent in SQL, it’s useful to read as much of it as possible.</p>
-<p>To understand this query, you really need to have the ERD handy. The ERD for <code>AdventureWorks</code> is <a href="https://i.stack.imgur.com/LMu4W.gif">here</a></p>
-<p><img src="https://i.stack.imgur.com/LMu4W.gif" /></p>
+<p>To understand this query, you really need to have the Entity Relationship Diagram (ERD) handy. The ERD for <code>AdventureWorks</code> is <a href="https://i.stack.imgur.com/LMu4W.gif">here</a></p>
 </div>
 </div>
 <div id="reproduce-the-view-with-dplyr" class="section level2">
 <h2><span class="header-section-number">12.3</span> Reproduce the <code>view</code> with dplyr</h2>
 <p>Save and study the SQL.</p>
-<p>Define each table that is involved and identify the columns that will be needed from that table.</p>
+<p>It can be helpful to actually mark up the ERD to identify the specific tables that are involved in the view you are going to reproduce.
+<img src="screenshots/AW-2008-OLTP-ERD.gif" /></p>
+<p>Define each table that is involved and identify the columns that will be needed from that table. The tables that are involved are:</p>
+<ol style="list-style-type: decimal">
+<li>employee</li>
+<li>person</li>
+<li>sales_person</li>
+<li>sales_order_header</li>
+<li>sales_territory</li>
+</ol>
+<p>Select the columns and do any necessary changes or renaming. In this case we follow the convention that any column that we change or create on the fly uses a snake case naming con vention.</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">sales_order_header &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;sales&quot;</span>, <span class="st">&quot;salesorderheader&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb12-2" data-line-number="2"><span class="st">  </span><span class="co"># Because we&#39;re lazy, we will keep both a crude `year` column and `orderdate` for later use</span></a>
 <a class="sourceLine" id="cb12-3" data-line-number="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sales_order_year =</span> <span class="kw">year</span>(orderdate)) <span class="op">%&gt;%</span><span class="st"> </span></a>
@@ -864,289 +868,66 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb12-13" data-line-number="13"><span class="st">  </span><span class="kw">select</span>(businessentityid, jobtitle)</a>
 <a class="sourceLine" id="cb12-14" data-line-number="14"></a>
 <a class="sourceLine" id="cb12-15" data-line-number="15">person &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;person&quot;</span>, <span class="st">&quot;person&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb12-16" data-line-number="16"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">fullname =</span> <span class="kw">paste</span>(firstname, middlename, lastname)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb12-17" data-line-number="17"><span class="st">  </span><span class="kw">select</span>(businessentityid, fullname)</a></code></pre></div>
-<p>Double check on the names that are defined in each <code>tbl</code> object.</p>
+<a class="sourceLine" id="cb12-16" data-line-number="16"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">full_name =</span> <span class="kw">paste</span>(firstname, middlename, lastname)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb12-17" data-line-number="17"><span class="st">  </span><span class="kw">select</span>(businessentityid, full_name)</a></code></pre></div>
+<p>Double check on the names that are defined in each <code>tbl</code> object. First define a function to show the names of columns you will retrieve.</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1">getnames &lt;-<span class="st"> </span><span class="cf">function</span>(table) {</a>
 <a class="sourceLine" id="cb13-2" data-line-number="2">  {table} <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="dv">5</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">names</span>()</a>
-<a class="sourceLine" id="cb13-3" data-line-number="3">}</a>
-<a class="sourceLine" id="cb13-4" data-line-number="4"><span class="kw">getnames</span>(employee)</a></code></pre></div>
+<a class="sourceLine" id="cb13-3" data-line-number="3">}</a></code></pre></div>
+<p>Verify the names selected:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="kw">getnames</span>(employee)</a></code></pre></div>
 <pre><code>## [1] &quot;businessentityid&quot; &quot;jobtitle&quot;</code></pre>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="kw">getnames</span>(person)</a></code></pre></div>
-<pre><code>## [1] &quot;businessentityid&quot; &quot;fullname&quot;</code></pre>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="kw">getnames</span>(sales_person)</a></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="kw">getnames</span>(person)</a></code></pre></div>
+<pre><code>## [1] &quot;businessentityid&quot; &quot;full_name&quot;</code></pre>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="kw">getnames</span>(sales_person)</a></code></pre></div>
 <pre><code>## [1] &quot;businessentityid&quot; &quot;territoryid&quot;</code></pre>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="kw">getnames</span>(sales_order_header)</a></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="kw">getnames</span>(sales_order_header)</a></code></pre></div>
 <pre><code>## [1] &quot;sales_order_year&quot; &quot;salespersonid&quot;    &quot;subtotal&quot;         &quot;orderdate&quot;</code></pre>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="kw">getnames</span>(sales_territory)</a></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1"><span class="kw">getnames</span>(sales_territory)</a></code></pre></div>
 <pre><code>## [1] &quot;territoryid&quot;    &quot;territory_name&quot;</code></pre>
-</div>
-<div id="define-a-database-view" class="section level2">
-<h2><span class="header-section-number">12.4</span> Define a database <code>view</code></h2>
-<ul>
-<li>A <code>view</code> is query that is stored in the database</li>
-<li>Can be used to read or write to the database in a standardized and well-understood way</li>
-</ul>
-<div id="why-views-are-useful" class="section level3">
-<h3><span class="header-section-number">12.4.1</span> Why views are useful</h3>
-<p>Reasons for views:</p>
-<ul>
-<li>Performance: aggregation calculations done on the server.</li>
-<li>Conceptual abstraction/simplification, e.g. looking at monthly subtotals, rather than having to do the aggregation in each of your * queries.</li>
-<li>Reuse: putting commonly used code in one place.
-<ul>
-<li>If you find any problems, it only needs to be fixed in one place.</li>
-<li>Simplifies downstream code, so easier to read and maintain.</li>
-</ul></li>
-<li>Security: a view can give access to someone who does not have access to underlying tables.</li>
-<li>Standardizes data provenance</li>
-</ul>
-</div>
-</div>
-<div id="existing-views-as-a-resource" class="section level2">
-<h2><span class="header-section-number">12.5</span> Existing views as a resource</h2>
-<ul>
-<li>Authoritative</li>
-<li>They are boring, but very important</li>
-</ul>
-<div id="how-to-unpack-and-inspect-a-view-1" class="section level3">
-<h3><span class="header-section-number">12.5.1</span> How to unpack and inspect a view</h3>
-<p>Using a view to retireve data from the database will be completely standard across all flavors of SQL.</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1">v_salesperson_sales_by_fiscal_years_data &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;sales&quot;</span>,<span class="st">&quot;vsalespersonsalesbyfiscalyearsdata&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">collect</span>()</a>
-<a class="sourceLine" id="cb23-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb23-3" data-line-number="3"><span class="kw">str</span>(v_salesperson_sales_by_fiscal_years_data)</a></code></pre></div>
-<pre><code>## Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    48 obs. of  6 variables:
-##  $ salespersonid : int  275 275 275 275 276 276 276 276 277 277 ...
-##  $ fullname      : chr  &quot;Michael G Blythe&quot; &quot;Michael G Blythe&quot; &quot;Michael G Blythe&quot; &quot;Michael G Blythe&quot; ...
-##  $ jobtitle      : chr  &quot;Sales Representative&quot; &quot;Sales Representative&quot; &quot;Sales Representative&quot; &quot;Sales Representative&quot; ...
-##  $ salesterritory: chr  &quot;Northeast&quot; &quot;Northeast&quot; &quot;Northeast&quot; &quot;Northeast&quot; ...
-##  $ salestotal    : num  63763 2399593 3765459 3065088 5476 ...
-##  $ fiscalyear    : num  2011 2012 2013 2014 2011 ...</code></pre>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1"><span class="kw">skim</span>(v_salesperson_sales_by_fiscal_years_data)</a></code></pre></div>
-<table>
-<caption><span id="tab:unnamed-chunk-5">Table 12.2: </span>Data summary</caption>
-<tbody>
-<tr class="odd">
-<td align="left">Name</td>
-<td align="left">v_salesperson_sales_by_fi…</td>
-</tr>
-<tr class="even">
-<td align="left">Number of rows</td>
-<td align="left">48</td>
-</tr>
-<tr class="odd">
-<td align="left">Number of columns</td>
-<td align="left">6</td>
-</tr>
-<tr class="even">
-<td align="left">_______________________</td>
-<td align="left"></td>
-</tr>
-<tr class="odd">
-<td align="left">Column type frequency:</td>
-<td align="left"></td>
-</tr>
-<tr class="even">
-<td align="left">character</td>
-<td align="left">3</td>
-</tr>
-<tr class="odd">
-<td align="left">numeric</td>
-<td align="left">3</td>
-</tr>
-<tr class="even">
-<td align="left">________________________</td>
-<td align="left"></td>
-</tr>
-<tr class="odd">
-<td align="left">Group variables</td>
-<td align="left">None</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Variable type: character</strong></p>
-<table>
-<thead>
-<tr class="header">
-<th align="left">skim_variable</th>
-<th align="right">n_missing</th>
-<th align="right">complete_rate</th>
-<th align="right">min</th>
-<th align="right">max</th>
-<th align="right">empty</th>
-<th align="right">n_unique</th>
-<th align="right">whitespace</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">fullname</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">9</td>
-<td align="right">26</td>
-<td align="right">0</td>
-<td align="right">14</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td align="left">jobtitle</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">20</td>
-<td align="right">20</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">0</td>
-</tr>
-<tr class="odd">
-<td align="left">salesterritory</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">6</td>
-<td align="right">14</td>
-<td align="right">0</td>
-<td align="right">10</td>
-<td align="right">0</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Variable type: numeric</strong></p>
-<table>
-<thead>
-<tr class="header">
-<th align="left">skim_variable</th>
-<th align="right">n_missing</th>
-<th align="right">complete_rate</th>
-<th align="right">mean</th>
-<th align="right">sd</th>
-<th align="right">p0</th>
-<th align="right">p25</th>
-<th align="right">p50</th>
-<th align="right">p75</th>
-<th align="right">p100</th>
-<th align="left">hist</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">salespersonid</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">281.19</td>
-<td align="right">4.57</td>
-<td align="right">275.00</td>
-<td align="right">277.75</td>
-<td align="right">280.50</td>
-<td align="right">283.25</td>
-<td align="right">290</td>
-<td align="left">▇▆▅▁▃</td>
-</tr>
-<tr class="even">
-<td align="left">salestotal</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">1635214.51</td>
-<td align="right">1243833.87</td>
-<td align="right">5475.95</td>
-<td align="right">533827.70</td>
-<td align="right">1371169.72</td>
-<td align="right">2409498.88</td>
-<td align="right">4188307</td>
-<td align="left">▇▇▆▃▃</td>
-</tr>
-<tr class="odd">
-<td align="left">fiscalyear</td>
-<td align="right">0</td>
-<td align="right">1</td>
-<td align="right">2012.69</td>
-<td align="right">1.09</td>
-<td align="right">2011.00</td>
-<td align="right">2012.00</td>
-<td align="right">2013.00</td>
-<td align="right">2014.00</td>
-<td align="right">2014</td>
-<td align="left">▅▆▁▇▇</td>
-</tr>
-</tbody>
-</table>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1">v_salesperson_sales_by_fiscal_years_data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(salespersonid <span class="op">==</span><span class="st"> </span><span class="dv">275</span>)</a></code></pre></div>
-<pre><code>## # A tibble: 4 x 6
-##   salespersonid fullname     jobtitle       salesterritory salestotal fiscalyear
-##           &lt;int&gt; &lt;chr&gt;        &lt;chr&gt;          &lt;chr&gt;               &lt;dbl&gt;      &lt;dbl&gt;
-## 1           275 Michael G B… Sales Represe… Northeast          63763.       2011
-## 2           275 Michael G B… Sales Represe… Northeast        2399593.       2012
-## 3           275 Michael G B… Sales Represe… Northeast        3765459.       2013
-## 4           275 Michael G B… Sales Represe… Northeast        3065088.       2014</code></pre>
-<p>Local idioms for looking at a view itself will vary. Here is the code that will work for PostgreSQL:</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1">view_definition &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(con, <span class="st">&quot;select pg_get_viewdef(&#39;sales.vsalespersonsalesbyfiscalyearsdata&#39;, true)&quot;</span>)</a>
-<a class="sourceLine" id="cb28-2" data-line-number="2"><span class="kw">str</span>(view_definition)</a></code></pre></div>
-<pre><code>## &#39;data.frame&#39;:    1 obs. of  1 variable:
-##  $ pg_get_viewdef: chr &quot; SELECT granular.salespersonid,\n    granular.fullname,\n    granular.jobtitle,\n    granular.salesterritory,\n&quot;| __truncated__</code></pre>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" data-line-number="1"><span class="kw">cat</span>(<span class="kw">str_replace_all</span>(view_definition<span class="op">$</span>pg_get_viewdef, <span class="st">&quot;</span><span class="ch">\\\\\\\\</span><span class="st">n&quot;</span>, <span class="st">&quot;</span><span class="ch">\\\\</span><span class="st">n&quot;</span>)) </a></code></pre></div>
-<pre><code>##  SELECT granular.salespersonid,
-##     granular.fullname,
-##     granular.jobtitle,
-##     granular.salesterritory,
-##     sum(granular.subtotal) AS salestotal,
-##     granular.fiscalyear
-##    FROM ( SELECT soh.salespersonid,
-##             ((p.firstname::text || &#39; &#39;::text) || COALESCE(p.middlename::text || &#39; &#39;::text, &#39;&#39;::text)) || p.lastname::text AS fullname,
-##             e.jobtitle,
-##             st.name AS salesterritory,
-##             soh.subtotal,
-##             date_part(&#39;year&#39;::text, soh.orderdate + &#39;6 mons&#39;::interval) AS fiscalyear
-##            FROM sales.salesperson sp
-##              JOIN sales.salesorderheader soh ON sp.businessentityid = soh.salespersonid
-##              JOIN sales.salesterritory st ON sp.territoryid = st.territoryid
-##              JOIN humanresources.employee e ON soh.salespersonid = e.businessentityid
-##              JOIN person.person p ON p.businessentityid = sp.businessentityid) granular
-##   GROUP BY granular.salespersonid, granular.fullname, granular.jobtitle, granular.salesterritory, granular.fiscalyear;</code></pre>
-<p>Even if you don’t intend to become fluent in SQL, it’s useful to read as much of it as possible.</p>
 <p>Join all of the data pertaining to a person.</p>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" data-line-number="1">salesperson_info &lt;-<span class="st"> </span>sales_person <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb32-2" data-line-number="2"><span class="st">  </span><span class="kw">left_join</span>(employee) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb32-3" data-line-number="3"><span class="st">  </span><span class="kw">left_join</span>(person) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb32-4" data-line-number="4"><span class="st">  </span><span class="kw">left_join</span>(sales_territory) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb32-5" data-line-number="5"><span class="st">  </span><span class="kw">collect</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1">salesperson_info &lt;-<span class="st"> </span>sales_person <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb24-2" data-line-number="2"><span class="st">  </span><span class="kw">left_join</span>(employee) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb24-3" data-line-number="3"><span class="st">  </span><span class="kw">left_join</span>(person) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb24-4" data-line-number="4"><span class="st">  </span><span class="kw">left_join</span>(sales_territory) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb24-5" data-line-number="5"><span class="st">  </span><span class="kw">collect</span>()</a></code></pre></div>
 <pre><code>## Joining, by = &quot;businessentityid&quot;Joining, by = &quot;businessentityid&quot;Joining, by =
 ## &quot;territoryid&quot;</code></pre>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" data-line-number="1"><span class="kw">str</span>(salesperson_info)</a></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1"><span class="kw">str</span>(salesperson_info)</a></code></pre></div>
 <pre><code>## Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    17 obs. of  5 variables:
 ##  $ businessentityid: int  274 275 276 277 278 279 280 281 282 283 ...
 ##  $ territoryid     : int  NA 2 4 3 6 5 1 4 6 1 ...
 ##  $ jobtitle        : chr  &quot;North American Sales Manager&quot; &quot;Sales Representative&quot; &quot;Sales Representative&quot; &quot;Sales Representative&quot; ...
-##  $ fullname        : chr  &quot;Stephen Y Jiang&quot; &quot;Michael G Blythe&quot; &quot;Linda C Mitchell&quot; &quot;Jillian Carson&quot; ...
+##  $ full_name       : chr  &quot;Stephen Y Jiang&quot; &quot;Michael G Blythe&quot; &quot;Linda C Mitchell&quot; &quot;Jillian Carson&quot; ...
 ##  $ territory_name  : chr  NA &quot;Northeast&quot; &quot;Southwest&quot; &quot;Central&quot; ...</code></pre>
 <p>Do a crude version with <code>sales_order_year</code>. All of the work can be done on the database server.</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" data-line-number="1">sales_data_year &lt;-<span class="st"> </span>sales_person <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb36-2" data-line-number="2"><span class="st">  </span><span class="kw">left_join</span>(sales_order_header, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;businessentityid&quot;</span> =<span class="st"> &quot;salespersonid&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb36-3" data-line-number="3"><span class="st">  </span><span class="kw">group_by</span>(businessentityid, sales_order_year) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb36-4" data-line-number="4"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">sales_total =</span> <span class="kw">sum</span>(subtotal, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))  <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb36-5" data-line-number="5"><span class="st">  </span><span class="kw">collect</span>()</a></code></pre></div>
-<p>Lubridate makes it very easy to convert <code>orderdate</code> to <code>fiscal_year</code>. Doing that conversion interleaving dplyr and <strong>ANSI-STANDARD</strong> SQL is harder. Too lazy!</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" data-line-number="1">sales_data_fiscal_year &lt;-<span class="st"> </span>sales_person <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb37-2" data-line-number="2"><span class="st">  </span><span class="kw">left_join</span>(sales_order_header, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;businessentityid&quot;</span> =<span class="st"> &quot;salespersonid&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb37-3" data-line-number="3"><span class="st">  </span><span class="kw">collect</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb37-4" data-line-number="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">fiscal_year =</span> <span class="kw">year</span>(orderdate <span class="op">%m+%</span><span class="st"> </span><span class="kw">months</span>(<span class="dv">6</span>))) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb37-5" data-line-number="5"><span class="st">  </span><span class="kw">group_by</span>(businessentityid, fiscal_year) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb37-6" data-line-number="6"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">sales_total =</span> <span class="kw">sum</span>(subtotal, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb37-7" data-line-number="7"><span class="st">  </span><span class="kw">ungroup</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1">sales_data_year &lt;-<span class="st"> </span>sales_person <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb28-2" data-line-number="2"><span class="st">  </span><span class="kw">left_join</span>(sales_order_header, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;businessentityid&quot;</span> =<span class="st"> &quot;salespersonid&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb28-3" data-line-number="3"><span class="st">  </span><span class="kw">group_by</span>(businessentityid, sales_order_year) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb28-4" data-line-number="4"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">sales_total =</span> <span class="kw">sum</span>(subtotal, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))  <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb28-5" data-line-number="5"><span class="st">  </span><span class="kw">collect</span>()</a></code></pre></div>
+<p>Lubridate makes it very easy to convert <code>orderdate</code> to <code>fiscal_year</code>. Doing that conversion interleaving dplyr and <strong>ANSI-STANDARD</strong> SQL is harder. Too lazy! Therefore we just pull the data from the server after the <code>left_join</code> and do the rest of the job on the R side.</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" data-line-number="1">sales_data_fiscal_year &lt;-<span class="st"> </span>sales_person <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb29-2" data-line-number="2"><span class="st">  </span><span class="kw">left_join</span>(sales_order_header, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;businessentityid&quot;</span> =<span class="st"> &quot;salespersonid&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb29-3" data-line-number="3"><span class="st">  </span><span class="kw">collect</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb29-4" data-line-number="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">fiscal_year =</span> <span class="kw">year</span>(orderdate <span class="op">%m+%</span><span class="st"> </span><span class="kw">months</span>(<span class="dv">6</span>))) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb29-5" data-line-number="5"><span class="st">  </span><span class="kw">group_by</span>(businessentityid, fiscal_year) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb29-6" data-line-number="6"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">sales_total =</span> <span class="kw">sum</span>(subtotal, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb29-7" data-line-number="7"><span class="st">  </span><span class="kw">ungroup</span>()</a></code></pre></div>
 <p>Put the two parts together: <code>sales_data_fiscal_year</code> and <code>person_info</code> to yeild the final query.</p>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" data-line-number="1">salesperson_sales_by_fiscal_years_dplyr &lt;-<span class="st"> </span>sales_data_fiscal_year <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb38-2" data-line-number="2"><span class="st">  </span><span class="kw">left_join</span>(salesperson_info) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb38-3" data-line-number="3"><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(territoryid))</a></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" data-line-number="1">salesperson_sales_by_fiscal_years_dplyr &lt;-<span class="st"> </span>sales_data_fiscal_year <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb30-2" data-line-number="2"><span class="st">  </span><span class="kw">left_join</span>(salesperson_info) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb30-3" data-line-number="3"><span class="st">  </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(territoryid))</a></code></pre></div>
 <pre><code>## Joining, by = &quot;businessentityid&quot;</code></pre>
 <p>Notice that we’re droping the Sales Managers – who don’t have a <code>territoryid</code>.</p>
-</div>
 <div id="compare-the-two-versions" class="section level3">
-<h3><span class="header-section-number">12.5.2</span> Compare the two versions</h3>
+<h3><span class="header-section-number">12.3.1</span> Compare the two versions</h3>
 <p>Use <code>pivot_wider</code> to make it easier to compare the native view to our dplyr version.</p>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" data-line-number="1">salesperson_sales_by_fiscal_years_dplyr <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb40-2" data-line-number="2"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>jobtitle, <span class="op">-</span><span class="st"> </span>territoryid) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb40-3" data-line-number="3"><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> fiscal_year, <span class="dt">values_from =</span> sales_total)</a></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" data-line-number="1">salesperson_sales_by_fiscal_years_dplyr <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb32-2" data-line-number="2"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>jobtitle, <span class="op">-</span><span class="st"> </span>territoryid) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb32-3" data-line-number="3"><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> fiscal_year, <span class="dt">values_from =</span> sales_total)</a></code></pre></div>
 <pre><code>## # A tibble: 14 x 7
-##    businessentityid fullname       territory_name  `2011`   `2012` `2013` `2014`
+##    businessentityid full_name      territory_name  `2011`   `2012` `2013` `2014`
 ##               &lt;int&gt; &lt;chr&gt;          &lt;chr&gt;            &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
 ##  1              275 Michael G Bly… Northeast       63763. 2399593. 3.77e6 3.07e6
 ##  2              276 Linda C Mitch… Southwest        5476. 3013884. 4.06e6 3.28e6
@@ -1162,9 +943,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 12              288 Rachel B Vald… Germany            NA       NA  3.72e5 1.46e6
 ## 13              289 Jae B Pak      United Kingdom     NA   963345. 4.19e6 3.35e6
 ## 14              290 Ranjit R Vark… France             NA   360246. 1.77e6 2.38e6</code></pre>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb42-1" data-line-number="1">v_salesperson_sales_by_fiscal_years_data <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb42-2" data-line-number="2"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>jobtitle) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb42-3" data-line-number="3"><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> fiscalyear, <span class="dt">values_from =</span> salestotal)</a></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" data-line-number="1">v_salesperson_sales_by_fiscal_years_data <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb34-2" data-line-number="2"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>jobtitle) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb34-3" data-line-number="3"><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> fiscalyear, <span class="dt">values_from =</span> salestotal)</a></code></pre></div>
 <pre><code>## # A tibble: 14 x 7
 ##    salespersonid fullname         salesterritory  `2011`   `2012`  `2013` `2014`
 ##            &lt;int&gt; &lt;chr&gt;            &lt;chr&gt;            &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;
@@ -1183,21 +964,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 13           289 Jae B Pak        United Kingdom     NA   963345.  4.19e6 3.35e6
 ## 14           290 Ranjit R Varkey… France             NA   360246.  1.77e6 2.38e6</code></pre>
 <p>The column names don’t match up, partly because we are using snake case convention for derived elements.</p>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb44-1" data-line-number="1"><span class="kw">names</span>(salesperson_sales_by_fiscal_years_dplyr) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sort</span>()</a></code></pre></div>
-<pre><code>## [1] &quot;businessentityid&quot; &quot;fiscal_year&quot;      &quot;fullname&quot;         &quot;jobtitle&quot;        
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" data-line-number="1"><span class="kw">names</span>(salesperson_sales_by_fiscal_years_dplyr) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sort</span>()</a></code></pre></div>
+<pre><code>## [1] &quot;businessentityid&quot; &quot;fiscal_year&quot;      &quot;full_name&quot;        &quot;jobtitle&quot;        
 ## [5] &quot;sales_total&quot;      &quot;territory_name&quot;   &quot;territoryid&quot;</code></pre>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb46-1" data-line-number="1"><span class="kw">names</span>(v_salesperson_sales_by_fiscal_years_data) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sort</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" data-line-number="1"><span class="kw">names</span>(v_salesperson_sales_by_fiscal_years_data) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sort</span>()</a></code></pre></div>
 <pre><code>## [1] &quot;fiscalyear&quot;     &quot;fullname&quot;       &quot;jobtitle&quot;       &quot;salespersonid&quot; 
 ## [5] &quot;salesterritory&quot; &quot;salestotal&quot;</code></pre>
 <p>Why 3 sales folks in vsalesperson don’t show up in 2014 vsalespersonsalesbyfiscalyearsdata</p>
 <p>Different environments / SQL dialects</p>
 </div>
 <div id="revise-the-view" class="section level3">
-<h3><span class="header-section-number">12.5.3</span> Revise the view</h3>
-</div>
-</div>
-<div id="writing-your-own-or-modifying-a-view" class="section level2">
-<h2><span class="header-section-number">12.6</span> Writing your own or modifying a view</h2>
+<h3><span class="header-section-number">12.3.2</span> Revise the view</h3>
 <ul>
 <li>What about by month? This could be motivation for creating a new view that does aggregation in the database, rather than in R.</li>
 <li>See SQL code for ‘vsalespersonsalesbyfiscalyearsdata’. Consider:</li>
@@ -1211,10 +988,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li>Making the change may not be your prerogative, but it’s your responsibility to propose any reasonable changes to those who have the authority to make the make the change.</li>
 </ul>
-<p>Save and study the SQL</p>
+</div>
 </div>
 <div id="save-a-view-in-the-database" class="section level2">
-<h2><span class="header-section-number">12.7</span> Save a <code>view</code> in the database</h2>
+<h2><span class="header-section-number">12.4</span> Save a <code>view</code> in the database</h2>
 
 </div>
 </div>
