@@ -107,7 +107,7 @@ ggplot(data = annual_sales, aes(x = year, y = total_soh_dollars)) +
   scale_y_continuous(labels = scales::dollar_format()) +
   labs(
     title = "Adventure Works Sales Dollars by Year",
-    x = glue("Year - between ", min_soh_dt, " - ", max_soh_dt),
+    x = paste0("Year - between ", min_soh_dt, " - ", max_soh_dt),
     y = "Sales $"
   )
 ```
@@ -365,7 +365,6 @@ ggplot(data = annual_sales_w_channel, aes(x = orderdate, y = avg_total_soh_dolla
   )
 ```
 
-
 ## Impact of order type on monthly sales
 
 Digging into the difference between **Sales Rep** and **Online** sales. 
@@ -396,7 +395,6 @@ monthly_sales_w_channel <- tbl(con, in_schema("sales", "salesorderheader")) %>%
   ) %>%
   ungroup()
 ```
-
   
 
 ```{r}
@@ -474,6 +472,7 @@ ggplot(monthly_sales_w_channel_lagged_by_month, aes(x = orderdate, y = pct_month
 ```
 
 For **Sales Reps** it looks like the variation is in the number of orders, not just dollars, as shown in the following plot.
+
 ```{r}
 ggplot(monthly_sales_w_channel_lagged_by_month, aes(x = orderdate, y = pct_monthly_soh_count_change)) +
   scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
@@ -490,7 +489,6 @@ ggplot(monthly_sales_w_channel_lagged_by_month, aes(x = orderdate, y = pct_month
     y = "Change number of orders"
   )
 ```
-
 
 Let's examine whether there is a large year-to-year change.
 ```{r}
@@ -568,7 +566,6 @@ sales_rep_day_of_month_sales <- tbl(con, in_schema("sales", "salesorderheader"))
   mutate(days_with_orders = replace_na(days_with_orders, 0)) %>%
   ungroup()
 ```
-
   
 ```{r}
 sales_rep_day_of_month_sales %>%
@@ -597,7 +594,6 @@ Here are the `r nrow(suspicious_months)` **suspicious months**:
 ```{r}
 suspicious_months
 ```
-
   
 
 ```{r}
@@ -777,7 +773,6 @@ monthly_sales_rep_adjusted %>%
   geom_col() +
   scale_x_continuous(limits = c(1, 32)) +
   labs(
-    title = glue(
     title = paste0(
       "Transactions Entered by Day of Month \n",
       "Comparing Online to Sales Rep Sales\n",
