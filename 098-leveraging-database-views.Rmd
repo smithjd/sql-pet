@@ -7,6 +7,17 @@
 >   * Create a database view either for personal use or for submittal to your enterprise DBA
 
 
+view replication is a big PITA. do it to understand the view mechanics and do that to extend or modify the view.  at the end: share with others via the DBA.
+
+Start with what you need, then "lookup" with other tables.  Within the constraints of foreign keys.  INdex considerations.
+
+repeat the function creation strategy from 083 --
+
+  * correct the date
+  * extract the fiscal year
+
+use tools like postgreSQL pg_modeler to get an ERD.
+
 ## Setup our standard working environment
 
 ```{r setup, include=FALSE}
@@ -81,9 +92,10 @@ str(v_salesperson_sales_by_fiscal_years_data)
 
 skim(tbl(con, in_schema("sales","vsalespersonsalesbyfiscalyearsdata")))
 
-tbl(con, in_schema("sales","vsalespersonsalesbyfiscalyearsdata")) %>% filter(salespersonid == 275)
+tbl(con, in_schema("sales","vsalespersonsalesbyfiscalyearsdata")) %>% 
+  filter(salespersonid == 275)
 ```
-Local idioms for looking at a view itself will vary.  Here is the code to retrieve a PostgreSQL view (using the `pg_get_viewdef` function):
+Database-specific idioms for looking at a view itself will vary.  Here is the code to retrieve a PostgreSQL view (using the `pg_get_viewdef` function):
 
 ```{r}
 view_definition <- dbGetQuery(con, "select 
@@ -157,7 +169,7 @@ getnames(sales_territory)
 
 ```
 
-Join all of the data pertaining to a person.
+Join all of the data pertaining to a person.  Notice that since all of these 4 tables contain `businessentityid`, dplyr will join them all on that common column.
 
 ```{r}
 salesperson_info <- sales_person %>% 
@@ -168,6 +180,9 @@ salesperson_info <- sales_person %>%
 
 str(salesperson_info)
 ```
+
+Discuss:
+  `date_part('year'::text, soh.orderdate + '6 mons'::interval) AS fiscalyear`
 
 Do a crude version with `sales_order_year`.  All of the work can be done on the database server.
 
@@ -181,6 +196,8 @@ sales_data_year <- sales_person %>%
 ```
 
 Lubridate makes it very easy to convert `orderdate` to `fiscal_year`.  Doing that conversion interleaving dplyr and **ANSI-STANDARD** SQL is harder.  Too lazy!  Therefore we just pull the data from the server after the `left_join` and do the rest of the job on the R side.
+
+** notice that the merge is happening on the R side. there would be a modificaiton to make it all (or as much as possible) happen on the server side.**
 
 ```{r}
 sales_data_fiscal_year <- sales_person %>% 
