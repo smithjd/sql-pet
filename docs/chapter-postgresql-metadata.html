@@ -24,7 +24,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, and Ian Frantz" />
 
 
-<meta name="date" content="2019-12-06" />
+<meta name="date" content="2019-12-20" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -443,31 +443,31 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul>
 </blockquote>
 <p>The following packages are used in this chapter:</p>
-<div class="sourceCode" id="cb283"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb283-1" data-line-number="1"><span class="kw">library</span>(tidyverse)</a>
-<a class="sourceLine" id="cb283-2" data-line-number="2"><span class="kw">library</span>(DBI)</a>
-<a class="sourceLine" id="cb283-3" data-line-number="3"><span class="kw">library</span>(RPostgres)</a>
-<a class="sourceLine" id="cb283-4" data-line-number="4"><span class="kw">library</span>(glue)</a>
-<a class="sourceLine" id="cb283-5" data-line-number="5"><span class="kw">library</span>(here)</a>
-<a class="sourceLine" id="cb283-6" data-line-number="6"><span class="kw">require</span>(knitr)</a>
-<a class="sourceLine" id="cb283-7" data-line-number="7"><span class="kw">library</span>(dbplyr)</a>
-<a class="sourceLine" id="cb283-8" data-line-number="8"><span class="kw">library</span>(sqlpetr)</a></code></pre></div>
+<div class="sourceCode" id="cb287"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb287-1" data-line-number="1"><span class="kw">library</span>(tidyverse)</a>
+<a class="sourceLine" id="cb287-2" data-line-number="2"><span class="kw">library</span>(DBI)</a>
+<a class="sourceLine" id="cb287-3" data-line-number="3"><span class="kw">library</span>(RPostgres)</a>
+<a class="sourceLine" id="cb287-4" data-line-number="4"><span class="kw">library</span>(glue)</a>
+<a class="sourceLine" id="cb287-5" data-line-number="5"><span class="kw">library</span>(here)</a>
+<a class="sourceLine" id="cb287-6" data-line-number="6"><span class="kw">require</span>(knitr)</a>
+<a class="sourceLine" id="cb287-7" data-line-number="7"><span class="kw">library</span>(dbplyr)</a>
+<a class="sourceLine" id="cb287-8" data-line-number="8"><span class="kw">library</span>(sqlpetr)</a></code></pre></div>
 <p>Assume that the Docker container with PostgreSQL and the dvdrental database are ready to go.</p>
-<div class="sourceCode" id="cb284"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb284-1" data-line-number="1"><span class="kw">sp_docker_start</span>(<span class="st">&quot;adventureworks&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb288"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb288-1" data-line-number="1"><span class="kw">sp_docker_start</span>(<span class="st">&quot;adventureworks&quot;</span>)</a></code></pre></div>
 <p>Connect to the database:</p>
-<div class="sourceCode" id="cb285"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb285-1" data-line-number="1">con &lt;-<span class="st"> </span>sqlpetr<span class="op">::</span><span class="kw">sp_get_postgres_connection</span>(</a>
-<a class="sourceLine" id="cb285-2" data-line-number="2">  <span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),</a>
-<a class="sourceLine" id="cb285-3" data-line-number="3">  <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),</a>
-<a class="sourceLine" id="cb285-4" data-line-number="4">  <span class="dt">dbname =</span> <span class="st">&quot;adventureworks&quot;</span>,</a>
-<a class="sourceLine" id="cb285-5" data-line-number="5">  <span class="dt">port =</span> <span class="dv">5432</span>, </a>
-<a class="sourceLine" id="cb285-6" data-line-number="6">  <span class="dt">seconds_to_test =</span> <span class="dv">20</span>, </a>
-<a class="sourceLine" id="cb285-7" data-line-number="7">  <span class="dt">connection_tab =</span> <span class="ot">TRUE</span></a>
-<a class="sourceLine" id="cb285-8" data-line-number="8">)</a></code></pre></div>
+<div class="sourceCode" id="cb289"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb289-1" data-line-number="1">con &lt;-<span class="st"> </span>sqlpetr<span class="op">::</span><span class="kw">sp_get_postgres_connection</span>(</a>
+<a class="sourceLine" id="cb289-2" data-line-number="2">  <span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),</a>
+<a class="sourceLine" id="cb289-3" data-line-number="3">  <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),</a>
+<a class="sourceLine" id="cb289-4" data-line-number="4">  <span class="dt">dbname =</span> <span class="st">&quot;adventureworks&quot;</span>,</a>
+<a class="sourceLine" id="cb289-5" data-line-number="5">  <span class="dt">port =</span> <span class="dv">5432</span>, </a>
+<a class="sourceLine" id="cb289-6" data-line-number="6">  <span class="dt">seconds_to_test =</span> <span class="dv">20</span>, </a>
+<a class="sourceLine" id="cb289-7" data-line-number="7">  <span class="dt">connection_tab =</span> <span class="ot">TRUE</span></a>
+<a class="sourceLine" id="cb289-8" data-line-number="8">)</a></code></pre></div>
 <div id="views-trick-parked-here-for-the-time-being" class="section level2">
 <h2><span class="header-section-number">13.1</span> Views trick parked here for the time being</h2>
 <div id="explore-the-vsalelsperson-and-vsalespersonsalesbyfiscalyearsdata-views" class="section level3">
 <h3><span class="header-section-number">13.1.1</span> Explore the vsalelsperson and vsalespersonsalesbyfiscalyearsdata views</h3>
 <p>The following trick goes later in the book, where it’s used to prove the finding that to make sense of othe data you need to</p>
-<div class="sourceCode" id="cb286"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb286-1" data-line-number="1"><span class="kw">cat</span>(<span class="kw">unlist</span>(<span class="kw">dbGetQuery</span>(con, <span class="st">&quot;select pg_get_viewdef(&#39;sales.vsalesperson&#39;, true)&quot;</span>)))</a></code></pre></div>
+<div class="sourceCode" id="cb290"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb290-1" data-line-number="1"><span class="kw">cat</span>(<span class="kw">unlist</span>(<span class="kw">dbGetQuery</span>(con, <span class="st">&quot;select pg_get_viewdef(&#39;sales.vsalesperson&#39;, true)&quot;</span>)))</a></code></pre></div>
 <pre><code>##  SELECT s.businessentityid,
 ##     p.title,
 ##     p.firstname,
@@ -521,40 +521,40 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="what-tables-are-in-the-database" class="section level3">
 <h3><span class="header-section-number">13.2.3</span> What tables are in the database?</h3>
 <p>The simplest way to get a list of tables is with … <em>NO LONGER WORKS</em>:</p>
-<div class="sourceCode" id="cb289"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb289-1" data-line-number="1">schema_list &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;information_schema&quot;</span>, <span class="st">&quot;schemata&quot;</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb289-2" data-line-number="2"><span class="st">  </span><span class="kw">select</span>(catalog_name, schema_name, schema_owner) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb289-3" data-line-number="3"><span class="st">  </span><span class="kw">collect</span>()</a>
-<a class="sourceLine" id="cb289-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb289-5" data-line-number="5"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(schema_list))</a></code></pre></div>
+<div class="sourceCode" id="cb293"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb293-1" data-line-number="1">schema_list &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;information_schema&quot;</span>, <span class="st">&quot;schemata&quot;</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb293-2" data-line-number="2"><span class="st">  </span><span class="kw">select</span>(catalog_name, schema_name, schema_owner) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb293-3" data-line-number="3"><span class="st">  </span><span class="kw">collect</span>()</a>
+<a class="sourceLine" id="cb293-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb293-5" data-line-number="5"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(schema_list))</a></code></pre></div>
 <p><div id="htmlwidget-1b4ff99564eb6e8884a5" style="width:100%;height:auto;" class="datatables html-widget"></div>
 <script type="application/json" data-for="htmlwidget-1b4ff99564eb6e8884a5">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["adventureworks","adventureworks","adventureworks","adventureworks","adventureworks","adventureworks"],["sales","sa","purchasing","pu","production","pr"],["postgres","postgres","postgres","postgres","postgres","postgres"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>catalog_name<\/th>\n      <th>schema_name<\/th>\n      <th>schema_owner<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script>
 ### Digging into the <code>information_schema</code></p>
 <p>We usually need more detail than just a list of tables. Most SQL databases have an <code>information_schema</code> that has a standard structure to describe and control the database.</p>
 <p>The <code>information_schema</code> is in a different schema from the default, so to connect to the <code>tables</code> table in the <code>information_schema</code> we connect to the database in a different way:</p>
-<div class="sourceCode" id="cb290"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb290-1" data-line-number="1">table_info_schema_table &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, dbplyr<span class="op">::</span><span class="kw">in_schema</span>(<span class="st">&quot;information_schema&quot;</span>, <span class="st">&quot;tables&quot;</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb294"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb294-1" data-line-number="1">table_info_schema_table &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, dbplyr<span class="op">::</span><span class="kw">in_schema</span>(<span class="st">&quot;information_schema&quot;</span>, <span class="st">&quot;tables&quot;</span>))</a></code></pre></div>
 <p>The <code>information_schema</code> is large and complex and contains 343 tables. So it’s easy to get lost in it.</p>
 <p>This query retrieves a list of the tables in the database that includes additional detail, not just the name of the table.</p>
-<div class="sourceCode" id="cb291"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb291-1" data-line-number="1">table_info &lt;-<span class="st"> </span>table_info_schema_table <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb291-2" data-line-number="2"><span class="st">  </span><span class="co"># filter(table_schema == &quot;public&quot;) %&gt;%</span></a>
-<a class="sourceLine" id="cb291-3" data-line-number="3"><span class="st">  </span><span class="kw">select</span>(table_catalog, table_schema, table_name, table_type) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb291-4" data-line-number="4"><span class="st">  </span><span class="kw">arrange</span>(table_type, table_name) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb291-5" data-line-number="5"><span class="st">  </span><span class="kw">collect</span>()</a>
-<a class="sourceLine" id="cb291-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb291-7" data-line-number="7"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(table_info))</a></code></pre></div>
+<div class="sourceCode" id="cb295"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb295-1" data-line-number="1">table_info &lt;-<span class="st"> </span>table_info_schema_table <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb295-2" data-line-number="2"><span class="st">  </span><span class="co"># filter(table_schema == &quot;public&quot;) %&gt;%</span></a>
+<a class="sourceLine" id="cb295-3" data-line-number="3"><span class="st">  </span><span class="kw">select</span>(table_catalog, table_schema, table_name, table_type) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb295-4" data-line-number="4"><span class="st">  </span><span class="kw">arrange</span>(table_type, table_name) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb295-5" data-line-number="5"><span class="st">  </span><span class="kw">collect</span>()</a>
+<a class="sourceLine" id="cb295-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb295-7" data-line-number="7"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(table_info))</a></code></pre></div>
 <p><div id="htmlwidget-8f836166d559454ecd73" style="width:100%;height:auto;" class="datatables html-widget"></div>
 <script type="application/json" data-for="htmlwidget-8f836166d559454ecd73">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["adventureworks","adventureworks","adventureworks","adventureworks","adventureworks","adventureworks"],["person","person","production","person","person","person"],["address","addresstype","billofmaterials","businessentity","businessentityaddress","businessentitycontact"],["BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_catalog<\/th>\n      <th>table_schema<\/th>\n      <th>table_name<\/th>\n      <th>table_type<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script>
 In this context <code>table_catalog</code> is synonymous with <code>database</code>.</p>
 <p>Notice that <em>VIEWS</em> are composites made up of one or more <em>BASE TABLES</em>.</p>
 <p>The SQL world has its own terminology. For example <code>rs</code> is shorthand for <code>result set</code>. That’s equivalent to using <code>df</code> for a <code>data frame</code>. The following SQL query returns the same information as the previous dplyr code.</p>
-<div class="sourceCode" id="cb292"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb292-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(</a>
-<a class="sourceLine" id="cb292-2" data-line-number="2">  con,</a>
-<a class="sourceLine" id="cb292-3" data-line-number="3">  <span class="st">&quot;select table_catalog, table_schema, table_name, table_type </span></a>
-<a class="sourceLine" id="cb292-4" data-line-number="4"><span class="st">  from information_schema.tables </span></a>
-<a class="sourceLine" id="cb292-5" data-line-number="5"><span class="st">  where table_schema not in (&#39;pg_catalog&#39;,&#39;information_schema&#39;)</span></a>
-<a class="sourceLine" id="cb292-6" data-line-number="6"><span class="st">  order by table_type, table_name </span></a>
-<a class="sourceLine" id="cb292-7" data-line-number="7"><span class="st">  ;&quot;</span></a>
-<a class="sourceLine" id="cb292-8" data-line-number="8">)</a>
-<a class="sourceLine" id="cb292-9" data-line-number="9"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs))</a></code></pre></div>
+<div class="sourceCode" id="cb296"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb296-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(</a>
+<a class="sourceLine" id="cb296-2" data-line-number="2">  con,</a>
+<a class="sourceLine" id="cb296-3" data-line-number="3">  <span class="st">&quot;select table_catalog, table_schema, table_name, table_type </span></a>
+<a class="sourceLine" id="cb296-4" data-line-number="4"><span class="st">  from information_schema.tables </span></a>
+<a class="sourceLine" id="cb296-5" data-line-number="5"><span class="st">  where table_schema not in (&#39;pg_catalog&#39;,&#39;information_schema&#39;)</span></a>
+<a class="sourceLine" id="cb296-6" data-line-number="6"><span class="st">  order by table_type, table_name </span></a>
+<a class="sourceLine" id="cb296-7" data-line-number="7"><span class="st">  ;&quot;</span></a>
+<a class="sourceLine" id="cb296-8" data-line-number="8">)</a>
+<a class="sourceLine" id="cb296-9" data-line-number="9"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs))</a></code></pre></div>
 <div id="htmlwidget-0d7db73d03839427d3b7" style="width:100%;height:auto;" class="datatables html-widget"></div>
 <script type="application/json" data-for="htmlwidget-0d7db73d03839427d3b7">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["adventureworks","adventureworks","adventureworks","adventureworks","adventureworks","adventureworks"],["person","person","production","person","person","person"],["address","addresstype","billofmaterials","businessentity","businessentityaddress","businessentitycontact"],["BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_catalog<\/th>\n      <th>table_schema<\/th>\n      <th>table_name<\/th>\n      <th>table_type<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script>
 </div>
@@ -562,26 +562,26 @@ In this context <code>table_catalog</code> is synonymous with <code>database</co
 <div id="what-columns-do-those-tables-contain" class="section level2">
 <h2><span class="header-section-number">13.3</span> What columns do those tables contain?</h2>
 <p>Of course, the <code>DBI</code> package has a <code>dbListFields</code> function that provides the simplest way to get the minimum, a list of column names:</p>
-<div class="sourceCode" id="cb293"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb293-1" data-line-number="1"><span class="co"># DBI::dbListFields(con, &quot;rental&quot;)</span></a></code></pre></div>
+<div class="sourceCode" id="cb297"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb297-1" data-line-number="1"><span class="co"># DBI::dbListFields(con, &quot;rental&quot;)</span></a></code></pre></div>
 <p>But the <code>information_schema</code> has a lot more useful information that we can use.</p>
-<div class="sourceCode" id="cb294"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb294-1" data-line-number="1">columns_info_schema_table &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, dbplyr<span class="op">::</span><span class="kw">in_schema</span>(<span class="st">&quot;information_schema&quot;</span>, <span class="st">&quot;columns&quot;</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb298"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb298-1" data-line-number="1">columns_info_schema_table &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, dbplyr<span class="op">::</span><span class="kw">in_schema</span>(<span class="st">&quot;information_schema&quot;</span>, <span class="st">&quot;columns&quot;</span>))</a></code></pre></div>
 <p>Since the <code>information_schema</code> contains 2961 columns, we are narrowing our focus to just one table. This query retrieves more information about the <code>rental</code> table:</p>
-<div class="sourceCode" id="cb295"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb295-1" data-line-number="1">columns_info_schema_info &lt;-<span class="st"> </span>columns_info_schema_table <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb295-2" data-line-number="2"><span class="st">  </span><span class="co"># filter(table_schema == &quot;public&quot;) %&gt;%</span></a>
-<a class="sourceLine" id="cb295-3" data-line-number="3"><span class="st">  </span><span class="kw">select</span>(</a>
-<a class="sourceLine" id="cb295-4" data-line-number="4">    table_catalog, table_schema, table_name, column_name, data_type, ordinal_position,</a>
-<a class="sourceLine" id="cb295-5" data-line-number="5">    character_maximum_length, column_default, numeric_precision, numeric_precision_radix</a>
-<a class="sourceLine" id="cb295-6" data-line-number="6">  ) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb295-7" data-line-number="7"><span class="st">  </span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="ot">Inf</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb295-8" data-line-number="8"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">data_type =</span> <span class="kw">case_when</span>(</a>
-<a class="sourceLine" id="cb295-9" data-line-number="9">    data_type <span class="op">==</span><span class="st"> &quot;character varying&quot;</span> <span class="op">~</span><span class="st"> </span><span class="kw">paste0</span>(data_type, <span class="st">&quot; (&quot;</span>, character_maximum_length, <span class="st">&quot;)&quot;</span>),</a>
-<a class="sourceLine" id="cb295-10" data-line-number="10">    data_type <span class="op">==</span><span class="st"> &quot;real&quot;</span> <span class="op">~</span><span class="st"> </span><span class="kw">paste0</span>(data_type, <span class="st">&quot; (&quot;</span>, numeric_precision, <span class="st">&quot;,&quot;</span>, numeric_precision_radix, <span class="st">&quot;)&quot;</span>),</a>
-<a class="sourceLine" id="cb295-11" data-line-number="11">    <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> </span>data_type</a>
-<a class="sourceLine" id="cb295-12" data-line-number="12">  )) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb295-13" data-line-number="13"><span class="st">  </span><span class="co"># filter(table_name == &quot;rental&quot;) %&gt;%</span></a>
-<a class="sourceLine" id="cb295-14" data-line-number="14"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>table_schema, <span class="op">-</span>numeric_precision, <span class="op">-</span>numeric_precision_radix)</a>
-<a class="sourceLine" id="cb295-15" data-line-number="15"></a>
-<a class="sourceLine" id="cb295-16" data-line-number="16"><span class="kw">glimpse</span>(columns_info_schema_info)</a></code></pre></div>
+<div class="sourceCode" id="cb299"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb299-1" data-line-number="1">columns_info_schema_info &lt;-<span class="st"> </span>columns_info_schema_table <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb299-2" data-line-number="2"><span class="st">  </span><span class="co"># filter(table_schema == &quot;public&quot;) %&gt;%</span></a>
+<a class="sourceLine" id="cb299-3" data-line-number="3"><span class="st">  </span><span class="kw">select</span>(</a>
+<a class="sourceLine" id="cb299-4" data-line-number="4">    table_catalog, table_schema, table_name, column_name, data_type, ordinal_position,</a>
+<a class="sourceLine" id="cb299-5" data-line-number="5">    character_maximum_length, column_default, numeric_precision, numeric_precision_radix</a>
+<a class="sourceLine" id="cb299-6" data-line-number="6">  ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb299-7" data-line-number="7"><span class="st">  </span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="ot">Inf</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb299-8" data-line-number="8"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">data_type =</span> <span class="kw">case_when</span>(</a>
+<a class="sourceLine" id="cb299-9" data-line-number="9">    data_type <span class="op">==</span><span class="st"> &quot;character varying&quot;</span> <span class="op">~</span><span class="st"> </span><span class="kw">paste0</span>(data_type, <span class="st">&quot; (&quot;</span>, character_maximum_length, <span class="st">&quot;)&quot;</span>),</a>
+<a class="sourceLine" id="cb299-10" data-line-number="10">    data_type <span class="op">==</span><span class="st"> &quot;real&quot;</span> <span class="op">~</span><span class="st"> </span><span class="kw">paste0</span>(data_type, <span class="st">&quot; (&quot;</span>, numeric_precision, <span class="st">&quot;,&quot;</span>, numeric_precision_radix, <span class="st">&quot;)&quot;</span>),</a>
+<a class="sourceLine" id="cb299-11" data-line-number="11">    <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> </span>data_type</a>
+<a class="sourceLine" id="cb299-12" data-line-number="12">  )) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb299-13" data-line-number="13"><span class="st">  </span><span class="co"># filter(table_name == &quot;rental&quot;) %&gt;%</span></a>
+<a class="sourceLine" id="cb299-14" data-line-number="14"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>table_schema, <span class="op">-</span>numeric_precision, <span class="op">-</span>numeric_precision_radix)</a>
+<a class="sourceLine" id="cb299-15" data-line-number="15"></a>
+<a class="sourceLine" id="cb299-16" data-line-number="16"><span class="kw">glimpse</span>(columns_info_schema_info)</a></code></pre></div>
 <pre><code>## Observations: 2,961
 ## Variables: 7
 ## $ table_catalog            &lt;chr&gt; &quot;adventureworks&quot;, &quot;adventureworks&quot;, &quot;adventu…
@@ -591,50 +591,50 @@ In this context <code>table_catalog</code> is synonymous with <code>database</co
 ## $ ordinal_position         &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 1…
 ## $ character_maximum_length &lt;int&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
 ## $ column_default           &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …</code></pre>
-<div class="sourceCode" id="cb297"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb297-1" data-line-number="1"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(columns_info_schema_info))</a></code></pre></div>
+<div class="sourceCode" id="cb301"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb301-1" data-line-number="1"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(columns_info_schema_info))</a></code></pre></div>
 <div id="htmlwidget-c2e3fede5c798441fdae" style="width:100%;height:auto;" class="datatables html-widget"></div>
 <script type="application/json" data-for="htmlwidget-c2e3fede5c798441fdae">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["adventureworks","adventureworks","adventureworks","adventureworks","adventureworks","adventureworks"],["pg_proc","pg_proc","pg_proc","pg_proc","pg_proc","pg_proc"],["proname","pronamespace","proowner","prolang","procost","prorows"],["name","oid","oid","oid","real (24,2)","real (24,2)"],[1,2,3,4,5,6],[null,null,null,null,null,null],[null,null,null,null,null,null]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_catalog<\/th>\n      <th>table_name<\/th>\n      <th>column_name<\/th>\n      <th>data_type<\/th>\n      <th>ordinal_position<\/th>\n      <th>character_maximum_length<\/th>\n      <th>column_default<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[5,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <div id="what-is-the-difference-between-a-view-and-a-base-table" class="section level3">
 <h3><span class="header-section-number">13.3.1</span> What is the difference between a <code>VIEW</code> and a <code>BASE TABLE</code>?</h3>
 <p>The <code>BASE TABLE</code> has the underlying data in the database</p>
-<div class="sourceCode" id="cb298"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb298-1" data-line-number="1">table_info_schema_table <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb298-2" data-line-number="2"><span class="st">  </span><span class="kw">filter</span>( table_type <span class="op">==</span><span class="st"> &quot;BASE TABLE&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb298-3" data-line-number="3"><span class="st">  </span><span class="co"># filter(table_schema == &quot;public&quot; &amp; table_type == &quot;BASE TABLE&quot;) %&gt;%</span></a>
-<a class="sourceLine" id="cb298-4" data-line-number="4"><span class="st">  </span><span class="kw">select</span>(table_name, table_type) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb298-5" data-line-number="5"><span class="st">  </span><span class="kw">left_join</span>(columns_info_schema_table, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;table_name&quot;</span> =<span class="st"> &quot;table_name&quot;</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb298-6" data-line-number="6"><span class="st">  </span><span class="kw">select</span>(</a>
-<a class="sourceLine" id="cb298-7" data-line-number="7">    table_type, table_name, column_name, data_type, ordinal_position,</a>
-<a class="sourceLine" id="cb298-8" data-line-number="8">    column_default</a>
-<a class="sourceLine" id="cb298-9" data-line-number="9">  ) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb298-10" data-line-number="10"><span class="st">  </span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="ot">Inf</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb298-11" data-line-number="11"><span class="st">  </span><span class="kw">filter</span>(<span class="kw">str_detect</span>(table_name, <span class="st">&quot;cust&quot;</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb298-12" data-line-number="12"><span class="st">  </span><span class="kw">head</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb298-13" data-line-number="13"><span class="st">  </span><span class="kw">sp_print_df</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb302"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb302-1" data-line-number="1">table_info_schema_table <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb302-2" data-line-number="2"><span class="st">  </span><span class="kw">filter</span>( table_type <span class="op">==</span><span class="st"> &quot;BASE TABLE&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb302-3" data-line-number="3"><span class="st">  </span><span class="co"># filter(table_schema == &quot;public&quot; &amp; table_type == &quot;BASE TABLE&quot;) %&gt;%</span></a>
+<a class="sourceLine" id="cb302-4" data-line-number="4"><span class="st">  </span><span class="kw">select</span>(table_name, table_type) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb302-5" data-line-number="5"><span class="st">  </span><span class="kw">left_join</span>(columns_info_schema_table, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;table_name&quot;</span> =<span class="st"> &quot;table_name&quot;</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb302-6" data-line-number="6"><span class="st">  </span><span class="kw">select</span>(</a>
+<a class="sourceLine" id="cb302-7" data-line-number="7">    table_type, table_name, column_name, data_type, ordinal_position,</a>
+<a class="sourceLine" id="cb302-8" data-line-number="8">    column_default</a>
+<a class="sourceLine" id="cb302-9" data-line-number="9">  ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb302-10" data-line-number="10"><span class="st">  </span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="ot">Inf</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb302-11" data-line-number="11"><span class="st">  </span><span class="kw">filter</span>(<span class="kw">str_detect</span>(table_name, <span class="st">&quot;cust&quot;</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb302-12" data-line-number="12"><span class="st">  </span><span class="kw">head</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb302-13" data-line-number="13"><span class="st">  </span><span class="kw">sp_print_df</span>()</a></code></pre></div>
 <div id="htmlwidget-a77ad32f6b82562872f5" style="width:100%;height:auto;" class="datatables html-widget"></div>
 <script type="application/json" data-for="htmlwidget-a77ad32f6b82562872f5">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE"],["customer","customer","customer","customer","customer","customer"],["personid","storeid","territoryid","rowguid","modifieddate","customerid"],["integer","integer","integer","uuid","timestamp without time zone","integer"],[2,3,4,5,6,1],[null,null,null,"uuid_generate_v1()","now()","nextval('sales.customer_customerid_seq'::regclass)"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_type<\/th>\n      <th>table_name<\/th>\n      <th>column_name<\/th>\n      <th>data_type<\/th>\n      <th>ordinal_position<\/th>\n      <th>column_default<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":5},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <p>Probably should explore how the <code>VIEW</code> is made up of data from BASE TABLEs.</p>
-<div class="sourceCode" id="cb299"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb299-1" data-line-number="1">table_info_schema_table <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb299-2" data-line-number="2"><span class="st">  </span><span class="kw">filter</span>( table_type <span class="op">==</span><span class="st"> &quot;VIEW&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb299-3" data-line-number="3"><span class="st">  </span><span class="co"># filter(table_schema == &quot;public&quot; &amp; table_type == &quot;VIEW&quot;) %&gt;%</span></a>
-<a class="sourceLine" id="cb299-4" data-line-number="4"><span class="st">  </span><span class="kw">select</span>(table_name, table_type) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb299-5" data-line-number="5"><span class="st">  </span><span class="kw">left_join</span>(columns_info_schema_table, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;table_name&quot;</span> =<span class="st"> &quot;table_name&quot;</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb299-6" data-line-number="6"><span class="st">  </span><span class="kw">select</span>(</a>
-<a class="sourceLine" id="cb299-7" data-line-number="7">    table_type, table_name, column_name, data_type, ordinal_position,</a>
-<a class="sourceLine" id="cb299-8" data-line-number="8">    column_default</a>
-<a class="sourceLine" id="cb299-9" data-line-number="9">  ) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb299-10" data-line-number="10"><span class="st">  </span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="ot">Inf</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb299-11" data-line-number="11"><span class="st">  </span><span class="kw">filter</span>(<span class="kw">str_detect</span>(table_name, <span class="st">&quot;cust&quot;</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb299-12" data-line-number="12"><span class="st">  </span><span class="kw">head</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb299-13" data-line-number="13"><span class="st">  </span><span class="kw">sp_print_df</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb303"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb303-1" data-line-number="1">table_info_schema_table <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb303-2" data-line-number="2"><span class="st">  </span><span class="kw">filter</span>( table_type <span class="op">==</span><span class="st"> &quot;VIEW&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb303-3" data-line-number="3"><span class="st">  </span><span class="co"># filter(table_schema == &quot;public&quot; &amp; table_type == &quot;VIEW&quot;) %&gt;%</span></a>
+<a class="sourceLine" id="cb303-4" data-line-number="4"><span class="st">  </span><span class="kw">select</span>(table_name, table_type) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb303-5" data-line-number="5"><span class="st">  </span><span class="kw">left_join</span>(columns_info_schema_table, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;table_name&quot;</span> =<span class="st"> &quot;table_name&quot;</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb303-6" data-line-number="6"><span class="st">  </span><span class="kw">select</span>(</a>
+<a class="sourceLine" id="cb303-7" data-line-number="7">    table_type, table_name, column_name, data_type, ordinal_position,</a>
+<a class="sourceLine" id="cb303-8" data-line-number="8">    column_default</a>
+<a class="sourceLine" id="cb303-9" data-line-number="9">  ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb303-10" data-line-number="10"><span class="st">  </span><span class="kw">collect</span>(<span class="dt">n =</span> <span class="ot">Inf</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb303-11" data-line-number="11"><span class="st">  </span><span class="kw">filter</span>(<span class="kw">str_detect</span>(table_name, <span class="st">&quot;cust&quot;</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb303-12" data-line-number="12"><span class="st">  </span><span class="kw">head</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb303-13" data-line-number="13"><span class="st">  </span><span class="kw">sp_print_df</span>()</a></code></pre></div>
 <div id="htmlwidget-e3479f292a01744eb530" style="width:100%;height:auto;" class="datatables html-widget"></div>
 <script type="application/json" data-for="htmlwidget-e3479f292a01744eb530">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["VIEW","VIEW","VIEW","VIEW","VIEW","VIEW"],["vindividualcustomer","vindividualcustomer","vindividualcustomer","vindividualcustomer","vindividualcustomer","vindividualcustomer"],["businessentityid","title","firstname","middlename","lastname","suffix"],["integer","character varying","character varying","character varying","character varying","character varying"],[1,2,3,4,5,6],[null,null,null,null,null,null]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_type<\/th>\n      <th>table_name<\/th>\n      <th>column_name<\/th>\n      <th>data_type<\/th>\n      <th>ordinal_position<\/th>\n      <th>column_default<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":5},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="what-data-types-are-found-in-the-database" class="section level3">
 <h3><span class="header-section-number">13.3.2</span> What data types are found in the database?</h3>
-<div class="sourceCode" id="cb300"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb300-1" data-line-number="1">columns_info_schema_info <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb300-2" data-line-number="2"><span class="st">  </span><span class="kw">count</span>(data_type) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb300-3" data-line-number="3"><span class="st">  </span><span class="kw">head</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb300-4" data-line-number="4"><span class="st">  </span><span class="kw">sp_print_df</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb304"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb304-1" data-line-number="1">columns_info_schema_info <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb304-2" data-line-number="2"><span class="st">  </span><span class="kw">count</span>(data_type) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb304-3" data-line-number="3"><span class="st">  </span><span class="kw">head</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb304-4" data-line-number="4"><span class="st">  </span><span class="kw">sp_print_df</span>()</a></code></pre></div>
 <div id="htmlwidget-65b7328530dcdf303887" style="width:100%;height:auto;" class="datatables html-widget"></div>
 <script type="application/json" data-for="htmlwidget-65b7328530dcdf303887">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["\"char\"","abstime","anyarray","ARRAY","bigint","boolean"],[38,2,9,75,161,136]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>data_type<\/th>\n      <th>n<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":2},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
@@ -646,21 +646,21 @@ In this context <code>table_catalog</code> is synonymous with <code>database</co
 <h3><span class="header-section-number">13.4.1</span> Counting columns and name reuse</h3>
 <p>Pull out some rough-and-ready but useful statistics about your database. Since we are in SQL-land we talk about variables as <code>columns</code>.</p>
 <p><em>this is wrong!</em></p>
-<div class="sourceCode" id="cb301"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb301-1" data-line-number="1">public_tables &lt;-<span class="st"> </span>columns_info_schema_table <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb301-2" data-line-number="2"><span class="st">  </span><span class="co"># filter(str_detect(table_name, &quot;pg_&quot;) == FALSE) %&gt;%</span></a>
-<a class="sourceLine" id="cb301-3" data-line-number="3"><span class="st">  </span><span class="co"># filter(table_schema == &quot;public&quot;) %&gt;%</span></a>
-<a class="sourceLine" id="cb301-4" data-line-number="4"><span class="st">  </span><span class="kw">collect</span>()</a>
-<a class="sourceLine" id="cb301-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb301-6" data-line-number="6">public_tables <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb301-7" data-line-number="7"><span class="st">  </span><span class="kw">count</span>(table_name, <span class="dt">sort =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb301-8" data-line-number="8"><span class="st">  </span><span class="kw">head</span>(<span class="dt">n =</span> <span class="dv">15</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb301-9" data-line-number="9"><span class="st">  </span><span class="kw">sp_print_df</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb305"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb305-1" data-line-number="1">public_tables &lt;-<span class="st"> </span>columns_info_schema_table <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb305-2" data-line-number="2"><span class="st">  </span><span class="co"># filter(str_detect(table_name, &quot;pg_&quot;) == FALSE) %&gt;%</span></a>
+<a class="sourceLine" id="cb305-3" data-line-number="3"><span class="st">  </span><span class="co"># filter(table_schema == &quot;public&quot;) %&gt;%</span></a>
+<a class="sourceLine" id="cb305-4" data-line-number="4"><span class="st">  </span><span class="kw">collect</span>()</a>
+<a class="sourceLine" id="cb305-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb305-6" data-line-number="6">public_tables <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb305-7" data-line-number="7"><span class="st">  </span><span class="kw">count</span>(table_name, <span class="dt">sort =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb305-8" data-line-number="8"><span class="st">  </span><span class="kw">head</span>(<span class="dt">n =</span> <span class="dv">15</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb305-9" data-line-number="9"><span class="st">  </span><span class="kw">sp_print_df</span>()</a></code></pre></div>
 <div id="htmlwidget-1990be7a07e95fee1522" style="width:100%;height:auto;" class="datatables html-widget"></div>
 <script type="application/json" data-for="htmlwidget-1990be7a07e95fee1522">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"],["routines","columns","p","pg_class","parameters","attributes","pg_type","element_types","user_defined_types","pg_proc","domains","pg_statistic","soh","pg_constraint","product"],[82,44,40,33,32,31,30,29,29,28,27,26,26,25,25]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_name<\/th>\n      <th>n<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":2},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <p>How many <em>column names</em> are shared across tables (or duplicated)?</p>
-<div class="sourceCode" id="cb302"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb302-1" data-line-number="1">public_tables <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(column_name, <span class="dt">sort =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb302-2" data-line-number="2"><span class="st">  </span><span class="kw">filter</span>(n <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb302-3" data-line-number="3"><span class="st">  </span><span class="kw">head</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb306"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb306-1" data-line-number="1">public_tables <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">count</span>(column_name, <span class="dt">sort =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb306-2" data-line-number="2"><span class="st">  </span><span class="kw">filter</span>(n <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb306-3" data-line-number="3"><span class="st">  </span><span class="kw">head</span>()</a></code></pre></div>
 <pre><code>## # A tibble: 6 x 2
 ##   column_name          n
 ##   &lt;chr&gt;            &lt;int&gt;
@@ -671,11 +671,11 @@ In this context <code>table_catalog</code> is synonymous with <code>database</co
 ## 5 businessentityid    49
 ## 6 productid           32</code></pre>
 <p>How many column names are unique?</p>
-<div class="sourceCode" id="cb304"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb304-1" data-line-number="1">public_tables <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb304-2" data-line-number="2"><span class="st">  </span><span class="kw">count</span>(column_name) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb304-3" data-line-number="3"><span class="st">  </span><span class="kw">filter</span>(n <span class="op">==</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb304-4" data-line-number="4"><span class="st">  </span><span class="kw">count</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb304-5" data-line-number="5"><span class="st">  </span><span class="kw">head</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb308"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb308-1" data-line-number="1">public_tables <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb308-2" data-line-number="2"><span class="st">  </span><span class="kw">count</span>(column_name) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb308-3" data-line-number="3"><span class="st">  </span><span class="kw">filter</span>(n <span class="op">==</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb308-4" data-line-number="4"><span class="st">  </span><span class="kw">count</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb308-5" data-line-number="5"><span class="st">  </span><span class="kw">head</span>()</a></code></pre></div>
 <pre><code>## # A tibble: 1 x 1
 ##       n
 ##   &lt;int&gt;
@@ -687,83 +687,83 @@ In this context <code>table_catalog</code> is synonymous with <code>database</co
 <div id="direct-sql" class="section level3">
 <h3><span class="header-section-number">13.5.1</span> Direct SQL</h3>
 <p>How do we use this output? Could it be generated by dplyr?</p>
-<div class="sourceCode" id="cb306"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb306-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(</a>
-<a class="sourceLine" id="cb306-2" data-line-number="2">  con,</a>
-<a class="sourceLine" id="cb306-3" data-line-number="3">  <span class="st">&quot;</span></a>
-<a class="sourceLine" id="cb306-4" data-line-number="4"><span class="st">--SELECT conrelid::regclass as table_from</span></a>
-<a class="sourceLine" id="cb306-5" data-line-number="5"><span class="st">select table_catalog||&#39;.&#39;||table_schema||&#39;.&#39;||table_name table_name</span></a>
-<a class="sourceLine" id="cb306-6" data-line-number="6"><span class="st">, conname, pg_catalog.pg_get_constraintdef(r.oid, true) as condef</span></a>
-<a class="sourceLine" id="cb306-7" data-line-number="7"><span class="st">FROM information_schema.columns c,pg_catalog.pg_constraint r</span></a>
-<a class="sourceLine" id="cb306-8" data-line-number="8"><span class="st">WHERE 1 = 1 --r.conrelid = &#39;16485&#39; </span></a>
-<a class="sourceLine" id="cb306-9" data-line-number="9"><span class="st">  AND r.contype  in (&#39;f&#39;,&#39;p&#39;) ORDER BY 1</span></a>
-<a class="sourceLine" id="cb306-10" data-line-number="10"><span class="st">;&quot;</span></a>
-<a class="sourceLine" id="cb306-11" data-line-number="11">)</a>
-<a class="sourceLine" id="cb306-12" data-line-number="12"><span class="kw">glimpse</span>(rs)</a></code></pre></div>
+<div class="sourceCode" id="cb310"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb310-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(</a>
+<a class="sourceLine" id="cb310-2" data-line-number="2">  con,</a>
+<a class="sourceLine" id="cb310-3" data-line-number="3">  <span class="st">&quot;</span></a>
+<a class="sourceLine" id="cb310-4" data-line-number="4"><span class="st">--SELECT conrelid::regclass as table_from</span></a>
+<a class="sourceLine" id="cb310-5" data-line-number="5"><span class="st">select table_catalog||&#39;.&#39;||table_schema||&#39;.&#39;||table_name table_name</span></a>
+<a class="sourceLine" id="cb310-6" data-line-number="6"><span class="st">, conname, pg_catalog.pg_get_constraintdef(r.oid, true) as condef</span></a>
+<a class="sourceLine" id="cb310-7" data-line-number="7"><span class="st">FROM information_schema.columns c,pg_catalog.pg_constraint r</span></a>
+<a class="sourceLine" id="cb310-8" data-line-number="8"><span class="st">WHERE 1 = 1 --r.conrelid = &#39;16485&#39; </span></a>
+<a class="sourceLine" id="cb310-9" data-line-number="9"><span class="st">  AND r.contype  in (&#39;f&#39;,&#39;p&#39;) ORDER BY 1</span></a>
+<a class="sourceLine" id="cb310-10" data-line-number="10"><span class="st">;&quot;</span></a>
+<a class="sourceLine" id="cb310-11" data-line-number="11">)</a>
+<a class="sourceLine" id="cb310-12" data-line-number="12"><span class="kw">glimpse</span>(rs)</a></code></pre></div>
 <pre><code>## Observations: 467,838
 ## Variables: 3
 ## $ table_name &lt;chr&gt; &quot;adventureworks.hr.d&quot;, &quot;adventureworks.hr.d&quot;, &quot;adventurewo…
 ## $ conname    &lt;chr&gt; &quot;FK_SalesOrderDetail_SpecialOfferProduct_SpecialOfferIDPro…
 ## $ condef     &lt;chr&gt; &quot;FOREIGN KEY (specialofferid, productid) REFERENCES sales.…</code></pre>
-<div class="sourceCode" id="cb308"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb308-1" data-line-number="1"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs))</a></code></pre></div>
+<div class="sourceCode" id="cb312"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb312-1" data-line-number="1"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs))</a></code></pre></div>
 <p><div id="htmlwidget-28cf82553809b695f76c" style="width:100%;height:auto;" class="datatables html-widget"></div>
 <script type="application/json" data-for="htmlwidget-28cf82553809b695f76c">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["adventureworks.hr.d","adventureworks.hr.d","adventureworks.hr.d","adventureworks.hr.d","adventureworks.hr.d","adventureworks.hr.d"],["FK_SalesOrderDetail_SpecialOfferProduct_SpecialOfferIDProductID","FK_SalesOrderDetail_SpecialOfferProduct_SpecialOfferIDProductID","FK_SalesOrderHeader_Address_BillToAddressID","FK_SalesOrderHeader_Address_BillToAddressID","FK_SalesOrderHeader_Address_BillToAddressID","FK_SalesOrderHeader_Address_BillToAddressID"],["FOREIGN KEY (specialofferid, productid) REFERENCES sales.specialofferproduct(specialofferid, productid)","FOREIGN KEY (specialofferid, productid) REFERENCES sales.specialofferproduct(specialofferid, productid)","FOREIGN KEY (billtoaddressid) REFERENCES person.address(addressid)","FOREIGN KEY (billtoaddressid) REFERENCES person.address(addressid)","FOREIGN KEY (billtoaddressid) REFERENCES person.address(addressid)","FOREIGN KEY (billtoaddressid) REFERENCES person.address(addressid)"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_name<\/th>\n      <th>conname<\/th>\n      <th>condef<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script>
 The following is more compact and looks more useful. What is the difference between the two?</p>
-<div class="sourceCode" id="cb309"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb309-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(</a>
-<a class="sourceLine" id="cb309-2" data-line-number="2">  con,</a>
-<a class="sourceLine" id="cb309-3" data-line-number="3">  <span class="st">&quot;select conrelid::regclass as table_from</span></a>
-<a class="sourceLine" id="cb309-4" data-line-number="4"><span class="st">      ,c.conname</span></a>
-<a class="sourceLine" id="cb309-5" data-line-number="5"><span class="st">      ,pg_get_constraintdef(c.oid)</span></a>
-<a class="sourceLine" id="cb309-6" data-line-number="6"><span class="st">  from pg_constraint c</span></a>
-<a class="sourceLine" id="cb309-7" data-line-number="7"><span class="st">  join pg_namespace n on n.oid = c.connamespace</span></a>
-<a class="sourceLine" id="cb309-8" data-line-number="8"><span class="st"> where c.contype in (&#39;f&#39;,&#39;p&#39;)</span></a>
-<a class="sourceLine" id="cb309-9" data-line-number="9"><span class="st">   and n.nspname = &#39;public&#39;</span></a>
-<a class="sourceLine" id="cb309-10" data-line-number="10"><span class="st">order by conrelid::regclass::text, contype DESC;</span></a>
-<a class="sourceLine" id="cb309-11" data-line-number="11"><span class="st">&quot;</span></a>
-<a class="sourceLine" id="cb309-12" data-line-number="12">)</a>
-<a class="sourceLine" id="cb309-13" data-line-number="13"><span class="kw">glimpse</span>(rs)</a></code></pre></div>
+<div class="sourceCode" id="cb313"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb313-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(</a>
+<a class="sourceLine" id="cb313-2" data-line-number="2">  con,</a>
+<a class="sourceLine" id="cb313-3" data-line-number="3">  <span class="st">&quot;select conrelid::regclass as table_from</span></a>
+<a class="sourceLine" id="cb313-4" data-line-number="4"><span class="st">      ,c.conname</span></a>
+<a class="sourceLine" id="cb313-5" data-line-number="5"><span class="st">      ,pg_get_constraintdef(c.oid)</span></a>
+<a class="sourceLine" id="cb313-6" data-line-number="6"><span class="st">  from pg_constraint c</span></a>
+<a class="sourceLine" id="cb313-7" data-line-number="7"><span class="st">  join pg_namespace n on n.oid = c.connamespace</span></a>
+<a class="sourceLine" id="cb313-8" data-line-number="8"><span class="st"> where c.contype in (&#39;f&#39;,&#39;p&#39;)</span></a>
+<a class="sourceLine" id="cb313-9" data-line-number="9"><span class="st">   and n.nspname = &#39;public&#39;</span></a>
+<a class="sourceLine" id="cb313-10" data-line-number="10"><span class="st">order by conrelid::regclass::text, contype DESC;</span></a>
+<a class="sourceLine" id="cb313-11" data-line-number="11"><span class="st">&quot;</span></a>
+<a class="sourceLine" id="cb313-12" data-line-number="12">)</a>
+<a class="sourceLine" id="cb313-13" data-line-number="13"><span class="kw">glimpse</span>(rs)</a></code></pre></div>
 <pre><code>## Observations: 0
 ## Variables: 3
 ## $ table_from           &lt;chr&gt; 
 ## $ conname              &lt;chr&gt; 
 ## $ pg_get_constraintdef &lt;chr&gt;</code></pre>
-<div class="sourceCode" id="cb311"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb311-1" data-line-number="1"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs))</a></code></pre></div>
+<div class="sourceCode" id="cb315"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb315-1" data-line-number="1"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(rs))</a></code></pre></div>
 <div id="htmlwidget-988252b1f4f7d9d645fb" style="width:100%;height:auto;" class="datatables html-widget"></div>
 <script type="application/json" data-for="htmlwidget-988252b1f4f7d9d645fb">{"x":{"filter":"none","data":[[],[],[],[]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_from<\/th>\n      <th>conname<\/th>\n      <th>pg_get_constraintdef<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script>
-<div class="sourceCode" id="cb312"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb312-1" data-line-number="1"><span class="kw">dim</span>(rs)[<span class="dv">1</span>]</a></code></pre></div>
+<div class="sourceCode" id="cb316"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb316-1" data-line-number="1"><span class="kw">dim</span>(rs)[<span class="dv">1</span>]</a></code></pre></div>
 <pre><code>## [1] 0</code></pre>
 </div>
 <div id="database-keys-with-dplyr" class="section level3">
 <h3><span class="header-section-number">13.5.2</span> Database keys with dplyr</h3>
 <p>This query shows the primary and foreign keys in the database.</p>
-<div class="sourceCode" id="cb314"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb314-1" data-line-number="1">tables &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, dbplyr<span class="op">::</span><span class="kw">in_schema</span>(<span class="st">&quot;information_schema&quot;</span>, <span class="st">&quot;tables&quot;</span>))</a>
-<a class="sourceLine" id="cb314-2" data-line-number="2">table_constraints &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, dbplyr<span class="op">::</span><span class="kw">in_schema</span>(<span class="st">&quot;information_schema&quot;</span>, <span class="st">&quot;table_constraints&quot;</span>))</a>
-<a class="sourceLine" id="cb314-3" data-line-number="3">key_column_usage &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, dbplyr<span class="op">::</span><span class="kw">in_schema</span>(<span class="st">&quot;information_schema&quot;</span>, <span class="st">&quot;key_column_usage&quot;</span>))</a>
-<a class="sourceLine" id="cb314-4" data-line-number="4">referential_constraints &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, dbplyr<span class="op">::</span><span class="kw">in_schema</span>(<span class="st">&quot;information_schema&quot;</span>, <span class="st">&quot;referential_constraints&quot;</span>))</a>
-<a class="sourceLine" id="cb314-5" data-line-number="5">constraint_column_usage &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, dbplyr<span class="op">::</span><span class="kw">in_schema</span>(<span class="st">&quot;information_schema&quot;</span>, <span class="st">&quot;constraint_column_usage&quot;</span>))</a>
-<a class="sourceLine" id="cb314-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb314-7" data-line-number="7">keys &lt;-<span class="st"> </span>tables <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb314-8" data-line-number="8"><span class="st">  </span><span class="kw">left_join</span>(table_constraints, <span class="dt">by =</span> <span class="kw">c</span>(</a>
-<a class="sourceLine" id="cb314-9" data-line-number="9">    <span class="st">&quot;table_catalog&quot;</span> =<span class="st"> &quot;table_catalog&quot;</span>,</a>
-<a class="sourceLine" id="cb314-10" data-line-number="10">    <span class="st">&quot;table_schema&quot;</span> =<span class="st"> &quot;table_schema&quot;</span>,</a>
-<a class="sourceLine" id="cb314-11" data-line-number="11">    <span class="st">&quot;table_name&quot;</span> =<span class="st"> &quot;table_name&quot;</span></a>
-<a class="sourceLine" id="cb314-12" data-line-number="12">  )) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb314-13" data-line-number="13"><span class="st">  </span><span class="co"># table_constraints %&gt;%</span></a>
-<a class="sourceLine" id="cb314-14" data-line-number="14"><span class="st">  </span><span class="kw">filter</span>(constraint_type <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;FOREIGN KEY&quot;</span>, <span class="st">&quot;PRIMARY KEY&quot;</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb314-15" data-line-number="15"><span class="st">  </span><span class="kw">left_join</span>(key_column_usage,</a>
-<a class="sourceLine" id="cb314-16" data-line-number="16">    <span class="dt">by =</span> <span class="kw">c</span>(</a>
-<a class="sourceLine" id="cb314-17" data-line-number="17">      <span class="st">&quot;table_catalog&quot;</span> =<span class="st"> &quot;table_catalog&quot;</span>,</a>
-<a class="sourceLine" id="cb314-18" data-line-number="18">      <span class="st">&quot;constraint_catalog&quot;</span> =<span class="st"> &quot;constraint_catalog&quot;</span>,</a>
-<a class="sourceLine" id="cb314-19" data-line-number="19">      <span class="st">&quot;constraint_schema&quot;</span> =<span class="st"> &quot;constraint_schema&quot;</span>,</a>
-<a class="sourceLine" id="cb314-20" data-line-number="20">      <span class="st">&quot;table_name&quot;</span> =<span class="st"> &quot;table_name&quot;</span>,</a>
-<a class="sourceLine" id="cb314-21" data-line-number="21">      <span class="st">&quot;table_schema&quot;</span> =<span class="st"> &quot;table_schema&quot;</span>,</a>
-<a class="sourceLine" id="cb314-22" data-line-number="22">      <span class="st">&quot;constraint_name&quot;</span> =<span class="st"> &quot;constraint_name&quot;</span></a>
-<a class="sourceLine" id="cb314-23" data-line-number="23">    )</a>
-<a class="sourceLine" id="cb314-24" data-line-number="24">  ) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb314-25" data-line-number="25"><span class="st">  </span><span class="co"># left_join(constraint_column_usage) %&gt;% # does this table add anything useful?</span></a>
-<a class="sourceLine" id="cb314-26" data-line-number="26"><span class="st">  </span><span class="kw">select</span>(table_name, table_type, constraint_name, constraint_type, column_name, ordinal_position) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb314-27" data-line-number="27"><span class="st">  </span><span class="kw">arrange</span>(table_name) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb314-28" data-line-number="28"><span class="st">  </span><span class="kw">collect</span>()</a>
-<a class="sourceLine" id="cb314-29" data-line-number="29"><span class="kw">glimpse</span>(keys)</a></code></pre></div>
+<div class="sourceCode" id="cb318"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb318-1" data-line-number="1">tables &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, dbplyr<span class="op">::</span><span class="kw">in_schema</span>(<span class="st">&quot;information_schema&quot;</span>, <span class="st">&quot;tables&quot;</span>))</a>
+<a class="sourceLine" id="cb318-2" data-line-number="2">table_constraints &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, dbplyr<span class="op">::</span><span class="kw">in_schema</span>(<span class="st">&quot;information_schema&quot;</span>, <span class="st">&quot;table_constraints&quot;</span>))</a>
+<a class="sourceLine" id="cb318-3" data-line-number="3">key_column_usage &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, dbplyr<span class="op">::</span><span class="kw">in_schema</span>(<span class="st">&quot;information_schema&quot;</span>, <span class="st">&quot;key_column_usage&quot;</span>))</a>
+<a class="sourceLine" id="cb318-4" data-line-number="4">referential_constraints &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, dbplyr<span class="op">::</span><span class="kw">in_schema</span>(<span class="st">&quot;information_schema&quot;</span>, <span class="st">&quot;referential_constraints&quot;</span>))</a>
+<a class="sourceLine" id="cb318-5" data-line-number="5">constraint_column_usage &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, dbplyr<span class="op">::</span><span class="kw">in_schema</span>(<span class="st">&quot;information_schema&quot;</span>, <span class="st">&quot;constraint_column_usage&quot;</span>))</a>
+<a class="sourceLine" id="cb318-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb318-7" data-line-number="7">keys &lt;-<span class="st"> </span>tables <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb318-8" data-line-number="8"><span class="st">  </span><span class="kw">left_join</span>(table_constraints, <span class="dt">by =</span> <span class="kw">c</span>(</a>
+<a class="sourceLine" id="cb318-9" data-line-number="9">    <span class="st">&quot;table_catalog&quot;</span> =<span class="st"> &quot;table_catalog&quot;</span>,</a>
+<a class="sourceLine" id="cb318-10" data-line-number="10">    <span class="st">&quot;table_schema&quot;</span> =<span class="st"> &quot;table_schema&quot;</span>,</a>
+<a class="sourceLine" id="cb318-11" data-line-number="11">    <span class="st">&quot;table_name&quot;</span> =<span class="st"> &quot;table_name&quot;</span></a>
+<a class="sourceLine" id="cb318-12" data-line-number="12">  )) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb318-13" data-line-number="13"><span class="st">  </span><span class="co"># table_constraints %&gt;%</span></a>
+<a class="sourceLine" id="cb318-14" data-line-number="14"><span class="st">  </span><span class="kw">filter</span>(constraint_type <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;FOREIGN KEY&quot;</span>, <span class="st">&quot;PRIMARY KEY&quot;</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb318-15" data-line-number="15"><span class="st">  </span><span class="kw">left_join</span>(key_column_usage,</a>
+<a class="sourceLine" id="cb318-16" data-line-number="16">    <span class="dt">by =</span> <span class="kw">c</span>(</a>
+<a class="sourceLine" id="cb318-17" data-line-number="17">      <span class="st">&quot;table_catalog&quot;</span> =<span class="st"> &quot;table_catalog&quot;</span>,</a>
+<a class="sourceLine" id="cb318-18" data-line-number="18">      <span class="st">&quot;constraint_catalog&quot;</span> =<span class="st"> &quot;constraint_catalog&quot;</span>,</a>
+<a class="sourceLine" id="cb318-19" data-line-number="19">      <span class="st">&quot;constraint_schema&quot;</span> =<span class="st"> &quot;constraint_schema&quot;</span>,</a>
+<a class="sourceLine" id="cb318-20" data-line-number="20">      <span class="st">&quot;table_name&quot;</span> =<span class="st"> &quot;table_name&quot;</span>,</a>
+<a class="sourceLine" id="cb318-21" data-line-number="21">      <span class="st">&quot;table_schema&quot;</span> =<span class="st"> &quot;table_schema&quot;</span>,</a>
+<a class="sourceLine" id="cb318-22" data-line-number="22">      <span class="st">&quot;constraint_name&quot;</span> =<span class="st"> &quot;constraint_name&quot;</span></a>
+<a class="sourceLine" id="cb318-23" data-line-number="23">    )</a>
+<a class="sourceLine" id="cb318-24" data-line-number="24">  ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb318-25" data-line-number="25"><span class="st">  </span><span class="co"># left_join(constraint_column_usage) %&gt;% # does this table add anything useful?</span></a>
+<a class="sourceLine" id="cb318-26" data-line-number="26"><span class="st">  </span><span class="kw">select</span>(table_name, table_type, constraint_name, constraint_type, column_name, ordinal_position) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb318-27" data-line-number="27"><span class="st">  </span><span class="kw">arrange</span>(table_name) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb318-28" data-line-number="28"><span class="st">  </span><span class="kw">collect</span>()</a>
+<a class="sourceLine" id="cb318-29" data-line-number="29"><span class="kw">glimpse</span>(keys)</a></code></pre></div>
 <pre><code>## Observations: 190
 ## Variables: 6
 ## $ table_name       &lt;chr&gt; &quot;address&quot;, &quot;address&quot;, &quot;addresstype&quot;, &quot;billofmaterial…
@@ -772,20 +772,20 @@ The following is more compact and looks more useful. What is the difference betw
 ## $ constraint_type  &lt;chr&gt; &quot;FOREIGN KEY&quot;, &quot;PRIMARY KEY&quot;, &quot;PRIMARY KEY&quot;, &quot;FOREIG…
 ## $ column_name      &lt;chr&gt; &quot;stateprovinceid&quot;, &quot;addressid&quot;, &quot;addresstypeid&quot;, &quot;co…
 ## $ ordinal_position &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 2, 1, 1, 1, 2…</code></pre>
-<div class="sourceCode" id="cb316"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb316-1" data-line-number="1"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(keys))</a></code></pre></div>
+<div class="sourceCode" id="cb320"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb320-1" data-line-number="1"><span class="kw">sp_print_df</span>(<span class="kw">head</span>(keys))</a></code></pre></div>
 <div id="htmlwidget-13a8be463c5fb2457ee4" style="width:100%;height:auto;" class="datatables html-widget"></div>
 <script type="application/json" data-for="htmlwidget-13a8be463c5fb2457ee4">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["address","address","addresstype","billofmaterials","billofmaterials","billofmaterials"],["BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE"],["FK_Address_StateProvince_StateProvinceID","PK_Address_AddressID","PK_AddressType_AddressTypeID","FK_BillOfMaterials_Product_ComponentID","FK_BillOfMaterials_Product_ProductAssemblyID","FK_BillOfMaterials_UnitMeasure_UnitMeasureCode"],["FOREIGN KEY","PRIMARY KEY","PRIMARY KEY","FOREIGN KEY","FOREIGN KEY","FOREIGN KEY"],["stateprovinceid","addressid","addresstypeid","componentid","productassemblyid","unitmeasurecode"],[1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_name<\/th>\n      <th>table_type<\/th>\n      <th>constraint_name<\/th>\n      <th>constraint_type<\/th>\n      <th>column_name<\/th>\n      <th>ordinal_position<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":6},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 <p>What do we learn from the following query? How is it useful?</p>
-<div class="sourceCode" id="cb317"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb317-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(</a>
-<a class="sourceLine" id="cb317-2" data-line-number="2">  con,</a>
-<a class="sourceLine" id="cb317-3" data-line-number="3">  <span class="st">&quot;SELECT r.*,</span></a>
-<a class="sourceLine" id="cb317-4" data-line-number="4"><span class="st">  pg_catalog.pg_get_constraintdef(r.oid, true) as condef</span></a>
-<a class="sourceLine" id="cb317-5" data-line-number="5"><span class="st">  FROM pg_catalog.pg_constraint r</span></a>
-<a class="sourceLine" id="cb317-6" data-line-number="6"><span class="st">  WHERE 1=1 --r.conrelid = &#39;16485&#39; AND r.contype = &#39;f&#39; ORDER BY 1;</span></a>
-<a class="sourceLine" id="cb317-7" data-line-number="7"><span class="st">  &quot;</span></a>
-<a class="sourceLine" id="cb317-8" data-line-number="8">)</a>
-<a class="sourceLine" id="cb317-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb317-10" data-line-number="10"><span class="kw">head</span>(rs)</a></code></pre></div>
+<div class="sourceCode" id="cb321"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb321-1" data-line-number="1">rs &lt;-<span class="st"> </span><span class="kw">dbGetQuery</span>(</a>
+<a class="sourceLine" id="cb321-2" data-line-number="2">  con,</a>
+<a class="sourceLine" id="cb321-3" data-line-number="3">  <span class="st">&quot;SELECT r.*,</span></a>
+<a class="sourceLine" id="cb321-4" data-line-number="4"><span class="st">  pg_catalog.pg_get_constraintdef(r.oid, true) as condef</span></a>
+<a class="sourceLine" id="cb321-5" data-line-number="5"><span class="st">  FROM pg_catalog.pg_constraint r</span></a>
+<a class="sourceLine" id="cb321-6" data-line-number="6"><span class="st">  WHERE 1=1 --r.conrelid = &#39;16485&#39; AND r.contype = &#39;f&#39; ORDER BY 1;</span></a>
+<a class="sourceLine" id="cb321-7" data-line-number="7"><span class="st">  &quot;</span></a>
+<a class="sourceLine" id="cb321-8" data-line-number="8">)</a>
+<a class="sourceLine" id="cb321-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb321-10" data-line-number="10"><span class="kw">head</span>(rs)</a></code></pre></div>
 <pre><code>##                        conname connamespace contype condeferrable condeferred
 ## 1 cardinal_number_domain_check        12771       c         FALSE       FALSE
 ## 2              yes_or_no_check        12771       c         FALSE       FALSE
@@ -841,20 +841,20 @@ The following is more compact and looks more useful. What is the difference betw
 <h2><span class="header-section-number">13.6</span> Creating your own data dictionary</h2>
 <p>If you are going to work with a database for an extended period it can be useful to create your own data dictionary. This can take the form of <a href="https://caitlinhudon.com/2018/10/30/data-dictionaries/">keeping detaild notes</a> as well as extracting metadata from the dbms. Here is an illustration of the idea.</p>
 <p><em>This probably doens’t work anymore</em></p>
-<div class="sourceCode" id="cb319"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb319-1" data-line-number="1"><span class="co"># some_tables &lt;- c(&quot;rental&quot;, &quot;city&quot;, &quot;store&quot;)</span></a>
-<a class="sourceLine" id="cb319-2" data-line-number="2"><span class="co"># </span></a>
-<a class="sourceLine" id="cb319-3" data-line-number="3"><span class="co"># all_meta &lt;- map_df(some_tables, sp_get_dbms_data_dictionary, con = con)</span></a>
-<a class="sourceLine" id="cb319-4" data-line-number="4"><span class="co"># </span></a>
-<a class="sourceLine" id="cb319-5" data-line-number="5"><span class="co"># all_meta</span></a>
-<a class="sourceLine" id="cb319-6" data-line-number="6"><span class="co"># </span></a>
-<a class="sourceLine" id="cb319-7" data-line-number="7"><span class="co"># glimpse(all_meta)</span></a>
-<a class="sourceLine" id="cb319-8" data-line-number="8"><span class="co"># </span></a>
-<a class="sourceLine" id="cb319-9" data-line-number="9"><span class="co"># sp_print_df(head(all_meta))</span></a></code></pre></div>
+<div class="sourceCode" id="cb323"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb323-1" data-line-number="1"><span class="co"># some_tables &lt;- c(&quot;rental&quot;, &quot;city&quot;, &quot;store&quot;)</span></a>
+<a class="sourceLine" id="cb323-2" data-line-number="2"><span class="co"># </span></a>
+<a class="sourceLine" id="cb323-3" data-line-number="3"><span class="co"># all_meta &lt;- map_df(some_tables, sp_get_dbms_data_dictionary, con = con)</span></a>
+<a class="sourceLine" id="cb323-4" data-line-number="4"><span class="co"># </span></a>
+<a class="sourceLine" id="cb323-5" data-line-number="5"><span class="co"># all_meta</span></a>
+<a class="sourceLine" id="cb323-6" data-line-number="6"><span class="co"># </span></a>
+<a class="sourceLine" id="cb323-7" data-line-number="7"><span class="co"># glimpse(all_meta)</span></a>
+<a class="sourceLine" id="cb323-8" data-line-number="8"><span class="co"># </span></a>
+<a class="sourceLine" id="cb323-9" data-line-number="9"><span class="co"># sp_print_df(head(all_meta))</span></a></code></pre></div>
 </div>
 <div id="save-your-work" class="section level2">
 <h2><span class="header-section-number">13.7</span> Save your work!</h2>
 <p>The work you do to understand the structure and contents of a database can be useful for others (including future-you). So at the end of a session, you might look at all the data frames you want to save. Consider saving them in a form where you can add notes at the appropriate level (as in a Google Doc representing table or columns that you annotate over time).</p>
-<div class="sourceCode" id="cb320"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb320-1" data-line-number="1"><span class="kw">ls</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb324"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb324-1" data-line-number="1"><span class="kw">ls</span>()</a></code></pre></div>
 <pre><code>##  [1] &quot;columns_info_schema_info&quot;  &quot;columns_info_schema_table&quot;
 ##  [3] &quot;con&quot;                       &quot;constraint_column_usage&quot;  
 ##  [5] &quot;cranex&quot;                    &quot;key_column_usage&quot;         
@@ -866,8 +866,8 @@ The following is more compact and looks more useful. What is the difference betw
 <p>```
 ## Cleaning up</p>
 <p>Always have R disconnect from the database when you’re done and stop the Adventureworks Container</p>
-<div class="sourceCode" id="cb322"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb322-1" data-line-number="1"><span class="kw">dbDisconnect</span>(con)</a>
-<a class="sourceLine" id="cb322-2" data-line-number="2"><span class="kw">sp_docker_stop</span>(<span class="st">&quot;adventureworks&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb326"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb326-1" data-line-number="1"><span class="kw">dbDisconnect</span>(con)</a>
+<a class="sourceLine" id="cb326-2" data-line-number="2"><span class="kw">sp_docker_stop</span>(<span class="st">&quot;adventureworks&quot;</span>)</a></code></pre></div>
 
 </div>
 </div>
