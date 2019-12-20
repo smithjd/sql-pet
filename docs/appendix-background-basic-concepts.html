@@ -24,7 +24,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, and Ian Frantz" />
 
 
-<meta name="date" content="2019-12-06" />
+<meta name="date" content="2019-12-20" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -578,27 +578,27 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="data-mapping-between-r-vs-sql-data-types" class="section level3">
 <h3><span class="header-section-number">A.8.2</span> Data mapping between R vs SQL data types</h3>
 <p>The following code shows how different elements of the R bestiary are translated to and from ANSI standard data types. Note that R factors are translated as <code>TEXT</code> so that missing levels are ignored on the SQL side.</p>
-<div class="sourceCode" id="cb327"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb327-1" data-line-number="1"><span class="kw">library</span>(DBI)</a>
-<a class="sourceLine" id="cb327-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb327-3" data-line-number="3"><span class="kw">dbDataType</span>(<span class="kw">ANSI</span>(), <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb331"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb331-1" data-line-number="1"><span class="kw">library</span>(DBI)</a>
+<a class="sourceLine" id="cb331-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb331-3" data-line-number="3"><span class="kw">dbDataType</span>(<span class="kw">ANSI</span>(), <span class="dv">1</span><span class="op">:</span><span class="dv">5</span>)</a></code></pre></div>
 <pre><code>## [1] &quot;INT&quot;</code></pre>
-<div class="sourceCode" id="cb329"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb329-1" data-line-number="1"><span class="kw">dbDataType</span>(<span class="kw">ANSI</span>(), <span class="dv">1</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb333"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb333-1" data-line-number="1"><span class="kw">dbDataType</span>(<span class="kw">ANSI</span>(), <span class="dv">1</span>)</a></code></pre></div>
 <pre><code>## [1] &quot;DOUBLE&quot;</code></pre>
-<div class="sourceCode" id="cb331"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb331-1" data-line-number="1"><span class="kw">dbDataType</span>(<span class="kw">ANSI</span>(), <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb335"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb335-1" data-line-number="1"><span class="kw">dbDataType</span>(<span class="kw">ANSI</span>(), <span class="ot">TRUE</span>)</a></code></pre></div>
 <pre><code>## [1] &quot;SMALLINT&quot;</code></pre>
-<div class="sourceCode" id="cb333"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb333-1" data-line-number="1"><span class="kw">dbDataType</span>(<span class="kw">ANSI</span>(), <span class="kw">Sys.Date</span>())</a></code></pre></div>
+<div class="sourceCode" id="cb337"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb337-1" data-line-number="1"><span class="kw">dbDataType</span>(<span class="kw">ANSI</span>(), <span class="kw">Sys.Date</span>())</a></code></pre></div>
 <pre><code>## [1] &quot;DATE&quot;</code></pre>
-<div class="sourceCode" id="cb335"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb335-1" data-line-number="1"><span class="kw">dbDataType</span>(<span class="kw">ANSI</span>(), <span class="kw">Sys.time</span>())</a></code></pre></div>
+<div class="sourceCode" id="cb339"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb339-1" data-line-number="1"><span class="kw">dbDataType</span>(<span class="kw">ANSI</span>(), <span class="kw">Sys.time</span>())</a></code></pre></div>
 <pre><code>## [1] &quot;TIMESTAMP&quot;</code></pre>
-<div class="sourceCode" id="cb337"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb337-1" data-line-number="1"><span class="kw">dbDataType</span>(<span class="kw">ANSI</span>(), <span class="kw">Sys.time</span>() <span class="op">-</span><span class="st"> </span><span class="kw">as.POSIXct</span>(<span class="kw">Sys.Date</span>()))</a></code></pre></div>
+<div class="sourceCode" id="cb341"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb341-1" data-line-number="1"><span class="kw">dbDataType</span>(<span class="kw">ANSI</span>(), <span class="kw">Sys.time</span>() <span class="op">-</span><span class="st"> </span><span class="kw">as.POSIXct</span>(<span class="kw">Sys.Date</span>()))</a></code></pre></div>
 <pre><code>## [1] &quot;TIME&quot;</code></pre>
-<div class="sourceCode" id="cb339"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb339-1" data-line-number="1"><span class="kw">dbDataType</span>(<span class="kw">ANSI</span>(), <span class="kw">c</span>(<span class="st">&quot;x&quot;</span>, <span class="st">&quot;abc&quot;</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb343"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb343-1" data-line-number="1"><span class="kw">dbDataType</span>(<span class="kw">ANSI</span>(), <span class="kw">c</span>(<span class="st">&quot;x&quot;</span>, <span class="st">&quot;abc&quot;</span>))</a></code></pre></div>
 <pre><code>## [1] &quot;TEXT&quot;</code></pre>
-<div class="sourceCode" id="cb341"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb341-1" data-line-number="1"><span class="kw">dbDataType</span>(<span class="kw">ANSI</span>(), <span class="kw">list</span>(<span class="kw">raw</span>(<span class="dv">10</span>), <span class="kw">raw</span>(<span class="dv">20</span>)))</a></code></pre></div>
+<div class="sourceCode" id="cb345"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb345-1" data-line-number="1"><span class="kw">dbDataType</span>(<span class="kw">ANSI</span>(), <span class="kw">list</span>(<span class="kw">raw</span>(<span class="dv">10</span>), <span class="kw">raw</span>(<span class="dv">20</span>)))</a></code></pre></div>
 <pre><code>## [1] &quot;BLOB&quot;</code></pre>
-<div class="sourceCode" id="cb343"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb343-1" data-line-number="1"><span class="kw">dbDataType</span>(<span class="kw">ANSI</span>(), <span class="kw">I</span>(<span class="dv">3</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb347"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb347-1" data-line-number="1"><span class="kw">dbDataType</span>(<span class="kw">ANSI</span>(), <span class="kw">I</span>(<span class="dv">3</span>))</a></code></pre></div>
 <pre><code>## [1] &quot;DOUBLE&quot;</code></pre>
-<div class="sourceCode" id="cb345"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb345-1" data-line-number="1"><span class="kw">dbDataType</span>(<span class="kw">ANSI</span>(), iris)</a></code></pre></div>
+<div class="sourceCode" id="cb349"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb349-1" data-line-number="1"><span class="kw">dbDataType</span>(<span class="kw">ANSI</span>(), iris)</a></code></pre></div>
 <pre><code>## Sepal.Length  Sepal.Width Petal.Length  Petal.Width      Species 
 ##     &quot;DOUBLE&quot;     &quot;DOUBLE&quot;     &quot;DOUBLE&quot;     &quot;DOUBLE&quot;       &quot;TEXT&quot;</code></pre>
 <p>The <a href="https://cran.r-project.org/web/packages/DBI/vignettes/spec.html">DBI specification</a> provides extensive documentation that is worth digesting if you intend to work with a DBMS from R. As you work through the examples in this book, you will also want to refer to the following resources:</p>
