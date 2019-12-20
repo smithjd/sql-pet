@@ -138,12 +138,8 @@ ggplot(data = annual_sales, aes(x = year, y = total_soh_dollars)) +
   scale_y_continuous(labels = scales::dollar_format()) +
   labs(
     title = "Adventure Works Sales Dollars by Year",
-<<<<<<< HEAD
-    x = glue("Year - between ", min_soh_dt, " - ", max_soh_dt),
-=======
     x = glue("Year - between ", {format(min_soh_dt, "%B %d, %Y")} , " and  ", 
             {format(max_soh_dt, "%B %d, %Y")}),
->>>>>>> jds-2019-12-07
     y = "Sales $"
   )
 ```
@@ -181,12 +177,8 @@ ggplot(data = annual_sales, aes(x = year, y = avg_total_soh_dollars)) +
   geom_text(aes(label = round(avg_total_soh_dollars, digits = 0)), vjust = -0.25) +
   labs(
     title = "Average Dollars per Sale",
-<<<<<<< HEAD
-    x = glue("Year - between ", min_soh_dt, " - ", max_soh_dt),
-=======
     x = glue("Year - between ", {format(min_soh_dt, "%B %d, %Y")} , " to  ", 
             {format(max_soh_dt, "%B %d, %Y")}),
->>>>>>> jds-2019-12-07
     y = "Average Sale Amount"
   )
 ```
@@ -232,12 +224,8 @@ ggplot(data = monthly_sales, aes(x = orderdate, y = total_soh_dollars)) +
   scale_y_continuous(labels = dollar) +
   theme(plot.title = element_text(hjust = 0.5)) + # Center the title
   labs(
-<<<<<<< HEAD
-    title = glue("Sales by Month\n", min_soh_dt, " - ", max_soh_dt),
-=======
     title = glue("Sales by Month\n", {format(min_soh_dt, "%B %d, %Y")} , " to  ", 
             {format(max_soh_dt, "%B %d, %Y")}),
->>>>>>> jds-2019-12-07
     x = "Month",
     y = "Sales Dollars"
   )
@@ -413,12 +401,8 @@ ggplot(data = annual_sales_w_channel, aes(x = orderdate, y = total_soh_dollars))
   facet_wrap("onlineorderflag") +
   labs(
     title = "Adventure Works Sales Dollars by Year",
-<<<<<<< HEAD
-    caption = glue("Between", min_soh_dt, " and ", max_soh_dt),
-=======
     caption = glue( "Between ", {format(min_soh_dt, "%B %d, %Y")} , " - ", 
             {format(max_soh_dt, "%B %d, %Y")}),
->>>>>>> jds-2019-12-07
     subtitle = "Comparing Online and Sales Rep sales channels",
     x = "Year",
     y = "Sales $"
@@ -439,12 +423,8 @@ ggplot(data = annual_sales_w_channel, aes(x = orderdate, y = as.numeric(soh_coun
   facet_wrap("onlineorderflag") +
   labs(
     title = "Adventure Works Number of orders per Year",
-<<<<<<< HEAD
-    caption = glue("Between", min_soh_dt, " and ", max_soh_dt),
-=======
     caption = glue( "Between ", {format(min_soh_dt, "%B %d, %Y")} , " - ", 
             {format(max_soh_dt, "%B %d, %Y")}),
->>>>>>> jds-2019-12-07
     subtitle = "Comparing Online and Sales Rep sales channels",
     x = "Year",
     y = "Total number of orders"
@@ -463,12 +443,8 @@ ggplot(data = annual_sales_w_channel, aes(x = orderdate, y = avg_total_soh_dolla
   scale_y_continuous(labels = scales::dollar_format()) +
   labs(
     title = "Average Dollars per Sale",
-<<<<<<< HEAD
-    x = glue("Year, between", min_soh_dt, " and ", max_soh_dt),
-=======
     x = glue( "Year - between ", {format(min_soh_dt, "%B %d, %Y")} , " - ", 
             {format(max_soh_dt, "%B %d, %Y")}),
->>>>>>> jds-2019-12-07
     y = "Average sale amount"
   )
 ```
@@ -1236,8 +1212,6 @@ sales_rep_day_of_month_sales <- tbl(con, in_schema("sales", "salesorderheader"))
 ## GROUP BY "year", "month"
 ```
 
-<<<<<<< HEAD
-=======
 a different strategy for finding the day-of-month problem.
 
 
@@ -1301,7 +1275,6 @@ Use the same pivot strategy on the corrected data.
 difference between detective work with a graph and just print it out.  "now I see what's driving the hint." 
 
 show 2011 in the graph, all years in the printout.
->>>>>>> jds-2019-12-07
 
 
 ```r
@@ -1328,29 +1301,6 @@ suspicious_months <- sales_rep_day_of_month_sales %>%
   unique()
 ```
 
-<<<<<<< HEAD
-Here are the 8 **suspicious months**:
-
-```r
-suspicious_months
-```
-
-```
-## # A tibble: 8 x 1
-##   order_month
-##   <date>     
-## 1 2011-06-01 
-## 2 2011-08-01 
-## 3 2011-09-01 
-## 4 2011-10-01 
-## 5 2011-11-01 
-## 6 2012-01-01 
-## 7 2014-01-01 
-## 8 2014-03-01
-```
-
-=======
->>>>>>> jds-2019-12-07
 
 
 ```r
@@ -1569,23 +1519,6 @@ all_equal(monthly_sales_rep_adjusted, monthly_sales_rep_adjusted_with_psql_funct
 ```
 
 ```r
-<<<<<<< HEAD
-monthly_sales_rep_adjusted %>%
-  mutate(day_of_month = day(adjusted_orderdate)) %>%
-  ggplot(aes(x = day_of_month, y = soh_count)) +
-  geom_col() +
-  scale_x_continuous(limits = c(1, 32)) +
-  labs(
-    title = glue(
-      "Transactions Entered by Day of Month \n",
-      "Comparing Online to Sales Rep Sales\n",
-      min_soh_dt, " - ", max_soh_dt
-    ),
-    x = "Day of the Month",
-    y = "Recorded Sales"
-  ) +
-  theme(plot.title = element_text(hjust = .5)) # Center ggplot title
-=======
 monthly_sales_rep_adjusted_with_psql_function %>% 
   filter(year(adjusted_orderdate) %in% c(2011,2014))
 ```
@@ -1608,7 +1541,6 @@ monthly_sales_rep_adjusted_with_psql_function %>%
 ## 12 2014-03-30                     7291.         2
 ## 13 2014-03-31                  3314519.       178
 ## 14 2014-04-30                  3416764.       181
->>>>>>> jds-2019-12-07
 ```
 
 
