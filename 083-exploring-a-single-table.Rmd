@@ -877,14 +877,43 @@ ggplot(
   theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
   labs(
     title = glue(
+      "Number of Sales per month \nOriginal and corrected amounts"
+    ),
+    x = paste0("Monthly - between ", min_soh_dt, " - ", max_soh_dt),
+    y = "Number of Sales Recorded",
+     caption = "green is corrected, orange is as recorded in the database"
+  )
+```
+
+```{r}
+mon_sales <- monthly_sales_rep_adjusted %>% 
+  rename(orderdate = year_month)
+
+x <- bind_rows(mon_sales,monthly_sales_rep_as_is, .id = "date_kind")
+```
+
+
+```{r}
+ggplot(
+  data = x,
+  aes(x = orderdate, y = soh_count, color = date_kind, fill=date_kind)
+) +
+  geom_col(position = "dodge") +
+  theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
+  labs(
+    title = glue(
       "Number of Sales per month using corrected dates\n",
       "Counting Sales Order Header records"
     ),
     x = paste0("Monthly - between ", min_soh_dt, " - ", max_soh_dt),
     y = "Number of Sales Recorded"
-  )
+  ) 
+  # geom_text()
 ```
 
+additive graph showing how correction adds in some months and subtracts in others.
+
+only show months where there is a mis-match.
 
 ```{r}
 ggplot(data = monthly_sales_rep_adjusted, aes(x = year_month, y = total_soh_dollars)) +
