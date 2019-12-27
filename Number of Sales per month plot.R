@@ -2,8 +2,8 @@ ggplot(
   data = monthly_sales_rep_adjusted,
   aes(x = year_month, y = soh_count)
   ) +
-  #geom_line(alpha = .5 , color = "green") +
-  #geom_point(color = "green") +
+  geom_line(alpha = .5 , color = "green") +
+  geom_point(color = "green") +
   geom_point(
     data = monthly_sales_rep_as_is,
     aes(orderdate, soh_count
