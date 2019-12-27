@@ -90,6 +90,8 @@ annual_sales <- tbl(con, in_schema("sales", "salesorderheader")) %>%
     avg_total_soh_dollars = round(mean(subtotal, na.rm = TRUE), 2),
     soh_count = n()
   ) %>%
+  mutate(min_soh_orderdate = as.Date(min_soh_orderdate)) %>%
+  mutate(max_soh_orderdate = as.Date(max_soh_orderdate)) %>%
   arrange(year) %>%
   select(
     year, min_soh_orderdate, max_soh_orderdate, total_soh_dollars,
@@ -884,6 +886,9 @@ ggplot(
     title = glue(
       "Number of Sales per month \nOriginal and corrected amounts"
     ),
+    subtitle = glue("Subtitle"),
+    caption = glue("Datasets Include: \n
+                   monthly_sales_rep_adjusted, monthly_sales_rep_as_is"),
     x = paste0("Monthly - between ", min_soh_dt, " - ", max_soh_dt),
     y = "Number of Sales Recorded"
   )
