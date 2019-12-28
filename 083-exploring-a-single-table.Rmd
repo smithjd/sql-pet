@@ -168,8 +168,8 @@ monthly_sales <- tbl(con, in_schema("sales", "salesorderheader")) %>%
   select(orderdate, subtotal) %>%
   collect() %>% 
   mutate(
-    orderdate = date(orderdate),
-    orderdate = round_date(orderdate, "month")
+    orderdate = lubridate::date(orderdate),
+    orderdate = lubridate::round_date(orderdate, "month")
   ) %>%
   group_by(orderdate) %>%
   summarize(
