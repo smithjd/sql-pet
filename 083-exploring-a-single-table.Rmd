@@ -45,7 +45,7 @@ Connect to `adventureworks`.  In an interactive session we prefer to use `connec
 
 
 ```{r, start adventureworks and connect}
-sp_docker_start("adventureworks")
+#sp_docker_start("adventureworks")
 Sys.sleep(sleep_default)
 # con <- dbConnect(
 con <- connection_open(
@@ -90,8 +90,6 @@ annual_sales <- tbl(con, in_schema("sales", "salesorderheader")) %>%
     avg_total_soh_dollars = round(mean(subtotal, na.rm = TRUE), 2),
     soh_count = n()
   ) %>%
-  mutate(min_soh_orderdate = as.Date(min_soh_orderdate)) %>%
-  mutate(max_soh_orderdate = as.Date(max_soh_orderdate)) %>%
   arrange(year) %>%
   select(
     year, min_soh_orderdate, max_soh_orderdate, total_soh_dollars,
