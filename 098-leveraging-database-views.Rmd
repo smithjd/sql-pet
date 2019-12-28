@@ -218,7 +218,7 @@ Lubridate makes it very easy to convert `orderdate` to `fiscal_year`.  Doing tha
 
 
 Using this function as a model:
-```{r, echo=FALSE, eval=FALSE}
+```{r, echo=TRUE, eval=FALSE}
 dbExecute(
   con,
   "CREATE OR REPLACE FUNCTION so_adj_date(so_date timestamp, ONLINE_ORDER boolean) RETURNS timestamp AS $$
@@ -240,7 +240,7 @@ LANGUAGE PLPGSQL;
 
 Trying to create a function that returns fiscal year on the server side.
 
-```{r, echo=FALSE, eval=FALSE}
+```{r, echo=TRUE, eval=FALSE}
 
 
 dbExecute(
@@ -315,13 +315,32 @@ names(salesperson_sales_by_fiscal_years_dplyr) %>% sort()
 names(v_salesperson_sales_by_fiscal_years_data) %>% sort()
 ```
 
+the following doesn't quite work yet.  The idea is to do as much work on the server as possible to correct the data entry date.  
 
 ```{r}
 sales_order_header_fy <- tbl(con, in_schema("sales", "salesorderheader")) %>% 
-  mutate(sales_order_year = year(orderdate),
-         sales_order_month = month(orderdate)) %>% 
- select(sales_order_year, sales_order_month, salespersonid, subtotal, orderdate)
+  mutate(orderdate = as.Date(orderdate),
+         sales_order_year = year(orderdate),
+         sales_order_month = month(orderdate),
+         sales_order_day = as.numeric(day(orderdate))
+         ) %>% 
+ select(sales_order_year, sales_order_month, sales_order_day, 
+        salespersonid, subtotal, orderdate) %>% 
+  group_by(sales_order_year, sales_order_month, sales_order_day, 
+        salespersonid) %>% 
+  summarize(subtotal = sum(subtotal, na.rm = TRUE)) %>% 
+  collect() %>% 
+  # show_query %>% 
+  mutate(
+    sales_order_day_adj = ifelse(
+      sales_order_day == 1, sales_order_day - 1, sales_order_day
+    )
+  ) %>% ungroup()
 
+# , 
+
+# View(sales_order_header_fy)
+str(sales_order_header_fy)
 ```
 
 Why 3 sales folks in vsalesperson don’t show up in 2014 vsalespersonsalesbyfiscalyearsdata
