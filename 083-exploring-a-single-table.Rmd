@@ -37,8 +37,7 @@ library(bookdown)
 library(here)
 library(lubridate)
 library(gt)
-
-library(scales) # ggplot xy scales
+library(scales)
 theme_set(theme_light())
 ```
 
@@ -219,8 +218,8 @@ The trend is positive on average `r prettyNum(sum_lags[["Mean"]], big.mark = ","
 ggplot(monthly_sales_lagged, aes(x = orderdate, y = monthly_sales_change)) +
   scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
   geom_line() +
-  scale_y_continuous(labels = scales::dollar_format()) +
-  theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
+  scale_y_continuous(limits = c(-1700000,2000000), labels = scales::dollar_format()) +
+  theme(plot.title = element_text(hjust = .5)) + 
   labs(
     title = glue(
       "Monthly Sales Change \n",
