@@ -298,13 +298,15 @@ salesperson_sales_by_fiscal_years_dplyr %>%
   summarize(sales_total = sum(sales_total)) %>% 
   # select(full_name, territory_name, calendar_year, sales_total) %>% 
   ungroup() %>% 
-  pivot_wider(names_from = calendar_year, values_from = sales_total, values_fill = 0) %>% 
+  pivot_wider(names_from = calendar_year, values_from = sales_total,
+              values_fill = list(sales_total = 0)) %>%
   arrange(territory_name, full_name)
   # pivot_wider(names_from = fiscal_year, values_from = sales_total)
 
 v_salesperson_sales_by_fiscal_years_data %>% # names()
   select(-jobtitle, -salespersonid) %>%
-  pivot_wider(names_from = fiscalyear, values_from = salestotal, values_fill = 0) %>% 
+  pivot_wider(names_from = fiscalyear, values_from = salestotal,
+              values_fill = list(salestotal = 0)) %>%
   arrange(salesterritory, fullname)
 ```
 
