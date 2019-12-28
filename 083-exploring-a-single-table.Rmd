@@ -199,12 +199,11 @@ ggplot(data = monthly_sales, aes(x = orderdate, y = total_soh_dollars)) +
 
 ### Check lagged monthly data
 
-The total sales are trending up but suspiciously uneven.  Looking at lags might confirm just how much month-to-month difference there is:
+The total sales are trending up but suspiciously uneven.  We'll use `dplyr::lag` to help with our month over month compairson and will later visualize just how much month-to-month difference there is:
 
 ```{r}
 monthly_sales_lagged <- monthly_sales %>%
-  mutate(monthly_sales_change = (lag(total_soh_dollars, 1)) -
-    total_soh_dollars)
+  mutate(monthly_sales_change = (dplyr::lag(total_soh_dollars)) - total_soh_dollars)
 ```
 
 ```{r}
@@ -218,6 +217,7 @@ The trend is positive on average `r prettyNum(sum_lags[["Mean"]], big.mark = ","
 ggplot(monthly_sales_lagged, aes(x = orderdate, y = monthly_sales_change)) +
   scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
   geom_line() +
+  geom_point() +
   scale_y_continuous(limits = c(-1700000,2000000), labels = scales::dollar_format()) +
   theme(plot.title = element_text(hjust = .5)) + 
   labs(
