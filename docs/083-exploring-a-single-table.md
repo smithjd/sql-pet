@@ -1239,8 +1239,8 @@ str(sales_rep_day_of_month_sales)
 ## Classes 'tbl_df', 'tbl' and 'data.frame':	40 obs. of  4 variables:
 ##  $ year : num  2011 2011 2011 2011 2011 ...
 ##  $ month: num  5 7 8 8 10 10 12 1 1 2 ...
-##  $ day  : num  31 1 31 1 1 31 1 29 1 29 ...
-##  $ n    : num  38 75 40 60 90 63 40 64 79 37 ...
+##  $ day  : num  31 1 31 1 31 1 1 29 1 29 ...
+##  $ n    : num  38 75 40 60 63 90 40 64 79 37 ...
 ```
 
 ```r
@@ -1393,6 +1393,8 @@ The former query misses the Sales Rep sales recorded on the first of the month i
 
 ### Define a date correction function in R
 
+This code does the date-correction work on the R side:
+
 
 ```r
 monthly_sales_rep_adjusted <- tbl(con, in_schema("sales", "salesorderheader")) %>%
@@ -1455,7 +1457,9 @@ monthly_sales_rep_adjusted %>% filter(year(year_month) %in% c(2011,2014))
 ## 12 2014-04-01          3416764.       181
 ```
 
-### Define and store a PostgreSQL function to correct the date
+### Define and store a PostgreSQL function to correct the date{#define-postgres-date-function}
+
+The following code defines a function on the server side to correct the date:
 
 
 ```r
@@ -1491,9 +1495,7 @@ If you can do the heavy lifting on the database side, that's good.  R can do it,
 monthly_sales_rep_adjusted_with_psql_function <- tbl(con, in_schema("sales", "salesorderheader")) %>%
   select(orderdate, subtotal, onlineorderflag) %>%
   mutate(
-    orderdate = as.Date(orderdate),
-    day = day(orderdate)
-  ) %>%
+    orderdate = as.Date(orderdate)) %>%
   mutate(adjusted_orderdate = as.Date(so_adj_date(orderdate, onlineorderflag))) %>%
   filter(onlineorderflag == FALSE) %>%
   group_by(adjusted_orderdate) %>%
@@ -1614,16 +1616,17 @@ ggplot(
   aes(x = year_month, y = soh_count)
 ) +
   geom_line(alpha = .5 , color = "green") +
+  geom_point(alpha = .5 , color = "green") +
   geom_point(
     data = monthly_sales_rep_as_is, aes(
-      orderdate, soh_count
-    ), color = "red", alpha = .5
-  ) +
+      orderdate, soh_count), color = "red", alpha = .5) +
   theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
+  annotate(geom = "text", y = 250, x = as.Date("2011-06-01"), 
+           label = "Green dots: corrected data\nOrange dots: original data\nBrown dots: unchanged",
+           hjust = 0) +
   labs(
     title = glue(
-      "Number of Sales per month using corrected dates\n",
-      "Counting Sales Order Header records"
+      "Number of Sales per month \nOriginal and corrected amounts"
     ),
     x = paste0("Monthly - between ", min_soh_dt, " - ", max_soh_dt),
     y = "Number of Sales Recorded"
@@ -1633,10 +1636,44 @@ ggplot(
 <img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-24-1.png" width="672" />
 
 
+```r
+mon_sales <- monthly_sales_rep_adjusted %>% 
+  rename(orderdate = year_month)
+
+sales_original_and_adjusted <- bind_rows(mon_sales, monthly_sales_rep_as_is, .id = "date_kind")
+```
+
+Does this graph add anything important?
+
+
+```r
+ggplot(
+  data = sales_original_and_adjusted,
+  aes(x = orderdate, y = soh_count, fill = date_kind)
+) +
+  geom_col(position = "dodge") +
+  theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
+  labs(
+    title = glue(
+      "Number of Sales per month using corrected dates\n",
+      "Counting Sales Order Header records"
+    ),
+    x = paste0("Monthly - between ", min_soh_dt, " - ", max_soh_dt),
+    y = "Number of Sales Recorded",
+    fill = "Date\nadjustment"
+  ) 
+```
+
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-26-1.png" width="672" />
+
+additive graph showing how correction adds in some months and subtracts in others.
+
+only show months where there is a mis-match.
+
 
 ```r
 ggplot(data = monthly_sales_rep_adjusted, aes(x = year_month, y = total_soh_dollars)) +
-  geom_col() +
+  geom_line() +
   scale_y_continuous(labels = dollar) +
   theme(plot.title = element_text(hjust = 0.5)) + # Center the title
   labs(
@@ -1647,7 +1684,7 @@ ggplot(data = monthly_sales_rep_adjusted, aes(x = year_month, y = total_soh_doll
   )
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-25-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-27-1.png" width="672" />
 
 Sales still seem to gyrate!
 

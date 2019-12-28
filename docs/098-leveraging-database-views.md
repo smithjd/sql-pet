@@ -76,7 +76,7 @@ Database `views` are useful for many reasons.
 
 ### Rely on **and** be critical of `views`
 
-Because they represent a conventional view of the database, a `view` may seem quite boring; remember why they are very important. Just because they are conventional and authorized, they may still need verification or auditing when used for a purpose other than the original intent. They can guide you toward what you need from the database but they could also mislead because they are easy to use and available.  People may forget why a specific view exists and who is using it. Therefore any given view might be a forgotten vestige or part of an production data pipeline or might a priceless nugget of insight.
+Because they represent a conventional view of the database, a `view` may seem quite boring; remember why they are very important. Just because they are conventional and authorized, they may still need verification or auditing when used for a purpose other than the original intent. They can guide you toward what you need from the database but they could also mislead because they are easy to use and available.  People may forget why a specific view exists and who is using it. Therefore any given view might be a forgotten vestige or part of a production data pipeline or a priceless nugget of insight. How can you tell? Consider the owner and schema, whether it's a materialized index view or not, if it has a trigger and try to deduce the intentionality behind the view.
 
 ## Unpacking the elements of a `view` Tidyverse
 
@@ -195,11 +195,11 @@ The `sales.vsalespersonsalesbyfiscalyearsdata` view joins data from five differe
 
 Define each table that is involved and identify the columns that will be needed from that table.  The tables that are involved are:
 
-  1. employee
-  2. person
+  1. sales_order_header
+  2. sales_territory
   3. sales_person
-  3. sales_order_header
-  3. sales_territory
+  4. employee
+  5. person
 
 Select the columns and do any necessary changes or renaming.  Avoid `dbplyr` default joins by **not** including `rowguid` and `ModifiedDate` columns, which appear in almost all `AdventureWorks` tables.  Also, we follow the convention that any column that we change or create on the fly uses a snake case naming convention.
 
@@ -233,30 +233,6 @@ getnames <- function(table) {
 Verify the names selected:
 
 ```r
-getnames(employee)
-```
-
-```
-## [1] "businessentityid" "jobtitle"
-```
-
-```r
-getnames(person)
-```
-
-```
-## [1] "businessentityid" "full_name"
-```
-
-```r
-getnames(sales_person)
-```
-
-```
-## [1] "businessentityid" "territoryid"
-```
-
-```r
 getnames(sales_order_header)
 ```
 
@@ -270,6 +246,30 @@ getnames(sales_territory)
 
 ```
 ## [1] "territoryid"    "territory_name"
+```
+
+```r
+getnames(sales_person)
+```
+
+```
+## [1] "businessentityid" "territoryid"
+```
+
+```r
+getnames(employee)
+```
+
+```
+## [1] "businessentityid" "jobtitle"
+```
+
+```r
+getnames(person)
+```
+
+```
+## [1] "businessentityid" "full_name"
 ```
 
 ### Join the tables together
@@ -324,10 +324,39 @@ Lubridate makes it very easy to convert `orderdate` to `fiscal_year`.  Doing tha
 
 Using this function as a model:
 
+```r
+dbExecute(
+  con,
+  "CREATE OR REPLACE FUNCTION so_adj_date(so_date timestamp, ONLINE_ORDER boolean) RETURNS timestamp AS $$
+     BEGIN
+        IF (ONLINE_ORDER) THEN
+            RETURN (SELECT so_date);
+        ELSE
+            RETURN(SELECT CASE WHEN EXTRACT(DAY FROM so_date) = 1
+                               THEN  so_date - '1 day'::interval
+                               ELSE  so_date
+                          END
+                  );
+        END IF;
+ END; $$
+LANGUAGE PLPGSQL;
+"
+)
+```
 
 Trying to create a function that returns fiscal year on the server side.
 
 
+```r
+dbExecute(
+  con,
+  "CREATE OR REPLACE FUNCTION so_calc_fy(orderdate timestamp) RETURNS orderdate AS $$
+        RETURN(date_part('year'::text, orderdate + '6 mons'::interval))
+$$
+LANGUAGE PLPGSQL;
+"
+)
+```
 
 
 
