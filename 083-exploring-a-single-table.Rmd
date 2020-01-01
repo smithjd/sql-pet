@@ -113,9 +113,11 @@ min_soh_dt <- min(annual_sales$min_soh_orderdate)
 max_soh_dt <- max(annual_sales$max_soh_orderdate)
 ```
 
+You can't see it yet but both 2011 and 2014 are shorter time spans than the other two years, making comparison across the years more difficult. We might normalize the totals based on the number of months in each year, but we first graph total dollars and see that 2013 was the best year for annual sales dollars.
+
 ### Total sales by year
 
-```{r Calculate time period and annual sales dollars - 2 , fig.height=4, fig.width=4}
+```{r Calculate time period and annual sales dollars - 2 , fig.height=4, fig.width=5}
 ggplot(data = annual_sales, aes(x = year, y = total_soh_dollars)) +
   geom_col() +
   geom_text(aes(label = round(as.numeric(total_soh_dollars), digits = 0)), vjust = -0.25) +
@@ -128,8 +130,6 @@ ggplot(data = annual_sales, aes(x = year, y = total_soh_dollars)) +
   )
 ```
 Both 2011 and 2014 are shorter time spans than the other two years, making comparison interpretation more difficult. 
-
-Both 2011 and 2014 are shorter time spans than the other two years, making comparison across the years more difficult. Could it be that sales are seasonal? Let's look at the order volume and see whether there's a pattern in the sales data.
 
 ### Total order volume
 
@@ -146,7 +146,7 @@ ggplot(data = annual_sales, aes(x = year, y = as.numeric(soh_count))) +
   )
 ```
 
-That's a huge jump in the number of orders between 2012 and 2013.  Given the total annual dollars, we ask whether the size of a sale has changed.
+Here again we see that 2013 was the best year in terms of total number of orders. But look at 2014, it has had many more orders than 2012 but lags in terms of annual sales. Why might this be? Let's investigate whether the size of the average sale has changed.
 
 ### Average dollars per sale
 ```{r average dollars per sale - , fig.height=4, fig.width=4}
@@ -200,14 +200,14 @@ monthly_sales <-  monthly_sales %>%
   mutate(orderdate = as.Date(orderdate))
 ```
 
-Plotting the monthly sales data:
+Next let's chart the monthly sales data:
 
 ```{r Total monthly sales bar chart}
 
 ggplot(data = monthly_sales, aes(x = orderdate, y = total_soh_dollars)) +
   geom_col() +
   scale_y_continuous(labels = dollar) +
-  theme(plot.title = element_text(hjust = 0.5)) + # Center the title
+  theme(plot.title = element_text(hjust = 0.5)) + 
   labs(
     title = glue("Sales by Month\n", {format(min_soh_dt, "%B %d, %Y")} , " to  ", 
             {format(max_soh_dt, "%B %d, %Y")}),
@@ -218,7 +218,7 @@ ggplot(data = monthly_sales, aes(x = orderdate, y = total_soh_dollars)) +
 
 ### Check lagged monthly data
 
-The total sales are trending up but suspiciously uneven.  We'll use `dplyr::lag` to help with our month over month compairson and will later visualize just how much month-to-month difference there is:
+We can see our month-over-month sales contains lots of variation. We'll use `dplyr::lag` to help find the delta and later visualize just how much month-to-month difference there is.
 
 ```{r}
 monthly_sales_lagged <- monthly_sales %>%
@@ -229,7 +229,7 @@ monthly_sales_lagged <- monthly_sales %>%
 (sum_lags <- summary(monthly_sales_lagged$monthly_sales_change))
 ```
 
-The trend is positive on average `r prettyNum(sum_lags[["Mean"]], big.mark = ",", format = "f", digits = 2)` but half of the months have swings greater than `r prettyNum(sum_lags[["3rd Qu."]] - sum_lags[["1st Qu."]], big.mark = ",", format = "f", digits = 2)`!
+The trend is positive on average `r prettyNum(sum_lags[["Mean"]], big.mark = ",", format = "f", digits = 2)`. Let's calculate the inner quartile range to see how spread out our data is: `r prettyNum(sum_lags[["3rd Qu."]] - sum_lags[["1st Qu."]], big.mark = ",", format = "f", digits = 2)` This robust statistic shows us that we have a very large spread in our month-over-month. Next, let's visualize this variation. 
 
 
 ```{r, message=FALSE, error=FALSE}
@@ -251,7 +251,6 @@ ggplot(monthly_sales_lagged, aes(x = orderdate, y = monthly_sales_change)) +
   )
 ```
 
-AdventureWorks sales are *very* uneven.  We'll come back to this issue shortly.
 
 ### Comparing dollars and orders to a base year
 
