@@ -106,7 +106,7 @@ Both 2011 and 2014 are shorter time spans than the other two years, making compa
 
 ### Total sales by year
 
-```{r Calculate time period and annual sales dollars - 2}
+```{r Calculate time period and annual sales dollars - 2 , fig.height=4, fig.width=4}
 
 ggplot(data = annual_sales, aes(x = year, y = total_soh_dollars)) +
   geom_col() +
@@ -124,7 +124,7 @@ From 2011 through 2013, sales are trending up. Are sales dollars for 2014 really
 ### Total order volume
 
 Look at number of orders per year:
-```{r average dollars per sale - v2}
+```{r average dollars per sale - v2, fig.height=4, fig.width=4}
 ggplot(data = annual_sales, aes(x = year, y = as.numeric(soh_count))) +
   geom_col() +
   geom_text(aes(label = round(as.numeric(soh_count), digits = 0)), vjust = -0.25) +
@@ -140,7 +140,7 @@ That's a huge jump in the number of orders between 2012 and 2013.  Given the tot
 
 ### Average dollars per sale
 
-```{r average dollars per sale - }
+```{r average dollars per sale - , fig.height=4, fig.width=4}
 ggplot(data = annual_sales, aes(x = year, y = avg_total_soh_dollars)) +
   geom_col() +
   scale_y_continuous(labels = scales::dollar_format()) +
@@ -213,7 +213,7 @@ monthly_sales_lagged <- monthly_sales %>%
 The trend is positive on average `r prettyNum(sum_lags[["Mean"]], big.mark = ",", format = "f", digits = 2)` but half of the months have swings greater than `r prettyNum(sum_lags[["3rd Qu."]] - sum_lags[["1st Qu."]], big.mark = ",", format = "f", digits = 2)`!
 
 
-```{r}
+```{r, message=FALSE, error=FALSE}
 ggplot(monthly_sales_lagged, aes(x = orderdate, y = monthly_sales_change)) +
   scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
   geom_line() +
@@ -268,7 +268,7 @@ monthly_sales_base_year_normalized_to_2011 <- monthly_sales %>%
   ungroup()
 
 monthly_sales_base_year_normalized_to_2011 <- monthly_sales_base_year_normalized_to_2011 %>%
-  select(orderdate, dollars, number_of_orders) %>%
+  select(orderdate, dollars, `# of orders` = number_of_orders) %>%
   pivot_longer(-orderdate,
     names_to = "relative_to_2011_average",
     values_to = "amount"
@@ -288,7 +288,8 @@ monthly_sales_base_year_normalized_to_2011 %>%
     x = "Date",
     y = "",
     color = "% change from\n 2011 average"
-  )
+  ) +
+  theme(legend.position = c(.3,.75))
 ```
 
 ## The effect of online sales
@@ -430,9 +431,7 @@ As we will see later on, the **Sales Rep** data doesn't match the **Online** dat
 
 Jumping to the trend line comparison, we see the source of the variation.
 
-```{r average dollars, fig.cap='SO, SO Dollars, and Average SO Dollars-b ',fig.width=16}
-
-# sp_print_df(monthly_sales_w_channel)
+```{r average dollars, warning=FALSE}
 
 ggplot(
   data = monthly_sales_w_channel,
@@ -461,7 +460,7 @@ The **monthly** gyrations are happening on the Sales Rep side, amounting to diff
 ### Compare monthly lagged data by order type
 
 First consider month-to-month change.
-```{r}
+```{r , warning=FALSE}
 monthly_sales_w_channel_lagged_by_month <- monthly_sales_w_channel %>%
   ungroup() %>% 
   group_by(onlineorderflag) %>%
@@ -493,10 +492,10 @@ summary(monthly_sales_w_channel_lagged_by_month)
 ```
 
 For **Sales Reps** it looks like the variation is in the number of orders, not just dollars, as shown in the following plot.
-```{r}
+```{r , warning=FALSE}
 ggplot(monthly_sales_w_channel_lagged_by_month, aes(x = orderdate, y = pct_monthly_soh_count_change)) +
   scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
-  facet_grid("onlineorderflag") +
+  facet_grid("onlineorderflag" , scales = "free") +
   geom_line() +
   theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
   labs(
@@ -513,7 +512,7 @@ ggplot(monthly_sales_w_channel_lagged_by_month, aes(x = orderdate, y = pct_month
 
 Let's examine whether there is a large year-to-year change.
 
-```{r}
+```{r , warning=FALSE}
 monthly_sales_w_channel_lagged_by_year <- monthly_sales_w_channel %>%
   group_by(onlineorderflag) %>%
   mutate(
@@ -610,10 +609,8 @@ sales_rep_day_of_month_sales <- tbl(con, in_schema("sales", "salesorderheader"))
 
 str(sales_rep_day_of_month_sales)
 
-sales_rep_day_of_month_sales <- sales_rep_day_of_month_sales %>% 
-  pivot_wider(names_from = day, values_from = n, names_prefix = "day_" )
-
 sales_rep_day_of_month_sales %>% 
+  pivot_wider(names_from = day, values_from = n, names_prefix = "day_" ) %>% 
   as.data.frame() %>% 
   select(year, month, day_1, day_28, day_29, day_30, day_31) %>% 
   filter(!is.na(day_1))
@@ -629,56 +626,9 @@ Use the same pivot strategy on the corrected data.
 
 difference between detective work with a graph and just print it out.  "now I see what's driving the hint." 
 
-show 2011 in the graph, all years in the printout.
-
-```{r,  eval=FALSE}
-sales_rep_day_of_month_sales %>%
-  ggplot(aes(order_month, days_with_orders, fill = min_day_factor)) +
-  geom_col() +
-  coord_flip() +
-  labs(
-    title = "How many days had Sales Rep orders posted",
-    subtitle = "At the beginning or end of the month?",
-    fill = "Day Sales were posted",
-    y = "Number of days with transactions",
-    x = "Date"
-  )
-```
-
-Suspicious months are those where sales were recorded on more than one day or there were no sales recorded in the month at all.
-```{r ,  eval=FALSE}
-suspicious_months <- sales_rep_day_of_month_sales %>%
-  filter(days_with_orders == 0 | days_with_orders > 1) %>%
-  arrange(order_month) %>%
-  select(order_month) %>%
-  unique()
-```
-
-
-```{r,  eval=FALSE}
-months_to_inspect <- tibble(target_month = suspicious_months) %>%
-  mutate(
-    current_month = target_month$order_month,
-    next_month = current_month %m+% months(1),
-    last_month = current_month %m-% months(1)
-  ) %>%
-  select(current_month, next_month, last_month) %>%
-  pivot_longer(cols = tidyselect::peek_vars()) %>%
-  select(value) %>%
-  distinct()
-```
 We have xx months when we add the month before and the month after the **suspicious months**.  We don't know whether the problem postings have been carried forward or backward.  We check for and eliminate duplicates as well.
 
-```{r ,  eval=FALSE}
-monthly_sales_w_channel_to_inspect <- monthly_sales_w_channel %>%
-  filter(onlineorderflag == "Sales Rep") %>%
-  mutate(order_month = round_date(orderdate, "month")) %>%
-  right_join(months_to_inspect, by = c("order_month" = "value")) %>%
-  select(-onlineorderflag, -min_soh_orderdate, -max_soh_orderdate) %>%
-  arrange(desc(orderdate))
 
-monthly_sales_w_channel_to_inspect
-```
 That is unexpected.  A couple of  things immediately jump out from the first page of data:
 
 *  July, September, and November are missing for 2011. 
@@ -759,6 +709,10 @@ monthly_sales_rep_adjusted <- tbl(con, in_schema("sales", "salesorderheader")) %
       soh_count = sum(soh_count)
     ) %>%
   ungroup()
+```
+Inspect:
+
+```{r}
 str(monthly_sales_rep_adjusted)
 monthly_sales_rep_adjusted %>% filter(year(year_month) %in% c(2011,2014))
 ```
@@ -805,15 +759,21 @@ monthly_sales_rep_adjusted_with_psql_function <- tbl(con, in_schema("sales", "sa
   ) %>%
   # show_query() %>%
   collect() %>%
+  mutate( year_month = floor_date(adjusted_orderdate, "month")) %>% 
+    group_by(year_month) %>%
   ungroup() %>% 
-  arrange(adjusted_orderdate)
+  arrange(year_month)
+```
+
+```{r}
+monthly_sales_rep_adjusted_with_psql_function %>% 
+  filter(year(year_month) %in% c(2011,2014))
+
 ```
 
 There's one minor difference between the two:
 ```{r}
 all_equal(monthly_sales_rep_adjusted, monthly_sales_rep_adjusted_with_psql_function)
-monthly_sales_rep_adjusted_with_psql_function %>% 
-  filter(year(adjusted_orderdate) %in% c(2011,2014))
 ```
 
 

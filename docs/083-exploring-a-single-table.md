@@ -3,7 +3,7 @@
 > This chapter explores:
 >
 >   * Issues that come up when investigate a single table from a business perspective
->   * Some details in one AdventureWorks table containing sales data
+>   * Some exploration in one AdventureWorks main tables containing sales data (*salesorderheader*)
 >   * Show the multiple data anomalies found in a single AdventureWorks table
 >   * Suggest the interplay between "data questions" and "business questions"
 
@@ -34,8 +34,7 @@ library(bookdown)
 library(here)
 library(lubridate)
 library(gt)
-
-library(scales) # ggplot xy scales
+library(scales)
 theme_set(theme_light())
 ```
 
@@ -43,7 +42,7 @@ Connect to `adventureworks`:
 
 
 ```r
-sp_docker_start("adventureworks")
+#sp_docker_start("adventureworks")
 Sys.sleep(sleep_default)
 con <- dbConnect(
   # prefer `connection_open` when running interactively...
@@ -144,7 +143,7 @@ ggplot(data = annual_sales, aes(x = year, y = total_soh_dollars)) +
   )
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/Calculate time period and annual sales dollars - 2-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/Calculate time period and annual sales dollars - 2 -1.png" width="384" />
 
 From 2011 through 2013, sales are trending up. Are sales dollars for 2014 really down? We only have a half year of data, but the 2014 total is less than half of the 2013 total. Could it be that sales are seasonal? Maybe AdventureWorks has larger sales volumes in the fourth quarter.  To see if the sales dollars are seasonal, we drill down and look at the monthly sales.  But first, let's look at the number of orders and whether there's a pattern in the sales data.  
 
@@ -158,12 +157,13 @@ ggplot(data = annual_sales, aes(x = year, y = as.numeric(soh_count))) +
   geom_text(aes(label = round(as.numeric(soh_count), digits = 0)), vjust = -0.25) +
   labs(
     title = "Number of orders per year",
-    x = glue("Years between ", min_soh_dt, " - ", max_soh_dt),
+    x = glue("Years between ", {format(min_soh_dt, "%B %d, %Y")} , " and  ", 
+            {format(max_soh_dt, "%B %d, %Y")}),
     y = "Total Number of Orders"
   )
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/average dollars per sale - v2-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/average dollars per sale - v2-1.png" width="384" />
 
 That's a huge jump in the number of orders between 2012 and 2013.  Given the total annual dollars, we ask whether the size of a sale has changed.
 
@@ -183,7 +183,7 @@ ggplot(data = annual_sales, aes(x = year, y = avg_total_soh_dollars)) +
   )
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/average dollars per sale --1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/average dollars per sale - -1.png" width="384" />
 
 That's a remarkable drop between average sale of more than $7,000 to less than $3,000.  Some kind of remarkable change has taken place in this business.
 
@@ -199,11 +199,10 @@ Our next investigation drills down from annual sales dollars to monthly sales do
 ```r
 monthly_sales <- tbl(con, in_schema("sales", "salesorderheader")) %>%
   select(orderdate, subtotal) %>%
-  collect() %>% # From here on we're in R
-
+  collect() %>% 
   mutate(
-    orderdate = date(orderdate),
-    orderdate = round_date(orderdate, "month")
+    orderdate = lubridate::date(orderdate),
+    orderdate = lubridate::round_date(orderdate, "month")
   ) %>%
   group_by(orderdate) %>%
   summarize(
@@ -264,8 +263,8 @@ The trend is positive on average 18,287 but half of the months have swings great
 ggplot(monthly_sales_lagged, aes(x = orderdate, y = monthly_sales_change)) +
   scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
   geom_line() +
-  scale_y_continuous(labels = scales::dollar_format()) +
-  theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
+  scale_y_continuous(limits = c(-1700000,2000000), labels = scales::dollar_format()) +
+  theme(plot.title = element_text(hjust = .5)) + 
   labs(
     title = glue(
       "Monthly Sales Change \n",
@@ -330,7 +329,7 @@ monthly_sales_base_year_normalized_to_2011 <- monthly_sales %>%
   ungroup()
 
 monthly_sales_base_year_normalized_to_2011 <- monthly_sales_base_year_normalized_to_2011 %>%
-  select(orderdate, dollars, number_of_orders) %>%
+  select(orderdate, dollars, `# of orders` = number_of_orders) %>%
   pivot_longer(-orderdate,
     names_to = "relative_to_2011_average",
     values_to = "amount"
@@ -350,7 +349,8 @@ monthly_sales_base_year_normalized_to_2011 %>%
     x = "Date",
     y = "",
     color = "% change from\n 2011 average"
-  )
+  ) +
+  theme(legend.position = c(.3,.75))
 ```
 
 <img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-6-1.png" width="672" />
@@ -974,8 +974,6 @@ Jumping to the trend line comparison, we see the source of the variation.
 
 
 ```r
-# sp_print_df(monthly_sales_w_channel)
-
 ggplot(
   data = monthly_sales_w_channel,
   aes(
@@ -1002,10 +1000,7 @@ ggplot(
 ## `geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'
 ```
 
-<div class="figure">
-<img src="083-exploring-a-single-table_files/figure-html/average dollars-1.png" alt="SO, SO Dollars, and Average SO Dollars-b " width="1536" />
-<p class="caption">(\#fig:average dollars)SO, SO Dollars, and Average SO Dollars-b </p>
-</div>
+<img src="083-exploring-a-single-table_files/figure-html/average dollars-1.png" width="672" />
 
 The **monthly** gyrations are happening on the Sales Rep side, amounting to differences in a million dollars compared to small variations of around $25,000.
 
@@ -1040,10 +1035,6 @@ ggplot(monthly_sales_w_channel_lagged_by_month, aes(x = orderdate, y = pct_month
            {format(max_soh_dt, "%B %d, %Y")})),
     y = "% Dollar Change"
   )
-```
-
-```
-## Warning: Removed 1 rows containing missing values (geom_path).
 ```
 
 <img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-9-1.png" width="672" />
@@ -1084,7 +1075,7 @@ For **Sales Reps** it looks like the variation is in the number of orders, not j
 ```r
 ggplot(monthly_sales_w_channel_lagged_by_month, aes(x = orderdate, y = pct_monthly_soh_count_change)) +
   scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
-  facet_grid("onlineorderflag") +
+  facet_grid("onlineorderflag" , scales = "free") +
   geom_line() +
   theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
   labs(
@@ -1097,10 +1088,6 @@ ggplot(monthly_sales_w_channel_lagged_by_month, aes(x = orderdate, y = pct_month
     x = "Month",
     y = "Change number of orders"
   )
-```
-
-```
-## Warning: Removed 1 rows containing missing values (geom_path).
 ```
 
 <img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-10-1.png" width="672" />
@@ -1138,10 +1125,6 @@ ggplot(
     x = paste0("Month - between ", min_soh_dt, " - ", max_soh_dt),
     y = "% Dollar Change"
   )
-```
-
-```
-## Warning: Removed 12 rows containing missing values (geom_path).
 ```
 
 <img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-11-1.png" width="672" />
@@ -1244,10 +1227,8 @@ str(sales_rep_day_of_month_sales)
 ```
 
 ```r
-sales_rep_day_of_month_sales <- sales_rep_day_of_month_sales %>% 
-  pivot_wider(names_from = day, values_from = n, names_prefix = "day_" )
-
 sales_rep_day_of_month_sales %>% 
+  pivot_wider(names_from = day, values_from = n, names_prefix = "day_" ) %>% 
   as.data.frame() %>% 
   select(year, month, day_1, day_28, day_29, day_30, day_31) %>% 
   filter(!is.na(day_1))
@@ -1274,60 +1255,9 @@ Use the same pivot strategy on the corrected data.
 
 difference between detective work with a graph and just print it out.  "now I see what's driving the hint." 
 
-show 2011 in the graph, all years in the printout.
-
-
-```r
-sales_rep_day_of_month_sales %>%
-  ggplot(aes(order_month, days_with_orders, fill = min_day_factor)) +
-  geom_col() +
-  coord_flip() +
-  labs(
-    title = "How many days had Sales Rep orders posted",
-    subtitle = "At the beginning or end of the month?",
-    fill = "Day Sales were posted",
-    y = "Number of days with transactions",
-    x = "Date"
-  )
-```
-
-Suspicious months are those where sales were recorded on more than one day or there were no sales recorded in the month at all.
-
-```r
-suspicious_months <- sales_rep_day_of_month_sales %>%
-  filter(days_with_orders == 0 | days_with_orders > 1) %>%
-  arrange(order_month) %>%
-  select(order_month) %>%
-  unique()
-```
-
-
-
-```r
-months_to_inspect <- tibble(target_month = suspicious_months) %>%
-  mutate(
-    current_month = target_month$order_month,
-    next_month = current_month %m+% months(1),
-    last_month = current_month %m-% months(1)
-  ) %>%
-  select(current_month, next_month, last_month) %>%
-  pivot_longer(cols = tidyselect::peek_vars()) %>%
-  select(value) %>%
-  distinct()
-```
 We have xx months when we add the month before and the month after the **suspicious months**.  We don't know whether the problem postings have been carried forward or backward.  We check for and eliminate duplicates as well.
 
 
-```r
-monthly_sales_w_channel_to_inspect <- monthly_sales_w_channel %>%
-  filter(onlineorderflag == "Sales Rep") %>%
-  mutate(order_month = round_date(orderdate, "month")) %>%
-  right_join(months_to_inspect, by = c("order_month" = "value")) %>%
-  select(-onlineorderflag, -min_soh_orderdate, -max_soh_orderdate) %>%
-  arrange(desc(orderdate))
-
-monthly_sales_w_channel_to_inspect
-```
 That is unexpected.  A couple of  things immediately jump out from the first page of data:
 
 *  July, September, and November are missing for 2011. 
@@ -1425,6 +1355,11 @@ monthly_sales_rep_adjusted <- tbl(con, in_schema("sales", "salesorderheader")) %
       soh_count = sum(soh_count)
     ) %>%
   ungroup()
+```
+Inspect:
+
+
+```r
 str(monthly_sales_rep_adjusted)
 ```
 
@@ -1505,8 +1440,36 @@ monthly_sales_rep_adjusted_with_psql_function <- tbl(con, in_schema("sales", "sa
   ) %>%
   # show_query() %>%
   collect() %>%
+  mutate( year_month = floor_date(adjusted_orderdate, "month")) %>% 
+    group_by(year_month) %>%
   ungroup() %>% 
-  arrange(adjusted_orderdate)
+  arrange(year_month)
+```
+
+
+```r
+monthly_sales_rep_adjusted_with_psql_function %>% 
+  filter(year(year_month) %in% c(2011,2014))
+```
+
+```
+## # A tibble: 14 x 4
+##    adjusted_orderdate total_soh_dollars soh_count year_month
+##    <date>                         <dbl>     <int> <date>    
+##  1 2011-05-31                   489329.        38 2011-05-01
+##  2 2011-06-30                  1538408.        75 2011-06-01
+##  3 2011-07-31                  1165897.        60 2011-07-01
+##  4 2011-08-31                   844721         40 2011-08-01
+##  5 2011-09-30                  2324136.        90 2011-09-01
+##  6 2011-10-31                  1702945.        63 2011-10-01
+##  7 2011-11-30                   713117.        40 2011-11-01
+##  8 2011-12-31                  1900789.        79 2011-12-01
+##  9 2014-01-28                     1565.         2 2014-01-01
+## 10 2014-01-29                  2737188.       173 2014-01-01
+## 11 2014-02-28                  2207772.        94 2014-02-01
+## 12 2014-03-30                     7291.         2 2014-03-01
+## 13 2014-03-31                  3314519.       178 2014-03-01
+## 14 2014-04-30                  3416764.       181 2014-04-01
 ```
 
 There's one minor difference between the two:
@@ -1517,32 +1480,6 @@ all_equal(monthly_sales_rep_adjusted, monthly_sales_rep_adjusted_with_psql_funct
 
 ```
 ## [1] "Cols in y but not x: `adjusted_orderdate`. "
-## [2] "Cols in x but not y: `year_month`. "
-```
-
-```r
-monthly_sales_rep_adjusted_with_psql_function %>% 
-  filter(year(adjusted_orderdate) %in% c(2011,2014))
-```
-
-```
-## # A tibble: 14 x 3
-##    adjusted_orderdate total_soh_dollars soh_count
-##    <date>                         <dbl>     <int>
-##  1 2011-05-31                   489329.        38
-##  2 2011-06-30                  1538408.        75
-##  3 2011-07-31                  1165897.        60
-##  4 2011-08-31                   844721         40
-##  5 2011-09-30                  2324136.        90
-##  6 2011-10-31                  1702945.        63
-##  7 2011-11-30                   713117.        40
-##  8 2011-12-31                  1900789.        79
-##  9 2014-01-28                     1565.         2
-## 10 2014-01-29                  2737188.       173
-## 11 2014-02-28                  2207772.        94
-## 12 2014-03-30                     7291.         2
-## 13 2014-03-31                  3314519.       178
-## 14 2014-04-30                  3416764.       181
 ```
 
 
@@ -1633,7 +1570,7 @@ ggplot(
   )
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-24-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-22-1.png" width="672" />
 
 
 ```r
@@ -1658,13 +1595,16 @@ ggplot(
       "Number of Sales per month using corrected dates\n",
       "Counting Sales Order Header records"
     ),
+    subtitle = glue("Subtitle"),
+    caption = glue("Datasets Include: \n
+                   monthly_sales_rep_adjusted, monthly_sales_rep_as_is"),
     x = paste0("Monthly - between ", min_soh_dt, " - ", max_soh_dt),
     y = "Number of Sales Recorded",
     fill = "Date\nadjustment"
   ) 
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-26-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-24-1.png" width="672" />
 
 additive graph showing how correction adds in some months and subtracts in others.
 
@@ -1684,7 +1624,7 @@ ggplot(data = monthly_sales_rep_adjusted, aes(x = year_month, y = total_soh_doll
   )
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-27-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-25-1.png" width="672" />
 
 Sales still seem to gyrate!
 
@@ -1695,5 +1635,5 @@ Sales still seem to gyrate!
 dbDisconnect(con)
 # use connection_close(con) when running interactively
 
-sp_docker_stop("adventureworks")
+#sp_docker_stop("adventureworks")
 ```
