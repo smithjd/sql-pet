@@ -6,9 +6,9 @@
 >   * Show the multiple data anomalies found in a single AdventureWorks table (*salesorderheader*)
 >   * The interplay between "data questions" and "business questions"
 
-The previous chapter has demonstrated some of the automated techniques for showing what's in a table using some standard R functions and packages.  Now we demonstrate a step-by-step process of making sense of what's in one table with more of a business perspective.  We illustrate the kind of detective work that's often involved as we investigate the *organizational meaning* of the data in a table.  We'll investigate the `salesorderheader` table in the `sales` schema in this example to understand the sales profile of a business.  We show that there are quite a few interpretation issues even when we are examining just 3 out of the 25 columns in one table.
+The previous chapter has demonstrated some of the automated techniques for showing what's in a table using some standard R functions and packages.  Now we demonstrate a step-by-step process of making sense of what's in one table with more of a business perspective.  We illustrate the kind of detective work that's often involved as we investigate the *organizational meaning* of the data in a table.  We'll investigate the `salesorderheader` table in the `sales` schema with a key business question in mind; are sales dollars trending up, down or flat?
 
-For this kind of detective work we are seeking to understand the following elements separately and as they interact with each other (and they all do):
+For this kind of detective work we are seeking to understand the following elements separately and as they interact with each other:
 
   * What data is stored in the database and 
   * How information is represented
@@ -116,9 +116,9 @@ max_soh_dt <- max(annual_sales$max_soh_orderdate)
 ### Total sales by year
 
 ```{r Calculate time period and annual sales dollars - 2 , fig.height=4, fig.width=4}
-
 ggplot(data = annual_sales, aes(x = year, y = total_soh_dollars)) +
   geom_col() +
+  geom_text(aes(label = round(as.numeric(total_soh_dollars), digits = 0)), vjust = -0.25) +
   scale_y_continuous(labels = scales::dollar_format()) +
   labs(
     title = "Adventure Works Sales Dollars by Year",
@@ -129,7 +129,7 @@ ggplot(data = annual_sales, aes(x = year, y = total_soh_dollars)) +
 ```
 Both 2011 and 2014 are shorter time spans than the other two years, making comparison interpretation more difficult. 
 
-From 2011 through 2013, sales are trending up. Are sales dollars for 2014 really down? We only have a half year of data, but the 2014 total is less than half of the 2013 total. Could it be that sales are seasonal? Maybe AdventureWorks has larger sales volumes in the fourth quarter.  To see if the sales dollars are seasonal, we drill down and look at the monthly sales.  But first, let's look at the number of orders and whether there's a pattern in the sales data.  
+Both 2011 and 2014 are shorter time spans than the other two years, making comparison across the years more difficult. Could it be that sales are seasonal? Let's look at the order volume and see whether there's a pattern in the sales data.
 
 ### Total order volume
 
@@ -149,7 +149,6 @@ ggplot(data = annual_sales, aes(x = year, y = as.numeric(soh_count))) +
 That's a huge jump in the number of orders between 2012 and 2013.  Given the total annual dollars, we ask whether the size of a sale has changed.
 
 ### Average dollars per sale
-
 ```{r average dollars per sale - , fig.height=4, fig.width=4}
 ggplot(data = annual_sales, aes(x = year, y = avg_total_soh_dollars)) +
   geom_col() +
@@ -164,6 +163,7 @@ ggplot(data = annual_sales, aes(x = year, y = avg_total_soh_dollars)) +
 ```
 
 That's a big drop between average sale of more than $7,000 to less than $3,000.  A remarkable change has taken place in this business.
+
 
 From 2012 to 2013 the average dollars per order dropped from more than $8,500 to nearly $3,000 while the total number of orders shot up from less than 4,000 to more than 14,000.  **Why are the number of orders increasing, but the average dollar amount of a sale is dropping?  **
 
