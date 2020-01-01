@@ -218,7 +218,7 @@ Lubridate makes it very easy to convert `orderdate` to `fiscal_year`.  Doing tha
 
 
 Using this function as a model:
-```{r, echo=TRUE, eval=FALSE}
+```{r, echo=TRUE, eval=TRUE}
 dbExecute(
   con,
   "CREATE OR REPLACE FUNCTION so_adj_date(so_date timestamp, ONLINE_ORDER boolean) RETURNS timestamp AS $$
@@ -355,6 +355,44 @@ repeat the function creation strategy from 083 --
   * extract the fiscal year
 
 
+```{r}
+
+by_q_correct_date <- tbl(con, in_schema("sales", "salesorderheader")) %>% 
+  mutate(orderdate = as.Date(orderdate), 
+         orderdate = sql("dateadd(day,-1,orderdate)"),
+         # orderdate = as.Date(so_adj_date(orderdate, onlineorderflag)),
+         year = year(orderdate),
+         month = month(orderdate),
+         quarter = quarter(orderdate)
+         # quarter = sql("DATE_PART('quarter', orderdate)")
+         ) %>% 
+  group_by(year, quarter, month) %>% 
+  summarize(subtotal = sum(subtotal), n = n()) %>% 
+  arrange(year, quarter, month) %>% 
+  show_query %>% 
+  ungroup() %>% 
+  collect()
+
+by_q_raw_date <- tbl(con, in_schema("sales", "salesorderheader")) %>% 
+  mutate(orderdate = as.Date(orderdate), 
+         # orderdate = sql("SELECT CASE WHEN EXTRACT(DAY 
+         #     FROM orderdate) = 1
+         #       THEN  orderdate - '1 day'::interval
+         #     ELSE  orderdate
+         #   END"),
+         year = year(orderdate),
+         month = month(orderdate),
+         quarter = sql("DATE_PART('quarter', orderdate)")) %>% 
+   group_by(year, quarter, month) %>% 
+  summarize(subtotal = sum(subtotal), n = n()) %>% 
+  arrange(year, quarter, month) %>% 
+  show_query %>% 
+  ungroup() %>% 
+  collect()
+
+by_q_correct_date
+by_q_raw_date
+```
   * What about by month? This could be motivation for creating a new view that does aggregation in the database, rather than in R.
   * See SQL code for 'vsalespersonsalesbyfiscalyearsdata'. Consider:
   * Modifying that to include quantity of sales.
