@@ -2,18 +2,18 @@
 
 > This chapter explores:
 >
->   * Issues that come up when investigate a single table from a business perspective
->   * Some exploration in one AdventureWorks main tables containing sales data (*salesorderheader*)
->   * Show the multiple data anomalies found in a single AdventureWorks table
->   * Suggest the interplay between "data questions" and "business questions"
+>   * Issues that come up when investigating a single table from a business perspective
+>   * Show the multiple data anomalies found in a single AdventureWorks table (*salesorderheader*)
+>   * The interplay between "data questions" and "business questions"
 
-The previous chapter has demonstrated some of the automated techniques for showing what's in a table using specific R functions and packages.  Now we demonstrate a step-by-step process of making sense of what's in one table with more of a business perspective.  We illustrate the kind of detective work that's often involved as we investigate the meaning of the data in a table.  We'll investigate the `salesorderheader` table in the `sales` schema in this example with an eye on the AdventureWorks business' sales.  We show that there are quite a few interpretation issues even when we are examining just 3 out of the 25 columns in the `salesorderheader` table.
+The previous chapter has demonstrated some of the automated techniques for showing what's in a table using some standard R functions and packages.  Now we demonstrate a step-by-step process of making sense of what's in one table with more of a business perspective.  We illustrate the kind of detective work that's often involved as we investigate the *organizational meaning* of the data in a table.  We'll investigate the `salesorderheader` table in the `sales` schema in this example to understand the sales profile of a business.  We show that there are quite a few interpretation issues even when we are examining just 3 out of the 25 columns in one table.
 
 For this kind of detective work we are seeking to understand the following elements separately and as they interact with each other (and they all do):
 
-  * The data that's stored in the database and how information is represented
+  * What data is stored in the database and 
+  * How information is represented
   * How the data is entered at a day-to-day level to represent business activities
-  * How the business itself is changing
+  * How the business itself is changing over time
 
 ## Setup our standard working environment
 
@@ -38,32 +38,31 @@ library(scales)
 theme_set(theme_light())
 ```
 
-Connect to `adventureworks`:
+Connect to `adventureworks`.  In an interactive session we prefer to use `connections::connection_open` instead of dbConnect
+
 
 
 ```r
-#sp_docker_start("adventureworks")
+sp_docker_start("adventureworks")
 Sys.sleep(sleep_default)
 con <- dbConnect(
-  # prefer `connection_open` when running interactively...
   RPostgres::Postgres(),
-  # without the following (and preceding) lines, 
-  # bigint become int64 which is a problem for ggplot
   bigint = "integer",  
   host = "localhost",
   port = 5432,
   user = "postgres",
   password = "postgres",
-  dbname = "adventureworks" 
-  # seconds_to_test = sleep_default, connection_tab = TRUE
-)
+  dbname = "adventureworks")
 ```
+
+Some queries generate big integers, so we need to include `RPostgres::Postgres()` and `bigint = "integer"` in the connections statement.
+
 
 ## A word on naming 
 
-> You will find that many columns have the same name in an enterprise database.  For example, in the adventureworks database, almost all tables have columns named `rowguid` and `modifieddate` and there are many other examples of names that are reused.  The meaning of a column depends on the table that contains it, so as you pull a column out of a table, naming its provenance is important.
+> You will find that many tables will have columns with the same name in an enterprise database.  For example, in the adventureworks database, almost all tables have columns named `rowguid` and `modifieddate` and there are many other examples of names that are reused throughout the database.  The meaning of a column depends on the table that contains it, so as you pull a column out of a table, naming its provenance is important.
 >
-> Naming columns carefully (whether retrieved from the database or calculated)  will pay off, especially as our queries become more complex. Using `soh` to tag statistics that are derived from the `salesorderheader` table as we do in this book is one example of an intentional naming strategy: it reminds you  of the original source of a column.  You, future you, and your collaborators will appreciate the effort although different naming conventions are completely valid.  And a naming convention when rigidly applied can yield some long and ugly names.
+> Naming columns carefully (whether retrieved from the database or calculated)  will pay off, especially as our queries become more complex. Using `soh` as an abbreviation of *sales order header* to tag statistics that are derived from the `salesorderheader` table, as we do in this book, is one example of an intentional naming strategy: it reminds us of the original source of a column.  You, future you, and your collaborators will appreciate the effort although different naming conventions are completely valid.  And a naming convention when rigidly applied can yield some long and ugly names.
 >
 > In the following example `soh` appears in different positions in the column name but it is easy to guess at a glance that the data comes from the `salesorderheader` table.
 >
@@ -71,9 +70,11 @@ con <- dbConnect(
 
 ## The overall AdventureWorks sales picture
 
+We begin by looking at Sales on a yearly basis, then consider monthly sales.  We discover that half way through the period represented in the database, the business appears to begin selling online, which has very different characteristics than sales by Sales Reps.  We then look at the details of how Sales Rep sales are recorded in the system and discover a data anomaly that we can correct. 
+
 ## Annual sales
 
-On an annual basis, are sales dollars trending up, down or flat? We begin with total revenue and number of orders at different levels of detail.  
+On an annual basis, are sales dollars trending up, down or flat? We begin with annual revenue and number of orders.  
 
 
 ```r
@@ -91,9 +92,9 @@ annual_sales <- tbl(con, in_schema("sales", "salesorderheader")) %>%
   select(
     year, min_soh_orderdate, max_soh_orderdate, total_soh_dollars,
     avg_total_soh_dollars, soh_count
-  ) %>%
-  show_query() %>%
-  collect()
+  ) %>% 
+  show_query() %>% 
+  collect() 
 ```
 
 ```
@@ -106,6 +107,9 @@ annual_sales <- tbl(con, in_schema("sales", "salesorderheader")) %>%
 ## GROUP BY "year") "dbplyr_002"
 ## ORDER BY "year") "dbplyr_003"
 ```
+
+Note that all of this query is running on the server.  The `show_query` function shows the SQL code postgreSQL is runs to produce its output.
+
 
 ```r
 annual_sales %>% str()
@@ -121,12 +125,13 @@ annual_sales %>% str()
 ##  $ soh_count            : int  1607 3915 14182 11761
 ```
 
+We hang on to some date information for later use in plot titles.
+
+
 ```r
 min_soh_dt <- min(annual_sales$min_soh_orderdate)
 max_soh_dt <- max(annual_sales$max_soh_orderdate)
 ```
-
-Both 2011 and 2014 are shorter time spans than the other two years, making comparison across the years more difficult. We might normalize the totals based on the number of months in each year, but we first graph total dollars.
 
 ### Total sales by year
 
@@ -144,6 +149,7 @@ ggplot(data = annual_sales, aes(x = year, y = total_soh_dollars)) +
 ```
 
 <img src="083-exploring-a-single-table_files/figure-html/Calculate time period and annual sales dollars - 2 -1.png" width="384" />
+Both 2011 and 2014 are shorter time spans than the other two years, making comparison interpretation more difficult. 
 
 From 2011 through 2013, sales are trending up. Are sales dollars for 2014 really down? We only have a half year of data, but the 2014 total is less than half of the 2013 total. Could it be that sales are seasonal? Maybe AdventureWorks has larger sales volumes in the fourth quarter.  To see if the sales dollars are seasonal, we drill down and look at the monthly sales.  But first, let's look at the number of orders and whether there's a pattern in the sales data.  
 
@@ -185,7 +191,7 @@ ggplot(data = annual_sales, aes(x = year, y = avg_total_soh_dollars)) +
 
 <img src="083-exploring-a-single-table_files/figure-html/average dollars per sale - -1.png" width="384" />
 
-That's a remarkable drop between average sale of more than $7,000 to less than $3,000.  Some kind of remarkable change has taken place in this business.
+That's a big drop between average sale of more than $7,000 to less than $3,000.  A remarkable change has taken place in this business.
 
 From 2012 to 2013 the average dollars per order dropped from more than $8,500 to nearly $3,000 while the total number of orders shot up from less than 4,000 to more than 14,000.  **Why are the number of orders increasing, but the average dollar amount of a sale is dropping?  **
 
@@ -193,25 +199,32 @@ We need to drill down to look at monthly sales, adapting the first query to grou
 
 ## Monthly Sales
 
-Our next investigation drills down from annual sales dollars to monthly sales dollars. For that we download the orderdate, rather than a character variable for the year.  R handles the conversion from the PostgreSQL date-time to an R date-time.  We then convert it to a simple date with a `lubridate` function.
+Our next iteration drills down from annual sales dollars to monthly sales dollars. For that we download the orderdate as a date, rather than a character variable for the year.  R handles the conversion from the PostgreSQL date-time to an R date-time.  We then convert it to a simple date with a `lubridate` function.
+
+The following query uses the [postgreSQL function `date_trunc`](https://www.postgresqltutorial.com/postgresql-date_trunc/), which is equivalent to `lubridate`'s `round_date` function in R.
 
 
 ```r
 monthly_sales <- tbl(con, in_schema("sales", "salesorderheader")) %>%
   select(orderdate, subtotal) %>%
-  collect() %>% 
   mutate(
-    orderdate = lubridate::date(orderdate),
-    orderdate = lubridate::round_date(orderdate, "month")
+    orderdate = date_trunc('month', orderdate)
   ) %>%
   group_by(orderdate) %>%
   summarize(
-    min_soh_orderdate = min(orderdate, na.rm = TRUE),
-    max_soh_orderdate = max(orderdate, na.rm = TRUE),
     total_soh_dollars = round(sum(subtotal, na.rm = TRUE), 2),
     avg_total_soh_dollars = round(mean(subtotal, na.rm = TRUE), 2),
     soh_count = n()
-  )
+  ) %>% 
+  collect() 
+```
+
+The `lubridate` and `postgreSQL` functions are *almost* equivalent -- except that the `postgreSQL` function produces a `POSIXct` column, not a `Date`. 
+
+
+```r
+monthly_sales <-  monthly_sales %>% 
+  mutate(orderdate = as.Date(orderdate))
 ```
 
 Plotting the monthly sales data:
@@ -234,13 +247,12 @@ ggplot(data = monthly_sales, aes(x = orderdate, y = total_soh_dollars)) +
 
 ### Check lagged monthly data
 
-The total sales are trending up but suspiciously uneven.  Looking at lags might confirm just how much month-to-month difference there is:
+The total sales are trending up but suspiciously uneven.  We'll use `dplyr::lag` to help with our month over month compairson and will later visualize just how much month-to-month difference there is:
 
 
 ```r
 monthly_sales_lagged <- monthly_sales %>%
-  mutate(monthly_sales_change = (lag(total_soh_dollars, 1)) -
-    total_soh_dollars)
+  mutate(monthly_sales_change = (dplyr::lag(total_soh_dollars)) - total_soh_dollars)
 ```
 
 
@@ -249,13 +261,13 @@ monthly_sales_lagged <- monthly_sales %>%
 ```
 
 ```
-##        Min.     1st Qu.      Median        Mean     3rd Qu.        Max. 
-## -1667368.56 -1082792.47    52892.65    18287.07   816048.02  4399378.90 
-##        NA's 
-##           1
+##         Min.      1st Qu.       Median         Mean      3rd Qu.         Max. 
+## -6758620.270 -1157751.300    11825.200    -8023.669  1383744.320  4907764.150 
+##         NA's 
+##            1
 ```
 
-The trend is positive on average 18,287 but half of the months have swings greater than 1,898,840!
+The trend is positive on average -8,024 but half of the months have swings greater than 2,541,496!
 
 
 
@@ -263,7 +275,8 @@ The trend is positive on average 18,287 but half of the months have swings great
 ggplot(monthly_sales_lagged, aes(x = orderdate, y = monthly_sales_change)) +
   scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
   geom_line() +
-  scale_y_continuous(limits = c(-1700000,2000000), labels = scales::dollar_format()) +
+  geom_point() +
+  scale_y_continuous(limits = c(-1700000,4500000), labels = scales::dollar_format()) +
   theme(plot.title = element_text(hjust = .5)) + 
   labs(
     title = glue(
@@ -277,10 +290,10 @@ ggplot(monthly_sales_lagged, aes(x = orderdate, y = monthly_sales_change)) +
 ```
 
 ```
-## Warning: Removed 1 rows containing missing values (geom_path).
+## Warning: Removed 9 rows containing missing values (geom_point).
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-3-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-4-1.png" width="672" />
 
 AdventureWorks sales are *very* uneven.  We'll come back to this issue shortly.
 
@@ -314,7 +327,7 @@ start_year
 ## # A tibble: 1 x 6
 ##      yr total_soh_dollars soh_count n_months avg_dollars avg_count
 ##   <dbl>             <dbl>     <int>    <int>       <dbl>     <dbl>
-## 1  2011         12354206.      1513        7    1764887.      216.
+## 1  2011         12641672.      1607        8    1580209.      201.
 ```
 
 Re express monthly data in terms of the baseline and plot:
@@ -353,7 +366,7 @@ monthly_sales_base_year_normalized_to_2011 %>%
   theme(legend.position = c(.3,.75))
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-6-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-7-1.png" width="672" />
 
 ## The effect of online sales
 
@@ -409,7 +422,7 @@ ggplot(data = annual_sales_w_channel, aes(x = orderdate, y = total_soh_dollars))
   )
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/Calculate time period and annual sales dollars - 5-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/Calculate annual sales dollars-1.png" width="672" />
 
 Indeed the total sales are quite different as are the number of orders and the average order size!
 
@@ -1037,7 +1050,7 @@ ggplot(monthly_sales_w_channel_lagged_by_month, aes(x = orderdate, y = pct_month
   )
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-9-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-10-1.png" width="672" />
 
 ```r
 summary(monthly_sales_w_channel_lagged_by_month)
@@ -1090,7 +1103,7 @@ ggplot(monthly_sales_w_channel_lagged_by_month, aes(x = orderdate, y = pct_month
   )
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-10-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-11-1.png" width="672" />
 
 Let's examine whether there is a large year-to-year change.
 
@@ -1127,7 +1140,7 @@ ggplot(
   )
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-11-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-12-1.png" width="672" />
 
 That's much smaller than the month-to-month change.
 
@@ -1190,8 +1203,8 @@ sales_rep_day_of_month_sales <- tbl(con, in_schema("sales", "salesorderheader"))
 ## FROM (SELECT "orderdate", "subtotal", EXTRACT(year FROM "orderdate") AS "year", EXTRACT(MONTH FROM "orderdate") AS "month", EXTRACT(day FROM "orderdate") AS "day"
 ## FROM (SELECT *
 ## FROM sales.salesorderheader
-## WHERE ("onlineorderflag" = FALSE)) "dbplyr_007") "dbplyr_008"
-## GROUP BY "year", "month", "day") "dbplyr_009"
+## WHERE ("onlineorderflag" = FALSE)) "dbplyr_008") "dbplyr_009"
+## GROUP BY "year", "month", "day") "dbplyr_010"
 ## GROUP BY "year", "month"
 ```
 
@@ -1570,7 +1583,7 @@ ggplot(
   )
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-22-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-23-1.png" width="672" />
 
 
 ```r
@@ -1604,7 +1617,7 @@ ggplot(
   ) 
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-24-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-25-1.png" width="672" />
 
 additive graph showing how correction adds in some months and subtracts in others.
 
@@ -1624,7 +1637,7 @@ ggplot(data = monthly_sales_rep_adjusted, aes(x = year_month, y = total_soh_doll
   )
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-25-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-26-1.png" width="672" />
 
 Sales still seem to gyrate!
 
