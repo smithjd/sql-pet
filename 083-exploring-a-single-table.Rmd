@@ -2,18 +2,18 @@
 
 > This chapter explores:
 >
->   * Issues that come up when investigate a single table from a business perspective
->   * Some exploration in one AdventureWorks main tables containing sales data (*salesorderheader*)
->   * Show the multiple data anomalies found in a single AdventureWorks table
->   * Suggest the interplay between "data questions" and "business questions"
+>   * Issues that come up when investigating a single table from a business perspective
+>   * Show the multiple data anomalies found in a single AdventureWorks table (*salesorderheader*)
+>   * The interplay between "data questions" and "business questions"
 
-The previous chapter has demonstrated some of the automated techniques for showing what's in a table using specific R functions and packages.  Now we demonstrate a step-by-step process of making sense of what's in one table with more of a business perspective.  We illustrate the kind of detective work that's often involved as we investigate the meaning of the data in a table.  We'll investigate the `salesorderheader` table in the `sales` schema in this example with an eye on the AdventureWorks business' sales.  We show that there are quite a few interpretation issues even when we are examining just 3 out of the 25 columns in the `salesorderheader` table.
+The previous chapter has demonstrated some of the automated techniques for showing what's in a table using some standard R functions and packages.  Now we demonstrate a step-by-step process of making sense of what's in one table with more of a business perspective.  We illustrate the kind of detective work that's often involved as we investigate the *organizational meaning* of the data in a table.  We'll investigate the `salesorderheader` table in the `sales` schema in this example to understand the sales profile of a business.  We show that there are quite a few interpretation issues even when we are examining just 3 out of the 25 columns in one table.
 
 For this kind of detective work we are seeking to understand the following elements separately and as they interact with each other (and they all do):
 
-  * The data that's stored in the database and how information is represented
+  * What data is stored in the database and 
+  * How information is represented
   * How the data is entered at a day-to-day level to represent business activities
-  * How the business itself is changing
+  * How the business itself is changing over time
 
 ## Setup our standard working environment
 
@@ -41,31 +41,30 @@ library(scales)
 theme_set(theme_light())
 ```
 
-Connect to `adventureworks`:
+Connect to `adventureworks`.  In an interactive session we prefer to use `connections::connection_open` instead of dbConnect
+
 
 ```{r, start adventureworks and connect}
-#sp_docker_start("adventureworks")
+sp_docker_start("adventureworks")
 Sys.sleep(sleep_default)
 con <- dbConnect(
-  # prefer `connection_open` when running interactively...
   RPostgres::Postgres(),
-  # without the following (and preceding) lines, 
-  # bigint become int64 which is a problem for ggplot
   bigint = "integer",  
   host = "localhost",
   port = 5432,
   user = "postgres",
   password = "postgres",
-  dbname = "adventureworks" 
-  # seconds_to_test = sleep_default, connection_tab = TRUE
-)
+  dbname = "adventureworks")
 ```
+
+Some queries generate big integers, so we need to include `RPostgres::Postgres()` and `bigint = "integer"` in the connections statement.
+
 
 ## A word on naming 
 
-> You will find that many columns have the same name in an enterprise database.  For example, in the adventureworks database, almost all tables have columns named `rowguid` and `modifieddate` and there are many other examples of names that are reused.  The meaning of a column depends on the table that contains it, so as you pull a column out of a table, naming its provenance is important.
+> You will find that many tables will have columns with the same name in an enterprise database.  For example, in the adventureworks database, almost all tables have columns named `rowguid` and `modifieddate` and there are many other examples of names that are reused throughout the database.  The meaning of a column depends on the table that contains it, so as you pull a column out of a table, naming its provenance is important.
 >
-> Naming columns carefully (whether retrieved from the database or calculated)  will pay off, especially as our queries become more complex. Using `soh` to tag statistics that are derived from the `salesorderheader` table as we do in this book is one example of an intentional naming strategy: it reminds you  of the original source of a column.  You, future you, and your collaborators will appreciate the effort although different naming conventions are completely valid.  And a naming convention when rigidly applied can yield some long and ugly names.
+> Naming columns carefully (whether retrieved from the database or calculated)  will pay off, especially as our queries become more complex. Using `soh` as an abbreviation of *sales order header* to tag statistics that are derived from the `salesorderheader` table, as we do in this book, is one example of an intentional naming strategy: it reminds us of the original source of a column.  You, future you, and your collaborators will appreciate the effort although different naming conventions are completely valid.  And a naming convention when rigidly applied can yield some long and ugly names.
 >
 > In the following example `soh` appears in different positions in the column name but it is easy to guess at a glance that the data comes from the `salesorderheader` table.
 >
@@ -73,11 +72,13 @@ con <- dbConnect(
 
 ## The overall AdventureWorks sales picture
 
+We begin by looking at Sales on a yearly basis, then consider monthly sales.  We discover that half way through the period represented in the database, the business appears to begin selling online, which has very different characteristics than sales by Sales Reps.  We then look at the details of how Sales Rep sales are recorded in the system and discover a data anomaly that we can correct. 
+
 ## Annual sales
 
-On an annual basis, are sales dollars trending up, down or flat? We begin with total revenue and number of orders at different levels of detail.  
+On an annual basis, are sales dollars trending up, down or flat? We begin with annual revenue and number of orders.  
 
-```{r Calculate time period and annual sales dollars- 1}
+```{r Calculate time period and annual sales dollars 1}
 annual_sales <- tbl(con, in_schema("sales", "salesorderheader")) %>%
   mutate(year = substr(as.character(orderdate), 1, 4)) %>%
   group_by(year) %>%
@@ -92,17 +93,24 @@ annual_sales <- tbl(con, in_schema("sales", "salesorderheader")) %>%
   select(
     year, min_soh_orderdate, max_soh_orderdate, total_soh_dollars,
     avg_total_soh_dollars, soh_count
-  ) %>%
-  show_query() %>%
-  collect()
+  ) %>% 
+  show_query() %>% 
+  collect() 
+  
+```
 
+Note that all of this query is running on the server.  The `show_query` function shows the SQL code postgreSQL is runs to produce its output.
+
+```{r Show the column format of the resulting query}
 annual_sales %>% str()
+```
 
+We hang on to some date information for later use in plot titles.
+
+```{r You will need time periods later on.}
 min_soh_dt <- min(annual_sales$min_soh_orderdate)
 max_soh_dt <- max(annual_sales$max_soh_orderdate)
 ```
-
-Both 2011 and 2014 are shorter time spans than the other two years, making comparison across the years more difficult. We might normalize the totals based on the number of months in each year, but we first graph total dollars.
 
 ### Total sales by year
 
@@ -118,6 +126,7 @@ ggplot(data = annual_sales, aes(x = year, y = total_soh_dollars)) +
     y = "Sales $"
   )
 ```
+Both 2011 and 2014 are shorter time spans than the other two years, making comparison interpretation more difficult. 
 
 From 2011 through 2013, sales are trending up. Are sales dollars for 2014 really down? We only have a half year of data, but the 2014 total is less than half of the 2013 total. Could it be that sales are seasonal? Maybe AdventureWorks has larger sales volumes in the fourth quarter.  To see if the sales dollars are seasonal, we drill down and look at the monthly sales.  But first, let's look at the number of orders and whether there's a pattern in the sales data.  
 
@@ -153,7 +162,7 @@ ggplot(data = annual_sales, aes(x = year, y = avg_total_soh_dollars)) +
   )
 ```
 
-That's a remarkable drop between average sale of more than $7,000 to less than $3,000.  Some kind of remarkable change has taken place in this business.
+That's a big drop between average sale of more than $7,000 to less than $3,000.  A remarkable change has taken place in this business.
 
 From 2012 to 2013 the average dollars per order dropped from more than $8,500 to nearly $3,000 while the total number of orders shot up from less than 4,000 to more than 14,000.  **Why are the number of orders increasing, but the average dollar amount of a sale is dropping?  **
 
@@ -161,24 +170,33 @@ We need to drill down to look at monthly sales, adapting the first query to grou
 
 ## Monthly Sales
 
-Our next investigation drills down from annual sales dollars to monthly sales dollars. For that we download the orderdate, rather than a character variable for the year.  R handles the conversion from the PostgreSQL date-time to an R date-time.  We then convert it to a simple date with a `lubridate` function.
+Our next iteration drills down from annual sales dollars to monthly sales dollars. For that we download the orderdate as a date, rather than a character variable for the year.  R handles the conversion from the PostgreSQL date-time to an R date-time.  We then convert it to a simple date with a `lubridate` function.
 
-```{r monthly sales retrieval}
+The following query uses the [postgreSQL function `date_trunc`](https://www.postgresqltutorial.com/postgresql-date_trunc/), which is equivalent to `lubridate`'s `round_date` function in R.  If you want to push as much of the processing as possible onto the database server and thus possibly deal with smaller datasets in R, interleaving [postgreSQL functions](https://www.postgresql.org/docs/current/functions.html) into your dplyr code will help.
+
+```{r monthly sales retrieval - sql}
 monthly_sales <- tbl(con, in_schema("sales", "salesorderheader")) %>%
   select(orderdate, subtotal) %>%
-  collect() %>% 
   mutate(
-    orderdate = lubridate::date(orderdate),
-    orderdate = lubridate::round_date(orderdate, "month")
+    orderdate = date_trunc('month', orderdate)
   ) %>%
   group_by(orderdate) %>%
   summarize(
-    min_soh_orderdate = min(orderdate, na.rm = TRUE),
-    max_soh_orderdate = max(orderdate, na.rm = TRUE),
     total_soh_dollars = round(sum(subtotal, na.rm = TRUE), 2),
     avg_total_soh_dollars = round(mean(subtotal, na.rm = TRUE), 2),
     soh_count = n()
-  )
+  ) %>% 
+  collect() 
+```
+
+In many cases we don't really care where our queries are executed, but if we do we have to look for cases where functions from R packages like `lubridate` and the equivalent `postgreSQL` functions are subtly different.  In this case the `postgreSQL` function produces a `POSIXct` column, not a `Date` so we need to tack on a mutate function onto our query.
+
+>
+> When to use the sql() function.
+
+```{r}
+monthly_sales <-  monthly_sales %>% 
+  mutate(orderdate = as.Date(orderdate))
 ```
 
 Plotting the monthly sales data:
@@ -329,7 +347,7 @@ annual_sales_w_channel <- tbl(con, in_schema("sales", "salesorderheader")) %>%
 
 Start by looking at total sales.
 
-```{r Calculate time period and annual sales dollars - 5}
+```{r Calculate annual sales dollars}
 
 ggplot(data = annual_sales_w_channel, aes(x = orderdate, y = total_soh_dollars)) +
   geom_col() +
