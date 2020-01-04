@@ -107,26 +107,20 @@ ggplot(data=fyr_data
   ggtitle(paste("Sales Rep Orders by Month\nUsing Adjusted Order Dates ")) +
     theme(axis.text.x = element_text(angle = 45))
 }  
-for (fy_yr in 2011:2012){
+for (fy_yr in 2011:2014){
   fyr_data <- SalesRepOrders_Fiscal_Year %>% filter(yyyy == fy_yr)
- print( fyr_plot(fyr_data))
+  print(fyr_plot(fyr_data))
 }
 
 ```
 
-```{r}
-fyr_data <- SalesRepOrders_Fiscal_Year %>% filter(yyyy == 2011)
-fyr_plot(fyr_data)
-```
-
-
 
 
 
 
 
 ```{r}
-SalesRepOrders_Fiscal_Year <- dbGetQuery(con,
+SalesRepOrders_Fiscal_Year_with_Imputed_values <- dbGetQuery(con,
 "
 with wo_adj_so_dates as
        (SELECT 'orig_date' date_type
@@ -180,19 +174,33 @@ select * from adj_so_dates
 order by yymm,date_type desc
 ")
 
-sp_print_df(SalesRepOrders_Fiscal_Year)
+sp_print_df(SalesRepOrders_Fiscal_Year_with_Imputed_values)
 ```
 
-```{r}
-fyr_plot(SalesRepOrders_Fiscal_Year %>% filter(yyyy == 2011  ))
-fyr_plot(SalesRepOrders_Fiscal_Year %>% filter(yyyy == 2012  ))
-fyr_plot(SalesRepOrders_Fiscal_Year %>% filter(yyyy == 2013  ))
-fyr_plot(SalesRepOrders_Fiscal_Year %>% filter(yyyy == 2014  ))
-```
 
 ```{r}
 for (fy_yr in 2011:2014){
-  fyr_data <- SalesRepOrders_Fiscal_Year %>% filter(yyyy == fy_yr)
-  fyr_plot(fyr_data)
+  fyr_data <- SalesRepOrders_Fiscal_Year_with_Imputed_values %>% filter(yyyy == fy_yr)
+  print(fyr_plot(fyr_data))
 }
 ```
+
+```{r}
+x <- dbGetQuery(con,
+"with adj_so_dates as
+       (SELECT 'adj_date' date_type,salespersonid
+             , min(date_part('year'::text, so_adj_date(soh.orderdate, onlineorderflag) + '6 mons'::interval))  AS fiscalyear
+             , min(TO_CHAR(so_adj_date(soh.orderdate, onlineorderflag), 'YYYY')) yyyy
+             , TO_CHAR(so_adj_date(soh.orderdate, onlineorderflag), 'YYmm') yymm
+             , COUNT(*) * 1.0 so_cnt 
+             , ROUND(sum(subtotal),2) so_dollars
+             , count(distinct so_adj_date(soh.orderdate, onlineorderflag)) unique_days
+          FROM sales.salesorderheader soh
+         where not onlineorderflag
+        group by TO_CHAR(so_adj_date(soh.orderdate, onlineorderflag), 'YYmm'),salespersonid
+        )
+select * from adj_so_dates order by salespersonid,yymm desc")
+
+x
+```
+
