@@ -83,7 +83,7 @@ source(here("book-src", "restore-adventureworks-postgres-on-docker.R"))
 ```
 
 ```
-## docker  run --detach  --name adventureworks --publish 5432:5432 --mount type=bind,source="/Users/jds/Documents/Library/R/r-system/sql-pet",target=/petdir postgres:11
+## docker  run --detach  --name adventureworks --publish 5432:5432 --mount type=bind,source="/home/znmeb/Projects/sql-pet",target=/petdir postgres:11
 ```
 
 ## Run the adventureworks Docker Image
@@ -184,7 +184,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## f44ee620b29e        postgres:11         "docker-entrypoint.s…"   17 seconds ago      Exited (0) Less than a second ago                       adventureworks
+## 157b828fe883        postgres:11         "docker-entrypoint.s…"   16 seconds ago      Exited (0) Less than a second ago                       adventureworks
 ```
 
 Next time, you can just use this command to start the container: 

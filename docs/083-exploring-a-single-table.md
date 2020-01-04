@@ -256,7 +256,7 @@ monthly_sales_lagged <- monthly_sales %>%
 ##           1
 ```
 
-The trend is positive on average 18,287 but half of the months have swings greater than 1,898,840!
+The trend is positive on average %#4.0-1e but half of the months have swings greater than %#4.0-1e!
 
 
 
@@ -503,7 +503,7 @@ monthly_sales_w_channel %>%
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#pzveloiefp .gt_table {
+#ihpatfhiuj .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -531,7 +531,7 @@ monthly_sales_w_channel %>%
   /* table.border.bottom.color */
 }
 
-#pzveloiefp .gt_heading {
+#ihpatfhiuj .gt_heading {
   background-color: #FFFFFF;
   /* heading.background.color */
   border-bottom-color: #FFFFFF;
@@ -550,7 +550,7 @@ monthly_sales_w_channel %>%
   /* heading.border.lr.color */
 }
 
-#pzveloiefp .gt_title {
+#ihpatfhiuj .gt_title {
   color: #333333;
   font-size: 125%;
   /* heading.title.font.size */
@@ -564,7 +564,7 @@ monthly_sales_w_channel %>%
   border-bottom-width: 0;
 }
 
-#pzveloiefp .gt_subtitle {
+#ihpatfhiuj .gt_subtitle {
   color: #333333;
   font-size: 85%;
   /* heading.subtitle.font.size */
@@ -578,7 +578,7 @@ monthly_sales_w_channel %>%
   border-top-width: 0;
 }
 
-#pzveloiefp .gt_bottom_border {
+#ihpatfhiuj .gt_bottom_border {
   border-bottom-style: solid;
   /* heading.border.bottom.style */
   border-bottom-width: 2px;
@@ -587,7 +587,7 @@ monthly_sales_w_channel %>%
   /* heading.border.bottom.color */
 }
 
-#pzveloiefp .gt_column_spanner {
+#ihpatfhiuj .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -595,7 +595,7 @@ monthly_sales_w_channel %>%
   padding-bottom: 4px;
 }
 
-#pzveloiefp .gt_col_headings {
+#ihpatfhiuj .gt_col_headings {
   border-top-style: solid;
   /* column_labels.border.top.style */
   border-top-width: 2px;
@@ -622,7 +622,7 @@ monthly_sales_w_channel %>%
   /* column_labels.border.lr.color */
 }
 
-#pzveloiefp .gt_col_heading {
+#ihpatfhiuj .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   /* column_labels.background.color */
@@ -638,11 +638,11 @@ monthly_sales_w_channel %>%
   overflow-x: hidden;
 }
 
-#pzveloiefp .gt_sep_right {
+#ihpatfhiuj .gt_sep_right {
   border-right: 5px solid #FFFFFF;
 }
 
-#pzveloiefp .gt_group_heading {
+#ihpatfhiuj .gt_group_heading {
   padding: 8px;
   /* row_group.padding */
   color: #333333;
@@ -681,7 +681,7 @@ monthly_sales_w_channel %>%
   vertical-align: middle;
 }
 
-#pzveloiefp .gt_empty_group_heading {
+#ihpatfhiuj .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -705,20 +705,20 @@ monthly_sales_w_channel %>%
   vertical-align: middle;
 }
 
-#pzveloiefp .gt_striped {
-  background-color: #8080800D;
+#ihpatfhiuj .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
   /* row.striping.background_color */
 }
 
-#pzveloiefp .gt_from_md > :first-child {
+#ihpatfhiuj .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#pzveloiefp .gt_from_md > :last-child {
+#ihpatfhiuj .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#pzveloiefp .gt_row {
+#ihpatfhiuj .gt_row {
   padding-top: 8px;
   /* data_row.padding */
   padding-bottom: 8px;
@@ -748,7 +748,7 @@ monthly_sales_w_channel %>%
   overflow-x: hidden;
 }
 
-#pzveloiefp .gt_stub {
+#ihpatfhiuj .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   /* stub.background.color */
@@ -765,7 +765,7 @@ monthly_sales_w_channel %>%
   padding-left: 12px;
 }
 
-#pzveloiefp .gt_summary_row {
+#ihpatfhiuj .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   /* summary_row.background.color */
@@ -779,7 +779,7 @@ monthly_sales_w_channel %>%
   padding-right: 5px;
 }
 
-#pzveloiefp .gt_first_summary_row {
+#ihpatfhiuj .gt_first_summary_row {
   padding-top: 8px;
   /* summary_row.padding */
   padding-bottom: 8px;
@@ -794,7 +794,7 @@ monthly_sales_w_channel %>%
   /* summary_row.border.color */
 }
 
-#pzveloiefp .gt_grand_summary_row {
+#ihpatfhiuj .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   /* grand_summary_row.background.color */
@@ -808,7 +808,7 @@ monthly_sales_w_channel %>%
   padding-right: 5px;
 }
 
-#pzveloiefp .gt_first_grand_summary_row {
+#ihpatfhiuj .gt_first_grand_summary_row {
   padding-top: 8px;
   /* grand_summary_row.padding */
   padding-bottom: 8px;
@@ -823,7 +823,7 @@ monthly_sales_w_channel %>%
   /* grand_summary_row.border.color */
 }
 
-#pzveloiefp .gt_table_body {
+#ihpatfhiuj .gt_table_body {
   border-top-style: solid;
   /* table_body.border.top.style */
   border-top-width: 2px;
@@ -838,7 +838,7 @@ monthly_sales_w_channel %>%
   /* table_body.border.bottom.color */
 }
 
-#pzveloiefp .gt_footnotes {
+#ihpatfhiuj .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   /* footnotes.background.color */
@@ -862,7 +862,7 @@ monthly_sales_w_channel %>%
   /* footnotes.border.lr.color */
 }
 
-#pzveloiefp .gt_footnote {
+#ihpatfhiuj .gt_footnote {
   margin: 0px;
   font-size: 90%;
   /* footnotes.font.size */
@@ -870,7 +870,7 @@ monthly_sales_w_channel %>%
   /* footnotes.padding */
 }
 
-#pzveloiefp .gt_sourcenotes {
+#ihpatfhiuj .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   /* source_notes.background.color */
@@ -894,48 +894,48 @@ monthly_sales_w_channel %>%
   /* source_notes.border.lr.style */
 }
 
-#pzveloiefp .gt_sourcenote {
+#ihpatfhiuj .gt_sourcenote {
   font-size: 90%;
   /* source_notes.font.size */
   padding: 4px;
   /* source_notes.padding */
 }
 
-#pzveloiefp .gt_left {
+#ihpatfhiuj .gt_left {
   text-align: left;
 }
 
-#pzveloiefp .gt_center {
+#ihpatfhiuj .gt_center {
   text-align: center;
 }
 
-#pzveloiefp .gt_right {
+#ihpatfhiuj .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#pzveloiefp .gt_font_normal {
+#ihpatfhiuj .gt_font_normal {
   font-weight: normal;
 }
 
-#pzveloiefp .gt_font_bold {
+#ihpatfhiuj .gt_font_bold {
   font-weight: bold;
 }
 
-#pzveloiefp .gt_font_italic {
+#ihpatfhiuj .gt_font_italic {
   font-style: italic;
 }
 
-#pzveloiefp .gt_super {
+#ihpatfhiuj .gt_super {
   font-size: 65%;
 }
 
-#pzveloiefp .gt_footnote_marks {
+#ihpatfhiuj .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 </style>
-<div id="pzveloiefp" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+<div id="ihpatfhiuj" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
   
   <thead class="gt_col_headings">
     <tr>
@@ -1239,8 +1239,8 @@ str(sales_rep_day_of_month_sales)
 ## Classes 'tbl_df', 'tbl' and 'data.frame':	40 obs. of  4 variables:
 ##  $ year : num  2011 2011 2011 2011 2011 ...
 ##  $ month: num  5 7 8 8 10 10 12 1 1 2 ...
-##  $ day  : num  31 1 31 1 31 1 1 29 1 29 ...
-##  $ n    : num  38 75 40 60 63 90 40 64 79 37 ...
+##  $ day  : num  31 1 31 1 1 31 1 29 1 29 ...
+##  $ n    : num  38 75 40 60 90 63 40 64 79 37 ...
 ```
 
 ```r

@@ -385,12 +385,12 @@ str(sales_data_fiscal_year)
 
 ```
 ## Classes 'tbl_df', 'tbl' and 'data.frame':	468 obs. of  6 variables:
-##  $ businessentityid  : int  276 280 277 287 286 274 290 275 276 275 ...
-##  $ orderdate         : Date, format: "2013-12-31" "2011-07-01" ...
-##  $ sales_total       : num  497156 153059 333179 42042 185822 ...
-##  $ day               : num  31 1 30 31 30 1 31 30 31 29 ...
-##  $ adjusted_orderdate: Date, format: "2013-12-31" "2011-06-30" ...
-##  $ year_month        : Date, format: "2013-12-01" "2011-06-01" ...
+##  $ businessentityid  : int  283 288 282 278 276 283 279 279 280 279 ...
+##  $ orderdate         : Date, format: "2012-03-30" "2014-02-28" ...
+##  $ sales_total       : num  115902 765 110014 196793 497156 ...
+##  $ day               : num  30 28 1 1 31 31 30 30 30 30 ...
+##  $ adjusted_orderdate: Date, format: "2012-03-30" "2014-02-28" ...
+##  $ year_month        : Date, format: "2012-03-01" "2014-02-01" ...
 ```
 
 ```r
@@ -423,7 +423,8 @@ salesperson_sales_by_fiscal_years_dplyr %>%
   summarize(sales_total = sum(sales_total)) %>% 
   # select(full_name, territory_name, calendar_year, sales_total) %>% 
   ungroup() %>% 
-  pivot_wider(names_from = calendar_year, values_from = sales_total, values_fill = 0) %>% 
+  pivot_wider(names_from = calendar_year, values_from = sales_total,
+              values_fill = list(sales_total = 0)) %>%
   arrange(territory_name, full_name)
 ```
 
@@ -452,7 +453,8 @@ salesperson_sales_by_fiscal_years_dplyr %>%
 
 v_salesperson_sales_by_fiscal_years_data %>% # names()
   select(-jobtitle, -salespersonid) %>%
-  pivot_wider(names_from = fiscalyear, values_from = salestotal, values_fill = 0) %>% 
+  pivot_wider(names_from = fiscalyear, values_from = salestotal,
+              values_fill = list(salestotal = 0)) %>%
   arrange(salesterritory, fullname)
 ```
 
@@ -499,13 +501,43 @@ names(v_salesperson_sales_by_fiscal_years_data) %>% sort()
 ## [5] "salesterritory" "salestotal"
 ```
 
+the following doesn't quite work yet.  The idea is to do as much work on the server as possible to correct the data entry date.  
 
 
 ```r
 sales_order_header_fy <- tbl(con, in_schema("sales", "salesorderheader")) %>% 
-  mutate(sales_order_year = year(orderdate),
-         sales_order_month = month(orderdate)) %>% 
- select(sales_order_year, sales_order_month, salespersonid, subtotal, orderdate)
+  mutate(orderdate = as.Date(orderdate),
+         sales_order_year = year(orderdate),
+         sales_order_month = month(orderdate),
+         sales_order_day = as.numeric(day(orderdate))
+         ) %>% 
+ select(sales_order_year, sales_order_month, sales_order_day, 
+        salespersonid, subtotal, orderdate) %>% 
+  group_by(sales_order_year, sales_order_month, sales_order_day, 
+        salespersonid) %>% 
+  summarize(subtotal = sum(subtotal, na.rm = TRUE)) %>% 
+  collect() %>% 
+  # show_query %>% 
+  mutate(
+    sales_order_day_adj = ifelse(
+      sales_order_day == 1, sales_order_day - 1, sales_order_day
+    )
+  ) %>% ungroup()
+
+# , 
+
+# View(sales_order_header_fy)
+str(sales_order_header_fy)
+```
+
+```
+## Classes 'tbl_df', 'tbl' and 'data.frame':	1592 obs. of  6 variables:
+##  $ sales_order_year   : num  2014 2013 2013 2014 2014 ...
+##  $ sales_order_month  : num  6 11 6 2 2 7 5 3 1 2 ...
+##  $ sales_order_day    : num  8 17 25 25 14 20 13 30 4 28 ...
+##  $ salespersonid      : int  NA NA NA NA NA NA NA 281 NA 283 ...
+##  $ subtotal           : num  1046 63751 20063 45560 46304 ...
+##  $ sales_order_day_adj: num  8 17 25 25 14 20 13 30 4 28 ...
 ```
 
 Why 3 sales folks in vsalesperson don’t show up in 2014 vsalespersonsalesbyfiscalyearsdata
