@@ -107,12 +107,18 @@ ggplot(data=fyr_data
   ggtitle(paste("Sales Rep Orders by Month\nUsing Adjusted Order Dates ")) +
     theme(axis.text.x = element_text(angle = 45))
 }  
-for (fy_yr in 2011:2014){
+for (fy_yr in 2011:2012){
   fyr_data <- SalesRepOrders_Fiscal_Year %>% filter(yyyy == fy_yr)
-  fyr_plot(fyr_data)
+ print( fyr_plot(fyr_data))
 }
 
 ```
+
+```{r}
+fyr_data <- SalesRepOrders_Fiscal_Year %>% filter(yyyy == 2011)
+fyr_plot(fyr_data)
+```
+
 
 
 
