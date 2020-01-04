@@ -1,0 +1,206 @@
+---
+title: "Untitled"
+author: "Sophie Yang"
+date: "November 9, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r libraries, include=FALSE}
+library(tidyverse)
+library(DBI)
+library(RPostgres)
+library(glue)
+require(knitr)
+library(dbplyr)
+library(sqlpetr)
+library(bookdown)
+library(here)
+
+library(scales)  # ggplot xy scales
+```
+
+```{r, start adventureworks}
+sp_docker_start('adventureworks')
+# Sys.sleep(10)
+con <- sp_get_postgres_connection(
+  host = "localhost",
+  port = 5432,
+  user = "postgres",
+  password = "postgres",
+  dbname = "adventureworks",
+  seconds_to_test = 60, connection_tab = TRUE
+)
+```
+
+```{r Dry Version so_adj_date function}
+SalesRepOrders_Fiscal_Year <- dbGetQuery(con,
+"
+with wo_adj_so_dates as
+       (SELECT 'orig_date' date_type
+             , date_part('year'::text, soh.orderdate + '6 mons'::interval)  AS fiscalyear
+             , TO_CHAR(soh.orderdate, 'YYYY') yyyy
+             , TO_CHAR(soh.orderdate, 'YYmm') yymm
+             , COUNT(*) * 1.0 so_cnt 
+             , ROUND(sum(subtotal),2) so_dollars
+             , min(soh.orderdate) min_dt
+             , max(soh.orderdate) max_dt
+             , EXTRACT(DAY FROM max(soh.orderdate)) - EXTRACT(DAY FROM min(soh.orderdate)) + 1 days
+             , count(distinct soh.orderdate) unique_days
+          FROM sales.salesorderheader soh
+         where not onlineorderflag
+        group by soh.orderdate
+             , date_part('year'::text, soh.orderdate + '6 mons'::interval)  
+             , TO_CHAR(soh.orderdate, 'YYmm')
+        ),
+adj_so_dates as
+       (SELECT 'adj_date' date_type
+             , date_part('year'::text, so_adj_date(soh.orderdate, onlineorderflag) + '6 mons'::interval)  AS fiscalyear
+             , TO_CHAR(so_adj_date(soh.orderdate, onlineorderflag), 'YYYY') yyyy
+             , TO_CHAR(so_adj_date(soh.orderdate, onlineorderflag), 'YYmm') yymm
+             , COUNT(*) * 1.0 so_cnt 
+             , ROUND(sum(subtotal),2) so_dollars
+             , min(so_adj_date(soh.orderdate, onlineorderflag)) min_dt
+             , max(so_adj_date(soh.orderdate, onlineorderflag)) max_dt
+             , EXTRACT(DAY FROM max(so_adj_date(soh.orderdate, onlineorderflag))) - EXTRACT(DAY FROM min(so_adj_date(soh.orderdate, onlineorderflag))) + 1 days
+             , count(distinct so_adj_date(soh.orderdate, onlineorderflag)) unique_days
+          FROM sales.salesorderheader soh
+         where not onlineorderflag
+        group by soh.orderdate,onlineorderflag
+             , date_part('year'::text, so_adj_date(soh.orderdate, onlineorderflag) + '6 mons'::interval)  
+             , TO_CHAR(so_adj_date(soh.orderdate, onlineorderflag), 'YYmm')
+        )
+select min(date_type) date_type
+      ,min(fiscalyear) fiscalyear
+      ,min(yyyy) yyyy
+      ,yymm
+      ,sum(so_cnt) so_cnt
+      ,sum(so_dollars) so_dollars
+      ,min(min_dt) min_dt
+      ,max(max_dt) max_dt
+      ,sum(days)days
+      ,sum(unique_days) unique_days
+  from wo_adj_so_dates
+  group by yymm
+union
+ select * from adj_so_dates
+order by yymm,date_type
+")
+sp_print_df(SalesRepOrders_Fiscal_Year)
+
+```
+
+```{r}
+
+fyr_plot <- function (fyr_data) {
+ggplot(data=fyr_data
+       ,aes(x=yymm,y=so_cnt,color=as.factor(date_type), group=as.factor(date_type))) + 
+  geom_line() +
+  geom_point(position=position_jitter(.2)) +
+  labs(color='Fiscal Year') +
+  xlab("Year-Month") + 
+  ylab("Number of Orders") +
+  theme(plot.title = element_text(hjust = .50)) +  
+  ggtitle(paste("Sales Rep Orders by Month\nUsing Adjusted Order Dates ")) +
+    theme(axis.text.x = element_text(angle = 45))
+}  
+for (fy_yr in 2011:2014){
+  fyr_data <- SalesRepOrders_Fiscal_Year %>% filter(yyyy == fy_yr)
+  print(fyr_plot(fyr_data))
+}
+
+```
+
+
+
+
+
+
+```{r}
+SalesRepOrders_Fiscal_Year_with_Imputed_values <- dbGetQuery(con,
+"
+with wo_adj_so_dates as
+       (SELECT 'orig_date' date_type
+             , min(date_part('year'::text, soh.orderdate + '6 mons'::interval))  AS fiscalyear
+             , min(TO_CHAR(soh.orderdate, 'YYYY')) yyyy
+             , TO_CHAR(soh.orderdate, 'YYmm') yymm
+             , COUNT(*) * 1.0 so_cnt 
+             , ROUND(sum(subtotal),2) so_dollars
+             , count(distinct soh.orderdate) unique_days
+          FROM sales.salesorderheader soh
+         where not onlineorderflag
+        group by TO_CHAR(soh.orderdate, 'YYmm')
+        ),
+adj_so_dates as
+       (SELECT 'adj_date' date_type
+             , min(date_part('year'::text, so_adj_date(soh.orderdate, onlineorderflag) + '6 mons'::interval))  AS fiscalyear
+             , min(TO_CHAR(so_adj_date(soh.orderdate, onlineorderflag), 'YYYY')) yyyy
+             , TO_CHAR(so_adj_date(soh.orderdate, onlineorderflag), 'YYmm') yymm
+             , COUNT(*) * 1.0 so_cnt 
+             , ROUND(sum(subtotal),2) so_dollars
+             , count(distinct so_adj_date(soh.orderdate, onlineorderflag)) unique_days
+          FROM sales.salesorderheader soh
+         where not onlineorderflag
+        group by TO_CHAR(so_adj_date(soh.orderdate, onlineorderflag), 'YYmm')
+        ),
+no_data as
+      (SELECT 'imputed' date_type
+             , min(date_part('year'::text, so_adj_date(soh.orderdate, onlineorderflag) + '6 mons'::interval))  AS fiscalyear
+             , min(TO_CHAR(so_adj_date(soh.orderdate, onlineorderflag), 'YYYY')) yyyy
+             , TO_CHAR(so_adj_date(soh.orderdate, onlineorderflag), 'YYmm') yymm
+             , 0 so_cnt 
+             , 0.00 so_dollars
+             , 0 unique_days
+          FROM sales.salesorderheader soh
+         where not onlineorderflag
+        group by TO_CHAR(so_adj_date(soh.orderdate, onlineorderflag), 'YYmm')
+      )
+select nd.date_type
+      ,coalesce(wo.fiscalyear, nd.fiscalyear) fiscalyear
+      ,coalesce(wo.yyyy, nd.yyyy) yyyy
+      ,coalesce(wo.yymm, nd.yymm) yymm
+      ,coalesce(wo.so_cnt, nd.so_cnt) so_cnt
+      ,coalesce(wo.so_dollars, nd.so_dollars) so_dollars
+      ,coalesce(wo.unique_days, nd.unique_days) unique_days
+  from no_data nd left join wo_adj_so_dates wo on nd.yymm = wo.yymm
+union
+select *
+  from wo_adj_so_dates 
+union
+select * from adj_so_dates
+order by yymm,date_type desc
+")
+
+sp_print_df(SalesRepOrders_Fiscal_Year_with_Imputed_values)
+```
+
+
+```{r}
+for (fy_yr in 2011:2014){
+  fyr_data <- SalesRepOrders_Fiscal_Year_with_Imputed_values %>% filter(yyyy == fy_yr)
+  print(fyr_plot(fyr_data))
+}
+```
+
+```{r}
+x <- dbGetQuery(con,
+"with adj_so_dates as
+       (SELECT 'adj_date' date_type,salespersonid
+             , min(date_part('year'::text, so_adj_date(soh.orderdate, onlineorderflag) + '6 mons'::interval))  AS fiscalyear
+             , min(TO_CHAR(so_adj_date(soh.orderdate, onlineorderflag), 'YYYY')) yyyy
+             , TO_CHAR(so_adj_date(soh.orderdate, onlineorderflag), 'YYmm') yymm
+             , COUNT(*) * 1.0 so_cnt 
+             , ROUND(sum(subtotal),2) so_dollars
+             , count(distinct so_adj_date(soh.orderdate, onlineorderflag)) unique_days
+          FROM sales.salesorderheader soh
+         where not onlineorderflag
+        group by TO_CHAR(so_adj_date(soh.orderdate, onlineorderflag), 'YYmm'),salespersonid
+        )
+select * from adj_so_dates order by salespersonid,yymm desc")
+
+x
+```
+
