@@ -116,8 +116,8 @@ schema_list <- tbl(con, in_schema("information_schema", "schemata")) %>%
 sp_print_df(head(schema_list))
 ```
 
-<!--html_preserve--><div id="htmlwidget-37146cf6ecae2786c03e" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-37146cf6ecae2786c03e">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["adventureworks","adventureworks","adventureworks","adventureworks","adventureworks","adventureworks"],["sales","sa","purchasing","pu","production","pr"],["postgres","postgres","postgres","postgres","postgres","postgres"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>catalog_name<\/th>\n      <th>schema_name<\/th>\n      <th>schema_owner<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-1b4ff99564eb6e8884a5" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1b4ff99564eb6e8884a5">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["adventureworks","adventureworks","adventureworks","adventureworks","adventureworks","adventureworks"],["sales","sa","purchasing","pu","production","pr"],["postgres","postgres","postgres","postgres","postgres","postgres"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>catalog_name<\/th>\n      <th>schema_name<\/th>\n      <th>schema_owner<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 ### Digging into the `information_schema`
 
 We usually need more detail than just a list of tables. Most SQL databases have an `information_schema` that has a standard structure to describe and control the database.
@@ -141,8 +141,8 @@ table_info <- table_info_schema_table %>%
 sp_print_df(head(table_info))
 ```
 
-<!--html_preserve--><div id="htmlwidget-2b78b0c355ded83f71d2" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-2b78b0c355ded83f71d2">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["adventureworks","adventureworks","adventureworks","adventureworks","adventureworks","adventureworks"],["person","person","production","person","person","person"],["address","addresstype","billofmaterials","businessentity","businessentityaddress","businessentitycontact"],["BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_catalog<\/th>\n      <th>table_schema<\/th>\n      <th>table_name<\/th>\n      <th>table_type<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-8f836166d559454ecd73" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-8f836166d559454ecd73">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["adventureworks","adventureworks","adventureworks","adventureworks","adventureworks","adventureworks"],["person","person","production","person","person","person"],["address","addresstype","billofmaterials","businessentity","businessentityaddress","businessentitycontact"],["BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_catalog<\/th>\n      <th>table_schema<\/th>\n      <th>table_name<\/th>\n      <th>table_type<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 In this context `table_catalog` is synonymous with `database`.
 
 Notice that *VIEWS* are composites made up of one or more *BASE TABLES*.
@@ -161,8 +161,8 @@ rs <- dbGetQuery(
 sp_print_df(head(rs))
 ```
 
-<!--html_preserve--><div id="htmlwidget-e983c6ab438af11d5328" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-e983c6ab438af11d5328">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["adventureworks","adventureworks","adventureworks","adventureworks","adventureworks","adventureworks"],["person","person","production","person","person","person"],["address","addresstype","billofmaterials","businessentity","businessentityaddress","businessentitycontact"],["BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_catalog<\/th>\n      <th>table_schema<\/th>\n      <th>table_name<\/th>\n      <th>table_type<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-0d7db73d03839427d3b7" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-0d7db73d03839427d3b7">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["adventureworks","adventureworks","adventureworks","adventureworks","adventureworks","adventureworks"],["person","person","production","person","person","person"],["address","addresstype","billofmaterials","businessentity","businessentityaddress","businessentitycontact"],["BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_catalog<\/th>\n      <th>table_schema<\/th>\n      <th>table_name<\/th>\n      <th>table_type<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ## What columns do those tables contain?
 
@@ -202,21 +202,21 @@ glimpse(columns_info_schema_info)
 ```
 ## Observations: 2,961
 ## Variables: 7
-## $ table_catalog            <chr> "adventureworks", "adventureworks", "ad…
-## $ table_name               <chr> "pg_proc", "pg_proc", "pg_proc", "pg_pr…
-## $ column_name              <chr> "proname", "pronamespace", "proowner", …
-## $ data_type                <chr> "name", "oid", "oid", "oid", "real (24,…
-## $ ordinal_position         <int> 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, …
-## $ character_maximum_length <int> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…
-## $ column_default           <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…
+## $ table_catalog            <chr> "adventureworks", "adventureworks", "adventu…
+## $ table_name               <chr> "pg_proc", "pg_proc", "pg_proc", "pg_proc", …
+## $ column_name              <chr> "proname", "pronamespace", "proowner", "prol…
+## $ data_type                <chr> "name", "oid", "oid", "oid", "real (24,2)", …
+## $ ordinal_position         <int> 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 1…
+## $ character_maximum_length <int> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+## $ column_default           <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
 ```
 
 ```r
 sp_print_df(head(columns_info_schema_info))
 ```
 
-<!--html_preserve--><div id="htmlwidget-ed744d0b48691d57f982" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-ed744d0b48691d57f982">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["adventureworks","adventureworks","adventureworks","adventureworks","adventureworks","adventureworks"],["pg_proc","pg_proc","pg_proc","pg_proc","pg_proc","pg_proc"],["proname","pronamespace","proowner","prolang","procost","prorows"],["name","oid","oid","oid","real (24,2)","real (24,2)"],[1,2,3,4,5,6],[null,null,null,null,null,null],[null,null,null,null,null,null]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_catalog<\/th>\n      <th>table_name<\/th>\n      <th>column_name<\/th>\n      <th>data_type<\/th>\n      <th>ordinal_position<\/th>\n      <th>character_maximum_length<\/th>\n      <th>column_default<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[5,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-c2e3fede5c798441fdae" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-c2e3fede5c798441fdae">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["adventureworks","adventureworks","adventureworks","adventureworks","adventureworks","adventureworks"],["pg_proc","pg_proc","pg_proc","pg_proc","pg_proc","pg_proc"],["proname","pronamespace","proowner","prolang","procost","prorows"],["name","oid","oid","oid","real (24,2)","real (24,2)"],[1,2,3,4,5,6],[null,null,null,null,null,null],[null,null,null,null,null,null]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_catalog<\/th>\n      <th>table_name<\/th>\n      <th>column_name<\/th>\n      <th>data_type<\/th>\n      <th>ordinal_position<\/th>\n      <th>character_maximum_length<\/th>\n      <th>column_default<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":[5,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ### What is the difference between a `VIEW` and a `BASE TABLE`?
 
@@ -238,8 +238,8 @@ table_info_schema_table %>%
   sp_print_df()
 ```
 
-<!--html_preserve--><div id="htmlwidget-5f6bcf6eae04ab45035c" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-5f6bcf6eae04ab45035c">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE"],["customer","customer","customer","customer","customer","customer"],["personid","storeid","territoryid","rowguid","modifieddate","customerid"],["integer","integer","integer","uuid","timestamp without time zone","integer"],[2,3,4,5,6,1],[null,null,null,"uuid_generate_v1()","now()","nextval('sales.customer_customerid_seq'::regclass)"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_type<\/th>\n      <th>table_name<\/th>\n      <th>column_name<\/th>\n      <th>data_type<\/th>\n      <th>ordinal_position<\/th>\n      <th>column_default<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":5},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-a77ad32f6b82562872f5" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-a77ad32f6b82562872f5">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE"],["customer","customer","customer","customer","customer","customer"],["personid","storeid","territoryid","rowguid","modifieddate","customerid"],["integer","integer","integer","uuid","timestamp without time zone","integer"],[2,3,4,5,6,1],[null,null,null,"uuid_generate_v1()","now()","nextval('sales.customer_customerid_seq'::regclass)"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_type<\/th>\n      <th>table_name<\/th>\n      <th>column_name<\/th>\n      <th>data_type<\/th>\n      <th>ordinal_position<\/th>\n      <th>column_default<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":5},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 Probably should explore how the `VIEW` is made up of data from BASE TABLEs.
 
@@ -259,8 +259,8 @@ table_info_schema_table %>%
   sp_print_df()
 ```
 
-<!--html_preserve--><div id="htmlwidget-03a707ce5d414ed499c1" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-03a707ce5d414ed499c1">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["VIEW","VIEW","VIEW","VIEW","VIEW","VIEW"],["vindividualcustomer","vindividualcustomer","vindividualcustomer","vindividualcustomer","vindividualcustomer","vindividualcustomer"],["businessentityid","title","firstname","middlename","lastname","suffix"],["integer","character varying","character varying","character varying","character varying","character varying"],[1,2,3,4,5,6],[null,null,null,null,null,null]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_type<\/th>\n      <th>table_name<\/th>\n      <th>column_name<\/th>\n      <th>data_type<\/th>\n      <th>ordinal_position<\/th>\n      <th>column_default<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":5},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-e3479f292a01744eb530" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-e3479f292a01744eb530">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["VIEW","VIEW","VIEW","VIEW","VIEW","VIEW"],["vindividualcustomer","vindividualcustomer","vindividualcustomer","vindividualcustomer","vindividualcustomer","vindividualcustomer"],["businessentityid","title","firstname","middlename","lastname","suffix"],["integer","character varying","character varying","character varying","character varying","character varying"],[1,2,3,4,5,6],[null,null,null,null,null,null]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_type<\/th>\n      <th>table_name<\/th>\n      <th>column_name<\/th>\n      <th>data_type<\/th>\n      <th>ordinal_position<\/th>\n      <th>column_default<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":5},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ### What data types are found in the database?
 
@@ -271,8 +271,8 @@ columns_info_schema_info %>%
   sp_print_df()
 ```
 
-<!--html_preserve--><div id="htmlwidget-5961b524ec6e5d8f457a" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-5961b524ec6e5d8f457a">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["\"char\"","abstime","anyarray","ARRAY","bigint","boolean"],[38,2,9,75,161,136]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>data_type<\/th>\n      <th>n<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":2},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-65b7328530dcdf303887" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-65b7328530dcdf303887">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["\"char\"","abstime","anyarray","ARRAY","bigint","boolean"],[38,2,9,75,161,136]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>data_type<\/th>\n      <th>n<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":2},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ## Characterizing how things are named
 
@@ -296,8 +296,8 @@ public_tables %>%
   sp_print_df()
 ```
 
-<!--html_preserve--><div id="htmlwidget-30c61db7c56a22288922" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-30c61db7c56a22288922">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"],["routines","columns","p","pg_class","parameters","attributes","pg_type","element_types","user_defined_types","pg_proc","domains","pg_statistic","soh","pg_constraint","product"],[82,44,40,33,32,31,30,29,29,28,27,26,26,25,25]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_name<\/th>\n      <th>n<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":2},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-1990be7a07e95fee1522" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1990be7a07e95fee1522">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"],["routines","columns","p","pg_class","parameters","attributes","pg_type","element_types","user_defined_types","pg_proc","domains","pg_statistic","soh","pg_constraint","product"],[82,44,40,33,32,31,30,29,29,28,27,26,26,25,25]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_name<\/th>\n      <th>n<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":2},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 How many *column names* are shared across tables (or duplicated)?
 
@@ -360,17 +360,17 @@ glimpse(rs)
 ```
 ## Observations: 467,838
 ## Variables: 3
-## $ table_name <chr> "adventureworks.hr.d", "adventureworks.hr.d", "advent…
-## $ conname    <chr> "FK_SalesOrderDetail_SpecialOfferProduct_SpecialOffer…
-## $ condef     <chr> "FOREIGN KEY (specialofferid, productid) REFERENCES s…
+## $ table_name <chr> "adventureworks.hr.d", "adventureworks.hr.d", "adventurewo…
+## $ conname    <chr> "FK_SalesOrderDetail_SpecialOfferProduct_SpecialOfferIDPro…
+## $ condef     <chr> "FOREIGN KEY (specialofferid, productid) REFERENCES sales.…
 ```
 
 ```r
 sp_print_df(head(rs))
 ```
 
-<!--html_preserve--><div id="htmlwidget-35c72f52c6841456fbea" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-35c72f52c6841456fbea">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["adventureworks.hr.d","adventureworks.hr.d","adventureworks.hr.d","adventureworks.hr.d","adventureworks.hr.d","adventureworks.hr.d"],["FK_SalesOrderDetail_SpecialOfferProduct_SpecialOfferIDProductID","FK_SalesOrderDetail_SpecialOfferProduct_SpecialOfferIDProductID","FK_SalesOrderHeader_Address_BillToAddressID","FK_SalesOrderHeader_Address_BillToAddressID","FK_SalesOrderHeader_Address_BillToAddressID","FK_SalesOrderHeader_Address_BillToAddressID"],["FOREIGN KEY (specialofferid, productid) REFERENCES sales.specialofferproduct(specialofferid, productid)","FOREIGN KEY (specialofferid, productid) REFERENCES sales.specialofferproduct(specialofferid, productid)","FOREIGN KEY (billtoaddressid) REFERENCES person.address(addressid)","FOREIGN KEY (billtoaddressid) REFERENCES person.address(addressid)","FOREIGN KEY (billtoaddressid) REFERENCES person.address(addressid)","FOREIGN KEY (billtoaddressid) REFERENCES person.address(addressid)"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_name<\/th>\n      <th>conname<\/th>\n      <th>condef<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-28cf82553809b695f76c" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-28cf82553809b695f76c">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["adventureworks.hr.d","adventureworks.hr.d","adventureworks.hr.d","adventureworks.hr.d","adventureworks.hr.d","adventureworks.hr.d"],["FK_SalesOrderDetail_SpecialOfferProduct_SpecialOfferIDProductID","FK_SalesOrderDetail_SpecialOfferProduct_SpecialOfferIDProductID","FK_SalesOrderHeader_Address_BillToAddressID","FK_SalesOrderHeader_Address_BillToAddressID","FK_SalesOrderHeader_Address_BillToAddressID","FK_SalesOrderHeader_Address_BillToAddressID"],["FOREIGN KEY (specialofferid, productid) REFERENCES sales.specialofferproduct(specialofferid, productid)","FOREIGN KEY (specialofferid, productid) REFERENCES sales.specialofferproduct(specialofferid, productid)","FOREIGN KEY (billtoaddressid) REFERENCES person.address(addressid)","FOREIGN KEY (billtoaddressid) REFERENCES person.address(addressid)","FOREIGN KEY (billtoaddressid) REFERENCES person.address(addressid)","FOREIGN KEY (billtoaddressid) REFERENCES person.address(addressid)"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_name<\/th>\n      <th>conname<\/th>\n      <th>condef<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 The following is more compact and looks more useful.  What is the difference between the two?
 
 ```r
@@ -401,8 +401,8 @@ glimpse(rs)
 sp_print_df(head(rs))
 ```
 
-<!--html_preserve--><div id="htmlwidget-a16acba4f07eaec47c17" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-a16acba4f07eaec47c17">{"x":{"filter":"none","data":[[],[],[],[]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_from<\/th>\n      <th>conname<\/th>\n      <th>pg_get_constraintdef<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-988252b1f4f7d9d645fb" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-988252b1f4f7d9d645fb">{"x":{"filter":"none","data":[[],[],[],[]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_from<\/th>\n      <th>conname<\/th>\n      <th>pg_get_constraintdef<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ```r
 dim(rs)[1]
@@ -451,20 +451,20 @@ glimpse(keys)
 ```
 ## Observations: 190
 ## Variables: 6
-## $ table_name       <chr> "address", "address", "addresstype", "billofmat…
-## $ table_type       <chr> "BASE TABLE", "BASE TABLE", "BASE TABLE", "BASE…
-## $ constraint_name  <chr> "FK_Address_StateProvince_StateProvinceID", "PK…
-## $ constraint_type  <chr> "FOREIGN KEY", "PRIMARY KEY", "PRIMARY KEY", "F…
-## $ column_name      <chr> "stateprovinceid", "addressid", "addresstypeid"…
-## $ ordinal_position <int> 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 2, 1, 1,…
+## $ table_name       <chr> "address", "address", "addresstype", "billofmaterial…
+## $ table_type       <chr> "BASE TABLE", "BASE TABLE", "BASE TABLE", "BASE TABL…
+## $ constraint_name  <chr> "FK_Address_StateProvince_StateProvinceID", "PK_Addr…
+## $ constraint_type  <chr> "FOREIGN KEY", "PRIMARY KEY", "PRIMARY KEY", "FOREIG…
+## $ column_name      <chr> "stateprovinceid", "addressid", "addresstypeid", "co…
+## $ ordinal_position <int> 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 2, 1, 1, 1, 2…
 ```
 
 ```r
 sp_print_df(head(keys))
 ```
 
-<!--html_preserve--><div id="htmlwidget-f1e0d329b385b65f967e" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-f1e0d329b385b65f967e">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["address","address","addresstype","billofmaterials","billofmaterials","billofmaterials"],["BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE"],["FK_Address_StateProvince_StateProvinceID","PK_Address_AddressID","PK_AddressType_AddressTypeID","FK_BillOfMaterials_Product_ComponentID","FK_BillOfMaterials_Product_ProductAssemblyID","FK_BillOfMaterials_UnitMeasure_UnitMeasureCode"],["FOREIGN KEY","PRIMARY KEY","PRIMARY KEY","FOREIGN KEY","FOREIGN KEY","FOREIGN KEY"],["stateprovinceid","addressid","addresstypeid","componentid","productassemblyid","unitmeasurecode"],[1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_name<\/th>\n      <th>table_type<\/th>\n      <th>constraint_name<\/th>\n      <th>constraint_type<\/th>\n      <th>column_name<\/th>\n      <th>ordinal_position<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":6},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-13a8be463c5fb2457ee4" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-13a8be463c5fb2457ee4">{"x":{"filter":"none","data":[["1","2","3","4","5","6"],["address","address","addresstype","billofmaterials","billofmaterials","billofmaterials"],["BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE","BASE TABLE"],["FK_Address_StateProvince_StateProvinceID","PK_Address_AddressID","PK_AddressType_AddressTypeID","FK_BillOfMaterials_Product_ComponentID","FK_BillOfMaterials_Product_ProductAssemblyID","FK_BillOfMaterials_UnitMeasure_UnitMeasureCode"],["FOREIGN KEY","PRIMARY KEY","PRIMARY KEY","FOREIGN KEY","FOREIGN KEY","FOREIGN KEY"],["stateprovinceid","addressid","addresstypeid","componentid","productassemblyid","unitmeasurecode"],[1,1,1,1,1,1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>table_name<\/th>\n      <th>table_type<\/th>\n      <th>constraint_name<\/th>\n      <th>constraint_type<\/th>\n      <th>column_name<\/th>\n      <th>ordinal_position<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":6},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 What do we learn from the following query?  How is it useful? 
 
@@ -482,34 +482,34 @@ head(rs)
 ```
 
 ```
-##                        conname connamespace contype condeferrable
-## 1 cardinal_number_domain_check        12771       c         FALSE
-## 2              yes_or_no_check        12771       c         FALSE
-## 3        CK_Employee_BirthDate        16386       c         FALSE
-## 4           CK_Employee_Gender        16386       c         FALSE
-## 5         CK_Employee_HireDate        16386       c         FALSE
-## 6    CK_Employee_MaritalStatus        16386       c         FALSE
-##   condeferred convalidated conrelid contypid conindid conparentid
-## 1       FALSE         TRUE        0    12785        0           0
-## 2       FALSE         TRUE        0    12797        0           0
-## 3       FALSE         TRUE    16450        0        0           0
-## 4       FALSE         TRUE    16450        0        0           0
-## 5       FALSE         TRUE    16450        0        0           0
-## 6       FALSE         TRUE    16450        0        0           0
-##   confrelid confupdtype confdeltype confmatchtype conislocal coninhcount
-## 1         0                                             TRUE           0
-## 2         0                                             TRUE           0
-## 3         0                                             TRUE           0
-## 4         0                                             TRUE           0
-## 5         0                                             TRUE           0
-## 6         0                                             TRUE           0
-##   connoinherit conkey confkey conpfeqop conppeqop conffeqop conexclop
-## 1        FALSE   <NA>    <NA>      <NA>      <NA>      <NA>      <NA>
-## 2        FALSE   <NA>    <NA>      <NA>      <NA>      <NA>      <NA>
-## 3        FALSE    {5}    <NA>      <NA>      <NA>      <NA>      <NA>
-## 4        FALSE    {7}    <NA>      <NA>      <NA>      <NA>      <NA>
-## 5        FALSE    {8}    <NA>      <NA>      <NA>      <NA>      <NA>
-## 6        FALSE    {6}    <NA>      <NA>      <NA>      <NA>      <NA>
+##                        conname connamespace contype condeferrable condeferred
+## 1 cardinal_number_domain_check        12771       c         FALSE       FALSE
+## 2              yes_or_no_check        12771       c         FALSE       FALSE
+## 3        CK_Employee_BirthDate        16386       c         FALSE       FALSE
+## 4           CK_Employee_Gender        16386       c         FALSE       FALSE
+## 5         CK_Employee_HireDate        16386       c         FALSE       FALSE
+## 6    CK_Employee_MaritalStatus        16386       c         FALSE       FALSE
+##   convalidated conrelid contypid conindid conparentid confrelid confupdtype
+## 1         TRUE        0    12785        0           0         0            
+## 2         TRUE        0    12797        0           0         0            
+## 3         TRUE    16450        0        0           0         0            
+## 4         TRUE    16450        0        0           0         0            
+## 5         TRUE    16450        0        0           0         0            
+## 6         TRUE    16450        0        0           0         0            
+##   confdeltype confmatchtype conislocal coninhcount connoinherit conkey confkey
+## 1                                 TRUE           0        FALSE   <NA>    <NA>
+## 2                                 TRUE           0        FALSE   <NA>    <NA>
+## 3                                 TRUE           0        FALSE    {5}    <NA>
+## 4                                 TRUE           0        FALSE    {7}    <NA>
+## 5                                 TRUE           0        FALSE    {8}    <NA>
+## 6                                 TRUE           0        FALSE    {6}    <NA>
+##   conpfeqop conppeqop conffeqop conexclop
+## 1      <NA>      <NA>      <NA>      <NA>
+## 2      <NA>      <NA>      <NA>      <NA>
+## 3      <NA>      <NA>      <NA>      <NA>
+## 4      <NA>      <NA>      <NA>      <NA>
+## 5      <NA>      <NA>      <NA>      <NA>
+## 6      <NA>      <NA>      <NA>      <NA>
 ##                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    conbin
 ## 1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         {OPEXPR :opno 525 :opfuncid 150 :opresulttype 16 :opretset false :opcollid 0 :inputcollid 0 :args ({COERCETODOMAINVALUE :typeId 23 :typeMod -1 :collation 0 :location 195} {CONST :consttype 23 :consttypmod -1 :constcollid 0 :constlen 4 :constbyval true :constisnull false :location 204 :constvalue 4 [ 0 0 0 0 0 0 0 0 ]}) :location 201}
 ## 2                                                                                                                                                                                 {SCALARARRAYOPEXPR :opno 98 :opfuncid 67 :useOr true :inputcollid 100 :args ({RELABELTYPE :arg {COERCETODOMAINVALUE :typeId 1043 :typeMod 7 :collation 100 :location 121} :resulttype 25 :resulttypmod -1 :resultcollid 100 :relabelformat 2 :location -1} {ARRAYCOERCEEXPR :arg {ARRAY :array_typeid 1015 :array_collid 100 :element_typeid 1043 :elements ({CONST :consttype 1043 :consttypmod -1 :constcollid 100 :constlen -1 :constbyval false :constisnull false :location 131 :constvalue 7 [ 28 0 0 0 89 69 83 ]} {CONST :consttype 1043 :consttypmod -1 :constcollid 100 :constlen -1 :constbyval false :constisnull false :location 138 :constvalue 6 [ 24 0 0 0 78 79 ]}) :multidims false :location -1} :elemexpr {RELABELTYPE :arg {CASETESTEXPR :typeId 1043 :typeMod -1 :collation 0} :resulttype 25 :resulttypmod -1 :resultcollid 100 :relabelformat 2 :location -1} :resulttype 1009 :resulttypmod -1 :resultcollid 100 :coerceformat 2 :location -1}) :location 127}
@@ -561,11 +561,21 @@ ls()
 ```
 ##  [1] "columns_info_schema_info"  "columns_info_schema_table"
 ##  [3] "con"                       "constraint_column_usage"  
-##  [5] "key_column_usage"          "keys"                     
-##  [7] "public_tables"             "referential_constraints"  
-##  [9] "rs"                        "schema_list"              
-## [11] "table_constraints"         "table_info"               
-## [13] "table_info_schema_table"   "tables"
+##  [5] "cranex"                    "key_column_usage"         
+##  [7] "keys"                      "public_tables"            
+##  [9] "referential_constraints"   "rs"                       
+## [11] "schema_list"               "table_constraints"        
+## [13] "table_info"                "table_info_schema_table"  
+## [15] "tables"
 ```
 
 
+```
+## Cleaning up
+
+Always have R disconnect from the database when you're done and stop the Adventureworks Container
+
+```r
+dbDisconnect(con)
+sp_docker_stop("adventureworks")
+```

@@ -216,12 +216,13 @@ try(sales_person_table %>% collect() %>%
 
 See more examples of lazy execution [here](https://datacarpentry.org/R-ecology-lesson/05-r-and-databases.html).
 
+## Disconnect from the database and stop Docker
+
 
 ```r
-DBI::dbDisconnect(con)
-sqlpetr::sp_docker_stop("adventureworks")
+dbDisconnect(con)
+sp_docker_stop("adventureworks")
 ```
-
 
 ## Other resources
 

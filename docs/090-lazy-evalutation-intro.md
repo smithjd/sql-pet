@@ -415,11 +415,12 @@ Q %>% dplyr::show_query()
 ## ) "dbplyr_009"
 ```
 Hand-written SQL code to do the same job will probably look a lot nicer and could be more efficient, but functionally `dplyr` does the job.
+## Disconnect from the database and stop Docker
 
 
 ```r
-DBI::dbDisconnect(con)
-sqlpetr::sp_docker_stop("adventureworks")
+dbDisconnect(con)
+sp_docker_stop("adventureworks")
 ```
 
 
