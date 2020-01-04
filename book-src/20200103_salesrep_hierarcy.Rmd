@@ -1,0 +1,389 @@
+---
+title: "Untitled"
+author: "Sophie Yang"
+date: "November 9, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r libraries, include=FALSE}
+library(tidyverse)
+library(DBI)
+library(RPostgres)
+library(glue)
+require(knitr)
+library(dbplyr)
+library(sqlpetr)
+library(bookdown)
+library(here)
+
+library(scales)  # ggplot xy scales
+```
+
+```{r, start adventureworks}
+sp_docker_start('adventureworks')
+# Sys.sleep(10)
+con <- sp_get_postgres_connection(
+  host = "localhost",
+  port = 5432,
+  user = "postgres",
+  password = "postgres",
+  dbname = "adventureworks",
+  seconds_to_test = 60, connection_tab = TRUE
+)
+```
+
+```{r Dry Version so_adj_date function}
+SalesRepOrders_Fiscal_Year <- dbGetQuery(con,
+"
+with wo_adj_so_dates as
+       (SELECT 'orig_date' date_type
+             , date_part('year'::text, soh.orderdate + '6 mons'::interval)  AS fiscalyear
+             , TO_CHAR(soh.orderdate, 'YYYY') yyyy
+             , TO_CHAR(soh.orderdate, 'YYmm') yymm
+             , COUNT(*) * 1.0 so_cnt 
+             , ROUND(sum(subtotal),2) so_dollars
+             , min(soh.orderdate) min_dt
+             , max(soh.orderdate) max_dt
+             , EXTRACT(DAY FROM max(soh.orderdate)) - EXTRACT(DAY FROM min(soh.orderdate)) + 1 days
+             , count(distinct soh.orderdate) unique_days
+          FROM sales.salesorderheader soh
+         where not onlineorderflag
+        group by soh.orderdate
+             , date_part('year'::text, soh.orderdate + '6 mons'::interval)  
+             , TO_CHAR(soh.orderdate, 'YYmm')
+        ),
+adj_so_dates as
+       (SELECT 'adj_date' date_type
+             , date_part('year'::text, so_adj_date(soh.orderdate, onlineorderflag) + '6 mons'::interval)  AS fiscalyear
+             , TO_CHAR(so_adj_date(soh.orderdate, onlineorderflag), 'YYYY') yyyy
+             , TO_CHAR(so_adj_date(soh.orderdate, onlineorderflag), 'YYmm') yymm
+             , COUNT(*) * 1.0 so_cnt 
+             , ROUND(sum(subtotal),2) so_dollars
+             , min(so_adj_date(soh.orderdate, onlineorderflag)) min_dt
+             , max(so_adj_date(soh.orderdate, onlineorderflag)) max_dt
+             , EXTRACT(DAY FROM max(so_adj_date(soh.orderdate, onlineorderflag))) - EXTRACT(DAY FROM min(so_adj_date(soh.orderdate, onlineorderflag))) + 1 days
+             , count(distinct so_adj_date(soh.orderdate, onlineorderflag)) unique_days
+          FROM sales.salesorderheader soh
+         where not onlineorderflag
+        group by soh.orderdate,onlineorderflag
+             , date_part('year'::text, so_adj_date(soh.orderdate, onlineorderflag) + '6 mons'::interval)  
+             , TO_CHAR(so_adj_date(soh.orderdate, onlineorderflag), 'YYmm')
+        )
+select min(date_type) date_type
+      ,min(fiscalyear) fiscalyear
+      ,min(yyyy) yyyy
+      ,yymm
+      ,sum(so_cnt) so_cnt
+      ,sum(so_dollars) so_dollars
+      ,min(min_dt) min_dt
+      ,max(max_dt) max_dt
+      ,sum(days)days
+      ,sum(unique_days) unique_days
+  from wo_adj_so_dates
+  group by yymm
+union
+ select * from adj_so_dates
+order by yymm,date_type
+")
+sp_print_df(SalesRepOrders_Fiscal_Year)
+
+```
+
+```{r show high level business organization personel}
+sql <- paste0(
+  "with org_counts as
+  (select substring(e.organizationnode,1,3) organizationnode,count(*) cnt
+     from humanresources.employee e
+   group by substring(e.organizationnode,1,3)
+)
+
+  select replace(e.organizationnode,'/','') node
+        ,repeat('.',5*(length(e.organizationnode) - length(replace(e.organizationnode,'/','')) - 1 )) || e.jobtitle jobtitle
+        ,ve.firstname||' '||ve.lastname EE,oc.cnt EES
+     from humanresources.employee e 
+     join humanresources.vemployee ve on e.businessentityid = ve.businessentityid
+     join org_counts oc on e.organizationnode = oc.organizationnode
+    where length(e.organizationnode) < 4
+   order by e.organizationnode
+  "
+) 
+dbGetQuery(con,sql)
+```
+
+```{r show Salees organization personel}
+sql <- 
+  "select repeat('.',5*(length(e.organizationnode) - length(replace(e.organizationnode,'/','')) - 2 )) || e.jobtitle jobtitle
+        ,ve.firstname||' '||ve.lastname EE
+        ,e.organizationnode
+        , 1000000 * cast(case when split_part(organizationnode, '/',2) = '' then '0' else split_part(organizationnode, '/',2) end as int) 
+          + 10000 * cast(case when split_part(organizationnode, '/',3) = '' then '0' else split_part(organizationnode, '/',3) end as int) 
+          +   100 * cast(case when split_part(organizationnode, '/',4) = '' then '0' else split_part(organizationnode, '/',4) end as int) 
+          +     1 * cast(case when split_part(organizationnode, '/',5) = '' then '0' else split_part(organizationnode, '/',5) end as int) numnode
+     from humanresources.employee e 
+     join humanresources.vemployee ve on e.businessentityid = ve.businessentityid
+  where e.organizationnode like '/6%'
+    order by 1000000 * cast(case when split_part(organizationnode, '/',2) = '' then '0' else split_part(organizationnode, '/',2) end as int) 
+           +   10000 * cast(case when split_part(organizationnode, '/',3) = '' then '0' else split_part(organizationnode, '/',3) end as int) 
+           +     100 * cast(case when split_part(organizationnode, '/',4) = '' then '0' else split_part(organizationnode, '/',4) end as int)
+           +       1 * cast(case when split_part(organizationnode, '/',5) = '' then '0' else split_part(organizationnode, '/',5) end as int), jobtitle,ve.firstname||' '||ve.lastname
+  "
+
+dbGetQuery(con,sql)
+```
+
+```{r}
+sql <- 
+  "select max(split_part(organizationnode, '/',1)) 
+         ,max(split_part(organizationnode, '/',2))
+         ,max(split_part(organizationnode, '/',3))
+         ,max(split_part(organizationnode, '/',4))
+         ,max(split_part(organizationnode, '/',5))
+     from humanresources.employee e 
+where e.organizationnode like '/6/1/%'
+
+" 
+dbGetQuery(con,sql)
+```
+
+
+```{r}
+sql <-
+  "select max(cast(case when split_part(organizationnode, '/',1) = '' 
+                    then '0'
+                    else split_part(organizationnode, '/',1) 
+               end as int)) x1
+         ,max(cast(case when split_part(organizationnode, '/',2) = '' 
+                    then '0'
+                    else split_part(organizationnode, '/',2) 
+               end as int)) x2
+         ,max(cast(case when split_part(organizationnode, '/',3) = '' 
+                    then '0'
+                    else split_part(organizationnode, '/',3) 
+               end as int)) x3
+         ,max(cast(case when split_part(organizationnode, '/',4) = '' 
+                    then '0'
+                    else split_part(organizationnode, '/',4) 
+               end as int)) x4
+         ,max(cast(case when split_part(organizationnode, '/',5) = '' 
+                    then '0'
+                    else split_part(organizationnode, '/',5) 
+               end as int)) x5
+         ,max(cast(case when split_part(organizationnode, '/',6) = '' 
+                    then '0'
+                    else split_part(organizationnode, '/',6) 
+               end as int)) x6
+     from humanresources.employee e 
+--where e.organizationnode like '/6/
+" 
+dbGetQuery(con,sql)
+```
+
+
+```{r}
+sql <-
+  "select organizationnode
+          ,100000 * cast(case when split_part(organizationnode, '/',2) = '' then '0' else split_part(organizationnode, '/',2) end as int) 
+          +  10000 * cast(case when split_part(organizationnode, '/',3) = '' then '0' else split_part(organizationnode, '/',3) end as int) 
+          +    100 * cast(case when split_part(organizationnode, '/',4) = '' then '0' else split_part(organizationnode, '/',4) end as int) 
+          +      1 * cast(case when split_part(organizationnode, '/',5) = '' then '0' else split_part(organizationnode, '/',5) end as int) numnode
+     from humanresources.employee e 
+where e.organizationnode like '/3/%'
+" 
+dbGetQuery(con,sql)
+```
+
+
+```{r salesrep 274}
+sql <-
+"with salesreps as (
+select salespersonid
+      ,soh.orderdate
+      ,date_part('year'::text, so_adj_date(soh.orderdate, soh.onlineorderflag) + '6 mons'::interval)  AS fyr
+      ,date_part('month',so_adj_date(soh.orderdate, soh.onlineorderflag) + '6 mons'::interval) as fmo
+      ,case when date_part('month',so_adj_date(soh.orderdate, soh.onlineorderflag) + '6 mons'::interval) < 4 then 1
+            when date_part('month',so_adj_date(soh.orderdate, soh.onlineorderflag) + '6 mons'::interval) < 7 then 2
+            when date_part('month',so_adj_date(soh.orderdate, soh.onlineorderflag) + '6 mons'::interval) < 10 then 3
+            else 4
+       end fqtr
+      ,date_part('year',so_adj_date(soh.orderdate, soh.onlineorderflag) + '6 mons'::interval) 
+      +case when date_part('month',so_adj_date(soh.orderdate, soh.onlineorderflag) + '6 mons'::interval) < 4 then 1
+            when date_part('month',so_adj_date(soh.orderdate, soh.onlineorderflag) + '6 mons'::interval) < 7 then 2
+            when date_part('month',so_adj_date(soh.orderdate, soh.onlineorderflag) + '6 mons'::interval) < 10 then 3
+            else 4
+       end/100. fyr_qtr
+      ,subtotal
+  from sales.salesorderheader soh 
+ where not onlineorderflag
+)
+
+select salespersonid,fyr_qtr,sum(subtotal) dollars,count(*) orders
+  from salesreps
+ where salespersonid = 274
+group by salespersonid,fyr_qtr
+order by salespersonid,fyr_qtr
+" 
+dbGetQuery(con,sql)
+```
+
+```{r salesrep dollars by quarter wide format}
+sql <-
+"with salesreps as (
+select salespersonid
+      ,soh.orderdate
+      ,date_part('year'::text, so_adj_date(soh.orderdate, soh.onlineorderflag) + '6 mons'::interval)  AS fyr
+      ,date_part('month',so_adj_date(soh.orderdate, soh.onlineorderflag) + '6 mons'::interval) as fmo
+      ,case when date_part('month',so_adj_date(soh.orderdate, soh.onlineorderflag) + '6 mons'::interval) < 4 then 1
+            when date_part('month',so_adj_date(soh.orderdate, soh.onlineorderflag) + '6 mons'::interval) < 7 then 2
+            when date_part('month',so_adj_date(soh.orderdate, soh.onlineorderflag) + '6 mons'::interval) < 10 then 3
+            else 4
+       end fqtr
+      ,date_part('year',so_adj_date(soh.orderdate, soh.onlineorderflag) + '6 mons'::interval) 
+      +case when date_part('month',so_adj_date(soh.orderdate, soh.onlineorderflag) + '6 mons'::interval) < 4 then 1
+            when date_part('month',so_adj_date(soh.orderdate, soh.onlineorderflag) + '6 mons'::interval) < 7 then 2
+            when date_part('month',so_adj_date(soh.orderdate, soh.onlineorderflag) + '6 mons'::interval) < 10 then 3
+            else 4
+       end/100. fyr_qtr
+      ,sum(subtotal) dollars
+  from sales.salesorderheader soh 
+ where not onlineorderflag
+group by salespersonid,orderdate,onlineorderflag
+)
+select salespersonid
+      ,sum(case when fyr_qtr = 2011.04 then dollars else 0 end) f1104
+      ,sum(case when fyr_qtr = 2012.01 then dollars else 0 end) f1201
+      ,sum(case when fyr_qtr = 2012.02 then dollars else 0 end) f1202
+      ,sum(case when fyr_qtr = 2012.03 then dollars else 0 end) f1203
+      ,sum(case when fyr_qtr = 2012.04 then dollars else 0 end) f1204
+      ,sum(case when fyr_qtr = 2013.01 then dollars else 0 end) f1301
+      ,sum(case when fyr_qtr = 2013.02 then dollars else 0 end) f1302
+      ,sum(case when fyr_qtr = 2013.03 then dollars else 0 end) f1303
+      ,sum(case when fyr_qtr = 2013.04 then dollars else 0 end) f1304
+      ,sum(case when fyr_qtr = 2014.01 then dollars else 0 end) f1401
+      ,sum(case when fyr_qtr = 2014.02 then dollars else 0 end) f1402
+      ,sum(case when fyr_qtr = 2014.03 then dollars else 0 end) f1403
+      ,sum(case when fyr_qtr = 2014.04 then dollars else 0 end) f1404
+  from (
+        select salespersonid,fyr,fyr_qtr,sum(dollars) dollars
+          from salesreps
+         group by salespersonid,fyr,fqtr,fyr_qtr
+       ) as qtr_sales
+group by salespersonid
+order by salespersonid
+" 
+dbGetQuery(con,sql)
+```
+
+```{r salesrep dollars by quarter narrow format}
+sql <-
+"with salesreps as (
+select salespersonid
+      ,soh.orderdate
+      ,date_part('year'::text, so_adj_date(soh.orderdate, soh.onlineorderflag) + '6 mons'::interval)  AS fyr
+      ,date_part('month',so_adj_date(soh.orderdate, soh.onlineorderflag) + '6 mons'::interval) as fmo
+      ,case when date_part('month',so_adj_date(soh.orderdate, soh.onlineorderflag) + '6 mons'::interval) < 4 then 1
+            when date_part('month',so_adj_date(soh.orderdate, soh.onlineorderflag) + '6 mons'::interval) < 7 then 2
+            when date_part('month',so_adj_date(soh.orderdate, soh.onlineorderflag) + '6 mons'::interval) < 10 then 3
+            else 4
+       end fqtr
+      ,date_part('year',so_adj_date(soh.orderdate, soh.onlineorderflag) + '6 mons'::interval) 
+      +case when date_part('month',so_adj_date(soh.orderdate, soh.onlineorderflag) + '6 mons'::interval) < 4 then 1
+            when date_part('month',so_adj_date(soh.orderdate, soh.onlineorderflag) + '6 mons'::interval) < 7 then 2
+            when date_part('month',so_adj_date(soh.orderdate, soh.onlineorderflag) + '6 mons'::interval) < 10 then 3
+            else 4
+       end/100. fyr_qtr
+      ,sum(subtotal) dollars
+  from sales.salesorderheader soh 
+ where not onlineorderflag
+group by salespersonid,orderdate,onlineorderflag
+)
+select salespersonid,concat(ve.firstname,' ',ve.lastname) SaleRep,ve.jobtitle,fyr
+      ,sum(case when fqtr = 1 then dollars else 0 end) q1
+      ,sum(case when fqtr = 2 then dollars else 0 end) q2
+      ,sum(case when fqtr = 3 then dollars else 0 end) q3
+      ,sum(case when fqtr = 4 then dollars else 0 end) q4
+      ,sum(dollars) yr
+  from (
+        select salespersonid,fyr,fqtr,fyr_qtr,sum(dollars) dollars
+          from salesreps
+         group by salespersonid,fyr,fqtr,fyr_qtr
+       ) as qtr_sales
+    join humanresources.vemployee ve on qtr_sales.salespersonid  = ve.businessentityid
+group by salespersonid,ve.firstname,ve.lastname,ve.jobtitle,fyr
+order by firstname,fyr
+" 
+dbGetQuery(con,sql)
+```
+
+```{r salesrep team hierarchy by year narrow}
+sql <-
+"with salesreps as (
+select salespersonid
+
+      ,organizationnode
+      ,100000 * cast(case when split_part(organizationnode, '/',2) = '' then '0' else split_part(organizationnode, '/',2) end as int) 
+      + 10000 * cast(case when split_part(organizationnode, '/',3) = '' then '0' else split_part(organizationnode, '/',3) end as int) 
+      +   100 * cast(case when split_part(organizationnode, '/',4) = '' then '0' else split_part(organizationnode, '/',4) end as int) 
+      +     1 * cast(case when split_part(organizationnode, '/',5) = '' then '0' else split_part(organizationnode, '/',5) end as int) numnode
+
+      ,soh.orderdate
+      ,date_part('year'::text, so_adj_date(soh.orderdate, soh.onlineorderflag) + '6 mons'::interval)  AS fyr
+      ,date_part('month',so_adj_date(soh.orderdate, soh.onlineorderflag) + '6 mons'::interval) as fmo
+      ,case when date_part('month',so_adj_date(soh.orderdate, soh.onlineorderflag) + '6 mons'::interval) < 4 then 1
+            when date_part('month',so_adj_date(soh.orderdate, soh.onlineorderflag) + '6 mons'::interval) < 7 then 2
+            when date_part('month',so_adj_date(soh.orderdate, soh.onlineorderflag) + '6 mons'::interval) < 10 then 3
+            else 4
+       end fqtr
+      ,date_part('year',so_adj_date(soh.orderdate, soh.onlineorderflag) + '6 mons'::interval) 
+      +case when date_part('month',so_adj_date(soh.orderdate, soh.onlineorderflag) + '6 mons'::interval) < 4 then 1
+            when date_part('month',so_adj_date(soh.orderdate, soh.onlineorderflag) + '6 mons'::interval) < 7 then 2
+            when date_part('month',so_adj_date(soh.orderdate, soh.onlineorderflag) + '6 mons'::interval) < 10 then 3
+            else 4
+       end/100. fyr_qtr
+      ,sum(subtotal) dollars
+  from sales.salesorderheader soh join humanresources.employee e on soh.salespersonid = e.businessentityid
+      
+ where not onlineorderflag
+group by salespersonid,organizationnode,orderdate,onlineorderflag
+)
+select salespersonid
+--      ,numnode,mod(numnode,10000)
+      ,case when mod(numnode,10000) = 0 
+            then jobtitle
+            else '.....' ||jobtitle
+       end jobtitle
+      ,case when mod(numnode,10000) = 0 
+            then concat(ve.firstname,' ',ve.lastname)
+            else '.....' ||ve.firstname || ' ' || ve.lastname
+       end salesrep
+       ,fyr
+      ,sum(case when fqtr = 1 then dollars else 0 end) q1
+      ,sum(case when fqtr = 2 then dollars else 0 end) q2
+      ,sum(case when fqtr = 3 then dollars else 0 end) q3
+      ,sum(case when fqtr = 4 then dollars else 0 end) q4
+      ,sum(dollars) yr
+  from (
+        select salespersonid,numnode,fyr,fqtr,fyr_qtr,sum(dollars) dollars
+          from salesreps
+         group by salespersonid,numnode,fyr,fqtr,fyr_qtr
+       ) as qtr_sales
+    join humanresources.vemployee ve on qtr_sales.salespersonid  = ve.businessentityid
+group by salespersonid,numnode,ve.firstname,ve.lastname,ve.jobtitle,fyr
+order by fyr,numnode
+" 
+dbGetQuery(con,sql)
+```
+
+
+```{r}
+sql <-
+"
+--select * from sales.vsalespersonsalesbyfiscalyears order by 1
+--select * from humanresources.vemployee ve
+select * from humanresources.employee e
+" 
+dbGetQuery(con,sql)
+```
