@@ -354,8 +354,22 @@ Different environments / SQL dialects
 repeat the function creation strategy from 083 --
 
   * correct the date
-  * extract the fiscal year
+  * extract the quarter
 
+```{r}
+
+by_q <- tbl(con, in_schema("sales", "salesorderheader")) %>% 
+  mutate(orderdate = as.Date(orderdate), 
+         year = year(orderdate),
+         quarter = sql("DATE_PART('quarter', orderdate)")) %>% 
+  # select(orderdate, quarter) %>% 
+  group_by(year, quarter) %>% 
+  summarize(subtotal = sum(subtotal), n = n()) %>% 
+  arrange(year, quarter) %>% 
+  collect()
+
+by_q
+```
 
 ```{r}
 
