@@ -7,10 +7,17 @@
 >   * The interplay between "data questions" and "business questions"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 The previous chapter has demonstrated some of the automated techniques for showing what's in a table using some standard R functions and packages.  Now we demonstrate a step-by-step process of making sense of what's in one table with more of a business perspective.  We illustrate the kind of detective work that's often involved as we investigate the *organizational meaning* of the data in a table.  We'll investigate the `salesorderheader` table in the `sales` schema in this example to understand the sales profile of a business.  We show that there are quite a few interpretation issues even when we are examining just 3 out of the 25 columns in one table.
 =======
 The previous chapter has demonstrated some of the automated techniques for showing what's in a table using specific R functions and packages. Now we demonstrate the kind of detective work that's often involved as we investigate the meaning of the data in a table. We'll investigate the `salesorderheader` table in the `sales` schema in this example with a key business question in mind; are sales dollars trending up, down or flat?
 >>>>>>> Minor: Creating a more readable chapter
+=======
+The previous chapter has demonstrated some of the automated techniques for showing what's in a table using specific R functions and packages. Now we demonstrate the kind of detective work that's often involved as we investigate the meaning of the data in a table. We'll investigate the `salesorderheader` table in the `sales` schema in this example with a key business question in mind; are sales dollars trending up, down or flat?
+=======
+The previous chapter has demonstrated some of the automated techniques for showing what's in a table using some standard R functions and packages.  Now we demonstrate a step-by-step process of making sense of what's in one table with more of a business perspective.  We illustrate the kind of detective work that's often involved as we investigate the *organizational meaning* of the data in a table.  We'll investigate the `salesorderheader` table in the `sales` schema in this example to understand the sales profile of a business.  We show that there are quite a few interpretation issues even when we are examining just 3 out of the 25 columns in one table.
+>>>>>>> da7a60976105347a5a2ee13a28f9d7a1ba81a591
+>>>>>>> Minor: commit just before merge
 
 For this kind of detective work we are seeking to understand the following elements separately and as they interact with each other:
 
@@ -79,10 +86,17 @@ We begin by looking at Sales on a yearly basis, then consider monthly sales.  We
 ## Annual sales
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 On an annual basis, are sales dollars trending up, down or flat? We begin with annual revenue and number of orders.  
 =======
 On an annual basis, are sales dollars trending up, down or flat? We begin with total revenue and the number of orders at different levels of detail.  
 >>>>>>> Minor: Creating a more readable chapter
+=======
+On an annual basis, are sales dollars trending up, down or flat? We begin with total revenue and the number of orders at different levels of detail.  
+=======
+On an annual basis, are sales dollars trending up, down or flat? We begin with annual revenue and number of orders.  
+>>>>>>> da7a60976105347a5a2ee13a28f9d7a1ba81a591
+>>>>>>> Minor: commit just before merge
 
 
 ```r
@@ -158,11 +172,19 @@ ggplot(data = annual_sales, aes(x = year, y = total_soh_dollars)) +
 ```
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 <img src="083-exploring-a-single-table_files/figure-html/Calculate time period and annual sales dollars - 2 -1.png" width="384" />
 Both 2011 and 2014 are shorter time spans than the other two years, making comparison interpretation more difficult. 
 =======
 <img src="083-exploring-a-single-table_files/figure-html/Calculate time period and annual sales dollars - 2 -1.png" width="480" />
 >>>>>>> Minor: Creating a more readable chapter
+=======
+<img src="083-exploring-a-single-table_files/figure-html/Calculate time period and annual sales dollars - 2 -1.png" width="480" />
+=======
+<img src="083-exploring-a-single-table_files/figure-html/Calculate time period and annual sales dollars - 2 -1.png" width="384" />
+Both 2011 and 2014 are shorter time spans than the other two years, making comparison interpretation more difficult. 
+>>>>>>> da7a60976105347a5a2ee13a28f9d7a1ba81a591
+>>>>>>> Minor: commit just before merge
 
 Both 2011 and 2014 are shorter time spans than the other two years, making comparison across the years more difficult. Could it be that sales are seasonal? Let's look at the order volume and see whether there's a pattern in the sales data.
 
@@ -207,10 +229,17 @@ ggplot(data = annual_sales, aes(x = year, y = avg_total_soh_dollars)) +
 <img src="083-exploring-a-single-table_files/figure-html/average dollars per sale - -1.png" width="384" />
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 That's a big drop between average sale of more than $7,000 to less than $3,000.  A remarkable change has taken place in this business.
 
 =======
 >>>>>>> Minor: Creating a more readable chapter
+=======
+=======
+That's a big drop between average sale of more than $7,000 to less than $3,000.  A remarkable change has taken place in this business.
+
+>>>>>>> da7a60976105347a5a2ee13a28f9d7a1ba81a591
+>>>>>>> Minor: commit just before merge
 From 2012 to 2013 the average dollars per order dropped from more than $8,500 to nearly $3,000 while the total number of orders shot up from less than 4,000 to more than 14,000.  **Why are the number of orders increasing, but the average dollar amount of a sale is dropping?  **
 
 We need to drill down to look at monthly sales, adapting the first query to group by month and year.
@@ -312,14 +341,23 @@ ggplot(monthly_sales_lagged, aes(x = orderdate, y = monthly_sales_change)) +
 ```
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 <img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-4-1.png" width="672" />
 =======
+=======
+>>>>>>> Minor: commit just before merge
 ```
 ## Warning: Removed 1 rows containing missing values (geom_point).
 ```
 
 <img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-3-1.png" width="672" />
+<<<<<<< HEAD
 >>>>>>> Minor: Creating a more readable chapter
+=======
+=======
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-4-1.png" width="672" />
+>>>>>>> da7a60976105347a5a2ee13a28f9d7a1ba81a591
+>>>>>>> Minor: commit just before merge
 
 AdventureWorks sales are *very* uneven.  We'll come back to this issue shortly.
 
