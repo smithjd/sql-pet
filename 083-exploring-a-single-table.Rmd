@@ -47,7 +47,8 @@ Connect to `adventureworks`.  In an interactive session we prefer to use `connec
 ```{r, start adventureworks and connect}
 sp_docker_start("adventureworks")
 Sys.sleep(sleep_default)
-con <- dbConnect(
+# con <- dbConnect(
+con <- connection_open(
   RPostgres::Postgres(),
   bigint = "integer",  
   host = "localhost",
@@ -236,7 +237,8 @@ ggplot(monthly_sales_lagged, aes(x = orderdate, y = monthly_sales_change)) +
   scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
   geom_line() +
   geom_point() +
-  scale_y_continuous(limits = c(-1700000,4500000), labels = scales::dollar_format()) +
+  scale_y_continuous( labels = scales::dollar_format()) +
+  # scale_y_continuous(limits = c(-1700000,4500000), labels = scales::dollar_format()) +
   theme(plot.title = element_text(hjust = .5)) + 
   labs(
     title = glue(
@@ -578,35 +580,7 @@ Looking at the raw data leads us to suspect that there is a problem with the dat
 
 Look at the dates when sales are entered for sales by **Sales Reps**.  The following query merits some discussion.
 
-```{r}
-sales_rep_day_of_month_sales <- tbl(con, in_schema("sales", "salesorderheader")) %>%
-  filter(onlineorderflag == FALSE) %>% # Drop online orders
-  select(orderdate, subtotal) %>%
-  mutate(
-    year = year(orderdate),
-    month = month(orderdate),
-    day = day(orderdate)
-  ) %>%
-  count(year, month, day, name = "orders") %>%
-  group_by(year, month) %>%
-  summarize(
-    days_with_orders = n(),
-    total_orders = sum(orders, na.rm = TRUE),
-    min_day = min(day, na.rm = FALSE)
-  ) %>%
-  show_query() %>%
-  collect() %>%
-  mutate(
-    days_with_orders = as.numeric(days_with_orders),
-    order_month = as.Date(paste0(year, "-", month, "-01")),
-    min_day_factor = if_else(min_day < 2, "Month start", "Month end")
-  ) %>%
-  complete(order_month = seq(min(order_month), max(order_month), by = "month")) %>%
-  mutate(days_with_orders = replace_na(days_with_orders, 0)) %>%
-  ungroup()
-```
-
-a different strategy for finding the day-of-month problem.
+Digging into the day-of-month problem.
 
 ```{r}
 sales_rep_day_of_month_sales <- tbl(con, in_schema("sales", "salesorderheader")) %>%
@@ -617,24 +591,81 @@ sales_rep_day_of_month_sales <- tbl(con, in_schema("sales", "salesorderheader"))
     month = month(orderdate),
     day = day(orderdate)
   ) %>%
-  # count(year, month, day, name = "orders") %>%
   count(year, month, day) %>% 
   arrange(year, month) %>% 
-  # filter(year == 2011) %>% 
   collect() %>% 
   ungroup() %>% 
   mutate(n = as.numeric(n))
 
 str(sales_rep_day_of_month_sales)
 
-sales_rep_day_of_month_sales %>% 
+sales_rep_day_of_month_sales <- sales_rep_day_of_month_sales %>% 
   pivot_wider(names_from = day, values_from = n, names_prefix = "day_" ) %>% 
   as.data.frame() %>% 
   select(year, month, day_1, day_28, day_29, day_30, day_31) %>% 
   filter(!is.na(day_1))
+
+str(sales_rep_day_of_month_sales)
 ```
 
-values_from  integer64 makes pivot_wider barf.
+There are two months with multiple sales rep order days for 2011, (11/08 and 11/10), one for 2012, (1201), and two in 2014, (14/01 and 14/03).  The 14/03 is the only three day sales rep order month.
+
+Are there months where there were no sales recorded for the sales reps?
+
+There are two approaches.  The first is to generate a list of months between the beginning and end of history and compare that to the Sales Rep records
+```{r}
+monthly_sales_rep_sales <- monthly_sales_w_channel %>% 
+  filter(onlineorderflag == "Sales Rep") %>% 
+  mutate(orderdate = as.Date(floor_date(orderdate, "month"))) %>% 
+  count(orderdate)
+
+str(monthly_sales_rep_sales)
+
+date_list <- tibble(month_date = seq.Date(floor_date(as.Date(min_soh_dt), "month"), 
+         floor_date(as.Date(max_soh_dt), "month"), 
+         by = "month"),
+         date_exists = FALSE)
+
+date_list %>% 
+  anti_join(monthly_sales_rep_sales, 
+            by = c("month_date" = "orderdate") )
+```
+
+
+  * June, September, and November are missing for 2011. 
+  * June for 2014
+
+The second approach is to use the dates found in the database for online orders.  Defining "complete" may not always be as simple as generating a complete list of months.
+```{r}
+sales_order_header_online <- tbl(con, in_schema("sales", "salesorderheader")) %>% 
+  filter(onlineorderflag == TRUE) %>% 
+  mutate(
+    orderdate = date_trunc('month', orderdate)
+  ) %>%
+  count(orderdate, name = "online_count") 
+
+sales_order_header_sales_rep <- tbl(con, in_schema("sales", "salesorderheader")) %>% 
+  filter(onlineorderflag == FALSE) %>% 
+  mutate(
+    orderdate = date_trunc('month', orderdate)
+  ) %>%
+  count(orderdate, name = "sales_rep_count") 
+
+missing_dates <- sales_order_header_sales_rep %>% 
+  full_join(sales_order_header_online) %>% 
+  show_query() %>% 
+  collect()
+
+missing_dates <- sales_order_header_online %>% 
+  anti_join(sales_order_header_sales_rep) %>% 
+  arrange(orderdate) %>% 
+  collect()
+
+missing_dates
+str(missing_dates)
+```
+
+And in this case they agree!
 
 discuss February issues.  and stuff. 
 
@@ -646,16 +677,9 @@ difference between detective work with a graph and just print it out.  "now I se
 
 We have xx months when we add the month before and the month after the **suspicious months**.  We don't know whether the problem postings have been carried forward or backward.  We check for and eliminate duplicates as well.
 
-
-That is unexpected.  A couple of  things immediately jump out from the first page of data:
-
-*  July, September, and November are missing for 2011. 
 *  Most of the **Sales Reps**' orders are entered on a single day of the month, unique days = 1. It is possible that these are monthly recurring orders that get released on a given day of the month.  If that is the case, what are the **Sales Reps** doing the rest of the month?
 *  ** ?? The lines with multiple days, unique_days > 1, have a noticeable higher number of orders, so_cnt, and associated so dollars.?? **
 
-The plot clearly shows that two months with multiple sales rep order days for 2011, (11/08 and 11/10), one for 2012, (1201), and two in 2014, (14/01 and 14/03).  The 14/03 is the only three day sales rep order month.
-
-In the next code block, we flesh out the dates associated with the **Sales Reps**' orders.  Since 4 out of the 5 months with multiple order days only have two dates, the code block captures them with a min/max orderdate.
 
 ## Correcting the order date for **Sales Reps**
 
