@@ -124,7 +124,7 @@ ggplot(data = annual_sales, aes(x = year, y = total_soh_dollars)) +
   scale_y_continuous(labels = scales::dollar_format()) +
   labs(
     title = "Adventure Works Sales Dollars by Year",
-    x = glue("Year - between ", {format(min_soh_dt, "%B %d, %Y")} , " and  ", 
+    x = glue("Years between ", {format(min_soh_dt, "%B %d, %Y")} , " and  ", 
             {format(max_soh_dt, "%B %d, %Y")}),
     y = "Sales $"
   )
@@ -156,7 +156,7 @@ ggplot(data = annual_sales, aes(x = year, y = avg_total_soh_dollars)) +
   geom_text(aes(label = round(avg_total_soh_dollars, digits = 0)), vjust = -0.25) +
   labs(
     title = "Average Dollars per Sale",
-    x = glue("Year - between ", {format(min_soh_dt, "%B %d, %Y")} , " to  ", 
+    x = glue("Years between ", {format(min_soh_dt, "%B %d, %Y")} , " to  ", 
             {format(max_soh_dt, "%B %d, %Y")}),
     y = "Average Sale Amount"
   )
@@ -192,9 +192,6 @@ monthly_sales <- tbl(con, in_schema("sales", "salesorderheader")) %>%
 
 In many cases we don't really care where our queries are executed, but if we do we have to look for cases where functions from R packages like `lubridate` and the equivalent `postgreSQL` functions are subtly different.  In this case the `postgreSQL` function produces a `POSIXct` column, not a `Date` so we need to tack on a mutate function onto our query.
 
->
-> When to use the sql() function.
-
 ```{r}
 monthly_sales <-  monthly_sales %>% 
   mutate(orderdate = as.Date(orderdate))
@@ -221,8 +218,12 @@ ggplot(data = monthly_sales, aes(x = orderdate, y = total_soh_dollars)) +
 We can see our month-over-month sales contains lots of variation. We'll use `dplyr::lag` to help find the delta and later visualize just how much month-to-month difference there is.
 
 ```{r}
+monthly_sales <- arrange(monthly_sales, orderdate)
+
 monthly_sales_lagged <- monthly_sales %>%
   mutate(monthly_sales_change = (dplyr::lag(total_soh_dollars)) - total_soh_dollars)
+
+monthly_sales_lagged[is.na(monthly_sales_lagged)] = 0
 ```
 
 ```{r}
@@ -237,8 +238,7 @@ ggplot(monthly_sales_lagged, aes(x = orderdate, y = monthly_sales_change)) +
   scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
   geom_line() +
   geom_point() +
-  scale_y_continuous( labels = scales::dollar_format()) +
-  # scale_y_continuous(limits = c(-1700000,4500000), labels = scales::dollar_format()) +
+  scale_y_continuous(limits = c(-6000000,5500000), labels = scales::dollar_format()) +
   theme(plot.title = element_text(hjust = .5)) + 
   labs(
     title = glue(
