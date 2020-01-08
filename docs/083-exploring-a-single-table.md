@@ -94,22 +94,10 @@ annual_sales <- tbl(con, in_schema("sales", "salesorderheader")) %>%
     year, min_soh_orderdate, max_soh_orderdate, total_soh_dollars,
     avg_total_soh_dollars, soh_count
   ) %>% 
-  show_query() %>% 
   collect() 
 ```
 
-```
-## <SQL>
-## SELECT "year", "min_soh_orderdate", "max_soh_orderdate", "total_soh_dollars", "avg_total_soh_dollars", "soh_count"
-## FROM (SELECT *
-## FROM (SELECT "year", MIN("orderdate") AS "min_soh_orderdate", MAX("orderdate") AS "max_soh_orderdate", ROUND((SUM("subtotal")) :: numeric, 2) AS "total_soh_dollars", ROUND((AVG("subtotal")) :: numeric, 2) AS "avg_total_soh_dollars", COUNT(*) AS "soh_count"
-## FROM (SELECT "salesorderid", "revisionnumber", "orderdate", "duedate", "shipdate", "status", "onlineorderflag", "purchaseordernumber", "accountnumber", "customerid", "salespersonid", "territoryid", "billtoaddressid", "shiptoaddressid", "shipmethodid", "creditcardid", "creditcardapprovalcode", "currencyrateid", "subtotal", "taxamt", "freight", "totaldue", "comment", "rowguid", "modifieddate", SUBSTR(CAST("orderdate" AS TEXT), 1, 4) AS "year"
-## FROM sales.salesorderheader) "dbplyr_001"
-## GROUP BY "year") "dbplyr_002"
-## ORDER BY "year") "dbplyr_003"
-```
-
-Note that all of this query is running on the server.  The `show_query` function shows the SQL code postgreSQL runs to produce its output.
+Note that all of this query is running on the server since the `collect()` statement is at the very end. 
 
 
 ```r
@@ -134,8 +122,6 @@ min_soh_dt <- min(annual_sales$min_soh_orderdate)
 max_soh_dt <- max(annual_sales$max_soh_orderdate)
 ```
 
-You can't see it yet but both 2011 and 2014 are shorter time spans than the other two years, making comparison across the years more difficult. We might normalize the totals based on the number of months in each year, but we first graph total dollars and see that 2013 was the best year for annual sales dollars.
-
 ### Total sales by year
 
 
@@ -145,7 +131,7 @@ ggplot(data = annual_sales, aes(x = year, y = total_soh_dollars)) +
   geom_text(aes(label = round(as.numeric(total_soh_dollars), digits = 0)), vjust = -0.25) +
   scale_y_continuous(labels = scales::dollar_format()) +
   labs(
-    title = "Adventure Works Sales Dollars by Year",
+    title = "AdventureWorks Sales Dollars by Year",
     x = glue("Years between ", {format(min_soh_dt, "%B %d, %Y")} , " and  ", 
             {format(max_soh_dt, "%B %d, %Y")}),
     y = "Sales $"
@@ -153,11 +139,12 @@ ggplot(data = annual_sales, aes(x = year, y = total_soh_dollars)) +
 ```
 
 <img src="083-exploring-a-single-table_files/figure-html/Calculate time period and annual sales dollars - 2 -1.png" width="480" />
-Both 2011 and 2014 are shorter time spans than the other two years, making comparison interpretation more difficult. 
+Both 2011 and 2014 turn out to be are shorter time spans than the other two years, making comparison interpretation difficult.  Still, it's clear that 2013 was the best year for annual sales dollars.
 
 ### Total order volume
 
-Look at number of orders per year:
+Comparing the number of orders per year has roughly the same overall pattern (2013 ranks highest, etc.) but the proportions between the years are quite different.
+
 
 ```r
 ggplot(data = annual_sales, aes(x = year, y = as.numeric(soh_count))) +
@@ -173,7 +160,7 @@ ggplot(data = annual_sales, aes(x = year, y = as.numeric(soh_count))) +
 
 <img src="083-exploring-a-single-table_files/figure-html/average dollars per sale - v2-1.png" width="384" />
 
-Here again we see that 2013 was the best year in terms of total number of orders. But look at 2014, it has had many more orders than 2012 but lags in terms of annual sales. Why might this be? Let's investigate whether the size of the average sale has changed.
+Although 2013 was the best year in terms of total number of orders, there were many more in 2014 compared with 2012.  That suggests looking at the average dollars per sale for each year.
 
 ### Average dollars per sale
 
@@ -192,12 +179,9 @@ ggplot(data = annual_sales, aes(x = year, y = avg_total_soh_dollars)) +
 
 <img src="083-exploring-a-single-table_files/figure-html/average dollars per sale - -1.png" width="384" />
 
-That's a big drop between average sale of more than $7,000 to less than $3,000.  A remarkable change has taken place in this business.
+That's a big drop between average sale of more than $7,000 in the first two years down to the $3,000 range in the last two.  There has been a remarkable change in this business.  At the same time the total number of orders shot up from less than 4,000 a year to more than 14,000.  **Why are the number of orders increasing, but the average dollar amount of a sale is dropping?  **
 
-
-From 2012 to 2013 the average dollars per order dropped from more than $8,500 to nearly $3,000 while the total number of orders shot up from less than 4,000 to more than 14,000.  **Why are the number of orders increasing, but the average dollar amount of a sale is dropping?  **
-
-We need to drill down to look at monthly sales, adapting the first query to group by month and year.
+Perhaps monthly monthly sales has the anser.  We adapt the first query to group by month and year.
 
 ## Monthly Sales
 
@@ -218,10 +202,21 @@ monthly_sales <- tbl(con, in_schema("sales", "salesorderheader")) %>%
     avg_total_soh_dollars = round(mean(subtotal, na.rm = TRUE), 2),
     soh_count = n()
   ) %>% 
+  show_query() %>% 
   collect() 
 ```
 
-In many cases we don't really care whether our queries are executed by R or by the SQL server, but if we do care we have to look for cases where functions from R packages like `lubridate` and the equivalent `postgreSQL` functions are subtly different.  In the previous query the `postgreSQL` function produces a `POSIXct` column, not a `Date` so we need to tack on a mutate function once the data is on the R side.
+```
+## <SQL>
+## SELECT "orderdate", ROUND((SUM("subtotal")) :: numeric, 2) AS "total_soh_dollars", ROUND((AVG("subtotal")) :: numeric, 2) AS "avg_total_soh_dollars", COUNT(*) AS "soh_count"
+## FROM (SELECT date_trunc('month', "orderdate") AS "orderdate", "subtotal"
+## FROM sales.salesorderheader) "dbplyr_004"
+## GROUP BY "orderdate"
+```
+
+> Note that ` date_trunc('month', orderdate)` gets passed through exactly "as is."
+
+In many cases we don't really care whether our queries are executed by R or by the SQL server, but if we do care we need to substitute the `postgreSQL` equivalent for the R functions we might ordinarily use.  In those cases we have to check whether functions from R packages like `lubridate` and the equivalent `postgreSQL` functions are exactly alike.  Often they are subtly different: in the previous query the `postgreSQL` function produces a `POSIXct` column, not a `Date` so we need to tack on a mutate function once the data is on the R side as shown here:
 
 
 ```r
@@ -229,7 +224,7 @@ monthly_sales <-  monthly_sales %>%
   mutate(orderdate = as.Date(orderdate))
 ```
 
-Next let's chart the monthly sales data:
+Next let's plot the monthly sales data:
 
 
 ```r
@@ -247,10 +242,11 @@ ggplot(data = monthly_sales, aes(x = orderdate, y = total_soh_dollars)) +
 
 <img src="083-exploring-a-single-table_files/figure-html/Total monthly sales bar chart-1.png" width="672" />
 
+That graph doesn't show how the business might have changed, but it is remarkable how much variation there is from one month to another -- particularly in 2012 and 2014.
+
 ### Check lagged monthly data
 
-We can see our month-over-month sales contains lots of variation. We'll use `dplyr::lag` to help find the delta and later visualize just how much month-to-month difference there is.
-
+Because of the  month-over-month sales  variation. We'll use `dplyr::lag` to help find the delta and later visualize just how much month-to-month difference there is.
 
 
 ```r
@@ -280,7 +276,7 @@ median(monthly_sales_lagged$monthly_sales_change, na.rm = TRUE)
 ## -5879806.05 -1172995.19  -221690.51    11968.42  1159252.70  5420357.17
 ```
 
-The trend is positive on average 11,968. Let's calculate the inner quartile range to see how spread out our data is: 2,332,248 This robust statistic shows us that we have a very large spread in our month-over-month. Next, let's visualize this variation. 
+The average month over month change in sales looks OK ($ 11,968) although the Median is negative: $ 11,968. There is a very wide spread in our month-over-month sales data between the lower and upper quartile. We can plot the variation as follows:
 
 
 
@@ -304,6 +300,7 @@ ggplot(monthly_sales_lagged, aes(x = orderdate, y = monthly_sales_change)) +
 
 <img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-4-1.png" width="672" />
 
+It looks like the big change in the business occurred in the summer of 2013 when the number of orders jumped but the dollar volume just continued to bump along.
 
 ### Comparing dollars and orders to a base year
 
@@ -410,6 +407,8 @@ annual_sales_w_channel <- tbl(con, in_schema("sales", "salesorderheader")) %>%
   )
 ```
 
+Note that we are creating a factor and doing most of the calculations on the R side, not on the DBMS side.
+
 ### Annual Sales comparison
 
 Start by looking at total sales.
@@ -421,7 +420,7 @@ ggplot(data = annual_sales_w_channel, aes(x = orderdate, y = total_soh_dollars))
   scale_y_continuous(labels = scales::dollar_format()) +
   facet_wrap("onlineorderflag") +
   labs(
-    title = "Adventure Works Sales Dollars by Year",
+    title = "AdventureWorks Sales Dollars by Year",
     caption = glue( "Between ", {format(min_soh_dt, "%B %d, %Y")} , " - ", 
             {format(max_soh_dt, "%B %d, %Y")}),
     subtitle = "Comparing Online and Sales Rep sales channels",
@@ -432,18 +431,17 @@ ggplot(data = annual_sales_w_channel, aes(x = orderdate, y = total_soh_dollars))
 
 <img src="083-exploring-a-single-table_files/figure-html/Calculate annual sales dollars-1.png" width="672" />
 
-Indeed the total sales are quite different as are the number of orders and the average order size!
+Based on annual sales, it looks like there are two businesses represented in the AdventureWorks database that have very different growth profiles. 
 
 ### Order volume comparison
 
-Look at number of orders per year:
 
 ```r
 ggplot(data = annual_sales_w_channel, aes(x = orderdate, y = as.numeric(soh_count))) +
   geom_col() +
   facet_wrap("onlineorderflag") +
   labs(
-    title = "Adventure Works Number of orders per Year",
+    title = "AdventureWorks Number of orders per Year",
     caption = glue( "Between ", {format(min_soh_dt, "%B %d, %Y")} , " - ", 
             {format(max_soh_dt, "%B %d, %Y")}),
     subtitle = "Comparing Online and Sales Rep sales channels",
@@ -454,7 +452,9 @@ ggplot(data = annual_sales_w_channel, aes(x = orderdate, y = as.numeric(soh_coun
 
 <img src="083-exploring-a-single-table_files/figure-html/average dollars per sale - v4-1.png" width="672" />
 
-### Comparing **Sales Rep** sales to **Online** Orders
+Comparing Online and Sales Rep sales, the difference in the number of orders is even more striking than the difference between annual sales.
+
+### Comparing average order size: **Sales Reps** to **Online** orders
 
 
 ```r
@@ -463,7 +463,7 @@ ggplot(data = annual_sales_w_channel, aes(x = orderdate, y = avg_total_soh_dolla
   facet_wrap("onlineorderflag") +
   scale_y_continuous(labels = scales::dollar_format()) +
   labs(
-    title = "Average Dollars per Sale",
+    title = "AdventureWorks Average Dollars per Sale",
     x = glue( "Year - between ", {format(min_soh_dt, "%B %d, %Y")} , " - ", 
             {format(max_soh_dt, "%B %d, %Y")}),
     y = "Average sale amount"
@@ -475,7 +475,7 @@ ggplot(data = annual_sales_w_channel, aes(x = orderdate, y = avg_total_soh_dolla
 
 ## Impact of order type on monthly sales
 
-Digging into the difference between **Sales Rep** and **Online** sales. 
+To dig into the difference between **Sales Rep** and **Online** sales we can look at monthly data.
 
 ### Retrieve monthly sales with the `onlineorderflag` 
 
@@ -486,14 +486,12 @@ This query puts the `collect` statement earlier than the previous queries.
 monthly_sales_w_channel <- tbl(con, in_schema("sales", "salesorderheader")) %>%
   select(orderdate, subtotal, onlineorderflag) %>%
   collect() %>% # From here on we're in R
-
   mutate(
     orderdate = date(orderdate),
-    orderdate_rounded = round_date(orderdate, "month"),
+    orderdate = floor_date(orderdate, unit = "month"),
     onlineorderflag = if_else(onlineorderflag == FALSE,
-      "Sales Rep", "Online"
-    ),
-  ) %>% #
+      "Sales Rep", "Online")
+  ) %>% 
   group_by(orderdate, onlineorderflag) %>%
   summarize(
     min_soh_orderdate = min(orderdate, na.rm = TRUE),
@@ -972,30 +970,30 @@ monthly_sales_w_channel %>%
   <tbody class="gt_table_body">
     <tr>
       <td class="gt_row gt_left">Online</td>
-      <td class="gt_row gt_center">1124</td>
-      <td class="gt_row gt_left">2011-05-31</td>
-      <td class="gt_row gt_left">2014-06-30</td>
+      <td class="gt_row gt_center">38</td>
+      <td class="gt_row gt_left">2011-05-01</td>
+      <td class="gt_row gt_left">2014-06-01</td>
       <td class="gt_row gt_right">29358677</td>
-      <td class="gt_row gt_center">1126 days</td>
+      <td class="gt_row gt_center">1127 days</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_striped">Sales Rep</td>
-      <td class="gt_row gt_center gt_striped">40</td>
-      <td class="gt_row gt_left gt_striped">2011-05-31</td>
+      <td class="gt_row gt_center gt_striped">34</td>
+      <td class="gt_row gt_left gt_striped">2011-05-01</td>
       <td class="gt_row gt_left gt_striped">2014-05-01</td>
       <td class="gt_row gt_right gt_striped">80487704</td>
-      <td class="gt_row gt_center gt_striped">1066 days</td>
+      <td class="gt_row gt_center gt_striped">1096 days</td>
     </tr>
   </tbody>
   
   
 </table></div><!--/html_preserve-->
 
-As this table shows, the **Sales Rep** dates don't match the **Online** dates.  they start the same, but have a different end.  The **Online** dates include 2 months that are not included in the Sales Rep sales (which are the main sales channel by dollar volume).
+As this table shows, the **Sales Rep** dates don't match the **Online** dates.  They start on the same date, but have a different end.  The **Online** dates include 2 months that are not included in the Sales Rep sales (which are the main sales channel by dollar volume).
 
 ### Monthly variation compared to a trend line
 
-Jumping to the trend line comparison, we see the source of the variation.
+Jumping to the trend line comparison, we see that the big the source of variation is on the Sales Rep side.
 
 
 ```r
@@ -1021,10 +1019,6 @@ ggplot(
   )
 ```
 
-```
-## `geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'
-```
-
 <img src="083-exploring-a-single-table_files/figure-html/average dollars-1.png" width="672" />
 
 The **monthly** gyrations are happening on the Sales Rep side, amounting to differences in a million dollars compared to small monthly variations of around $25,000 for the Online orders.
@@ -1035,7 +1029,6 @@ First consider month-to-month change.
 
 ```r
 monthly_sales_w_channel_lagged_by_month <- monthly_sales_w_channel %>%
-  ungroup() %>% 
   group_by(onlineorderflag) %>%
   mutate(
     pct_monthly_soh_dollar_change =
@@ -1063,37 +1056,6 @@ ggplot(monthly_sales_w_channel_lagged_by_month, aes(x = orderdate, y = pct_month
 ```
 
 <img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-10-1.png" width="672" />
-
-```r
-summary(monthly_sales_w_channel_lagged_by_month)
-```
-
-```
-##    orderdate          onlineorderflag    min_soh_orderdate   
-##  Min.   :2011-05-31   Length:1164        Min.   :2011-05-31  
-##  1st Qu.:2012-03-09   Class :character   1st Qu.:2012-03-09  
-##  Median :2012-12-16   Mode  :character   Median :2012-12-16  
-##  Mean   :2012-12-15                      Mean   :2012-12-15  
-##  3rd Qu.:2013-09-24                      3rd Qu.:2013-09-24  
-##  Max.   :2014-06-30                      Max.   :2014-06-30  
-##                                                              
-##  max_soh_orderdate    total_soh_dollars    avg_total_soh_dollars
-##  Min.   :2011-05-31   Min.   :    699.10   Min.   :   40.220    
-##  1st Qu.:2012-03-09   1st Qu.:  13993.27   1st Qu.:  866.710    
-##  Median :2012-12-16   Median :  21469.62   Median : 1823.380    
-##  Mean   :2012-12-15   Mean   :  94369.74   Mean   : 2495.473    
-##  3rd Qu.:2013-09-24   3rd Qu.:  37256.86   3rd Qu.: 3032.733    
-##  Max.   :2014-06-30   Max.   :4220928.00   Max.   :33245.690    
-##                                                                 
-##    soh_count         pct_monthly_soh_dollar_change pct_monthly_soh_count_change
-##  Min.   :  1.00000   Min.   :     0.03876          Min.   :   1.123596         
-##  1st Qu.:  6.00000   1st Qu.:    71.57126          1st Qu.:  75.000000         
-##  Median : 10.00000   Median :   100.00000          Median : 100.000000         
-##  Mean   : 27.03179   Mean   :   598.40406          Mean   : 140.916436         
-##  3rd Qu.: 53.00000   3rd Qu.:   138.22965          3rd Qu.: 130.415373         
-##  Max.   :186.00000   Max.   :265839.48116          Max.   :8950.000000         
-##                      NA's   :2                     NA's   :2
-```
 
 For **Sales Reps** it looks like the variation is in the number of orders, not just dollars, as shown in the following plot.
 
@@ -1138,7 +1100,7 @@ ggplot(
     date_breaks = "year", date_labels = "%Y",
     date_minor_breaks = "3 months"
   ) +
-  scale_y_continuous(limits = c(-10, 300)) +
+  # scale_y_continuous(limits = c(-10, 300)) +
   facet_grid("onlineorderflag") +
   geom_line() +
   theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
@@ -1164,7 +1126,7 @@ We suspect that the business has changed a lot with the advent of **Online** ord
 
 ## Detect and diagnose the day of the month problem
 
-Browsing at the raw data leads us to suspect that there is an odd pattern on the Sales Rep side: the sales are almost always recorded on the last day of the month.
+We have noticed many indications that Sales Rep sales are different from the Online sales: the sales are almost always recorded on the last day of the month.
 
 ### Sales Rep Orderdate Distribution
 
@@ -1220,11 +1182,11 @@ sales_rep_day_of_month_sales
 
 ```
 ##   year month day_1 day_28 day_29 day_30 day_31
-## 1 2012     1    79      0     64      0      0
+## 1 2011    10    90      0      0      0     63
 ## 2 2014     3    91      0      0      2    178
 ## 3 2011     7    75      0      0      0      0
 ## 4 2011     8    60      0      0      0     40
-## 5 2011    10    90      0      0      0     63
+## 5 2012     1    79      0     64      0      0
 ## 6 2014     5   179      0      0      0      0
 ## 7 2011    12    40      0      0      0      0
 ```
@@ -1247,7 +1209,7 @@ str(monthly_sales_rep_sales)
 ```
 ## Classes 'tbl_df', 'tbl' and 'data.frame':	34 obs. of  2 variables:
 ##  $ orderdate: Date, format: "2011-05-01" "2011-07-01" ...
-##  $ n        : int  1 1 2 2 1 2 1 1 1 1 ...
+##  $ n        : int  1 1 1 1 1 1 1 1 1 1 ...
 ```
 
 ```r
@@ -1309,13 +1271,13 @@ missing_dates <- sales_order_header_sales_rep %>%
 ## FROM (SELECT "salesorderid", "revisionnumber", date_trunc('month', "orderdate") AS "orderdate", "duedate", "shipdate", "status", "onlineorderflag", "purchaseordernumber", "accountnumber", "customerid", "salespersonid", "territoryid", "billtoaddressid", "shiptoaddressid", "shipmethodid", "creditcardid", "creditcardapprovalcode", "currencyrateid", "subtotal", "taxamt", "freight", "totaldue", "comment", "rowguid", "modifieddate"
 ## FROM (SELECT *
 ## FROM sales.salesorderheader
-## WHERE ("onlineorderflag" = FALSE)) "dbplyr_012") "dbplyr_013"
+## WHERE ("onlineorderflag" = FALSE)) "dbplyr_010") "dbplyr_011"
 ## GROUP BY "orderdate") "LHS"
 ## FULL JOIN (SELECT "orderdate", COUNT(*) AS "online_count"
 ## FROM (SELECT "salesorderid", "revisionnumber", date_trunc('month', "orderdate") AS "orderdate", "duedate", "shipdate", "status", "onlineorderflag", "purchaseordernumber", "accountnumber", "customerid", "salespersonid", "territoryid", "billtoaddressid", "shiptoaddressid", "shipmethodid", "creditcardid", "creditcardapprovalcode", "currencyrateid", "subtotal", "taxamt", "freight", "totaldue", "comment", "rowguid", "modifieddate"
 ## FROM (SELECT *
 ## FROM sales.salesorderheader
-## WHERE ("onlineorderflag" = TRUE)) "dbplyr_014") "dbplyr_015"
+## WHERE ("onlineorderflag" = TRUE)) "dbplyr_012") "dbplyr_013"
 ## GROUP BY "orderdate") "RHS"
 ## ON ("LHS"."orderdate" = "RHS"."orderdate")
 ```
@@ -1442,7 +1404,6 @@ monthly_sales_rep_adjusted <- tbl(con, in_schema("sales", "salesorderheader")) %
     orderdate = as.Date(orderdate),
     day = day(orderdate)
   ) %>%
-  # show_query() %>%
   collect() %>%
   ungroup() %>% 
   mutate(
@@ -1541,7 +1502,6 @@ monthly_sales_rep_adjusted_with_psql_function <- tbl(con, in_schema("sales", "sa
     total_soh_dollars = round(sum(subtotal, na.rm = TRUE), 2),
     soh_count = n()
   ) %>%
-  # show_query() %>%
   collect() %>%
   mutate( year_month = floor_date(adjusted_orderdate, "month")) %>% 
     group_by(year_month) %>%
