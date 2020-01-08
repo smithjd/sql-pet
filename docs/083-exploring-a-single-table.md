@@ -6,9 +6,20 @@
 >   * Show the multiple data anomalies found in a single AdventureWorks table (*salesorderheader*)
 >   * The interplay between "data questions" and "business questions"
 
+<<<<<<< HEAD
+<<<<<<< HEAD
 The previous chapter has demonstrated some of the automated techniques for showing what's in a table using some standard R functions and packages.  Now we demonstrate a step-by-step process of making sense of what's in one table with more of a business perspective.  We illustrate the kind of detective work that's often involved as we investigate the *organizational meaning* of the data in a table.  We'll investigate the `salesorderheader` table in the `sales` schema in this example to understand the sales profile of a business.  We show that there are quite a few interpretation issues even when we are examining just 3 out of the 25 columns in one table.
+=======
+The previous chapter has demonstrated some of the automated techniques for showing what's in a table using specific R functions and packages. Now we demonstrate the kind of detective work that's often involved as we investigate the meaning of the data in a table. We'll investigate the `salesorderheader` table in the `sales` schema in this example with a key business question in mind; are sales dollars trending up, down or flat?
+>>>>>>> Minor: Creating a more readable chapter
+=======
+The previous chapter has demonstrated some of the automated techniques for showing what's in a table using specific R functions and packages. Now we demonstrate the kind of detective work that's often involved as we investigate the meaning of the data in a table. We'll investigate the `salesorderheader` table in the `sales` schema in this example with a key business question in mind; are sales dollars trending up, down or flat?
+=======
+The previous chapter has demonstrated some of the automated techniques for showing what's in a table using some standard R functions and packages.  Now we demonstrate a step-by-step process of making sense of what's in one table with more of a business perspective.  We illustrate the kind of detective work that's often involved as we investigate the *organizational meaning* of the data in a table.  We'll investigate the `salesorderheader` table in the `sales` schema in this example to understand the sales profile of a business.  We show that there are quite a few interpretation issues even when we are examining just 3 out of the 25 columns in one table.
+>>>>>>> da7a60976105347a5a2ee13a28f9d7a1ba81a591
+>>>>>>> Minor: commit just before merge
 
-For this kind of detective work we are seeking to understand the following elements separately and as they interact with each other (and they all do):
+For this kind of detective work we are seeking to understand the following elements separately and as they interact with each other:
 
   * What data is stored in the database and 
   * How information is represented
@@ -74,7 +85,18 @@ We begin by looking at Sales on a yearly basis, then consider monthly sales.  We
 
 ## Annual sales
 
+<<<<<<< HEAD
+<<<<<<< HEAD
 On an annual basis, are sales dollars trending up, down or flat? We begin with annual revenue and number of orders.  
+=======
+On an annual basis, are sales dollars trending up, down or flat? We begin with total revenue and the number of orders at different levels of detail.  
+>>>>>>> Minor: Creating a more readable chapter
+=======
+On an annual basis, are sales dollars trending up, down or flat? We begin with total revenue and the number of orders at different levels of detail.  
+=======
+On an annual basis, are sales dollars trending up, down or flat? We begin with annual revenue and number of orders.  
+>>>>>>> da7a60976105347a5a2ee13a28f9d7a1ba81a591
+>>>>>>> Minor: commit just before merge
 
 
 ```r
@@ -139,6 +161,7 @@ max_soh_dt <- max(annual_sales$max_soh_orderdate)
 ```r
 ggplot(data = annual_sales, aes(x = year, y = total_soh_dollars)) +
   geom_col() +
+  geom_text(aes(label = round(as.numeric(total_soh_dollars), digits = 0)), vjust = -0.25) +
   scale_y_continuous(labels = scales::dollar_format()) +
   labs(
     title = "Adventure Works Sales Dollars by Year",
@@ -148,14 +171,27 @@ ggplot(data = annual_sales, aes(x = year, y = total_soh_dollars)) +
   )
 ```
 
+<<<<<<< HEAD
+<<<<<<< HEAD
 <img src="083-exploring-a-single-table_files/figure-html/Calculate time period and annual sales dollars - 2 -1.png" width="384" />
 Both 2011 and 2014 are shorter time spans than the other two years, making comparison interpretation more difficult. 
+=======
+<img src="083-exploring-a-single-table_files/figure-html/Calculate time period and annual sales dollars - 2 -1.png" width="480" />
+>>>>>>> Minor: Creating a more readable chapter
+=======
+<img src="083-exploring-a-single-table_files/figure-html/Calculate time period and annual sales dollars - 2 -1.png" width="480" />
+=======
+<img src="083-exploring-a-single-table_files/figure-html/Calculate time period and annual sales dollars - 2 -1.png" width="384" />
+Both 2011 and 2014 are shorter time spans than the other two years, making comparison interpretation more difficult. 
+>>>>>>> da7a60976105347a5a2ee13a28f9d7a1ba81a591
+>>>>>>> Minor: commit just before merge
 
-From 2011 through 2013, sales are trending up. Are sales dollars for 2014 really down? We only have a half year of data, but the 2014 total is less than half of the 2013 total. Could it be that sales are seasonal? Maybe AdventureWorks has larger sales volumes in the fourth quarter.  To see if the sales dollars are seasonal, we drill down and look at the monthly sales.  But first, let's look at the number of orders and whether there's a pattern in the sales data.  
+Both 2011 and 2014 are shorter time spans than the other two years, making comparison across the years more difficult. Could it be that sales are seasonal? Let's look at the order volume and see whether there's a pattern in the sales data.
 
 ### Total order volume
 
 Look at number of orders per year:
+<<<<<<< HEAD
 
 ```r
 ggplot(data = annual_sales, aes(x = year, y = as.numeric(soh_count))) +
@@ -175,6 +211,7 @@ That's a huge jump in the number of orders between 2012 and 2013.  Given the tot
 
 ### Average dollars per sale
 
+<<<<<<< HEAD
 
 ```r
 ggplot(data = annual_sales, aes(x = year, y = avg_total_soh_dollars)) +
@@ -191,8 +228,18 @@ ggplot(data = annual_sales, aes(x = year, y = avg_total_soh_dollars)) +
 
 <img src="083-exploring-a-single-table_files/figure-html/average dollars per sale - -1.png" width="384" />
 
+<<<<<<< HEAD
+<<<<<<< HEAD
 That's a big drop between average sale of more than $7,000 to less than $3,000.  A remarkable change has taken place in this business.
 
+=======
+>>>>>>> Minor: Creating a more readable chapter
+=======
+=======
+That's a big drop between average sale of more than $7,000 to less than $3,000.  A remarkable change has taken place in this business.
+
+>>>>>>> da7a60976105347a5a2ee13a28f9d7a1ba81a591
+>>>>>>> Minor: commit just before merge
 From 2012 to 2013 the average dollars per order dropped from more than $8,500 to nearly $3,000 while the total number of orders shot up from less than 4,000 to more than 14,000.  **Why are the number of orders increasing, but the average dollar amount of a sale is dropping?  **
 
 We need to drill down to look at monthly sales, adapting the first query to group by month and year.
@@ -293,7 +340,24 @@ ggplot(monthly_sales_lagged, aes(x = orderdate, y = monthly_sales_change)) +
 ## Warning: Removed 9 rows containing missing values (geom_point).
 ```
 
+<<<<<<< HEAD
+<<<<<<< HEAD
 <img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-4-1.png" width="672" />
+=======
+=======
+>>>>>>> Minor: commit just before merge
+```
+## Warning: Removed 1 rows containing missing values (geom_point).
+```
+
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-3-1.png" width="672" />
+<<<<<<< HEAD
+>>>>>>> Minor: Creating a more readable chapter
+=======
+=======
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-4-1.png" width="672" />
+>>>>>>> da7a60976105347a5a2ee13a28f9d7a1ba81a591
+>>>>>>> Minor: commit just before merge
 
 AdventureWorks sales are *very* uneven.  We'll come back to this issue shortly.
 
@@ -516,7 +580,7 @@ monthly_sales_w_channel %>%
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#pzveloiefp .gt_table {
+#obgqlcctgs .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -544,7 +608,7 @@ monthly_sales_w_channel %>%
   /* table.border.bottom.color */
 }
 
-#pzveloiefp .gt_heading {
+#obgqlcctgs .gt_heading {
   background-color: #FFFFFF;
   /* heading.background.color */
   border-bottom-color: #FFFFFF;
@@ -563,7 +627,7 @@ monthly_sales_w_channel %>%
   /* heading.border.lr.color */
 }
 
-#pzveloiefp .gt_title {
+#obgqlcctgs .gt_title {
   color: #333333;
   font-size: 125%;
   /* heading.title.font.size */
@@ -577,7 +641,7 @@ monthly_sales_w_channel %>%
   border-bottom-width: 0;
 }
 
-#pzveloiefp .gt_subtitle {
+#obgqlcctgs .gt_subtitle {
   color: #333333;
   font-size: 85%;
   /* heading.subtitle.font.size */
@@ -591,7 +655,7 @@ monthly_sales_w_channel %>%
   border-top-width: 0;
 }
 
-#pzveloiefp .gt_bottom_border {
+#obgqlcctgs .gt_bottom_border {
   border-bottom-style: solid;
   /* heading.border.bottom.style */
   border-bottom-width: 2px;
@@ -600,7 +664,7 @@ monthly_sales_w_channel %>%
   /* heading.border.bottom.color */
 }
 
-#pzveloiefp .gt_column_spanner {
+#obgqlcctgs .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -608,7 +672,7 @@ monthly_sales_w_channel %>%
   padding-bottom: 4px;
 }
 
-#pzveloiefp .gt_col_headings {
+#obgqlcctgs .gt_col_headings {
   border-top-style: solid;
   /* column_labels.border.top.style */
   border-top-width: 2px;
@@ -635,7 +699,7 @@ monthly_sales_w_channel %>%
   /* column_labels.border.lr.color */
 }
 
-#pzveloiefp .gt_col_heading {
+#obgqlcctgs .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   /* column_labels.background.color */
@@ -651,11 +715,11 @@ monthly_sales_w_channel %>%
   overflow-x: hidden;
 }
 
-#pzveloiefp .gt_sep_right {
+#obgqlcctgs .gt_sep_right {
   border-right: 5px solid #FFFFFF;
 }
 
-#pzveloiefp .gt_group_heading {
+#obgqlcctgs .gt_group_heading {
   padding: 8px;
   /* row_group.padding */
   color: #333333;
@@ -694,7 +758,7 @@ monthly_sales_w_channel %>%
   vertical-align: middle;
 }
 
-#pzveloiefp .gt_empty_group_heading {
+#obgqlcctgs .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -718,20 +782,20 @@ monthly_sales_w_channel %>%
   vertical-align: middle;
 }
 
-#pzveloiefp .gt_striped {
+#obgqlcctgs .gt_striped {
   background-color: #8080800D;
   /* row.striping.background_color */
 }
 
-#pzveloiefp .gt_from_md > :first-child {
+#obgqlcctgs .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#pzveloiefp .gt_from_md > :last-child {
+#obgqlcctgs .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#pzveloiefp .gt_row {
+#obgqlcctgs .gt_row {
   padding-top: 8px;
   /* data_row.padding */
   padding-bottom: 8px;
@@ -761,7 +825,7 @@ monthly_sales_w_channel %>%
   overflow-x: hidden;
 }
 
-#pzveloiefp .gt_stub {
+#obgqlcctgs .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   /* stub.background.color */
@@ -778,7 +842,7 @@ monthly_sales_w_channel %>%
   padding-left: 12px;
 }
 
-#pzveloiefp .gt_summary_row {
+#obgqlcctgs .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   /* summary_row.background.color */
@@ -792,7 +856,7 @@ monthly_sales_w_channel %>%
   padding-right: 5px;
 }
 
-#pzveloiefp .gt_first_summary_row {
+#obgqlcctgs .gt_first_summary_row {
   padding-top: 8px;
   /* summary_row.padding */
   padding-bottom: 8px;
@@ -807,7 +871,7 @@ monthly_sales_w_channel %>%
   /* summary_row.border.color */
 }
 
-#pzveloiefp .gt_grand_summary_row {
+#obgqlcctgs .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   /* grand_summary_row.background.color */
@@ -821,7 +885,7 @@ monthly_sales_w_channel %>%
   padding-right: 5px;
 }
 
-#pzveloiefp .gt_first_grand_summary_row {
+#obgqlcctgs .gt_first_grand_summary_row {
   padding-top: 8px;
   /* grand_summary_row.padding */
   padding-bottom: 8px;
@@ -836,7 +900,7 @@ monthly_sales_w_channel %>%
   /* grand_summary_row.border.color */
 }
 
-#pzveloiefp .gt_table_body {
+#obgqlcctgs .gt_table_body {
   border-top-style: solid;
   /* table_body.border.top.style */
   border-top-width: 2px;
@@ -851,7 +915,7 @@ monthly_sales_w_channel %>%
   /* table_body.border.bottom.color */
 }
 
-#pzveloiefp .gt_footnotes {
+#obgqlcctgs .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   /* footnotes.background.color */
@@ -875,7 +939,7 @@ monthly_sales_w_channel %>%
   /* footnotes.border.lr.color */
 }
 
-#pzveloiefp .gt_footnote {
+#obgqlcctgs .gt_footnote {
   margin: 0px;
   font-size: 90%;
   /* footnotes.font.size */
@@ -883,7 +947,7 @@ monthly_sales_w_channel %>%
   /* footnotes.padding */
 }
 
-#pzveloiefp .gt_sourcenotes {
+#obgqlcctgs .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   /* source_notes.background.color */
@@ -907,48 +971,48 @@ monthly_sales_w_channel %>%
   /* source_notes.border.lr.style */
 }
 
-#pzveloiefp .gt_sourcenote {
+#obgqlcctgs .gt_sourcenote {
   font-size: 90%;
   /* source_notes.font.size */
   padding: 4px;
   /* source_notes.padding */
 }
 
-#pzveloiefp .gt_left {
+#obgqlcctgs .gt_left {
   text-align: left;
 }
 
-#pzveloiefp .gt_center {
+#obgqlcctgs .gt_center {
   text-align: center;
 }
 
-#pzveloiefp .gt_right {
+#obgqlcctgs .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#pzveloiefp .gt_font_normal {
+#obgqlcctgs .gt_font_normal {
   font-weight: normal;
 }
 
-#pzveloiefp .gt_font_bold {
+#obgqlcctgs .gt_font_bold {
   font-weight: bold;
 }
 
-#pzveloiefp .gt_font_italic {
+#obgqlcctgs .gt_font_italic {
   font-style: italic;
 }
 
-#pzveloiefp .gt_super {
+#obgqlcctgs .gt_super {
   font-size: 65%;
 }
 
-#pzveloiefp .gt_footnote_marks {
+#obgqlcctgs .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 </style>
-<div id="pzveloiefp" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+<div id="obgqlcctgs" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
   
   <thead class="gt_col_headings">
     <tr>
@@ -1073,14 +1137,22 @@ summary(monthly_sales_w_channel_lagged_by_month)
 ##  3rd Qu.:2013-09-24   3rd Qu.:  37256.86   3rd Qu.: 3032.733    
 ##  Max.   :2014-06-30   Max.   :4220928.00   Max.   :33245.690    
 ##                                                                 
-##    soh_count         pct_monthly_soh_dollar_change pct_monthly_soh_count_change
-##  Min.   :  1.00000   Min.   :     0.03876          Min.   :   1.123596         
-##  1st Qu.:  6.00000   1st Qu.:    71.57126          1st Qu.:  75.000000         
-##  Median : 10.00000   Median :   100.00000          Median : 100.000000         
-##  Mean   : 27.03179   Mean   :   598.40406          Mean   : 140.916436         
-##  3rd Qu.: 53.00000   3rd Qu.:   138.22965          3rd Qu.: 130.415373         
-##  Max.   :186.00000   Max.   :265839.48116          Max.   :8950.000000         
-##                      NA's   :2                     NA's   :2
+##    soh_count         pct_monthly_soh_dollar_change
+##  Min.   :  1.00000   Min.   :     0.03876         
+##  1st Qu.:  6.00000   1st Qu.:    71.57126         
+##  Median : 10.00000   Median :   100.00000         
+##  Mean   : 27.03179   Mean   :   598.40406         
+##  3rd Qu.: 53.00000   3rd Qu.:   138.22965         
+##  Max.   :186.00000   Max.   :265839.48116         
+##                      NA's   :2                    
+##  pct_monthly_soh_count_change
+##  Min.   :   1.123596         
+##  1st Qu.:  75.000000         
+##  Median : 100.000000         
+##  Mean   : 140.916436         
+##  3rd Qu.: 130.415373         
+##  Max.   :8950.000000         
+##  NA's   :2
 ```
 
 For **Sales Reps** it looks like the variation is in the number of orders, not just dollars, as shown in the following plot.
@@ -1578,6 +1650,9 @@ ggplot(
     title = glue(
       "Number of Sales per month \nOriginal and corrected amounts"
     ),
+    subtitle = glue("Subtitle"),
+    caption = glue("Datasets Include: \n
+                   monthly_sales_rep_adjusted, monthly_sales_rep_as_is"),
     x = paste0("Monthly - between ", min_soh_dt, " - ", max_soh_dt),
     y = "Number of Sales Recorded"
   )
