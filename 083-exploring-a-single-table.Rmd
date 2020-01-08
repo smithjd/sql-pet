@@ -99,7 +99,7 @@ annual_sales <- tbl(con, in_schema("sales", "salesorderheader")) %>%
   
 ```
 
-Note that all of this query is running on the server.  
+Note that all of this query is running on the server since the `collect()` statement is at the very end. 
 
 ```{r Show the column format of the resulting query}
 annual_sales %>% str()
@@ -112,8 +112,6 @@ min_soh_dt <- min(annual_sales$min_soh_orderdate)
 max_soh_dt <- max(annual_sales$max_soh_orderdate)
 ```
 
-You can't see it yet but both 2011 and 2014 are shorter time spans than the other two years, making comparison across the years more difficult. We might normalize the totals based on the number of months in each year, but we first graph total dollars and see that 2013 was the best year for annual sales dollars.
-
 ### Total sales by year
 
 ```{r Calculate time period and annual sales dollars - 2 , fig.height=4, fig.width=5}
@@ -122,17 +120,18 @@ ggplot(data = annual_sales, aes(x = year, y = total_soh_dollars)) +
   geom_text(aes(label = round(as.numeric(total_soh_dollars), digits = 0)), vjust = -0.25) +
   scale_y_continuous(labels = scales::dollar_format()) +
   labs(
-    title = "Adventure Works Sales Dollars by Year",
+    title = "AdventureWorks Sales Dollars by Year",
     x = glue("Years between ", {format(min_soh_dt, "%B %d, %Y")} , " and  ", 
             {format(max_soh_dt, "%B %d, %Y")}),
     y = "Sales $"
   )
 ```
-Both 2011 and 2014 are shorter time spans than the other two years, making comparison interpretation more difficult. 
+Both 2011 and 2014 turn out to be are shorter time spans than the other two years, making comparison interpretation difficult.  Still, it's clear that 2013 was the best year for annual sales dollars.
 
 ### Total order volume
 
-Look at number of orders per year:
+Comparing the number of orders per year has roughly the same overall pattern (2013 ranks highest, etc.) but the proportions between the years are quite different.
+
 ```{r average dollars per sale - v2, fig.height=4, fig.width=4}
 ggplot(data = annual_sales, aes(x = year, y = as.numeric(soh_count))) +
   geom_col() +
@@ -145,7 +144,7 @@ ggplot(data = annual_sales, aes(x = year, y = as.numeric(soh_count))) +
   )
 ```
 
-Here again we see that 2013 was the best year in terms of total number of orders. But look at 2014, it has had many more orders than 2012 but lags in terms of annual sales. Why might this be? Let's investigate whether the size of the average sale has changed.
+Although 2013 was the best year in terms of total number of orders, there were many more in 2014 compared with 2012.  That suggests looking at the average dollars per sale for each year.
 
 ### Average dollars per sale
 ```{r average dollars per sale - , fig.height=4, fig.width=4}
@@ -161,12 +160,9 @@ ggplot(data = annual_sales, aes(x = year, y = avg_total_soh_dollars)) +
   )
 ```
 
-That's a big drop between average sale of more than $7,000 to less than $3,000.  A remarkable change has taken place in this business.
+That's a big drop between average sale of more than $7,000 in the first two years down to the $3,000 range in the last two.  There has been a remarkable change in this business.  At the same time the total number of orders shot up from less than 4,000 a year to more than 14,000.  **Why are the number of orders increasing, but the average dollar amount of a sale is dropping?  **
 
-
-From 2012 to 2013 the average dollars per order dropped from more than $8,500 to nearly $3,000 while the total number of orders shot up from less than 4,000 to more than 14,000.  **Why are the number of orders increasing, but the average dollar amount of a sale is dropping?  **
-
-We need to drill down to look at monthly sales, adapting the first query to group by month and year.
+Perhaps monthly monthly sales has the anser.  We adapt the first query to group by month and year.
 
 ## Monthly Sales
 
@@ -186,17 +182,20 @@ monthly_sales <- tbl(con, in_schema("sales", "salesorderheader")) %>%
     avg_total_soh_dollars = round(mean(subtotal, na.rm = TRUE), 2),
     soh_count = n()
   ) %>% 
+  show_query() %>% 
   collect() 
 ```
 
-In many cases we don't really care whether our queries are executed by R or by the SQL server, but if we do care we have to look for cases where functions from R packages like `lubridate` and the equivalent `postgreSQL` functions are subtly different.  In the previous query the `postgreSQL` function produces a `POSIXct` column, not a `Date` so we need to tack on a mutate function once the data is on the R side.
+> Note that ` date_trunc('month', orderdate)` gets passed through exactly "as is."
+
+In many cases we don't really care whether our queries are executed by R or by the SQL server, but if we do care we need to substitute the `postgreSQL` equivalent for the R functions we might ordinarily use.  In those cases we have to check whether functions from R packages like `lubridate` and the equivalent `postgreSQL` functions are exactly alike.  Often they are subtly different: in the previous query the `postgreSQL` function produces a `POSIXct` column, not a `Date` so we need to tack on a mutate function once the data is on the R side as shown here:
 
 ```{r}
 monthly_sales <-  monthly_sales %>% 
   mutate(orderdate = as.Date(orderdate))
 ```
 
-Next let's chart the monthly sales data:
+Next let's plot the monthly sales data:
 
 ```{r Total monthly sales bar chart}
 
@@ -212,10 +211,11 @@ ggplot(data = monthly_sales, aes(x = orderdate, y = total_soh_dollars)) +
   )
 ```
 
+That graph doesn't show how the business might have changed, but it is remarkable how much variation there is from one month to another -- particularly in 2012 and 2014.
+
 ### Check lagged monthly data
 
-We can see our month-over-month sales contains lots of variation. We'll use `dplyr::lag` to help find the delta and later visualize just how much month-to-month difference there is.
-
+Because of the  month-over-month sales  variation. We'll use `dplyr::lag` to help find the delta and later visualize just how much month-to-month difference there is.
 
 ```{r}
 monthly_sales <- arrange(monthly_sales, orderdate)
@@ -231,7 +231,7 @@ median(monthly_sales_lagged$monthly_sales_change, na.rm = TRUE)
 (sum_lags <- summary(monthly_sales_lagged$monthly_sales_change))
 ```
 
-The trend is positive on average `r prettyNum(sum_lags[["Mean"]], big.mark = ",", format = "f", digits = 2)`. Let's calculate the inner quartile range to see how spread out our data is: `r prettyNum(sum_lags[["3rd Qu."]] - sum_lags[["1st Qu."]], big.mark = ",", format = "f", digits = 2)` This robust statistic shows us that we have a very large spread in our month-over-month. Next, let's visualize this variation. 
+The average month over month change in sales looks OK ($ `r prettyNum(sum_lags[["Mean"]], big.mark = ",", format = "f", digits = 2)`) although the Median is negative: $ `r prettyNum(sum_lags[["Mean"]], big.mark = ",", format = "f", digits = 2)`. There is a very wide spread in our month-over-month sales data between the lower and upper quartile. We can plot the variation as follows:
 
 
 ```{r, message=FALSE, error=FALSE}
@@ -252,6 +252,7 @@ ggplot(monthly_sales_lagged, aes(x = orderdate, y = monthly_sales_change)) +
   )
 ```
 
+It looks like the big change in the business occurred in the summer of 2013 when the number of orders jumped but the dollar volume just continued to bump along.
 
 ### Comparing dollars and orders to a base year
 
@@ -345,6 +346,8 @@ annual_sales_w_channel <- tbl(con, in_schema("sales", "salesorderheader")) %>%
   )
 ```
 
+Note that we are creating a factor and doing most of the calculations on the R side, not on the DBMS side.
+
 ### Annual Sales comparison
 
 Start by looking at total sales.
@@ -356,7 +359,7 @@ ggplot(data = annual_sales_w_channel, aes(x = orderdate, y = total_soh_dollars))
   scale_y_continuous(labels = scales::dollar_format()) +
   facet_wrap("onlineorderflag") +
   labs(
-    title = "Adventure Works Sales Dollars by Year",
+    title = "AdventureWorks Sales Dollars by Year",
     caption = glue( "Between ", {format(min_soh_dt, "%B %d, %Y")} , " - ", 
             {format(max_soh_dt, "%B %d, %Y")}),
     subtitle = "Comparing Online and Sales Rep sales channels",
@@ -365,17 +368,16 @@ ggplot(data = annual_sales_w_channel, aes(x = orderdate, y = total_soh_dollars))
   )
 ```
 
-Indeed the total sales are quite different as are the number of orders and the average order size!
+Based on annual sales, it looks like there are two businesses represented in the AdventureWorks database that have very different growth profiles. 
 
 ### Order volume comparison
 
-Look at number of orders per year:
 ```{r average dollars per sale - v4}
 ggplot(data = annual_sales_w_channel, aes(x = orderdate, y = as.numeric(soh_count))) +
   geom_col() +
   facet_wrap("onlineorderflag") +
   labs(
-    title = "Adventure Works Number of orders per Year",
+    title = "AdventureWorks Number of orders per Year",
     caption = glue( "Between ", {format(min_soh_dt, "%B %d, %Y")} , " - ", 
             {format(max_soh_dt, "%B %d, %Y")}),
     subtitle = "Comparing Online and Sales Rep sales channels",
@@ -384,7 +386,9 @@ ggplot(data = annual_sales_w_channel, aes(x = orderdate, y = as.numeric(soh_coun
   )
 ```
 
-### Comparing **Sales Rep** sales to **Online** Orders
+Comparing Online and Sales Rep sales, the difference in the number of orders is even more striking than the difference between annual sales.
+
+### Comparing average order size: **Sales Reps** to **Online** orders
 
 ```{r average dollars per sale 3}
 ggplot(data = annual_sales_w_channel, aes(x = orderdate, y = avg_total_soh_dollars)) +
@@ -392,7 +396,7 @@ ggplot(data = annual_sales_w_channel, aes(x = orderdate, y = avg_total_soh_dolla
   facet_wrap("onlineorderflag") +
   scale_y_continuous(labels = scales::dollar_format()) +
   labs(
-    title = "Average Dollars per Sale",
+    title = "AdventureWorks Average Dollars per Sale",
     x = glue( "Year - between ", {format(min_soh_dt, "%B %d, %Y")} , " - ", 
             {format(max_soh_dt, "%B %d, %Y")}),
     y = "Average sale amount"
@@ -402,7 +406,7 @@ ggplot(data = annual_sales_w_channel, aes(x = orderdate, y = avg_total_soh_dolla
 
 ## Impact of order type on monthly sales
 
-Digging into the difference between **Sales Rep** and **Online** sales. 
+To dig into the difference between **Sales Rep** and **Online** sales we can look at monthly data.
 
 ### Retrieve monthly sales with the `onlineorderflag` 
 
@@ -412,14 +416,12 @@ This query puts the `collect` statement earlier than the previous queries.
 monthly_sales_w_channel <- tbl(con, in_schema("sales", "salesorderheader")) %>%
   select(orderdate, subtotal, onlineorderflag) %>%
   collect() %>% # From here on we're in R
-
   mutate(
     orderdate = date(orderdate),
-    orderdate_rounded = round_date(orderdate, "month"),
+    orderdate = floor_date(orderdate, unit = "month"),
     onlineorderflag = if_else(onlineorderflag == FALSE,
-      "Sales Rep", "Online"
-    ),
-  ) %>% #
+      "Sales Rep", "Online")
+  ) %>% 
   group_by(orderdate, onlineorderflag) %>%
   summarize(
     min_soh_orderdate = min(orderdate, na.rm = TRUE),
@@ -446,13 +448,13 @@ monthly_sales_w_channel %>%
   gt()
 ```
 
-As this table shows, the **Sales Rep** dates don't match the **Online** dates.  they start the same, but have a different end.  The **Online** dates include 2 months that are not included in the Sales Rep sales (which are the main sales channel by dollar volume).
+As this table shows, the **Sales Rep** dates don't match the **Online** dates.  They start on the same date, but have a different end.  The **Online** dates include 2 months that are not included in the Sales Rep sales (which are the main sales channel by dollar volume).
 
 ### Monthly variation compared to a trend line
 
-Jumping to the trend line comparison, we see the source of the variation.
+Jumping to the trend line comparison, we see that the big the source of variation is on the Sales Rep side.
 
-```{r average dollars, warning=FALSE}
+```{r average dollars, warning=FALSE, message=FALSE}
 
 ggplot(
   data = monthly_sales_w_channel,
@@ -483,7 +485,6 @@ The **monthly** gyrations are happening on the Sales Rep side, amounting to diff
 First consider month-to-month change.
 ```{r , warning=FALSE}
 monthly_sales_w_channel_lagged_by_month <- monthly_sales_w_channel %>%
-  ungroup() %>% 
   group_by(onlineorderflag) %>%
   mutate(
     pct_monthly_soh_dollar_change =
@@ -508,8 +509,6 @@ ggplot(monthly_sales_w_channel_lagged_by_month, aes(x = orderdate, y = pct_month
            {format(max_soh_dt, "%B %d, %Y")})),
     y = "% Dollar Change"
   )
-
-summary(monthly_sales_w_channel_lagged_by_month)
 ```
 
 For **Sales Reps** it looks like the variation is in the number of orders, not just dollars, as shown in the following plot.
@@ -533,7 +532,7 @@ ggplot(monthly_sales_w_channel_lagged_by_month, aes(x = orderdate, y = pct_month
 
 Let's examine whether there is a large year-to-year change.
 
-```{r , warning=FALSE}
+```{r , warning=FALSE, message=FALSE}
 monthly_sales_w_channel_lagged_by_year <- monthly_sales_w_channel %>%
   group_by(onlineorderflag) %>%
   mutate(
@@ -551,7 +550,7 @@ ggplot(
     date_breaks = "year", date_labels = "%Y",
     date_minor_breaks = "3 months"
   ) +
-  scale_y_continuous(limits = c(-10, 300)) +
+  # scale_y_continuous(limits = c(-10, 300)) +
   facet_grid("onlineorderflag") +
   geom_line() +
   theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
@@ -575,7 +574,7 @@ We suspect that the business has changed a lot with the advent of **Online** ord
 
 ## Detect and diagnose the day of the month problem
 
-Browsing at the raw data leads us to suspect that there is an odd pattern on the Sales Rep side: the sales are almost always recorded on the last day of the month.
+We have noticed many indications that Sales Rep sales are different from the Online sales: the sales are almost always recorded on the last day of the month.
 
 ### Sales Rep Orderdate Distribution
 
