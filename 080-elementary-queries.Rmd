@@ -157,8 +157,7 @@ tbl(con, "salesorderheader") %>%
   dplyr::rename(order_date = orderdate, sub_total_amount = subtotal,
               tax_amount = taxamt, freight_amount = freight, total_due_amount = totaldue) %>% 
   dplyr::select(order_date, sub_total_amount, tax_amount, freight_amount, total_due_amount ) %>%
-  # head()
-show_query()
+  show_query()
 ```
 That's equivalent to the following SQL code:
 ```{r}
@@ -169,13 +168,17 @@ DBI::dbGetQuery(
     "taxamt" AS "tax_amount", 
     "freight" AS "freight_amount", 
     "totaldue" AS "total_due_amount"
-    FROM "salesorderheader"' ) %>% head()
+    FROM "salesorderheader"' ) %>% 
+  head()
 ```
-The one difference is that the `SQL` code returns a regular data frame and the `dplyr` code returns a `tibble`.  Notice that the seconds are grayed out in the `tibble` display.
+The one difference is that the `SQL` code returns a regular data frame and the `dplyr` code returns a `tibble`.  Notice that the seconds are grayed out in the `tibble` display.  
 
 ## Translating `dplyr` code to `SQL` queries
 
-Where did the translations we've shown above come from?  The `show_query` function shows how `dplyr` is translating your query to the dialect of the target DBMS:
+Where did the translations we've shown above come from?  The `show_query` function shows how `dplyr` is translating your query to the dialect of the target DBMS.  
+
+> The `show_query()` function shows you what dplyr is sending to the DBMS.  It might be handy for inspecting what dplyr is doing or for showing your code to someone who is more SQL- than R-literate.  In general we have used the function extensively in writing this book but in the final product we will not use it unless there is something in the SQL or the translation process that needs to be explained.
+
 ```{r}
 salesorderheader_table %>%
   dplyr::tally() %>%
