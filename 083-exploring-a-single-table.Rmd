@@ -45,7 +45,7 @@ Connect to `adventureworks`.  In an interactive session we prefer to use `connec
 
 
 ```{r, start adventureworks and connect}
-#sp_docker_start("adventureworks")
+sp_docker_start("adventureworks")
 Sys.sleep(sleep_default)
 # con <- dbConnect(
 con <- connection_open(
@@ -948,5 +948,5 @@ Sales still seem to gyrate!
 dbDisconnect(con)
 # use connection_close(con) when running interactively
 
-#sp_docker_stop("adventureworks")
+sp_docker_stop("adventureworks")
 ```
