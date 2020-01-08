@@ -2,7 +2,7 @@
 title: "Exploring Enterprise Databases with R: A Tidyverse Approach"
 author: John David Smith, Sophie Yang, M. Edward (Ed) 
   Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, and Ian Frantz
-date: "2019-12-20"
+date: "2020-01-07"
 description: An introduction to Docker and PostgreSQL for R users to simulate use cases behind corporate walls.
 bibliography: [book.bib, packages.bib]
 documentclass: book
@@ -15,7 +15,7 @@ site: bookdown::bookdown_site
 > This chapter introduces:
 > 
 > * The motivation for this book and the strategies we have adopted
-> * Our approach to exploring issues "beyind the enterprise firewall" using Docker to demonstrate access to a service like PostgreSQL from R
+> * Our approach to exploring issues "behind the enterprise firewall" using Docker to demonstrate access to a service like PostgreSQL from R
 > * Our team and how this project came about
 
 ## Using R to query a DBMS in your organization
@@ -72,6 +72,8 @@ The following packages are used in this book:
 * skimr
 * sqlpetr (installs with: `remotes::install_github("smithjd/sqlpetr", force = TRUE, quiet = TRUE, build = TRUE, build_opts = "")`)
 * tidyverse
+
+Note that when you install `sqlpetr`, it will install all the other packages you need as dependencies.
 
 
 ## Who are we?

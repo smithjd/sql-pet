@@ -6,11 +6,11 @@
 >   * Show the multiple data anomalies found in a single AdventureWorks table (*salesorderheader*)
 >   * The interplay between "data questions" and "business questions"
 
-The previous chapter has demonstrated some of the automated techniques for showing what's in a table using some standard R functions and packages.  Now we demonstrate a step-by-step process of making sense of what's in one table with more of a business perspective.  We illustrate the kind of detective work that's often involved as we investigate the *organizational meaning* of the data in a table.  We'll investigate the `salesorderheader` table in the `sales` schema in this example to understand the sales profile of a business.  We show that there are quite a few interpretation issues even when we are examining just 3 out of the 25 columns in one table.
+The previous chapter has demonstrated some of the automated techniques for showing what's in a table using some standard R functions and packages.  Now we demonstrate a step-by-step process of making sense of what's in one table with more of a business perspective.  We illustrate the kind of detective work that's often involved as we investigate the *organizational meaning* of the data in a table.  We'll investigate the `salesorderheader` table in the `sales` schema in this example to understand the sales profile of the "AdventureWorks" business.  We show that there are quite a few interpretation issues even when we are examining just 3 out of the 25 columns in one table.
 
 For this kind of detective work we are seeking to understand the following elements separately and as they interact with each other (and they all do):
 
-  * What data is stored in the database and 
+  * What data is stored in the database
   * How information is represented
   * How the data is entered at a day-to-day level to represent business activities
   * How the business itself is changing over time
@@ -46,6 +46,7 @@ Connect to `adventureworks`.  In an interactive session we prefer to use `connec
 sp_docker_start("adventureworks")
 Sys.sleep(sleep_default)
 con <- dbConnect(
+# con <- connection_open(
   RPostgres::Postgres(),
   bigint = "integer",  
   host = "localhost",
@@ -55,14 +56,14 @@ con <- dbConnect(
   dbname = "adventureworks")
 ```
 
-Some queries generate big integers, so we need to include `RPostgres::Postgres()` and `bigint = "integer"` in the connections statement.
+Some queries generate big integers, so we need to include `RPostgres::Postgres()` and `bigint = "integer"` in the connections statement because some functions in the tidyverse object to the **bigint** datatype.
 
 
 ## A word on naming 
 
-> You will find that many tables will have columns with the same name in an enterprise database.  For example, in the adventureworks database, almost all tables have columns named `rowguid` and `modifieddate` and there are many other examples of names that are reused throughout the database.  The meaning of a column depends on the table that contains it, so as you pull a column out of a table, naming its provenance is important.
+> You will find that many tables will have columns with the same name in an enterprise database.  For example, in the *AdventureWorks* database, almost all tables have columns named `rowguid` and `modifieddate` and there are many other examples of names that are reused throughout the database.  Duplicate columns are best renamed or deliberately dropped.  The meaning of a column depends on the table that contains it, so as you pull a column out of a table, when renaming it the collumns provenance should be reflected in the new name.
 >
-> Naming columns carefully (whether retrieved from the database or calculated)  will pay off, especially as our queries become more complex. Using `soh` as an abbreviation of *sales order header* to tag statistics that are derived from the `salesorderheader` table, as we do in this book, is one example of an intentional naming strategy: it reminds us of the original source of a column.  You, future you, and your collaborators will appreciate the effort although different naming conventions are completely valid.  And a naming convention when rigidly applied can yield some long and ugly names.
+> Naming columns carefully (whether retrieved from the database or calculated)  will pay off, especially as our queries become more complex. Using `soh` as an abbreviation of *sales order header* to tag columns or statistics that are derived from the `salesorderheader` table, as we do in this book, is one example of an intentional naming strategy: it reminds us of the original source of the data.  You, future you, and your collaborators will appreciate the effort no matter what naming convention you adopt.  And a naming convention when rigidly applied can yield some long and ugly names.
 >
 > In the following example `soh` appears in different positions in the column name but it is easy to guess at a glance that the data comes from the `salesorderheader` table.
 >
@@ -108,7 +109,7 @@ annual_sales <- tbl(con, in_schema("sales", "salesorderheader")) %>%
 ## ORDER BY "year") "dbplyr_003"
 ```
 
-Note that all of this query is running on the server.  The `show_query` function shows the SQL code postgreSQL is runs to produce its output.
+Note that all of this query is running on the server.  The `show_query` function shows the SQL code postgreSQL runs to produce its output.
 
 
 ```r
@@ -201,7 +202,7 @@ We need to drill down to look at monthly sales, adapting the first query to grou
 
 Our next iteration drills down from annual sales dollars to monthly sales dollars. For that we download the orderdate as a date, rather than a character variable for the year.  R handles the conversion from the PostgreSQL date-time to an R date-time.  We then convert it to a simple date with a `lubridate` function.
 
-The following query uses the [postgreSQL function `date_trunc`](https://www.postgresqltutorial.com/postgresql-date_trunc/), which is equivalent to `lubridate`'s `round_date` function in R.
+The following query uses the [postgreSQL function `date_trunc`](https://www.postgresqltutorial.com/postgresql-date_trunc/), which is equivalent to `lubridate`'s `round_date` function in R.  If you want to push as much of the processing as possible onto the database server and thus possibly deal with smaller datasets in R, interleaving [postgreSQL functions](https://www.postgresql.org/docs/current/functions.html) into your dplyr code will help.
 
 
 ```r
@@ -219,7 +220,7 @@ monthly_sales <- tbl(con, in_schema("sales", "salesorderheader")) %>%
   collect() 
 ```
 
-The `lubridate` and `postgreSQL` functions are *almost* equivalent -- except that the `postgreSQL` function produces a `POSIXct` column, not a `Date`. 
+In many cases we don't really care whether our queries are executed by R or by the SQL server, but if we do care we have to look for cases where functions from R packages like `lubridate` and the equivalent `postgreSQL` functions are subtly different.  In the previous query the `postgreSQL` function produces a `POSIXct` column, not a `Date` so we need to tack on a mutate function once the data is on the R side.
 
 
 ```r
@@ -257,17 +258,25 @@ monthly_sales_lagged <- monthly_sales %>%
 
 
 ```r
+median(monthly_sales_lagged$monthly_sales_change, na.rm = TRUE)
+```
+
+```
+## [1] -243090.76
+```
+
+```r
 (sum_lags <- summary(monthly_sales_lagged$monthly_sales_change))
 ```
 
 ```
-##         Min.      1st Qu.       Median         Mean      3rd Qu.         Max. 
-## -6758620.270 -1157751.300    11825.200    -8023.669  1383744.320  4907764.150 
-##         NA's 
-##            1
+##        Min.     1st Qu.      Median        Mean     3rd Qu.        Max. 
+## -4628835.15 -1007058.90  -243090.76    20186.95  1614895.05  5742104.18 
+##        NA's 
+##           1
 ```
 
-The trend is positive on average -8,024 but half of the months have swings greater than 2,541,496!
+The trend is positive on average 20,187 but half of the months have swings greater than 2,621,954!
 
 
 
@@ -276,7 +285,8 @@ ggplot(monthly_sales_lagged, aes(x = orderdate, y = monthly_sales_change)) +
   scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
   geom_line() +
   geom_point() +
-  scale_y_continuous(limits = c(-1700000,4500000), labels = scales::dollar_format()) +
+  scale_y_continuous( labels = scales::dollar_format()) +
+  # scale_y_continuous(limits = c(-1700000,4500000), labels = scales::dollar_format()) +
   theme(plot.title = element_text(hjust = .5)) + 
   labs(
     title = glue(
@@ -290,7 +300,7 @@ ggplot(monthly_sales_lagged, aes(x = orderdate, y = monthly_sales_change)) +
 ```
 
 ```
-## Warning: Removed 9 rows containing missing values (geom_point).
+## Warning: Removed 1 rows containing missing values (geom_point).
 ```
 
 <img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-4-1.png" width="672" />
@@ -507,7 +517,8 @@ monthly_sales_w_channel %>%
     unique_dates = n(),
     start_date = min(min_soh_orderdate),
     end_date = max(max_soh_orderdate),
-    total_sales = sum(total_soh_dollars)
+    total_sales = round(sum(total_soh_dollars)), 
+    days_span = end_date - start_date
   ) %>%
   gt()
 ```
@@ -957,6 +968,7 @@ monthly_sales_w_channel %>%
       <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">start_date</th>
       <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">end_date</th>
       <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">total_sales</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">days_span</th>
     </tr>
   </thead>
   <tbody class="gt_table_body">
@@ -965,21 +977,23 @@ monthly_sales_w_channel %>%
       <td class="gt_row gt_center">1124</td>
       <td class="gt_row gt_left">2011-05-31</td>
       <td class="gt_row gt_left">2014-06-30</td>
-      <td class="gt_row gt_right">29358677.46</td>
+      <td class="gt_row gt_right">29358677</td>
+      <td class="gt_row gt_center">1126 days</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_striped">Sales Rep</td>
       <td class="gt_row gt_center gt_striped">40</td>
       <td class="gt_row gt_left gt_striped">2011-05-31</td>
       <td class="gt_row gt_left gt_striped">2014-05-01</td>
-      <td class="gt_row gt_right gt_striped">80487704.18</td>
+      <td class="gt_row gt_right gt_striped">80487704</td>
+      <td class="gt_row gt_center gt_striped">1066 days</td>
     </tr>
   </tbody>
   
   
 </table></div><!--/html_preserve-->
 
-As we will see later on, the **Sales Rep** data doesn't match the **Online** data.  The **Online** data includes 2 months that are not included in the main sales channel.
+As this table shows, the **Sales Rep** dates don't match the **Online** dates.  they start the same, but have a different end.  The **Online** dates include 2 months that are not included in the Sales Rep sales (which are the main sales channel by dollar volume).
 
 ### Monthly variation compared to a trend line
 
@@ -1015,7 +1029,7 @@ ggplot(
 
 <img src="083-exploring-a-single-table_files/figure-html/average dollars-1.png" width="672" />
 
-The **monthly** gyrations are happening on the Sales Rep side, amounting to differences in a million dollars compared to small variations of around $25,000.
+The **monthly** gyrations are happening on the Sales Rep side, amounting to differences in a million dollars compared to small monthly variations of around $25,000 for the Online orders.
 
 ### Compare monthly lagged data by order type
 
@@ -1152,113 +1166,198 @@ We suspect that the business has changed a lot with the advent of **Online** ord
 
 ## Detect and diagnose the day of the month problem
 
-Looking at the raw data leads us to suspect that there is a problem with the dates on which Sales Rep orders are entered.
+Browsing at the raw data leads us to suspect that there is an odd pattern on the Sales Rep side: the sales are almost always recorded on the last day of the month.
 
 ### Sales Rep Orderdate Distribution
 
-Look at the dates when sales are entered for sales by **Sales Reps**.  The following query merits some discussion.
+Look at the dates when sales are entered for sales by **Sales Reps**.  The following query / plot combination shows this pattern and the exception for transactions entered on the first day of the month.
 
 
 ```r
-sales_rep_day_of_month_sales <- tbl(con, in_schema("sales", "salesorderheader")) %>%
+  tbl(con, in_schema("sales", "salesorderheader")) %>%
   filter(onlineorderflag == FALSE) %>% # Drop online orders
-  select(orderdate, subtotal) %>%
-  mutate(
-    year = year(orderdate),
-    month = month(orderdate),
-    day = day(orderdate)
-  ) %>%
-  count(year, month, day, name = "orders") %>%
-  group_by(year, month) %>%
-  summarize(
-    days_with_orders = n(),
-    total_orders = sum(orders, na.rm = TRUE),
-    min_day = min(day, na.rm = FALSE)
-  ) %>%
-  show_query() %>%
-  collect() %>%
-  mutate(
-    days_with_orders = as.numeric(days_with_orders),
-    order_month = as.Date(paste0(year, "-", month, "-01")),
-    min_day_factor = if_else(min_day < 2, "Month start", "Month end")
-  ) %>%
-  complete(order_month = seq(min(order_month), max(order_month), by = "month")) %>%
-  mutate(days_with_orders = replace_na(days_with_orders, 0)) %>%
-  ungroup()
-```
-
-```
-## <SQL>
-```
-
-```
-## Warning: Missing values are always removed in SQL.
-## Use `MIN(x, na.rm = TRUE)` to silence this warning
-## This warning is displayed only once per session.
-```
-
-```
-## SELECT "year", "month", COUNT(*) AS "days_with_orders", SUM("orders") AS "total_orders", MIN("day") AS "min_day"
-## FROM (SELECT "year", "month", "day", COUNT(*) AS "orders"
-## FROM (SELECT "orderdate", "subtotal", EXTRACT(year FROM "orderdate") AS "year", EXTRACT(MONTH FROM "orderdate") AS "month", EXTRACT(day FROM "orderdate") AS "day"
-## FROM (SELECT *
-## FROM sales.salesorderheader
-## WHERE ("onlineorderflag" = FALSE)) "dbplyr_008") "dbplyr_009"
-## GROUP BY "year", "month", "day") "dbplyr_010"
-## GROUP BY "year", "month"
-```
-
-a different strategy for finding the day-of-month problem.
-
-
-```r
-sales_rep_day_of_month_sales <- tbl(con, in_schema("sales", "salesorderheader")) %>%
-  filter(onlineorderflag == FALSE) %>% # Drop online orders
-  select(orderdate, subtotal) %>%
-  mutate(
-    year = year(orderdate),
-    month = month(orderdate),
-    day = day(orderdate)
-  ) %>%
-  # count(year, month, day, name = "orders") %>%
-  count(year, month, day) %>% 
-  arrange(year, month) %>% 
-  # filter(year == 2011) %>% 
+  mutate(orderday = day(orderdate)) %>%
+  count(orderday, name = "Orders") %>% 
   collect() %>% 
-  ungroup() %>% 
-  mutate(n = as.numeric(n))
-
-str(sales_rep_day_of_month_sales)
+  full_join(tibble(orderday = seq(1:31))) %>% 
+  mutate(orderday = as.factor(orderday)) %>% 
+  ggplot(aes(orderday, Orders)) +
+  geom_col() +
+  coord_flip() +
+  labs(title = "The first day of the month looks odd",
+       x = "Day Number")
 ```
 
 ```
-## Classes 'tbl_df', 'tbl' and 'data.frame':	40 obs. of  4 variables:
-##  $ year : num  2011 2011 2011 2011 2011 ...
-##  $ month: num  5 7 8 8 10 10 12 1 1 2 ...
-##  $ day  : num  31 1 31 1 31 1 1 29 1 29 ...
-##  $ n    : num  38 75 40 60 63 90 40 64 79 37 ...
+## Joining, by = "orderday"
 ```
+
+```
+## Warning: Removed 26 rows containing missing values (position_stack).
+```
+
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-13-1.png" width="672" />
+
+We can check on which months have orders entered on the first of the month.
 
 ```r
-sales_rep_day_of_month_sales %>% 
-  pivot_wider(names_from = day, values_from = n, names_prefix = "day_" ) %>% 
+sales_rep_day_of_month_sales <- tbl(con, in_schema("sales", "salesorderheader")) %>%
+  filter(onlineorderflag == FALSE) %>% # Drop online orders
+  select(orderdate, subtotal) %>%
+  mutate(
+    year = year(orderdate),
+    month = month(orderdate),
+    day = day(orderdate)
+  ) %>%
+  count(year, month, day) %>% 
+  collect() %>%
+  pivot_wider(names_from = day, values_from = n, names_prefix = "day_", values_fill = 0 ) %>% 
   as.data.frame() %>% 
   select(year, month, day_1, day_28, day_29, day_30, day_31) %>% 
-  filter(!is.na(day_1))
+  # filter(!is.na(day_1))
+  filter(day_1 > 0)
+
+sales_rep_day_of_month_sales
 ```
 
 ```
 ##   year month day_1 day_28 day_29 day_30 day_31
-## 1 2011     7    75     NA     NA     NA     NA
-## 2 2011     8    60     NA     NA     NA     40
-## 3 2011    10    90     NA     NA     NA     63
-## 4 2011    12    40     NA     NA     NA     NA
-## 5 2012     1    79     NA     64     NA     NA
-## 6 2014     3    91     NA     NA      2    178
-## 7 2014     5   179     NA     NA     NA     NA
+## 1 2012     1    79      0     64      0      0
+## 2 2014     3    91      0      0      2    178
+## 3 2011     7    75      0      0      0      0
+## 4 2011     8    60      0      0      0     40
+## 5 2011    10    90      0      0      0     63
+## 6 2014     5   179      0      0      0      0
+## 7 2011    12    40      0      0      0      0
 ```
 
-values_from  integer64 makes pivot_wider barf.
+There are two months with multiple sales rep order days for 2011, (11/08 and 11/10), one for 2012, (1201), and two in 2014, (14/01 and 14/03).  The 14/03 is the only three day sales rep order month.
+
+Are there months where there were no sales recorded for the sales reps?
+
+There are two approaches.  The first is to generate a list of months between the beginning and end of history and compare that to the Sales Rep records
+
+```r
+monthly_sales_rep_sales <- monthly_sales_w_channel %>% 
+  filter(onlineorderflag == "Sales Rep") %>% 
+  mutate(orderdate = as.Date(floor_date(orderdate, "month"))) %>% 
+  count(orderdate)
+
+str(monthly_sales_rep_sales)
+```
+
+```
+## Classes 'tbl_df', 'tbl' and 'data.frame':	34 obs. of  2 variables:
+##  $ orderdate: Date, format: "2011-05-01" "2011-07-01" ...
+##  $ n        : int  1 1 2 2 1 2 1 1 1 1 ...
+```
+
+```r
+date_list <- tibble(month_date = seq.Date(floor_date(as.Date(min_soh_dt), "month"), 
+         floor_date(as.Date(max_soh_dt), "month"), 
+         by = "month"),
+         date_exists = FALSE)
+
+date_list %>% 
+  anti_join(monthly_sales_rep_sales, 
+            by = c("month_date" = "orderdate") )
+```
+
+```
+## # A tibble: 4 x 2
+##   month_date date_exists
+##   <date>     <lgl>      
+## 1 2011-06-01 FALSE      
+## 2 2011-09-01 FALSE      
+## 3 2011-11-01 FALSE      
+## 4 2014-06-01 FALSE
+```
+
+
+  * June, September, and November are missing for 2011. 
+  * June for 2014
+
+The second approach is to use the dates found in the database for online orders.  Defining "complete" may not always be as simple as generating a complete list of months.
+
+```r
+sales_order_header_online <- tbl(con, in_schema("sales", "salesorderheader")) %>% 
+  filter(onlineorderflag == TRUE) %>% 
+  mutate(
+    orderdate = date_trunc('month', orderdate)
+  ) %>%
+  count(orderdate, name = "online_count") 
+
+sales_order_header_sales_rep <- tbl(con, in_schema("sales", "salesorderheader")) %>% 
+  filter(onlineorderflag == FALSE) %>% 
+  mutate(
+    orderdate = date_trunc('month', orderdate)
+  ) %>%
+  count(orderdate, name = "sales_rep_count") 
+
+missing_dates <- sales_order_header_sales_rep %>% 
+  full_join(sales_order_header_online) %>% 
+  show_query() %>% 
+  collect()
+```
+
+```
+## Joining, by = "orderdate"
+```
+
+```
+## <SQL>
+## SELECT COALESCE("LHS"."orderdate", "RHS"."orderdate") AS "orderdate", "LHS"."sales_rep_count" AS "sales_rep_count", "RHS"."online_count" AS "online_count"
+## FROM (SELECT "orderdate", COUNT(*) AS "sales_rep_count"
+## FROM (SELECT "salesorderid", "revisionnumber", date_trunc('month', "orderdate") AS "orderdate", "duedate", "shipdate", "status", "onlineorderflag", "purchaseordernumber", "accountnumber", "customerid", "salespersonid", "territoryid", "billtoaddressid", "shiptoaddressid", "shipmethodid", "creditcardid", "creditcardapprovalcode", "currencyrateid", "subtotal", "taxamt", "freight", "totaldue", "comment", "rowguid", "modifieddate"
+## FROM (SELECT *
+## FROM sales.salesorderheader
+## WHERE ("onlineorderflag" = FALSE)) "dbplyr_012") "dbplyr_013"
+## GROUP BY "orderdate") "LHS"
+## FULL JOIN (SELECT "orderdate", COUNT(*) AS "online_count"
+## FROM (SELECT "salesorderid", "revisionnumber", date_trunc('month', "orderdate") AS "orderdate", "duedate", "shipdate", "status", "onlineorderflag", "purchaseordernumber", "accountnumber", "customerid", "salespersonid", "territoryid", "billtoaddressid", "shiptoaddressid", "shipmethodid", "creditcardid", "creditcardapprovalcode", "currencyrateid", "subtotal", "taxamt", "freight", "totaldue", "comment", "rowguid", "modifieddate"
+## FROM (SELECT *
+## FROM sales.salesorderheader
+## WHERE ("onlineorderflag" = TRUE)) "dbplyr_014") "dbplyr_015"
+## GROUP BY "orderdate") "RHS"
+## ON ("LHS"."orderdate" = "RHS"."orderdate")
+```
+
+```r
+missing_dates <- sales_order_header_online %>% 
+  anti_join(sales_order_header_sales_rep) %>% 
+  arrange(orderdate) %>% 
+  collect()
+```
+
+```
+## Joining, by = "orderdate"
+```
+
+```r
+missing_dates
+```
+
+```
+## # A tibble: 4 x 2
+##   orderdate           online_count
+##   <dttm>                     <int>
+## 1 2011-06-01 00:00:00          141
+## 2 2011-09-01 00:00:00          157
+## 3 2011-11-01 00:00:00          230
+## 4 2014-06-01 00:00:00          939
+```
+
+```r
+str(missing_dates)
+```
+
+```
+## Classes 'tbl_df', 'tbl' and 'data.frame':	4 obs. of  2 variables:
+##  $ orderdate   : POSIXct, format: "2011-06-01" "2011-09-01" ...
+##  $ online_count: int  141 157 230 939
+```
+
+And in this case they agree!
 
 discuss February issues.  and stuff. 
 
@@ -1270,16 +1369,9 @@ difference between detective work with a graph and just print it out.  "now I se
 
 We have xx months when we add the month before and the month after the **suspicious months**.  We don't know whether the problem postings have been carried forward or backward.  We check for and eliminate duplicates as well.
 
-
-That is unexpected.  A couple of  things immediately jump out from the first page of data:
-
-*  July, September, and November are missing for 2011. 
 *  Most of the **Sales Reps**' orders are entered on a single day of the month, unique days = 1. It is possible that these are monthly recurring orders that get released on a given day of the month.  If that is the case, what are the **Sales Reps** doing the rest of the month?
 *  ** ?? The lines with multiple days, unique_days > 1, have a noticeable higher number of orders, so_cnt, and associated so dollars.?? **
 
-The plot clearly shows that two months with multiple sales rep order days for 2011, (11/08 and 11/10), one for 2012, (1201), and two in 2014, (14/01 and 14/03).  The 14/03 is the only three day sales rep order month.
-
-In the next code block, we flesh out the dates associated with the **Sales Reps**' orders.  Since 4 out of the 5 months with multiple order days only have two dates, the code block captures them with a min/max orderdate.
 
 ## Correcting the order date for **Sales Reps**
 
@@ -1583,7 +1675,7 @@ ggplot(
   )
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-23-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-25-1.png" width="672" />
 
 
 ```r
@@ -1617,7 +1709,7 @@ ggplot(
   ) 
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-25-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-27-1.png" width="672" />
 
 additive graph showing how correction adds in some months and subtracts in others.
 
@@ -1637,7 +1729,7 @@ ggplot(data = monthly_sales_rep_adjusted, aes(x = year_month, y = total_soh_doll
   )
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-26-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-28-1.png" width="672" />
 
 Sales still seem to gyrate!
 
@@ -1646,7 +1738,14 @@ Sales still seem to gyrate!
 
 ```r
 dbDisconnect(con)
-# use connection_close(con) when running interactively
+# when running interactively use:
+connection_close(con) 
+```
 
+```
+## Warning in connection_release(conn@ptr): Already disconnected
+```
+
+```r
 #sp_docker_stop("adventureworks")
 ```

@@ -344,6 +344,10 @@ LANGUAGE PLPGSQL;
 )
 ```
 
+```
+## [1] 0
+```
+
 Trying to create a function that returns fiscal year on the server side.
 
 
@@ -385,12 +389,12 @@ str(sales_data_fiscal_year)
 
 ```
 ## Classes 'tbl_df', 'tbl' and 'data.frame':	468 obs. of  6 variables:
-##  $ businessentityid  : int  276 280 277 287 286 274 290 275 276 275 ...
-##  $ orderdate         : Date, format: "2013-12-31" "2011-07-01" ...
-##  $ sales_total       : num  497156 153059 333179 42042 185822 ...
-##  $ day               : num  31 1 30 31 30 1 31 30 31 29 ...
-##  $ adjusted_orderdate: Date, format: "2013-12-31" "2011-06-30" ...
-##  $ year_month        : Date, format: "2013-12-01" "2011-06-01" ...
+##  $ businessentityid  : int  283 288 282 278 276 283 279 279 280 279 ...
+##  $ orderdate         : Date, format: "2012-03-30" "2014-02-28" ...
+##  $ sales_total       : num  115902 765 110014 196793 497156 ...
+##  $ day               : num  30 28 1 1 31 31 30 30 30 30 ...
+##  $ adjusted_orderdate: Date, format: "2012-03-30" "2014-02-28" ...
+##  $ year_month        : Date, format: "2012-03-01" "2014-02-01" ...
 ```
 
 ```r
@@ -423,7 +427,8 @@ salesperson_sales_by_fiscal_years_dplyr %>%
   summarize(sales_total = sum(sales_total)) %>% 
   # select(full_name, territory_name, calendar_year, sales_total) %>% 
   ungroup() %>% 
-  pivot_wider(names_from = calendar_year, values_from = sales_total, values_fill = 0) %>% 
+  pivot_wider(names_from = calendar_year, values_from = sales_total,
+              values_fill = list(sales_total = 0)) %>%
   arrange(territory_name, full_name)
 ```
 
@@ -452,7 +457,8 @@ salesperson_sales_by_fiscal_years_dplyr %>%
 
 v_salesperson_sales_by_fiscal_years_data %>% # names()
   select(-jobtitle, -salespersonid) %>%
-  pivot_wider(names_from = fiscalyear, values_from = salestotal, values_fill = 0) %>% 
+  pivot_wider(names_from = fiscalyear, values_from = salestotal,
+              values_fill = list(salestotal = 0)) %>%
   arrange(salesterritory, fullname)
 ```
 
@@ -499,13 +505,43 @@ names(v_salesperson_sales_by_fiscal_years_data) %>% sort()
 ## [5] "salesterritory" "salestotal"
 ```
 
+the following doesn't quite work yet.  The idea is to do as much work on the server as possible to correct the data entry date.  
 
 
 ```r
 sales_order_header_fy <- tbl(con, in_schema("sales", "salesorderheader")) %>% 
-  mutate(sales_order_year = year(orderdate),
-         sales_order_month = month(orderdate)) %>% 
- select(sales_order_year, sales_order_month, salespersonid, subtotal, orderdate)
+  mutate(orderdate = as.Date(orderdate),
+         sales_order_year = year(orderdate),
+         sales_order_month = month(orderdate),
+         sales_order_day = as.numeric(day(orderdate))
+         ) %>% 
+ select(sales_order_year, sales_order_month, sales_order_day, 
+        salespersonid, subtotal, orderdate) %>% 
+  group_by(sales_order_year, sales_order_month, sales_order_day, 
+        salespersonid) %>% 
+  summarize(subtotal = sum(subtotal, na.rm = TRUE)) %>% 
+  collect() %>% 
+  # show_query %>% 
+  mutate(
+    sales_order_day_adj = ifelse(
+      sales_order_day == 1, sales_order_day - 1, sales_order_day
+    )
+  ) %>% ungroup()
+
+# , 
+
+# View(sales_order_header_fy)
+str(sales_order_header_fy)
+```
+
+```
+## Classes 'tbl_df', 'tbl' and 'data.frame':	1592 obs. of  6 variables:
+##  $ sales_order_year   : num  2014 2013 2013 2014 2014 ...
+##  $ sales_order_month  : num  6 11 6 2 2 7 5 3 1 2 ...
+##  $ sales_order_day    : num  8 17 25 25 14 20 13 30 4 28 ...
+##  $ salespersonid      : int  NA NA NA NA NA NA NA 281 NA 283 ...
+##  $ subtotal           : num  1046 63751 20063 45560 46304 ...
+##  $ sales_order_day_adj: num  8 17 25 25 14 20 13 30 4 28 ...
 ```
 
 Why 3 sales folks in vsalesperson don’t show up in 2014 vsalespersonsalesbyfiscalyearsdata
@@ -517,9 +553,150 @@ Different environments / SQL dialects
 repeat the function creation strategy from 083 --
 
   * correct the date
-  * extract the fiscal year
+  * extract the quarter
 
 
+```r
+by_q <- tbl(con, in_schema("sales", "salesorderheader")) %>% 
+  mutate(orderdate = as.Date(orderdate), 
+         year = year(orderdate),
+         quarter = sql("DATE_PART('quarter', orderdate)")) %>% 
+  # select(orderdate, quarter) %>% 
+  group_by(year, quarter) %>% 
+  summarize(subtotal = sum(subtotal), n = n()) %>% 
+  arrange(year, quarter) %>% 
+  collect()
+```
+
+```
+## Warning: Missing values are always removed in SQL.
+## Use `SUM(x, na.rm = TRUE)` to silence this warning
+## This warning is displayed only once per session.
+```
+
+```r
+by_q
+```
+
+```
+## # A tibble: 13 x 4
+## # Groups:   year [4]
+##     year quarter  subtotal     n
+##    <dbl>   <dbl>     <dbl> <int>
+##  1  2011       2   962717.   184
+##  2  2011       3  5042491.   638
+##  3  2011       4  6636465.   785
+##  4  2012       1  8421802.   859
+##  5  2012       2  8808558.   952
+##  6  2012       3  9047743.  1022
+##  7  2012       4  7246198.  1082
+##  8  2013       1  7816864.  1166
+##  9  2013       2 10858959.  1575
+## 10  2013       3 12763227.  5320
+## 11  2013       4 12183430.  6121
+## 12  2014       1 12845074.  6296
+## 13  2014       2  7212855.  5465
+```
+
+
+```r
+by_q_correct_date <- tbl(con, in_schema("sales", "salesorderheader")) %>% 
+  mutate(orderdate = as.Date(orderdate), 
+         orderdate = sql("dateadd(day,-1,orderdate)"),
+         # orderdate = as.Date(so_adj_date(orderdate, onlineorderflag)),
+         year = year(orderdate),
+         month = month(orderdate),
+         quarter = quarter(orderdate)
+         # quarter = sql("DATE_PART('quarter', orderdate)")
+         ) %>% 
+  group_by(year, quarter, month) %>% 
+  summarize(subtotal = sum(subtotal), n = n()) %>% 
+  arrange(year, quarter, month) %>% 
+  show_query %>% 
+  ungroup() %>% 
+  collect()
+```
+
+```
+## <SQL>
+## SELECT "year", "quarter", "month", SUM("subtotal") AS "subtotal", COUNT(*) AS "n"
+## FROM (SELECT "salesorderid", "revisionnumber", "orderdate", "duedate", "shipdate", "status", "onlineorderflag", "purchaseordernumber", "accountnumber", "customerid", "salespersonid", "territoryid", "billtoaddressid", "shiptoaddressid", "shipmethodid", "creditcardid", "creditcardapprovalcode", "currencyrateid", "subtotal", "taxamt", "freight", "totaldue", "comment", "rowguid", "modifieddate", EXTRACT(year FROM "orderdate") AS "year", EXTRACT(MONTH FROM "orderdate") AS "month", EXTRACT(QUARTER FROM "orderdate") AS "quarter"
+## FROM (SELECT "salesorderid", "revisionnumber", CAST("orderdate" AS DATE) AS "orderdate", "duedate", "shipdate", "status", "onlineorderflag", "purchaseordernumber", "accountnumber", "customerid", "salespersonid", "territoryid", "billtoaddressid", "shiptoaddressid", "shipmethodid", "creditcardid", "creditcardapprovalcode", "currencyrateid", "subtotal", "taxamt", "freight", "totaldue", "comment", "rowguid", "modifieddate"
+## FROM sales.salesorderheader) "dbplyr_009") "dbplyr_010"
+## GROUP BY "year", "quarter", "month"
+## ORDER BY "year", "quarter", "month"
+```
+
+```r
+by_q_raw_date <- tbl(con, in_schema("sales", "salesorderheader")) %>% 
+  mutate(orderdate = as.Date(orderdate), 
+         # orderdate = sql("SELECT CASE WHEN EXTRACT(DAY 
+         #     FROM orderdate) = 1
+         #       THEN  orderdate - '1 day'::interval
+         #     ELSE  orderdate
+         #   END"),
+         year = year(orderdate),
+         month = month(orderdate),
+         quarter = sql("DATE_PART('quarter', orderdate)")) %>% 
+   group_by(year, quarter, month) %>% 
+  summarize(subtotal = sum(subtotal), n = n()) %>% 
+  arrange(year, quarter, month) %>% 
+  show_query %>% 
+  ungroup() %>% 
+  collect()
+```
+
+```
+## <SQL>
+## SELECT "year", "quarter", "month", SUM("subtotal") AS "subtotal", COUNT(*) AS "n"
+## FROM (SELECT "salesorderid", "revisionnumber", "orderdate", "duedate", "shipdate", "status", "onlineorderflag", "purchaseordernumber", "accountnumber", "customerid", "salespersonid", "territoryid", "billtoaddressid", "shiptoaddressid", "shipmethodid", "creditcardid", "creditcardapprovalcode", "currencyrateid", "subtotal", "taxamt", "freight", "totaldue", "comment", "rowguid", "modifieddate", EXTRACT(year FROM "orderdate") AS "year", EXTRACT(MONTH FROM "orderdate") AS "month", DATE_PART('quarter', orderdate) AS "quarter"
+## FROM (SELECT "salesorderid", "revisionnumber", CAST("orderdate" AS DATE) AS "orderdate", "duedate", "shipdate", "status", "onlineorderflag", "purchaseordernumber", "accountnumber", "customerid", "salespersonid", "territoryid", "billtoaddressid", "shiptoaddressid", "shipmethodid", "creditcardid", "creditcardapprovalcode", "currencyrateid", "subtotal", "taxamt", "freight", "totaldue", "comment", "rowguid", "modifieddate"
+## FROM sales.salesorderheader) "dbplyr_013") "dbplyr_014"
+## GROUP BY "year", "quarter", "month"
+## ORDER BY "year", "quarter", "month"
+```
+
+```r
+by_q_correct_date
+```
+
+```
+## # A tibble: 38 x 5
+##     year quarter month subtotal     n
+##    <dbl>   <dbl> <dbl>    <dbl> <int>
+##  1  2011       2     5  503806.    43
+##  2  2011       2     6  458911.   141
+##  3  2011       3     7 2044600.   231
+##  4  2011       3     8 2495817.   250
+##  5  2011       3     9  502074.   157
+##  6  2011       4    10 4588762.   327
+##  7  2011       4    11  737840.   230
+##  8  2011       4    12 1309863.   228
+##  9  2012       1     1 3970627.   336
+## 10  2012       1     2 1475427.   219
+## # … with 28 more rows
+```
+
+```r
+by_q_raw_date
+```
+
+```
+## # A tibble: 38 x 5
+##     year quarter month subtotal     n
+##    <dbl>   <dbl> <dbl>    <dbl> <int>
+##  1  2011       2     5  503806.    43
+##  2  2011       2     6  458911.   141
+##  3  2011       3     7 2044600.   231
+##  4  2011       3     8 2495817.   250
+##  5  2011       3     9  502074.   157
+##  6  2011       4    10 4588762.   327
+##  7  2011       4    11  737840.   230
+##  8  2011       4    12 1309863.   228
+##  9  2012       1     1 3970627.   336
+## 10  2012       1     2 1475427.   219
+## # … with 28 more rows
+```
   * What about by month? This could be motivation for creating a new view that does aggregation in the database, rather than in R.
   * See SQL code for 'vsalespersonsalesbyfiscalyearsdata'. Consider:
   * Modifying that to include quantity of sales.
