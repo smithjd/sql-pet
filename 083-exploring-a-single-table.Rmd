@@ -217,6 +217,7 @@ ggplot(data = monthly_sales, aes(x = orderdate, y = total_soh_dollars)) +
 
 We can see our month-over-month sales contains lots of variation. We'll use `dplyr::lag` to help find the delta and later visualize just how much month-to-month difference there is.
 
+
 ```{r}
 monthly_sales <- arrange(monthly_sales, orderdate)
 
