@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 3 Chapter Learning Goals and Use Cases | Exploring Enterprise Databases with R: A Tidyverse Approach</title>
   <meta name="description" content="An introduction to Docker and PostgreSQL for R users to simulate use cases behind corporate walls." />
-  <meta name="generator" content="bookdown 0.12 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.16 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 3 Chapter Learning Goals and Use Cases | Exploring Enterprise Databases with R: A Tidyverse Approach" />
   <meta property="og:type" content="book" />
@@ -24,15 +24,15 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, and Ian Frantz" />
 
 
-<meta name="date" content="2019-12-20" />
+<meta name="date" content="2020-01-08" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="chapter-how-to-use-this-book.html">
-<link rel="next" href="chapter-setup-adventureworks-db.html">
+<link rel="prev" href="chapter-how-to-use-this-book.html"/>
+<link rel="next" href="chapter-setup-adventureworks-db.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -40,6 +40,9 @@
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
 
 
 
@@ -49,7 +52,7 @@
 
 <script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.10/datatables.js"></script>
+<script src="libs/datatables-binding-0.11/datatables.js"></script>
 <link href="libs/dt-core-1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" />
 <link href="libs/dt-core-1.10.19/css/jquery.dataTables.extra.css" rel="stylesheet" />
 <script src="libs/dt-core-1.10.19/js/jquery.dataTables.min.js"></script>
@@ -245,7 +248,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="8.9" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#correcting-the-order-date-for-sales-reps"><i class="fa fa-check"></i><b>8.9</b> Correcting the order date for <strong>Sales Reps</strong></a><ul>
 <li class="chapter" data-level="8.9.1" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#define-a-date-correction-function-in-r"><i class="fa fa-check"></i><b>8.9.1</b> Define a date correction function in R</a></li>
-<li class="chapter" data-level="8.9.2" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#define-and-store-a-postgresql-function-to-correct-the-date"><i class="fa fa-check"></i><b>8.9.2</b> Define and store a PostgreSQL function to correct the date</a></li>
+<li class="chapter" data-level="8.9.2" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#define-postgres-date-function"><i class="fa fa-check"></i><b>8.9.2</b> Define and store a PostgreSQL function to correct the date</a></li>
 <li class="chapter" data-level="8.9.3" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#use-the-postgresql-function"><i class="fa fa-check"></i><b>8.9.3</b> Use the PostgreSQL function</a></li>
 <li class="chapter" data-level="8.9.4" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#monthly-sales-by-order-type-with-corrected-dates-relative-to-a-trend-line"><i class="fa fa-check"></i><b>8.9.4</b> Monthly Sales by Order Type with corrected dates – relative to a trend line</a></li>
 </ul></li>
@@ -300,13 +303,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="12.2" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#the-role-of-database-views"><i class="fa fa-check"></i><b>12.2</b> The role of database <code>views</code></a><ul>
 <li class="chapter" data-level="12.2.1" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#why-database-views-are-useful"><i class="fa fa-check"></i><b>12.2.1</b> Why database <code>views</code> are useful</a></li>
 <li class="chapter" data-level="12.2.2" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#rely-on-and-be-critical-of-views"><i class="fa fa-check"></i><b>12.2.2</b> Rely on <strong>and</strong> be critical of <code>views</code></a></li>
-<li class="chapter" data-level="12.2.3" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#how-to-unpack-and-inspect-a-view"><i class="fa fa-check"></i><b>12.2.3</b> How to unpack and inspect a <code>view</code></a></li>
 </ul></li>
-<li class="chapter" data-level="12.3" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#reproduce-the-view-with-dplyr"><i class="fa fa-check"></i><b>12.3</b> Reproduce the <code>view</code> with dplyr</a><ul>
-<li class="chapter" data-level="12.3.1" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#compare-the-two-versions"><i class="fa fa-check"></i><b>12.3.1</b> Compare the two versions</a></li>
-<li class="chapter" data-level="12.3.2" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#revise-the-view"><i class="fa fa-check"></i><b>12.3.2</b> Revise the view</a></li>
+<li class="chapter" data-level="12.3" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#unpacking-the-elements-of-a-view-tidyverse"><i class="fa fa-check"></i><b>12.3</b> Unpacking the elements of a <code>view</code> Tidyverse</a><ul>
+<li class="chapter" data-level="12.3.1" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#use-a-view-just-like-any-other-table"><i class="fa fa-check"></i><b>12.3.1</b> Use a <code>view</code> just like any other table</a></li>
+<li class="chapter" data-level="12.3.2" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#sql-source-code"><i class="fa fa-check"></i><b>12.3.2</b> SQL source code</a></li>
+<li class="chapter" data-level="12.3.3" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#the-erd-as-context-for-sql-code"><i class="fa fa-check"></i><b>12.3.3</b> The ERD as context for SQL code</a></li>
+<li class="chapter" data-level="12.3.4" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#tables-and-columns"><i class="fa fa-check"></i><b>12.3.4</b> Tables and columns</a></li>
+<li class="chapter" data-level="12.3.5" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#join-the-tables-together"><i class="fa fa-check"></i><b>12.3.5</b> Join the tables together</a></li>
 </ul></li>
-<li class="chapter" data-level="12.4" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#save-a-view-in-the-database"><i class="fa fa-check"></i><b>12.4</b> Save a <code>view</code> in the database</a></li>
+<li class="chapter" data-level="12.4" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#compare-the-official-from-a-view-and-the-dplyr-output"><i class="fa fa-check"></i><b>12.4</b> Compare the official from a view and the dplyr output</a></li>
+<li class="chapter" data-level="12.5" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#revise-the-view"><i class="fa fa-check"></i><b>12.5</b> Revise the view</a></li>
+<li class="chapter" data-level="12.6" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#save-a-view-in-the-database"><i class="fa fa-check"></i><b>12.6</b> Save a <code>view</code> in the database</a></li>
 </ul></li>
 <li class="chapter" data-level="13" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html"><i class="fa fa-check"></i><b>13</b> Getting metadata about and from PostgreSQL</a><ul>
 <li class="chapter" data-level="13.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#views-trick-parked-here-for-the-time-being"><i class="fa fa-check"></i><b>13.1</b> Views trick parked here for the time being</a><ul>
@@ -617,11 +624,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
@@ -629,12 +638,11 @@ gitbook.start({
 "github": false,
 "facebook": true,
 "twitter": true,
-"google": false,
 "linkedin": false,
 "weibo": false,
 "instapaper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -646,6 +654,10 @@ gitbook.start({
 "text": "Edit"
 },
 "history": {
+"link": null,
+"text": null
+},
+"view": {
 "link": null,
 "text": null
 },

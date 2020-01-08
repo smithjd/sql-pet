@@ -6,22 +6,11 @@
 >   * Show the multiple data anomalies found in a single AdventureWorks table (*salesorderheader*)
 >   * The interplay between "data questions" and "business questions"
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-The previous chapter has demonstrated some of the automated techniques for showing what's in a table using some standard R functions and packages.  Now we demonstrate a step-by-step process of making sense of what's in one table with more of a business perspective.  We illustrate the kind of detective work that's often involved as we investigate the *organizational meaning* of the data in a table.  We'll investigate the `salesorderheader` table in the `sales` schema in this example to understand the sales profile of a business.  We show that there are quite a few interpretation issues even when we are examining just 3 out of the 25 columns in one table.
-=======
-The previous chapter has demonstrated some of the automated techniques for showing what's in a table using specific R functions and packages. Now we demonstrate the kind of detective work that's often involved as we investigate the meaning of the data in a table. We'll investigate the `salesorderheader` table in the `sales` schema in this example with a key business question in mind; are sales dollars trending up, down or flat?
->>>>>>> Minor: Creating a more readable chapter
-=======
-The previous chapter has demonstrated some of the automated techniques for showing what's in a table using specific R functions and packages. Now we demonstrate the kind of detective work that's often involved as we investigate the meaning of the data in a table. We'll investigate the `salesorderheader` table in the `sales` schema in this example with a key business question in mind; are sales dollars trending up, down or flat?
-=======
-The previous chapter has demonstrated some of the automated techniques for showing what's in a table using some standard R functions and packages.  Now we demonstrate a step-by-step process of making sense of what's in one table with more of a business perspective.  We illustrate the kind of detective work that's often involved as we investigate the *organizational meaning* of the data in a table.  We'll investigate the `salesorderheader` table in the `sales` schema in this example to understand the sales profile of a business.  We show that there are quite a few interpretation issues even when we are examining just 3 out of the 25 columns in one table.
->>>>>>> da7a60976105347a5a2ee13a28f9d7a1ba81a591
->>>>>>> Minor: commit just before merge
+The previous chapter has demonstrated some of the automated techniques for showing what's in a table using some standard R functions and packages.  Now we demonstrate a step-by-step process of making sense of what's in one table with more of a business perspective.  We illustrate the kind of detective work that's often involved as we investigate the *organizational meaning* of the data in a table.  We'll investigate the `salesorderheader` table in the `sales` schema in this example to understand the sales profile of the "AdventureWorks" business.  We show that there are quite a few interpretation issues even when we are examining just 3 out of the 25 columns in one table.
 
 For this kind of detective work we are seeking to understand the following elements separately and as they interact with each other:
 
-  * What data is stored in the database and 
+  * What data is stored in the database
   * How information is represented
   * How the data is entered at a day-to-day level to represent business activities
   * How the business itself is changing over time
@@ -57,6 +46,7 @@ Connect to `adventureworks`.  In an interactive session we prefer to use `connec
 sp_docker_start("adventureworks")
 Sys.sleep(sleep_default)
 con <- dbConnect(
+# con <- connection_open(
   RPostgres::Postgres(),
   bigint = "integer",  
   host = "localhost",
@@ -66,14 +56,14 @@ con <- dbConnect(
   dbname = "adventureworks")
 ```
 
-Some queries generate big integers, so we need to include `RPostgres::Postgres()` and `bigint = "integer"` in the connections statement.
+Some queries generate big integers, so we need to include `RPostgres::Postgres()` and `bigint = "integer"` in the connections statement because some functions in the tidyverse object to the **bigint** datatype.
 
 
 ## A word on naming 
 
-> You will find that many tables will have columns with the same name in an enterprise database.  For example, in the adventureworks database, almost all tables have columns named `rowguid` and `modifieddate` and there are many other examples of names that are reused throughout the database.  The meaning of a column depends on the table that contains it, so as you pull a column out of a table, naming its provenance is important.
+> You will find that many tables will have columns with the same name in an enterprise database.  For example, in the *AdventureWorks* database, almost all tables have columns named `rowguid` and `modifieddate` and there are many other examples of names that are reused throughout the database.  Duplicate columns are best renamed or deliberately dropped.  The meaning of a column depends on the table that contains it, so as you pull a column out of a table, when renaming it the collumns provenance should be reflected in the new name.
 >
-> Naming columns carefully (whether retrieved from the database or calculated)  will pay off, especially as our queries become more complex. Using `soh` as an abbreviation of *sales order header* to tag statistics that are derived from the `salesorderheader` table, as we do in this book, is one example of an intentional naming strategy: it reminds us of the original source of a column.  You, future you, and your collaborators will appreciate the effort although different naming conventions are completely valid.  And a naming convention when rigidly applied can yield some long and ugly names.
+> Naming columns carefully (whether retrieved from the database or calculated)  will pay off, especially as our queries become more complex. Using `soh` as an abbreviation of *sales order header* to tag columns or statistics that are derived from the `salesorderheader` table, as we do in this book, is one example of an intentional naming strategy: it reminds us of the original source of the data.  You, future you, and your collaborators will appreciate the effort no matter what naming convention you adopt.  And a naming convention when rigidly applied can yield some long and ugly names.
 >
 > In the following example `soh` appears in different positions in the column name but it is easy to guess at a glance that the data comes from the `salesorderheader` table.
 >
@@ -85,18 +75,7 @@ We begin by looking at Sales on a yearly basis, then consider monthly sales.  We
 
 ## Annual sales
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 On an annual basis, are sales dollars trending up, down or flat? We begin with annual revenue and number of orders.  
-=======
-On an annual basis, are sales dollars trending up, down or flat? We begin with total revenue and the number of orders at different levels of detail.  
->>>>>>> Minor: Creating a more readable chapter
-=======
-On an annual basis, are sales dollars trending up, down or flat? We begin with total revenue and the number of orders at different levels of detail.  
-=======
-On an annual basis, are sales dollars trending up, down or flat? We begin with annual revenue and number of orders.  
->>>>>>> da7a60976105347a5a2ee13a28f9d7a1ba81a591
->>>>>>> Minor: commit just before merge
 
 
 ```r
@@ -130,7 +109,7 @@ annual_sales <- tbl(con, in_schema("sales", "salesorderheader")) %>%
 ## ORDER BY "year") "dbplyr_003"
 ```
 
-Note that all of this query is running on the server.  The `show_query` function shows the SQL code postgreSQL is runs to produce its output.
+Note that all of this query is running on the server.  The `show_query` function shows the SQL code postgreSQL runs to produce its output.
 
 
 ```r
@@ -155,6 +134,8 @@ min_soh_dt <- min(annual_sales$min_soh_orderdate)
 max_soh_dt <- max(annual_sales$max_soh_orderdate)
 ```
 
+You can't see it yet but both 2011 and 2014 are shorter time spans than the other two years, making comparison across the years more difficult. We might normalize the totals based on the number of months in each year, but we first graph total dollars and see that 2013 was the best year for annual sales dollars.
+
 ### Total sales by year
 
 
@@ -165,33 +146,18 @@ ggplot(data = annual_sales, aes(x = year, y = total_soh_dollars)) +
   scale_y_continuous(labels = scales::dollar_format()) +
   labs(
     title = "Adventure Works Sales Dollars by Year",
-    x = glue("Year - between ", {format(min_soh_dt, "%B %d, %Y")} , " and  ", 
+    x = glue("Years between ", {format(min_soh_dt, "%B %d, %Y")} , " and  ", 
             {format(max_soh_dt, "%B %d, %Y")}),
     y = "Sales $"
   )
 ```
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<img src="083-exploring-a-single-table_files/figure-html/Calculate time period and annual sales dollars - 2 -1.png" width="384" />
-Both 2011 and 2014 are shorter time spans than the other two years, making comparison interpretation more difficult. 
-=======
 <img src="083-exploring-a-single-table_files/figure-html/Calculate time period and annual sales dollars - 2 -1.png" width="480" />
->>>>>>> Minor: Creating a more readable chapter
-=======
-<img src="083-exploring-a-single-table_files/figure-html/Calculate time period and annual sales dollars - 2 -1.png" width="480" />
-=======
-<img src="083-exploring-a-single-table_files/figure-html/Calculate time period and annual sales dollars - 2 -1.png" width="384" />
 Both 2011 and 2014 are shorter time spans than the other two years, making comparison interpretation more difficult. 
->>>>>>> da7a60976105347a5a2ee13a28f9d7a1ba81a591
->>>>>>> Minor: commit just before merge
-
-Both 2011 and 2014 are shorter time spans than the other two years, making comparison across the years more difficult. Could it be that sales are seasonal? Let's look at the order volume and see whether there's a pattern in the sales data.
 
 ### Total order volume
 
 Look at number of orders per year:
-<<<<<<< HEAD
 
 ```r
 ggplot(data = annual_sales, aes(x = year, y = as.numeric(soh_count))) +
@@ -207,11 +173,9 @@ ggplot(data = annual_sales, aes(x = year, y = as.numeric(soh_count))) +
 
 <img src="083-exploring-a-single-table_files/figure-html/average dollars per sale - v2-1.png" width="384" />
 
-That's a huge jump in the number of orders between 2012 and 2013.  Given the total annual dollars, we ask whether the size of a sale has changed.
+Here again we see that 2013 was the best year in terms of total number of orders. But look at 2014, it has had many more orders than 2012 but lags in terms of annual sales. Why might this be? Let's investigate whether the size of the average sale has changed.
 
 ### Average dollars per sale
-
-<<<<<<< HEAD
 
 ```r
 ggplot(data = annual_sales, aes(x = year, y = avg_total_soh_dollars)) +
@@ -220,7 +184,7 @@ ggplot(data = annual_sales, aes(x = year, y = avg_total_soh_dollars)) +
   geom_text(aes(label = round(avg_total_soh_dollars, digits = 0)), vjust = -0.25) +
   labs(
     title = "Average Dollars per Sale",
-    x = glue("Year - between ", {format(min_soh_dt, "%B %d, %Y")} , " to  ", 
+    x = glue("Years between ", {format(min_soh_dt, "%B %d, %Y")} , " to  ", 
             {format(max_soh_dt, "%B %d, %Y")}),
     y = "Average Sale Amount"
   )
@@ -228,18 +192,9 @@ ggplot(data = annual_sales, aes(x = year, y = avg_total_soh_dollars)) +
 
 <img src="083-exploring-a-single-table_files/figure-html/average dollars per sale - -1.png" width="384" />
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 That's a big drop between average sale of more than $7,000 to less than $3,000.  A remarkable change has taken place in this business.
 
-=======
->>>>>>> Minor: Creating a more readable chapter
-=======
-=======
-That's a big drop between average sale of more than $7,000 to less than $3,000.  A remarkable change has taken place in this business.
 
->>>>>>> da7a60976105347a5a2ee13a28f9d7a1ba81a591
->>>>>>> Minor: commit just before merge
 From 2012 to 2013 the average dollars per order dropped from more than $8,500 to nearly $3,000 while the total number of orders shot up from less than 4,000 to more than 14,000.  **Why are the number of orders increasing, but the average dollar amount of a sale is dropping?  **
 
 We need to drill down to look at monthly sales, adapting the first query to group by month and year.
@@ -248,7 +203,7 @@ We need to drill down to look at monthly sales, adapting the first query to grou
 
 Our next iteration drills down from annual sales dollars to monthly sales dollars. For that we download the orderdate as a date, rather than a character variable for the year.  R handles the conversion from the PostgreSQL date-time to an R date-time.  We then convert it to a simple date with a `lubridate` function.
 
-The following query uses the [postgreSQL function `date_trunc`](https://www.postgresqltutorial.com/postgresql-date_trunc/), which is equivalent to `lubridate`'s `round_date` function in R.
+The following query uses the [postgreSQL function `date_trunc`](https://www.postgresqltutorial.com/postgresql-date_trunc/), which is equivalent to `lubridate`'s `round_date` function in R.  If you want to push as much of the processing as possible onto the database server and thus possibly deal with smaller datasets in R, interleaving [postgreSQL functions](https://www.postgresql.org/docs/current/functions.html) into your dplyr code will help.
 
 
 ```r
@@ -266,7 +221,7 @@ monthly_sales <- tbl(con, in_schema("sales", "salesorderheader")) %>%
   collect() 
 ```
 
-The `lubridate` and `postgreSQL` functions are *almost* equivalent -- except that the `postgreSQL` function produces a `POSIXct` column, not a `Date`. 
+In many cases we don't really care whether our queries are executed by R or by the SQL server, but if we do care we have to look for cases where functions from R packages like `lubridate` and the equivalent `postgreSQL` functions are subtly different.  In the previous query the `postgreSQL` function produces a `POSIXct` column, not a `Date` so we need to tack on a mutate function once the data is on the R side.
 
 
 ```r
@@ -274,14 +229,14 @@ monthly_sales <-  monthly_sales %>%
   mutate(orderdate = as.Date(orderdate))
 ```
 
-Plotting the monthly sales data:
+Next let's chart the monthly sales data:
 
 
 ```r
 ggplot(data = monthly_sales, aes(x = orderdate, y = total_soh_dollars)) +
   geom_col() +
   scale_y_continuous(labels = dollar) +
-  theme(plot.title = element_text(hjust = 0.5)) + # Center the title
+  theme(plot.title = element_text(hjust = 0.5)) + 
   labs(
     title = glue("Sales by Month\n", {format(min_soh_dt, "%B %d, %Y")} , " to  ", 
             {format(max_soh_dt, "%B %d, %Y")}),
@@ -294,27 +249,38 @@ ggplot(data = monthly_sales, aes(x = orderdate, y = total_soh_dollars)) +
 
 ### Check lagged monthly data
 
-The total sales are trending up but suspiciously uneven.  We'll use `dplyr::lag` to help with our month over month compairson and will later visualize just how much month-to-month difference there is:
+We can see our month-over-month sales contains lots of variation. We'll use `dplyr::lag` to help find the delta and later visualize just how much month-to-month difference there is.
+
 
 
 ```r
+monthly_sales <- arrange(monthly_sales, orderdate)
+
 monthly_sales_lagged <- monthly_sales %>%
   mutate(monthly_sales_change = (dplyr::lag(total_soh_dollars)) - total_soh_dollars)
+
+monthly_sales_lagged[is.na(monthly_sales_lagged)] = 0
 ```
 
+
+```r
+median(monthly_sales_lagged$monthly_sales_change, na.rm = TRUE)
+```
+
+```
+## [1] -221690.505
+```
 
 ```r
 (sum_lags <- summary(monthly_sales_lagged$monthly_sales_change))
 ```
 
 ```
-##         Min.      1st Qu.       Median         Mean      3rd Qu.         Max. 
-## -6758620.270 -1157751.300    11825.200    -8023.669  1383744.320  4907764.150 
-##         NA's 
-##            1
+##        Min.     1st Qu.      Median        Mean     3rd Qu.        Max. 
+## -5879806.05 -1172995.19  -221690.51    11968.42  1159252.70  5420357.17
 ```
 
-The trend is positive on average -8,024 but half of the months have swings greater than 2,541,496!
+The trend is positive on average 11,968. Let's calculate the inner quartile range to see how spread out our data is: 2,332,248 This robust statistic shows us that we have a very large spread in our month-over-month. Next, let's visualize this variation. 
 
 
 
@@ -323,7 +289,7 @@ ggplot(monthly_sales_lagged, aes(x = orderdate, y = monthly_sales_change)) +
   scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
   geom_line() +
   geom_point() +
-  scale_y_continuous(limits = c(-1700000,4500000), labels = scales::dollar_format()) +
+  scale_y_continuous(limits = c(-6000000,5500000), labels = scales::dollar_format()) +
   theme(plot.title = element_text(hjust = .5)) + 
   labs(
     title = glue(
@@ -336,30 +302,8 @@ ggplot(monthly_sales_lagged, aes(x = orderdate, y = monthly_sales_change)) +
   )
 ```
 
-```
-## Warning: Removed 9 rows containing missing values (geom_point).
-```
-
-<<<<<<< HEAD
-<<<<<<< HEAD
 <img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-4-1.png" width="672" />
-=======
-=======
->>>>>>> Minor: commit just before merge
-```
-## Warning: Removed 1 rows containing missing values (geom_point).
-```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-3-1.png" width="672" />
-<<<<<<< HEAD
->>>>>>> Minor: Creating a more readable chapter
-=======
-=======
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-4-1.png" width="672" />
->>>>>>> da7a60976105347a5a2ee13a28f9d7a1ba81a591
->>>>>>> Minor: commit just before merge
-
-AdventureWorks sales are *very* uneven.  We'll come back to this issue shortly.
 
 ### Comparing dollars and orders to a base year
 
@@ -394,7 +338,7 @@ start_year
 ## 1  2011         12641672.      1607        8    1580209.      201.
 ```
 
-Re express monthly data in terms of the baseline and plot:
+Express monthly data relative to 2011`
 
 
 ```r
@@ -571,7 +515,8 @@ monthly_sales_w_channel %>%
     unique_dates = n(),
     start_date = min(min_soh_orderdate),
     end_date = max(max_soh_orderdate),
-    total_sales = sum(total_soh_dollars)
+    total_sales = round(sum(total_soh_dollars)), 
+    days_span = end_date - start_date
   ) %>%
   gt()
 ```
@@ -580,7 +525,7 @@ monthly_sales_w_channel %>%
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#obgqlcctgs .gt_table {
+#pzveloiefp .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -608,7 +553,7 @@ monthly_sales_w_channel %>%
   /* table.border.bottom.color */
 }
 
-#obgqlcctgs .gt_heading {
+#pzveloiefp .gt_heading {
   background-color: #FFFFFF;
   /* heading.background.color */
   border-bottom-color: #FFFFFF;
@@ -627,7 +572,7 @@ monthly_sales_w_channel %>%
   /* heading.border.lr.color */
 }
 
-#obgqlcctgs .gt_title {
+#pzveloiefp .gt_title {
   color: #333333;
   font-size: 125%;
   /* heading.title.font.size */
@@ -641,7 +586,7 @@ monthly_sales_w_channel %>%
   border-bottom-width: 0;
 }
 
-#obgqlcctgs .gt_subtitle {
+#pzveloiefp .gt_subtitle {
   color: #333333;
   font-size: 85%;
   /* heading.subtitle.font.size */
@@ -655,7 +600,7 @@ monthly_sales_w_channel %>%
   border-top-width: 0;
 }
 
-#obgqlcctgs .gt_bottom_border {
+#pzveloiefp .gt_bottom_border {
   border-bottom-style: solid;
   /* heading.border.bottom.style */
   border-bottom-width: 2px;
@@ -664,7 +609,7 @@ monthly_sales_w_channel %>%
   /* heading.border.bottom.color */
 }
 
-#obgqlcctgs .gt_column_spanner {
+#pzveloiefp .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -672,7 +617,7 @@ monthly_sales_w_channel %>%
   padding-bottom: 4px;
 }
 
-#obgqlcctgs .gt_col_headings {
+#pzveloiefp .gt_col_headings {
   border-top-style: solid;
   /* column_labels.border.top.style */
   border-top-width: 2px;
@@ -699,7 +644,7 @@ monthly_sales_w_channel %>%
   /* column_labels.border.lr.color */
 }
 
-#obgqlcctgs .gt_col_heading {
+#pzveloiefp .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   /* column_labels.background.color */
@@ -715,11 +660,11 @@ monthly_sales_w_channel %>%
   overflow-x: hidden;
 }
 
-#obgqlcctgs .gt_sep_right {
+#pzveloiefp .gt_sep_right {
   border-right: 5px solid #FFFFFF;
 }
 
-#obgqlcctgs .gt_group_heading {
+#pzveloiefp .gt_group_heading {
   padding: 8px;
   /* row_group.padding */
   color: #333333;
@@ -758,7 +703,7 @@ monthly_sales_w_channel %>%
   vertical-align: middle;
 }
 
-#obgqlcctgs .gt_empty_group_heading {
+#pzveloiefp .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -782,20 +727,20 @@ monthly_sales_w_channel %>%
   vertical-align: middle;
 }
 
-#obgqlcctgs .gt_striped {
+#pzveloiefp .gt_striped {
   background-color: #8080800D;
   /* row.striping.background_color */
 }
 
-#obgqlcctgs .gt_from_md > :first-child {
+#pzveloiefp .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#obgqlcctgs .gt_from_md > :last-child {
+#pzveloiefp .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#obgqlcctgs .gt_row {
+#pzveloiefp .gt_row {
   padding-top: 8px;
   /* data_row.padding */
   padding-bottom: 8px;
@@ -825,7 +770,7 @@ monthly_sales_w_channel %>%
   overflow-x: hidden;
 }
 
-#obgqlcctgs .gt_stub {
+#pzveloiefp .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   /* stub.background.color */
@@ -842,7 +787,7 @@ monthly_sales_w_channel %>%
   padding-left: 12px;
 }
 
-#obgqlcctgs .gt_summary_row {
+#pzveloiefp .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   /* summary_row.background.color */
@@ -856,7 +801,7 @@ monthly_sales_w_channel %>%
   padding-right: 5px;
 }
 
-#obgqlcctgs .gt_first_summary_row {
+#pzveloiefp .gt_first_summary_row {
   padding-top: 8px;
   /* summary_row.padding */
   padding-bottom: 8px;
@@ -871,7 +816,7 @@ monthly_sales_w_channel %>%
   /* summary_row.border.color */
 }
 
-#obgqlcctgs .gt_grand_summary_row {
+#pzveloiefp .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   /* grand_summary_row.background.color */
@@ -885,7 +830,7 @@ monthly_sales_w_channel %>%
   padding-right: 5px;
 }
 
-#obgqlcctgs .gt_first_grand_summary_row {
+#pzveloiefp .gt_first_grand_summary_row {
   padding-top: 8px;
   /* grand_summary_row.padding */
   padding-bottom: 8px;
@@ -900,7 +845,7 @@ monthly_sales_w_channel %>%
   /* grand_summary_row.border.color */
 }
 
-#obgqlcctgs .gt_table_body {
+#pzveloiefp .gt_table_body {
   border-top-style: solid;
   /* table_body.border.top.style */
   border-top-width: 2px;
@@ -915,7 +860,7 @@ monthly_sales_w_channel %>%
   /* table_body.border.bottom.color */
 }
 
-#obgqlcctgs .gt_footnotes {
+#pzveloiefp .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   /* footnotes.background.color */
@@ -939,7 +884,7 @@ monthly_sales_w_channel %>%
   /* footnotes.border.lr.color */
 }
 
-#obgqlcctgs .gt_footnote {
+#pzveloiefp .gt_footnote {
   margin: 0px;
   font-size: 90%;
   /* footnotes.font.size */
@@ -947,7 +892,7 @@ monthly_sales_w_channel %>%
   /* footnotes.padding */
 }
 
-#obgqlcctgs .gt_sourcenotes {
+#pzveloiefp .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   /* source_notes.background.color */
@@ -971,48 +916,48 @@ monthly_sales_w_channel %>%
   /* source_notes.border.lr.style */
 }
 
-#obgqlcctgs .gt_sourcenote {
+#pzveloiefp .gt_sourcenote {
   font-size: 90%;
   /* source_notes.font.size */
   padding: 4px;
   /* source_notes.padding */
 }
 
-#obgqlcctgs .gt_left {
+#pzveloiefp .gt_left {
   text-align: left;
 }
 
-#obgqlcctgs .gt_center {
+#pzveloiefp .gt_center {
   text-align: center;
 }
 
-#obgqlcctgs .gt_right {
+#pzveloiefp .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#obgqlcctgs .gt_font_normal {
+#pzveloiefp .gt_font_normal {
   font-weight: normal;
 }
 
-#obgqlcctgs .gt_font_bold {
+#pzveloiefp .gt_font_bold {
   font-weight: bold;
 }
 
-#obgqlcctgs .gt_font_italic {
+#pzveloiefp .gt_font_italic {
   font-style: italic;
 }
 
-#obgqlcctgs .gt_super {
+#pzveloiefp .gt_super {
   font-size: 65%;
 }
 
-#obgqlcctgs .gt_footnote_marks {
+#pzveloiefp .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 </style>
-<div id="obgqlcctgs" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+<div id="pzveloiefp" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
   
   <thead class="gt_col_headings">
     <tr>
@@ -1021,6 +966,7 @@ monthly_sales_w_channel %>%
       <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">start_date</th>
       <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">end_date</th>
       <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">total_sales</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">days_span</th>
     </tr>
   </thead>
   <tbody class="gt_table_body">
@@ -1029,21 +975,23 @@ monthly_sales_w_channel %>%
       <td class="gt_row gt_center">1124</td>
       <td class="gt_row gt_left">2011-05-31</td>
       <td class="gt_row gt_left">2014-06-30</td>
-      <td class="gt_row gt_right">29358677.46</td>
+      <td class="gt_row gt_right">29358677</td>
+      <td class="gt_row gt_center">1126 days</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_striped">Sales Rep</td>
       <td class="gt_row gt_center gt_striped">40</td>
       <td class="gt_row gt_left gt_striped">2011-05-31</td>
       <td class="gt_row gt_left gt_striped">2014-05-01</td>
-      <td class="gt_row gt_right gt_striped">80487704.18</td>
+      <td class="gt_row gt_right gt_striped">80487704</td>
+      <td class="gt_row gt_center gt_striped">1066 days</td>
     </tr>
   </tbody>
   
   
 </table></div><!--/html_preserve-->
 
-As we will see later on, the **Sales Rep** data doesn't match the **Online** data.  The **Online** data includes 2 months that are not included in the main sales channel.
+As this table shows, the **Sales Rep** dates don't match the **Online** dates.  they start the same, but have a different end.  The **Online** dates include 2 months that are not included in the Sales Rep sales (which are the main sales channel by dollar volume).
 
 ### Monthly variation compared to a trend line
 
@@ -1079,7 +1027,7 @@ ggplot(
 
 <img src="083-exploring-a-single-table_files/figure-html/average dollars-1.png" width="672" />
 
-The **monthly** gyrations are happening on the Sales Rep side, amounting to differences in a million dollars compared to small variations of around $25,000.
+The **monthly** gyrations are happening on the Sales Rep side, amounting to differences in a million dollars compared to small monthly variations of around $25,000 for the Online orders.
 
 ### Compare monthly lagged data by order type
 
@@ -1137,22 +1085,14 @@ summary(monthly_sales_w_channel_lagged_by_month)
 ##  3rd Qu.:2013-09-24   3rd Qu.:  37256.86   3rd Qu.: 3032.733    
 ##  Max.   :2014-06-30   Max.   :4220928.00   Max.   :33245.690    
 ##                                                                 
-##    soh_count         pct_monthly_soh_dollar_change
-##  Min.   :  1.00000   Min.   :     0.03876         
-##  1st Qu.:  6.00000   1st Qu.:    71.57126         
-##  Median : 10.00000   Median :   100.00000         
-##  Mean   : 27.03179   Mean   :   598.40406         
-##  3rd Qu.: 53.00000   3rd Qu.:   138.22965         
-##  Max.   :186.00000   Max.   :265839.48116         
-##                      NA's   :2                    
-##  pct_monthly_soh_count_change
-##  Min.   :   1.123596         
-##  1st Qu.:  75.000000         
-##  Median : 100.000000         
-##  Mean   : 140.916436         
-##  3rd Qu.: 130.415373         
-##  Max.   :8950.000000         
-##  NA's   :2
+##    soh_count         pct_monthly_soh_dollar_change pct_monthly_soh_count_change
+##  Min.   :  1.00000   Min.   :     0.03876          Min.   :   1.123596         
+##  1st Qu.:  6.00000   1st Qu.:    71.57126          1st Qu.:  75.000000         
+##  Median : 10.00000   Median :   100.00000          Median : 100.000000         
+##  Mean   : 27.03179   Mean   :   598.40406          Mean   : 140.916436         
+##  3rd Qu.: 53.00000   3rd Qu.:   138.22965          3rd Qu.: 130.415373         
+##  Max.   :186.00000   Max.   :265839.48116          Max.   :8950.000000         
+##                      NA's   :2                     NA's   :2
 ```
 
 For **Sales Reps** it looks like the variation is in the number of orders, not just dollars, as shown in the following plot.
@@ -1224,113 +1164,198 @@ We suspect that the business has changed a lot with the advent of **Online** ord
 
 ## Detect and diagnose the day of the month problem
 
-Looking at the raw data leads us to suspect that there is a problem with the dates on which Sales Rep orders are entered.
+Browsing at the raw data leads us to suspect that there is an odd pattern on the Sales Rep side: the sales are almost always recorded on the last day of the month.
 
 ### Sales Rep Orderdate Distribution
 
-Look at the dates when sales are entered for sales by **Sales Reps**.  The following query merits some discussion.
+Look at the dates when sales are entered for sales by **Sales Reps**.  The following query / plot combination shows this pattern and the exception for transactions entered on the first day of the month.
 
 
 ```r
-sales_rep_day_of_month_sales <- tbl(con, in_schema("sales", "salesorderheader")) %>%
+  tbl(con, in_schema("sales", "salesorderheader")) %>%
   filter(onlineorderflag == FALSE) %>% # Drop online orders
-  select(orderdate, subtotal) %>%
-  mutate(
-    year = year(orderdate),
-    month = month(orderdate),
-    day = day(orderdate)
-  ) %>%
-  count(year, month, day, name = "orders") %>%
-  group_by(year, month) %>%
-  summarize(
-    days_with_orders = n(),
-    total_orders = sum(orders, na.rm = TRUE),
-    min_day = min(day, na.rm = FALSE)
-  ) %>%
-  show_query() %>%
-  collect() %>%
-  mutate(
-    days_with_orders = as.numeric(days_with_orders),
-    order_month = as.Date(paste0(year, "-", month, "-01")),
-    min_day_factor = if_else(min_day < 2, "Month start", "Month end")
-  ) %>%
-  complete(order_month = seq(min(order_month), max(order_month), by = "month")) %>%
-  mutate(days_with_orders = replace_na(days_with_orders, 0)) %>%
-  ungroup()
-```
-
-```
-## <SQL>
-```
-
-```
-## Warning: Missing values are always removed in SQL.
-## Use `MIN(x, na.rm = TRUE)` to silence this warning
-## This warning is displayed only once per session.
-```
-
-```
-## SELECT "year", "month", COUNT(*) AS "days_with_orders", SUM("orders") AS "total_orders", MIN("day") AS "min_day"
-## FROM (SELECT "year", "month", "day", COUNT(*) AS "orders"
-## FROM (SELECT "orderdate", "subtotal", EXTRACT(year FROM "orderdate") AS "year", EXTRACT(MONTH FROM "orderdate") AS "month", EXTRACT(day FROM "orderdate") AS "day"
-## FROM (SELECT *
-## FROM sales.salesorderheader
-## WHERE ("onlineorderflag" = FALSE)) "dbplyr_008") "dbplyr_009"
-## GROUP BY "year", "month", "day") "dbplyr_010"
-## GROUP BY "year", "month"
-```
-
-a different strategy for finding the day-of-month problem.
-
-
-```r
-sales_rep_day_of_month_sales <- tbl(con, in_schema("sales", "salesorderheader")) %>%
-  filter(onlineorderflag == FALSE) %>% # Drop online orders
-  select(orderdate, subtotal) %>%
-  mutate(
-    year = year(orderdate),
-    month = month(orderdate),
-    day = day(orderdate)
-  ) %>%
-  # count(year, month, day, name = "orders") %>%
-  count(year, month, day) %>% 
-  arrange(year, month) %>% 
-  # filter(year == 2011) %>% 
+  mutate(orderday = day(orderdate)) %>%
+  count(orderday, name = "Orders") %>% 
   collect() %>% 
-  ungroup() %>% 
-  mutate(n = as.numeric(n))
-
-str(sales_rep_day_of_month_sales)
+  full_join(tibble(orderday = seq(1:31))) %>% 
+  mutate(orderday = as.factor(orderday)) %>% 
+  ggplot(aes(orderday, Orders)) +
+  geom_col() +
+  coord_flip() +
+  labs(title = "The first day of the month looks odd",
+       x = "Day Number")
 ```
 
 ```
-## Classes 'tbl_df', 'tbl' and 'data.frame':	40 obs. of  4 variables:
-##  $ year : num  2011 2011 2011 2011 2011 ...
-##  $ month: num  5 7 8 8 10 10 12 1 1 2 ...
-##  $ day  : num  31 1 31 1 31 1 1 29 1 29 ...
-##  $ n    : num  38 75 40 60 63 90 40 64 79 37 ...
+## Joining, by = "orderday"
 ```
+
+```
+## Warning: Removed 26 rows containing missing values (position_stack).
+```
+
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-13-1.png" width="672" />
+
+We can check on which months have orders entered on the first of the month.
 
 ```r
-sales_rep_day_of_month_sales %>% 
-  pivot_wider(names_from = day, values_from = n, names_prefix = "day_" ) %>% 
+sales_rep_day_of_month_sales <- tbl(con, in_schema("sales", "salesorderheader")) %>%
+  filter(onlineorderflag == FALSE) %>% # Drop online orders
+  select(orderdate, subtotal) %>%
+  mutate(
+    year = year(orderdate),
+    month = month(orderdate),
+    day = day(orderdate)
+  ) %>%
+  count(year, month, day) %>% 
+  collect() %>%
+  pivot_wider(names_from = day, values_from = n, names_prefix = "day_", values_fill = 0 ) %>% 
   as.data.frame() %>% 
   select(year, month, day_1, day_28, day_29, day_30, day_31) %>% 
-  filter(!is.na(day_1))
+  # filter(!is.na(day_1))
+  filter(day_1 > 0)
+
+sales_rep_day_of_month_sales
 ```
 
 ```
 ##   year month day_1 day_28 day_29 day_30 day_31
-## 1 2011     7    75     NA     NA     NA     NA
-## 2 2011     8    60     NA     NA     NA     40
-## 3 2011    10    90     NA     NA     NA     63
-## 4 2011    12    40     NA     NA     NA     NA
-## 5 2012     1    79     NA     64     NA     NA
-## 6 2014     3    91     NA     NA      2    178
-## 7 2014     5   179     NA     NA     NA     NA
+## 1 2012     1    79      0     64      0      0
+## 2 2014     3    91      0      0      2    178
+## 3 2011     7    75      0      0      0      0
+## 4 2011     8    60      0      0      0     40
+## 5 2011    10    90      0      0      0     63
+## 6 2014     5   179      0      0      0      0
+## 7 2011    12    40      0      0      0      0
 ```
 
-values_from  integer64 makes pivot_wider barf.
+There are two months with multiple sales rep order days for 2011, (11/08 and 11/10), one for 2012, (1201), and two in 2014, (14/01 and 14/03).  The 14/03 is the only three day sales rep order month.
+
+Are there months where there were no sales recorded for the sales reps?
+
+There are two approaches.  The first is to generate a list of months between the beginning and end of history and compare that to the Sales Rep records
+
+```r
+monthly_sales_rep_sales <- monthly_sales_w_channel %>% 
+  filter(onlineorderflag == "Sales Rep") %>% 
+  mutate(orderdate = as.Date(floor_date(orderdate, "month"))) %>% 
+  count(orderdate)
+
+str(monthly_sales_rep_sales)
+```
+
+```
+## Classes 'tbl_df', 'tbl' and 'data.frame':	34 obs. of  2 variables:
+##  $ orderdate: Date, format: "2011-05-01" "2011-07-01" ...
+##  $ n        : int  1 1 2 2 1 2 1 1 1 1 ...
+```
+
+```r
+date_list <- tibble(month_date = seq.Date(floor_date(as.Date(min_soh_dt), "month"), 
+         floor_date(as.Date(max_soh_dt), "month"), 
+         by = "month"),
+         date_exists = FALSE)
+
+date_list %>% 
+  anti_join(monthly_sales_rep_sales, 
+            by = c("month_date" = "orderdate") )
+```
+
+```
+## # A tibble: 4 x 2
+##   month_date date_exists
+##   <date>     <lgl>      
+## 1 2011-06-01 FALSE      
+## 2 2011-09-01 FALSE      
+## 3 2011-11-01 FALSE      
+## 4 2014-06-01 FALSE
+```
+
+
+  * June, September, and November are missing for 2011. 
+  * June for 2014
+
+The second approach is to use the dates found in the database for online orders.  Defining "complete" may not always be as simple as generating a complete list of months.
+
+```r
+sales_order_header_online <- tbl(con, in_schema("sales", "salesorderheader")) %>% 
+  filter(onlineorderflag == TRUE) %>% 
+  mutate(
+    orderdate = date_trunc('month', orderdate)
+  ) %>%
+  count(orderdate, name = "online_count") 
+
+sales_order_header_sales_rep <- tbl(con, in_schema("sales", "salesorderheader")) %>% 
+  filter(onlineorderflag == FALSE) %>% 
+  mutate(
+    orderdate = date_trunc('month', orderdate)
+  ) %>%
+  count(orderdate, name = "sales_rep_count") 
+
+missing_dates <- sales_order_header_sales_rep %>% 
+  full_join(sales_order_header_online) %>% 
+  show_query() %>% 
+  collect()
+```
+
+```
+## Joining, by = "orderdate"
+```
+
+```
+## <SQL>
+## SELECT COALESCE("LHS"."orderdate", "RHS"."orderdate") AS "orderdate", "LHS"."sales_rep_count" AS "sales_rep_count", "RHS"."online_count" AS "online_count"
+## FROM (SELECT "orderdate", COUNT(*) AS "sales_rep_count"
+## FROM (SELECT "salesorderid", "revisionnumber", date_trunc('month', "orderdate") AS "orderdate", "duedate", "shipdate", "status", "onlineorderflag", "purchaseordernumber", "accountnumber", "customerid", "salespersonid", "territoryid", "billtoaddressid", "shiptoaddressid", "shipmethodid", "creditcardid", "creditcardapprovalcode", "currencyrateid", "subtotal", "taxamt", "freight", "totaldue", "comment", "rowguid", "modifieddate"
+## FROM (SELECT *
+## FROM sales.salesorderheader
+## WHERE ("onlineorderflag" = FALSE)) "dbplyr_012") "dbplyr_013"
+## GROUP BY "orderdate") "LHS"
+## FULL JOIN (SELECT "orderdate", COUNT(*) AS "online_count"
+## FROM (SELECT "salesorderid", "revisionnumber", date_trunc('month', "orderdate") AS "orderdate", "duedate", "shipdate", "status", "onlineorderflag", "purchaseordernumber", "accountnumber", "customerid", "salespersonid", "territoryid", "billtoaddressid", "shiptoaddressid", "shipmethodid", "creditcardid", "creditcardapprovalcode", "currencyrateid", "subtotal", "taxamt", "freight", "totaldue", "comment", "rowguid", "modifieddate"
+## FROM (SELECT *
+## FROM sales.salesorderheader
+## WHERE ("onlineorderflag" = TRUE)) "dbplyr_014") "dbplyr_015"
+## GROUP BY "orderdate") "RHS"
+## ON ("LHS"."orderdate" = "RHS"."orderdate")
+```
+
+```r
+missing_dates <- sales_order_header_online %>% 
+  anti_join(sales_order_header_sales_rep) %>% 
+  arrange(orderdate) %>% 
+  collect()
+```
+
+```
+## Joining, by = "orderdate"
+```
+
+```r
+missing_dates
+```
+
+```
+## # A tibble: 4 x 2
+##   orderdate           online_count
+##   <dttm>                     <int>
+## 1 2011-06-01 00:00:00          141
+## 2 2011-09-01 00:00:00          157
+## 3 2011-11-01 00:00:00          230
+## 4 2014-06-01 00:00:00          939
+```
+
+```r
+str(missing_dates)
+```
+
+```
+## Classes 'tbl_df', 'tbl' and 'data.frame':	4 obs. of  2 variables:
+##  $ orderdate   : POSIXct, format: "2011-06-01" "2011-09-01" ...
+##  $ online_count: int  141 157 230 939
+```
+
+And in this case they agree!
 
 discuss February issues.  and stuff. 
 
@@ -1342,16 +1367,9 @@ difference between detective work with a graph and just print it out.  "now I se
 
 We have xx months when we add the month before and the month after the **suspicious months**.  We don't know whether the problem postings have been carried forward or backward.  We check for and eliminate duplicates as well.
 
-
-That is unexpected.  A couple of  things immediately jump out from the first page of data:
-
-*  July, September, and November are missing for 2011. 
 *  Most of the **Sales Reps**' orders are entered on a single day of the month, unique days = 1. It is possible that these are monthly recurring orders that get released on a given day of the month.  If that is the case, what are the **Sales Reps** doing the rest of the month?
 *  ** ?? The lines with multiple days, unique_days > 1, have a noticeable higher number of orders, so_cnt, and associated so dollars.?? **
 
-The plot clearly shows that two months with multiple sales rep order days for 2011, (11/08 and 11/10), one for 2012, (1201), and two in 2014, (14/01 and 14/03).  The 14/03 is the only three day sales rep order month.
-
-In the next code block, we flesh out the dates associated with the **Sales Reps**' orders.  Since 4 out of the 5 months with multiple order days only have two dates, the code block captures them with a min/max orderdate.
 
 ## Correcting the order date for **Sales Reps**
 
@@ -1658,7 +1676,7 @@ ggplot(
   )
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-23-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-25-1.png" width="672" />
 
 
 ```r
@@ -1692,7 +1710,7 @@ ggplot(
   ) 
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-25-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-27-1.png" width="672" />
 
 additive graph showing how correction adds in some months and subtracts in others.
 
@@ -1712,7 +1730,7 @@ ggplot(data = monthly_sales_rep_adjusted, aes(x = year_month, y = total_soh_doll
   )
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-26-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-28-1.png" width="672" />
 
 Sales still seem to gyrate!
 
@@ -1721,7 +1739,14 @@ Sales still seem to gyrate!
 
 ```r
 dbDisconnect(con)
-# use connection_close(con) when running interactively
+# when running interactively use:
+connection_close(con) 
+```
 
-#sp_docker_stop("adventureworks")
+```
+## Warning in connection_release(conn@ptr): Already disconnected
+```
+
+```r
+sp_docker_stop("adventureworks")
 ```

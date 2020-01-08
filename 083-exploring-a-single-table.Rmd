@@ -6,11 +6,11 @@
 >   * Show the multiple data anomalies found in a single AdventureWorks table (*salesorderheader*)
 >   * The interplay between "data questions" and "business questions"
 
-The previous chapter has demonstrated some of the automated techniques for showing what's in a table using some standard R functions and packages.  Now we demonstrate a step-by-step process of making sense of what's in one table with more of a business perspective.  We illustrate the kind of detective work that's often involved as we investigate the *organizational meaning* of the data in a table.  We'll investigate the `salesorderheader` table in the `sales` schema with a key business question in mind; are sales dollars trending up, down or flat?
+The previous chapter has demonstrated some of the automated techniques for showing what's in a table using some standard R functions and packages.  Now we demonstrate a step-by-step process of making sense of what's in one table with more of a business perspective.  We illustrate the kind of detective work that's often involved as we investigate the *organizational meaning* of the data in a table.  We'll investigate the `salesorderheader` table in the `sales` schema in this example to understand the sales profile of the "AdventureWorks" business.  We show that there are quite a few interpretation issues even when we are examining just 3 out of the 25 columns in one table.
 
 For this kind of detective work we are seeking to understand the following elements separately and as they interact with each other:
 
-  * What data is stored in the database and 
+  * What data is stored in the database
   * How information is represented
   * How the data is entered at a day-to-day level to represent business activities
   * How the business itself is changing over time
@@ -47,8 +47,8 @@ Connect to `adventureworks`.  In an interactive session we prefer to use `connec
 ```{r, start adventureworks and connect}
 sp_docker_start("adventureworks")
 Sys.sleep(sleep_default)
-# con <- dbConnect(
-con <- connection_open(
+con <- dbConnect(
+# con <- connection_open(
   RPostgres::Postgres(),
   bigint = "integer",  
   host = "localhost",
@@ -58,14 +58,14 @@ con <- connection_open(
   dbname = "adventureworks")
 ```
 
-Some queries generate big integers, so we need to include `RPostgres::Postgres()` and `bigint = "integer"` in the connections statement.
+Some queries generate big integers, so we need to include `RPostgres::Postgres()` and `bigint = "integer"` in the connections statement because some functions in the tidyverse object to the **bigint** datatype.
 
 
 ## A word on naming 
 
-> You will find that many tables will have columns with the same name in an enterprise database.  For example, in the adventureworks database, almost all tables have columns named `rowguid` and `modifieddate` and there are many other examples of names that are reused throughout the database.  The meaning of a column depends on the table that contains it, so as you pull a column out of a table, naming its provenance is important.
+> You will find that many tables will have columns with the same name in an enterprise database.  For example, in the *AdventureWorks* database, almost all tables have columns named `rowguid` and `modifieddate` and there are many other examples of names that are reused throughout the database.  Duplicate columns are best renamed or deliberately dropped.  The meaning of a column depends on the table that contains it, so as you pull a column out of a table, when renaming it the collumns provenance should be reflected in the new name.
 >
-> Naming columns carefully (whether retrieved from the database or calculated)  will pay off, especially as our queries become more complex. Using `soh` as an abbreviation of *sales order header* to tag statistics that are derived from the `salesorderheader` table, as we do in this book, is one example of an intentional naming strategy: it reminds us of the original source of a column.  You, future you, and your collaborators will appreciate the effort although different naming conventions are completely valid.  And a naming convention when rigidly applied can yield some long and ugly names.
+> Naming columns carefully (whether retrieved from the database or calculated)  will pay off, especially as our queries become more complex. Using `soh` as an abbreviation of *sales order header* to tag columns or statistics that are derived from the `salesorderheader` table, as we do in this book, is one example of an intentional naming strategy: it reminds us of the original source of the data.  You, future you, and your collaborators will appreciate the effort no matter what naming convention you adopt.  And a naming convention when rigidly applied can yield some long and ugly names.
 >
 > In the following example `soh` appears in different positions in the column name but it is easy to guess at a glance that the data comes from the `salesorderheader` table.
 >
@@ -100,7 +100,7 @@ annual_sales <- tbl(con, in_schema("sales", "salesorderheader")) %>%
   
 ```
 
-Note that all of this query is running on the server.  The `show_query` function shows the SQL code postgreSQL is runs to produce its output.
+Note that all of this query is running on the server.  The `show_query` function shows the SQL code postgreSQL runs to produce its output.
 
 ```{r Show the column format of the resulting query}
 annual_sales %>% str()
@@ -190,7 +190,7 @@ monthly_sales <- tbl(con, in_schema("sales", "salesorderheader")) %>%
   collect() 
 ```
 
-In many cases we don't really care where our queries are executed, but if we do we have to look for cases where functions from R packages like `lubridate` and the equivalent `postgreSQL` functions are subtly different.  In this case the `postgreSQL` function produces a `POSIXct` column, not a `Date` so we need to tack on a mutate function onto our query.
+In many cases we don't really care whether our queries are executed by R or by the SQL server, but if we do care we have to look for cases where functions from R packages like `lubridate` and the equivalent `postgreSQL` functions are subtly different.  In the previous query the `postgreSQL` function produces a `POSIXct` column, not a `Date` so we need to tack on a mutate function once the data is on the R side.
 
 ```{r}
 monthly_sales <-  monthly_sales %>% 
@@ -228,6 +228,7 @@ monthly_sales_lagged[is.na(monthly_sales_lagged)] = 0
 ```
 
 ```{r}
+median(monthly_sales_lagged$monthly_sales_change, na.rm = TRUE)
 (sum_lags <- summary(monthly_sales_lagged$monthly_sales_change))
 ```
 
@@ -440,12 +441,13 @@ monthly_sales_w_channel %>%
     unique_dates = n(),
     start_date = min(min_soh_orderdate),
     end_date = max(max_soh_orderdate),
-    total_sales = sum(total_soh_dollars)
+    total_sales = round(sum(total_soh_dollars)), 
+    days_span = end_date - start_date
   ) %>%
   gt()
 ```
 
-As we will see later on, the **Sales Rep** data doesn't match the **Online** data.  The **Online** data includes 2 months that are not included in the main sales channel.
+As this table shows, the **Sales Rep** dates don't match the **Online** dates.  they start the same, but have a different end.  The **Online** dates include 2 months that are not included in the Sales Rep sales (which are the main sales channel by dollar volume).
 
 ### Monthly variation compared to a trend line
 
@@ -475,7 +477,7 @@ ggplot(
   )
 ```
 
-The **monthly** gyrations are happening on the Sales Rep side, amounting to differences in a million dollars compared to small variations of around $25,000.
+The **monthly** gyrations are happening on the Sales Rep side, amounting to differences in a million dollars compared to small monthly variations of around $25,000 for the Online orders.
 
 ### Compare monthly lagged data by order type
 
@@ -574,14 +576,30 @@ We suspect that the business has changed a lot with the advent of **Online** ord
 
 ## Detect and diagnose the day of the month problem
 
-Looking at the raw data leads us to suspect that there is a problem with the dates on which Sales Rep orders are entered.
+Browsing at the raw data leads us to suspect that there is an odd pattern on the Sales Rep side: the sales are almost always recorded on the last day of the month.
 
 ### Sales Rep Orderdate Distribution
 
-Look at the dates when sales are entered for sales by **Sales Reps**.  The following query merits some discussion.
+Look at the dates when sales are entered for sales by **Sales Reps**.  The following query / plot combination shows this pattern and the exception for transactions entered on the first day of the month.
 
-Digging into the day-of-month problem.
+```{r}
+  tbl(con, in_schema("sales", "salesorderheader")) %>%
+  filter(onlineorderflag == FALSE) %>% # Drop online orders
+  mutate(orderday = day(orderdate)) %>%
+  count(orderday, name = "Orders") %>% 
+  collect() %>% 
+  full_join(tibble(orderday = seq(1:31))) %>% 
+  mutate(orderday = as.factor(orderday)) %>% 
+  ggplot(aes(orderday, Orders)) +
+  geom_col() +
+  coord_flip() +
+  labs(title = "The first day of the month looks odd",
+       x = "Day Number")
+  
 
+```
+
+We can check on which months have orders entered on the first of the month.
 ```{r}
 sales_rep_day_of_month_sales <- tbl(con, in_schema("sales", "salesorderheader")) %>%
   filter(onlineorderflag == FALSE) %>% # Drop online orders
@@ -592,20 +610,15 @@ sales_rep_day_of_month_sales <- tbl(con, in_schema("sales", "salesorderheader"))
     day = day(orderdate)
   ) %>%
   count(year, month, day) %>% 
-  arrange(year, month) %>% 
-  collect() %>% 
-  ungroup() %>% 
-  mutate(n = as.numeric(n))
-
-str(sales_rep_day_of_month_sales)
-
-sales_rep_day_of_month_sales <- sales_rep_day_of_month_sales %>% 
-  pivot_wider(names_from = day, values_from = n, names_prefix = "day_" ) %>% 
+  collect() %>%
+  pivot_wider(names_from = day, values_from = n, names_prefix = "day_", values_fill = 0 ) %>% 
   as.data.frame() %>% 
   select(year, month, day_1, day_28, day_29, day_30, day_31) %>% 
-  filter(!is.na(day_1))
+  # filter(!is.na(day_1))
+  filter(day_1 > 0)
 
-str(sales_rep_day_of_month_sales)
+sales_rep_day_of_month_sales
+
 ```
 
 There are two months with multiple sales rep order days for 2011, (11/08 and 11/10), one for 2012, (1201), and two in 2014, (14/01 and 14/03).  The 14/03 is the only three day sales rep order month.
@@ -946,7 +959,8 @@ Sales still seem to gyrate!
 
 ```{r}
 dbDisconnect(con)
-# use connection_close(con) when running interactively
+# when running interactively use:
+connection_close(con) 
 
 sp_docker_stop("adventureworks")
 ```

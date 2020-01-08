@@ -29,9 +29,7 @@ sp_check_that_docker_is_up()
 ```
 
 ```
-## [1] "Docker is up, running these containers:"                                                                                                           
-## [2] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES"           
-## [3] "f44ee620b29e        postgres:11         \"docker-entrypoint.s…\"   5 days ago          Up 4 days           0.0.0.0:5432->5432/tcp   adventureworks"
+## [1] "Docker is up but running no containers"
 ```
 
 

@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 9 Sales Forecasting | Exploring Enterprise Databases with R: A Tidyverse Approach</title>
   <meta name="description" content="An introduction to Docker and PostgreSQL for R users to simulate use cases behind corporate walls." />
-  <meta name="generator" content="bookdown 0.12 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.16 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 9 Sales Forecasting | Exploring Enterprise Databases with R: A Tidyverse Approach" />
   <meta property="og:type" content="book" />
@@ -24,15 +24,15 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, and Ian Frantz" />
 
 
-<meta name="date" content="2019-12-20" />
+<meta name="date" content="2020-01-08" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="chapter-exploring-a-single-table.html">
-<link rel="next" href="chapter-lazy-evaluation-queries.html">
+<link rel="prev" href="chapter-exploring-a-single-table.html"/>
+<link rel="next" href="chapter-lazy-evaluation-queries.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -40,6 +40,9 @@
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
 
 
 
@@ -49,7 +52,7 @@
 
 <script src="libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
 <link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding-0.10/datatables.js"></script>
+<script src="libs/datatables-binding-0.11/datatables.js"></script>
 <link href="libs/dt-core-1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" />
 <link href="libs/dt-core-1.10.19/css/jquery.dataTables.extra.css" rel="stylesheet" />
 <script src="libs/dt-core-1.10.19/js/jquery.dataTables.min.js"></script>
@@ -245,7 +248,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="8.9" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#correcting-the-order-date-for-sales-reps"><i class="fa fa-check"></i><b>8.9</b> Correcting the order date for <strong>Sales Reps</strong></a><ul>
 <li class="chapter" data-level="8.9.1" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#define-a-date-correction-function-in-r"><i class="fa fa-check"></i><b>8.9.1</b> Define a date correction function in R</a></li>
-<li class="chapter" data-level="8.9.2" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#define-and-store-a-postgresql-function-to-correct-the-date"><i class="fa fa-check"></i><b>8.9.2</b> Define and store a PostgreSQL function to correct the date</a></li>
+<li class="chapter" data-level="8.9.2" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#define-postgres-date-function"><i class="fa fa-check"></i><b>8.9.2</b> Define and store a PostgreSQL function to correct the date</a></li>
 <li class="chapter" data-level="8.9.3" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#use-the-postgresql-function"><i class="fa fa-check"></i><b>8.9.3</b> Use the PostgreSQL function</a></li>
 <li class="chapter" data-level="8.9.4" data-path="chapter-exploring-a-single-table.html"><a href="chapter-exploring-a-single-table.html#monthly-sales-by-order-type-with-corrected-dates-relative-to-a-trend-line"><i class="fa fa-check"></i><b>8.9.4</b> Monthly Sales by Order Type with corrected dates – relative to a trend line</a></li>
 </ul></li>
@@ -300,13 +303,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="12.2" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#the-role-of-database-views"><i class="fa fa-check"></i><b>12.2</b> The role of database <code>views</code></a><ul>
 <li class="chapter" data-level="12.2.1" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#why-database-views-are-useful"><i class="fa fa-check"></i><b>12.2.1</b> Why database <code>views</code> are useful</a></li>
 <li class="chapter" data-level="12.2.2" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#rely-on-and-be-critical-of-views"><i class="fa fa-check"></i><b>12.2.2</b> Rely on <strong>and</strong> be critical of <code>views</code></a></li>
-<li class="chapter" data-level="12.2.3" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#how-to-unpack-and-inspect-a-view"><i class="fa fa-check"></i><b>12.2.3</b> How to unpack and inspect a <code>view</code></a></li>
 </ul></li>
-<li class="chapter" data-level="12.3" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#reproduce-the-view-with-dplyr"><i class="fa fa-check"></i><b>12.3</b> Reproduce the <code>view</code> with dplyr</a><ul>
-<li class="chapter" data-level="12.3.1" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#compare-the-two-versions"><i class="fa fa-check"></i><b>12.3.1</b> Compare the two versions</a></li>
-<li class="chapter" data-level="12.3.2" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#revise-the-view"><i class="fa fa-check"></i><b>12.3.2</b> Revise the view</a></li>
+<li class="chapter" data-level="12.3" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#unpacking-the-elements-of-a-view-tidyverse"><i class="fa fa-check"></i><b>12.3</b> Unpacking the elements of a <code>view</code> Tidyverse</a><ul>
+<li class="chapter" data-level="12.3.1" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#use-a-view-just-like-any-other-table"><i class="fa fa-check"></i><b>12.3.1</b> Use a <code>view</code> just like any other table</a></li>
+<li class="chapter" data-level="12.3.2" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#sql-source-code"><i class="fa fa-check"></i><b>12.3.2</b> SQL source code</a></li>
+<li class="chapter" data-level="12.3.3" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#the-erd-as-context-for-sql-code"><i class="fa fa-check"></i><b>12.3.3</b> The ERD as context for SQL code</a></li>
+<li class="chapter" data-level="12.3.4" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#tables-and-columns"><i class="fa fa-check"></i><b>12.3.4</b> Tables and columns</a></li>
+<li class="chapter" data-level="12.3.5" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#join-the-tables-together"><i class="fa fa-check"></i><b>12.3.5</b> Join the tables together</a></li>
 </ul></li>
-<li class="chapter" data-level="12.4" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#save-a-view-in-the-database"><i class="fa fa-check"></i><b>12.4</b> Save a <code>view</code> in the database</a></li>
+<li class="chapter" data-level="12.4" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#compare-the-official-from-a-view-and-the-dplyr-output"><i class="fa fa-check"></i><b>12.4</b> Compare the official from a view and the dplyr output</a></li>
+<li class="chapter" data-level="12.5" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#revise-the-view"><i class="fa fa-check"></i><b>12.5</b> Revise the view</a></li>
+<li class="chapter" data-level="12.6" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#save-a-view-in-the-database"><i class="fa fa-check"></i><b>12.6</b> Save a <code>view</code> in the database</a></li>
 </ul></li>
 <li class="chapter" data-level="13" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html"><i class="fa fa-check"></i><b>13</b> Getting metadata about and from PostgreSQL</a><ul>
 <li class="chapter" data-level="13.1" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html#views-trick-parked-here-for-the-time-being"><i class="fa fa-check"></i><b>13.1</b> Views trick parked here for the time being</a><ul>
@@ -444,32 +451,32 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="setup-1" class="section level2">
 <h2><span class="header-section-number">9.1</span> Setup</h2>
 <p>The following packages are used in this chapter:</p>
-<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb181-1" data-line-number="1"><span class="kw">library</span>(tidyverse)</a>
-<a class="sourceLine" id="cb181-2" data-line-number="2"><span class="kw">library</span>(DBI)</a>
-<a class="sourceLine" id="cb181-3" data-line-number="3"><span class="kw">library</span>(RPostgres)</a>
-<a class="sourceLine" id="cb181-4" data-line-number="4"><span class="kw">require</span>(knitr)</a>
-<a class="sourceLine" id="cb181-5" data-line-number="5"><span class="kw">library</span>(bookdown)</a>
-<a class="sourceLine" id="cb181-6" data-line-number="6"><span class="kw">library</span>(sqlpetr)</a>
-<a class="sourceLine" id="cb181-7" data-line-number="7"><span class="kw">library</span>(tsibble)</a>
-<a class="sourceLine" id="cb181-8" data-line-number="8"><span class="kw">library</span>(fable)</a>
-<a class="sourceLine" id="cb181-9" data-line-number="9"><span class="kw">library</span>(zoo)</a></code></pre></div>
+<div class="sourceCode" id="cb191"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb191-1" data-line-number="1"><span class="kw">library</span>(tidyverse)</a>
+<a class="sourceLine" id="cb191-2" data-line-number="2"><span class="kw">library</span>(DBI)</a>
+<a class="sourceLine" id="cb191-3" data-line-number="3"><span class="kw">library</span>(RPostgres)</a>
+<a class="sourceLine" id="cb191-4" data-line-number="4"><span class="kw">require</span>(knitr)</a>
+<a class="sourceLine" id="cb191-5" data-line-number="5"><span class="kw">library</span>(bookdown)</a>
+<a class="sourceLine" id="cb191-6" data-line-number="6"><span class="kw">library</span>(sqlpetr)</a>
+<a class="sourceLine" id="cb191-7" data-line-number="7"><span class="kw">library</span>(tsibble)</a>
+<a class="sourceLine" id="cb191-8" data-line-number="8"><span class="kw">library</span>(fable)</a>
+<a class="sourceLine" id="cb191-9" data-line-number="9"><span class="kw">library</span>(zoo)</a></code></pre></div>
 <p>Analyzing sales time series, in particular determining seasonality and forecasting future sales, is a common activty in business management. A collection of packages called <code>tidyverst</code> is designed to do this in a tidy data framework.</p>
 <p>First, we make sure the Docker container is ready and connect to the <code>adventureworks</code> database.</p>
-<div class="sourceCode" id="cb182"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb182-1" data-line-number="1">sqlpetr<span class="op">::</span><span class="kw">sp_docker_start</span>(<span class="st">&quot;adventureworks&quot;</span>)</a>
-<a class="sourceLine" id="cb182-2" data-line-number="2">con &lt;-<span class="st"> </span>sqlpetr<span class="op">::</span><span class="kw">sp_get_postgres_connection</span>(</a>
-<a class="sourceLine" id="cb182-3" data-line-number="3">  <span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),</a>
-<a class="sourceLine" id="cb182-4" data-line-number="4">  <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),</a>
-<a class="sourceLine" id="cb182-5" data-line-number="5">  <span class="dt">dbname =</span> <span class="st">&quot;adventureworks&quot;</span>,</a>
-<a class="sourceLine" id="cb182-6" data-line-number="6">  <span class="dt">port =</span> <span class="dv">5432</span>,</a>
-<a class="sourceLine" id="cb182-7" data-line-number="7">  <span class="dt">seconds_to_test =</span> <span class="dv">20</span>,</a>
-<a class="sourceLine" id="cb182-8" data-line-number="8">  <span class="dt">connection_tab =</span> <span class="ot">FALSE</span></a>
-<a class="sourceLine" id="cb182-9" data-line-number="9">)</a></code></pre></div>
+<div class="sourceCode" id="cb192"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb192-1" data-line-number="1">sqlpetr<span class="op">::</span><span class="kw">sp_docker_start</span>(<span class="st">&quot;adventureworks&quot;</span>)</a>
+<a class="sourceLine" id="cb192-2" data-line-number="2">con &lt;-<span class="st"> </span>sqlpetr<span class="op">::</span><span class="kw">sp_get_postgres_connection</span>(</a>
+<a class="sourceLine" id="cb192-3" data-line-number="3">  <span class="dt">user =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_USER_NAME&quot;</span>),</a>
+<a class="sourceLine" id="cb192-4" data-line-number="4">  <span class="dt">password =</span> <span class="kw">Sys.getenv</span>(<span class="st">&quot;DEFAULT_POSTGRES_PASSWORD&quot;</span>),</a>
+<a class="sourceLine" id="cb192-5" data-line-number="5">  <span class="dt">dbname =</span> <span class="st">&quot;adventureworks&quot;</span>,</a>
+<a class="sourceLine" id="cb192-6" data-line-number="6">  <span class="dt">port =</span> <span class="dv">5432</span>,</a>
+<a class="sourceLine" id="cb192-7" data-line-number="7">  <span class="dt">seconds_to_test =</span> <span class="dv">20</span>,</a>
+<a class="sourceLine" id="cb192-8" data-line-number="8">  <span class="dt">connection_tab =</span> <span class="ot">FALSE</span></a>
+<a class="sourceLine" id="cb192-9" data-line-number="9">)</a></code></pre></div>
 <p>Next, we retrieve the “sales order header” table from the database, close the connection and stop the container.</p>
-<div class="sourceCode" id="cb183"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb183-1" data-line-number="1"><span class="kw">dbExecute</span>(con, <span class="st">&quot;set search_path to sales;&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb193-1" data-line-number="1"><span class="kw">dbExecute</span>(con, <span class="st">&quot;set search_path to sales;&quot;</span>)</a></code></pre></div>
 <pre><code>## [1] 0</code></pre>
-<div class="sourceCode" id="cb185"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb185-1" data-line-number="1">salesorderheader_tibble &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbReadTable</span>(con, <span class="st">&quot;salesorderheader&quot;</span>)</a>
-<a class="sourceLine" id="cb185-2" data-line-number="2">DBI<span class="op">::</span><span class="kw">dbDisconnect</span>(con)</a>
-<a class="sourceLine" id="cb185-3" data-line-number="3">sqlpetr<span class="op">::</span><span class="kw">sp_docker_stop</span>(<span class="st">&quot;adventureworks&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb195-1" data-line-number="1">salesorderheader_tibble &lt;-<span class="st"> </span>DBI<span class="op">::</span><span class="kw">dbReadTable</span>(con, <span class="st">&quot;salesorderheader&quot;</span>)</a>
+<a class="sourceLine" id="cb195-2" data-line-number="2">DBI<span class="op">::</span><span class="kw">dbDisconnect</span>(con)</a>
+<a class="sourceLine" id="cb195-3" data-line-number="3">sqlpetr<span class="op">::</span><span class="kw">sp_docker_stop</span>(<span class="st">&quot;adventureworks&quot;</span>)</a></code></pre></div>
 </div>
 <div id="exploring-the-sales-data" class="section level2">
 <h2><span class="header-section-number">9.2</span> Exploring the sales data</h2>
@@ -480,56 +487,56 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>In a real-world setting, the analyst would need to validate these assumptions. Given that, our first task is to create a <code>tsibble</code> - a time series tibble - of monthly revenue figures.</p>
 <div id="creating-a-tsibble" class="section level3">
 <h3><span class="header-section-number">9.2.1</span> Creating a tsibble</h3>
-<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb186-1" data-line-number="1">monthly_tsibble &lt;-<span class="st"> </span>salesorderheader_tibble <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb186-2" data-line-number="2"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(</a>
-<a class="sourceLine" id="cb186-3" data-line-number="3">    <span class="dt">origin =</span> <span class="kw">ifelse</span>(onlineorderflag, <span class="st">&quot;online&quot;</span>, <span class="st">&quot;sales_rep&quot;</span>),</a>
-<a class="sourceLine" id="cb186-4" data-line-number="4">    <span class="dt">month =</span> lubridate<span class="op">::</span><span class="kw">floor_date</span>(shipdate, <span class="dt">unit =</span> <span class="st">&quot;months&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb186-5" data-line-number="5"><span class="st">      </span><span class="kw">as.yearmon</span>()</a>
-<a class="sourceLine" id="cb186-6" data-line-number="6">  ) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb186-7" data-line-number="7"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">group_by</span>(origin, month) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb186-8" data-line-number="8"><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">summarize</span>(<span class="dt">orders =</span> <span class="kw">n</span>(), <span class="dt">total_revenue =</span> <span class="kw">sum</span>(subtotal)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb186-9" data-line-number="9"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">ungroup</span>()</a>
-<a class="sourceLine" id="cb186-10" data-line-number="10"></a>
-<a class="sourceLine" id="cb186-11" data-line-number="11"><span class="co"># Note that there are two more months - June and July of 2014 - for the</span></a>
-<a class="sourceLine" id="cb186-12" data-line-number="12"><span class="co"># online data, and the revenue values are suspiciously low.</span></a>
-<a class="sourceLine" id="cb186-13" data-line-number="13"><span class="co"># We remove them for consistency.</span></a>
-<a class="sourceLine" id="cb186-14" data-line-number="14">monthly_tsibble &lt;-<span class="st"> </span>monthly_tsibble <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb186-15" data-line-number="15"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(month <span class="op">&lt;</span><span class="st"> &#39;2014-06-01&#39;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb186-16" data-line-number="16"><span class="st">  </span>tsibble<span class="op">::</span><span class="kw">as_tsibble</span>(<span class="dt">key =</span> origin, <span class="dt">index =</span> month)</a></code></pre></div>
+<div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb196-1" data-line-number="1">monthly_tsibble &lt;-<span class="st"> </span>salesorderheader_tibble <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb196-2" data-line-number="2"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">mutate</span>(</a>
+<a class="sourceLine" id="cb196-3" data-line-number="3">    <span class="dt">origin =</span> <span class="kw">ifelse</span>(onlineorderflag, <span class="st">&quot;online&quot;</span>, <span class="st">&quot;sales_rep&quot;</span>),</a>
+<a class="sourceLine" id="cb196-4" data-line-number="4">    <span class="dt">month =</span> lubridate<span class="op">::</span><span class="kw">floor_date</span>(shipdate, <span class="dt">unit =</span> <span class="st">&quot;months&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb196-5" data-line-number="5"><span class="st">      </span><span class="kw">as.yearmon</span>()</a>
+<a class="sourceLine" id="cb196-6" data-line-number="6">  ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb196-7" data-line-number="7"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">group_by</span>(origin, month) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb196-8" data-line-number="8"><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">summarize</span>(<span class="dt">orders =</span> <span class="kw">n</span>(), <span class="dt">total_revenue =</span> <span class="kw">sum</span>(subtotal)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb196-9" data-line-number="9"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">ungroup</span>()</a>
+<a class="sourceLine" id="cb196-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb196-11" data-line-number="11"><span class="co"># Note that there are two more months - June and July of 2014 - for the</span></a>
+<a class="sourceLine" id="cb196-12" data-line-number="12"><span class="co"># online data, and the revenue values are suspiciously low.</span></a>
+<a class="sourceLine" id="cb196-13" data-line-number="13"><span class="co"># We remove them for consistency.</span></a>
+<a class="sourceLine" id="cb196-14" data-line-number="14">monthly_tsibble &lt;-<span class="st"> </span>monthly_tsibble <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb196-15" data-line-number="15"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">filter</span>(month <span class="op">&lt;</span><span class="st"> &#39;2014-06-01&#39;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb196-16" data-line-number="16"><span class="st">  </span>tsibble<span class="op">::</span><span class="kw">as_tsibble</span>(<span class="dt">key =</span> origin, <span class="dt">index =</span> month)</a></code></pre></div>
 </div>
 <div id="exploring-the-data" class="section level3">
 <h3><span class="header-section-number">9.2.2</span> Exploring the data</h3>
 <p>First, let’s look at orders for online and sales representative sales:</p>
-<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb187-1" data-line-number="1">monthly_tsibble <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">autoplot</span>(orders)</a></code></pre></div>
+<div class="sourceCode" id="cb197"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb197-1" data-line-number="1">monthly_tsibble <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">autoplot</span>(orders)</a></code></pre></div>
 <pre><code>## Don&#39;t know how to automatically pick scale for object of type yearmon. Defaulting to continuous.</code></pre>
 <p><img src="085-sales-forecasting_files/figure-html/unnamed-chunk-1-1.png" width="672" />
 Disconnect from the database:</p>
-<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb189-1" data-line-number="1"><span class="kw">dbDisconnect</span>(con)</a></code></pre></div>
+<div class="sourceCode" id="cb199"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb199-1" data-line-number="1"><span class="kw">dbDisconnect</span>(con)</a></code></pre></div>
 <pre><code>## Warning in connection_release(conn@ptr): Already disconnected</code></pre>
 </div>
 </div>
 <div id="cleaning-up" class="section level2">
 <h2><span class="header-section-number">9.3</span> Cleaning up</h2>
 <p>Always have R disconnect from the database when you’re done.</p>
-<div class="sourceCode" id="cb191"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb191-1" data-line-number="1"><span class="kw">dbDisconnect</span>(con)</a></code></pre></div>
+<div class="sourceCode" id="cb201"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb201-1" data-line-number="1"><span class="kw">dbDisconnect</span>(con)</a></code></pre></div>
 <pre><code>## Warning in connection_release(conn@ptr): Already disconnected</code></pre>
 <p>```</p>
 <p>Wow! Online orders really took off in the late spring - early summer of 2013! How about revenues?</p>
-<div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb193-1" data-line-number="1">monthly_tsibble <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">autoplot</span>(total_revenue)</a></code></pre></div>
+<div class="sourceCode" id="cb203"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb203-1" data-line-number="1">monthly_tsibble <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">autoplot</span>(total_revenue)</a></code></pre></div>
 <pre><code>## Don&#39;t know how to automatically pick scale for object of type yearmon. Defaulting to continuous.</code></pre>
 <p><img src="085-sales-forecasting_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <p>There’s an increase, but the sales representatives always brought in more revenue than the online platform. And there’s a pronounced variation in the revenue from sales representatives on a month-to-month basis.</p>
 <p>Before moving on, let’s look at revenue per order.</p>
-<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb195-1" data-line-number="1">monthly_tsibble <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">autoplot</span>(total_revenue <span class="op">/</span><span class="st"> </span>orders)</a></code></pre></div>
+<div class="sourceCode" id="cb205"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb205-1" data-line-number="1">monthly_tsibble <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">autoplot</span>(total_revenue <span class="op">/</span><span class="st"> </span>orders)</a></code></pre></div>
 <pre><code>## Don&#39;t know how to automatically pick scale for object of type yearmon. Defaulting to continuous.</code></pre>
 <p><img src="085-sales-forecasting_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 <p>For the sales representatives, there’s still a month-to-month variation but the revenue per order appears to be bounded both below and above. However, the online revenue per order is decreasing. Note that this decline appears to be in steps between May and June each year; that could mean it’s an artifact of the database creation process and not a “natural” phenomenon.</p>
 </div>
 <div id="disconnect-from-the-database-and-stop-docker-4" class="section level2">
 <h2><span class="header-section-number">9.4</span> Disconnect from the database and stop Docker</h2>
-<div class="sourceCode" id="cb197"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb197-1" data-line-number="1"><span class="kw">dbDisconnect</span>(con)</a></code></pre></div>
+<div class="sourceCode" id="cb207"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb207-1" data-line-number="1"><span class="kw">dbDisconnect</span>(con)</a></code></pre></div>
 <pre><code>## Warning in connection_release(conn@ptr): Already disconnected</code></pre>
-<div class="sourceCode" id="cb199"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb199-1" data-line-number="1"><span class="kw">sp_docker_stop</span>(<span class="st">&quot;adventureworks&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb209"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb209-1" data-line-number="1"><span class="kw">sp_docker_stop</span>(<span class="st">&quot;adventureworks&quot;</span>)</a></code></pre></div>
 
 </div>
 </div>
@@ -544,11 +551,13 @@ Disconnect from the database:</p>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
@@ -556,12 +565,11 @@ gitbook.start({
 "github": false,
 "facebook": true,
 "twitter": true,
-"google": false,
 "linkedin": false,
 "weibo": false,
 "instapaper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -573,6 +581,10 @@ gitbook.start({
 "text": "Edit"
 },
 "history": {
+"link": null,
+"text": null
+},
+"view": {
 "link": null,
 "text": null
 },
