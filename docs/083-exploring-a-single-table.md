@@ -8,7 +8,7 @@
 
 The previous chapter has demonstrated some of the automated techniques for showing what's in a table using some standard R functions and packages.  Now we demonstrate a step-by-step process of making sense of what's in one table with more of a business perspective.  We illustrate the kind of detective work that's often involved as we investigate the *organizational meaning* of the data in a table.  We'll investigate the `salesorderheader` table in the `sales` schema in this example to understand the sales profile of the "AdventureWorks" business.  We show that there are quite a few interpretation issues even when we are examining just 3 out of the 25 columns in one table.
 
-For this kind of detective work we are seeking to understand the following elements separately and as they interact with each other (and they all do):
+For this kind of detective work we are seeking to understand the following elements separately and as they interact with each other:
 
   * What data is stored in the database
   * How information is represented
@@ -134,25 +134,26 @@ min_soh_dt <- min(annual_sales$min_soh_orderdate)
 max_soh_dt <- max(annual_sales$max_soh_orderdate)
 ```
 
+You can't see it yet but both 2011 and 2014 are shorter time spans than the other two years, making comparison across the years more difficult. We might normalize the totals based on the number of months in each year, but we first graph total dollars and see that 2013 was the best year for annual sales dollars.
+
 ### Total sales by year
 
 
 ```r
 ggplot(data = annual_sales, aes(x = year, y = total_soh_dollars)) +
   geom_col() +
+  geom_text(aes(label = round(as.numeric(total_soh_dollars), digits = 0)), vjust = -0.25) +
   scale_y_continuous(labels = scales::dollar_format()) +
   labs(
     title = "Adventure Works Sales Dollars by Year",
-    x = glue("Year - between ", {format(min_soh_dt, "%B %d, %Y")} , " and  ", 
+    x = glue("Years between ", {format(min_soh_dt, "%B %d, %Y")} , " and  ", 
             {format(max_soh_dt, "%B %d, %Y")}),
     y = "Sales $"
   )
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/Calculate time period and annual sales dollars - 2 -1.png" width="384" />
+<img src="083-exploring-a-single-table_files/figure-html/Calculate time period and annual sales dollars - 2 -1.png" width="480" />
 Both 2011 and 2014 are shorter time spans than the other two years, making comparison interpretation more difficult. 
-
-From 2011 through 2013, sales are trending up. Are sales dollars for 2014 really down? We only have a half year of data, but the 2014 total is less than half of the 2013 total. Could it be that sales are seasonal? Maybe AdventureWorks has larger sales volumes in the fourth quarter.  To see if the sales dollars are seasonal, we drill down and look at the monthly sales.  But first, let's look at the number of orders and whether there's a pattern in the sales data.  
 
 ### Total order volume
 
@@ -172,10 +173,9 @@ ggplot(data = annual_sales, aes(x = year, y = as.numeric(soh_count))) +
 
 <img src="083-exploring-a-single-table_files/figure-html/average dollars per sale - v2-1.png" width="384" />
 
-That's a huge jump in the number of orders between 2012 and 2013.  Given the total annual dollars, we ask whether the size of a sale has changed.
+Here again we see that 2013 was the best year in terms of total number of orders. But look at 2014, it has had many more orders than 2012 but lags in terms of annual sales. Why might this be? Let's investigate whether the size of the average sale has changed.
 
 ### Average dollars per sale
-
 
 ```r
 ggplot(data = annual_sales, aes(x = year, y = avg_total_soh_dollars)) +
@@ -184,7 +184,7 @@ ggplot(data = annual_sales, aes(x = year, y = avg_total_soh_dollars)) +
   geom_text(aes(label = round(avg_total_soh_dollars, digits = 0)), vjust = -0.25) +
   labs(
     title = "Average Dollars per Sale",
-    x = glue("Year - between ", {format(min_soh_dt, "%B %d, %Y")} , " to  ", 
+    x = glue("Years between ", {format(min_soh_dt, "%B %d, %Y")} , " to  ", 
             {format(max_soh_dt, "%B %d, %Y")}),
     y = "Average Sale Amount"
   )
@@ -193,6 +193,7 @@ ggplot(data = annual_sales, aes(x = year, y = avg_total_soh_dollars)) +
 <img src="083-exploring-a-single-table_files/figure-html/average dollars per sale - -1.png" width="384" />
 
 That's a big drop between average sale of more than $7,000 to less than $3,000.  A remarkable change has taken place in this business.
+
 
 From 2012 to 2013 the average dollars per order dropped from more than $8,500 to nearly $3,000 while the total number of orders shot up from less than 4,000 to more than 14,000.  **Why are the number of orders increasing, but the average dollar amount of a sale is dropping?  **
 
@@ -228,14 +229,14 @@ monthly_sales <-  monthly_sales %>%
   mutate(orderdate = as.Date(orderdate))
 ```
 
-Plotting the monthly sales data:
+Next let's chart the monthly sales data:
 
 
 ```r
 ggplot(data = monthly_sales, aes(x = orderdate, y = total_soh_dollars)) +
   geom_col() +
   scale_y_continuous(labels = dollar) +
-  theme(plot.title = element_text(hjust = 0.5)) + # Center the title
+  theme(plot.title = element_text(hjust = 0.5)) + 
   labs(
     title = glue("Sales by Month\n", {format(min_soh_dt, "%B %d, %Y")} , " to  ", 
             {format(max_soh_dt, "%B %d, %Y")}),
@@ -248,12 +249,17 @@ ggplot(data = monthly_sales, aes(x = orderdate, y = total_soh_dollars)) +
 
 ### Check lagged monthly data
 
-The total sales are trending up but suspiciously uneven.  We'll use `dplyr::lag` to help with our month over month compairson and will later visualize just how much month-to-month difference there is:
+We can see our month-over-month sales contains lots of variation. We'll use `dplyr::lag` to help find the delta and later visualize just how much month-to-month difference there is.
+
 
 
 ```r
+monthly_sales <- arrange(monthly_sales, orderdate)
+
 monthly_sales_lagged <- monthly_sales %>%
   mutate(monthly_sales_change = (dplyr::lag(total_soh_dollars)) - total_soh_dollars)
+
+monthly_sales_lagged[is.na(monthly_sales_lagged)] = 0
 ```
 
 
@@ -262,7 +268,7 @@ median(monthly_sales_lagged$monthly_sales_change, na.rm = TRUE)
 ```
 
 ```
-## [1] -243090.76
+## [1] -221690.505
 ```
 
 ```r
@@ -271,12 +277,10 @@ median(monthly_sales_lagged$monthly_sales_change, na.rm = TRUE)
 
 ```
 ##        Min.     1st Qu.      Median        Mean     3rd Qu.        Max. 
-## -4628835.15 -1007058.90  -243090.76    20186.95  1614895.05  5742104.18 
-##        NA's 
-##           1
+## -5879806.05 -1172995.19  -221690.51    11968.42  1159252.70  5420357.17
 ```
 
-The trend is positive on average 20,187 but half of the months have swings greater than 2,621,954!
+The trend is positive on average 11,968. Let's calculate the inner quartile range to see how spread out our data is: 2,332,248 This robust statistic shows us that we have a very large spread in our month-over-month. Next, let's visualize this variation. 
 
 
 
@@ -285,8 +289,7 @@ ggplot(monthly_sales_lagged, aes(x = orderdate, y = monthly_sales_change)) +
   scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
   geom_line() +
   geom_point() +
-  scale_y_continuous( labels = scales::dollar_format()) +
-  # scale_y_continuous(limits = c(-1700000,4500000), labels = scales::dollar_format()) +
+  scale_y_continuous(limits = c(-6000000,5500000), labels = scales::dollar_format()) +
   theme(plot.title = element_text(hjust = .5)) + 
   labs(
     title = glue(
@@ -299,13 +302,8 @@ ggplot(monthly_sales_lagged, aes(x = orderdate, y = monthly_sales_change)) +
   )
 ```
 
-```
-## Warning: Removed 1 rows containing missing values (geom_point).
-```
-
 <img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-4-1.png" width="672" />
 
-AdventureWorks sales are *very* uneven.  We'll come back to this issue shortly.
 
 ### Comparing dollars and orders to a base year
 
@@ -340,7 +338,7 @@ start_year
 ## 1  2011         12641672.      1607        8    1580209.      201.
 ```
 
-Re express monthly data in terms of the baseline and plot:
+Express monthly data relative to 2011`
 
 
 ```r
@@ -1670,6 +1668,9 @@ ggplot(
     title = glue(
       "Number of Sales per month \nOriginal and corrected amounts"
     ),
+    subtitle = glue("Subtitle"),
+    caption = glue("Datasets Include: \n
+                   monthly_sales_rep_adjusted, monthly_sales_rep_as_is"),
     x = paste0("Monthly - between ", min_soh_dt, " - ", max_soh_dt),
     y = "Number of Sales Recorded"
   )
@@ -1747,5 +1748,5 @@ connection_close(con)
 ```
 
 ```r
-#sp_docker_stop("adventureworks")
+sp_docker_stop("adventureworks")
 ```
