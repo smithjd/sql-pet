@@ -95,12 +95,11 @@ annual_sales <- tbl(con, in_schema("sales", "salesorderheader")) %>%
     year, min_soh_orderdate, max_soh_orderdate, total_soh_dollars,
     avg_total_soh_dollars, soh_count
   ) %>% 
-  show_query() %>% 
   collect() 
   
 ```
 
-Note that all of this query is running on the server.  The `show_query` function shows the SQL code postgreSQL runs to produce its output.
+Note that all of this query is running on the server.  
 
 ```{r Show the column format of the resulting query}
 annual_sales %>% str()
@@ -748,7 +747,6 @@ monthly_sales_rep_adjusted <- tbl(con, in_schema("sales", "salesorderheader")) %
     orderdate = as.Date(orderdate),
     day = day(orderdate)
   ) %>%
-  # show_query() %>%
   collect() %>%
   ungroup() %>% 
   mutate(
@@ -812,7 +810,6 @@ monthly_sales_rep_adjusted_with_psql_function <- tbl(con, in_schema("sales", "sa
     total_soh_dollars = round(sum(subtotal, na.rm = TRUE), 2),
     soh_count = n()
   ) %>%
-  # show_query() %>%
   collect() %>%
   mutate( year_month = floor_date(adjusted_orderdate, "month")) %>% 
     group_by(year_month) %>%
