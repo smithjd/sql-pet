@@ -1034,9 +1034,9 @@ monthly_sales_w_channel_lagged_by_month <- monthly_sales_w_channel %>%
     lag_soh_count = lag(soh_count, 1),
     lag_soh_total_dollars = lag(total_soh_dollars, 1),
     pct_monthly_soh_dollar_change =
-      total_soh_dollars / lag_soh_total_dollars * 100,
+      (total_soh_dollars - lag_soh_total_dollars) / lag_soh_total_dollars * 100,
     pct_monthly_soh_count_change =
-      soh_count / lag_soh_count * 100
+      (soh_count - lag_soh_count) / lag_soh_count * 100
   )
 ```
 
@@ -1061,7 +1061,7 @@ ggplot(monthly_sales_w_channel_lagged_by_month, aes(x = orderdate, y = pct_month
   )
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-11-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-10-1.png" width="672" />
 
 For **Sales Reps** it looks like the variation is in the number of orders, not just dollars, as shown in the following plot.
 
@@ -1083,14 +1083,15 @@ ggplot(monthly_sales_w_channel_lagged_by_month, aes(x = orderdate, y = pct_month
   )
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-12-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-11-1.png" width="672" />
 
 The last two plots may not be so illuminating.  Here's a table that might be improved.
 
 
 ```r
 monthly_sales_w_channel_lagged_by_month %>%
-  filter(pct_monthly_soh_count_change > 200) %>% 
+  filter(abs(pct_monthly_soh_count_change) > 150 | 
+         abs(pct_monthly_soh_dollar_change) > 150 ) %>% 
   ungroup() %>% 
   arrange(onlineorderflag, orderdate) %>% 
   mutate(
@@ -1108,12 +1109,12 @@ monthly_sales_w_channel_lagged_by_month %>%
     columns = c(7:8), decimals = 0) %>%
   cols_label(
     onlineorderflag = "Channel",
-    total_soh_dollars = "$ Total",
+    total_soh_dollars = "$ this Month",
     lag_soh_total_dollars = "$ last Month",
-    soh_count = "# of Orders",
+    soh_count = "# this Month",
     lag_soh_count = "# last Month",
     pct_monthly_soh_dollar_change = "$ change",
-    pct_monthly_soh_count_change = "Orders change"
+    pct_monthly_soh_count_change = "# change"
   )
 ```
 
@@ -1559,12 +1560,12 @@ monthly_sales_w_channel_lagged_by_month %>%
     <tr>
       <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">orderdate</th>
       <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">Channel</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">$ Total</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">$ this Month</th>
       <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">$ last Month</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1"># of Orders</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1"># this Month</th>
       <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1"># last Month</th>
       <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">$ change</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">Orders change</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1"># change</th>
     </tr>
   </thead>
   <tbody class="gt_table_body">
@@ -1575,8 +1576,8 @@ monthly_sales_w_channel_lagged_by_month %>%
       <td class="gt_row gt_right">14,477</td>
       <td class="gt_row gt_center">141</td>
       <td class="gt_row gt_center">5</td>
-      <td class="gt_row gt_right">317,000&percnt;</td>
-      <td class="gt_row gt_right">282,000&percnt;</td>
+      <td class="gt_row gt_right">307,000&percnt;</td>
+      <td class="gt_row gt_right">272,000&percnt;</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_striped">2013-07-01</td>
@@ -1585,38 +1586,38 @@ monthly_sales_w_channel_lagged_by_month %>%
       <td class="gt_row gt_right gt_striped">860,141</td>
       <td class="gt_row gt_center gt_striped">1564</td>
       <td class="gt_row gt_center gt_striped">533</td>
-      <td class="gt_row gt_right gt_striped">9,800&percnt;</td>
-      <td class="gt_row gt_right gt_striped">29,300&percnt;</td>
+      <td class="gt_row gt_right gt_striped">&minus;200&percnt;</td>
+      <td class="gt_row gt_right gt_striped">19,300&percnt;</td>
     </tr>
     <tr>
-      <td class="gt_row gt_left">2012-01-01</td>
+      <td class="gt_row gt_left">2011-07-01</td>
       <td class="gt_row gt_left">Sales Rep</td>
-      <td class="gt_row gt_right">3,356,069</td>
-      <td class="gt_row gt_right">713,117</td>
-      <td class="gt_row gt_center">143</td>
-      <td class="gt_row gt_center">40</td>
-      <td class="gt_row gt_right">47,100&percnt;</td>
-      <td class="gt_row gt_right">35,800&percnt;</td>
+      <td class="gt_row gt_right">1,538,408</td>
+      <td class="gt_row gt_right">489,329</td>
+      <td class="gt_row gt_center">75</td>
+      <td class="gt_row gt_center">38</td>
+      <td class="gt_row gt_right">21,400&percnt;</td>
+      <td class="gt_row gt_right">9,700&percnt;</td>
     </tr>
     <tr>
-      <td class="gt_row gt_left gt_striped">2012-03-01</td>
+      <td class="gt_row gt_left gt_striped">2012-01-01</td>
       <td class="gt_row gt_left gt_striped">Sales Rep</td>
-      <td class="gt_row gt_right gt_striped">2,269,117</td>
-      <td class="gt_row gt_right gt_striped">882,900</td>
-      <td class="gt_row gt_center gt_striped">85</td>
-      <td class="gt_row gt_center gt_striped">37</td>
-      <td class="gt_row gt_right gt_striped">25,700&percnt;</td>
-      <td class="gt_row gt_right gt_striped">23,000&percnt;</td>
+      <td class="gt_row gt_right gt_striped">3,356,069</td>
+      <td class="gt_row gt_right gt_striped">713,117</td>
+      <td class="gt_row gt_center gt_striped">143</td>
+      <td class="gt_row gt_center gt_striped">40</td>
+      <td class="gt_row gt_right gt_striped">37,100&percnt;</td>
+      <td class="gt_row gt_right gt_striped">25,800&percnt;</td>
     </tr>
     <tr>
-      <td class="gt_row gt_left">2012-12-01</td>
+      <td class="gt_row gt_left">2012-03-01</td>
       <td class="gt_row gt_left">Sales Rep</td>
-      <td class="gt_row gt_right">2,384,847</td>
-      <td class="gt_row gt_right">1,317,542</td>
-      <td class="gt_row gt_center">132</td>
-      <td class="gt_row gt_center">65</td>
-      <td class="gt_row gt_right">18,100&percnt;</td>
-      <td class="gt_row gt_right">20,300&percnt;</td>
+      <td class="gt_row gt_right">2,269,117</td>
+      <td class="gt_row gt_right">882,900</td>
+      <td class="gt_row gt_center">85</td>
+      <td class="gt_row gt_center">37</td>
+      <td class="gt_row gt_right">15,700&percnt;</td>
+      <td class="gt_row gt_right">13,000&percnt;</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_striped">2014-03-01</td>
@@ -1625,8 +1626,8 @@ monthly_sales_w_channel_lagged_by_month %>%
       <td class="gt_row gt_right gt_striped">3,231</td>
       <td class="gt_row gt_center gt_striped">271</td>
       <td class="gt_row gt_center gt_striped">3</td>
-      <td class="gt_row gt_right gt_striped">17,106,000&percnt;</td>
-      <td class="gt_row gt_right gt_striped">903,300&percnt;</td>
+      <td class="gt_row gt_right gt_striped">17,096,000&percnt;</td>
+      <td class="gt_row gt_right gt_striped">893,300&percnt;</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">2014-05-01</td>
@@ -1635,8 +1636,8 @@ monthly_sales_w_channel_lagged_by_month %>%
       <td class="gt_row gt_right">1,285</td>
       <td class="gt_row gt_center">179</td>
       <td class="gt_row gt_center">2</td>
-      <td class="gt_row gt_right">26,583,900&percnt;</td>
-      <td class="gt_row gt_right">895,000&percnt;</td>
+      <td class="gt_row gt_right">26,573,900&percnt;</td>
+      <td class="gt_row gt_right">885,000&percnt;</td>
     </tr>
   </tbody>
   
@@ -1678,7 +1679,7 @@ ggplot(
   )
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-13-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-12-1.png" width="672" />
 
 That's much more stable than the month-to-month change.
 
@@ -1720,7 +1721,7 @@ Look at the dates when sales are entered for sales by **Sales Reps**.  The follo
 ## Warning: Removed 26 rows containing missing values (position_stack).
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-14-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-13-1.png" width="672" />
 
 We can check on which months have orders entered on the first of the month.
 
@@ -1738,21 +1739,21 @@ sales_rep_day_of_month_sales <- tbl(con, in_schema("sales", "salesorderheader"))
   pivot_wider(names_from = day, values_from = n, names_prefix = "day_", values_fill = 0 ) %>% 
   as.data.frame() %>% 
   select(year, month, day_1, day_28, day_29, day_30, day_31) %>% 
-  # filter(!is.na(day_1))
-  filter(day_1 > 0)
+  filter(day_1 > 0) %>% 
+  arrange(year, month)
 
 sales_rep_day_of_month_sales
 ```
 
 ```
 ##   year month day_1 day_28 day_29 day_30 day_31
-## 1 2011    10    90      0      0      0     63
-## 2 2014     3    91      0      0      2    178
-## 3 2011     7    75      0      0      0      0
-## 4 2011     8    60      0      0      0     40
+## 1 2011     7    75      0      0      0      0
+## 2 2011     8    60      0      0      0     40
+## 3 2011    10    90      0      0      0     63
+## 4 2011    12    40      0      0      0      0
 ## 5 2012     1    79      0     64      0      0
-## 6 2014     5   179      0      0      0      0
-## 7 2011    12    40      0      0      0      0
+## 6 2014     3    91      0      0      2    178
+## 7 2014     5   179      0      0      0      0
 ```
 
 There are two months with multiple sales rep order days for 2011, (11/08 and 11/10), one for 2012, (1201), and two in 2014, (14/01 and 14/03).  The 14/03 is the only three day sales rep order month.
@@ -1899,56 +1900,6 @@ We have xx months when we add the month before and the month after the **suspici
 
 ## Correcting the order date for **Sales Reps**
 
-
-
-```r
-dbGetQuery(
-  con,
-  "
-with udays as (
-SELECT to_char(orderdate,'YYMM') yymm
-     ,EXTRACT(YEAR FROM soh.orderdate) yr
-     , EXTRACT(MONTH FROM soh.orderdate) mo 
-     , COUNT(DISTINCT soh.orderdate) *1.0 unique_days
-     , COUNT(*) so_cnt
-     , sum(subtotal) so_dollars
-  FROM sales.salesorderheader soh
-where not onlineorderflag
-group by to_char(orderdate,'YYMM') 
-     , EXTRACT(MONTH FROM orderdate) 
-     , EXTRACT(YEAR FROM orderdate)
-ORDER BY to_char(orderdate,'YYMM')
-)
-select soh.orderdate,count(*) from udays 
-join sales.salesorderheader soh on to_char(soh.orderdate,'YYMM')  = udays.yymm
-where unique_days > 1
-  and not onlineorderflag
-group by soh.orderdate
-having count(*) > 1
-order by orderdate
-"
-)
-```
-
-```
-##     orderdate count
-## 1  2011-08-01    60
-## 2  2011-08-31    40
-## 3  2011-10-01    90
-## 4  2011-10-31    63
-## 5  2012-01-01    79
-## 6  2012-01-29    64
-## 7  2014-01-28     2
-## 8  2014-01-29   173
-## 9  2014-03-01    91
-## 10 2014-03-30     2
-## 11 2014-03-31   178
-```
-
-The former query misses the Sales Rep sales recorded on the first of the month in the following months:
-
-  * 2011-12-01: 40
-  * 2014-05-01: 179
 
 ### Define a date correction function in R
 
@@ -2200,7 +2151,7 @@ ggplot(
   )
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-26-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-24-1.png" width="672" />
 
 
 ```r
@@ -2234,7 +2185,7 @@ ggplot(
   ) 
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-28-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-26-1.png" width="672" />
 
 additive graph showing how correction adds in some months and subtracts in others.
 
@@ -2254,7 +2205,7 @@ ggplot(data = monthly_sales_rep_adjusted, aes(x = year_month, y = total_soh_doll
   )
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-29-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-27-1.png" width="672" />
 
 Sales still seem to gyrate!
 
