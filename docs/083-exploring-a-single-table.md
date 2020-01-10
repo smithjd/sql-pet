@@ -1011,7 +1011,7 @@ ggplot(
   theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
   labs(
     title = glue(
-      "Sales by Month by Year"
+      "AdventureWorks Monthly Sales Trend"
     ),
     x = glue( "Month - between ", {format(min_soh_dt, "%B %d, %Y")} , " - ", 
            {format(max_soh_dt, "%B %d, %Y")}),
@@ -1021,9 +1021,9 @@ ggplot(
 
 <img src="083-exploring-a-single-table_files/figure-html/average dollars-1.png" width="672" />
 
-The **monthly** gyrations are happening on the Sales Rep side, amounting to differences in a million dollars compared to small monthly variations of around $25,000 for the Online orders.
+The **monthly** gyrations are much larger on the Sales Rep side, amounting to differences in a million dollars compared to small monthly variations of around $25,000 for the Online orders.
 
-### Compare monthly lagged data by order type
+### Compare monthly lagged data by Sales Channel
 
 First consider month-to-month change.
 
@@ -1031,12 +1031,18 @@ First consider month-to-month change.
 monthly_sales_w_channel_lagged_by_month <- monthly_sales_w_channel %>%
   group_by(onlineorderflag) %>%
   mutate(
+    lag_soh_count = lag(soh_count, 1),
+    lag_soh_total_dollars = lag(total_soh_dollars, 1),
     pct_monthly_soh_dollar_change =
-      total_soh_dollars / (lag(total_soh_dollars, 1)) * 100,
+      total_soh_dollars / lag_soh_total_dollars * 100,
     pct_monthly_soh_count_change =
-      soh_count / (lag(soh_count, 1)) * 100
+      soh_count / lag_soh_count * 100
   )
+```
 
+
+
+```r
 ggplot(monthly_sales_w_channel_lagged_by_month, aes(x = orderdate, y = pct_monthly_soh_dollar_change)) +
   scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
   scale_y_continuous() +
@@ -1055,7 +1061,7 @@ ggplot(monthly_sales_w_channel_lagged_by_month, aes(x = orderdate, y = pct_month
   )
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-10-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-11-1.png" width="672" />
 
 For **Sales Reps** it looks like the variation is in the number of orders, not just dollars, as shown in the following plot.
 
@@ -1077,7 +1083,565 @@ ggplot(monthly_sales_w_channel_lagged_by_month, aes(x = orderdate, y = pct_month
   )
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-11-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-12-1.png" width="672" />
+
+The last two plots may not be so illuminating.  Here's a table that might be improved.
+
+
+```r
+monthly_sales_w_channel_lagged_by_month %>%
+  filter(pct_monthly_soh_count_change > 200) %>% 
+  ungroup() %>% 
+  arrange(onlineorderflag, orderdate) %>% 
+  mutate(
+    total_soh_dollars = round(total_soh_dollars),
+    lag_soh_total_dollars = round(lag_soh_total_dollars),
+    pct_monthly_soh_dollar_change = round(pct_monthly_soh_dollar_change),
+    pct_monthly_soh_count_change = round(pct_monthly_soh_count_change)) %>% 
+  select(orderdate, onlineorderflag,  total_soh_dollars, lag_soh_total_dollars, 
+         soh_count, lag_soh_count, pct_monthly_soh_dollar_change, pct_monthly_soh_count_change) %>% 
+  # names()
+  gt() %>%
+  fmt_number(
+    columns = c(3:4), decimals = 0) %>%
+  fmt_percent(
+    columns = c(7:8), decimals = 0) %>%
+  cols_label(
+    onlineorderflag = "Channel",
+    total_soh_dollars = "$ Total",
+    lag_soh_total_dollars = "$ last Month",
+    soh_count = "# of Orders",
+    lag_soh_count = "# last Month",
+    pct_monthly_soh_dollar_change = "$ change",
+    pct_monthly_soh_count_change = "Orders change"
+  )
+```
+
+<!--html_preserve--><style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+#dbgvzfontn .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  /* table.margin.left */
+  margin-right: auto;
+  /* table.margin.right */
+  color: #333333;
+  font-size: 16px;
+  /* table.font.size */
+  background-color: #FFFFFF;
+  /* table.background.color */
+  width: auto;
+  /* table.width */
+  border-top-style: solid;
+  /* table.border.top.style */
+  border-top-width: 2px;
+  /* table.border.top.width */
+  border-top-color: #A8A8A8;
+  /* table.border.top.color */
+  border-bottom-style: solid;
+  /* table.border.bottom.style */
+  border-bottom-width: 2px;
+  /* table.border.bottom.width */
+  border-bottom-color: #A8A8A8;
+  /* table.border.bottom.color */
+}
+
+#dbgvzfontn .gt_heading {
+  background-color: #FFFFFF;
+  /* heading.background.color */
+  border-bottom-color: #FFFFFF;
+  /* table.background.color */
+  border-left-style: hidden;
+  /* heading.border.lr.style */
+  border-left-width: 1px;
+  /* heading.border.lr.width */
+  border-left-color: #D3D3D3;
+  /* heading.border.lr.color */
+  border-right-style: hidden;
+  /* heading.border.lr.style */
+  border-right-width: 1px;
+  /* heading.border.lr.width */
+  border-right-color: #D3D3D3;
+  /* heading.border.lr.color */
+}
+
+#dbgvzfontn .gt_title {
+  color: #333333;
+  font-size: 125%;
+  /* heading.title.font.size */
+  font-weight: initial;
+  /* heading.title.font.weight */
+  padding-top: 4px;
+  /* heading.top.padding - not yet used */
+  padding-bottom: 4px;
+  border-bottom-color: #FFFFFF;
+  /* table.background.color */
+  border-bottom-width: 0;
+}
+
+#dbgvzfontn .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  /* heading.subtitle.font.size */
+  font-weight: initial;
+  /* heading.subtitle.font.weight */
+  padding-top: 0;
+  padding-bottom: 4px;
+  /* heading.bottom.padding - not yet used */
+  border-top-color: #FFFFFF;
+  /* table.background.color */
+  border-top-width: 0;
+}
+
+#dbgvzfontn .gt_bottom_border {
+  border-bottom-style: solid;
+  /* heading.border.bottom.style */
+  border-bottom-width: 2px;
+  /* heading.border.bottom.width */
+  border-bottom-color: #D3D3D3;
+  /* heading.border.bottom.color */
+}
+
+#dbgvzfontn .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#dbgvzfontn .gt_col_headings {
+  border-top-style: solid;
+  /* column_labels.border.top.style */
+  border-top-width: 2px;
+  /* column_labels.border.top.width */
+  border-top-color: #D3D3D3;
+  /* column_labels.border.top.color */
+  border-bottom-style: solid;
+  /* column_labels.border.bottom.style */
+  border-bottom-width: 2px;
+  /* column_labels.border.bottom.width */
+  border-bottom-color: #D3D3D3;
+  /* column_labels.border.bottom.color */
+  border-left-style: none;
+  /* column_labels.border.lr.style */
+  border-left-width: 1px;
+  /* column_labels.border.lr.width */
+  border-left-color: #D3D3D3;
+  /* column_labels.border.lr.color */
+  border-right-style: none;
+  /* column_labels.border.lr.style */
+  border-right-width: 1px;
+  /* column_labels.border.lr.width */
+  border-right-color: #D3D3D3;
+  /* column_labels.border.lr.color */
+}
+
+#dbgvzfontn .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  /* column_labels.background.color */
+  font-size: 100%;
+  /* column_labels.font.size */
+  font-weight: initial;
+  /* column_labels.font.weight */
+  text-transform: inherit;
+  /* column_labels.text_transform */
+  vertical-align: middle;
+  padding: 5px;
+  margin: 10px;
+  overflow-x: hidden;
+}
+
+#dbgvzfontn .gt_sep_right {
+  border-right: 5px solid #FFFFFF;
+}
+
+#dbgvzfontn .gt_group_heading {
+  padding: 8px;
+  /* row_group.padding */
+  color: #333333;
+  background-color: #FFFFFF;
+  /* row_group.background.color */
+  font-size: 100%;
+  /* row_group.font.size */
+  font-weight: initial;
+  /* row_group.font.weight */
+  text-transform: inherit;
+  /* row_group.text_transform */
+  border-top-style: solid;
+  /* row_group.border.top.style */
+  border-top-width: 2px;
+  /* row_group.border.top.width */
+  border-top-color: #D3D3D3;
+  /* row_group.border.top.color */
+  border-bottom-style: solid;
+  /* row_group.border.bottom.style */
+  border-bottom-width: 2px;
+  /* row_group.border.bottom.width */
+  border-bottom-color: #D3D3D3;
+  /* row_group.border.bottom.color */
+  border-left-style: none;
+  /* row_group.border.left.style */
+  border-left-width: 1px;
+  /* row_group.border.left.width */
+  border-left-color: #D3D3D3;
+  /* row_group.border.left.color */
+  border-right-style: none;
+  /* row_group.border.right.style */
+  border-right-width: 1px;
+  /* row_group.border.right.width */
+  border-right-color: #D3D3D3;
+  /* row_group.border.right.color */
+  vertical-align: middle;
+}
+
+#dbgvzfontn .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  /* row_group.background.color */
+  font-size: 100%;
+  /* row_group.font.size */
+  font-weight: initial;
+  /* row_group.font.weight */
+  border-top-style: solid;
+  /* row_group.border.top.style */
+  border-top-width: 2px;
+  /* row_group.border.top.width */
+  border-top-color: #D3D3D3;
+  /* row_group.border.top.color */
+  border-bottom-style: solid;
+  /* row_group.border.bottom.style */
+  border-bottom-width: 2px;
+  /* row_group.border.bottom.width */
+  border-bottom-color: #D3D3D3;
+  /* row_group.border.bottom.color */
+  vertical-align: middle;
+}
+
+#dbgvzfontn .gt_striped {
+  background-color: #8080800D;
+  /* row.striping.background_color */
+}
+
+#dbgvzfontn .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#dbgvzfontn .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#dbgvzfontn .gt_row {
+  padding-top: 8px;
+  /* data_row.padding */
+  padding-bottom: 8px;
+  /* data_row.padding */
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  /* table_body.hlines.style */
+  border-top-width: 1px;
+  /* table_body.hlines.width */
+  border-top-color: #D3D3D3;
+  /* table_body.hlines.color */
+  border-left-style: none;
+  /* table_body.vlines.style */
+  border-left-width: 1px;
+  /* table_body.vlines.width */
+  border-left-color: #D3D3D3;
+  /* table_body.vlines.color */
+  border-right-style: none;
+  /* table_body.vlines.style */
+  border-right-width: 1px;
+  /* table_body.vlines.width */
+  border-right-color: #D3D3D3;
+  /* table_body.vlines.color */
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#dbgvzfontn .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  /* stub.background.color */
+  font-weight: initial;
+  /* stub.font.weight */
+  text-transform: inherit;
+  /* stub.text_transform */
+  border-right-style: solid;
+  /* stub.border.style */
+  border-right-width: 2px;
+  /* stub.border.width */
+  border-right-color: #D3D3D3;
+  /* stub.border.color */
+  padding-left: 12px;
+}
+
+#dbgvzfontn .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  /* summary_row.background.color */
+  text-transform: inherit;
+  /* summary_row.text_transform */
+  padding-top: 8px;
+  /* summary_row.padding */
+  padding-bottom: 8px;
+  /* summary_row.padding */
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#dbgvzfontn .gt_first_summary_row {
+  padding-top: 8px;
+  /* summary_row.padding */
+  padding-bottom: 8px;
+  /* summary_row.padding */
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: solid;
+  /* summary_row.border.style */
+  border-top-width: 2px;
+  /* summary_row.border.width */
+  border-top-color: #D3D3D3;
+  /* summary_row.border.color */
+}
+
+#dbgvzfontn .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  /* grand_summary_row.background.color */
+  text-transform: inherit;
+  /* grand_summary_row.text_transform */
+  padding-top: 8px;
+  /* grand_summary_row.padding */
+  padding-bottom: 8px;
+  /* grand_summary_row.padding */
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#dbgvzfontn .gt_first_grand_summary_row {
+  padding-top: 8px;
+  /* grand_summary_row.padding */
+  padding-bottom: 8px;
+  /* grand_summary_row.padding */
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  /* grand_summary_row.border.style */
+  border-top-width: 6px;
+  /* grand_summary_row.border.width */
+  border-top-color: #D3D3D3;
+  /* grand_summary_row.border.color */
+}
+
+#dbgvzfontn .gt_table_body {
+  border-top-style: solid;
+  /* table_body.border.top.style */
+  border-top-width: 2px;
+  /* table_body.border.top.width */
+  border-top-color: #D3D3D3;
+  /* table_body.border.top.color */
+  border-bottom-style: solid;
+  /* table_body.border.bottom.style */
+  border-bottom-width: 2px;
+  /* table_body.border.bottom.width */
+  border-bottom-color: #D3D3D3;
+  /* table_body.border.bottom.color */
+}
+
+#dbgvzfontn .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  /* footnotes.background.color */
+  border-bottom-style: none;
+  /* footnotes.border.bottom.style */
+  border-bottom-width: 2px;
+  /* footnotes.border.bottom.width */
+  border-bottom-color: #D3D3D3;
+  /* footnotes.border.bottom.color */
+  border-left-style: none;
+  /* footnotes.border.lr.color */
+  border-left-width: 2px;
+  /* footnotes.border.lr.color */
+  border-left-color: #D3D3D3;
+  /* footnotes.border.lr.color */
+  border-right-style: none;
+  /* footnotes.border.lr.color */
+  border-right-width: 2px;
+  /* footnotes.border.lr.color */
+  border-right-color: #D3D3D3;
+  /* footnotes.border.lr.color */
+}
+
+#dbgvzfontn .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  /* footnotes.font.size */
+  padding: 4px;
+  /* footnotes.padding */
+}
+
+#dbgvzfontn .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  /* source_notes.background.color */
+  border-bottom-style: none;
+  /* source_notes.border.bottom.style */
+  border-bottom-width: 2px;
+  /* source_notes.border.bottom.width */
+  border-bottom-color: #D3D3D3;
+  /* source_notes.border.bottom.color */
+  border-left-style: none;
+  /* source_notes.border.lr.style */
+  border-left-width: 2px;
+  /* source_notes.border.lr.style */
+  border-left-color: #D3D3D3;
+  /* source_notes.border.lr.style */
+  border-right-style: none;
+  /* source_notes.border.lr.style */
+  border-right-width: 2px;
+  /* source_notes.border.lr.style */
+  border-right-color: #D3D3D3;
+  /* source_notes.border.lr.style */
+}
+
+#dbgvzfontn .gt_sourcenote {
+  font-size: 90%;
+  /* source_notes.font.size */
+  padding: 4px;
+  /* source_notes.padding */
+}
+
+#dbgvzfontn .gt_left {
+  text-align: left;
+}
+
+#dbgvzfontn .gt_center {
+  text-align: center;
+}
+
+#dbgvzfontn .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#dbgvzfontn .gt_font_normal {
+  font-weight: normal;
+}
+
+#dbgvzfontn .gt_font_bold {
+  font-weight: bold;
+}
+
+#dbgvzfontn .gt_font_italic {
+  font-style: italic;
+}
+
+#dbgvzfontn .gt_super {
+  font-size: 65%;
+}
+
+#dbgvzfontn .gt_footnote_marks {
+  font-style: italic;
+  font-size: 65%;
+}
+</style>
+<div id="dbgvzfontn" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+  
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">orderdate</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">Channel</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">$ Total</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">$ last Month</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1"># of Orders</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1"># last Month</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">$ change</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">Orders change</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr>
+      <td class="gt_row gt_left">2011-06-01</td>
+      <td class="gt_row gt_left">Online</td>
+      <td class="gt_row gt_right">458,911</td>
+      <td class="gt_row gt_right">14,477</td>
+      <td class="gt_row gt_center">141</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_right">317,000&percnt;</td>
+      <td class="gt_row gt_right">282,000&percnt;</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_striped">2013-07-01</td>
+      <td class="gt_row gt_left gt_striped">Online</td>
+      <td class="gt_row gt_right gt_striped">847,139</td>
+      <td class="gt_row gt_right gt_striped">860,141</td>
+      <td class="gt_row gt_center gt_striped">1564</td>
+      <td class="gt_row gt_center gt_striped">533</td>
+      <td class="gt_row gt_right gt_striped">9,800&percnt;</td>
+      <td class="gt_row gt_right gt_striped">29,300&percnt;</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">2012-01-01</td>
+      <td class="gt_row gt_left">Sales Rep</td>
+      <td class="gt_row gt_right">3,356,069</td>
+      <td class="gt_row gt_right">713,117</td>
+      <td class="gt_row gt_center">143</td>
+      <td class="gt_row gt_center">40</td>
+      <td class="gt_row gt_right">47,100&percnt;</td>
+      <td class="gt_row gt_right">35,800&percnt;</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_striped">2012-03-01</td>
+      <td class="gt_row gt_left gt_striped">Sales Rep</td>
+      <td class="gt_row gt_right gt_striped">2,269,117</td>
+      <td class="gt_row gt_right gt_striped">882,900</td>
+      <td class="gt_row gt_center gt_striped">85</td>
+      <td class="gt_row gt_center gt_striped">37</td>
+      <td class="gt_row gt_right gt_striped">25,700&percnt;</td>
+      <td class="gt_row gt_right gt_striped">23,000&percnt;</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">2012-12-01</td>
+      <td class="gt_row gt_left">Sales Rep</td>
+      <td class="gt_row gt_right">2,384,847</td>
+      <td class="gt_row gt_right">1,317,542</td>
+      <td class="gt_row gt_center">132</td>
+      <td class="gt_row gt_center">65</td>
+      <td class="gt_row gt_right">18,100&percnt;</td>
+      <td class="gt_row gt_right">20,300&percnt;</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_striped">2014-03-01</td>
+      <td class="gt_row gt_left gt_striped">Sales Rep</td>
+      <td class="gt_row gt_right gt_striped">5,526,352</td>
+      <td class="gt_row gt_right gt_striped">3,231</td>
+      <td class="gt_row gt_center gt_striped">271</td>
+      <td class="gt_row gt_center gt_striped">3</td>
+      <td class="gt_row gt_right gt_striped">17,106,000&percnt;</td>
+      <td class="gt_row gt_right gt_striped">903,300&percnt;</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">2014-05-01</td>
+      <td class="gt_row gt_left">Sales Rep</td>
+      <td class="gt_row gt_right">3,415,479</td>
+      <td class="gt_row gt_right">1,285</td>
+      <td class="gt_row gt_center">179</td>
+      <td class="gt_row gt_center">2</td>
+      <td class="gt_row gt_right">26,583,900&percnt;</td>
+      <td class="gt_row gt_right">895,000&percnt;</td>
+    </tr>
+  </tbody>
+  
+  
+</table></div><!--/html_preserve-->
 
 Let's examine whether there is a large year-to-year change.
 
@@ -1100,13 +1664,13 @@ ggplot(
     date_breaks = "year", date_labels = "%Y",
     date_minor_breaks = "3 months"
   ) +
-  # scale_y_continuous(limits = c(-10, 300)) +
+   scale_y_continuous(limits = c(-50, 400)) +
   facet_grid("onlineorderflag") +
   geom_line() +
   theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
   labs(
     title = glue(
-      "Year-on-Year Total Monthly Sales Change \n",
+      "Year-on-Year Change in Total Monthly Sales\n",
       "Comparing Online to Sales Rep Sales"
     ),
     x = paste0("Month - between ", min_soh_dt, " - ", max_soh_dt),
@@ -1114,9 +1678,9 @@ ggplot(
   )
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-12-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-13-1.png" width="672" />
 
-That's much smaller than the month-to-month change.
+That's much more stable than the month-to-month change.
 
 > ??? Comparing the number of sales orders year over year by month for 2013 and 2012, one can see that the 2013 sales are between 1.2 and 1.8 times larger than the corresponding month of 2012 from January through June.  In July the 2013 sales are 5 to 6 times the 2012 sales orders. ???
 
@@ -1126,11 +1690,11 @@ We suspect that the business has changed a lot with the advent of **Online** ord
 
 ## Detect and diagnose the day of the month problem
 
-We have noticed many indications that Sales Rep sales are different from the Online sales: the sales are almost always recorded on the last day of the month.
+There have been several indications that Sales Rep sales are recorded once a month while Online sales are recorded on a daily basis.
 
 ### Sales Rep Orderdate Distribution
 
-Look at the dates when sales are entered for sales by **Sales Reps**.  The following query / plot combination shows this pattern and the exception for transactions entered on the first day of the month.
+Look at the dates when sales are entered for sales by **Sales Reps**.  The following query / plot combination shows this pattern.  and the exception for transactions entered on the first day of the month.
 
 
 ```r
@@ -1156,7 +1720,7 @@ Look at the dates when sales are entered for sales by **Sales Reps**.  The follo
 ## Warning: Removed 26 rows containing missing values (position_stack).
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-13-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-14-1.png" width="672" />
 
 We can check on which months have orders entered on the first of the month.
 
@@ -1636,7 +2200,7 @@ ggplot(
   )
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-25-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-26-1.png" width="672" />
 
 
 ```r
@@ -1670,7 +2234,7 @@ ggplot(
   ) 
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-27-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-28-1.png" width="672" />
 
 additive graph showing how correction adds in some months and subtracts in others.
 
@@ -1690,7 +2254,7 @@ ggplot(data = monthly_sales_rep_adjusted, aes(x = year_month, y = total_soh_doll
   )
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-28-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-29-1.png" width="672" />
 
 Sales still seem to gyrate!
 
