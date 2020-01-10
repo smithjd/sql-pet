@@ -470,7 +470,7 @@ ggplot(
   theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
   labs(
     title = glue(
-      "Sales by Month by Year"
+      "AdventureWorks Monthly Sales Trend"
     ),
     x = glue( "Month - between ", {format(min_soh_dt, "%B %d, %Y")} , " - ", 
            {format(max_soh_dt, "%B %d, %Y")}),
@@ -478,21 +478,26 @@ ggplot(
   )
 ```
 
-The **monthly** gyrations are happening on the Sales Rep side, amounting to differences in a million dollars compared to small monthly variations of around $25,000 for the Online orders.
+The **monthly** gyrations are much larger on the Sales Rep side, amounting to differences in a million dollars compared to small monthly variations of around $25,000 for the Online orders.
 
-### Compare monthly lagged data by order type
+### Compare monthly lagged data by Sales Channel
 
 First consider month-to-month change.
-```{r , warning=FALSE}
+```{r monthly_sales_w_channel_lagged_by_month calc, warning=FALSE}
 monthly_sales_w_channel_lagged_by_month <- monthly_sales_w_channel %>%
   group_by(onlineorderflag) %>%
   mutate(
+    lag_soh_count = lag(soh_count, 1),
+    lag_soh_total_dollars = lag(total_soh_dollars, 1),
     pct_monthly_soh_dollar_change =
-      total_soh_dollars / (lag(total_soh_dollars, 1)) * 100,
+      (total_soh_dollars - lag_soh_total_dollars) / lag_soh_total_dollars * 100,
     pct_monthly_soh_count_change =
-      soh_count / (lag(soh_count, 1)) * 100
+      (soh_count - lag_soh_count) / lag_soh_count * 100
   )
+```
 
+
+```{r , warning=FALSE}
 ggplot(monthly_sales_w_channel_lagged_by_month, aes(x = orderdate, y = pct_monthly_soh_dollar_change)) +
   scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
   scale_y_continuous() +
@@ -530,6 +535,38 @@ ggplot(monthly_sales_w_channel_lagged_by_month, aes(x = orderdate, y = pct_month
   )
 ```
 
+The last two plots may not be so illuminating.  Here's a table that might be improved.
+
+```{r monthly_sales_w_channel_lagged_by_month table}
+monthly_sales_w_channel_lagged_by_month %>%
+  filter(abs(pct_monthly_soh_count_change) > 150 | 
+         abs(pct_monthly_soh_dollar_change) > 150 ) %>% 
+  ungroup() %>% 
+  arrange(onlineorderflag, orderdate) %>% 
+  mutate(
+    total_soh_dollars = round(total_soh_dollars),
+    lag_soh_total_dollars = round(lag_soh_total_dollars),
+    pct_monthly_soh_dollar_change = round(pct_monthly_soh_dollar_change),
+    pct_monthly_soh_count_change = round(pct_monthly_soh_count_change)) %>% 
+  select(orderdate, onlineorderflag,  total_soh_dollars, lag_soh_total_dollars, 
+         soh_count, lag_soh_count, pct_monthly_soh_dollar_change, pct_monthly_soh_count_change) %>% 
+  # names()
+  gt() %>%
+  fmt_number(
+    columns = c(3:4), decimals = 0) %>%
+  fmt_percent(
+    columns = c(7:8), decimals = 0) %>%
+  cols_label(
+    onlineorderflag = "Channel",
+    total_soh_dollars = "$ this Month",
+    lag_soh_total_dollars = "$ last Month",
+    soh_count = "# this Month",
+    lag_soh_count = "# last Month",
+    pct_monthly_soh_dollar_change = "$ change",
+    pct_monthly_soh_count_change = "Orders change"
+  )
+```
+
 Let's examine whether there is a large year-to-year change.
 
 ```{r , warning=FALSE, message=FALSE}
@@ -550,13 +587,13 @@ ggplot(
     date_breaks = "year", date_labels = "%Y",
     date_minor_breaks = "3 months"
   ) +
-  # scale_y_continuous(limits = c(-10, 300)) +
+   scale_y_continuous(limits = c(-50, 400)) +
   facet_grid("onlineorderflag") +
   geom_line() +
   theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
   labs(
     title = glue(
-      "Year-on-Year Total Monthly Sales Change \n",
+      "Year-on-Year Change in Total Monthly Sales\n",
       "Comparing Online to Sales Rep Sales"
     ),
     x = paste0("Month - between ", min_soh_dt, " - ", max_soh_dt),
@@ -564,7 +601,7 @@ ggplot(
   )
 ```
 
-That's much smaller than the month-to-month change.
+That's much more stable than the month-to-month change.
 
 > ??? Comparing the number of sales orders year over year by month for 2013 and 2012, one can see that the 2013 sales are between 1.2 and 1.8 times larger than the corresponding month of 2012 from January through June.  In July the 2013 sales are 5 to 6 times the 2012 sales orders. ???
 
@@ -574,11 +611,11 @@ We suspect that the business has changed a lot with the advent of **Online** ord
 
 ## Detect and diagnose the day of the month problem
 
-We have noticed many indications that Sales Rep sales are different from the Online sales: the sales are almost always recorded on the last day of the month.
+There have been several indications that Sales Rep sales are recorded once a month while Online sales are recorded on a daily basis.
 
 ### Sales Rep Orderdate Distribution
 
-Look at the dates when sales are entered for sales by **Sales Reps**.  The following query / plot combination shows this pattern and the exception for transactions entered on the first day of the month.
+Look at the dates when sales are entered for sales by **Sales Reps**.  The following query / plot combination shows this pattern.  and the exception for transactions entered on the first day of the month.
 
 ```{r}
   tbl(con, in_schema("sales", "salesorderheader")) %>%
@@ -612,8 +649,8 @@ sales_rep_day_of_month_sales <- tbl(con, in_schema("sales", "salesorderheader"))
   pivot_wider(names_from = day, values_from = n, names_prefix = "day_", values_fill = 0 ) %>% 
   as.data.frame() %>% 
   select(year, month, day_1, day_28, day_29, day_30, day_31) %>% 
-  # filter(!is.na(day_1))
-  filter(day_1 > 0)
+  filter(day_1 > 0) %>% 
+  arrange(year, month)
 
 sales_rep_day_of_month_sales
 
@@ -694,40 +731,6 @@ We have xx months when we add the month before and the month after the **suspici
 
 ## Correcting the order date for **Sales Reps**
 
-
-```{r}
-dbGetQuery(
-  con,
-  "
-with udays as (
-SELECT to_char(orderdate,'YYMM') yymm
-     ,EXTRACT(YEAR FROM soh.orderdate) yr
-     , EXTRACT(MONTH FROM soh.orderdate) mo 
-     , COUNT(DISTINCT soh.orderdate) *1.0 unique_days
-     , COUNT(*) so_cnt
-     , sum(subtotal) so_dollars
-  FROM sales.salesorderheader soh
-where not onlineorderflag
-group by to_char(orderdate,'YYMM') 
-     , EXTRACT(MONTH FROM orderdate) 
-     , EXTRACT(YEAR FROM orderdate)
-ORDER BY to_char(orderdate,'YYMM')
-)
-select soh.orderdate,count(*) from udays 
-join sales.salesorderheader soh on to_char(soh.orderdate,'YYMM')  = udays.yymm
-where unique_days > 1
-  and not onlineorderflag
-group by soh.orderdate
-having count(*) > 1
-order by orderdate
-"
-)
-```
-
-The former query misses the Sales Rep sales recorded on the first of the month in the following months:
-
-  * 2011-12-01: 40
-  * 2014-05-01: 179
 
 ### Define a date correction function in R
 
