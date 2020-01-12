@@ -238,7 +238,7 @@ The average month over month change in sales looks OK ($ `r prettyNum(sum_lags[[
 ggplot(monthly_sales_lagged, aes(x = orderdate, y = monthly_sales_change)) +
   scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
   geom_line() +
-  geom_point() +
+  # geom_point() +
   scale_y_continuous(limits = c(-6000000,5500000), labels = scales::dollar_format()) +
   theme(plot.title = element_text(hjust = .5)) + 
   labs(
@@ -952,7 +952,7 @@ ggplot(data = monthly_sales_rep_adjusted, aes(x = year_month, y = total_soh_doll
   )
 ```
 
-Sales still seem to gyrate!
+Sales still seem to gyrate!  We have found that sales rep sales data is often very strange.
 
 ## Disconnect from the database and stop Docker
 
