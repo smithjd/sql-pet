@@ -115,8 +115,8 @@ view_definition <- dbGetQuery(con, "select
 ```
 The PostgreSQL `pg_get_viewdef` function returns a data frame with one column named `pg_get_viewdef` and one row.  To properly view its contents, the `\n` character strings need to be turned into new-lines.
 
-```{r}
-cat(str_replace_all(view_definition$pg_get_viewdef, "\\\\\\\\n", "\\\\n")) 
+```{r display the view source}
+cat(str_replace_all(view_definition$pg_get_viewdef, "\\\\\\\\n", "\\\\n"))
 ```
 
 Even if you don't intend to become completely fluent in SQL, it's useful to study as much of it as possible.  Studying the SQL in a view is particularly useful to:
