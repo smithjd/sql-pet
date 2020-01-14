@@ -8,6 +8,8 @@
 > * Query the database to get basic information about each dvdrental story
 > * How to interact with the database using different strategies
 
+> ** This chapter still points to `dvdrentals` **
+
 These packages are called in almost every chapter of the book:
 ```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
 library(tidyverse)
@@ -493,7 +495,9 @@ sp_print_df(smy_cust_dupes)
 
 ```{r}
 
- dbDisconnect(con)
+dbDisconnect(con)
+# or if using the connections package, use:
+# connection_close(con)
 
  sp_docker_stop("sql-pet")
 ```

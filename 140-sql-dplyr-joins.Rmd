@@ -19,6 +19,7 @@ library(here)
 require(knitr)
 library(dbplyr)
 library(sqlpetr)
+library(connections)
 ```
 
 Verify Docker is up and running:
@@ -43,11 +44,15 @@ Now connect to the database with R
 ```{r connect to the database}
 # need to wait for Docker & Postgres to come up before connecting.
 
-con <- sp_get_postgres_connection(
+# con <- connection_open(  # use in an interactive session
+con <- dbConnect(          # use in other settings
+  RPostgres::Postgres(),
+  # without the following (and preceding) lines, 
+  # bigint become int64 which is a problem for ggplot
+  bigint = "integer",  
   user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
   password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
-  dbname = "dvdrental",
-  seconds_to_test = 30, connection_tab = TRUE
+  dbname = "dvdrental"
 )
 ```
 
@@ -932,6 +937,9 @@ In `by = c("col1" = "col2")`,  `=` is _not_ the equality operator, but an assign
 
 ```{r}
 dbDisconnect(con)
+# or if using the connections package, use:
+# connection_close(con)
+
 sp_docker_stop("adventureworks")
 ```
 

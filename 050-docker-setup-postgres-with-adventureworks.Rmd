@@ -37,6 +37,9 @@ library(dbplyr)
 library(sqlpetr)
 library(bookdown)
 library(here)
+library(connections)
+sleep_default <- 3
+theme_set(theme_light())
 ```
 
 ## Verify that Docker is up, running, and clean up if necessary
@@ -102,13 +105,18 @@ are kept private.
 Use the DBI package to connect to the `adventureworks` database in PostgreSQL.  Remember the settings discussion about [keeping passwords hidden][Pause for some security considerations]
 
 ```{r }
-con <- sp_get_postgres_connection(
+Sys.sleep(sleep_default)
+# con <- connection_open(  # use in an interactive session
+con <- dbConnect(          # use in other settings
+  RPostgres::Postgres(),
+  # without the following (and preceding) lines, 
+  # bigint become int64 which is a problem for ggplot
+  bigint = "integer",  
   host = "localhost",
   port = 5432,  # this version still using 5432!!!
   user = "postgres",
   password = "postgres",
-  dbname = "adventureworks",
-  seconds_to_test = 20, connection_tab = TRUE
+  dbname = "adventureworks"
 )
 ```
 
@@ -135,11 +143,7 @@ Clicking on the icon to the left of a `schema` expands the list of `tables` and 
 
 The number of rows and columns shown in the View pane depends on the size of the window.
 
-Disconnect from the database:
-```{r }
-dbDisconnect(con)
 
-```
 
 ## Cleaning up: diconnect from the database and stop Docker
 
@@ -148,6 +152,8 @@ Always have R disconnect from the database when you're done.
 
 dbDisconnect(con)
 
+# or if using the connections package, use:
+# connection_close(con)
 ```
 
 Stop the `adventureworks` container:

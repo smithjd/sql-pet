@@ -41,8 +41,8 @@ Connect to `adventureworks`:
 ```{r Connect to adventureworks, start adventureworks and connect}
 sp_docker_start("adventureworks")
 Sys.sleep(sleep_default)
-con <- connection_open(  # use in an interactive session
-# con <- dbConnect(          # use in other settings
+# con <- connection_open(  # use in an interactive session
+con <- dbConnect(          # use in other settings
   RPostgres::Postgres(),
   # without the following (and preceding) lines, 
   # bigint become int64 which is a problem for ggplot

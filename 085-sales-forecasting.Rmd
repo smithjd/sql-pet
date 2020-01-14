@@ -17,7 +17,7 @@ library(sqlpetr)
 library(tsibble)
 library(fable)
 library(zoo)
-
+library(connections)
 ```
 Analyzing sales time series, in particular determining seasonality and forecasting future sales, is a common activty in business management. A collection of packages called `tidyverst` is designed to do this in a tidy data framework.
 
@@ -25,7 +25,13 @@ First, we make sure the Docker container is ready and connect to the `adventurew
 
 ```{r connect_to adventureworks}
 sqlpetr::sp_docker_start("adventureworks")
-con <- sqlpetr::sp_get_postgres_connection(
+
+# con <- connection_open(  # use in an interactive session
+con <- dbConnect(          # use in other settings
+  RPostgres::Postgres(),
+  # without the following (and preceding) lines, 
+  # bigint become int64 which is a problem for ggplot
+  bigint = "integer",  
   user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
   password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
   dbname = "adventureworks",
@@ -123,5 +129,8 @@ For the sales representatives, there's still a month-to-month variation but the 
 
 ```{r}
 dbDisconnect(con)
+# or if using the connections package, use:
+# connection_close(con)
+
 sp_docker_stop("adventureworks")
 ```

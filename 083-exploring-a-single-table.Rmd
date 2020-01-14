@@ -48,8 +48,9 @@ Connect to `adventureworks`.  In an interactive session we prefer to use `connec
 sp_docker_start("adventureworks")
 Sys.sleep(sleep_default)
 con <- dbConnect(
-# con <- connection_open(
   RPostgres::Postgres(),
+  # without the following (and preceding) lines, 
+  # bigint become int64 which is a problem for ggplot
   bigint = "integer",  
   host = "localhost",
   port = 5432,
