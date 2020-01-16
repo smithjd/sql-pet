@@ -38,14 +38,18 @@ theme_set(theme_light())
 ```
 
 Connect to `adventureworks`:
-```{r Connect to adventureworks, start adventureworks and connect}
+```{r Start adventureworks}
 sp_docker_start("adventureworks")
 Sys.sleep(sleep_default)
-con <- connection_open(  # use in an interactive session
-# con <- dbConnect(          # use in other settings
+```
+
+
+```{r Connect to adventureworks}
+# con <- connection_open(  # use in an interactive session
+con <- dbConnect(          # use in other settings
   RPostgres::Postgres(),
-  # without the following (and preceding) lines, 
-  # bigint become int64 which is a problem for ggplot
+  # without the previous and next lines, some functions fail with bigint data 
+  #   so change int64 to integer
   bigint = "integer",  
   host = "localhost",
   port = 5432,
@@ -115,8 +119,8 @@ view_definition <- dbGetQuery(con, "select
 ```
 The PostgreSQL `pg_get_viewdef` function returns a data frame with one column named `pg_get_viewdef` and one row.  To properly view its contents, the `\n` character strings need to be turned into new-lines.
 
-```{r}
-cat(str_replace_all(view_definition$pg_get_viewdef, "\\\\\\\\n", "\\\\n")) 
+```{r display the view source}
+cat(str_replace_all(view_definition$pg_get_viewdef, "\\\\\\\\n", "\\\\n"))
 ```
 
 Even if you don't intend to become completely fluent in SQL, it's useful to study as much of it as possible.  Studying the SQL in a view is particularly useful to:

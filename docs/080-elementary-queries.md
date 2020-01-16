@@ -20,22 +20,29 @@ require(knitr)
 library(bookdown)
 library(sqlpetr)
 library(skimr)
+library(connections)
+sleep_default <- 3
 ```
 Assume that the Docker container with PostgreSQL and the adventureworks database are ready to go. If not go back to [Chapter 6][#chapter_setup-adventureworks-db]
 
 ```r
 sqlpetr::sp_docker_start("adventureworks")
+Sys.sleep(sleep_default)
 ```
 Connect to the database:
 
 ```r
-con <- sqlpetr::sp_get_postgres_connection(
+# con <- connection_open(  # use in an interactive session
+con <- dbConnect(          # use in other settings
+  RPostgres::Postgres(),
+  # without the previous and next lines, some functions fail with bigint data 
+  #   so change int64 to integer
+  bigint = "integer",  
+  host = "localhost",
   user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
   password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
   dbname = "adventureworks",
-  port = 5432, 
-  seconds_to_test = 20, 
-  connection_tab = TRUE
+  port = 5432
 )
 ```
 
@@ -154,27 +161,27 @@ one_percent_sample
 ```
 
 ```
-##     orderdate   subtotal    taxamt   freight    totaldue
-## 1  2011-05-31 20541.4072 1969.5564  615.4864  23126.4500
-## 2  2011-06-01  3578.2700  286.2616   89.4568   3953.9884
-## 3  2011-06-04  3578.2700  286.2616   89.4568   3953.9884
-## 4  2011-06-25  3578.2700  286.2616   89.4568   3953.9884
-## 5  2011-07-01  1749.5880  167.9604   52.4876   1970.0360
-## 6  2011-07-01 38816.8056 3725.7234 1164.2885  43706.8175
-## 7  2011-07-06  3399.9900  271.9992   84.9998   3756.9890
-## 8  2011-07-11  3578.2700  286.2616   89.4568   3953.9884
-## 9  2011-07-23  3578.2700  286.2616   89.4568   3953.9884
-## 10 2011-07-29  3578.2700  286.2616   89.4568   3953.9884
-## 11 2011-07-29  3578.2700  286.2616   89.4568   3953.9884
-## 12 2011-08-01  5007.7200  482.6446  150.8264   5641.1910
-## 13 2011-08-01 91014.7853 8770.4397 2740.7624 102525.9874
-## 14 2011-08-31 21090.7731 2025.9951  633.1235  23749.8917
-## 15 2011-09-04  3578.2700  286.2616   89.4568   3953.9884
-## 16 2011-09-08   699.0982   55.9279   17.4775    772.5036
-## 17 2011-09-18  3578.2700  286.2616   89.4568   3953.9884
-## 18 2011-10-01 67458.9556 6486.0468 2026.8896  75971.8920
-## 19 2011-10-01  2146.9620  206.1084   64.4089   2417.4793
-## 20 2011-10-01  2254.9498  222.4884   69.5276   2546.9658
+##     orderdate  subtotal    taxamt   freight  totaldue
+## 1  2011-06-01  3578.270  286.2616   89.4568  3953.988
+## 2  2011-06-13  3578.270  286.2616   89.4568  3953.988
+## 3  2011-06-21  3578.270  286.2616   89.4568  3953.988
+## 4  2011-06-26  3578.270  286.2616   89.4568  3953.988
+## 5  2011-06-29  3374.990  269.9992   84.3748  3729.364
+## 6  2011-07-01 20249.940 1943.9942  607.4982 22801.432
+## 7  2011-07-01 23401.106 2244.4088  701.3777 26346.893
+## 8  2011-07-01  1718.898  164.9658   51.5518  1935.416
+## 9  2011-07-01 38816.806 3725.7234 1164.2885 43706.817
+## 10 2011-07-01 11942.596 1147.8551  358.7047 13449.156
+## 11 2011-07-01 11361.271 1093.5814  341.7442 12796.596
+## 12 2011-07-06  3578.270  286.2616   89.4568  3953.988
+## 13 2011-07-07  3578.270  286.2616   89.4568  3953.988
+## 14 2011-07-14  3578.270  286.2616   89.4568  3953.988
+## 15 2011-07-21  3374.990  269.9992   84.3748  3729.364
+## 16 2011-07-24  3578.270  286.2616   89.4568  3953.988
+## 17 2011-07-30  3578.270  286.2616   89.4568  3953.988
+## 18 2011-08-01  5007.720  482.6446  150.8264  5641.191
+## 19 2011-08-01  4079.988  391.6788  122.3996  4594.066
+## 20 2011-08-01 42341.075 4074.6130 1273.3166 47689.005
 ```
 **Exact sample of 100 records**
 
@@ -319,8 +326,7 @@ tbl(con, "salesorderheader") %>%
   dplyr::rename(order_date = orderdate, sub_total_amount = subtotal,
               tax_amount = taxamt, freight_amount = freight, total_due_amount = totaldue) %>% 
   dplyr::select(order_date, sub_total_amount, tax_amount, freight_amount, total_due_amount ) %>%
-  # head()
-show_query()
+  show_query()
 ```
 
 ```
@@ -338,7 +344,8 @@ DBI::dbGetQuery(
     "taxamt" AS "tax_amount", 
     "freight" AS "freight_amount", 
     "totaldue" AS "total_due_amount"
-    FROM "salesorderheader"' ) %>% head()
+    FROM "salesorderheader"' ) %>% 
+  head()
 ```
 
 ```
@@ -350,11 +357,14 @@ DBI::dbGetQuery(
 ## 5 2011-05-31         419.4589    40.2681        12.5838         472.3108
 ## 6 2011-05-31       24432.6088  2344.9921       732.8100       27510.4109
 ```
-The one difference is that the `SQL` code returns a regular data frame and the `dplyr` code returns a `tibble`.  Notice that the seconds are grayed out in the `tibble` display.
+The one difference is that the `SQL` code returns a regular data frame and the `dplyr` code returns a `tibble`.  Notice that the seconds are grayed out in the `tibble` display.  
 
 ## Translating `dplyr` code to `SQL` queries
 
-Where did the translations we've shown above come from?  The `show_query` function shows how `dplyr` is translating your query to the dialect of the target DBMS:
+Where did the translations we've shown above come from?  The `show_query` function shows how `dplyr` is translating your query to the dialect of the target DBMS.  
+
+> The `show_query()` function shows you what dplyr is sending to the DBMS.  It might be handy for inspecting what dplyr is doing or for showing your code to someone who is more SQL- than R-literate.  In general we have used the function extensively in writing this book but in the final product we will not use it unless there is something in the SQL or the translation process that needs to be explained.
+
 
 ```r
 salesorderheader_table %>%
@@ -702,6 +712,9 @@ shipdate                 0               1  2011-06-07   2014-07-07   2013-11-10
 
 ```r
 dbDisconnect(con)
+# or if using the connections package, use:
+# connection_close(con)
+
 sp_docker_stop("adventureworks")
 ```
 

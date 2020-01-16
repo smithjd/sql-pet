@@ -19,20 +19,27 @@ require(knitr)
 library(bookdown)
 library(sqlpetr)
 library(skimr)
+library(connections)
+sleep_default <- 3
 ```
 Assume that the Docker container with PostgreSQL and the adventureworks database are ready to go. If not go back to [Chapter 6][#chapter_setup-adventureworks-db]
 ```{r check on adventureworks}
 sqlpetr::sp_docker_start("adventureworks")
+Sys.sleep(sleep_default)
 ```
 Connect to the database:
 ```{r connect to postgresql}
-con <- sqlpetr::sp_get_postgres_connection(
+# con <- connection_open(  # use in an interactive session
+con <- dbConnect(          # use in other settings
+  RPostgres::Postgres(),
+  # without the previous and next lines, some functions fail with bigint data 
+  #   so change int64 to integer
+  bigint = "integer",  
+  host = "localhost",
   user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
   password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
   dbname = "adventureworks",
-  port = 5432, 
-  seconds_to_test = 20, 
-  connection_tab = TRUE
+  port = 5432
 )
 ```
 
@@ -290,6 +297,9 @@ skimr::skim_to_wide(salesorderheader_tibble) #skimr doesn't like certain kinds o
 
 ```{r}
 dbDisconnect(con)
+# or if using the connections package, use:
+# connection_close(con)
+
 sp_docker_stop("adventureworks")
 ```
 

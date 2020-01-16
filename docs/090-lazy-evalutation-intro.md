@@ -19,23 +19,29 @@ library(dbplyr)
 require(knitr)
 library(bookdown)
 library(sqlpetr)
+library(connections)
+sleep_default <- 3
 ```
 Start your `adventureworks` container:
 
 ```r
 sqlpetr::sp_docker_start("adventureworks")
+Sys.sleep(sleep_default)
 ```
 Connect to the database:
 
 ```r
-con <- sqlpetr::sp_get_postgres_connection(
+# con <- connection_open(  # use in an interactive session
+con <- dbConnect(          # use in other settings
+  RPostgres::Postgres(),
+  # without the previous and next lines, some functions fail with bigint data 
+  #   so change int64 to integer
+	  bigint = "integer",  
   user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
   password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
   dbname = "adventureworks",
-  port = 5432, 
-  seconds_to_test = 20, 
-  connection_tab = TRUE
-)
+  host = "localhost",
+  port = 5432)
 ```
 
 ## R is lazy and comes with guardrails
@@ -322,9 +328,9 @@ Q %>% dplyr::tally()
 ```
 ## # Source:   lazy query [?? x 1]
 ## # Database: postgres [postgres@localhost:5432/adventureworks]
-##   n      
-##   <int64>
-## 1 17
+##       n
+##   <int>
+## 1    17
 ```
 The `nrow()` function knows that `Q` is a list.  On the other hand, the `tally()` function tells SQL to go count all the rows. Notice that `Q` results in 1,000 rows -- the same number of rows as `film`.
 
@@ -420,6 +426,9 @@ Hand-written SQL code to do the same job will probably look a lot nicer and coul
 
 ```r
 dbDisconnect(con)
+# or if using the connections package, use:
+# connection_close(con)
+
 sp_docker_stop("adventureworks")
 ```
 

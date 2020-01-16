@@ -6,6 +6,8 @@
 > * Illustrates some of the differences between writing `dplyr` commands and SQL
 > * Suggests some strategies for dividing the work between your local R session and the dbms
 
+> **This still points to `dvdrental`**
+
 ## Setup
 
 The following packages are used in this chapter:
@@ -24,11 +26,15 @@ sqlpetr::sp_docker_start("sql-pet")
 ```
 Connect to the database:
 ```{r connect to postgresql}
-con <- sqlpetr::sp_get_postgres_connection(
+# con <- connection_open(  # use in an interactive session
+con <- dbConnect(          # use in other settings
+  RPostgres::Postgres(),
+  # without the following (and preceding) lines, 
+  # bigint become int64 which is a problem for ggplot
+  bigint = "integer",  
   user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
   password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
-  dbname = "dvdrental",
-  seconds_to_test = 30, connection_tab = TRUE
+  dbname = "dvdrental"
 )
 ```
 
@@ -266,5 +272,6 @@ Where you place the `collect` function matters.
 
 ```{r}
 dbDisconnect(con)
+
 sp_docker_stop("sql-pet")
 ```

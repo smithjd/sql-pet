@@ -46,8 +46,9 @@ Connect to `adventureworks`.  In an interactive session we prefer to use `connec
 sp_docker_start("adventureworks")
 Sys.sleep(sleep_default)
 con <- dbConnect(
-# con <- connection_open(
   RPostgres::Postgres(),
+  # without the previous and next lines, some functions fail with bigint data 
+  #   so change int64 to integer
   bigint = "integer",  
   host = "localhost",
   port = 5432,
@@ -131,14 +132,14 @@ ggplot(data = annual_sales, aes(x = year, y = total_soh_dollars)) +
   geom_text(aes(label = round(as.numeric(total_soh_dollars), digits = 0)), vjust = -0.25) +
   scale_y_continuous(labels = scales::dollar_format()) +
   labs(
-    title = "AdventureWorks Sales Dollars by Year",
+    title = "AdventureWorks Total Sales by Year",
     x = glue("Years between ", {format(min_soh_dt, "%B %d, %Y")} , " and  ", 
             {format(max_soh_dt, "%B %d, %Y")}),
     y = "Sales $"
   )
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/Calculate time period and annual sales dollars - 2 -1.png" width="480" />
+<img src="083-exploring-a-single-table_files/figure-html/AdventureWorks Annual Sales-1.png" width="480" />
 Both 2011 and 2014 turn out to be are shorter time spans than the other two years, making comparison interpretation difficult.  Still, it's clear that 2013 was the best year for annual sales dollars.
 
 ### Total order volume
@@ -151,14 +152,17 @@ ggplot(data = annual_sales, aes(x = year, y = as.numeric(soh_count))) +
   geom_col() +
   geom_text(aes(label = round(as.numeric(soh_count), digits = 0)), vjust = -0.25) +
   labs(
-    title = "Number of orders per year",
+    title = "Total Number of orders by year",
     x = glue("Years between ", {format(min_soh_dt, "%B %d, %Y")} , " and  ", 
             {format(max_soh_dt, "%B %d, %Y")}),
     y = "Total Number of Orders"
   )
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/average dollars per sale - v2-1.png" width="384" />
+<div class="figure">
+<img src="083-exploring-a-single-table_files/figure-html/average dollars per sale - v2-1.png" alt="Total Number of orders by year" width="384" />
+<p class="caption">(\#fig:average dollars per sale - v2)Total Number of orders by year</p>
+</div>
 
 Although 2013 was the best year in terms of total number of orders, there were many more in 2014 compared with 2012.  That suggests looking at the average dollars per sale for each year.
 
@@ -170,14 +174,17 @@ ggplot(data = annual_sales, aes(x = year, y = avg_total_soh_dollars)) +
   scale_y_continuous(labels = scales::dollar_format()) +
   geom_text(aes(label = round(avg_total_soh_dollars, digits = 0)), vjust = -0.25) +
   labs(
-    title = "Average Dollars per Sale",
+    title = "Yearly Average Dollars per Sale",
     x = glue("Years between ", {format(min_soh_dt, "%B %d, %Y")} , " to  ", 
             {format(max_soh_dt, "%B %d, %Y")}),
     y = "Average Sale Amount"
   )
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/average dollars per sale - -1.png" width="384" />
+<div class="figure">
+<img src="083-exploring-a-single-table_files/figure-html/average dollars per sale - -1.png" alt="Yearly Average Dollars per Sale" width="384" />
+<p class="caption">(\#fig:average dollars per sale - )Yearly Average Dollars per Sale</p>
+</div>
 
 That's a big drop between average sale of more than $7,000 in the first two years down to the $3,000 range in the last two.  There has been a remarkable change in this business.  At the same time the total number of orders shot up from less than 4,000 a year to more than 14,000.  **Why are the number of orders increasing, but the average dollar amount of a sale is dropping?  **
 
@@ -240,7 +247,10 @@ ggplot(data = monthly_sales, aes(x = orderdate, y = total_soh_dollars)) +
   )
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/Total monthly sales bar chart-1.png" width="672" />
+<div class="figure">
+<img src="083-exploring-a-single-table_files/figure-html/Total monthly sales bar chart-1.png" alt="Total Monthly Sales" width="672" />
+<p class="caption">(\#fig:Total monthly sales bar chart)Total Monthly Sales</p>
+</div>
 
 That graph doesn't show how the business might have changed, but it is remarkable how much variation there is from one month to another -- particularly in 2012 and 2014.
 
@@ -284,7 +294,7 @@ The average month over month change in sales looks OK ($ 11,968) although the Me
 ggplot(monthly_sales_lagged, aes(x = orderdate, y = monthly_sales_change)) +
   scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
   geom_line() +
-  geom_point() +
+  # geom_point() +
   scale_y_continuous(limits = c(-6000000,5500000), labels = scales::dollar_format()) +
   theme(plot.title = element_text(hjust = .5)) + 
   labs(
@@ -298,7 +308,10 @@ ggplot(monthly_sales_lagged, aes(x = orderdate, y = monthly_sales_change)) +
   )
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-4-1.png" width="672" />
+<div class="figure">
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-4-1.png" alt="Monthly Sales Change" width="672" />
+<p class="caption">(\#fig:unnamed-chunk-4)Monthly Sales Change</p>
+</div>
 
 It looks like the big change in the business occurred in the summer of 2013 when the number of orders jumped but the dollar volume just continued to bump along.
 
@@ -371,7 +384,10 @@ monthly_sales_base_year_normalized_to_2011 %>%
   theme(legend.position = c(.3,.75))
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-7-1.png" width="672" />
+<div class="figure">
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-7-1.png" alt="Miscellaneous plots" width="672" />
+<p class="caption">(\#fig:unnamed-chunk-7)Miscellaneous plots</p>
+</div>
 
 ## The effect of online sales
 
@@ -429,7 +445,10 @@ ggplot(data = annual_sales_w_channel, aes(x = orderdate, y = total_soh_dollars))
   )
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/Calculate annual sales dollars-1.png" width="672" />
+<div class="figure">
+<img src="083-exploring-a-single-table_files/figure-html/Calculate annual sales dollars -1.png" alt="Sales Channel Breakdown" width="672" />
+<p class="caption">(\#fig:Calculate annual sales dollars )Sales Channel Breakdown</p>
+</div>
 
 Based on annual sales, it looks like there are two businesses represented in the AdventureWorks database that have very different growth profiles. 
 
@@ -450,7 +469,10 @@ ggplot(data = annual_sales_w_channel, aes(x = orderdate, y = as.numeric(soh_coun
   )
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/average dollars per sale - v4-1.png" width="672" />
+<div class="figure">
+<img src="083-exploring-a-single-table_files/figure-html/average dollars per sale - v4-1.png" alt="Average Dollars by Channel" width="672" />
+<p class="caption">(\#fig:average dollars per sale - v4)Average Dollars by Channel</p>
+</div>
 
 Comparing Online and Sales Rep sales, the difference in the number of orders is even more striking than the difference between annual sales.
 
@@ -470,7 +492,10 @@ ggplot(data = annual_sales_w_channel, aes(x = orderdate, y = avg_total_soh_dolla
   )
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/average dollars per sale 3-1.png" width="672" />
+<div class="figure">
+<img src="083-exploring-a-single-table_files/figure-html/average dollars per sale 3-1.png" alt="Sales Rep to Online comparison" width="672" />
+<p class="caption">(\#fig:average dollars per sale 3)Sales Rep to Online comparison</p>
+</div>
 
 
 ## Impact of order type on monthly sales
@@ -1019,7 +1044,10 @@ ggplot(
   )
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/average dollars-1.png" width="672" />
+<div class="figure">
+<img src="083-exploring-a-single-table_files/figure-html/average dollars-1.png" alt="Monthly Sales Trend" width="672" />
+<p class="caption">(\#fig:average dollars)Monthly Sales Trend</p>
+</div>
 
 The **monthly** gyrations are much larger on the Sales Rep side, amounting to differences in a million dollars compared to small monthly variations of around $25,000 for the Online orders.
 
@@ -1061,7 +1089,10 @@ ggplot(monthly_sales_w_channel_lagged_by_month, aes(x = orderdate, y = pct_month
   )
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-10-1.png" width="672" />
+<div class="figure">
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-10-1.png" alt="Percent change - Channel Comparison" width="672" />
+<p class="caption">(\#fig:unnamed-chunk-10)Percent change - Channel Comparison</p>
+</div>
 
 For **Sales Reps** it looks like the variation is in the number of orders, not just dollars, as shown in the following plot.
 
@@ -1083,7 +1114,10 @@ ggplot(monthly_sales_w_channel_lagged_by_month, aes(x = orderdate, y = pct_month
   )
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-11-1.png" width="672" />
+<div class="figure">
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-11-1.png" alt="Number of Sales Orders by Channel" width="672" />
+<p class="caption">(\#fig:unnamed-chunk-11)Number of Sales Orders by Channel</p>
+</div>
 
 The last two plots may not be so illuminating.  Here's a table that might be improved.
 
@@ -1679,7 +1713,10 @@ ggplot(
   )
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-12-1.png" width="672" />
+<div class="figure">
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-12-1.png" alt="Lagged Sales by Channel" width="672" />
+<p class="caption">(\#fig:unnamed-chunk-12)Lagged Sales by Channel</p>
+</div>
 
 That's much more stable than the month-to-month change.
 
@@ -1721,7 +1758,10 @@ Look at the dates when sales are entered for sales by **Sales Reps**.  The follo
 ## Warning: Removed 26 rows containing missing values (position_stack).
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-13-1.png" width="672" />
+<div class="figure">
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-13-1.png" alt="Days of the month with Sales Rep activity recorded" width="672" />
+<p class="caption">(\#fig:unnamed-chunk-13)Days of the month with Sales Rep activity recorded</p>
+</div>
 
 We can check on which months have orders entered on the first of the month.
 
@@ -2185,7 +2225,10 @@ ggplot(
   ) 
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-26-1.png" width="672" />
+<div class="figure">
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-26-1.png" alt="Could be dumped?" width="672" />
+<p class="caption">(\#fig:unnamed-chunk-26)Could be dumped?</p>
+</div>
 
 additive graph showing how correction adds in some months and subtracts in others.
 
@@ -2207,7 +2250,7 @@ ggplot(data = monthly_sales_rep_adjusted, aes(x = year_month, y = total_soh_doll
 
 <img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-27-1.png" width="672" />
 
-Sales still seem to gyrate!
+Sales still seem to gyrate!  We have found that sales rep sales data is often very strange.
 
 ## Disconnect from the database and stop Docker
 

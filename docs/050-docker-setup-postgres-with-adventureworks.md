@@ -38,6 +38,9 @@ library(dbplyr)
 library(sqlpetr)
 library(bookdown)
 library(here)
+library(connections)
+sleep_default <- 3
+theme_set(theme_light())
 ```
 
 ## Verify that Docker is up, running, and clean up if necessary
@@ -86,6 +89,10 @@ source(here("book-src", "restore-adventureworks-postgres-on-docker.R"))
 ## docker  run --detach  --name adventureworks --publish 5432:5432 --mount type=bind,source="/Users/jds/Documents/Library/R/r-system/sql-pet",target=/petdir postgres:11
 ```
 
+```r
+Sys.sleep(sleep_default * 2)
+```
+
 ## Run the adventureworks Docker Image
 
 Now we can run the image in a container and connect to the database. To run the
@@ -119,13 +126,18 @@ Use the DBI package to connect to the `adventureworks` database in PostgreSQL.  
 
 
 ```r
-con <- sp_get_postgres_connection(
+Sys.sleep(sleep_default)
+# con <- connection_open(  # use in an interactive session
+con <- dbConnect(          # use in other settings
+  RPostgres::Postgres(),
+  # without the previous and next lines, some functions fail with bigint data 
+  #   so change int64 to integer
+  bigint = "integer",  
   host = "localhost",
   port = 5432,  # this version still using 5432!!!
   user = "postgres",
   password = "postgres",
-  dbname = "adventureworks",
-  seconds_to_test = 20, connection_tab = TRUE
+  dbname = "adventureworks"
 )
 ```
 
@@ -152,11 +164,7 @@ Clicking on the icon to the left of a `schema` expands the list of `tables` and 
 
 The number of rows and columns shown in the View pane depends on the size of the window.
 
-Disconnect from the database:
 
-```r
-dbDisconnect(con)
-```
 
 ## Cleaning up: diconnect from the database and stop Docker
 
@@ -164,10 +172,9 @@ Always have R disconnect from the database when you're done.
 
 ```r
 dbDisconnect(con)
-```
 
-```
-## Warning in connection_release(conn@ptr): Already disconnected
+# or if using the connections package, use:
+# connection_close(con)
 ```
 
 Stop the `adventureworks` container:
@@ -184,7 +191,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## de78e7698f9e        postgres:11         "docker-entrypoint.s…"   16 seconds ago      Exited (0) Less than a second ago                       adventureworks
+## 0b074616f226        postgres:11         "docker-entrypoint.s…"   25 seconds ago      Exited (0) Less than a second ago                       adventureworks
 ```
 
 Next time, you can just use this command to start the container: 
