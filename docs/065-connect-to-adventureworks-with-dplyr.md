@@ -17,6 +17,8 @@ library(dbplyr)
 library(sqlpetr)
 library(bookdown)
 library(here)
+library(connections)
+sleep_default <- 3
 ```
 
 ## Verify that Docker is up and running, and start the database
@@ -58,14 +60,19 @@ Use the DBI package to connect to the `adventureworks` database in PostgreSQL.  
 
 
 ```r
-con <- sp_get_postgres_connection(
+# con <- connection_open(  # use in an interactive session
+
+Sys.sleep(sleep_default)
+con <- dbConnect(
+  RPostgres::Postgres(),
+  # without the previous and next lines, some functions fail with bigint data 
+  #   so change int64 to integer
+  bigint = "integer",  
   host = "localhost",
-  port = 5432,  # this version still using 5432!!!
+  port = 5432,
   user = "postgres",
   password = "postgres",
-  dbname = "adventureworks",
-  seconds_to_test = 20, connection_tab = TRUE
-)
+  dbname = "adventureworks")
 ```
 
 ## Set schema search path and list its contents
@@ -308,5 +315,8 @@ salesorderheader_table$ops$x$vars
 
 ```r
 dbDisconnect(con)
+# or if using the connections package, use:
+# connection_close(con)
+
 sp_docker_stop("adventureworks")
 ```

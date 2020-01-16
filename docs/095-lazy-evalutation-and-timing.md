@@ -17,23 +17,27 @@ library(dbplyr)
 require(knitr)
 library(bookdown)
 library(sqlpetr)
+sleep_default <- 3
 ```
 If you have not yet set up the Docker container with PostgreSQL and the dvdrental database, go back to [those instructions][Build the pet-sql Docker Image] to configure your environment. Otherwise, start your `adventureworks` container:
 
 ```r
 sqlpetr::sp_docker_start("adventureworks")
+Sys.sleep(sleep_default)
 ```
 Connect to the database:
 
 ```r
-con <- sqlpetr::sp_get_postgres_connection(
+con <- dbConnect(
+  RPostgres::Postgres(),
+  # without the previous and next lines, some functions fail with bigint data 
+  #   so change int64 to integer
+  bigint = "integer",  
+  host = "localhost",
   user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
   password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
   dbname = "adventureworks",
-  port = 5432, 
-  seconds_to_test = 20, 
-  connection_tab = TRUE
-)
+  port = 5432)
 ```
 
 Here is a simple string of `dplyr` verbs similar to the query used to illustrate issues in the last chapter:
@@ -137,8 +141,8 @@ Q %>% summarize(total_sales = sum(saleslastyear, na.rm = TRUE), sales_persons_co
 ## # Source:   lazy query [?? x 2]
 ## # Database: postgres [postgres@localhost:5432/adventureworks]
 ##   total_sales sales_persons_count
-##         <dbl> <int64>            
-## 1   23685964. 17
+##         <dbl>               <int>
+## 1   23685964.                  17
 ```
 
 ![](screenshots/green-check.png) When all the accumulated `dplyr` verbs are executed, they are submitted to the dbms and the number of rows that are returned follow the same rules as discussed above.

@@ -19,19 +19,21 @@ require(knitr)
 library(bookdown)
 library(sqlpetr)
 library(connections)
+sleep_default <- 3
 ```
 Start your `adventureworks` container:
 ```{r check on adventureworks}
 sqlpetr::sp_docker_start("adventureworks")
+Sys.sleep(sleep_default)
 ```
 Connect to the database:
 ```{r connect to postgresql}
 # con <- connection_open(  # use in an interactive session
 con <- dbConnect(          # use in other settings
   RPostgres::Postgres(),
-  # without the following (and preceding) lines, 
-  # bigint become int64 which is a problem for ggplot
-  bigint = "integer",  
+  # without the previous and next lines, some functions fail with bigint data 
+  #   so change int64 to integer
+	  bigint = "integer",  
   user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
   password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
   dbname = "adventureworks",

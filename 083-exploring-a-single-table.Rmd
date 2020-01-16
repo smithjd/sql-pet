@@ -49,8 +49,8 @@ sp_docker_start("adventureworks")
 Sys.sleep(sleep_default)
 con <- dbConnect(
   RPostgres::Postgres(),
-  # without the following (and preceding) lines, 
-  # bigint become int64 which is a problem for ggplot
+  # without the previous and next lines, some functions fail with bigint data 
+  #   so change int64 to integer
   bigint = "integer",  
   host = "localhost",
   port = 5432,
@@ -115,13 +115,13 @@ max_soh_dt <- max(annual_sales$max_soh_orderdate)
 
 ### Total sales by year
 
-```{r Calculate time period and annual sales dollars - 2 , fig.height=4, fig.width=5}
+```{r AdventureWorks Annual Sales, fig.height=4, fig.width=5, fig.cap = ""}
 ggplot(data = annual_sales, aes(x = year, y = total_soh_dollars)) +
   geom_col() +
   geom_text(aes(label = round(as.numeric(total_soh_dollars), digits = 0)), vjust = -0.25) +
   scale_y_continuous(labels = scales::dollar_format()) +
   labs(
-    title = "AdventureWorks Sales Dollars by Year",
+    title = "AdventureWorks Total Sales by Year",
     x = glue("Years between ", {format(min_soh_dt, "%B %d, %Y")} , " and  ", 
             {format(max_soh_dt, "%B %d, %Y")}),
     y = "Sales $"
@@ -133,12 +133,12 @@ Both 2011 and 2014 turn out to be are shorter time spans than the other two year
 
 Comparing the number of orders per year has roughly the same overall pattern (2013 ranks highest, etc.) but the proportions between the years are quite different.
 
-```{r average dollars per sale - v2, fig.height=4, fig.width=4}
+```{r average dollars per sale - v2, fig.height=4, fig.width=4, fig.cap = "Total Number of orders by year"}
 ggplot(data = annual_sales, aes(x = year, y = as.numeric(soh_count))) +
   geom_col() +
   geom_text(aes(label = round(as.numeric(soh_count), digits = 0)), vjust = -0.25) +
   labs(
-    title = "Number of orders per year",
+    title = "Total Number of orders by year",
     x = glue("Years between ", {format(min_soh_dt, "%B %d, %Y")} , " and  ", 
             {format(max_soh_dt, "%B %d, %Y")}),
     y = "Total Number of Orders"
@@ -148,13 +148,13 @@ ggplot(data = annual_sales, aes(x = year, y = as.numeric(soh_count))) +
 Although 2013 was the best year in terms of total number of orders, there were many more in 2014 compared with 2012.  That suggests looking at the average dollars per sale for each year.
 
 ### Average dollars per sale
-```{r average dollars per sale - , fig.height=4, fig.width=4}
+```{r average dollars per sale - , fig.height=4, fig.width=4, fig.cap = "Yearly Average Dollars per Sale"}
 ggplot(data = annual_sales, aes(x = year, y = avg_total_soh_dollars)) +
   geom_col() +
   scale_y_continuous(labels = scales::dollar_format()) +
   geom_text(aes(label = round(avg_total_soh_dollars, digits = 0)), vjust = -0.25) +
   labs(
-    title = "Average Dollars per Sale",
+    title = "Yearly Average Dollars per Sale",
     x = glue("Years between ", {format(min_soh_dt, "%B %d, %Y")} , " to  ", 
             {format(max_soh_dt, "%B %d, %Y")}),
     y = "Average Sale Amount"
@@ -198,7 +198,7 @@ monthly_sales <-  monthly_sales %>%
 
 Next let's plot the monthly sales data:
 
-```{r Total monthly sales bar chart}
+```{r Total monthly sales bar chart, fig.cap = "Total Monthly Sales"}
 
 ggplot(data = monthly_sales, aes(x = orderdate, y = total_soh_dollars)) +
   geom_col() +
@@ -235,7 +235,7 @@ median(monthly_sales_lagged$monthly_sales_change, na.rm = TRUE)
 The average month over month change in sales looks OK ($ `r prettyNum(sum_lags[["Mean"]], big.mark = ",", format = "f", digits = 2)`) although the Median is negative: $ `r prettyNum(sum_lags[["Mean"]], big.mark = ",", format = "f", digits = 2)`. There is a very wide spread in our month-over-month sales data between the lower and upper quartile. We can plot the variation as follows:
 
 
-```{r, message=FALSE, error=FALSE}
+```{r, message=FALSE, error=FALSE, fig.cap = "Monthly Sales Change"}
 ggplot(monthly_sales_lagged, aes(x = orderdate, y = monthly_sales_change)) +
   scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
   geom_line() +
@@ -281,7 +281,7 @@ start_year
 
 Express monthly data relative to 2011`
 
-```{r}
+```{r , fig.cap = "Miscellaneous plots"}
 monthly_sales_base_year_normalized_to_2011 <- monthly_sales %>%
   mutate(
     dollars = (100 * total_soh_dollars) / start_year$avg_dollars,
@@ -353,7 +353,7 @@ Note that we are creating a factor and doing most of the calculations on the R s
 
 Start by looking at total sales.
 
-```{r Calculate annual sales dollars}
+```{r Calculate annual sales dollars , fig.cap = "Sales Channel Breakdown"}
 
 ggplot(data = annual_sales_w_channel, aes(x = orderdate, y = total_soh_dollars)) +
   geom_col() +
@@ -373,7 +373,7 @@ Based on annual sales, it looks like there are two businesses represented in the
 
 ### Order volume comparison
 
-```{r average dollars per sale - v4}
+```{r average dollars per sale - v4, fig.cap = "Average Dollars by Channel"}
 ggplot(data = annual_sales_w_channel, aes(x = orderdate, y = as.numeric(soh_count))) +
   geom_col() +
   facet_wrap("onlineorderflag") +
@@ -391,7 +391,7 @@ Comparing Online and Sales Rep sales, the difference in the number of orders is 
 
 ### Comparing average order size: **Sales Reps** to **Online** orders
 
-```{r average dollars per sale 3}
+```{r average dollars per sale 3, fig.cap = "Sales Rep to Online comparison"}
 ggplot(data = annual_sales_w_channel, aes(x = orderdate, y = avg_total_soh_dollars)) +
   geom_col() +
   facet_wrap("onlineorderflag") +
@@ -455,7 +455,7 @@ As this table shows, the **Sales Rep** dates don't match the **Online** dates.  
 
 Jumping to the trend line comparison, we see that the big the source of variation is on the Sales Rep side.
 
-```{r average dollars, warning=FALSE, message=FALSE}
+```{r average dollars, warning=FALSE, message=FALSE, fig.cap = "Monthly Sales Trend"}
 
 ggplot(
   data = monthly_sales_w_channel,
@@ -498,7 +498,7 @@ monthly_sales_w_channel_lagged_by_month <- monthly_sales_w_channel %>%
 ```
 
 
-```{r , warning=FALSE}
+```{r , warning=FALSE, fig.cap = "Percent change - Channel Comparison"}
 ggplot(monthly_sales_w_channel_lagged_by_month, aes(x = orderdate, y = pct_monthly_soh_dollar_change)) +
   scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
   scale_y_continuous() +
@@ -518,7 +518,7 @@ ggplot(monthly_sales_w_channel_lagged_by_month, aes(x = orderdate, y = pct_month
 ```
 
 For **Sales Reps** it looks like the variation is in the number of orders, not just dollars, as shown in the following plot.
-```{r , warning=FALSE}
+```{r , warning=FALSE, fig.cap = "Number of Sales Orders by Channel"}
 ggplot(monthly_sales_w_channel_lagged_by_month, aes(x = orderdate, y = pct_monthly_soh_count_change)) +
   scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
   facet_grid("onlineorderflag" , scales = "free") +
@@ -570,7 +570,7 @@ monthly_sales_w_channel_lagged_by_month %>%
 
 Let's examine whether there is a large year-to-year change.
 
-```{r , warning=FALSE, message=FALSE}
+```{r , warning=FALSE, message=FALSE, fig.cap = "Lagged Sales by Channel"}
 monthly_sales_w_channel_lagged_by_year <- monthly_sales_w_channel %>%
   group_by(onlineorderflag) %>%
   mutate(
@@ -618,7 +618,7 @@ There have been several indications that Sales Rep sales are recorded once a mon
 
 Look at the dates when sales are entered for sales by **Sales Reps**.  The following query / plot combination shows this pattern.  and the exception for transactions entered on the first day of the month.
 
-```{r}
+```{r , fig.cap = "Days of the month with Sales Rep activity recorded"}
   tbl(con, in_schema("sales", "salesorderheader")) %>%
   filter(onlineorderflag == FALSE) %>% # Drop online orders
   mutate(orderday = day(orderdate)) %>%
@@ -835,7 +835,7 @@ all_equal(monthly_sales_rep_adjusted, monthly_sales_rep_adjusted_with_psql_funct
 ### Monthly Sales by Order Type with corrected dates -- relative to a trend line
 
 
-```{r, eval=FALSE}
+```{r, eval=FALSE, fig.cap = "Resolved dates"}
 
 monthly_sales_rep_as_is <- monthly_sales_w_channel %>%
   filter(onlineorderflag == "Sales Rep")
@@ -915,7 +915,7 @@ sales_original_and_adjusted <- bind_rows(mon_sales, monthly_sales_rep_as_is, .id
 
 Does this graph add anything important?
 
-```{r}
+```{r , fig.cap = "Could be dumped?"}
 ggplot(
   data = sales_original_and_adjusted,
   aes(x = orderdate, y = soh_count, fill = date_kind)

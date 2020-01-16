@@ -26,6 +26,34 @@ As noted above, PostgreSQL has a very flexible fine-grained access permissions s
 ### Setting up Docker
 First, we need to make sure we don't have any other databases listening on the default port `5439`.
 
+```r
+library(tidyverse)
+```
+
+```
+## ── Attaching packages ──────────────────────────── tidyverse 1.3.0 ──
+```
+
+```
+## ✓ ggplot2 3.2.1          ✓ purrr   0.3.3     
+## ✓ tibble  2.1.3          ✓ dplyr   0.8.3     
+## ✓ tidyr   1.0.0.9000     ✓ stringr 1.4.0     
+## ✓ readr   1.3.1          ✓ forcats 0.4.0
+```
+
+```
+## ── Conflicts ─────────────────────────────── tidyverse_conflicts() ──
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()
+```
+
+```r
+library(DBI)
+library(RPostgres)
+library(connections)
+```
+
+
 
 ```r
 sqlpetr::sp_check_that_docker_is_up()
@@ -55,14 +83,17 @@ We'll create a "cattle" container with a default PostgreSQL 10 database cluster.
 ```r
 sqlpetr::sp_make_simple_pg("cattle")
 
-con <- sqlpetr::sp_get_postgres_connection(
+# con <- connection_open(  # use in an interactive session
+con <- dbConnect(          # use in other settings
+  RPostgres::Postgres(),
+  # without the following (and preceding) lines, 
+  # bigint become int64 which is a problem for ggplot
+  bigint = "integer",  
   host = "localhost",
   port = 5439,
   dbname = "postgres",
   user = "postgres",
-  password = "postgres",
-  seconds_to_test = 30
-)
+  password = "postgres")
 ```
 
 ### Adding a role
@@ -163,6 +194,8 @@ head(DBI::dbReadTable(con, "iris"))
 
 ```r
 DBI::dbDisconnect(con)
+# or if using the connections package, use:
+# connection_close(con)
 
 sqlpetr::sp_docker_remove_container("cattle")
 ```

@@ -71,6 +71,7 @@ in `sqlpetr` to build this image, called *OUT OF DATE!!* . Vignette [Building th
 *Ignore the errors in the following step:
 ```{r}
 source(here("book-src", "restore-adventureworks-postgres-on-docker.R"))
+Sys.sleep(sleep_default * 2)
 ```
 
 ## Run the adventureworks Docker Image
@@ -109,8 +110,8 @@ Sys.sleep(sleep_default)
 # con <- connection_open(  # use in an interactive session
 con <- dbConnect(          # use in other settings
   RPostgres::Postgres(),
-  # without the following (and preceding) lines, 
-  # bigint become int64 which is a problem for ggplot
+  # without the previous and next lines, some functions fail with bigint data 
+  #   so change int64 to integer
   bigint = "integer",  
   host = "localhost",
   port = 5432,  # this version still using 5432!!!

@@ -39,11 +39,16 @@ Connect to `adventureworks`:
 ```r
 sp_docker_start("adventureworks")
 Sys.sleep(sleep_default)
-con <- connection_open(  # use in an interactive session
-# con <- dbConnect(          # use in other settings
+```
+
+
+
+```r
+# con <- connection_open(  # use in an interactive session
+con <- dbConnect(          # use in other settings
   RPostgres::Postgres(),
-  # without the following (and preceding) lines, 
-  # bigint become int64 which is a problem for ggplot
+  # without the previous and next lines, some functions fail with bigint data 
+  #   so change int64 to integer
   bigint = "integer",  
   host = "localhost",
   port = 5432,
@@ -149,7 +154,7 @@ The PostgreSQL `pg_get_viewdef` function returns a data frame with one column na
 
 
 ```r
-cat(str_replace_all(view_definition$pg_get_viewdef, "\\\\\\\\n", "\\\\n")) 
+cat(str_replace_all(view_definition$pg_get_viewdef, "\\\\\\\\n", "\\\\n"))
 ```
 
 ```

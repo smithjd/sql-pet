@@ -58,8 +58,8 @@ Use the DBI package to connect to the `adventureworks` database in PostgreSQL.  
 Sys.sleep(sleep_default)
 con <- dbConnect(
   RPostgres::Postgres(),
-  # without the following (and preceding) lines, 
-  # bigint become int64 which is a problem for ggplot
+  # without the previous and next lines, some functions fail with bigint data 
+  #   so change int64 to integer
   bigint = "integer",  
   host = "localhost",
   port = 5432,

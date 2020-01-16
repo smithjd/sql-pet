@@ -17,6 +17,9 @@ library(DBI)
 library(RPostgres)
 require(knitr)
 library(sqlpetr)
+library(connections)
+sleep_default <- 3
+theme_set(theme_light())
 ```
 ## Set up the adventureworks Docker container
 
@@ -70,11 +73,18 @@ Once that file is created, restart R, and after that R reads it every time it co
 Connect to the postgrSQL using the `sp_get_postgres_connection` function:
 
 ```r
-con <- sp_get_postgres_connection(user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
-                         password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
-                         port = 5432,
-                         dbname = "adventureworks",
-                         seconds_to_test = 30, connection_tab = TRUE)
+Sys.sleep(sleep_default)
+# con <- connection_open(  # use in an interactive session
+con <- dbConnect(          # use in other settings
+  RPostgres::Postgres(),
+  # without the previous and next lines, some functions fail with bigint data 
+  #   so change int64 to integer
+  bigint = "integer",  
+  user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
+  password = Sys.getenv("DEFAULT_POSTGRES_PASSWORD"),
+  host = "localhost",
+  port = 5432,
+  dbname = "adventureworks")
 ```
 Once the connection object has been created, you can list all of the tables in one of the schemas:
 
@@ -103,5 +113,8 @@ dbListTables(con)
 
 ```r
 dbDisconnect(con)
+# or if using the connections package, use:
+# connection_close(con)
+
 sp_docker_stop("adventureworks")
 ```

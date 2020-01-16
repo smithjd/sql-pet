@@ -20,18 +20,20 @@ library(bookdown)
 library(sqlpetr)
 library(skimr)
 library(connections)
+sleep_default <- 3
 ```
 Assume that the Docker container with PostgreSQL and the adventureworks database are ready to go. If not go back to [Chapter 6][#chapter_setup-adventureworks-db]
 ```{r check on adventureworks}
 sqlpetr::sp_docker_start("adventureworks")
+Sys.sleep(sleep_default)
 ```
 Connect to the database:
 ```{r connect to postgresql}
 # con <- connection_open(  # use in an interactive session
 con <- dbConnect(          # use in other settings
   RPostgres::Postgres(),
-  # without the following (and preceding) lines, 
-  # bigint become int64 which is a problem for ggplot
+  # without the previous and next lines, some functions fail with bigint data 
+  #   so change int64 to integer
   bigint = "integer",  
   host = "localhost",
   user = Sys.getenv("DEFAULT_POSTGRES_USER_NAME"),
