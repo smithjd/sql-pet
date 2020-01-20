@@ -31,13 +31,10 @@ library(bookdown)
 library(here)
 library(lubridate)
 library(skimr)
-# library(DiagrammeR)
-
-library(scales) # ggplot xy scales
-theme_set(theme_light())
 ```
 
 Connect to `adventureworks`:
+
 ```{r Start adventureworks}
 sp_docker_start("adventureworks")
 Sys.sleep(sleep_default)
@@ -57,9 +54,9 @@ con <- dbConnect(          # use in other settings
   password = "postgres",
   dbname = "adventureworks"
 )
+
 dbExecute(con, "set search_path to sales;")
 ```
-
 
 ## The role of database `views`
 
@@ -78,11 +75,11 @@ Database `views` are useful for many reasons.
 
 ### Rely on **and** be critical of `views`
 
-Because they represent a conventional view of the database, a `view` may seem quite boring; remember why they are very important. Just because they are conventional and authorized, they may still need verification or auditing when used for a purpose other than the original intent. They can guide you toward what you need from the database but they could also mislead because they are easy to use and available.  People may forget why a specific view exists and who is using it. Therefore any given view might be a forgotten vestige or part of a production data pipeline or a priceless nugget of insight. How can you tell? Consider the owner and schema, whether it's a materialized index view or not, if it has a trigger and try to deduce the intentionality behind the view.
+Because they represent a conventional view of the database, it might seem like a `view` is beneath notice.  Even though they are conventional and authorized, they may still need verification or auditing, especially when used for a purpose other than the original intent. They can guide you toward what you need from the database but they could also mislead because they are easy to use and available.  People may forget why a specific view exists and who is using it. Therefore any given view might be a forgotten vestige or part of a production data pipeline or a priceless nugget of insight. How can you tell? Consider the owner and schema, whether it's a materialized index view or not, if it has a trigger and try to deduce the intention behind the view.
 
-## Unpacking the elements of a `view` Tidyverse
+## Unpacking the elements of a `view` in the Tidyverse
 
-Since a view is just like an ordinary table, many of the tools we've become familiar with work the same.  The simplest way of getting a list of columns in a view is the same as it is for a regular table:
+Since a view is just like an ordinary table, we can use the same tools in the same way as they are used on a database table.  For example, the simplest way of getting a list of columns in a view is the same as it is for a regular table:
 
 ```{r}
 dbListFields(con, "vsalespersonsalesbyfiscalyearsdata")
@@ -90,23 +87,28 @@ dbListFields(con, "vsalespersonsalesbyfiscalyearsdata")
 
 ### Use a `view` just like any other table
 
-From a retrieval perspective a database `view` is just like any other table.  Using a view to retrieve data from the database will be completely standard across all flavors of SQL.  (To find out what a view does behind the scenes requires that you use functions that are **not** standard.)
+From a retrieval perspective a database `view` is just like any other table.  Using a view to retrieve data from the database will be completely standard across all flavors of SQL.  
 
-```{r Illustrate different calls to one view}
+```{r Use a view just like a regular table}
 v_salesperson_sales_by_fiscal_years_data <- 
   tbl(con, in_schema("sales","vsalespersonsalesbyfiscalyearsdata")) %>% 
   collect()
 
 str(v_salesperson_sales_by_fiscal_years_data)
-
-tbl(con, in_schema("sales","vsalespersonsalesbyfiscalyearsdata")) %>% 
-  filter(salespersonid == 275) %>% 
-  collect()
 ```
 
-view replication is a big PITA. do it to understand the view mechanics and do that to extend or modify the view.  at the end: share with others via the DBA.
+As we will see, our sample `view`,  `vsalespersonsalesbyfiscalyearsdata` joins 5 different tables.  We can expect that subsetting or calculation on any of the columns in the component tables will behave as expected, doing the work on the database side.  For example, the following query filters on a column that exists in one of the `view`'s component tables.
 
-Start with what you need, then "look up" with other tables.  Within the constraints of foreign keys.  Index considerations.
+```{r Subset using the information in one constituent table}
+tbl(con, in_schema("sales","vsalespersonsalesbyfiscalyearsdata")) %>% 
+  filter(salesterritory == "Northeast") %>% 
+  collect()
+```
+Although finding out what a view does behind the scenes requires that you use functions that are **not** standard, doing so has several general purposes: 
+
+  * It is satisfying to know what's going on behind the scenes.
+  * Specific elements or components of a `view` might be worth plagiarizing or incorporating in our queries.
+  * It is necessary to understand the mechanics of a `view` if we are going to build on what it does or intend to extend or modify it.
 
 ### SQL source code
 
@@ -130,20 +132,14 @@ Even if you don't intend to become completely fluent in SQL, it's useful to stud
 
 ### The ERD as context for SQL code
 
-A database Entity Relationship Diagram (ERD) is very helpful in making sense of the SQL in a `view`.  The ERD for `AdventureWorks` is [here](https://i.stack.imgur.com/LMu4W.gif). 
-Save and study the SQL.
+A database Entity Relationship Diagram (ERD) is very helpful in making sense of the SQL in a `view`.  The ERD for `AdventureWorks` is [here](https://i.stack.imgur.com/LMu4W.gif). If a published ERD is not available, a tool like the PostgreSQL *pg_modeler* is capable of generating an ERD (or at least describing the portion of the database that is visible to you).
 
-### Tables and columns
+### Selecting relevant tables and columns
 
-use tools like PostgreSQL pg_modeler to get an ERD.
-
-
-It can be helpful to actually mark up the ERD to identify the specific tables that are involved in the view you are going to reproduce.
+Before bginning to write code, it can be helpful to actually mark up the ERD to identify the specific tables that are involved in the view you are going to reproduce.
 ![](screenshots/AW-2008-OLTP-ERD.gif)
 
-The `sales.vsalespersonsalesbyfiscalyearsdata` view joins data from five different tables
-
-Define each table that is involved and identify the columns that will be needed from that table.  The tables that are involved are:
+Define each table that is involved and identify the columns that will be needed from that table.  The `sales.vsalespersonsalesbyfiscalyearsdata` view joins data from five different tables:
 
   1. sales_order_header
   2. sales_territory
@@ -151,7 +147,7 @@ Define each table that is involved and identify the columns that will be needed 
   4. employee
   5. person
 
-Select the columns and do any necessary changes or renaming.  Avoid `dbplyr` default joins by **not** including `rowguid` and `ModifiedDate` columns, which appear in almost all `AdventureWorks` tables.  Also, we follow the convention that any column that we change or create on the fly uses a snake case naming convention.
+For each of the tables in the `view`, we select the columns that appear in the `sales.vsalespersonsalesbyfiscalyearsdata`.  Selecting columns in this way prevents joins that `dbplyr` would make automatically based on common column names such as `rowguid` and `ModifiedDate` columns, which appear in almost all `AdventureWorks` tables.  In the following code we follow the convention that any column that we change or create on the fly uses a snake case naming convention.
 ```{r}
 sales_order_header <- tbl(con, in_schema("sales", "salesorderheader")) %>% 
   select(orderdate, salespersonid, subtotal)
@@ -164,7 +160,17 @@ sales_person <- tbl(con, in_schema("sales", "salesperson")) %>%
 
 employee <- tbl(con, in_schema("humanresources", "employee")) %>% 
   select(businessentityid, jobtitle)
+```
 
+In addition to selecting rows as shown in the previous statements,  `mutate` and other functions help us replicate code in the `view` such as:
+
+    ((p.firstname::text || ' '::text) ||
+    COALESCE(p.middlename::text || ' '::text,
+    ''::text)) || p.lastname::text AS fullname
+
+The following dplyr code pastes the first, middle and last names together to make `full_name`:
+
+```{r}
 person <- tbl(con, in_schema("person", "person")) %>% 
   mutate(full_name = paste(firstname, middlename, lastname)) %>% 
   select(businessentityid, full_name)
@@ -190,7 +196,7 @@ getnames(person)
 
 ### Join the tables together
 
-Join all of the data pertaining to a person.  Notice that since all of these 4 tables contain `businessentityid`, dplyr will join them all on that common column automatically.
+Join all of the data pertaining to a person.  Notice that since each of these 4 tables contain `businessentityid`, dplyr will join them all on that common column automatically.  And since we know that all of these tables are small, we don't mind a query that joins and downloads all the data.
 
 ```{r}
 salesperson_info <- sales_person %>% 
@@ -202,10 +208,12 @@ salesperson_info <- sales_person %>%
 str(salesperson_info)
 ```
 
-Discuss:
-  `date_part('year'::text, soh.orderdate + '6 mons'::interval) AS fiscalyear`
+The one part of the view that we haven't replicated is:
 
-Do a crude version with `orderdate`.  All of the work can be done on the database server.
+  `date_part('year'::text, soh.orderdate`
+  `+ '6 mons'::interval) AS fiscalyear`
+
+For now we can skip the fiscalyear calculation and just aggregate and download the data by `orderdate`. That will collapse many rows into a much smaller number since we know from our previous investigation into how sales are recorded for Sales Reps that all sales are recorded more or less once a month.  Therefore most of the crunching happens on the database server side.
 
 ```{r}
 sales_data_year <- sales_person %>% 
@@ -368,7 +376,7 @@ by_q <- tbl(con, in_schema("sales", "salesorderheader")) %>%
          quarter = sql("DATE_PART('quarter', orderdate)")) %>% 
   # select(orderdate, quarter) %>% 
   group_by(year, quarter) %>% 
-  summarize(subtotal = sum(subtotal), n = n()) %>% 
+  summarize(subtotal = sum(subtotal, na.rm = TRUE), n = n()) %>% 
   arrange(year, quarter) %>% 
   collect()
 
