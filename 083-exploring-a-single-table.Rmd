@@ -78,7 +78,7 @@ We begin by looking at Sales on a yearly basis, then consider monthly sales.  We
 
 ## Annual sales
 
-On an annual basis, are sales dollars trending up, down or flat? We begin with annual revenue and number of orders.  
+On an annual basis, are sales dollars and orders trending up, down or flat? We begin with annual revenue and number of orders.  
 
 ```{r Calculate time period and annual sales dollars 1}
 annual_sales <- tbl(con, in_schema("sales", "salesorderheader")) %>%
@@ -253,11 +253,11 @@ ggplot(monthly_sales_lagged, aes(x = orderdate, y = monthly_sales_change)) +
   )
 ```
 
-It looks like the big change in the business occurred in the summer of 2013 when the number of orders jumped but the dollar volume just continued to bump along.
+Here we can see that Adventureworks has two larger swings in month-over-month variation. Once in 2011-2012 and also in 2014. We now know that 2013 was the highest producing and most stable sales year so far. However, we are seeing new patterns in 2014. 
 
-### Comparing dollars and orders to a base year
+### Comparing dollars and orders to 2013
 
-To look at dollars and the number of orders together, we compare the monthly data to the yearly average for 2011.
+To look at dollars and the number of orders together, we compare the monthly data to the yearly average for 2012 since it's a full year. 
 
 ```{r}
 start_year <- monthly_sales %>%
@@ -270,34 +270,36 @@ start_year <- monthly_sales %>%
     avg_dollars = total_soh_dollars / n_months,
     avg_count = soh_count / n_months
   ) %>%
-  filter(yr == min(yr))
+  filter(yr == "2013")
 ```
 
-Use 2011 as a baseline:
+Using 2013 as a baseline, we'll see how 2014 compaires against the annual avg_dollars for 2013.
 
 ```{r}
 start_year
 ```
 
-Express monthly data relative to 2011`
+Express monthly data relative to 2013 average:
+The numerator in this case is the 2014 total_soh_dollars multiplied by 100. 
 
 ```{r , fig.cap = "Miscellaneous plots"}
-monthly_sales_base_year_normalized_to_2011 <- monthly_sales %>%
+monthly_sales_base_year_relative_to_2013 <- monthly_sales %>%
   mutate(
-    dollars = (100 * total_soh_dollars) / start_year$avg_dollars,
+    diff = (100 * total_soh_dollars) / start_year$avg_dollars,
     number_of_orders = (100 * soh_count) / start_year$avg_count
   ) %>%
+  filter(year(orderdate) %in% c(2013,2014)) %>%
   ungroup()
 
-monthly_sales_base_year_normalized_to_2011 <- monthly_sales_base_year_normalized_to_2011 %>%
-  select(orderdate, dollars, `# of orders` = number_of_orders) %>%
+monthly_sales_base_year_relative_to_2013 <- monthly_sales_base_year_relative_to_2013 %>%
+  select(orderdate, diff, `# of orders` = number_of_orders) %>%
   pivot_longer(-orderdate,
-    names_to = "relative_to_2011_average",
+    names_to = "relative_to_2013_average",
     values_to = "amount"
   )
 
-monthly_sales_base_year_normalized_to_2011 %>%
-  ggplot(aes(orderdate, amount, color = relative_to_2011_average)) +
+monthly_sales_base_year_relative_to_2013 %>%
+  ggplot(aes(orderdate, amount, color = relative_to_2013_average)) +
   geom_line() +
   geom_hline(yintercept = 100) +
   scale_x_date(date_labels = "%Y-%m", date_breaks = "6 months") +
@@ -309,7 +311,7 @@ monthly_sales_base_year_normalized_to_2011 %>%
             {format(max_soh_dt, "%B %d, %Y")}),
     x = "Date",
     y = "",
-    color = "% change from\n 2011 average"
+    color = "% change from\n 2013 average"
   ) +
   theme(legend.position = c(.3,.75))
 ```
