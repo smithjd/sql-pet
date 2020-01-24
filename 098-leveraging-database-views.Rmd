@@ -31,6 +31,7 @@ library(bookdown)
 library(here)
 library(lubridate)
 library(skimr)
+library(gt)
 ```
 
 Connect to `adventureworks`:
@@ -213,7 +214,7 @@ The one part of the view that we haven't replicated is:
   `date_part('year'::text, soh.orderdate`
   `+ '6 mons'::interval) AS fiscalyear`
 
-For now we can skip the fiscalyear calculation and just aggregate and download the data by `orderdate`. That will collapse many rows into a much smaller number since we know from our previous investigation into how sales are recorded for Sales Reps that all sales are recorded more or less once a month.  Therefore most of the crunching happens on the database server side.
+For now we can skip the fiscalyear calculation and just aggregate and download the data by `orderdate`. That will collapse many rows into a much smaller table since we know from our previous investigation into how sales are recorded for Sales Reps that all sales are recorded more or less once a month.  Therefore most of the crunching happens on the database server side.
 
 ```{r}
 sales_data_year <- sales_person %>% 
@@ -226,50 +227,10 @@ sales_data_year <- sales_person %>%
 
 Lubridate makes it very easy to convert `orderdate` to `fiscal_year`.  Doing that conversion interleaving dplyr and **ANSI-STANDARD** SQL is harder.  Too lazy!  Therefore we just pull the data from the server after the `left_join` and do the rest of the job on the R side.
 
-** notice that the merge is happening on the R side. there would be a modification to make it all (or as much as possible) happen on the server side.**
-
-
-Using this function as a model:
-```{r, echo=TRUE, eval=TRUE}
-dbExecute(
-  con,
-  "CREATE OR REPLACE FUNCTION so_adj_date(so_date timestamp, ONLINE_ORDER boolean) RETURNS timestamp AS $$
-     BEGIN
-        IF (ONLINE_ORDER) THEN
-            RETURN (SELECT so_date);
-        ELSE
-            RETURN(SELECT CASE WHEN EXTRACT(DAY FROM so_date) = 1
-                               THEN  so_date - '1 day'::interval
-                               ELSE  so_date
-                          END
-                  );
-        END IF;
- END; $$
-LANGUAGE PLPGSQL;
-"
-)
-```
-
-Trying to create a function that returns fiscal year on the server side.
-
-```{r, echo=TRUE, eval=FALSE}
-
-
-dbExecute(
-  con,
-  "CREATE OR REPLACE FUNCTION so_calc_fy(orderdate timestamp) RETURNS orderdate AS $$
-        RETURN(date_part('year'::text, orderdate + '6 mons'::interval))
-$$
-LANGUAGE PLPGSQL;
-"
-)
-```
-
 
 ```{r}
 sales_data_fiscal_year <- sales_person %>% 
   left_join(sales_order_header, by = c("businessentityid" = "salespersonid")) %>% 
-  # mutate(fiscal_year = year(orderdate %m+% months(6))) %>% 
   group_by(businessentityid, orderdate) %>%
   summarize(sales_total = sum(subtotal, na.rm = TRUE)) %>% 
   mutate(
@@ -277,17 +238,13 @@ sales_data_fiscal_year <- sales_person %>%
     day = day(orderdate)
   ) %>%
   collect() %>% 
-  ungroup() %>% 
   mutate(
-    adjusted_orderdate = case_when(
-      day == 1L ~ orderdate -1,
-      TRUE ~ orderdate
-    ),
-    year_month = floor_date(adjusted_orderdate, "month")
-  )
-
-str(sales_data_fiscal_year)
-# View(sales_data_fiscal_year)
+    fiscal_year = year(orderdate %m+% months(6))
+  ) %>% 
+  ungroup() %>% 
+  group_by(businessentityid, fiscal_year) %>% 
+  summarize(sales_total = sum(sales_total, na.rm = FALSE)) %>% 
+  ungroup()
 ```
 
 Put the two parts together: `sales_data_fiscal_year` and `person_info` to yield the final query.
@@ -305,115 +262,92 @@ Use `pivot_wider` to make it easier to compare the native view to our dplyr vers
 
 ```{r}
 salesperson_sales_by_fiscal_years_dplyr %>% 
-  mutate(calendar_year = year(adjusted_orderdate)) %>% #names()
-  group_by(full_name, territory_name, calendar_year) %>% 
-  summarize(sales_total = sum(sales_total)) %>% 
-  # select(full_name, territory_name, calendar_year, sales_total) %>% 
-  ungroup() %>% 
-  pivot_wider(names_from = calendar_year, values_from = sales_total,
+  select(-jobtitle, -businessentityid, -territoryid) %>%
+  pivot_wider(names_from = fiscal_year, values_from = sales_total,
               values_fill = list(sales_total = 0)) %>%
-  arrange(territory_name, full_name)
+  arrange(territory_name, full_name) %>% 
+  filter(territory_name == "Canada")
   # pivot_wider(names_from = fiscal_year, values_from = sales_total)
 
-v_salesperson_sales_by_fiscal_years_data %>% # names()
+v_salesperson_sales_by_fiscal_years_data %>% 
   select(-jobtitle, -salespersonid) %>%
   pivot_wider(names_from = fiscalyear, values_from = salestotal,
               values_fill = list(salestotal = 0)) %>%
-  arrange(salesterritory, fullname)
+  arrange(salesterritory, fullname) %>% 
+  filter(salesterritory == "Canada")
 ```
 
 The column names don't match up, partly because we are using snake case convention for derived elements.
+
+NOTE: Figure out when to drop businessentityid  and territoryid
 
 ```{r}
 names(salesperson_sales_by_fiscal_years_dplyr) %>% sort()
 names(v_salesperson_sales_by_fiscal_years_data) %>% sort()
 ```
 
-the following doesn't quite work yet.  The idea is to do as much work on the server as possible to correct the data entry date.  
+## Revise the view to summarize by quarter not fiscal year
 
-```{r}
-sales_order_header_fy <- tbl(con, in_schema("sales", "salesorderheader")) %>% 
-  mutate(orderdate = as.Date(orderdate),
-         sales_order_year = year(orderdate),
-         sales_order_month = month(orderdate),
-         sales_order_day = as.numeric(day(orderdate))
-         ) %>% 
- select(sales_order_year, sales_order_month, sales_order_day, 
-        salespersonid, subtotal, orderdate) %>% 
-  group_by(sales_order_year, sales_order_month, sales_order_day, 
-        salespersonid) %>% 
-  summarize(subtotal = sum(subtotal, na.rm = TRUE)) %>% 
-  collect() %>% 
-  # show_query %>% 
-  mutate(
-    sales_order_day_adj = ifelse(
-      sales_order_day == 1, sales_order_day - 1, sales_order_day
-    )
-  ) %>% ungroup()
-
-# , 
-
-# View(sales_order_header_fy)
-str(sales_order_header_fy)
-```
-
-Why 3 sales folks in vsalesperson don’t show up in 2014 vsalespersonsalesbyfiscalyearsdata
-
-Different environments / SQL dialects
-
-## Revise the view
-
-repeat the function creation strategy from 083 --
-
-  * correct the date
-  * extract the quarter
+sales in Canada
 
 ```{r}
 
-by_q <- tbl(con, in_schema("sales", "salesorderheader")) %>% 
+tbl(con, in_schema("sales", "salesorderheader")) %>% 
   mutate(orderdate = as.Date(orderdate), 
          year = year(orderdate),
          quarter = sql("DATE_PART('quarter', orderdate)")) %>% 
-  # select(orderdate, quarter) %>% 
-  group_by(year, quarter) %>% 
-  summarize(subtotal = sum(subtotal, na.rm = TRUE), n = n()) %>% 
-  arrange(year, quarter) %>% 
-  collect()
-
-by_q
+  group_by(salespersonid, year, quarter) %>% 
+  summarize(subtotal = round(sum(subtotal, na.rm = TRUE), digits = 0)) %>% 
+  collect() %>% ungroup() %>% 
+  group_by(salespersonid, year) %>% ungroup() %>% 
+  left_join(salesperson_info, by = c("salespersonid" = "businessentityid")) %>% 
+  filter(territory_name == "Canada") %>% 
+  arrange(full_name, year) %>%
+  pivot_wider(names_from = quarter, values_from = subtotal,
+              names_prefix = "Q") %>% 
+  select(full_name, year, Q1, Q2, Q3, Q4) %>%
+  head(., n = 10) %>% 
+  gt()
 ```
 
-```{r}
+Maybe correcting the dates makes no difference.
 
+```{r, eval=FALSE}
 by_q_correct_date <- tbl(con, in_schema("sales", "salesorderheader")) %>% 
   mutate(orderdate = as.Date(orderdate), 
          orderdate = sql("dateadd(day,-1,orderdate)"),
-         # orderdate = as.Date(so_adj_date(orderdate, onlineorderflag)),
          year = year(orderdate),
-         month = month(orderdate),
          quarter = quarter(orderdate)
-         # quarter = sql("DATE_PART('quarter', orderdate)")
          ) %>% 
-  group_by(year, quarter, month) %>% 
-  summarize(subtotal = sum(subtotal), n = n()) %>% 
-  arrange(year, quarter, month) %>% 
-  show_query %>% 
-  ungroup() %>% 
-  collect()
+  group_by(salespersonid, year, quarter) %>% 
+  summarize(subtotal = round(sum(subtotal, na.rm = TRUE), digits = 0)) %>% 
+  collect() %>% ungroup()
 
+by_q_correct_date %>% ungroup() %>% 
+  group_by(salespersonid, year) %>% ungroup() %>% 
+  arrange(salespersonid, year) %>% 
+  pivot_wider(names_from = quarter, values_from = subtotal,
+              names_prefix = "Q") %>% 
+  select(salespersonid, year, Q1, Q2, Q3, Q4) %>% 
+  head(., n = 10) %>% 
+  gt()
+```
+
+
+```{r, eval=FALSE}
 by_q_raw_date <- tbl(con, in_schema("sales", "salesorderheader")) %>% 
   mutate(orderdate = as.Date(orderdate), 
-         # orderdate = sql("SELECT CASE WHEN EXTRACT(DAY 
-         #     FROM orderdate) = 1
-         #       THEN  orderdate - '1 day'::interval
-         #     ELSE  orderdate
-         #   END"),
+         orderdate = sql("SELECT CASE WHEN EXTRACT(DAY
+             FROM orderdate) = 1
+               THEN  orderdate - '1 day'::interval
+             ELSE  orderdate
+           END"),
          year = year(orderdate),
-         month = month(orderdate),
+         # month = month(orderdate),
          quarter = sql("DATE_PART('quarter', orderdate)")) %>% 
-   group_by(year, quarter, month) %>% 
+   group_by(year, quarter) %>% 
   summarize(subtotal = sum(subtotal), n = n()) %>% 
-  arrange(year, quarter, month) %>% 
+  arrange(year, quarter) %>% 
   show_query %>% 
   ungroup() %>% 
   collect()
