@@ -1,0 +1,2176 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>083-exploring-a-single-table.utf8</title>
+  <meta name="description" content="" />
+  <meta name="generator" content="bookdown #bookdown:version# and GitBook 2.6.7" />
+
+  <meta property="og:title" content="083-exploring-a-single-table.utf8" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="083-exploring-a-single-table.utf8" />
+  
+  
+  
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<!--bookdown:link_prev-->
+<!--bookdown:link_next-->
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+<!--bookdown:title:start-->
+<!--bookdown:title:end-->
+
+<!--bookdown:toc:start-->
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+<!--bookdown:toc2:start-->
+<ul>
+<li><a href="#chapter_exploring-a-single-table"><span class="toc-section-number">1</span> Asking Business Questions From a Single Table</a><ul>
+<li><a href="#setup-our-standard-working-environment"><span class="toc-section-number">1.1</span> Setup our standard working environment</a></li>
+<li><a href="#a-word-on-naming"><span class="toc-section-number">1.2</span> A word on naming</a></li>
+<li><a href="#the-overall-adventureworks-sales-picture"><span class="toc-section-number">1.3</span> The overall AdventureWorks sales picture</a></li>
+<li><a href="#annual-sales"><span class="toc-section-number">1.4</span> Annual sales</a><ul>
+<li><a href="#total-sales-by-year"><span class="toc-section-number">1.4.1</span> Total sales by year</a></li>
+<li><a href="#total-order-volume"><span class="toc-section-number">1.4.2</span> Total order volume</a></li>
+<li><a href="#average-dollars-per-sale"><span class="toc-section-number">1.4.3</span> Average dollars per sale</a></li>
+</ul></li>
+<li><a href="#monthly-sales"><span class="toc-section-number">1.5</span> Monthly Sales</a><ul>
+<li><a href="#check-lagged-monthly-data"><span class="toc-section-number">1.5.1</span> Check lagged monthly data</a></li>
+<li><a href="#comparing-dollars-and-orders-to-a-base-year"><span class="toc-section-number">1.5.2</span> Comparing dollars and orders to a base year</a></li>
+</ul></li>
+<li><a href="#the-effect-of-online-sales"><span class="toc-section-number">1.6</span> The effect of online sales</a><ul>
+<li><a href="#add-onlineorderflag-to-our-annual-sales-query"><span class="toc-section-number">1.6.1</span> Add <code>onlineorderflag</code> to our annual sales query</a></li>
+<li><a href="#annual-sales-comparison"><span class="toc-section-number">1.6.2</span> Annual Sales comparison</a></li>
+<li><a href="#order-volume-comparison"><span class="toc-section-number">1.6.3</span> Order volume comparison</a></li>
+<li><a href="#comparing-average-order-size-sales-reps-to-online-orders"><span class="toc-section-number">1.6.4</span> Comparing average order size: <strong>Sales Reps</strong> to <strong>Online</strong> orders</a></li>
+</ul></li>
+<li><a href="#impact-of-order-type-on-monthly-sales"><span class="toc-section-number">1.7</span> Impact of order type on monthly sales</a><ul>
+<li><a href="#retrieve-monthly-sales-with-the-onlineorderflag"><span class="toc-section-number">1.7.1</span> Retrieve monthly sales with the <code>onlineorderflag</code></a></li>
+<li><a href="#monthly-variation-compared-to-a-trend-line"><span class="toc-section-number">1.7.2</span> Monthly variation compared to a trend line</a></li>
+<li><a href="#compare-monthly-lagged-data-by-sales-channel"><span class="toc-section-number">1.7.3</span> Compare monthly lagged data by Sales Channel</a></li>
+</ul></li>
+<li><a href="#detect-and-diagnose-the-day-of-the-month-problem"><span class="toc-section-number">1.8</span> Detect and diagnose the day of the month problem</a><ul>
+<li><a href="#sales-rep-orderdate-distribution"><span class="toc-section-number">1.8.1</span> Sales Rep Orderdate Distribution</a></li>
+</ul></li>
+<li><a href="#correcting-the-order-date-for-sales-reps"><span class="toc-section-number">1.9</span> Correcting the order date for <strong>Sales Reps</strong></a><ul>
+<li><a href="#define-a-date-correction-function-in-r"><span class="toc-section-number">1.9.1</span> Define a date correction function in R</a></li>
+<li><a href="#define-postgres-date-function"><span class="toc-section-number">1.9.2</span> Define and store a PostgreSQL function to correct the date</a></li>
+<li><a href="#use-the-postgresql-function"><span class="toc-section-number">1.9.3</span> Use the PostgreSQL function</a></li>
+<li><a href="#monthly-sales-by-order-type-with-corrected-dates-relative-to-a-trend-line"><span class="toc-section-number">1.9.4</span> Monthly Sales by Order Type with corrected dates – relative to a trend line</a></li>
+</ul></li>
+<li><a href="#disconnect-from-the-database-and-stop-docker"><span class="toc-section-number">1.10</span> Disconnect from the database and stop Docker</a></li>
+</ul></li>
+</ul>
+<!--bookdown:toc2:end-->
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./"></a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<!--bookdown:toc:end-->
+<!--bookdown:body:start-->
+<div id="chapter_exploring-a-single-table" class="section level1">
+<h1><span class="header-section-number">1</span> Asking Business Questions From a Single Table</h1>
+<blockquote>
+<p>This chapter explores:</p>
+<ul>
+<li>Issues that come up when investigating a single table from a business perspective</li>
+<li>Show the multiple data anomalies found in a single AdventureWorks table (<em>salesorderheader</em>)</li>
+<li>The interplay between “data questions” and “business questions”</li>
+</ul>
+</blockquote>
+<p>The previous chapter has demonstrated some of the automated techniques for showing what’s in a table using some standard R functions and packages. Now we demonstrate a step-by-step process of making sense of what’s in one table with more of a business perspective. We illustrate the kind of detective work that’s often involved as we investigate the <em>organizational meaning</em> of the data in a table. We’ll investigate the <code>salesorderheader</code> table in the <code>sales</code> schema in this example to understand the sales profile of the “AdventureWorks” business. We show that there are quite a few interpretation issues even when we are examining just 3 out of the 25 columns in one table.</p>
+<p>For this kind of detective work we are seeking to understand the following elements separately and as they interact with each other:</p>
+<ul>
+<li>What data is stored in the database</li>
+<li>How information is represented</li>
+<li>How the data is entered at a day-to-day level to represent business activities</li>
+<li>How the business itself is changing over time</li>
+</ul>
+<div id="setup-our-standard-working-environment" class="section level2">
+<h2><span class="header-section-number">1.1</span> Setup our standard working environment</h2>
+<p>Use these libraries:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(tidyverse)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">library</span>(DBI)</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="kw">library</span>(RPostgres)</a>
+<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="kw">library</span>(connections)</a>
+<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="kw">library</span>(glue)</a>
+<a class="sourceLine" id="cb1-6" data-line-number="6"><span class="kw">require</span>(knitr)</a>
+<a class="sourceLine" id="cb1-7" data-line-number="7"><span class="kw">library</span>(dbplyr)</a>
+<a class="sourceLine" id="cb1-8" data-line-number="8"><span class="kw">library</span>(sqlpetr)</a>
+<a class="sourceLine" id="cb1-9" data-line-number="9"><span class="kw">library</span>(bookdown)</a>
+<a class="sourceLine" id="cb1-10" data-line-number="10"><span class="kw">library</span>(here)</a>
+<a class="sourceLine" id="cb1-11" data-line-number="11"><span class="kw">library</span>(lubridate)</a>
+<a class="sourceLine" id="cb1-12" data-line-number="12"><span class="kw">library</span>(gt)</a>
+<a class="sourceLine" id="cb1-13" data-line-number="13"><span class="kw">library</span>(scales)</a>
+<a class="sourceLine" id="cb1-14" data-line-number="14"><span class="kw">theme_set</span>(<span class="kw">theme_light</span>())</a></code></pre></div>
+<p>Connect to <code>adventureworks</code>. In an interactive session we prefer to use <code>connections::connection_open</code> instead of dbConnect</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">sp_docker_start</span>(<span class="st">&quot;adventureworks&quot;</span>)</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw">Sys.sleep</span>(sleep_default)</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">con &lt;-<span class="st"> </span><span class="kw">dbConnect</span>(</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">  RPostgres<span class="op">::</span><span class="kw">Postgres</span>(),</a>
+<a class="sourceLine" id="cb2-5" data-line-number="5">  <span class="co"># without the previous and next lines, some functions fail with bigint data </span></a>
+<a class="sourceLine" id="cb2-6" data-line-number="6">  <span class="co">#   so change int64 to integer</span></a>
+<a class="sourceLine" id="cb2-7" data-line-number="7">  <span class="dt">bigint =</span> <span class="st">&quot;integer&quot;</span>,  </a>
+<a class="sourceLine" id="cb2-8" data-line-number="8">  <span class="dt">host =</span> <span class="st">&quot;localhost&quot;</span>,</a>
+<a class="sourceLine" id="cb2-9" data-line-number="9">  <span class="dt">port =</span> <span class="dv">5432</span>,</a>
+<a class="sourceLine" id="cb2-10" data-line-number="10">  <span class="dt">user =</span> <span class="st">&quot;postgres&quot;</span>,</a>
+<a class="sourceLine" id="cb2-11" data-line-number="11">  <span class="dt">password =</span> <span class="st">&quot;postgres&quot;</span>,</a>
+<a class="sourceLine" id="cb2-12" data-line-number="12">  <span class="dt">dbname =</span> <span class="st">&quot;adventureworks&quot;</span>)</a></code></pre></div>
+<p>Some queries generate big integers, so we need to include <code>RPostgres::Postgres()</code> and <code>bigint = &quot;integer&quot;</code> in the connections statement because some functions in the tidyverse object to the <strong>bigint</strong> datatype.</p>
+</div>
+<div id="a-word-on-naming" class="section level2">
+<h2><span class="header-section-number">1.2</span> A word on naming</h2>
+<blockquote>
+<p>You will find that many tables will have columns with the same name in an enterprise database. For example, in the <em>AdventureWorks</em> database, almost all tables have columns named <code>rowguid</code> and <code>modifieddate</code> and there are many other examples of names that are reused throughout the database. Duplicate columns are best renamed or deliberately dropped. The meaning of a column depends on the table that contains it, so as you pull a column out of a table, when renaming it the collumns provenance should be reflected in the new name.</p>
+<p>Naming columns carefully (whether retrieved from the database or calculated) will pay off, especially as our queries become more complex. Using <code>soh</code> as an abbreviation of <em>sales order header</em> to tag columns or statistics that are derived from the <code>salesorderheader</code> table, as we do in this book, is one example of an intentional naming strategy: it reminds us of the original source of the data. You, future you, and your collaborators will appreciate the effort no matter what naming convention you adopt. And a naming convention when rigidly applied can yield some long and ugly names.</p>
+<p>In the following example <code>soh</code> appears in different positions in the column name but it is easy to guess at a glance that the data comes from the <code>salesorderheader</code> table.</p>
+<p>Naming derived tables is just as important as naming derived columns.</p>
+</blockquote>
+</div>
+<div id="the-overall-adventureworks-sales-picture" class="section level2">
+<h2><span class="header-section-number">1.3</span> The overall AdventureWorks sales picture</h2>
+<p>We begin by looking at Sales on a yearly basis, then consider monthly sales. We discover that half way through the period represented in the database, the business appears to begin selling online, which has very different characteristics than sales by Sales Reps. We then look at the details of how Sales Rep sales are recorded in the system and discover a data anomaly that we can correct.</p>
+</div>
+<div id="annual-sales" class="section level2">
+<h2><span class="header-section-number">1.4</span> Annual sales</h2>
+<p>On an annual basis, are sales dollars trending up, down or flat? We begin with annual revenue and number of orders.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">annual_sales &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;sales&quot;</span>, <span class="st">&quot;salesorderheader&quot;</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">year =</span> <span class="kw">substr</span>(<span class="kw">as.character</span>(orderdate), <span class="dv">1</span>, <span class="dv">4</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="st">  </span><span class="kw">group_by</span>(year) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="st">  </span><span class="kw">summarize</span>(</a>
+<a class="sourceLine" id="cb3-5" data-line-number="5">    <span class="dt">min_soh_orderdate =</span> <span class="kw">min</span>(orderdate, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</a>
+<a class="sourceLine" id="cb3-6" data-line-number="6">    <span class="dt">max_soh_orderdate =</span> <span class="kw">max</span>(orderdate, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</a>
+<a class="sourceLine" id="cb3-7" data-line-number="7">    <span class="dt">total_soh_dollars =</span> <span class="kw">round</span>(<span class="kw">sum</span>(subtotal, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">2</span>),</a>
+<a class="sourceLine" id="cb3-8" data-line-number="8">    <span class="dt">avg_total_soh_dollars =</span> <span class="kw">round</span>(<span class="kw">mean</span>(subtotal, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">2</span>),</a>
+<a class="sourceLine" id="cb3-9" data-line-number="9">    <span class="dt">soh_count =</span> <span class="kw">n</span>()</a>
+<a class="sourceLine" id="cb3-10" data-line-number="10">  ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb3-11" data-line-number="11"><span class="st">  </span><span class="kw">arrange</span>(year) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb3-12" data-line-number="12"><span class="st">  </span><span class="kw">select</span>(</a>
+<a class="sourceLine" id="cb3-13" data-line-number="13">    year, min_soh_orderdate, max_soh_orderdate, total_soh_dollars,</a>
+<a class="sourceLine" id="cb3-14" data-line-number="14">    avg_total_soh_dollars, soh_count</a>
+<a class="sourceLine" id="cb3-15" data-line-number="15">  ) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb3-16" data-line-number="16"><span class="st">  </span><span class="kw">collect</span>() </a></code></pre></div>
+<p>Note that all of this query is running on the server since the <code>collect()</code> statement is at the very end.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">annual_sales <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">str</span>()</a></code></pre></div>
+<pre><code>## Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    4 obs. of  6 variables:
+##  $ year                 : chr  &quot;2011&quot; &quot;2012&quot; &quot;2013&quot; &quot;2014&quot;
+##  $ min_soh_orderdate    : POSIXct, format: &quot;2011-05-31&quot; &quot;2012-01-01&quot; ...
+##  $ max_soh_orderdate    : POSIXct, format: &quot;2011-12-31&quot; &quot;2012-12-31&quot; ...
+##  $ total_soh_dollars    : num  12641672 33524301 43622479 20057929
+##  $ avg_total_soh_dollars: num  7867 8563 3076 1705
+##  $ soh_count            : int  1607 3915 14182 11761</code></pre>
+<p>We hang on to some date information for later use in plot titles.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">min_soh_dt &lt;-<span class="st"> </span><span class="kw">min</span>(annual_sales<span class="op">$</span>min_soh_orderdate)</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">max_soh_dt &lt;-<span class="st"> </span><span class="kw">max</span>(annual_sales<span class="op">$</span>max_soh_orderdate)</a></code></pre></div>
+<div id="total-sales-by-year" class="section level3">
+<h3><span class="header-section-number">1.4.1</span> Total sales by year</h3>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">ggplot</span>(<span class="dt">data =</span> annual_sales, <span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> total_soh_dollars)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="st">  </span><span class="kw">geom_col</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">label =</span> <span class="kw">round</span>(<span class="kw">as.numeric</span>(total_soh_dollars), <span class="dt">digits =</span> <span class="dv">0</span>)), <span class="dt">vjust =</span> <span class="fl">-0.25</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb7-4" data-line-number="4"><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">labels =</span> scales<span class="op">::</span><span class="kw">dollar_format</span>()) <span class="op">+</span></a>
+<a class="sourceLine" id="cb7-5" data-line-number="5"><span class="st">  </span><span class="kw">labs</span>(</a>
+<a class="sourceLine" id="cb7-6" data-line-number="6">    <span class="dt">title =</span> <span class="st">&quot;AdventureWorks Total Sales by Year&quot;</span>,</a>
+<a class="sourceLine" id="cb7-7" data-line-number="7">    <span class="dt">x =</span> <span class="kw">glue</span>(<span class="st">&quot;Years between &quot;</span>, {<span class="kw">format</span>(min_soh_dt, <span class="st">&quot;%B %d, %Y&quot;</span>)} , <span class="st">&quot; and  &quot;</span>, </a>
+<a class="sourceLine" id="cb7-8" data-line-number="8">            {<span class="kw">format</span>(max_soh_dt, <span class="st">&quot;%B %d, %Y&quot;</span>)}),</a>
+<a class="sourceLine" id="cb7-9" data-line-number="9">    <span class="dt">y =</span> <span class="st">&quot;Sales $&quot;</span></a>
+<a class="sourceLine" id="cb7-10" data-line-number="10">  )</a></code></pre></div>
+<p><img src="083-exploring-a-single-table_files/figure-html/AdventureWorks%20Annual%20Sales-1.png" width="480" />
+Both 2011 and 2014 turn out to be are shorter time spans than the other two years, making comparison interpretation difficult. Still, it’s clear that 2013 was the best year for annual sales dollars.</p>
+</div>
+<div id="total-order-volume" class="section level3">
+<h3><span class="header-section-number">1.4.2</span> Total order volume</h3>
+<p>Comparing the number of orders per year has roughly the same overall pattern (2013 ranks highest, etc.) but the proportions between the years are quite different.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">ggplot</span>(<span class="dt">data =</span> annual_sales, <span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> <span class="kw">as.numeric</span>(soh_count))) <span class="op">+</span></a>
+<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="st">  </span><span class="kw">geom_col</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">label =</span> <span class="kw">round</span>(<span class="kw">as.numeric</span>(soh_count), <span class="dt">digits =</span> <span class="dv">0</span>)), <span class="dt">vjust =</span> <span class="fl">-0.25</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb8-4" data-line-number="4"><span class="st">  </span><span class="kw">labs</span>(</a>
+<a class="sourceLine" id="cb8-5" data-line-number="5">    <span class="dt">title =</span> <span class="st">&quot;Total Number of orders by year&quot;</span>,</a>
+<a class="sourceLine" id="cb8-6" data-line-number="6">    <span class="dt">x =</span> <span class="kw">glue</span>(<span class="st">&quot;Years between &quot;</span>, {<span class="kw">format</span>(min_soh_dt, <span class="st">&quot;%B %d, %Y&quot;</span>)} , <span class="st">&quot; and  &quot;</span>, </a>
+<a class="sourceLine" id="cb8-7" data-line-number="7">            {<span class="kw">format</span>(max_soh_dt, <span class="st">&quot;%B %d, %Y&quot;</span>)}),</a>
+<a class="sourceLine" id="cb8-8" data-line-number="8">    <span class="dt">y =</span> <span class="st">&quot;Total Number of Orders&quot;</span></a>
+<a class="sourceLine" id="cb8-9" data-line-number="9">  )</a></code></pre></div>
+<div class="figure">
+<img src="083-exploring-a-single-table_files/figure-html/Average%20dollars%20per%20sale%20-%20v2-1.png" alt="Total Number of orders by year" width="384" />
+<p class="caption">
+(#fig:Average dollars per sale - v2)Total Number of orders by year
+</p>
+</div>
+<p>Although 2013 was the best year in terms of total number of orders, there were many more in 2014 compared with 2012. That suggests looking at the average dollars per sale for each year.</p>
+</div>
+<div id="average-dollars-per-sale" class="section level3">
+<h3><span class="header-section-number">1.4.3</span> Average dollars per sale</h3>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">ggplot</span>(<span class="dt">data =</span> annual_sales, <span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> avg_total_soh_dollars)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb9-2" data-line-number="2"><span class="st">  </span><span class="kw">geom_col</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb9-3" data-line-number="3"><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">labels =</span> scales<span class="op">::</span><span class="kw">dollar_format</span>()) <span class="op">+</span></a>
+<a class="sourceLine" id="cb9-4" data-line-number="4"><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">label =</span> <span class="kw">round</span>(avg_total_soh_dollars, <span class="dt">digits =</span> <span class="dv">0</span>)), <span class="dt">vjust =</span> <span class="fl">-0.25</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb9-5" data-line-number="5"><span class="st">  </span><span class="kw">labs</span>(</a>
+<a class="sourceLine" id="cb9-6" data-line-number="6">    <span class="dt">title =</span> <span class="st">&quot;Yearly Average Dollars per Sale&quot;</span>,</a>
+<a class="sourceLine" id="cb9-7" data-line-number="7">    <span class="dt">x =</span> <span class="kw">glue</span>(<span class="st">&quot;Years between &quot;</span>, {<span class="kw">format</span>(min_soh_dt, <span class="st">&quot;%B %d, %Y&quot;</span>)} , <span class="st">&quot; to  &quot;</span>, </a>
+<a class="sourceLine" id="cb9-8" data-line-number="8">            {<span class="kw">format</span>(max_soh_dt, <span class="st">&quot;%B %d, %Y&quot;</span>)}),</a>
+<a class="sourceLine" id="cb9-9" data-line-number="9">    <span class="dt">y =</span> <span class="st">&quot;Average Sale Amount&quot;</span></a>
+<a class="sourceLine" id="cb9-10" data-line-number="10">  )</a></code></pre></div>
+<div class="figure">
+<img src="083-exploring-a-single-table_files/figure-html/average%20dollars%20per%20sale%20-%20-1.png" alt="Yearly Average Dollars per Sale" width="384" />
+<p class="caption">
+(#fig:average dollars per sale - )Yearly Average Dollars per Sale
+</p>
+</div>
+<p>That’s a big drop between average sale of more than $7,000 in the first two years down to the $3,000 range in the last two. There has been a remarkable change in this business. At the same time the total number of orders shot up from less than 4,000 a year to more than 14,000. <strong>Why are the number of orders increasing, but the average dollar amount of a sale is dropping? </strong></p>
+<p>Perhaps monthly monthly sales has the anser. We adapt the first query to group by month and year.</p>
+</div>
+</div>
+<div id="monthly-sales" class="section level2">
+<h2><span class="header-section-number">1.5</span> Monthly Sales</h2>
+<p>Our next iteration drills down from annual sales dollars to monthly sales dollars. For that we download the orderdate as a date, rather than a character variable for the year. R handles the conversion from the PostgreSQL date-time to an R date-time. We then convert it to a simple date with a <code>lubridate</code> function.</p>
+<p>The following query uses the <a href="https://www.postgresqltutorial.com/postgresql-date_trunc/">postgreSQL function <code>date_trunc</code></a>, which is equivalent to <code>lubridate</code>’s <code>round_date</code> function in R. If you want to push as much of the processing as possible onto the database server and thus possibly deal with smaller datasets in R, interleaving <a href="https://www.postgresql.org/docs/current/functions.html">postgreSQL functions</a> into your dplyr code will help.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">monthly_sales &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;sales&quot;</span>, <span class="st">&quot;salesorderheader&quot;</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="st">  </span><span class="kw">select</span>(orderdate, subtotal) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb10-3" data-line-number="3"><span class="st">  </span><span class="kw">mutate</span>(</a>
+<a class="sourceLine" id="cb10-4" data-line-number="4">    <span class="dt">orderdate =</span> <span class="kw">date_trunc</span>(<span class="st">&#39;month&#39;</span>, orderdate)</a>
+<a class="sourceLine" id="cb10-5" data-line-number="5">  ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb10-6" data-line-number="6"><span class="st">  </span><span class="kw">group_by</span>(orderdate) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb10-7" data-line-number="7"><span class="st">  </span><span class="kw">summarize</span>(</a>
+<a class="sourceLine" id="cb10-8" data-line-number="8">    <span class="dt">total_soh_dollars =</span> <span class="kw">round</span>(<span class="kw">sum</span>(subtotal, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">2</span>),</a>
+<a class="sourceLine" id="cb10-9" data-line-number="9">    <span class="dt">avg_total_soh_dollars =</span> <span class="kw">round</span>(<span class="kw">mean</span>(subtotal, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">2</span>),</a>
+<a class="sourceLine" id="cb10-10" data-line-number="10">    <span class="dt">soh_count =</span> <span class="kw">n</span>()</a>
+<a class="sourceLine" id="cb10-11" data-line-number="11">  ) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb10-12" data-line-number="12"><span class="st">  </span><span class="kw">show_query</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb10-13" data-line-number="13"><span class="st">  </span><span class="kw">collect</span>() </a></code></pre></div>
+<pre><code>## &lt;SQL&gt;
+## SELECT &quot;orderdate&quot;, ROUND((SUM(&quot;subtotal&quot;)) :: numeric, 2) AS &quot;total_soh_dollars&quot;, ROUND((AVG(&quot;subtotal&quot;)) :: numeric, 2) AS &quot;avg_total_soh_dollars&quot;, COUNT(*) AS &quot;soh_count&quot;
+## FROM (SELECT date_trunc(&#39;month&#39;, &quot;orderdate&quot;) AS &quot;orderdate&quot;, &quot;subtotal&quot;
+## FROM sales.salesorderheader) &quot;dbplyr_004&quot;
+## GROUP BY &quot;orderdate&quot;</code></pre>
+<blockquote>
+<p>Note that <code>date_trunc('month', orderdate)</code> gets passed through exactly “as is.”</p>
+</blockquote>
+<p>In many cases we don’t really care whether our queries are executed by R or by the SQL server, but if we do care we need to substitute the <code>postgreSQL</code> equivalent for the R functions we might ordinarily use. In those cases we have to check whether functions from R packages like <code>lubridate</code> and the equivalent <code>postgreSQL</code> functions are exactly alike. Often they are subtly different: in the previous query the <code>postgreSQL</code> function produces a <code>POSIXct</code> column, not a <code>Date</code> so we need to tack on a mutate function once the data is on the R side as shown here:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">monthly_sales &lt;-<span class="st">  </span>monthly_sales <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb12-2" data-line-number="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">orderdate =</span> <span class="kw">as.Date</span>(orderdate))</a></code></pre></div>
+<p>Next let’s plot the monthly sales data:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw">ggplot</span>(<span class="dt">data =</span> monthly_sales, <span class="kw">aes</span>(<span class="dt">x =</span> orderdate, <span class="dt">y =</span> total_soh_dollars)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb13-2" data-line-number="2"><span class="st">  </span><span class="kw">geom_col</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb13-3" data-line-number="3"><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">labels =</span> dollar) <span class="op">+</span></a>
+<a class="sourceLine" id="cb13-4" data-line-number="4"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb13-5" data-line-number="5"><span class="st">  </span><span class="kw">labs</span>(</a>
+<a class="sourceLine" id="cb13-6" data-line-number="6">    <span class="dt">title =</span> <span class="kw">glue</span>(<span class="st">&quot;Sales by Month</span><span class="ch">\n</span><span class="st">&quot;</span>, {<span class="kw">format</span>(min_soh_dt, <span class="st">&quot;%B %d, %Y&quot;</span>)} , <span class="st">&quot; to  &quot;</span>, </a>
+<a class="sourceLine" id="cb13-7" data-line-number="7">            {<span class="kw">format</span>(max_soh_dt, <span class="st">&quot;%B %d, %Y&quot;</span>)}),</a>
+<a class="sourceLine" id="cb13-8" data-line-number="8">    <span class="dt">x =</span> <span class="st">&quot;Month&quot;</span>,</a>
+<a class="sourceLine" id="cb13-9" data-line-number="9">    <span class="dt">y =</span> <span class="st">&quot;Sales Dollars&quot;</span></a>
+<a class="sourceLine" id="cb13-10" data-line-number="10">  )</a></code></pre></div>
+<div class="figure">
+<img src="083-exploring-a-single-table_files/figure-html/Total%20monthly%20sales%20bar%20chart-1.png" alt="Total Monthly Sales" width="672" />
+<p class="caption">
+(#fig:Total monthly sales bar chart)Total Monthly Sales
+</p>
+</div>
+<p>That graph doesn’t show how the business might have changed, but it is remarkable how much variation there is from one month to another – particularly in 2012 and 2014.</p>
+<div id="check-lagged-monthly-data" class="section level3">
+<h3><span class="header-section-number">1.5.1</span> Check lagged monthly data</h3>
+<p>Because of the month-over-month sales variation. We’ll use <code>dplyr::lag</code> to help find the delta and later visualize just how much month-to-month difference there is.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1">monthly_sales &lt;-<span class="st"> </span><span class="kw">arrange</span>(monthly_sales, orderdate)</a>
+<a class="sourceLine" id="cb14-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb14-3" data-line-number="3">monthly_sales_lagged &lt;-<span class="st"> </span>monthly_sales <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb14-4" data-line-number="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">monthly_sales_change =</span> (dplyr<span class="op">::</span><span class="kw">lag</span>(total_soh_dollars)) <span class="op">-</span><span class="st"> </span>total_soh_dollars)</a>
+<a class="sourceLine" id="cb14-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb14-6" data-line-number="6">monthly_sales_lagged[<span class="kw">is.na</span>(monthly_sales_lagged)] =<span class="st"> </span><span class="dv">0</span></a></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="kw">median</span>(monthly_sales_lagged<span class="op">$</span>monthly_sales_change, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<pre><code>## [1] -221690.505</code></pre>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">(sum_lags &lt;-<span class="st"> </span><span class="kw">summary</span>(monthly_sales_lagged<span class="op">$</span>monthly_sales_change))</a></code></pre></div>
+<pre><code>##        Min.     1st Qu.      Median        Mean     3rd Qu.        Max. 
+## -5879806.05 -1172995.19  -221690.51    11968.42  1159252.70  5420357.17</code></pre>
+<p>The average month over month change in sales looks OK ($ 11,968) although the Median is negative: $ 11,968. There is a very wide spread in our month-over-month sales data between the lower and upper quartile. We can plot the variation as follows:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="kw">ggplot</span>(monthly_sales_lagged, <span class="kw">aes</span>(<span class="dt">x =</span> orderdate, <span class="dt">y =</span> monthly_sales_change)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb19-2" data-line-number="2"><span class="st">  </span><span class="kw">scale_x_date</span>(<span class="dt">date_breaks =</span> <span class="st">&quot;year&quot;</span>, <span class="dt">date_labels =</span> <span class="st">&quot;%Y&quot;</span>, <span class="dt">date_minor_breaks =</span> <span class="st">&quot;3 months&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb19-3" data-line-number="3"><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb19-4" data-line-number="4"><span class="st">  </span><span class="co"># geom_point() +</span></a>
+<a class="sourceLine" id="cb19-5" data-line-number="5"><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">limits =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">6000000</span>,<span class="dv">5500000</span>), <span class="dt">labels =</span> scales<span class="op">::</span><span class="kw">dollar_format</span>()) <span class="op">+</span></a>
+<a class="sourceLine" id="cb19-6" data-line-number="6"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">.5</span>)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb19-7" data-line-number="7"><span class="st">  </span><span class="kw">labs</span>(</a>
+<a class="sourceLine" id="cb19-8" data-line-number="8">    <span class="dt">title =</span> <span class="kw">glue</span>(</a>
+<a class="sourceLine" id="cb19-9" data-line-number="9">      <span class="st">&quot;Monthly Sales Change </span><span class="ch">\n</span><span class="st">&quot;</span>,</a>
+<a class="sourceLine" id="cb19-10" data-line-number="10">      <span class="st">&quot;Between &quot;</span>, {<span class="kw">format</span>(min_soh_dt, <span class="st">&quot;%B %d, %Y&quot;</span>)} , <span class="st">&quot; and  &quot;</span>, </a>
+<a class="sourceLine" id="cb19-11" data-line-number="11">            {<span class="kw">format</span>(max_soh_dt, <span class="st">&quot;%B %d, %Y&quot;</span>)}</a>
+<a class="sourceLine" id="cb19-12" data-line-number="12">    ),</a>
+<a class="sourceLine" id="cb19-13" data-line-number="13">    <span class="dt">x =</span> <span class="st">&quot;Month&quot;</span>,</a>
+<a class="sourceLine" id="cb19-14" data-line-number="14">    <span class="dt">y =</span> <span class="st">&quot;Dollar Change&quot;</span></a>
+<a class="sourceLine" id="cb19-15" data-line-number="15">  )</a></code></pre></div>
+<div class="figure">
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-4-1.png" alt="Monthly Sales Change" width="672" />
+<p class="caption">
+(#fig:unnamed-chunk-4)Monthly Sales Change
+</p>
+</div>
+<p>It looks like the big change in the business occurred in the summer of 2013 when the number of orders jumped but the dollar volume just continued to bump along.</p>
+</div>
+<div id="comparing-dollars-and-orders-to-a-base-year" class="section level3">
+<h3><span class="header-section-number">1.5.2</span> Comparing dollars and orders to a base year</h3>
+<p>To look at dollars and the number of orders together, we compare the monthly data to the yearly average for 2011.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1">start_year &lt;-<span class="st"> </span>monthly_sales <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb20-2" data-line-number="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">yr =</span> <span class="kw">year</span>(orderdate)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb20-3" data-line-number="3"><span class="st">  </span><span class="kw">group_by</span>(yr) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb20-4" data-line-number="4"><span class="st">  </span><span class="kw">summarize</span>(</a>
+<a class="sourceLine" id="cb20-5" data-line-number="5">    <span class="dt">total_soh_dollars =</span> <span class="kw">sum</span>(total_soh_dollars),</a>
+<a class="sourceLine" id="cb20-6" data-line-number="6">    <span class="dt">soh_count =</span> <span class="kw">sum</span>(soh_count),</a>
+<a class="sourceLine" id="cb20-7" data-line-number="7">    <span class="dt">n_months =</span> <span class="kw">n</span>(),</a>
+<a class="sourceLine" id="cb20-8" data-line-number="8">    <span class="dt">avg_dollars =</span> total_soh_dollars <span class="op">/</span><span class="st"> </span>n_months,</a>
+<a class="sourceLine" id="cb20-9" data-line-number="9">    <span class="dt">avg_count =</span> soh_count <span class="op">/</span><span class="st"> </span>n_months</a>
+<a class="sourceLine" id="cb20-10" data-line-number="10">  ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb20-11" data-line-number="11"><span class="st">  </span><span class="kw">filter</span>(yr <span class="op">==</span><span class="st"> </span><span class="kw">min</span>(yr))</a></code></pre></div>
+<p>Use 2011 as a baseline:</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1">start_year</a></code></pre></div>
+<pre><code>## # A tibble: 1 x 6
+##      yr total_soh_dollars soh_count n_months avg_dollars avg_count
+##   &lt;dbl&gt;             &lt;dbl&gt;     &lt;int&gt;    &lt;int&gt;       &lt;dbl&gt;     &lt;dbl&gt;
+## 1  2011         12641672.      1607        8    1580209.      201.</code></pre>
+<p>Express monthly data relative to 2011`</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1">monthly_sales_base_year_normalized_to_<span class="dv">2011</span> &lt;-<span class="st"> </span>monthly_sales <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb23-2" data-line-number="2"><span class="st">  </span><span class="kw">mutate</span>(</a>
+<a class="sourceLine" id="cb23-3" data-line-number="3">    <span class="dt">dollars =</span> (<span class="dv">100</span> <span class="op">*</span><span class="st"> </span>total_soh_dollars) <span class="op">/</span><span class="st"> </span>start_year<span class="op">$</span>avg_dollars,</a>
+<a class="sourceLine" id="cb23-4" data-line-number="4">    <span class="dt">number_of_orders =</span> (<span class="dv">100</span> <span class="op">*</span><span class="st"> </span>soh_count) <span class="op">/</span><span class="st"> </span>start_year<span class="op">$</span>avg_count</a>
+<a class="sourceLine" id="cb23-5" data-line-number="5">  ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb23-6" data-line-number="6"><span class="st">  </span><span class="kw">ungroup</span>()</a>
+<a class="sourceLine" id="cb23-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb23-8" data-line-number="8">monthly_sales_base_year_normalized_to_<span class="dv">2011</span> &lt;-<span class="st"> </span>monthly_sales_base_year_normalized_to_<span class="dv">2011</span> <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb23-9" data-line-number="9"><span class="st">  </span><span class="kw">select</span>(orderdate, dollars, <span class="st">`</span><span class="dt"># of orders</span><span class="st">`</span> =<span class="st"> </span>number_of_orders) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb23-10" data-line-number="10"><span class="st">  </span><span class="kw">pivot_longer</span>(<span class="op">-</span>orderdate,</a>
+<a class="sourceLine" id="cb23-11" data-line-number="11">    <span class="dt">names_to =</span> <span class="st">&quot;relative_to_2011_average&quot;</span>,</a>
+<a class="sourceLine" id="cb23-12" data-line-number="12">    <span class="dt">values_to =</span> <span class="st">&quot;amount&quot;</span></a>
+<a class="sourceLine" id="cb23-13" data-line-number="13">  )</a>
+<a class="sourceLine" id="cb23-14" data-line-number="14"></a>
+<a class="sourceLine" id="cb23-15" data-line-number="15">monthly_sales_base_year_normalized_to_<span class="dv">2011</span> <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb23-16" data-line-number="16"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(orderdate, amount, <span class="dt">color =</span> relative_to_<span class="dv">2011</span>_average)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb23-17" data-line-number="17"><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb23-18" data-line-number="18"><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">100</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb23-19" data-line-number="19"><span class="st">  </span><span class="kw">scale_x_date</span>(<span class="dt">date_labels =</span> <span class="st">&quot;%Y-%m&quot;</span>, <span class="dt">date_breaks =</span> <span class="st">&quot;6 months&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb23-20" data-line-number="20"><span class="st">  </span><span class="kw">labs</span>(</a>
+<a class="sourceLine" id="cb23-21" data-line-number="21">    <span class="dt">title =</span> <span class="kw">glue</span>(</a>
+<a class="sourceLine" id="cb23-22" data-line-number="22">      <span class="st">&quot;Adventureworks Normalized Monthly Sales</span><span class="ch">\n</span><span class="st">&quot;</span>,</a>
+<a class="sourceLine" id="cb23-23" data-line-number="23">      <span class="st">&quot;Number of Sales Orders and Dollar Totals</span><span class="ch">\n</span><span class="st">&quot;</span>,</a>
+<a class="sourceLine" id="cb23-24" data-line-number="24">      {<span class="kw">format</span>(min_soh_dt, <span class="st">&quot;%B %d, %Y&quot;</span>)} , <span class="st">&quot; to  &quot;</span>, </a>
+<a class="sourceLine" id="cb23-25" data-line-number="25">            {<span class="kw">format</span>(max_soh_dt, <span class="st">&quot;%B %d, %Y&quot;</span>)}),</a>
+<a class="sourceLine" id="cb23-26" data-line-number="26">    <span class="dt">x =</span> <span class="st">&quot;Date&quot;</span>,</a>
+<a class="sourceLine" id="cb23-27" data-line-number="27">    <span class="dt">y =</span> <span class="st">&quot;&quot;</span>,</a>
+<a class="sourceLine" id="cb23-28" data-line-number="28">    <span class="dt">color =</span> <span class="st">&quot;% change from</span><span class="ch">\n</span><span class="st"> 2011 average&quot;</span></a>
+<a class="sourceLine" id="cb23-29" data-line-number="29">  ) <span class="op">+</span></a>
+<a class="sourceLine" id="cb23-30" data-line-number="30"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="kw">c</span>(.<span class="dv">3</span>,.<span class="dv">75</span>))</a></code></pre></div>
+<div class="figure">
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-7-1.png" alt="Miscellaneous plots" width="672" />
+<p class="caption">
+(#fig:unnamed-chunk-7)Miscellaneous plots
+</p>
+</div>
+</div>
+</div>
+<div id="the-effect-of-online-sales" class="section level2">
+<h2><span class="header-section-number">1.6</span> The effect of online sales</h2>
+<p>We suspect that the business has changed a lot with the advent of online orders so we check the impact of <code>onlineorderflag</code> on annual sales. The <code>onlineorderflag</code> indicates which sales channel accounted for the sale, <strong>Sales Reps</strong> or <strong>Online</strong>.</p>
+<div id="add-onlineorderflag-to-our-annual-sales-query" class="section level3">
+<h3><span class="header-section-number">1.6.1</span> Add <code>onlineorderflag</code> to our annual sales query</h3>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1">annual_sales_w_channel &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;sales&quot;</span>, <span class="st">&quot;salesorderheader&quot;</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb24-2" data-line-number="2"><span class="st">  </span><span class="kw">select</span>(orderdate, subtotal, onlineorderflag) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb24-3" data-line-number="3"><span class="st">  </span><span class="kw">collect</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb24-4" data-line-number="4"><span class="st">  </span><span class="kw">mutate</span>(</a>
+<a class="sourceLine" id="cb24-5" data-line-number="5">    <span class="dt">orderdate =</span> <span class="kw">date</span>(orderdate),</a>
+<a class="sourceLine" id="cb24-6" data-line-number="6">    <span class="dt">orderdate =</span> <span class="kw">round_date</span>(orderdate, <span class="st">&quot;year&quot;</span>),</a>
+<a class="sourceLine" id="cb24-7" data-line-number="7">    <span class="dt">onlineorderflag =</span> <span class="kw">if_else</span>(onlineorderflag <span class="op">==</span><span class="st"> </span><span class="ot">FALSE</span>,</a>
+<a class="sourceLine" id="cb24-8" data-line-number="8">      <span class="st">&quot;Sales Rep&quot;</span>, <span class="st">&quot;Online&quot;</span></a>
+<a class="sourceLine" id="cb24-9" data-line-number="9">    ),</a>
+<a class="sourceLine" id="cb24-10" data-line-number="10">    <span class="dt">onlineorderflag =</span> <span class="kw">as.factor</span>(onlineorderflag)</a>
+<a class="sourceLine" id="cb24-11" data-line-number="11">  ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb24-12" data-line-number="12"><span class="st">  </span><span class="kw">group_by</span>(orderdate, onlineorderflag) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb24-13" data-line-number="13"><span class="st">  </span><span class="kw">summarize</span>(</a>
+<a class="sourceLine" id="cb24-14" data-line-number="14">    <span class="dt">min_soh_orderdate =</span> <span class="kw">min</span>(orderdate, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</a>
+<a class="sourceLine" id="cb24-15" data-line-number="15">    <span class="dt">max_soh_orderdate =</span> <span class="kw">max</span>(orderdate, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</a>
+<a class="sourceLine" id="cb24-16" data-line-number="16">    <span class="dt">total_soh_dollars =</span> <span class="kw">round</span>(<span class="kw">sum</span>(subtotal, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">2</span>),</a>
+<a class="sourceLine" id="cb24-17" data-line-number="17">    <span class="dt">avg_total_soh_dollars =</span> <span class="kw">round</span>(<span class="kw">mean</span>(subtotal, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">2</span>),</a>
+<a class="sourceLine" id="cb24-18" data-line-number="18">    <span class="dt">soh_count =</span> <span class="kw">n</span>()</a>
+<a class="sourceLine" id="cb24-19" data-line-number="19">  ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb24-20" data-line-number="20"><span class="st">  </span><span class="kw">select</span>(</a>
+<a class="sourceLine" id="cb24-21" data-line-number="21">    orderdate, onlineorderflag, min_soh_orderdate,</a>
+<a class="sourceLine" id="cb24-22" data-line-number="22">    max_soh_orderdate, total_soh_dollars,</a>
+<a class="sourceLine" id="cb24-23" data-line-number="23">    avg_total_soh_dollars, soh_count</a>
+<a class="sourceLine" id="cb24-24" data-line-number="24">  )</a></code></pre></div>
+<p>Note that we are creating a factor and doing most of the calculations on the R side, not on the DBMS side.</p>
+</div>
+<div id="annual-sales-comparison" class="section level3">
+<h3><span class="header-section-number">1.6.2</span> Annual Sales comparison</h3>
+<p>Start by looking at total sales.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1"><span class="kw">ggplot</span>(<span class="dt">data =</span> annual_sales_w_channel, <span class="kw">aes</span>(<span class="dt">x =</span> orderdate, <span class="dt">y =</span> total_soh_dollars)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb25-2" data-line-number="2"><span class="st">  </span><span class="kw">geom_col</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb25-3" data-line-number="3"><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">labels =</span> scales<span class="op">::</span><span class="kw">dollar_format</span>()) <span class="op">+</span></a>
+<a class="sourceLine" id="cb25-4" data-line-number="4"><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="st">&quot;onlineorderflag&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb25-5" data-line-number="5"><span class="st">  </span><span class="kw">labs</span>(</a>
+<a class="sourceLine" id="cb25-6" data-line-number="6">    <span class="dt">title =</span> <span class="st">&quot;AdventureWorks Sales Dollars by Year&quot;</span>,</a>
+<a class="sourceLine" id="cb25-7" data-line-number="7">    <span class="dt">caption =</span> <span class="kw">glue</span>( <span class="st">&quot;Between &quot;</span>, {<span class="kw">format</span>(min_soh_dt, <span class="st">&quot;%B %d, %Y&quot;</span>)} , <span class="st">&quot; - &quot;</span>, </a>
+<a class="sourceLine" id="cb25-8" data-line-number="8">            {<span class="kw">format</span>(max_soh_dt, <span class="st">&quot;%B %d, %Y&quot;</span>)}),</a>
+<a class="sourceLine" id="cb25-9" data-line-number="9">    <span class="dt">subtitle =</span> <span class="st">&quot;Comparing Online and Sales Rep sales channels&quot;</span>,</a>
+<a class="sourceLine" id="cb25-10" data-line-number="10">    <span class="dt">x =</span> <span class="st">&quot;Year&quot;</span>,</a>
+<a class="sourceLine" id="cb25-11" data-line-number="11">    <span class="dt">y =</span> <span class="st">&quot;Sales $&quot;</span></a>
+<a class="sourceLine" id="cb25-12" data-line-number="12">  )</a></code></pre></div>
+<div class="figure">
+<img src="083-exploring-a-single-table_files/figure-html/Calculate%20annual%20sales%20dollars%20-1.png" alt="Sales Channel Breakdown" width="672" />
+<p class="caption">
+(#fig:Calculate annual sales dollars )Sales Channel Breakdown
+</p>
+</div>
+<p>Based on annual sales, it looks like there are two businesses represented in the AdventureWorks database that have very different growth profiles.</p>
+</div>
+<div id="order-volume-comparison" class="section level3">
+<h3><span class="header-section-number">1.6.3</span> Order volume comparison</h3>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1"><span class="kw">ggplot</span>(<span class="dt">data =</span> annual_sales_w_channel, <span class="kw">aes</span>(<span class="dt">x =</span> orderdate, <span class="dt">y =</span> <span class="kw">as.numeric</span>(soh_count))) <span class="op">+</span></a>
+<a class="sourceLine" id="cb26-2" data-line-number="2"><span class="st">  </span><span class="kw">geom_col</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb26-3" data-line-number="3"><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="st">&quot;onlineorderflag&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb26-4" data-line-number="4"><span class="st">  </span><span class="kw">labs</span>(</a>
+<a class="sourceLine" id="cb26-5" data-line-number="5">    <span class="dt">title =</span> <span class="st">&quot;AdventureWorks Number of orders per Year&quot;</span>,</a>
+<a class="sourceLine" id="cb26-6" data-line-number="6">    <span class="dt">caption =</span> <span class="kw">glue</span>( <span class="st">&quot;Between &quot;</span>, {<span class="kw">format</span>(min_soh_dt, <span class="st">&quot;%B %d, %Y&quot;</span>)} , <span class="st">&quot; - &quot;</span>, </a>
+<a class="sourceLine" id="cb26-7" data-line-number="7">            {<span class="kw">format</span>(max_soh_dt, <span class="st">&quot;%B %d, %Y&quot;</span>)}),</a>
+<a class="sourceLine" id="cb26-8" data-line-number="8">    <span class="dt">subtitle =</span> <span class="st">&quot;Comparing Online and Sales Rep sales channels&quot;</span>,</a>
+<a class="sourceLine" id="cb26-9" data-line-number="9">    <span class="dt">x =</span> <span class="st">&quot;Year&quot;</span>,</a>
+<a class="sourceLine" id="cb26-10" data-line-number="10">    <span class="dt">y =</span> <span class="st">&quot;Total number of orders&quot;</span></a>
+<a class="sourceLine" id="cb26-11" data-line-number="11">  )</a></code></pre></div>
+<div class="figure">
+<img src="083-exploring-a-single-table_files/figure-html/average%20dollars%20per%20sale%20-%20v4-1.png" alt="Average Dollars by Channel" width="672" />
+<p class="caption">
+(#fig:average dollars per sale - v4)Average Dollars by Channel
+</p>
+</div>
+<p>Comparing Online and Sales Rep sales, the difference in the number of orders is even more striking than the difference between annual sales.</p>
+</div>
+<div id="comparing-average-order-size-sales-reps-to-online-orders" class="section level3">
+<h3><span class="header-section-number">1.6.4</span> Comparing average order size: <strong>Sales Reps</strong> to <strong>Online</strong> orders</h3>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1"><span class="kw">ggplot</span>(<span class="dt">data =</span> annual_sales_w_channel, <span class="kw">aes</span>(<span class="dt">x =</span> orderdate, <span class="dt">y =</span> avg_total_soh_dollars)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb27-2" data-line-number="2"><span class="st">  </span><span class="kw">geom_col</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb27-3" data-line-number="3"><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="st">&quot;onlineorderflag&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb27-4" data-line-number="4"><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">labels =</span> scales<span class="op">::</span><span class="kw">dollar_format</span>()) <span class="op">+</span></a>
+<a class="sourceLine" id="cb27-5" data-line-number="5"><span class="st">  </span><span class="kw">labs</span>(</a>
+<a class="sourceLine" id="cb27-6" data-line-number="6">    <span class="dt">title =</span> <span class="st">&quot;AdventureWorks Average Dollars per Sale&quot;</span>,</a>
+<a class="sourceLine" id="cb27-7" data-line-number="7">    <span class="dt">x =</span> <span class="kw">glue</span>( <span class="st">&quot;Year - between &quot;</span>, {<span class="kw">format</span>(min_soh_dt, <span class="st">&quot;%B %d, %Y&quot;</span>)} , <span class="st">&quot; - &quot;</span>, </a>
+<a class="sourceLine" id="cb27-8" data-line-number="8">            {<span class="kw">format</span>(max_soh_dt, <span class="st">&quot;%B %d, %Y&quot;</span>)}),</a>
+<a class="sourceLine" id="cb27-9" data-line-number="9">    <span class="dt">y =</span> <span class="st">&quot;Average sale amount&quot;</span></a>
+<a class="sourceLine" id="cb27-10" data-line-number="10">  )</a></code></pre></div>
+<div class="figure">
+<img src="083-exploring-a-single-table_files/figure-html/average%20dollars%20per%20sale%203-1.png" alt="Sales Rep to Online comparison" width="672" />
+<p class="caption">
+(#fig:average dollars per sale 3)Sales Rep to Online comparison
+</p>
+</div>
+</div>
+</div>
+<div id="impact-of-order-type-on-monthly-sales" class="section level2">
+<h2><span class="header-section-number">1.7</span> Impact of order type on monthly sales</h2>
+<p>To dig into the difference between <strong>Sales Rep</strong> and <strong>Online</strong> sales we can look at monthly data.</p>
+<div id="retrieve-monthly-sales-with-the-onlineorderflag" class="section level3">
+<h3><span class="header-section-number">1.7.1</span> Retrieve monthly sales with the <code>onlineorderflag</code></h3>
+<p>This query puts the <code>collect</code> statement earlier than the previous queries.</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1">monthly_sales_w_channel &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;sales&quot;</span>, <span class="st">&quot;salesorderheader&quot;</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb28-2" data-line-number="2"><span class="st">  </span><span class="kw">select</span>(orderdate, subtotal, onlineorderflag) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb28-3" data-line-number="3"><span class="st">  </span><span class="kw">collect</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># From here on we&#39;re in R</span></a>
+<a class="sourceLine" id="cb28-4" data-line-number="4"><span class="st">  </span><span class="kw">mutate</span>(</a>
+<a class="sourceLine" id="cb28-5" data-line-number="5">    <span class="dt">orderdate =</span> <span class="kw">date</span>(orderdate),</a>
+<a class="sourceLine" id="cb28-6" data-line-number="6">    <span class="dt">orderdate =</span> <span class="kw">floor_date</span>(orderdate, <span class="dt">unit =</span> <span class="st">&quot;month&quot;</span>),</a>
+<a class="sourceLine" id="cb28-7" data-line-number="7">    <span class="dt">onlineorderflag =</span> <span class="kw">if_else</span>(onlineorderflag <span class="op">==</span><span class="st"> </span><span class="ot">FALSE</span>,</a>
+<a class="sourceLine" id="cb28-8" data-line-number="8">      <span class="st">&quot;Sales Rep&quot;</span>, <span class="st">&quot;Online&quot;</span>)</a>
+<a class="sourceLine" id="cb28-9" data-line-number="9">  ) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb28-10" data-line-number="10"><span class="st">  </span><span class="kw">group_by</span>(orderdate, onlineorderflag) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb28-11" data-line-number="11"><span class="st">  </span><span class="kw">summarize</span>(</a>
+<a class="sourceLine" id="cb28-12" data-line-number="12">    <span class="dt">min_soh_orderdate =</span> <span class="kw">min</span>(orderdate, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</a>
+<a class="sourceLine" id="cb28-13" data-line-number="13">    <span class="dt">max_soh_orderdate =</span> <span class="kw">max</span>(orderdate, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</a>
+<a class="sourceLine" id="cb28-14" data-line-number="14">    <span class="dt">total_soh_dollars =</span> <span class="kw">round</span>(<span class="kw">sum</span>(subtotal, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">2</span>),</a>
+<a class="sourceLine" id="cb28-15" data-line-number="15">    <span class="dt">avg_total_soh_dollars =</span> <span class="kw">round</span>(<span class="kw">mean</span>(subtotal, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">2</span>),</a>
+<a class="sourceLine" id="cb28-16" data-line-number="16">    <span class="dt">soh_count =</span> <span class="kw">n</span>()</a>
+<a class="sourceLine" id="cb28-17" data-line-number="17">  ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb28-18" data-line-number="18"><span class="st">  </span><span class="kw">ungroup</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" data-line-number="1">monthly_sales_w_channel <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb29-2" data-line-number="2"><span class="st">  </span><span class="kw">rename</span>(<span class="st">`</span><span class="dt">Sales Channel</span><span class="st">`</span> =<span class="st"> </span>onlineorderflag) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb29-3" data-line-number="3"><span class="st">  </span><span class="kw">group_by</span>(<span class="st">`</span><span class="dt">Sales Channel</span><span class="st">`</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb29-4" data-line-number="4"><span class="st">  </span><span class="kw">summarize</span>(</a>
+<a class="sourceLine" id="cb29-5" data-line-number="5">    <span class="dt">unique_dates =</span> <span class="kw">n</span>(),</a>
+<a class="sourceLine" id="cb29-6" data-line-number="6">    <span class="dt">start_date =</span> <span class="kw">min</span>(min_soh_orderdate),</a>
+<a class="sourceLine" id="cb29-7" data-line-number="7">    <span class="dt">end_date =</span> <span class="kw">max</span>(max_soh_orderdate),</a>
+<a class="sourceLine" id="cb29-8" data-line-number="8">    <span class="dt">total_sales =</span> <span class="kw">round</span>(<span class="kw">sum</span>(total_soh_dollars)), </a>
+<a class="sourceLine" id="cb29-9" data-line-number="9">    <span class="dt">days_span =</span> end_date <span class="op">-</span><span class="st"> </span>start_date</a>
+<a class="sourceLine" id="cb29-10" data-line-number="10">  ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb29-11" data-line-number="11"><span class="st">  </span><span class="kw">gt</span>()</a></code></pre></div>
+<style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+#pzveloiefp .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  /* table.margin.left */
+  margin-right: auto;
+  /* table.margin.right */
+  color: #333333;
+  font-size: 16px;
+  /* table.font.size */
+  background-color: #FFFFFF;
+  /* table.background.color */
+  width: auto;
+  /* table.width */
+  border-top-style: solid;
+  /* table.border.top.style */
+  border-top-width: 2px;
+  /* table.border.top.width */
+  border-top-color: #A8A8A8;
+  /* table.border.top.color */
+  border-bottom-style: solid;
+  /* table.border.bottom.style */
+  border-bottom-width: 2px;
+  /* table.border.bottom.width */
+  border-bottom-color: #A8A8A8;
+  /* table.border.bottom.color */
+}
+
+#pzveloiefp .gt_heading {
+  background-color: #FFFFFF;
+  /* heading.background.color */
+  border-bottom-color: #FFFFFF;
+  /* table.background.color */
+  border-left-style: hidden;
+  /* heading.border.lr.style */
+  border-left-width: 1px;
+  /* heading.border.lr.width */
+  border-left-color: #D3D3D3;
+  /* heading.border.lr.color */
+  border-right-style: hidden;
+  /* heading.border.lr.style */
+  border-right-width: 1px;
+  /* heading.border.lr.width */
+  border-right-color: #D3D3D3;
+  /* heading.border.lr.color */
+}
+
+#pzveloiefp .gt_title {
+  color: #333333;
+  font-size: 125%;
+  /* heading.title.font.size */
+  font-weight: initial;
+  /* heading.title.font.weight */
+  padding-top: 4px;
+  /* heading.top.padding - not yet used */
+  padding-bottom: 4px;
+  border-bottom-color: #FFFFFF;
+  /* table.background.color */
+  border-bottom-width: 0;
+}
+
+#pzveloiefp .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  /* heading.subtitle.font.size */
+  font-weight: initial;
+  /* heading.subtitle.font.weight */
+  padding-top: 0;
+  padding-bottom: 4px;
+  /* heading.bottom.padding - not yet used */
+  border-top-color: #FFFFFF;
+  /* table.background.color */
+  border-top-width: 0;
+}
+
+#pzveloiefp .gt_bottom_border {
+  border-bottom-style: solid;
+  /* heading.border.bottom.style */
+  border-bottom-width: 2px;
+  /* heading.border.bottom.width */
+  border-bottom-color: #D3D3D3;
+  /* heading.border.bottom.color */
+}
+
+#pzveloiefp .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#pzveloiefp .gt_col_headings {
+  border-top-style: solid;
+  /* column_labels.border.top.style */
+  border-top-width: 2px;
+  /* column_labels.border.top.width */
+  border-top-color: #D3D3D3;
+  /* column_labels.border.top.color */
+  border-bottom-style: solid;
+  /* column_labels.border.bottom.style */
+  border-bottom-width: 2px;
+  /* column_labels.border.bottom.width */
+  border-bottom-color: #D3D3D3;
+  /* column_labels.border.bottom.color */
+  border-left-style: none;
+  /* column_labels.border.lr.style */
+  border-left-width: 1px;
+  /* column_labels.border.lr.width */
+  border-left-color: #D3D3D3;
+  /* column_labels.border.lr.color */
+  border-right-style: none;
+  /* column_labels.border.lr.style */
+  border-right-width: 1px;
+  /* column_labels.border.lr.width */
+  border-right-color: #D3D3D3;
+  /* column_labels.border.lr.color */
+}
+
+#pzveloiefp .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  /* column_labels.background.color */
+  font-size: 100%;
+  /* column_labels.font.size */
+  font-weight: initial;
+  /* column_labels.font.weight */
+  text-transform: inherit;
+  /* column_labels.text_transform */
+  vertical-align: middle;
+  padding: 5px;
+  margin: 10px;
+  overflow-x: hidden;
+}
+
+#pzveloiefp .gt_sep_right {
+  border-right: 5px solid #FFFFFF;
+}
+
+#pzveloiefp .gt_group_heading {
+  padding: 8px;
+  /* row_group.padding */
+  color: #333333;
+  background-color: #FFFFFF;
+  /* row_group.background.color */
+  font-size: 100%;
+  /* row_group.font.size */
+  font-weight: initial;
+  /* row_group.font.weight */
+  text-transform: inherit;
+  /* row_group.text_transform */
+  border-top-style: solid;
+  /* row_group.border.top.style */
+  border-top-width: 2px;
+  /* row_group.border.top.width */
+  border-top-color: #D3D3D3;
+  /* row_group.border.top.color */
+  border-bottom-style: solid;
+  /* row_group.border.bottom.style */
+  border-bottom-width: 2px;
+  /* row_group.border.bottom.width */
+  border-bottom-color: #D3D3D3;
+  /* row_group.border.bottom.color */
+  border-left-style: none;
+  /* row_group.border.left.style */
+  border-left-width: 1px;
+  /* row_group.border.left.width */
+  border-left-color: #D3D3D3;
+  /* row_group.border.left.color */
+  border-right-style: none;
+  /* row_group.border.right.style */
+  border-right-width: 1px;
+  /* row_group.border.right.width */
+  border-right-color: #D3D3D3;
+  /* row_group.border.right.color */
+  vertical-align: middle;
+}
+
+#pzveloiefp .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  /* row_group.background.color */
+  font-size: 100%;
+  /* row_group.font.size */
+  font-weight: initial;
+  /* row_group.font.weight */
+  border-top-style: solid;
+  /* row_group.border.top.style */
+  border-top-width: 2px;
+  /* row_group.border.top.width */
+  border-top-color: #D3D3D3;
+  /* row_group.border.top.color */
+  border-bottom-style: solid;
+  /* row_group.border.bottom.style */
+  border-bottom-width: 2px;
+  /* row_group.border.bottom.width */
+  border-bottom-color: #D3D3D3;
+  /* row_group.border.bottom.color */
+  vertical-align: middle;
+}
+
+#pzveloiefp .gt_striped {
+  background-color: #8080800D;
+  /* row.striping.background_color */
+}
+
+#pzveloiefp .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#pzveloiefp .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#pzveloiefp .gt_row {
+  padding-top: 8px;
+  /* data_row.padding */
+  padding-bottom: 8px;
+  /* data_row.padding */
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  /* table_body.hlines.style */
+  border-top-width: 1px;
+  /* table_body.hlines.width */
+  border-top-color: #D3D3D3;
+  /* table_body.hlines.color */
+  border-left-style: none;
+  /* table_body.vlines.style */
+  border-left-width: 1px;
+  /* table_body.vlines.width */
+  border-left-color: #D3D3D3;
+  /* table_body.vlines.color */
+  border-right-style: none;
+  /* table_body.vlines.style */
+  border-right-width: 1px;
+  /* table_body.vlines.width */
+  border-right-color: #D3D3D3;
+  /* table_body.vlines.color */
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#pzveloiefp .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  /* stub.background.color */
+  font-weight: initial;
+  /* stub.font.weight */
+  text-transform: inherit;
+  /* stub.text_transform */
+  border-right-style: solid;
+  /* stub.border.style */
+  border-right-width: 2px;
+  /* stub.border.width */
+  border-right-color: #D3D3D3;
+  /* stub.border.color */
+  padding-left: 12px;
+}
+
+#pzveloiefp .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  /* summary_row.background.color */
+  text-transform: inherit;
+  /* summary_row.text_transform */
+  padding-top: 8px;
+  /* summary_row.padding */
+  padding-bottom: 8px;
+  /* summary_row.padding */
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pzveloiefp .gt_first_summary_row {
+  padding-top: 8px;
+  /* summary_row.padding */
+  padding-bottom: 8px;
+  /* summary_row.padding */
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: solid;
+  /* summary_row.border.style */
+  border-top-width: 2px;
+  /* summary_row.border.width */
+  border-top-color: #D3D3D3;
+  /* summary_row.border.color */
+}
+
+#pzveloiefp .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  /* grand_summary_row.background.color */
+  text-transform: inherit;
+  /* grand_summary_row.text_transform */
+  padding-top: 8px;
+  /* grand_summary_row.padding */
+  padding-bottom: 8px;
+  /* grand_summary_row.padding */
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pzveloiefp .gt_first_grand_summary_row {
+  padding-top: 8px;
+  /* grand_summary_row.padding */
+  padding-bottom: 8px;
+  /* grand_summary_row.padding */
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  /* grand_summary_row.border.style */
+  border-top-width: 6px;
+  /* grand_summary_row.border.width */
+  border-top-color: #D3D3D3;
+  /* grand_summary_row.border.color */
+}
+
+#pzveloiefp .gt_table_body {
+  border-top-style: solid;
+  /* table_body.border.top.style */
+  border-top-width: 2px;
+  /* table_body.border.top.width */
+  border-top-color: #D3D3D3;
+  /* table_body.border.top.color */
+  border-bottom-style: solid;
+  /* table_body.border.bottom.style */
+  border-bottom-width: 2px;
+  /* table_body.border.bottom.width */
+  border-bottom-color: #D3D3D3;
+  /* table_body.border.bottom.color */
+}
+
+#pzveloiefp .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  /* footnotes.background.color */
+  border-bottom-style: none;
+  /* footnotes.border.bottom.style */
+  border-bottom-width: 2px;
+  /* footnotes.border.bottom.width */
+  border-bottom-color: #D3D3D3;
+  /* footnotes.border.bottom.color */
+  border-left-style: none;
+  /* footnotes.border.lr.color */
+  border-left-width: 2px;
+  /* footnotes.border.lr.color */
+  border-left-color: #D3D3D3;
+  /* footnotes.border.lr.color */
+  border-right-style: none;
+  /* footnotes.border.lr.color */
+  border-right-width: 2px;
+  /* footnotes.border.lr.color */
+  border-right-color: #D3D3D3;
+  /* footnotes.border.lr.color */
+}
+
+#pzveloiefp .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  /* footnotes.font.size */
+  padding: 4px;
+  /* footnotes.padding */
+}
+
+#pzveloiefp .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  /* source_notes.background.color */
+  border-bottom-style: none;
+  /* source_notes.border.bottom.style */
+  border-bottom-width: 2px;
+  /* source_notes.border.bottom.width */
+  border-bottom-color: #D3D3D3;
+  /* source_notes.border.bottom.color */
+  border-left-style: none;
+  /* source_notes.border.lr.style */
+  border-left-width: 2px;
+  /* source_notes.border.lr.style */
+  border-left-color: #D3D3D3;
+  /* source_notes.border.lr.style */
+  border-right-style: none;
+  /* source_notes.border.lr.style */
+  border-right-width: 2px;
+  /* source_notes.border.lr.style */
+  border-right-color: #D3D3D3;
+  /* source_notes.border.lr.style */
+}
+
+#pzveloiefp .gt_sourcenote {
+  font-size: 90%;
+  /* source_notes.font.size */
+  padding: 4px;
+  /* source_notes.padding */
+}
+
+#pzveloiefp .gt_left {
+  text-align: left;
+}
+
+#pzveloiefp .gt_center {
+  text-align: center;
+}
+
+#pzveloiefp .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#pzveloiefp .gt_font_normal {
+  font-weight: normal;
+}
+
+#pzveloiefp .gt_font_bold {
+  font-weight: bold;
+}
+
+#pzveloiefp .gt_font_italic {
+  font-style: italic;
+}
+
+#pzveloiefp .gt_super {
+  font-size: 65%;
+}
+
+#pzveloiefp .gt_footnote_marks {
+  font-style: italic;
+  font-size: 65%;
+}
+</style>
+<div id="pzveloiefp" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+  
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">Sales Channel</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">unique_dates</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">start_date</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">end_date</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">total_sales</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">days_span</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr>
+      <td class="gt_row gt_left">Online</td>
+      <td class="gt_row gt_center">38</td>
+      <td class="gt_row gt_left">2011-05-01</td>
+      <td class="gt_row gt_left">2014-06-01</td>
+      <td class="gt_row gt_right">29358677</td>
+      <td class="gt_row gt_center">1127 days</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_striped">Sales Rep</td>
+      <td class="gt_row gt_center gt_striped">34</td>
+      <td class="gt_row gt_left gt_striped">2011-05-01</td>
+      <td class="gt_row gt_left gt_striped">2014-05-01</td>
+      <td class="gt_row gt_right gt_striped">80487704</td>
+      <td class="gt_row gt_center gt_striped">1096 days</td>
+    </tr>
+  </tbody>
+  
+  
+</table></div>
+<p>As this table shows, the <strong>Sales Rep</strong> dates don’t match the <strong>Online</strong> dates. They start on the same date, but have a different end. The <strong>Online</strong> dates include 2 months that are not included in the Sales Rep sales (which are the main sales channel by dollar volume).</p>
+</div>
+<div id="monthly-variation-compared-to-a-trend-line" class="section level3">
+<h3><span class="header-section-number">1.7.2</span> Monthly variation compared to a trend line</h3>
+<p>Jumping to the trend line comparison, we see that the big the source of variation is on the Sales Rep side.</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" data-line-number="1"><span class="kw">ggplot</span>(</a>
+<a class="sourceLine" id="cb30-2" data-line-number="2">  <span class="dt">data =</span> monthly_sales_w_channel,</a>
+<a class="sourceLine" id="cb30-3" data-line-number="3">  <span class="kw">aes</span>(</a>
+<a class="sourceLine" id="cb30-4" data-line-number="4">    <span class="dt">x =</span> orderdate, <span class="dt">y =</span> total_soh_dollars</a>
+<a class="sourceLine" id="cb30-5" data-line-number="5">  )</a>
+<a class="sourceLine" id="cb30-6" data-line-number="6">) <span class="op">+</span></a>
+<a class="sourceLine" id="cb30-7" data-line-number="7"><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb30-8" data-line-number="8"><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">se =</span> <span class="ot">FALSE</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb30-9" data-line-number="9"><span class="st">  </span><span class="kw">facet_grid</span>(<span class="st">&quot;onlineorderflag&quot;</span>, <span class="dt">scales =</span> <span class="st">&quot;free&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb30-10" data-line-number="10"><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">labels =</span> dollar) <span class="op">+</span></a>
+<a class="sourceLine" id="cb30-11" data-line-number="11"><span class="st">  </span><span class="kw">scale_x_date</span>(<span class="dt">date_breaks =</span> <span class="st">&quot;year&quot;</span>, <span class="dt">date_labels =</span> <span class="st">&quot;%Y&quot;</span>, <span class="dt">date_minor_breaks =</span> <span class="st">&quot;3 months&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb30-12" data-line-number="12"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">.5</span>)) <span class="op">+</span><span class="st"> </span><span class="co"># Center ggplot title</span></a>
+<a class="sourceLine" id="cb30-13" data-line-number="13"><span class="st">  </span><span class="kw">labs</span>(</a>
+<a class="sourceLine" id="cb30-14" data-line-number="14">    <span class="dt">title =</span> <span class="kw">glue</span>(</a>
+<a class="sourceLine" id="cb30-15" data-line-number="15">      <span class="st">&quot;AdventureWorks Monthly Sales Trend&quot;</span></a>
+<a class="sourceLine" id="cb30-16" data-line-number="16">    ),</a>
+<a class="sourceLine" id="cb30-17" data-line-number="17">    <span class="dt">x =</span> <span class="kw">glue</span>( <span class="st">&quot;Month - between &quot;</span>, {<span class="kw">format</span>(min_soh_dt, <span class="st">&quot;%B %d, %Y&quot;</span>)} , <span class="st">&quot; - &quot;</span>, </a>
+<a class="sourceLine" id="cb30-18" data-line-number="18">           {<span class="kw">format</span>(max_soh_dt, <span class="st">&quot;%B %d, %Y&quot;</span>)}),</a>
+<a class="sourceLine" id="cb30-19" data-line-number="19">    <span class="dt">y =</span> <span class="st">&quot;Sales Dollars&quot;</span></a>
+<a class="sourceLine" id="cb30-20" data-line-number="20">  )</a></code></pre></div>
+<div class="figure">
+<img src="083-exploring-a-single-table_files/figure-html/average%20dollars-1.png" alt="Monthly Sales Trend" width="672" />
+<p class="caption">
+(#fig:average dollars)Monthly Sales Trend
+</p>
+</div>
+<p>The <strong>monthly</strong> gyrations are much larger on the Sales Rep side, amounting to differences in a million dollars compared to small monthly variations of around $25,000 for the Online orders.</p>
+</div>
+<div id="compare-monthly-lagged-data-by-sales-channel" class="section level3">
+<h3><span class="header-section-number">1.7.3</span> Compare monthly lagged data by Sales Channel</h3>
+<p>First consider month-to-month change.</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" data-line-number="1">monthly_sales_w_channel_lagged_by_month &lt;-<span class="st"> </span>monthly_sales_w_channel <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb31-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(onlineorderflag) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb31-3" data-line-number="3"><span class="st">  </span><span class="kw">mutate</span>(</a>
+<a class="sourceLine" id="cb31-4" data-line-number="4">    <span class="dt">lag_soh_count =</span> <span class="kw">lag</span>(soh_count, <span class="dv">1</span>),</a>
+<a class="sourceLine" id="cb31-5" data-line-number="5">    <span class="dt">lag_soh_total_dollars =</span> <span class="kw">lag</span>(total_soh_dollars, <span class="dv">1</span>),</a>
+<a class="sourceLine" id="cb31-6" data-line-number="6">    <span class="dt">pct_monthly_soh_dollar_change =</span></a>
+<a class="sourceLine" id="cb31-7" data-line-number="7">      (total_soh_dollars <span class="op">-</span><span class="st"> </span>lag_soh_total_dollars) <span class="op">/</span><span class="st"> </span>lag_soh_total_dollars <span class="op">*</span><span class="st"> </span><span class="dv">100</span>,</a>
+<a class="sourceLine" id="cb31-8" data-line-number="8">    <span class="dt">pct_monthly_soh_count_change =</span></a>
+<a class="sourceLine" id="cb31-9" data-line-number="9">      (soh_count <span class="op">-</span><span class="st"> </span>lag_soh_count) <span class="op">/</span><span class="st"> </span>lag_soh_count <span class="op">*</span><span class="st"> </span><span class="dv">100</span></a>
+<a class="sourceLine" id="cb31-10" data-line-number="10">  )</a></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" data-line-number="1"><span class="kw">ggplot</span>(monthly_sales_w_channel_lagged_by_month, <span class="kw">aes</span>(<span class="dt">x =</span> orderdate, <span class="dt">y =</span> pct_monthly_soh_dollar_change)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb32-2" data-line-number="2"><span class="st">  </span><span class="kw">scale_x_date</span>(<span class="dt">date_breaks =</span> <span class="st">&quot;year&quot;</span>, <span class="dt">date_labels =</span> <span class="st">&quot;%Y&quot;</span>, <span class="dt">date_minor_breaks =</span> <span class="st">&quot;3 months&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb32-3" data-line-number="3"><span class="st">  </span><span class="kw">scale_y_continuous</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb32-4" data-line-number="4"><span class="st">  </span><span class="kw">facet_grid</span>(<span class="st">&quot;onlineorderflag&quot;</span>, <span class="dt">scale =</span> <span class="st">&quot;free&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb32-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb32-6" data-line-number="6"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">.5</span>)) <span class="op">+</span><span class="st"> </span><span class="co"># Center ggplot title</span></a>
+<a class="sourceLine" id="cb32-7" data-line-number="7"><span class="st">  </span><span class="kw">labs</span>(</a>
+<a class="sourceLine" id="cb32-8" data-line-number="8">    <span class="dt">title =</span> <span class="kw">glue</span>(</a>
+<a class="sourceLine" id="cb32-9" data-line-number="9">      <span class="st">&quot;Monthly Percent Sales Change </span><span class="ch">\n</span><span class="st">&quot;</span>,</a>
+<a class="sourceLine" id="cb32-10" data-line-number="10">      <span class="st">&quot;Comparing Online to Sales Rep Sales&quot;</span></a>
+<a class="sourceLine" id="cb32-11" data-line-number="11">    ),</a>
+<a class="sourceLine" id="cb32-12" data-line-number="12">    <span class="dt">x =</span> <span class="kw">paste0</span>(<span class="st">&quot;Month - between &quot;</span>, </a>
+<a class="sourceLine" id="cb32-13" data-line-number="13">               <span class="kw">glue</span>({<span class="kw">format</span>(min_soh_dt, <span class="st">&quot;%B %d, %Y&quot;</span>)} , <span class="st">&quot; - &quot;</span>, </a>
+<a class="sourceLine" id="cb32-14" data-line-number="14">           {<span class="kw">format</span>(max_soh_dt, <span class="st">&quot;%B %d, %Y&quot;</span>)})),</a>
+<a class="sourceLine" id="cb32-15" data-line-number="15">    <span class="dt">y =</span> <span class="st">&quot;% Dollar Change&quot;</span></a>
+<a class="sourceLine" id="cb32-16" data-line-number="16">  )</a></code></pre></div>
+<div class="figure">
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-10-1.png" alt="Percent change - Channel Comparison" width="672" />
+<p class="caption">
+(#fig:unnamed-chunk-10)Percent change - Channel Comparison
+</p>
+</div>
+<p>For <strong>Sales Reps</strong> it looks like the variation is in the number of orders, not just dollars, as shown in the following plot.</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" data-line-number="1"><span class="kw">ggplot</span>(monthly_sales_w_channel_lagged_by_month, <span class="kw">aes</span>(<span class="dt">x =</span> orderdate, <span class="dt">y =</span> pct_monthly_soh_count_change)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb33-2" data-line-number="2"><span class="st">  </span><span class="kw">scale_x_date</span>(<span class="dt">date_breaks =</span> <span class="st">&quot;year&quot;</span>, <span class="dt">date_labels =</span> <span class="st">&quot;%Y&quot;</span>, <span class="dt">date_minor_breaks =</span> <span class="st">&quot;3 months&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb33-3" data-line-number="3"><span class="st">  </span><span class="kw">facet_grid</span>(<span class="st">&quot;onlineorderflag&quot;</span> , <span class="dt">scales =</span> <span class="st">&quot;free&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb33-4" data-line-number="4"><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb33-5" data-line-number="5"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">.5</span>)) <span class="op">+</span><span class="st"> </span><span class="co"># Center ggplot title</span></a>
+<a class="sourceLine" id="cb33-6" data-line-number="6"><span class="st">  </span><span class="kw">labs</span>(</a>
+<a class="sourceLine" id="cb33-7" data-line-number="7">    <span class="dt">title =</span> <span class="kw">glue</span>(</a>
+<a class="sourceLine" id="cb33-8" data-line-number="8">      <span class="st">&quot;Monthly Order Volume Change </span><span class="ch">\n</span><span class="st">&quot;</span>,</a>
+<a class="sourceLine" id="cb33-9" data-line-number="9">      <span class="st">&quot;Comparing Online to Sales Rep Sales</span><span class="ch">\n</span><span class="st">&quot;</span>,</a>
+<a class="sourceLine" id="cb33-10" data-line-number="10">      <span class="kw">glue</span>({<span class="kw">format</span>(min_soh_dt, <span class="st">&quot;%B %d, %Y&quot;</span>)} , <span class="st">&quot; - &quot;</span>, </a>
+<a class="sourceLine" id="cb33-11" data-line-number="11">           {<span class="kw">format</span>(max_soh_dt, <span class="st">&quot;%B %d, %Y&quot;</span>)})</a>
+<a class="sourceLine" id="cb33-12" data-line-number="12">    ),</a>
+<a class="sourceLine" id="cb33-13" data-line-number="13">    <span class="dt">x =</span> <span class="st">&quot;Month&quot;</span>,</a>
+<a class="sourceLine" id="cb33-14" data-line-number="14">    <span class="dt">y =</span> <span class="st">&quot;Change number of orders&quot;</span></a>
+<a class="sourceLine" id="cb33-15" data-line-number="15">  )</a></code></pre></div>
+<div class="figure">
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-11-1.png" alt="Number of Sales Orders by Channel" width="672" />
+<p class="caption">
+(#fig:unnamed-chunk-11)Number of Sales Orders by Channel
+</p>
+</div>
+<p>The last two plots may not be so illuminating. Here’s a table that might be improved.</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" data-line-number="1">monthly_sales_w_channel_lagged_by_month <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb34-2" data-line-number="2"><span class="st">  </span><span class="kw">filter</span>(<span class="kw">abs</span>(pct_monthly_soh_count_change) <span class="op">&gt;</span><span class="st"> </span><span class="dv">150</span> <span class="op">|</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb34-3" data-line-number="3"><span class="st">         </span><span class="kw">abs</span>(pct_monthly_soh_dollar_change) <span class="op">&gt;</span><span class="st"> </span><span class="dv">150</span> ) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb34-4" data-line-number="4"><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb34-5" data-line-number="5"><span class="st">  </span><span class="kw">arrange</span>(onlineorderflag, orderdate) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb34-6" data-line-number="6"><span class="st">  </span><span class="kw">mutate</span>(</a>
+<a class="sourceLine" id="cb34-7" data-line-number="7">    <span class="dt">total_soh_dollars =</span> <span class="kw">round</span>(total_soh_dollars),</a>
+<a class="sourceLine" id="cb34-8" data-line-number="8">    <span class="dt">lag_soh_total_dollars =</span> <span class="kw">round</span>(lag_soh_total_dollars),</a>
+<a class="sourceLine" id="cb34-9" data-line-number="9">    <span class="dt">pct_monthly_soh_dollar_change =</span> <span class="kw">round</span>(pct_monthly_soh_dollar_change),</a>
+<a class="sourceLine" id="cb34-10" data-line-number="10">    <span class="dt">pct_monthly_soh_count_change =</span> <span class="kw">round</span>(pct_monthly_soh_count_change)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb34-11" data-line-number="11"><span class="st">  </span><span class="kw">select</span>(orderdate, onlineorderflag,  total_soh_dollars, lag_soh_total_dollars, </a>
+<a class="sourceLine" id="cb34-12" data-line-number="12">         soh_count, lag_soh_count, pct_monthly_soh_dollar_change, pct_monthly_soh_count_change) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb34-13" data-line-number="13"><span class="st">  </span><span class="co"># names()</span></a>
+<a class="sourceLine" id="cb34-14" data-line-number="14"><span class="st">  </span><span class="kw">gt</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb34-15" data-line-number="15"><span class="st">  </span><span class="kw">fmt_number</span>(</a>
+<a class="sourceLine" id="cb34-16" data-line-number="16">    <span class="dt">columns =</span> <span class="kw">c</span>(<span class="dv">3</span><span class="op">:</span><span class="dv">4</span>), <span class="dt">decimals =</span> <span class="dv">0</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb34-17" data-line-number="17"><span class="st">  </span><span class="kw">fmt_percent</span>(</a>
+<a class="sourceLine" id="cb34-18" data-line-number="18">    <span class="dt">columns =</span> <span class="kw">c</span>(<span class="dv">7</span><span class="op">:</span><span class="dv">8</span>), <span class="dt">decimals =</span> <span class="dv">0</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb34-19" data-line-number="19"><span class="st">  </span><span class="kw">cols_label</span>(</a>
+<a class="sourceLine" id="cb34-20" data-line-number="20">    <span class="dt">onlineorderflag =</span> <span class="st">&quot;Channel&quot;</span>,</a>
+<a class="sourceLine" id="cb34-21" data-line-number="21">    <span class="dt">total_soh_dollars =</span> <span class="st">&quot;$ this Month&quot;</span>,</a>
+<a class="sourceLine" id="cb34-22" data-line-number="22">    <span class="dt">lag_soh_total_dollars =</span> <span class="st">&quot;$ last Month&quot;</span>,</a>
+<a class="sourceLine" id="cb34-23" data-line-number="23">    <span class="dt">soh_count =</span> <span class="st">&quot;# this Month&quot;</span>,</a>
+<a class="sourceLine" id="cb34-24" data-line-number="24">    <span class="dt">lag_soh_count =</span> <span class="st">&quot;# last Month&quot;</span>,</a>
+<a class="sourceLine" id="cb34-25" data-line-number="25">    <span class="dt">pct_monthly_soh_dollar_change =</span> <span class="st">&quot;$ change&quot;</span>,</a>
+<a class="sourceLine" id="cb34-26" data-line-number="26">    <span class="dt">pct_monthly_soh_count_change =</span> <span class="st">&quot;# change&quot;</span></a>
+<a class="sourceLine" id="cb34-27" data-line-number="27">  )</a></code></pre></div>
+<style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+#dbgvzfontn .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  /* table.margin.left */
+  margin-right: auto;
+  /* table.margin.right */
+  color: #333333;
+  font-size: 16px;
+  /* table.font.size */
+  background-color: #FFFFFF;
+  /* table.background.color */
+  width: auto;
+  /* table.width */
+  border-top-style: solid;
+  /* table.border.top.style */
+  border-top-width: 2px;
+  /* table.border.top.width */
+  border-top-color: #A8A8A8;
+  /* table.border.top.color */
+  border-bottom-style: solid;
+  /* table.border.bottom.style */
+  border-bottom-width: 2px;
+  /* table.border.bottom.width */
+  border-bottom-color: #A8A8A8;
+  /* table.border.bottom.color */
+}
+
+#dbgvzfontn .gt_heading {
+  background-color: #FFFFFF;
+  /* heading.background.color */
+  border-bottom-color: #FFFFFF;
+  /* table.background.color */
+  border-left-style: hidden;
+  /* heading.border.lr.style */
+  border-left-width: 1px;
+  /* heading.border.lr.width */
+  border-left-color: #D3D3D3;
+  /* heading.border.lr.color */
+  border-right-style: hidden;
+  /* heading.border.lr.style */
+  border-right-width: 1px;
+  /* heading.border.lr.width */
+  border-right-color: #D3D3D3;
+  /* heading.border.lr.color */
+}
+
+#dbgvzfontn .gt_title {
+  color: #333333;
+  font-size: 125%;
+  /* heading.title.font.size */
+  font-weight: initial;
+  /* heading.title.font.weight */
+  padding-top: 4px;
+  /* heading.top.padding - not yet used */
+  padding-bottom: 4px;
+  border-bottom-color: #FFFFFF;
+  /* table.background.color */
+  border-bottom-width: 0;
+}
+
+#dbgvzfontn .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  /* heading.subtitle.font.size */
+  font-weight: initial;
+  /* heading.subtitle.font.weight */
+  padding-top: 0;
+  padding-bottom: 4px;
+  /* heading.bottom.padding - not yet used */
+  border-top-color: #FFFFFF;
+  /* table.background.color */
+  border-top-width: 0;
+}
+
+#dbgvzfontn .gt_bottom_border {
+  border-bottom-style: solid;
+  /* heading.border.bottom.style */
+  border-bottom-width: 2px;
+  /* heading.border.bottom.width */
+  border-bottom-color: #D3D3D3;
+  /* heading.border.bottom.color */
+}
+
+#dbgvzfontn .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#dbgvzfontn .gt_col_headings {
+  border-top-style: solid;
+  /* column_labels.border.top.style */
+  border-top-width: 2px;
+  /* column_labels.border.top.width */
+  border-top-color: #D3D3D3;
+  /* column_labels.border.top.color */
+  border-bottom-style: solid;
+  /* column_labels.border.bottom.style */
+  border-bottom-width: 2px;
+  /* column_labels.border.bottom.width */
+  border-bottom-color: #D3D3D3;
+  /* column_labels.border.bottom.color */
+  border-left-style: none;
+  /* column_labels.border.lr.style */
+  border-left-width: 1px;
+  /* column_labels.border.lr.width */
+  border-left-color: #D3D3D3;
+  /* column_labels.border.lr.color */
+  border-right-style: none;
+  /* column_labels.border.lr.style */
+  border-right-width: 1px;
+  /* column_labels.border.lr.width */
+  border-right-color: #D3D3D3;
+  /* column_labels.border.lr.color */
+}
+
+#dbgvzfontn .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  /* column_labels.background.color */
+  font-size: 100%;
+  /* column_labels.font.size */
+  font-weight: initial;
+  /* column_labels.font.weight */
+  text-transform: inherit;
+  /* column_labels.text_transform */
+  vertical-align: middle;
+  padding: 5px;
+  margin: 10px;
+  overflow-x: hidden;
+}
+
+#dbgvzfontn .gt_sep_right {
+  border-right: 5px solid #FFFFFF;
+}
+
+#dbgvzfontn .gt_group_heading {
+  padding: 8px;
+  /* row_group.padding */
+  color: #333333;
+  background-color: #FFFFFF;
+  /* row_group.background.color */
+  font-size: 100%;
+  /* row_group.font.size */
+  font-weight: initial;
+  /* row_group.font.weight */
+  text-transform: inherit;
+  /* row_group.text_transform */
+  border-top-style: solid;
+  /* row_group.border.top.style */
+  border-top-width: 2px;
+  /* row_group.border.top.width */
+  border-top-color: #D3D3D3;
+  /* row_group.border.top.color */
+  border-bottom-style: solid;
+  /* row_group.border.bottom.style */
+  border-bottom-width: 2px;
+  /* row_group.border.bottom.width */
+  border-bottom-color: #D3D3D3;
+  /* row_group.border.bottom.color */
+  border-left-style: none;
+  /* row_group.border.left.style */
+  border-left-width: 1px;
+  /* row_group.border.left.width */
+  border-left-color: #D3D3D3;
+  /* row_group.border.left.color */
+  border-right-style: none;
+  /* row_group.border.right.style */
+  border-right-width: 1px;
+  /* row_group.border.right.width */
+  border-right-color: #D3D3D3;
+  /* row_group.border.right.color */
+  vertical-align: middle;
+}
+
+#dbgvzfontn .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  /* row_group.background.color */
+  font-size: 100%;
+  /* row_group.font.size */
+  font-weight: initial;
+  /* row_group.font.weight */
+  border-top-style: solid;
+  /* row_group.border.top.style */
+  border-top-width: 2px;
+  /* row_group.border.top.width */
+  border-top-color: #D3D3D3;
+  /* row_group.border.top.color */
+  border-bottom-style: solid;
+  /* row_group.border.bottom.style */
+  border-bottom-width: 2px;
+  /* row_group.border.bottom.width */
+  border-bottom-color: #D3D3D3;
+  /* row_group.border.bottom.color */
+  vertical-align: middle;
+}
+
+#dbgvzfontn .gt_striped {
+  background-color: #8080800D;
+  /* row.striping.background_color */
+}
+
+#dbgvzfontn .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#dbgvzfontn .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#dbgvzfontn .gt_row {
+  padding-top: 8px;
+  /* data_row.padding */
+  padding-bottom: 8px;
+  /* data_row.padding */
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  /* table_body.hlines.style */
+  border-top-width: 1px;
+  /* table_body.hlines.width */
+  border-top-color: #D3D3D3;
+  /* table_body.hlines.color */
+  border-left-style: none;
+  /* table_body.vlines.style */
+  border-left-width: 1px;
+  /* table_body.vlines.width */
+  border-left-color: #D3D3D3;
+  /* table_body.vlines.color */
+  border-right-style: none;
+  /* table_body.vlines.style */
+  border-right-width: 1px;
+  /* table_body.vlines.width */
+  border-right-color: #D3D3D3;
+  /* table_body.vlines.color */
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#dbgvzfontn .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  /* stub.background.color */
+  font-weight: initial;
+  /* stub.font.weight */
+  text-transform: inherit;
+  /* stub.text_transform */
+  border-right-style: solid;
+  /* stub.border.style */
+  border-right-width: 2px;
+  /* stub.border.width */
+  border-right-color: #D3D3D3;
+  /* stub.border.color */
+  padding-left: 12px;
+}
+
+#dbgvzfontn .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  /* summary_row.background.color */
+  text-transform: inherit;
+  /* summary_row.text_transform */
+  padding-top: 8px;
+  /* summary_row.padding */
+  padding-bottom: 8px;
+  /* summary_row.padding */
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#dbgvzfontn .gt_first_summary_row {
+  padding-top: 8px;
+  /* summary_row.padding */
+  padding-bottom: 8px;
+  /* summary_row.padding */
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: solid;
+  /* summary_row.border.style */
+  border-top-width: 2px;
+  /* summary_row.border.width */
+  border-top-color: #D3D3D3;
+  /* summary_row.border.color */
+}
+
+#dbgvzfontn .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  /* grand_summary_row.background.color */
+  text-transform: inherit;
+  /* grand_summary_row.text_transform */
+  padding-top: 8px;
+  /* grand_summary_row.padding */
+  padding-bottom: 8px;
+  /* grand_summary_row.padding */
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#dbgvzfontn .gt_first_grand_summary_row {
+  padding-top: 8px;
+  /* grand_summary_row.padding */
+  padding-bottom: 8px;
+  /* grand_summary_row.padding */
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  /* grand_summary_row.border.style */
+  border-top-width: 6px;
+  /* grand_summary_row.border.width */
+  border-top-color: #D3D3D3;
+  /* grand_summary_row.border.color */
+}
+
+#dbgvzfontn .gt_table_body {
+  border-top-style: solid;
+  /* table_body.border.top.style */
+  border-top-width: 2px;
+  /* table_body.border.top.width */
+  border-top-color: #D3D3D3;
+  /* table_body.border.top.color */
+  border-bottom-style: solid;
+  /* table_body.border.bottom.style */
+  border-bottom-width: 2px;
+  /* table_body.border.bottom.width */
+  border-bottom-color: #D3D3D3;
+  /* table_body.border.bottom.color */
+}
+
+#dbgvzfontn .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  /* footnotes.background.color */
+  border-bottom-style: none;
+  /* footnotes.border.bottom.style */
+  border-bottom-width: 2px;
+  /* footnotes.border.bottom.width */
+  border-bottom-color: #D3D3D3;
+  /* footnotes.border.bottom.color */
+  border-left-style: none;
+  /* footnotes.border.lr.color */
+  border-left-width: 2px;
+  /* footnotes.border.lr.color */
+  border-left-color: #D3D3D3;
+  /* footnotes.border.lr.color */
+  border-right-style: none;
+  /* footnotes.border.lr.color */
+  border-right-width: 2px;
+  /* footnotes.border.lr.color */
+  border-right-color: #D3D3D3;
+  /* footnotes.border.lr.color */
+}
+
+#dbgvzfontn .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  /* footnotes.font.size */
+  padding: 4px;
+  /* footnotes.padding */
+}
+
+#dbgvzfontn .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  /* source_notes.background.color */
+  border-bottom-style: none;
+  /* source_notes.border.bottom.style */
+  border-bottom-width: 2px;
+  /* source_notes.border.bottom.width */
+  border-bottom-color: #D3D3D3;
+  /* source_notes.border.bottom.color */
+  border-left-style: none;
+  /* source_notes.border.lr.style */
+  border-left-width: 2px;
+  /* source_notes.border.lr.style */
+  border-left-color: #D3D3D3;
+  /* source_notes.border.lr.style */
+  border-right-style: none;
+  /* source_notes.border.lr.style */
+  border-right-width: 2px;
+  /* source_notes.border.lr.style */
+  border-right-color: #D3D3D3;
+  /* source_notes.border.lr.style */
+}
+
+#dbgvzfontn .gt_sourcenote {
+  font-size: 90%;
+  /* source_notes.font.size */
+  padding: 4px;
+  /* source_notes.padding */
+}
+
+#dbgvzfontn .gt_left {
+  text-align: left;
+}
+
+#dbgvzfontn .gt_center {
+  text-align: center;
+}
+
+#dbgvzfontn .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#dbgvzfontn .gt_font_normal {
+  font-weight: normal;
+}
+
+#dbgvzfontn .gt_font_bold {
+  font-weight: bold;
+}
+
+#dbgvzfontn .gt_font_italic {
+  font-style: italic;
+}
+
+#dbgvzfontn .gt_super {
+  font-size: 65%;
+}
+
+#dbgvzfontn .gt_footnote_marks {
+  font-style: italic;
+  font-size: 65%;
+}
+</style>
+<div id="dbgvzfontn" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+  
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">orderdate</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">Channel</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">$ this Month</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">$ last Month</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1"># this Month</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1"># last Month</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">$ change</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1"># change</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr>
+      <td class="gt_row gt_left">2011-06-01</td>
+      <td class="gt_row gt_left">Online</td>
+      <td class="gt_row gt_right">458,911</td>
+      <td class="gt_row gt_right">14,477</td>
+      <td class="gt_row gt_center">141</td>
+      <td class="gt_row gt_center">5</td>
+      <td class="gt_row gt_right">307,000&percnt;</td>
+      <td class="gt_row gt_right">272,000&percnt;</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_striped">2013-07-01</td>
+      <td class="gt_row gt_left gt_striped">Online</td>
+      <td class="gt_row gt_right gt_striped">847,139</td>
+      <td class="gt_row gt_right gt_striped">860,141</td>
+      <td class="gt_row gt_center gt_striped">1564</td>
+      <td class="gt_row gt_center gt_striped">533</td>
+      <td class="gt_row gt_right gt_striped">&minus;200&percnt;</td>
+      <td class="gt_row gt_right gt_striped">19,300&percnt;</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">2011-07-01</td>
+      <td class="gt_row gt_left">Sales Rep</td>
+      <td class="gt_row gt_right">1,538,408</td>
+      <td class="gt_row gt_right">489,329</td>
+      <td class="gt_row gt_center">75</td>
+      <td class="gt_row gt_center">38</td>
+      <td class="gt_row gt_right">21,400&percnt;</td>
+      <td class="gt_row gt_right">9,700&percnt;</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_striped">2012-01-01</td>
+      <td class="gt_row gt_left gt_striped">Sales Rep</td>
+      <td class="gt_row gt_right gt_striped">3,356,069</td>
+      <td class="gt_row gt_right gt_striped">713,117</td>
+      <td class="gt_row gt_center gt_striped">143</td>
+      <td class="gt_row gt_center gt_striped">40</td>
+      <td class="gt_row gt_right gt_striped">37,100&percnt;</td>
+      <td class="gt_row gt_right gt_striped">25,800&percnt;</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">2012-03-01</td>
+      <td class="gt_row gt_left">Sales Rep</td>
+      <td class="gt_row gt_right">2,269,117</td>
+      <td class="gt_row gt_right">882,900</td>
+      <td class="gt_row gt_center">85</td>
+      <td class="gt_row gt_center">37</td>
+      <td class="gt_row gt_right">15,700&percnt;</td>
+      <td class="gt_row gt_right">13,000&percnt;</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_striped">2014-03-01</td>
+      <td class="gt_row gt_left gt_striped">Sales Rep</td>
+      <td class="gt_row gt_right gt_striped">5,526,352</td>
+      <td class="gt_row gt_right gt_striped">3,231</td>
+      <td class="gt_row gt_center gt_striped">271</td>
+      <td class="gt_row gt_center gt_striped">3</td>
+      <td class="gt_row gt_right gt_striped">17,096,000&percnt;</td>
+      <td class="gt_row gt_right gt_striped">893,300&percnt;</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">2014-05-01</td>
+      <td class="gt_row gt_left">Sales Rep</td>
+      <td class="gt_row gt_right">3,415,479</td>
+      <td class="gt_row gt_right">1,285</td>
+      <td class="gt_row gt_center">179</td>
+      <td class="gt_row gt_center">2</td>
+      <td class="gt_row gt_right">26,573,900&percnt;</td>
+      <td class="gt_row gt_right">885,000&percnt;</td>
+    </tr>
+  </tbody>
+  
+  
+</table></div>
+<p>Let’s examine whether there is a large year-to-year change.</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" data-line-number="1">monthly_sales_w_channel_lagged_by_year &lt;-<span class="st"> </span>monthly_sales_w_channel <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb35-2" data-line-number="2"><span class="st">  </span><span class="kw">group_by</span>(onlineorderflag) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb35-3" data-line-number="3"><span class="st">  </span><span class="kw">mutate</span>(</a>
+<a class="sourceLine" id="cb35-4" data-line-number="4">    <span class="dt">pct_monthly_soh_dollar_change =</span></a>
+<a class="sourceLine" id="cb35-5" data-line-number="5">      total_soh_dollars <span class="op">/</span><span class="st"> </span>(<span class="kw">lag</span>(total_soh_dollars, <span class="dv">12</span>)) <span class="op">*</span><span class="st"> </span><span class="dv">100</span>,</a>
+<a class="sourceLine" id="cb35-6" data-line-number="6">    <span class="dt">pct_monthly_soh_count_change =</span></a>
+<a class="sourceLine" id="cb35-7" data-line-number="7">      soh_count <span class="op">/</span><span class="st"> </span>(<span class="kw">lag</span>(soh_count, <span class="dv">12</span>)) <span class="op">*</span><span class="st"> </span><span class="dv">100</span></a>
+<a class="sourceLine" id="cb35-8" data-line-number="8">  )</a>
+<a class="sourceLine" id="cb35-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb35-10" data-line-number="10"><span class="kw">ggplot</span>(</a>
+<a class="sourceLine" id="cb35-11" data-line-number="11">  monthly_sales_w_channel_lagged_by_year,</a>
+<a class="sourceLine" id="cb35-12" data-line-number="12">  <span class="kw">aes</span>(<span class="dt">x =</span> orderdate, <span class="dt">y =</span> pct_monthly_soh_dollar_change)</a>
+<a class="sourceLine" id="cb35-13" data-line-number="13">) <span class="op">+</span></a>
+<a class="sourceLine" id="cb35-14" data-line-number="14"><span class="st">  </span><span class="kw">scale_x_date</span>(</a>
+<a class="sourceLine" id="cb35-15" data-line-number="15">    <span class="dt">date_breaks =</span> <span class="st">&quot;year&quot;</span>, <span class="dt">date_labels =</span> <span class="st">&quot;%Y&quot;</span>,</a>
+<a class="sourceLine" id="cb35-16" data-line-number="16">    <span class="dt">date_minor_breaks =</span> <span class="st">&quot;3 months&quot;</span></a>
+<a class="sourceLine" id="cb35-17" data-line-number="17">  ) <span class="op">+</span></a>
+<a class="sourceLine" id="cb35-18" data-line-number="18"><span class="st">   </span><span class="kw">scale_y_continuous</span>(<span class="dt">limits =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">50</span>, <span class="dv">400</span>)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb35-19" data-line-number="19"><span class="st">  </span><span class="kw">facet_grid</span>(<span class="st">&quot;onlineorderflag&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb35-20" data-line-number="20"><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb35-21" data-line-number="21"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">.5</span>)) <span class="op">+</span><span class="st"> </span><span class="co"># Center ggplot title</span></a>
+<a class="sourceLine" id="cb35-22" data-line-number="22"><span class="st">  </span><span class="kw">labs</span>(</a>
+<a class="sourceLine" id="cb35-23" data-line-number="23">    <span class="dt">title =</span> <span class="kw">glue</span>(</a>
+<a class="sourceLine" id="cb35-24" data-line-number="24">      <span class="st">&quot;Year-on-Year Change in Total Monthly Sales</span><span class="ch">\n</span><span class="st">&quot;</span>,</a>
+<a class="sourceLine" id="cb35-25" data-line-number="25">      <span class="st">&quot;Comparing Online to Sales Rep Sales&quot;</span></a>
+<a class="sourceLine" id="cb35-26" data-line-number="26">    ),</a>
+<a class="sourceLine" id="cb35-27" data-line-number="27">    <span class="dt">x =</span> <span class="kw">paste0</span>(<span class="st">&quot;Month - between &quot;</span>, min_soh_dt, <span class="st">&quot; - &quot;</span>, max_soh_dt),</a>
+<a class="sourceLine" id="cb35-28" data-line-number="28">    <span class="dt">y =</span> <span class="st">&quot;% Dollar Change&quot;</span></a>
+<a class="sourceLine" id="cb35-29" data-line-number="29">  )</a></code></pre></div>
+<div class="figure">
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-12-1.png" alt="Lagged Sales by Channel" width="672" />
+<p class="caption">
+(#fig:unnamed-chunk-12)Lagged Sales by Channel
+</p>
+</div>
+<p>That’s much more stable than the month-to-month change.</p>
+<blockquote>
+<p>??? Comparing the number of sales orders year over year by month for 2013 and 2012, one can see that the 2013 sales are between 1.2 and 1.8 times larger than the corresponding month of 2012 from January through June. In July the 2013 sales are 5 to 6 times the 2012 sales orders. ???</p>
+</blockquote>
+<p>This trend continues into 2014 before the number of sales plummet to just 1.3 time in June.</p>
+<p>We suspect that the business has changed a lot with the advent of <strong>Online</strong> orders.</p>
+</div>
+</div>
+<div id="detect-and-diagnose-the-day-of-the-month-problem" class="section level2">
+<h2><span class="header-section-number">1.8</span> Detect and diagnose the day of the month problem</h2>
+<p>There have been several indications that Sales Rep sales are recorded once a month while Online sales are recorded on a daily basis.</p>
+<div id="sales-rep-orderdate-distribution" class="section level3">
+<h3><span class="header-section-number">1.8.1</span> Sales Rep Orderdate Distribution</h3>
+<p>Look at the dates when sales are entered for sales by <strong>Sales Reps</strong>. The following query / plot combination shows this pattern. and the exception for transactions entered on the first day of the month.</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" data-line-number="1">  <span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;sales&quot;</span>, <span class="st">&quot;salesorderheader&quot;</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb36-2" data-line-number="2"><span class="st">  </span><span class="kw">filter</span>(onlineorderflag <span class="op">==</span><span class="st"> </span><span class="ot">FALSE</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Drop online orders</span></a>
+<a class="sourceLine" id="cb36-3" data-line-number="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">orderday =</span> <span class="kw">day</span>(orderdate)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb36-4" data-line-number="4"><span class="st">  </span><span class="kw">count</span>(orderday, <span class="dt">name =</span> <span class="st">&quot;Orders&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb36-5" data-line-number="5"><span class="st">  </span><span class="kw">collect</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb36-6" data-line-number="6"><span class="st">  </span><span class="kw">full_join</span>(<span class="kw">tibble</span>(<span class="dt">orderday =</span> <span class="kw">seq</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">31</span>))) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb36-7" data-line-number="7"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">orderday =</span> <span class="kw">as.factor</span>(orderday)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb36-8" data-line-number="8"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(orderday, Orders)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb36-9" data-line-number="9"><span class="st">  </span><span class="kw">geom_col</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb36-10" data-line-number="10"><span class="st">  </span><span class="kw">coord_flip</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb36-11" data-line-number="11"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;The first day of the month looks odd&quot;</span>,</a>
+<a class="sourceLine" id="cb36-12" data-line-number="12">       <span class="dt">x =</span> <span class="st">&quot;Day Number&quot;</span>)</a></code></pre></div>
+<pre><code>## Joining, by = &quot;orderday&quot;</code></pre>
+<pre><code>## Warning: Removed 26 rows containing missing values (position_stack).</code></pre>
+<div class="figure">
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-13-1.png" alt="Days of the month with Sales Rep activity recorded" width="672" />
+<p class="caption">
+(#fig:unnamed-chunk-13)Days of the month with Sales Rep activity recorded
+</p>
+</div>
+<p>We can check on which months have orders entered on the first of the month.</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb39-1" data-line-number="1">sales_rep_day_of_month_sales &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;sales&quot;</span>, <span class="st">&quot;salesorderheader&quot;</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb39-2" data-line-number="2"><span class="st">  </span><span class="kw">filter</span>(onlineorderflag <span class="op">==</span><span class="st"> </span><span class="ot">FALSE</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Drop online orders</span></a>
+<a class="sourceLine" id="cb39-3" data-line-number="3"><span class="st">  </span><span class="kw">select</span>(orderdate, subtotal) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb39-4" data-line-number="4"><span class="st">  </span><span class="kw">mutate</span>(</a>
+<a class="sourceLine" id="cb39-5" data-line-number="5">    <span class="dt">year =</span> <span class="kw">year</span>(orderdate),</a>
+<a class="sourceLine" id="cb39-6" data-line-number="6">    <span class="dt">month =</span> <span class="kw">month</span>(orderdate),</a>
+<a class="sourceLine" id="cb39-7" data-line-number="7">    <span class="dt">day =</span> <span class="kw">day</span>(orderdate)</a>
+<a class="sourceLine" id="cb39-8" data-line-number="8">  ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb39-9" data-line-number="9"><span class="st">  </span><span class="kw">count</span>(year, month, day) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb39-10" data-line-number="10"><span class="st">  </span><span class="kw">collect</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb39-11" data-line-number="11"><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> day, <span class="dt">values_from =</span> n, <span class="dt">names_prefix =</span> <span class="st">&quot;day_&quot;</span>, <span class="dt">values_fill =</span> <span class="dv">0</span> ) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb39-12" data-line-number="12"><span class="st">  </span><span class="kw">as.data.frame</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb39-13" data-line-number="13"><span class="st">  </span><span class="kw">select</span>(year, month, day_<span class="dv">1</span>, day_<span class="dv">28</span>, day_<span class="dv">29</span>, day_<span class="dv">30</span>, day_<span class="dv">31</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb39-14" data-line-number="14"><span class="st">  </span><span class="kw">filter</span>(day_<span class="dv">1</span> <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb39-15" data-line-number="15"><span class="st">  </span><span class="kw">arrange</span>(year, month)</a>
+<a class="sourceLine" id="cb39-16" data-line-number="16"></a>
+<a class="sourceLine" id="cb39-17" data-line-number="17">sales_rep_day_of_month_sales</a></code></pre></div>
+<pre><code>##   year month day_1 day_28 day_29 day_30 day_31
+## 1 2011     7    75      0      0      0      0
+## 2 2011     8    60      0      0      0     40
+## 3 2011    10    90      0      0      0     63
+## 4 2011    12    40      0      0      0      0
+## 5 2012     1    79      0     64      0      0
+## 6 2014     3    91      0      0      2    178
+## 7 2014     5   179      0      0      0      0</code></pre>
+<p>There are two months with multiple sales rep order days for 2011, (11/08 and 11/10), one for 2012, (1201), and two in 2014, (14/01 and 14/03). The 14/03 is the only three day sales rep order month.</p>
+<p>Are there months where there were no sales recorded for the sales reps?</p>
+<p>There are two approaches. The first is to generate a list of months between the beginning and end of history and compare that to the Sales Rep records</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" data-line-number="1">monthly_sales_rep_sales &lt;-<span class="st"> </span>monthly_sales_w_channel <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb41-2" data-line-number="2"><span class="st">  </span><span class="kw">filter</span>(onlineorderflag <span class="op">==</span><span class="st"> &quot;Sales Rep&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb41-3" data-line-number="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">orderdate =</span> <span class="kw">as.Date</span>(<span class="kw">floor_date</span>(orderdate, <span class="st">&quot;month&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb41-4" data-line-number="4"><span class="st">  </span><span class="kw">count</span>(orderdate)</a>
+<a class="sourceLine" id="cb41-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb41-6" data-line-number="6"><span class="kw">str</span>(monthly_sales_rep_sales)</a></code></pre></div>
+<pre><code>## Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    34 obs. of  2 variables:
+##  $ orderdate: Date, format: &quot;2011-05-01&quot; &quot;2011-07-01&quot; ...
+##  $ n        : int  1 1 1 1 1 1 1 1 1 1 ...</code></pre>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb43-1" data-line-number="1">date_list &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">month_date =</span> <span class="kw">seq.Date</span>(<span class="kw">floor_date</span>(<span class="kw">as.Date</span>(min_soh_dt), <span class="st">&quot;month&quot;</span>), </a>
+<a class="sourceLine" id="cb43-2" data-line-number="2">         <span class="kw">floor_date</span>(<span class="kw">as.Date</span>(max_soh_dt), <span class="st">&quot;month&quot;</span>), </a>
+<a class="sourceLine" id="cb43-3" data-line-number="3">         <span class="dt">by =</span> <span class="st">&quot;month&quot;</span>),</a>
+<a class="sourceLine" id="cb43-4" data-line-number="4">         <span class="dt">date_exists =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb43-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb43-6" data-line-number="6">date_list <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb43-7" data-line-number="7"><span class="st">  </span><span class="kw">anti_join</span>(monthly_sales_rep_sales, </a>
+<a class="sourceLine" id="cb43-8" data-line-number="8">            <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;month_date&quot;</span> =<span class="st"> &quot;orderdate&quot;</span>) )</a></code></pre></div>
+<pre><code>## # A tibble: 4 x 2
+##   month_date date_exists
+##   &lt;date&gt;     &lt;lgl&gt;      
+## 1 2011-06-01 FALSE      
+## 2 2011-09-01 FALSE      
+## 3 2011-11-01 FALSE      
+## 4 2014-06-01 FALSE</code></pre>
+<ul>
+<li>June, September, and November are missing for 2011.</li>
+<li>June for 2014</li>
+</ul>
+<p>The second approach is to use the dates found in the database for online orders. Defining “complete” may not always be as simple as generating a complete list of months.</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" data-line-number="1">sales_order_header_online &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;sales&quot;</span>, <span class="st">&quot;salesorderheader&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb45-2" data-line-number="2"><span class="st">  </span><span class="kw">filter</span>(onlineorderflag <span class="op">==</span><span class="st"> </span><span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb45-3" data-line-number="3"><span class="st">  </span><span class="kw">mutate</span>(</a>
+<a class="sourceLine" id="cb45-4" data-line-number="4">    <span class="dt">orderdate =</span> <span class="kw">date_trunc</span>(<span class="st">&#39;month&#39;</span>, orderdate)</a>
+<a class="sourceLine" id="cb45-5" data-line-number="5">  ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb45-6" data-line-number="6"><span class="st">  </span><span class="kw">count</span>(orderdate, <span class="dt">name =</span> <span class="st">&quot;online_count&quot;</span>) </a>
+<a class="sourceLine" id="cb45-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb45-8" data-line-number="8">sales_order_header_sales_rep &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;sales&quot;</span>, <span class="st">&quot;salesorderheader&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb45-9" data-line-number="9"><span class="st">  </span><span class="kw">filter</span>(onlineorderflag <span class="op">==</span><span class="st"> </span><span class="ot">FALSE</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb45-10" data-line-number="10"><span class="st">  </span><span class="kw">mutate</span>(</a>
+<a class="sourceLine" id="cb45-11" data-line-number="11">    <span class="dt">orderdate =</span> <span class="kw">date_trunc</span>(<span class="st">&#39;month&#39;</span>, orderdate)</a>
+<a class="sourceLine" id="cb45-12" data-line-number="12">  ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb45-13" data-line-number="13"><span class="st">  </span><span class="kw">count</span>(orderdate, <span class="dt">name =</span> <span class="st">&quot;sales_rep_count&quot;</span>) </a>
+<a class="sourceLine" id="cb45-14" data-line-number="14"></a>
+<a class="sourceLine" id="cb45-15" data-line-number="15">missing_dates &lt;-<span class="st"> </span>sales_order_header_sales_rep <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb45-16" data-line-number="16"><span class="st">  </span><span class="kw">full_join</span>(sales_order_header_online) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb45-17" data-line-number="17"><span class="st">  </span><span class="kw">show_query</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb45-18" data-line-number="18"><span class="st">  </span><span class="kw">collect</span>()</a></code></pre></div>
+<pre><code>## Joining, by = &quot;orderdate&quot;</code></pre>
+<pre><code>## &lt;SQL&gt;
+## SELECT COALESCE(&quot;LHS&quot;.&quot;orderdate&quot;, &quot;RHS&quot;.&quot;orderdate&quot;) AS &quot;orderdate&quot;, &quot;LHS&quot;.&quot;sales_rep_count&quot; AS &quot;sales_rep_count&quot;, &quot;RHS&quot;.&quot;online_count&quot; AS &quot;online_count&quot;
+## FROM (SELECT &quot;orderdate&quot;, COUNT(*) AS &quot;sales_rep_count&quot;
+## FROM (SELECT &quot;salesorderid&quot;, &quot;revisionnumber&quot;, date_trunc(&#39;month&#39;, &quot;orderdate&quot;) AS &quot;orderdate&quot;, &quot;duedate&quot;, &quot;shipdate&quot;, &quot;status&quot;, &quot;onlineorderflag&quot;, &quot;purchaseordernumber&quot;, &quot;accountnumber&quot;, &quot;customerid&quot;, &quot;salespersonid&quot;, &quot;territoryid&quot;, &quot;billtoaddressid&quot;, &quot;shiptoaddressid&quot;, &quot;shipmethodid&quot;, &quot;creditcardid&quot;, &quot;creditcardapprovalcode&quot;, &quot;currencyrateid&quot;, &quot;subtotal&quot;, &quot;taxamt&quot;, &quot;freight&quot;, &quot;totaldue&quot;, &quot;comment&quot;, &quot;rowguid&quot;, &quot;modifieddate&quot;
+## FROM (SELECT *
+## FROM sales.salesorderheader
+## WHERE (&quot;onlineorderflag&quot; = FALSE)) &quot;dbplyr_010&quot;) &quot;dbplyr_011&quot;
+## GROUP BY &quot;orderdate&quot;) &quot;LHS&quot;
+## FULL JOIN (SELECT &quot;orderdate&quot;, COUNT(*) AS &quot;online_count&quot;
+## FROM (SELECT &quot;salesorderid&quot;, &quot;revisionnumber&quot;, date_trunc(&#39;month&#39;, &quot;orderdate&quot;) AS &quot;orderdate&quot;, &quot;duedate&quot;, &quot;shipdate&quot;, &quot;status&quot;, &quot;onlineorderflag&quot;, &quot;purchaseordernumber&quot;, &quot;accountnumber&quot;, &quot;customerid&quot;, &quot;salespersonid&quot;, &quot;territoryid&quot;, &quot;billtoaddressid&quot;, &quot;shiptoaddressid&quot;, &quot;shipmethodid&quot;, &quot;creditcardid&quot;, &quot;creditcardapprovalcode&quot;, &quot;currencyrateid&quot;, &quot;subtotal&quot;, &quot;taxamt&quot;, &quot;freight&quot;, &quot;totaldue&quot;, &quot;comment&quot;, &quot;rowguid&quot;, &quot;modifieddate&quot;
+## FROM (SELECT *
+## FROM sales.salesorderheader
+## WHERE (&quot;onlineorderflag&quot; = TRUE)) &quot;dbplyr_012&quot;) &quot;dbplyr_013&quot;
+## GROUP BY &quot;orderdate&quot;) &quot;RHS&quot;
+## ON (&quot;LHS&quot;.&quot;orderdate&quot; = &quot;RHS&quot;.&quot;orderdate&quot;)</code></pre>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb48-1" data-line-number="1">missing_dates &lt;-<span class="st"> </span>sales_order_header_online <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb48-2" data-line-number="2"><span class="st">  </span><span class="kw">anti_join</span>(sales_order_header_sales_rep) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb48-3" data-line-number="3"><span class="st">  </span><span class="kw">arrange</span>(orderdate) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb48-4" data-line-number="4"><span class="st">  </span><span class="kw">collect</span>()</a></code></pre></div>
+<pre><code>## Joining, by = &quot;orderdate&quot;</code></pre>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb50-1" data-line-number="1">missing_dates</a></code></pre></div>
+<pre><code>## # A tibble: 4 x 2
+##   orderdate           online_count
+##   &lt;dttm&gt;                     &lt;int&gt;
+## 1 2011-06-01 00:00:00          141
+## 2 2011-09-01 00:00:00          157
+## 3 2011-11-01 00:00:00          230
+## 4 2014-06-01 00:00:00          939</code></pre>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb52-1" data-line-number="1"><span class="kw">str</span>(missing_dates)</a></code></pre></div>
+<pre><code>## Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    4 obs. of  2 variables:
+##  $ orderdate   : POSIXct, format: &quot;2011-06-01&quot; &quot;2011-09-01&quot; ...
+##  $ online_count: int  141 157 230 939</code></pre>
+<p>And in this case they agree!</p>
+<p>discuss February issues. and stuff.</p>
+<p>look at each year sepraately as a diagnostic</p>
+<p>Use the same pivot strategy on the corrected data.</p>
+<p>difference between detective work with a graph and just print it out. “now I see what’s driving the hint.”</p>
+<p>We have xx months when we add the month before and the month after the <strong>suspicious months</strong>. We don’t know whether the problem postings have been carried forward or backward. We check for and eliminate duplicates as well.</p>
+<ul>
+<li>Most of the <strong>Sales Reps</strong>’ orders are entered on a single day of the month, unique days = 1. It is possible that these are monthly recurring orders that get released on a given day of the month. If that is the case, what are the <strong>Sales Reps</strong> doing the rest of the month?</li>
+<li>** ?? The lines with multiple days, unique_days &gt; 1, have a noticeable higher number of orders, so_cnt, and associated so dollars.?? **</li>
+</ul>
+</div>
+</div>
+<div id="correcting-the-order-date-for-sales-reps" class="section level2">
+<h2><span class="header-section-number">1.9</span> Correcting the order date for <strong>Sales Reps</strong></h2>
+<div id="define-a-date-correction-function-in-r" class="section level3">
+<h3><span class="header-section-number">1.9.1</span> Define a date correction function in R</h3>
+<p>This code does the date-correction work on the R side:</p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb54-1" data-line-number="1">monthly_sales_rep_adjusted &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;sales&quot;</span>, <span class="st">&quot;salesorderheader&quot;</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb54-2" data-line-number="2"><span class="st">  </span><span class="kw">filter</span>(onlineorderflag <span class="op">==</span><span class="st"> </span><span class="ot">FALSE</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb54-3" data-line-number="3"><span class="st">  </span><span class="kw">select</span>(orderdate, subtotal, onlineorderflag) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb54-4" data-line-number="4"><span class="st">  </span><span class="kw">group_by</span>(orderdate) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb54-5" data-line-number="5"><span class="st">  </span><span class="kw">summarize</span>(</a>
+<a class="sourceLine" id="cb54-6" data-line-number="6">    <span class="dt">total_soh_dollars =</span> <span class="kw">round</span>(<span class="kw">sum</span>(subtotal, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">2</span>),</a>
+<a class="sourceLine" id="cb54-7" data-line-number="7">    <span class="dt">soh_count =</span> <span class="kw">n</span>()</a>
+<a class="sourceLine" id="cb54-8" data-line-number="8">  ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb54-9" data-line-number="9"><span class="st">  </span><span class="kw">mutate</span>(</a>
+<a class="sourceLine" id="cb54-10" data-line-number="10">    <span class="dt">orderdate =</span> <span class="kw">as.Date</span>(orderdate),</a>
+<a class="sourceLine" id="cb54-11" data-line-number="11">    <span class="dt">day =</span> <span class="kw">day</span>(orderdate)</a>
+<a class="sourceLine" id="cb54-12" data-line-number="12">  ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb54-13" data-line-number="13"><span class="st">  </span><span class="kw">collect</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb54-14" data-line-number="14"><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb54-15" data-line-number="15"><span class="st">  </span><span class="kw">mutate</span>(</a>
+<a class="sourceLine" id="cb54-16" data-line-number="16">    <span class="dt">adjusted_orderdate =</span> <span class="kw">case_when</span>(</a>
+<a class="sourceLine" id="cb54-17" data-line-number="17">      day <span class="op">==</span><span class="st"> </span>1L <span class="op">~</span><span class="st"> </span>orderdate <span class="dv">-1</span>,</a>
+<a class="sourceLine" id="cb54-18" data-line-number="18">      <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> </span>orderdate</a>
+<a class="sourceLine" id="cb54-19" data-line-number="19">    ),</a>
+<a class="sourceLine" id="cb54-20" data-line-number="20">    <span class="dt">year_month =</span> <span class="kw">floor_date</span>(adjusted_orderdate, <span class="st">&quot;month&quot;</span>)</a>
+<a class="sourceLine" id="cb54-21" data-line-number="21">  ) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb54-22" data-line-number="22"><span class="st">  </span><span class="kw">group_by</span>(year_month) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb54-23" data-line-number="23"><span class="st">  </span><span class="kw">summarize</span>(</a>
+<a class="sourceLine" id="cb54-24" data-line-number="24">      <span class="dt">total_soh_dollars =</span> <span class="kw">round</span>(<span class="kw">sum</span>(total_soh_dollars, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">2</span>),</a>
+<a class="sourceLine" id="cb54-25" data-line-number="25">      <span class="dt">soh_count =</span> <span class="kw">sum</span>(soh_count)</a>
+<a class="sourceLine" id="cb54-26" data-line-number="26">    ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb54-27" data-line-number="27"><span class="st">  </span><span class="kw">ungroup</span>()</a></code></pre></div>
+<p>Inspect:</p>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb55-1" data-line-number="1"><span class="kw">str</span>(monthly_sales_rep_adjusted)</a></code></pre></div>
+<pre><code>## Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    36 obs. of  3 variables:
+##  $ year_month       : Date, format: &quot;2011-05-01&quot; &quot;2011-06-01&quot; ...
+##  $ total_soh_dollars: num  489329 1538408 1165897 844721 2324136 ...
+##  $ soh_count        : int  38 75 60 40 90 63 40 79 64 37 ...</code></pre>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb57-1" data-line-number="1">monthly_sales_rep_adjusted <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(<span class="kw">year</span>(year_month) <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">2011</span>,<span class="dv">2014</span>))</a></code></pre></div>
+<pre><code>## # A tibble: 12 x 3
+##    year_month total_soh_dollars soh_count
+##    &lt;date&gt;                 &lt;dbl&gt;     &lt;int&gt;
+##  1 2011-05-01           489329.        38
+##  2 2011-06-01          1538408.        75
+##  3 2011-07-01          1165897.        60
+##  4 2011-08-01           844721         40
+##  5 2011-09-01          2324136.        90
+##  6 2011-10-01          1702945.        63
+##  7 2011-11-01           713117.        40
+##  8 2011-12-01          1900789.        79
+##  9 2014-01-01          2738752.       175
+## 10 2014-02-01          2207772.        94
+## 11 2014-03-01          3321810.       180
+## 12 2014-04-01          3416764.       181</code></pre>
+</div>
+<div id="define-postgres-date-function" class="section level3">
+<h3><span class="header-section-number">1.9.2</span> Define and store a PostgreSQL function to correct the date</h3>
+<p>The following code defines a function on the server side to correct the date:</p>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb59-1" data-line-number="1"><span class="kw">dbExecute</span>(</a>
+<a class="sourceLine" id="cb59-2" data-line-number="2">  con,</a>
+<a class="sourceLine" id="cb59-3" data-line-number="3">  <span class="st">&quot;CREATE OR REPLACE FUNCTION so_adj_date(so_date timestamp, ONLINE_ORDER boolean) RETURNS timestamp AS $$</span></a>
+<a class="sourceLine" id="cb59-4" data-line-number="4"><span class="st">     BEGIN</span></a>
+<a class="sourceLine" id="cb59-5" data-line-number="5"><span class="st">        IF (ONLINE_ORDER) THEN</span></a>
+<a class="sourceLine" id="cb59-6" data-line-number="6"><span class="st">            RETURN (SELECT so_date);</span></a>
+<a class="sourceLine" id="cb59-7" data-line-number="7"><span class="st">        ELSE</span></a>
+<a class="sourceLine" id="cb59-8" data-line-number="8"><span class="st">            RETURN(SELECT CASE WHEN EXTRACT(DAY FROM so_date) = 1</span></a>
+<a class="sourceLine" id="cb59-9" data-line-number="9"><span class="st">                               THEN  so_date - &#39;1 day&#39;::interval</span></a>
+<a class="sourceLine" id="cb59-10" data-line-number="10"><span class="st">                               ELSE  so_date</span></a>
+<a class="sourceLine" id="cb59-11" data-line-number="11"><span class="st">                          END</span></a>
+<a class="sourceLine" id="cb59-12" data-line-number="12"><span class="st">                  );</span></a>
+<a class="sourceLine" id="cb59-13" data-line-number="13"><span class="st">        END IF;</span></a>
+<a class="sourceLine" id="cb59-14" data-line-number="14"><span class="st"> END; $$</span></a>
+<a class="sourceLine" id="cb59-15" data-line-number="15"><span class="st">LANGUAGE PLPGSQL;</span></a>
+<a class="sourceLine" id="cb59-16" data-line-number="16"><span class="st">&quot;</span></a>
+<a class="sourceLine" id="cb59-17" data-line-number="17">)</a></code></pre></div>
+<pre><code>## [1] 0</code></pre>
+</div>
+<div id="use-the-postgresql-function" class="section level3">
+<h3><span class="header-section-number">1.9.3</span> Use the PostgreSQL function</h3>
+<p>If you can do the heavy lifting on the database side, that’s good. R can do it, but it’s best for finding the issues.</p>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb61-1" data-line-number="1">monthly_sales_rep_adjusted_with_psql_function &lt;-<span class="st"> </span><span class="kw">tbl</span>(con, <span class="kw">in_schema</span>(<span class="st">&quot;sales&quot;</span>, <span class="st">&quot;salesorderheader&quot;</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb61-2" data-line-number="2"><span class="st">  </span><span class="kw">select</span>(orderdate, subtotal, onlineorderflag) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb61-3" data-line-number="3"><span class="st">  </span><span class="kw">mutate</span>(</a>
+<a class="sourceLine" id="cb61-4" data-line-number="4">    <span class="dt">orderdate =</span> <span class="kw">as.Date</span>(orderdate)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb61-5" data-line-number="5"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">adjusted_orderdate =</span> <span class="kw">as.Date</span>(<span class="kw">so_adj_date</span>(orderdate, onlineorderflag))) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb61-6" data-line-number="6"><span class="st">  </span><span class="kw">filter</span>(onlineorderflag <span class="op">==</span><span class="st"> </span><span class="ot">FALSE</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb61-7" data-line-number="7"><span class="st">  </span><span class="kw">group_by</span>(adjusted_orderdate) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb61-8" data-line-number="8"><span class="st">  </span><span class="kw">summarize</span>(</a>
+<a class="sourceLine" id="cb61-9" data-line-number="9">    <span class="dt">total_soh_dollars =</span> <span class="kw">round</span>(<span class="kw">sum</span>(subtotal, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">2</span>),</a>
+<a class="sourceLine" id="cb61-10" data-line-number="10">    <span class="dt">soh_count =</span> <span class="kw">n</span>()</a>
+<a class="sourceLine" id="cb61-11" data-line-number="11">  ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb61-12" data-line-number="12"><span class="st">  </span><span class="kw">collect</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb61-13" data-line-number="13"><span class="st">  </span><span class="kw">mutate</span>( <span class="dt">year_month =</span> <span class="kw">floor_date</span>(adjusted_orderdate, <span class="st">&quot;month&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb61-14" data-line-number="14"><span class="st">    </span><span class="kw">group_by</span>(year_month) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb61-15" data-line-number="15"><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb61-16" data-line-number="16"><span class="st">  </span><span class="kw">arrange</span>(year_month)</a></code></pre></div>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb62-1" data-line-number="1">monthly_sales_rep_adjusted_with_psql_function <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb62-2" data-line-number="2"><span class="st">  </span><span class="kw">filter</span>(<span class="kw">year</span>(year_month) <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">2011</span>,<span class="dv">2014</span>))</a></code></pre></div>
+<pre><code>## # A tibble: 14 x 4
+##    adjusted_orderdate total_soh_dollars soh_count year_month
+##    &lt;date&gt;                         &lt;dbl&gt;     &lt;int&gt; &lt;date&gt;    
+##  1 2011-05-31                   489329.        38 2011-05-01
+##  2 2011-06-30                  1538408.        75 2011-06-01
+##  3 2011-07-31                  1165897.        60 2011-07-01
+##  4 2011-08-31                   844721         40 2011-08-01
+##  5 2011-09-30                  2324136.        90 2011-09-01
+##  6 2011-10-31                  1702945.        63 2011-10-01
+##  7 2011-11-30                   713117.        40 2011-11-01
+##  8 2011-12-31                  1900789.        79 2011-12-01
+##  9 2014-01-28                     1565.         2 2014-01-01
+## 10 2014-01-29                  2737188.       173 2014-01-01
+## 11 2014-02-28                  2207772.        94 2014-02-01
+## 12 2014-03-30                     7291.         2 2014-03-01
+## 13 2014-03-31                  3314519.       178 2014-03-01
+## 14 2014-04-30                  3416764.       181 2014-04-01</code></pre>
+<p>There’s one minor difference between the two:</p>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb64-1" data-line-number="1"><span class="kw">all_equal</span>(monthly_sales_rep_adjusted, monthly_sales_rep_adjusted_with_psql_function)</a></code></pre></div>
+<pre><code>## [1] &quot;Cols in y but not x: `adjusted_orderdate`. &quot;</code></pre>
+</div>
+<div id="monthly-sales-by-order-type-with-corrected-dates-relative-to-a-trend-line" class="section level3">
+<h3><span class="header-section-number">1.9.4</span> Monthly Sales by Order Type with corrected dates – relative to a trend line</h3>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb66-1" data-line-number="1">monthly_sales_rep_as_is &lt;-<span class="st"> </span>monthly_sales_w_channel <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb66-2" data-line-number="2"><span class="st">  </span><span class="kw">filter</span>(onlineorderflag <span class="op">==</span><span class="st"> &quot;Sales Rep&quot;</span>)</a>
+<a class="sourceLine" id="cb66-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb66-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb66-5" data-line-number="5"><span class="kw">ggplot</span>(</a>
+<a class="sourceLine" id="cb66-6" data-line-number="6">  <span class="dt">data =</span> monthly_sales_rep_adjusted,</a>
+<a class="sourceLine" id="cb66-7" data-line-number="7">  <span class="kw">aes</span>(<span class="dt">x =</span> year_month, <span class="dt">y =</span> soh_count)</a>
+<a class="sourceLine" id="cb66-8" data-line-number="8">) <span class="op">+</span></a>
+<a class="sourceLine" id="cb66-9" data-line-number="9"><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">alpha =</span> <span class="fl">.5</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb66-10" data-line-number="10"><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">se =</span> <span class="ot">FALSE</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb66-11" data-line-number="11"><span class="st">  </span><span class="kw">geom_smooth</span>(</a>
+<a class="sourceLine" id="cb66-12" data-line-number="12">    <span class="dt">data =</span> monthly_sales_rep_as_is, <span class="kw">aes</span>(</a>
+<a class="sourceLine" id="cb66-13" data-line-number="13">      orderdate, soh_count</a>
+<a class="sourceLine" id="cb66-14" data-line-number="14">    ), <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">alpha =</span> <span class="fl">.5</span>,</a>
+<a class="sourceLine" id="cb66-15" data-line-number="15">    <span class="dt">se =</span> <span class="ot">FALSE</span></a>
+<a class="sourceLine" id="cb66-16" data-line-number="16">  ) <span class="op">+</span></a>
+<a class="sourceLine" id="cb66-17" data-line-number="17"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">.5</span>)) <span class="op">+</span><span class="st"> </span><span class="co"># Center ggplot title</span></a>
+<a class="sourceLine" id="cb66-18" data-line-number="18"><span class="st">  </span><span class="kw">labs</span>(</a>
+<a class="sourceLine" id="cb66-19" data-line-number="19">    <span class="dt">title =</span> <span class="kw">glue</span>(</a>
+<a class="sourceLine" id="cb66-20" data-line-number="20">      <span class="st">&quot;Number of Sales per month using corrected dates</span><span class="ch">\n</span><span class="st">&quot;</span>,</a>
+<a class="sourceLine" id="cb66-21" data-line-number="21">      <span class="st">&quot;Counting Sales Order Header records&quot;</span></a>
+<a class="sourceLine" id="cb66-22" data-line-number="22">    ),</a>
+<a class="sourceLine" id="cb66-23" data-line-number="23">    <span class="dt">x =</span> <span class="kw">paste0</span>(<span class="st">&quot;Monthly - between &quot;</span>, min_soh_dt, <span class="st">&quot; - &quot;</span>, max_soh_dt),</a>
+<a class="sourceLine" id="cb66-24" data-line-number="24">    <span class="dt">y =</span> <span class="st">&quot;Number of Sales Recorded&quot;</span></a>
+<a class="sourceLine" id="cb66-25" data-line-number="25">  )</a></code></pre></div>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb67-1" data-line-number="1">monthly_sales_rep_as_is &lt;-<span class="st"> </span>monthly_sales_w_channel <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb67-2" data-line-number="2"><span class="st">  </span><span class="kw">filter</span>(onlineorderflag <span class="op">==</span><span class="st"> &quot;Sales Rep&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb67-3" data-line-number="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">orderdate =</span> <span class="kw">as.Date</span>(<span class="kw">floor_date</span>(orderdate, <span class="dt">unit =</span> <span class="st">&quot;month&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb67-4" data-line-number="4"><span class="st">  </span><span class="kw">group_by</span>(orderdate) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb67-5" data-line-number="5"><span class="st">  </span><span class="kw">summarize</span>(</a>
+<a class="sourceLine" id="cb67-6" data-line-number="6">      <span class="dt">total_soh_dollars =</span> <span class="kw">round</span>(<span class="kw">sum</span>(total_soh_dollars, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), <span class="dv">2</span>),</a>
+<a class="sourceLine" id="cb67-7" data-line-number="7">      <span class="dt">soh_count =</span> <span class="kw">sum</span>(soh_count)</a>
+<a class="sourceLine" id="cb67-8" data-line-number="8">    ) </a>
+<a class="sourceLine" id="cb67-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb67-10" data-line-number="10">monthly_sales_rep_as_is <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb67-11" data-line-number="11"><span class="st">  </span><span class="kw">filter</span>(<span class="kw">year</span>(orderdate) <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">2011</span>,<span class="dv">2014</span>))</a></code></pre></div>
+<pre><code>## # A tibble: 10 x 3
+##    orderdate  total_soh_dollars soh_count
+##    &lt;date&gt;                 &lt;dbl&gt;     &lt;int&gt;
+##  1 2011-05-01           489329.        38
+##  2 2011-07-01          1538408.        75
+##  3 2011-08-01          2010618.       100
+##  4 2011-10-01          4027080.       153
+##  5 2011-12-01           713117.        40
+##  6 2014-01-01          2738752.       175
+##  7 2014-02-01             3231.         3
+##  8 2014-03-01          5526352.       271
+##  9 2014-04-01             1285.         2
+## 10 2014-05-01          3415479.       179</code></pre>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb69-1" data-line-number="1"><span class="kw">ggplot</span>(</a>
+<a class="sourceLine" id="cb69-2" data-line-number="2">  <span class="dt">data =</span> monthly_sales_rep_adjusted,</a>
+<a class="sourceLine" id="cb69-3" data-line-number="3">  <span class="kw">aes</span>(<span class="dt">x =</span> year_month, <span class="dt">y =</span> soh_count)</a>
+<a class="sourceLine" id="cb69-4" data-line-number="4">) <span class="op">+</span></a>
+<a class="sourceLine" id="cb69-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">alpha =</span> <span class="fl">.5</span> , <span class="dt">color =</span> <span class="st">&quot;green&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb69-6" data-line-number="6"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="fl">.5</span> , <span class="dt">color =</span> <span class="st">&quot;green&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb69-7" data-line-number="7"><span class="st">  </span><span class="kw">geom_point</span>(</a>
+<a class="sourceLine" id="cb69-8" data-line-number="8">    <span class="dt">data =</span> monthly_sales_rep_as_is, <span class="kw">aes</span>(</a>
+<a class="sourceLine" id="cb69-9" data-line-number="9">      orderdate, soh_count), <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">alpha =</span> <span class="fl">.5</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb69-10" data-line-number="10"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">.5</span>)) <span class="op">+</span><span class="st"> </span><span class="co"># Center ggplot title</span></a>
+<a class="sourceLine" id="cb69-11" data-line-number="11"><span class="st">  </span><span class="kw">annotate</span>(<span class="dt">geom =</span> <span class="st">&quot;text&quot;</span>, <span class="dt">y =</span> <span class="dv">250</span>, <span class="dt">x =</span> <span class="kw">as.Date</span>(<span class="st">&quot;2011-06-01&quot;</span>), </a>
+<a class="sourceLine" id="cb69-12" data-line-number="12">           <span class="dt">label =</span> <span class="st">&quot;Green dots: corrected data</span><span class="ch">\n</span><span class="st">Orange dots: original data</span><span class="ch">\n</span><span class="st">Brown dots: unchanged&quot;</span>,</a>
+<a class="sourceLine" id="cb69-13" data-line-number="13">           <span class="dt">hjust =</span> <span class="dv">0</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb69-14" data-line-number="14"><span class="st">  </span><span class="kw">labs</span>(</a>
+<a class="sourceLine" id="cb69-15" data-line-number="15">    <span class="dt">title =</span> <span class="kw">glue</span>(</a>
+<a class="sourceLine" id="cb69-16" data-line-number="16">      <span class="st">&quot;Number of Sales per month </span><span class="ch">\n</span><span class="st">Original and corrected amounts&quot;</span></a>
+<a class="sourceLine" id="cb69-17" data-line-number="17">    ),</a>
+<a class="sourceLine" id="cb69-18" data-line-number="18">    <span class="dt">subtitle =</span> <span class="kw">glue</span>(<span class="st">&quot;Subtitle&quot;</span>),</a>
+<a class="sourceLine" id="cb69-19" data-line-number="19">    <span class="dt">caption =</span> <span class="kw">glue</span>(<span class="st">&quot;Datasets Include: </span><span class="ch">\n</span></a>
+<a class="sourceLine" id="cb69-20" data-line-number="20"><span class="st">                   monthly_sales_rep_adjusted, monthly_sales_rep_as_is&quot;</span>),</a>
+<a class="sourceLine" id="cb69-21" data-line-number="21">    <span class="dt">x =</span> <span class="kw">paste0</span>(<span class="st">&quot;Monthly - between &quot;</span>, min_soh_dt, <span class="st">&quot; - &quot;</span>, max_soh_dt),</a>
+<a class="sourceLine" id="cb69-22" data-line-number="22">    <span class="dt">y =</span> <span class="st">&quot;Number of Sales Recorded&quot;</span></a>
+<a class="sourceLine" id="cb69-23" data-line-number="23">  )</a></code></pre></div>
+<p><img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb70-1" data-line-number="1">mon_sales &lt;-<span class="st"> </span>monthly_sales_rep_adjusted <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb70-2" data-line-number="2"><span class="st">  </span><span class="kw">rename</span>(<span class="dt">orderdate =</span> year_month)</a>
+<a class="sourceLine" id="cb70-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb70-4" data-line-number="4">sales_original_and_adjusted &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(mon_sales, monthly_sales_rep_as_is, <span class="dt">.id =</span> <span class="st">&quot;date_kind&quot;</span>)</a></code></pre></div>
+<p>Does this graph add anything important?</p>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb71-1" data-line-number="1"><span class="kw">ggplot</span>(</a>
+<a class="sourceLine" id="cb71-2" data-line-number="2">  <span class="dt">data =</span> sales_original_and_adjusted,</a>
+<a class="sourceLine" id="cb71-3" data-line-number="3">  <span class="kw">aes</span>(<span class="dt">x =</span> orderdate, <span class="dt">y =</span> soh_count, <span class="dt">fill =</span> date_kind)</a>
+<a class="sourceLine" id="cb71-4" data-line-number="4">) <span class="op">+</span></a>
+<a class="sourceLine" id="cb71-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_col</span>(<span class="dt">position =</span> <span class="st">&quot;dodge&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb71-6" data-line-number="6"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">.5</span>)) <span class="op">+</span><span class="st"> </span><span class="co"># Center ggplot title</span></a>
+<a class="sourceLine" id="cb71-7" data-line-number="7"><span class="st">  </span><span class="kw">labs</span>(</a>
+<a class="sourceLine" id="cb71-8" data-line-number="8">    <span class="dt">title =</span> <span class="kw">glue</span>(</a>
+<a class="sourceLine" id="cb71-9" data-line-number="9">      <span class="st">&quot;Number of Sales per month using corrected dates</span><span class="ch">\n</span><span class="st">&quot;</span>,</a>
+<a class="sourceLine" id="cb71-10" data-line-number="10">      <span class="st">&quot;Counting Sales Order Header records&quot;</span></a>
+<a class="sourceLine" id="cb71-11" data-line-number="11">    ),</a>
+<a class="sourceLine" id="cb71-12" data-line-number="12">    <span class="dt">subtitle =</span> <span class="kw">glue</span>(<span class="st">&quot;Subtitle&quot;</span>),</a>
+<a class="sourceLine" id="cb71-13" data-line-number="13">    <span class="dt">caption =</span> <span class="kw">glue</span>(<span class="st">&quot;Datasets Include: </span><span class="ch">\n</span></a>
+<a class="sourceLine" id="cb71-14" data-line-number="14"><span class="st">                   monthly_sales_rep_adjusted, monthly_sales_rep_as_is&quot;</span>),</a>
+<a class="sourceLine" id="cb71-15" data-line-number="15">    <span class="dt">x =</span> <span class="kw">paste0</span>(<span class="st">&quot;Monthly - between &quot;</span>, min_soh_dt, <span class="st">&quot; - &quot;</span>, max_soh_dt),</a>
+<a class="sourceLine" id="cb71-16" data-line-number="16">    <span class="dt">y =</span> <span class="st">&quot;Number of Sales Recorded&quot;</span>,</a>
+<a class="sourceLine" id="cb71-17" data-line-number="17">    <span class="dt">fill =</span> <span class="st">&quot;Date</span><span class="ch">\n</span><span class="st">adjustment&quot;</span></a>
+<a class="sourceLine" id="cb71-18" data-line-number="18">  ) </a></code></pre></div>
+<div class="figure">
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-26-1.png" alt="Could be dumped?" width="672" />
+<p class="caption">
+(#fig:unnamed-chunk-26)Could be dumped?
+</p>
+</div>
+<p>additive graph showing how correction adds in some months and subtracts in others.</p>
+<p>only show months where there is a mis-match.</p>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb72-1" data-line-number="1"><span class="kw">ggplot</span>(<span class="dt">data =</span> monthly_sales_rep_adjusted, <span class="kw">aes</span>(<span class="dt">x =</span> year_month, <span class="dt">y =</span> total_soh_dollars)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb72-2" data-line-number="2"><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb72-3" data-line-number="3"><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">labels =</span> dollar) <span class="op">+</span></a>
+<a class="sourceLine" id="cb72-4" data-line-number="4"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="fl">0.5</span>)) <span class="op">+</span><span class="st"> </span><span class="co"># Center the title</span></a>
+<a class="sourceLine" id="cb72-5" data-line-number="5"><span class="st">  </span><span class="kw">labs</span>(</a>
+<a class="sourceLine" id="cb72-6" data-line-number="6">    <span class="dt">title =</span> <span class="kw">glue</span>(<span class="st">&quot;Sales by Month - Sales Reps only</span><span class="ch">\n</span><span class="st">&quot;</span>, {<span class="kw">format</span>(min_soh_dt, <span class="st">&quot;%B %d, %Y&quot;</span>)} , <span class="st">&quot; to  &quot;</span>, </a>
+<a class="sourceLine" id="cb72-7" data-line-number="7">            {<span class="kw">format</span>(max_soh_dt, <span class="st">&quot;%B %d, %Y&quot;</span>)}),</a>
+<a class="sourceLine" id="cb72-8" data-line-number="8">    <span class="dt">x =</span> <span class="st">&quot;Month - Adjusted dates&quot;</span>,</a>
+<a class="sourceLine" id="cb72-9" data-line-number="9">    <span class="dt">y =</span> <span class="st">&quot;Sales Dollars&quot;</span></a>
+<a class="sourceLine" id="cb72-10" data-line-number="10">  )</a></code></pre></div>
+<p><img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+<p>Sales still seem to gyrate! We have found that sales rep sales data is often very strange.</p>
+</div>
+</div>
+<div id="disconnect-from-the-database-and-stop-docker" class="section level2">
+<h2><span class="header-section-number">1.10</span> Disconnect from the database and stop Docker</h2>
+<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb73-1" data-line-number="1"><span class="kw">dbDisconnect</span>(con)</a>
+<a class="sourceLine" id="cb73-2" data-line-number="2"><span class="co"># when running interactively use:</span></a>
+<a class="sourceLine" id="cb73-3" data-line-number="3"><span class="kw">connection_close</span>(con) </a></code></pre></div>
+<pre><code>## Warning in connection_release(conn@ptr): Already disconnected</code></pre>
+<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb75-1" data-line-number="1"><span class="kw">sp_docker_stop</span>(<span class="st">&quot;adventureworks&quot;</span>)</a></code></pre></div>
+</div>
+</div>
+<!--bookdown:body:end-->
+            </section>
+
+          </div>
+        </div>
+      </div>
+<!--bookdown:link_prev-->
+<!--bookdown:link_next-->
+    </div>
+  </div>
+<!--bookdown:config-->
+
+</body>
+
+</html>

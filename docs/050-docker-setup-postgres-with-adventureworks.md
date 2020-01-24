@@ -53,7 +53,9 @@ sp_check_that_docker_is_up()
 ```
 
 ```
-## [1] "Docker is up but running no containers"
+## [1] "Docker is up, running these containers:"                                                                                                           
+## [2] "CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES"           
+## [3] "f9bd78abcbf0        postgres:11         \"docker-entrypoint.s…\"   2 days ago          Up 42 minutes       0.0.0.0:5432->5432/tcp   adventureworks"
 ```
 
 ## Clean up if appropriate
@@ -191,7 +193,7 @@ sp_show_all_docker_containers()
 
 ```
 ## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## 0b074616f226        postgres:11         "docker-entrypoint.s…"   25 seconds ago      Exited (0) Less than a second ago                       adventureworks
+## c94c1d33f648        postgres:11         "docker-entrypoint.s…"   25 seconds ago      Exited (0) Less than a second ago                       adventureworks
 ```
 
 Next time, you can just use this command to start the container: 
