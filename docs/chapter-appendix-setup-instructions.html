@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<html lang="" xml:lang="">
 <head>
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>B - Setup instructions | Exploring Enterprise Databases with R: A Tidyverse Approach</title>
   <meta name="description" content="An introduction to Docker and PostgreSQL for R users to simulate use cases behind corporate walls." />
-  <meta name="generator" content="bookdown 0.16 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.17 and GitBook 2.6.7" />
 
   <meta property="og:title" content="B - Setup instructions | Exploring Enterprise Databases with R: A Tidyverse Approach" />
   <meta property="og:type" content="book" />
@@ -24,7 +24,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, and Ian Frantz" />
 
 
-<meta name="date" content="2020-01-16" />
+<meta name="date" content="2020-01-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -295,15 +295,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="11.2.1" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#why-database-views-are-useful"><i class="fa fa-check"></i><b>11.2.1</b> Why database <code>views</code> are useful</a></li>
 <li class="chapter" data-level="11.2.2" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#rely-on-and-be-critical-of-views"><i class="fa fa-check"></i><b>11.2.2</b> Rely on <strong>and</strong> be critical of <code>views</code></a></li>
 </ul></li>
-<li class="chapter" data-level="11.3" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#unpacking-the-elements-of-a-view-tidyverse"><i class="fa fa-check"></i><b>11.3</b> Unpacking the elements of a <code>view</code> Tidyverse</a><ul>
+<li class="chapter" data-level="11.3" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#unpacking-the-elements-of-a-view-in-the-tidyverse"><i class="fa fa-check"></i><b>11.3</b> Unpacking the elements of a <code>view</code> in the Tidyverse</a><ul>
 <li class="chapter" data-level="11.3.1" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#use-a-view-just-like-any-other-table"><i class="fa fa-check"></i><b>11.3.1</b> Use a <code>view</code> just like any other table</a></li>
 <li class="chapter" data-level="11.3.2" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#sql-source-code"><i class="fa fa-check"></i><b>11.3.2</b> SQL source code</a></li>
 <li class="chapter" data-level="11.3.3" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#the-erd-as-context-for-sql-code"><i class="fa fa-check"></i><b>11.3.3</b> The ERD as context for SQL code</a></li>
-<li class="chapter" data-level="11.3.4" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#tables-and-columns"><i class="fa fa-check"></i><b>11.3.4</b> Tables and columns</a></li>
+<li class="chapter" data-level="11.3.4" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#selecting-relevant-tables-and-columns"><i class="fa fa-check"></i><b>11.3.4</b> Selecting relevant tables and columns</a></li>
 <li class="chapter" data-level="11.3.5" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#join-the-tables-together"><i class="fa fa-check"></i><b>11.3.5</b> Join the tables together</a></li>
 </ul></li>
 <li class="chapter" data-level="11.4" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#compare-the-official-from-a-view-and-the-dplyr-output"><i class="fa fa-check"></i><b>11.4</b> Compare the official from a view and the dplyr output</a></li>
-<li class="chapter" data-level="11.5" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#revise-the-view"><i class="fa fa-check"></i><b>11.5</b> Revise the view</a></li>
+<li class="chapter" data-level="11.5" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#revise-the-view-to-summarize-by-quarter-not-fiscal-year"><i class="fa fa-check"></i><b>11.5</b> Revise the view to summarize by quarter not fiscal year</a></li>
 <li class="chapter" data-level="11.6" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#save-a-view-in-the-database"><i class="fa fa-check"></i><b>11.6</b> Save a <code>view</code> in the database</a></li>
 </ul></li>
 <li class="chapter" data-level="12" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html"><i class="fa fa-check"></i><b>12</b> Getting metadata about and from PostgreSQL</a><ul>
@@ -458,17 +458,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>In addition to the current version of R and RStudio, you will need current versions of the following packages:</p>
 <ul>
 <li><code>DBI</code> <span class="citation">(R Special Interest Group on Databases (R-SIG-DB), Wickham, and Müller <a href="#ref-R-DBI">2019</a>)</span></li>
-<li><code>DiagrammeR</code> <span class="citation">(Iannone <a href="#ref-R-DiagrammeR">2019</a>)</span></li>
+<li><code>DiagrammeR</code> <span class="citation">(Iannone <a href="#ref-R-DiagrammeR">2020</a>)</span></li>
 <li><code>RPostgres</code> <span class="citation">(Wickham, Ooms, and Müller <a href="#ref-R-RPostgres">2019</a>)</span></li>
 <li><code>dbplyr</code> <span class="citation">(Wickham and Ruiz <a href="#ref-R-dbplyr">2019</a>)</span></li>
 <li><code>devtools</code> <span class="citation">(Wickham, Hester, and Chang <a href="#ref-R-devtools">2019</a>)</span></li>
 <li><code>downloader</code> <span class="citation">(Chang <a href="#ref-R-downloader">2015</a>)</span></li>
 <li><code>glue</code> <span class="citation">(Hester <a href="#ref-R-glue">2019</a>)</span></li>
 <li><code>here</code> <span class="citation">(Müller <a href="#ref-R-here">2017</a>)</span></li>
-<li><code>knitr</code> <span class="citation">(Xie <a href="#ref-R-knitr">2019</a><a href="#ref-R-knitr">b</a>)</span></li>
+<li><code>knitr</code> <span class="citation">(Xie <a href="#ref-R-knitr">2020</a><a href="#ref-R-knitr">b</a>)</span></li>
 <li><code>skimr</code> <span class="citation">(Waring et al. <a href="#ref-R-skimr">2019</a>)</span></li>
 <li><p><code>tidyverse</code> <span class="citation">(Wickham <a href="#ref-R-tidyverse">2019</a>)</span></p></li>
-<li><p><code>bookdown</code> <span class="citation">(Xie <a href="#ref-R-bookdown">2019</a><a href="#ref-R-bookdown">a</a>)</span> (for compiling the book, if you want to)</p></li>
+<li><p><code>bookdown</code> <span class="citation">(Xie <a href="#ref-R-bookdown">2020</a><a href="#ref-R-bookdown">a</a>)</span> (for compiling the book, if you want to)</p></li>
 </ul>
 </div>
 <div id="r-rstudio-and-git" class="section level2">
@@ -532,7 +532,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Hester, Jim. 2019. <em>Glue: Interpreted String Literals</em>. <a href="https://CRAN.R-project.org/package=glue">https://CRAN.R-project.org/package=glue</a>.</p>
 </div>
 <div id="ref-R-DiagrammeR">
-<p>Iannone, Richard. 2019. <em>DiagrammeR: Graph/Network Visualization</em>. <a href="https://CRAN.R-project.org/package=DiagrammeR">https://CRAN.R-project.org/package=DiagrammeR</a>.</p>
+<p>Iannone, Richard. 2020. <em>DiagrammeR: Graph/Network Visualization</em>. <a href="https://CRAN.R-project.org/package=DiagrammeR">https://CRAN.R-project.org/package=DiagrammeR</a>.</p>
 </div>
 <div id="ref-R-here">
 <p>Müller, Kirill. 2017. <em>Here: A Simpler Way to Find Your Files</em>. <a href="https://CRAN.R-project.org/package=here">https://CRAN.R-project.org/package=here</a>.</p>
@@ -562,10 +562,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Wickham, Hadley, and Edgar Ruiz. 2019. <em>Dbplyr: A ’Dplyr’ Back End for Databases</em>. <a href="https://CRAN.R-project.org/package=dbplyr">https://CRAN.R-project.org/package=dbplyr</a>.</p>
 </div>
 <div id="ref-R-bookdown">
-<p>Xie, Yihui. 2019a. <em>Bookdown: Authoring Books and Technical Documents with R Markdown</em>. <a href="https://CRAN.R-project.org/package=bookdown">https://CRAN.R-project.org/package=bookdown</a>.</p>
+<p>Xie, Yihui. 2020a. <em>Bookdown: Authoring Books and Technical Documents with R Markdown</em>. <a href="https://CRAN.R-project.org/package=bookdown">https://CRAN.R-project.org/package=bookdown</a>.</p>
 </div>
 <div id="ref-R-knitr">
-<p>Xie, Yihui. 2019b. <em>Knitr: A General-Purpose Package for Dynamic Report Generation in R</em>. <a href="https://CRAN.R-project.org/package=knitr">https://CRAN.R-project.org/package=knitr</a>.</p>
+<p>Xie, Yihui. 2020b. <em>Knitr: A General-Purpose Package for Dynamic Report Generation in R</em>. <a href="https://CRAN.R-project.org/package=knitr">https://CRAN.R-project.org/package=knitr</a>.</p>
 </div>
 </div>
             </section>

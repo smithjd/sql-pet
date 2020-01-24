@@ -160,8 +160,8 @@ ggplot(data = annual_sales, aes(x = year, y = as.numeric(soh_count))) +
 ```
 
 <div class="figure">
-<img src="083-exploring-a-single-table_files/figure-html/average dollars per sale - v2-1.png" alt="Total Number of orders by year" width="384" />
-<p class="caption">(\#fig:average dollars per sale - v2)Total Number of orders by year</p>
+<img src="083-exploring-a-single-table_files/figure-html/Average dollars per sale - v2-1.png" alt="Total Number of orders by year" width="384" />
+<p class="caption">(\#fig:Average dollars per sale - v2)Total Number of orders by year</p>
 </div>
 
 Although 2013 was the best year in terms of total number of orders, there were many more in 2014 compared with 2012.  That suggests looking at the average dollars per sale for each year.

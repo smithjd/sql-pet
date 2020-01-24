@@ -28,13 +28,11 @@ library(bookdown)
 library(here)
 library(lubridate)
 library(skimr)
-# library(DiagrammeR)
-
-library(scales) # ggplot xy scales
-theme_set(theme_light())
+library(gt)
 ```
 
 Connect to `adventureworks`:
+
 
 ```r
 sp_docker_start("adventureworks")
@@ -56,13 +54,13 @@ con <- dbConnect(          # use in other settings
   password = "postgres",
   dbname = "adventureworks"
 )
+
 dbExecute(con, "set search_path to sales;")
 ```
 
 ```
 ## [1] 0
 ```
-
 
 ## The role of database `views`
 
@@ -81,11 +79,11 @@ Database `views` are useful for many reasons.
 
 ### Rely on **and** be critical of `views`
 
-Because they represent a conventional view of the database, a `view` may seem quite boring; remember why they are very important. Just because they are conventional and authorized, they may still need verification or auditing when used for a purpose other than the original intent. They can guide you toward what you need from the database but they could also mislead because they are easy to use and available.  People may forget why a specific view exists and who is using it. Therefore any given view might be a forgotten vestige or part of a production data pipeline or a priceless nugget of insight. How can you tell? Consider the owner and schema, whether it's a materialized index view or not, if it has a trigger and try to deduce the intentionality behind the view.
+Because they represent a conventional view of the database, it might seem like a `view` is beneath notice.  Even though they are conventional and authorized, they may still need verification or auditing, especially when used for a purpose other than the original intent. They can guide you toward what you need from the database but they could also mislead because they are easy to use and available.  People may forget why a specific view exists and who is using it. Therefore any given view might be a forgotten vestige or part of a production data pipeline or a priceless nugget of insight. How can you tell? Consider the owner and schema, whether it's a materialized index view or not, if it has a trigger and try to deduce the intention behind the view.
 
-## Unpacking the elements of a `view` Tidyverse
+## Unpacking the elements of a `view` in the Tidyverse
 
-Since a view is just like an ordinary table, many of the tools we've become familiar with work the same.  The simplest way of getting a list of columns in a view is the same as it is for a regular table:
+Since a view is just like an ordinary table, we can use the same tools in the same way as they are used on a database table.  For example, the simplest way of getting a list of columns in a view is the same as it is for a regular table:
 
 
 ```r
@@ -99,7 +97,7 @@ dbListFields(con, "vsalespersonsalesbyfiscalyearsdata")
 
 ### Use a `view` just like any other table
 
-From a retrieval perspective a database `view` is just like any other table.  Using a view to retrieve data from the database will be completely standard across all flavors of SQL.  (To find out what a view does behind the scenes requires that you use functions that are **not** standard.)
+From a retrieval perspective a database `view` is just like any other table.  Using a view to retrieve data from the database will be completely standard across all flavors of SQL.  
 
 
 ```r
@@ -120,9 +118,12 @@ str(v_salesperson_sales_by_fiscal_years_data)
 ##  $ fiscalyear    : num  2011 2012 2013 2014 2011 ...
 ```
 
+As we will see, our sample `view`,  `vsalespersonsalesbyfiscalyearsdata` joins 5 different tables.  We can expect that subsetting or calculation on any of the columns in the component tables will behave as expected, doing the work on the database side.  For example, the following query filters on a column that exists in one of the `view`'s component tables.
+
+
 ```r
 tbl(con, in_schema("sales","vsalespersonsalesbyfiscalyearsdata")) %>% 
-  filter(salespersonid == 275) %>% 
+  filter(salesterritory == "Northeast") %>% 
   collect()
 ```
 
@@ -130,15 +131,16 @@ tbl(con, in_schema("sales","vsalespersonsalesbyfiscalyearsdata")) %>%
 ## # A tibble: 4 x 6
 ##   salespersonid fullname     jobtitle       salesterritory salestotal fiscalyear
 ##           <int> <chr>        <chr>          <chr>               <dbl>      <dbl>
-## 1           275 Michael G B… Sales Represe… Northeast          63763.       2011
-## 2           275 Michael G B… Sales Represe… Northeast        2399593.       2012
-## 3           275 Michael G B… Sales Represe… Northeast        3765459.       2013
-## 4           275 Michael G B… Sales Represe… Northeast        3065088.       2014
+## 1           275 Michael G B… Sales Represe… Northeast        2399593.       2012
+## 2           275 Michael G B… Sales Represe… Northeast        3065088.       2014
+## 3           275 Michael G B… Sales Represe… Northeast          63763.       2011
+## 4           275 Michael G B… Sales Represe… Northeast        3765459.       2013
 ```
+Although finding out what a view does behind the scenes requires that you use functions that are **not** standard, doing so has several general purposes: 
 
-view replication is a big PITA. do it to understand the view mechanics and do that to extend or modify the view.  at the end: share with others via the DBA.
-
-Start with what you need, then "look up" with other tables.  Within the constraints of foreign keys.  Index considerations.
+  * It is satisfying to know what's going on behind the scenes.
+  * Specific elements or components of a `view` might be worth plagiarizing or incorporating in our queries.
+  * It is necessary to understand the mechanics of a `view` if we are going to build on what it does or intend to extend or modify it.
 
 ### SQL source code
 
@@ -185,20 +187,14 @@ Even if you don't intend to become completely fluent in SQL, it's useful to stud
 
 ### The ERD as context for SQL code
 
-A database Entity Relationship Diagram (ERD) is very helpful in making sense of the SQL in a `view`.  The ERD for `AdventureWorks` is [here](https://i.stack.imgur.com/LMu4W.gif). 
-Save and study the SQL.
+A database Entity Relationship Diagram (ERD) is very helpful in making sense of the SQL in a `view`.  The ERD for `AdventureWorks` is [here](https://i.stack.imgur.com/LMu4W.gif). If a published ERD is not available, a tool like the PostgreSQL *pg_modeler* is capable of generating an ERD (or at least describing the portion of the database that is visible to you).
 
-### Tables and columns
+### Selecting relevant tables and columns
 
-use tools like PostgreSQL pg_modeler to get an ERD.
-
-
-It can be helpful to actually mark up the ERD to identify the specific tables that are involved in the view you are going to reproduce.
+Before bginning to write code, it can be helpful to actually mark up the ERD to identify the specific tables that are involved in the view you are going to reproduce.
 ![](screenshots/AW-2008-OLTP-ERD.gif)
 
-The `sales.vsalespersonsalesbyfiscalyearsdata` view joins data from five different tables
-
-Define each table that is involved and identify the columns that will be needed from that table.  The tables that are involved are:
+Define each table that is involved and identify the columns that will be needed from that table.  The `sales.vsalespersonsalesbyfiscalyearsdata` view joins data from five different tables:
 
   1. sales_order_header
   2. sales_territory
@@ -206,7 +202,7 @@ Define each table that is involved and identify the columns that will be needed 
   4. employee
   5. person
 
-Select the columns and do any necessary changes or renaming.  Avoid `dbplyr` default joins by **not** including `rowguid` and `ModifiedDate` columns, which appear in almost all `AdventureWorks` tables.  Also, we follow the convention that any column that we change or create on the fly uses a snake case naming convention.
+For each of the tables in the `view`, we select the columns that appear in the `sales.vsalespersonsalesbyfiscalyearsdata`.  Selecting columns in this way prevents joins that `dbplyr` would make automatically based on common column names such as `rowguid` and `ModifiedDate` columns, which appear in almost all `AdventureWorks` tables.  In the following code we follow the convention that any column that we change or create on the fly uses a snake case naming convention.
 
 ```r
 sales_order_header <- tbl(con, in_schema("sales", "salesorderheader")) %>% 
@@ -220,7 +216,18 @@ sales_person <- tbl(con, in_schema("sales", "salesperson")) %>%
 
 employee <- tbl(con, in_schema("humanresources", "employee")) %>% 
   select(businessentityid, jobtitle)
+```
 
+In addition to selecting rows as shown in the previous statements,  `mutate` and other functions help us replicate code in the `view` such as:
+
+    ((p.firstname::text || ' '::text) ||
+    COALESCE(p.middlename::text || ' '::text,
+    ''::text)) || p.lastname::text AS fullname
+
+The following dplyr code pastes the first, middle and last names together to make `full_name`:
+
+
+```r
 person <- tbl(con, in_schema("person", "person")) %>% 
   mutate(full_name = paste(firstname, middlename, lastname)) %>% 
   select(businessentityid, full_name)
@@ -279,7 +286,7 @@ getnames(person)
 
 ### Join the tables together
 
-Join all of the data pertaining to a person.  Notice that since all of these 4 tables contain `businessentityid`, dplyr will join them all on that common column automatically.
+Join all of the data pertaining to a person.  Notice that since each of these 4 tables contain `businessentityid`, dplyr will join them all on that common column automatically.  And since we know that all of these tables are small, we don't mind a query that joins and downloads all the data.
 
 
 ```r
@@ -308,10 +315,12 @@ str(salesperson_info)
 ##  $ territory_name  : chr  NA "Northeast" "Southwest" "Central" ...
 ```
 
-Discuss:
-  `date_part('year'::text, soh.orderdate + '6 mons'::interval) AS fiscalyear`
+The one part of the view that we haven't replicated is:
 
-Do a crude version with `orderdate`.  All of the work can be done on the database server.
+  `date_part('year'::text, soh.orderdate`
+  `+ '6 mons'::interval) AS fiscalyear`
+
+For now we can skip the fiscalyear calculation and just aggregate and download the data by `orderdate`. That will collapse many rows into a much smaller table since we know from our previous investigation into how sales are recorded for Sales Reps that all sales are recorded more or less once a month.  Therefore most of the crunching happens on the database server side.
 
 
 ```r
@@ -324,55 +333,11 @@ sales_data_year <- sales_person %>%
 
 Lubridate makes it very easy to convert `orderdate` to `fiscal_year`.  Doing that conversion interleaving dplyr and **ANSI-STANDARD** SQL is harder.  Too lazy!  Therefore we just pull the data from the server after the `left_join` and do the rest of the job on the R side.
 
-** notice that the merge is happening on the R side. there would be a modification to make it all (or as much as possible) happen on the server side.**
-
-
-Using this function as a model:
-
-```r
-dbExecute(
-  con,
-  "CREATE OR REPLACE FUNCTION so_adj_date(so_date timestamp, ONLINE_ORDER boolean) RETURNS timestamp AS $$
-     BEGIN
-        IF (ONLINE_ORDER) THEN
-            RETURN (SELECT so_date);
-        ELSE
-            RETURN(SELECT CASE WHEN EXTRACT(DAY FROM so_date) = 1
-                               THEN  so_date - '1 day'::interval
-                               ELSE  so_date
-                          END
-                  );
-        END IF;
- END; $$
-LANGUAGE PLPGSQL;
-"
-)
-```
-
-```
-## [1] 0
-```
-
-Trying to create a function that returns fiscal year on the server side.
-
-
-```r
-dbExecute(
-  con,
-  "CREATE OR REPLACE FUNCTION so_calc_fy(orderdate timestamp) RETURNS orderdate AS $$
-        RETURN(date_part('year'::text, orderdate + '6 mons'::interval))
-$$
-LANGUAGE PLPGSQL;
-"
-)
-```
-
 
 
 ```r
 sales_data_fiscal_year <- sales_person %>% 
   left_join(sales_order_header, by = c("businessentityid" = "salespersonid")) %>% 
-  # mutate(fiscal_year = year(orderdate %m+% months(6))) %>% 
   group_by(businessentityid, orderdate) %>%
   summarize(sales_total = sum(subtotal, na.rm = TRUE)) %>% 
   mutate(
@@ -380,30 +345,13 @@ sales_data_fiscal_year <- sales_person %>%
     day = day(orderdate)
   ) %>%
   collect() %>% 
-  ungroup() %>% 
   mutate(
-    adjusted_orderdate = case_when(
-      day == 1L ~ orderdate -1,
-      TRUE ~ orderdate
-    ),
-    year_month = floor_date(adjusted_orderdate, "month")
-  )
-
-str(sales_data_fiscal_year)
-```
-
-```
-## Classes 'tbl_df', 'tbl' and 'data.frame':	468 obs. of  6 variables:
-##  $ businessentityid  : int  283 288 282 278 276 283 279 279 280 279 ...
-##  $ orderdate         : Date, format: "2012-03-30" "2014-02-28" ...
-##  $ sales_total       : num  115902 765 110014 196793 497156 ...
-##  $ day               : num  30 28 1 1 31 31 30 30 30 30 ...
-##  $ adjusted_orderdate: Date, format: "2012-03-30" "2014-02-28" ...
-##  $ year_month        : Date, format: "2012-03-01" "2014-02-01" ...
-```
-
-```r
-# View(sales_data_fiscal_year)
+    fiscal_year = year(orderdate %m+% months(6))
+  ) %>% 
+  ungroup() %>% 
+  group_by(businessentityid, fiscal_year) %>% 
+  summarize(sales_total = sum(sales_total, na.rm = FALSE)) %>% 
+  ungroup()
 ```
 
 Put the two parts together: `sales_data_fiscal_year` and `person_info` to yield the final query.
@@ -427,67 +375,43 @@ Use `pivot_wider` to make it easier to compare the native view to our dplyr vers
 
 ```r
 salesperson_sales_by_fiscal_years_dplyr %>% 
-  mutate(calendar_year = year(adjusted_orderdate)) %>% #names()
-  group_by(full_name, territory_name, calendar_year) %>% 
-  summarize(sales_total = sum(sales_total)) %>% 
-  # select(full_name, territory_name, calendar_year, sales_total) %>% 
-  ungroup() %>% 
-  pivot_wider(names_from = calendar_year, values_from = sales_total,
+  select(-jobtitle, -businessentityid, -territoryid) %>%
+  pivot_wider(names_from = fiscal_year, values_from = sales_total,
               values_fill = list(sales_total = 0)) %>%
-  arrange(territory_name, full_name)
+  arrange(territory_name, full_name) %>% 
+  filter(territory_name == "Canada")
 ```
 
 ```
-## # A tibble: 14 x 6
-##    full_name                  territory_name   `2011`   `2012`   `2013`   `2014`
-##    <chr>                      <chr>             <dbl>    <dbl>    <dbl>    <dbl>
-##  1 Lynn N Tsoflias            Australia            0        0   836055.  585756.
-##  2 Garrett R Vargas           Canada          613330. 1170331. 1389837.  435949.
-##  3 José Edvaldo Saraiva       Canada         1338400. 1672323. 1870884. 1044811.
-##  4 Jillian Carson             Central        1631265. 3997669. 3396776. 1040093.
-##  5 Ranjit R Varkey Chudukatil France               0   996292. 2646078.  867519.
-##  6 Rachel B Valdez            Germany              0        0  1245459.  581608.
-##  7 Michael G Blythe           Northeast      1031655. 3219626. 3985375. 1057247.
-##  8 David R Campbell           Northwest       726049. 1162008. 1351422.  490466.
-##  9 Pamela O Ansman-Wolfe      Northwest       838589. 1018161.  963421.  504932.
-## 10 Tete A Mensa-Annan         Northwest            0   441640. 1269909.  600997.
-## 11 Tsvi Michael Reiter        Southeast      1833198. 2362528. 2188083.  787204.
-## 12 Linda C Mitchell           Southwest      1530233. 3454391. 4111295. 1271089.
-## 13 Shu K Ito                  Southwest      1046490. 2215318. 2387256.  777942.
-## 14 Jae B Pak                  United Kingdom       0  3014278. 4106064. 1382997.
+## # A tibble: 2 x 6
+##   full_name            territory_name  `2011`   `2012`   `2013`   `2014`
+##   <chr>                <chr>            <dbl>    <dbl>    <dbl>    <dbl>
+## 1 Garrett R Vargas     Canada           9109. 1254087. 1179531. 1166720.
+## 2 José Edvaldo Saraiva Canada         106252. 2171995. 1388793. 2259378.
 ```
 
 ```r
   # pivot_wider(names_from = fiscal_year, values_from = sales_total)
 
-v_salesperson_sales_by_fiscal_years_data %>% # names()
+v_salesperson_sales_by_fiscal_years_data %>% 
   select(-jobtitle, -salespersonid) %>%
   pivot_wider(names_from = fiscalyear, values_from = salestotal,
               values_fill = list(salestotal = 0)) %>%
-  arrange(salesterritory, fullname)
+  arrange(salesterritory, fullname) %>% 
+  filter(salesterritory == "Canada")
 ```
 
 ```
-## # A tibble: 14 x 6
-##    fullname                   salesterritory  `2011`   `2012`   `2013`   `2014`
-##    <chr>                      <chr>            <dbl>    <dbl>    <dbl>    <dbl>
-##  1 Lynn N Tsoflias            Australia           0        0   184106. 1237705.
-##  2 Garrett R Vargas           Canada           9109. 1254087. 1179531. 1166720.
-##  3 José Edvaldo Saraiva       Canada         106252. 2171995. 1388793. 2259378.
-##  4 Jillian Carson             Central         46696. 3496244. 3940665. 2582199.
-##  5 Ranjit R Varkey Chudukatil France              0   360246. 1770367. 2379277.
-##  6 Rachel B Valdez            Germany             0        0   371973. 1455094.
-##  7 Michael G Blythe           Northeast       63763. 2399593. 3765459. 3065088.
-##  8 David R Campbell           Northwest       69473. 1291905. 1151081. 1217487.
-##  9 Pamela O Ansman-Wolfe      Northwest       24433. 1533076.  587779. 1179815.
-## 10 Tete A Mensa-Annan         Northwest           0        0   959000. 1353546.
-## 11 Tsvi Michael Reiter        Southeast      104419. 3037175. 2159685. 1869733.
-## 12 Linda C Mitchell           Southwest        5476. 3013884. 4064078. 3283569.
-## 13 Shu K Ito                  Southwest       59708. 1953001. 2439216. 1975080.
-## 14 Jae B Pak                  United Kingdom      0   963345. 4188307. 3351687.
+## # A tibble: 2 x 6
+##   fullname             salesterritory  `2011`   `2012`   `2013`   `2014`
+##   <chr>                <chr>            <dbl>    <dbl>    <dbl>    <dbl>
+## 1 Garrett R Vargas     Canada           9109. 1254087. 1179531. 1166720.
+## 2 José Edvaldo Saraiva Canada         106252. 2171995. 1388793. 2259378.
 ```
 
 The column names don't match up, partly because we are using snake case convention for derived elements.
+
+NOTE: Figure out when to drop businessentityid  and territoryid
 
 
 ```r
@@ -495,10 +419,8 @@ names(salesperson_sales_by_fiscal_years_dplyr) %>% sort()
 ```
 
 ```
-##  [1] "adjusted_orderdate" "businessentityid"   "day"               
-##  [4] "full_name"          "jobtitle"           "orderdate"         
-##  [7] "sales_total"        "territory_name"     "territoryid"       
-## [10] "year_month"
+## [1] "businessentityid" "fiscal_year"      "full_name"        "jobtitle"        
+## [5] "sales_total"      "territory_name"   "territoryid"
 ```
 
 ```r
@@ -510,197 +432,594 @@ names(v_salesperson_sales_by_fiscal_years_data) %>% sort()
 ## [5] "salesterritory" "salestotal"
 ```
 
-the following doesn't quite work yet.  The idea is to do as much work on the server as possible to correct the data entry date.  
+## Revise the view to summarize by quarter not fiscal year
+
+sales in Canada
 
 
 ```r
-sales_order_header_fy <- tbl(con, in_schema("sales", "salesorderheader")) %>% 
-  mutate(orderdate = as.Date(orderdate),
-         sales_order_year = year(orderdate),
-         sales_order_month = month(orderdate),
-         sales_order_day = as.numeric(day(orderdate))
-         ) %>% 
- select(sales_order_year, sales_order_month, sales_order_day, 
-        salespersonid, subtotal, orderdate) %>% 
-  group_by(sales_order_year, sales_order_month, sales_order_day, 
-        salespersonid) %>% 
-  summarize(subtotal = sum(subtotal, na.rm = TRUE)) %>% 
-  collect() %>% 
-  # show_query %>% 
-  mutate(
-    sales_order_day_adj = ifelse(
-      sales_order_day == 1, sales_order_day - 1, sales_order_day
-    )
-  ) %>% ungroup()
-
-# , 
-
-# View(sales_order_header_fy)
-str(sales_order_header_fy)
-```
-
-```
-## Classes 'tbl_df', 'tbl' and 'data.frame':	1592 obs. of  6 variables:
-##  $ sales_order_year   : num  2014 2013 2013 2014 2014 ...
-##  $ sales_order_month  : num  6 11 6 2 2 7 5 3 1 2 ...
-##  $ sales_order_day    : num  8 17 25 25 14 20 13 30 4 28 ...
-##  $ salespersonid      : int  NA NA NA NA NA NA NA 281 NA 283 ...
-##  $ subtotal           : num  1046 63751 20063 45560 46304 ...
-##  $ sales_order_day_adj: num  8 17 25 25 14 20 13 30 4 28 ...
-```
-
-Why 3 sales folks in vsalesperson don’t show up in 2014 vsalespersonsalesbyfiscalyearsdata
-
-Different environments / SQL dialects
-
-## Revise the view
-
-repeat the function creation strategy from 083 --
-
-  * correct the date
-  * extract the quarter
-
-
-```r
-by_q <- tbl(con, in_schema("sales", "salesorderheader")) %>% 
+tbl(con, in_schema("sales", "salesorderheader")) %>% 
   mutate(orderdate = as.Date(orderdate), 
          year = year(orderdate),
          quarter = sql("DATE_PART('quarter', orderdate)")) %>% 
-  # select(orderdate, quarter) %>% 
-  group_by(year, quarter) %>% 
-  summarize(subtotal = sum(subtotal), n = n()) %>% 
-  arrange(year, quarter) %>% 
-  collect()
+  group_by(salespersonid, year, quarter) %>% 
+  summarize(subtotal = round(sum(subtotal, na.rm = TRUE), digits = 0)) %>% 
+  collect() %>% ungroup() %>% 
+  group_by(salespersonid, year) %>% ungroup() %>% 
+  left_join(salesperson_info, by = c("salespersonid" = "businessentityid")) %>% 
+  filter(territory_name == "Canada") %>% 
+  arrange(full_name, year) %>%
+  pivot_wider(names_from = quarter, values_from = subtotal,
+              names_prefix = "Q") %>% 
+  select(full_name, year, Q1, Q2, Q3, Q4) %>%
+  head(., n = 10) %>% 
+  gt()
 ```
 
-```
-## Warning: Missing values are always removed in SQL.
-## Use `SUM(x, na.rm = TRUE)` to silence this warning
-## This warning is displayed only once per session.
-```
+<!--html_preserve--><style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
 
-```r
-by_q
-```
+#pzveloiefp .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  /* table.margin.left */
+  margin-right: auto;
+  /* table.margin.right */
+  color: #333333;
+  font-size: 16px;
+  /* table.font.size */
+  background-color: #FFFFFF;
+  /* table.background.color */
+  width: auto;
+  /* table.width */
+  border-top-style: solid;
+  /* table.border.top.style */
+  border-top-width: 2px;
+  /* table.border.top.width */
+  border-top-color: #A8A8A8;
+  /* table.border.top.color */
+  border-bottom-style: solid;
+  /* table.border.bottom.style */
+  border-bottom-width: 2px;
+  /* table.border.bottom.width */
+  border-bottom-color: #A8A8A8;
+  /* table.border.bottom.color */
+}
 
-```
-## # A tibble: 13 x 4
-## # Groups:   year [4]
-##     year quarter  subtotal     n
-##    <dbl>   <dbl>     <dbl> <int>
-##  1  2011       2   962717.   184
-##  2  2011       3  5042491.   638
-##  3  2011       4  6636465.   785
-##  4  2012       1  8421802.   859
-##  5  2012       2  8808558.   952
-##  6  2012       3  9047743.  1022
-##  7  2012       4  7246198.  1082
-##  8  2013       1  7816864.  1166
-##  9  2013       2 10858959.  1575
-## 10  2013       3 12763227.  5320
-## 11  2013       4 12183430.  6121
-## 12  2014       1 12845074.  6296
-## 13  2014       2  7212855.  5465
-```
+#pzveloiefp .gt_heading {
+  background-color: #FFFFFF;
+  /* heading.background.color */
+  border-bottom-color: #FFFFFF;
+  /* table.background.color */
+  border-left-style: hidden;
+  /* heading.border.lr.style */
+  border-left-width: 1px;
+  /* heading.border.lr.width */
+  border-left-color: #D3D3D3;
+  /* heading.border.lr.color */
+  border-right-style: hidden;
+  /* heading.border.lr.style */
+  border-right-width: 1px;
+  /* heading.border.lr.width */
+  border-right-color: #D3D3D3;
+  /* heading.border.lr.color */
+}
+
+#pzveloiefp .gt_title {
+  color: #333333;
+  font-size: 125%;
+  /* heading.title.font.size */
+  font-weight: initial;
+  /* heading.title.font.weight */
+  padding-top: 4px;
+  /* heading.top.padding - not yet used */
+  padding-bottom: 4px;
+  border-bottom-color: #FFFFFF;
+  /* table.background.color */
+  border-bottom-width: 0;
+}
+
+#pzveloiefp .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  /* heading.subtitle.font.size */
+  font-weight: initial;
+  /* heading.subtitle.font.weight */
+  padding-top: 0;
+  padding-bottom: 4px;
+  /* heading.bottom.padding - not yet used */
+  border-top-color: #FFFFFF;
+  /* table.background.color */
+  border-top-width: 0;
+}
+
+#pzveloiefp .gt_bottom_border {
+  border-bottom-style: solid;
+  /* heading.border.bottom.style */
+  border-bottom-width: 2px;
+  /* heading.border.bottom.width */
+  border-bottom-color: #D3D3D3;
+  /* heading.border.bottom.color */
+}
+
+#pzveloiefp .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#pzveloiefp .gt_col_headings {
+  border-top-style: solid;
+  /* column_labels.border.top.style */
+  border-top-width: 2px;
+  /* column_labels.border.top.width */
+  border-top-color: #D3D3D3;
+  /* column_labels.border.top.color */
+  border-bottom-style: solid;
+  /* column_labels.border.bottom.style */
+  border-bottom-width: 2px;
+  /* column_labels.border.bottom.width */
+  border-bottom-color: #D3D3D3;
+  /* column_labels.border.bottom.color */
+  border-left-style: none;
+  /* column_labels.border.lr.style */
+  border-left-width: 1px;
+  /* column_labels.border.lr.width */
+  border-left-color: #D3D3D3;
+  /* column_labels.border.lr.color */
+  border-right-style: none;
+  /* column_labels.border.lr.style */
+  border-right-width: 1px;
+  /* column_labels.border.lr.width */
+  border-right-color: #D3D3D3;
+  /* column_labels.border.lr.color */
+}
+
+#pzveloiefp .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  /* column_labels.background.color */
+  font-size: 100%;
+  /* column_labels.font.size */
+  font-weight: initial;
+  /* column_labels.font.weight */
+  text-transform: inherit;
+  /* column_labels.text_transform */
+  vertical-align: middle;
+  padding: 5px;
+  margin: 10px;
+  overflow-x: hidden;
+}
+
+#pzveloiefp .gt_sep_right {
+  border-right: 5px solid #FFFFFF;
+}
+
+#pzveloiefp .gt_group_heading {
+  padding: 8px;
+  /* row_group.padding */
+  color: #333333;
+  background-color: #FFFFFF;
+  /* row_group.background.color */
+  font-size: 100%;
+  /* row_group.font.size */
+  font-weight: initial;
+  /* row_group.font.weight */
+  text-transform: inherit;
+  /* row_group.text_transform */
+  border-top-style: solid;
+  /* row_group.border.top.style */
+  border-top-width: 2px;
+  /* row_group.border.top.width */
+  border-top-color: #D3D3D3;
+  /* row_group.border.top.color */
+  border-bottom-style: solid;
+  /* row_group.border.bottom.style */
+  border-bottom-width: 2px;
+  /* row_group.border.bottom.width */
+  border-bottom-color: #D3D3D3;
+  /* row_group.border.bottom.color */
+  border-left-style: none;
+  /* row_group.border.left.style */
+  border-left-width: 1px;
+  /* row_group.border.left.width */
+  border-left-color: #D3D3D3;
+  /* row_group.border.left.color */
+  border-right-style: none;
+  /* row_group.border.right.style */
+  border-right-width: 1px;
+  /* row_group.border.right.width */
+  border-right-color: #D3D3D3;
+  /* row_group.border.right.color */
+  vertical-align: middle;
+}
+
+#pzveloiefp .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  /* row_group.background.color */
+  font-size: 100%;
+  /* row_group.font.size */
+  font-weight: initial;
+  /* row_group.font.weight */
+  border-top-style: solid;
+  /* row_group.border.top.style */
+  border-top-width: 2px;
+  /* row_group.border.top.width */
+  border-top-color: #D3D3D3;
+  /* row_group.border.top.color */
+  border-bottom-style: solid;
+  /* row_group.border.bottom.style */
+  border-bottom-width: 2px;
+  /* row_group.border.bottom.width */
+  border-bottom-color: #D3D3D3;
+  /* row_group.border.bottom.color */
+  vertical-align: middle;
+}
+
+#pzveloiefp .gt_striped {
+  background-color: #8080800D;
+  /* row.striping.background_color */
+}
+
+#pzveloiefp .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#pzveloiefp .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#pzveloiefp .gt_row {
+  padding-top: 8px;
+  /* data_row.padding */
+  padding-bottom: 8px;
+  /* data_row.padding */
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  /* table_body.hlines.style */
+  border-top-width: 1px;
+  /* table_body.hlines.width */
+  border-top-color: #D3D3D3;
+  /* table_body.hlines.color */
+  border-left-style: none;
+  /* table_body.vlines.style */
+  border-left-width: 1px;
+  /* table_body.vlines.width */
+  border-left-color: #D3D3D3;
+  /* table_body.vlines.color */
+  border-right-style: none;
+  /* table_body.vlines.style */
+  border-right-width: 1px;
+  /* table_body.vlines.width */
+  border-right-color: #D3D3D3;
+  /* table_body.vlines.color */
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#pzveloiefp .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  /* stub.background.color */
+  font-weight: initial;
+  /* stub.font.weight */
+  text-transform: inherit;
+  /* stub.text_transform */
+  border-right-style: solid;
+  /* stub.border.style */
+  border-right-width: 2px;
+  /* stub.border.width */
+  border-right-color: #D3D3D3;
+  /* stub.border.color */
+  padding-left: 12px;
+}
+
+#pzveloiefp .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  /* summary_row.background.color */
+  text-transform: inherit;
+  /* summary_row.text_transform */
+  padding-top: 8px;
+  /* summary_row.padding */
+  padding-bottom: 8px;
+  /* summary_row.padding */
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pzveloiefp .gt_first_summary_row {
+  padding-top: 8px;
+  /* summary_row.padding */
+  padding-bottom: 8px;
+  /* summary_row.padding */
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: solid;
+  /* summary_row.border.style */
+  border-top-width: 2px;
+  /* summary_row.border.width */
+  border-top-color: #D3D3D3;
+  /* summary_row.border.color */
+}
+
+#pzveloiefp .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  /* grand_summary_row.background.color */
+  text-transform: inherit;
+  /* grand_summary_row.text_transform */
+  padding-top: 8px;
+  /* grand_summary_row.padding */
+  padding-bottom: 8px;
+  /* grand_summary_row.padding */
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pzveloiefp .gt_first_grand_summary_row {
+  padding-top: 8px;
+  /* grand_summary_row.padding */
+  padding-bottom: 8px;
+  /* grand_summary_row.padding */
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  /* grand_summary_row.border.style */
+  border-top-width: 6px;
+  /* grand_summary_row.border.width */
+  border-top-color: #D3D3D3;
+  /* grand_summary_row.border.color */
+}
+
+#pzveloiefp .gt_table_body {
+  border-top-style: solid;
+  /* table_body.border.top.style */
+  border-top-width: 2px;
+  /* table_body.border.top.width */
+  border-top-color: #D3D3D3;
+  /* table_body.border.top.color */
+  border-bottom-style: solid;
+  /* table_body.border.bottom.style */
+  border-bottom-width: 2px;
+  /* table_body.border.bottom.width */
+  border-bottom-color: #D3D3D3;
+  /* table_body.border.bottom.color */
+}
+
+#pzveloiefp .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  /* footnotes.background.color */
+  border-bottom-style: none;
+  /* footnotes.border.bottom.style */
+  border-bottom-width: 2px;
+  /* footnotes.border.bottom.width */
+  border-bottom-color: #D3D3D3;
+  /* footnotes.border.bottom.color */
+  border-left-style: none;
+  /* footnotes.border.lr.color */
+  border-left-width: 2px;
+  /* footnotes.border.lr.color */
+  border-left-color: #D3D3D3;
+  /* footnotes.border.lr.color */
+  border-right-style: none;
+  /* footnotes.border.lr.color */
+  border-right-width: 2px;
+  /* footnotes.border.lr.color */
+  border-right-color: #D3D3D3;
+  /* footnotes.border.lr.color */
+}
+
+#pzveloiefp .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  /* footnotes.font.size */
+  padding: 4px;
+  /* footnotes.padding */
+}
+
+#pzveloiefp .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  /* source_notes.background.color */
+  border-bottom-style: none;
+  /* source_notes.border.bottom.style */
+  border-bottom-width: 2px;
+  /* source_notes.border.bottom.width */
+  border-bottom-color: #D3D3D3;
+  /* source_notes.border.bottom.color */
+  border-left-style: none;
+  /* source_notes.border.lr.style */
+  border-left-width: 2px;
+  /* source_notes.border.lr.style */
+  border-left-color: #D3D3D3;
+  /* source_notes.border.lr.style */
+  border-right-style: none;
+  /* source_notes.border.lr.style */
+  border-right-width: 2px;
+  /* source_notes.border.lr.style */
+  border-right-color: #D3D3D3;
+  /* source_notes.border.lr.style */
+}
+
+#pzveloiefp .gt_sourcenote {
+  font-size: 90%;
+  /* source_notes.font.size */
+  padding: 4px;
+  /* source_notes.padding */
+}
+
+#pzveloiefp .gt_left {
+  text-align: left;
+}
+
+#pzveloiefp .gt_center {
+  text-align: center;
+}
+
+#pzveloiefp .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#pzveloiefp .gt_font_normal {
+  font-weight: normal;
+}
+
+#pzveloiefp .gt_font_bold {
+  font-weight: bold;
+}
+
+#pzveloiefp .gt_font_italic {
+  font-style: italic;
+}
+
+#pzveloiefp .gt_super {
+  font-size: 65%;
+}
+
+#pzveloiefp .gt_footnote_marks {
+  font-style: italic;
+  font-size: 65%;
+}
+</style>
+<div id="pzveloiefp" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+  
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">full_name</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">year</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">Q1</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">Q2</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">Q3</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">Q4</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr>
+      <td class="gt_row gt_left">Garrett R Vargas</td>
+      <td class="gt_row gt_right">2011</td>
+      <td class="gt_row gt_right">NA</td>
+      <td class="gt_row gt_right">9109</td>
+      <td class="gt_row gt_right">233696</td>
+      <td class="gt_row gt_right">257287</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_striped">Garrett R Vargas</td>
+      <td class="gt_row gt_right gt_striped">2012</td>
+      <td class="gt_row gt_right gt_striped">410518</td>
+      <td class="gt_row gt_right gt_striped">352587</td>
+      <td class="gt_row gt_right gt_striped">316818</td>
+      <td class="gt_row gt_right gt_striped">203647</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">Garrett R Vargas</td>
+      <td class="gt_row gt_right">2013</td>
+      <td class="gt_row gt_right">291333</td>
+      <td class="gt_row gt_right">367732</td>
+      <td class="gt_row gt_right">393788</td>
+      <td class="gt_row gt_right">336984</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_striped">Garrett R Vargas</td>
+      <td class="gt_row gt_right gt_striped">2014</td>
+      <td class="gt_row gt_right gt_striped">290536</td>
+      <td class="gt_row gt_right gt_striped">145413</td>
+      <td class="gt_row gt_right gt_striped">NA</td>
+      <td class="gt_row gt_right gt_striped">NA</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">José Edvaldo Saraiva</td>
+      <td class="gt_row gt_right">2011</td>
+      <td class="gt_row gt_right">NA</td>
+      <td class="gt_row gt_right">106252</td>
+      <td class="gt_row gt_right">521794</td>
+      <td class="gt_row gt_right">546962</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_striped">José Edvaldo Saraiva</td>
+      <td class="gt_row gt_right gt_striped">2012</td>
+      <td class="gt_row gt_right gt_striped">795861</td>
+      <td class="gt_row gt_right gt_striped">307379</td>
+      <td class="gt_row gt_right gt_striped">408415</td>
+      <td class="gt_row gt_right gt_striped">324062</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left">José Edvaldo Saraiva</td>
+      <td class="gt_row gt_right">2013</td>
+      <td class="gt_row gt_right">231991</td>
+      <td class="gt_row gt_right">424326</td>
+      <td class="gt_row gt_right">748430</td>
+      <td class="gt_row gt_right">466137</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left gt_striped">José Edvaldo Saraiva</td>
+      <td class="gt_row gt_right gt_striped">2014</td>
+      <td class="gt_row gt_right gt_striped">618832</td>
+      <td class="gt_row gt_right gt_striped">425979</td>
+      <td class="gt_row gt_right gt_striped">NA</td>
+      <td class="gt_row gt_right gt_striped">NA</td>
+    </tr>
+  </tbody>
+  
+  
+</table></div><!--/html_preserve-->
+
+Maybe correcting the dates makes no difference.
 
 
 ```r
 by_q_correct_date <- tbl(con, in_schema("sales", "salesorderheader")) %>% 
   mutate(orderdate = as.Date(orderdate), 
          orderdate = sql("dateadd(day,-1,orderdate)"),
-         # orderdate = as.Date(so_adj_date(orderdate, onlineorderflag)),
          year = year(orderdate),
-         month = month(orderdate),
          quarter = quarter(orderdate)
-         # quarter = sql("DATE_PART('quarter', orderdate)")
          ) %>% 
-  group_by(year, quarter, month) %>% 
-  summarize(subtotal = sum(subtotal), n = n()) %>% 
-  arrange(year, quarter, month) %>% 
-  show_query %>% 
-  ungroup() %>% 
-  collect()
+  group_by(salespersonid, year, quarter) %>% 
+  summarize(subtotal = round(sum(subtotal, na.rm = TRUE), digits = 0)) %>% 
+  collect() %>% ungroup()
+
+by_q_correct_date %>% ungroup() %>% 
+  group_by(salespersonid, year) %>% ungroup() %>% 
+  arrange(salespersonid, year) %>% 
+  pivot_wider(names_from = quarter, values_from = subtotal,
+              names_prefix = "Q") %>% 
+  select(salespersonid, year, Q1, Q2, Q3, Q4) %>% 
+  head(., n = 10) %>% 
+  gt()
 ```
 
-```
-## <SQL>
-## SELECT "year", "quarter", "month", SUM("subtotal") AS "subtotal", COUNT(*) AS "n"
-## FROM (SELECT "salesorderid", "revisionnumber", "orderdate", "duedate", "shipdate", "status", "onlineorderflag", "purchaseordernumber", "accountnumber", "customerid", "salespersonid", "territoryid", "billtoaddressid", "shiptoaddressid", "shipmethodid", "creditcardid", "creditcardapprovalcode", "currencyrateid", "subtotal", "taxamt", "freight", "totaldue", "comment", "rowguid", "modifieddate", EXTRACT(year FROM "orderdate") AS "year", EXTRACT(MONTH FROM "orderdate") AS "month", EXTRACT(QUARTER FROM "orderdate") AS "quarter"
-## FROM (SELECT "salesorderid", "revisionnumber", CAST("orderdate" AS DATE) AS "orderdate", "duedate", "shipdate", "status", "onlineorderflag", "purchaseordernumber", "accountnumber", "customerid", "salespersonid", "territoryid", "billtoaddressid", "shiptoaddressid", "shipmethodid", "creditcardid", "creditcardapprovalcode", "currencyrateid", "subtotal", "taxamt", "freight", "totaldue", "comment", "rowguid", "modifieddate"
-## FROM sales.salesorderheader) "dbplyr_009") "dbplyr_010"
-## GROUP BY "year", "quarter", "month"
-## ORDER BY "year", "quarter", "month"
-```
+
 
 ```r
 by_q_raw_date <- tbl(con, in_schema("sales", "salesorderheader")) %>% 
   mutate(orderdate = as.Date(orderdate), 
-         # orderdate = sql("SELECT CASE WHEN EXTRACT(DAY 
-         #     FROM orderdate) = 1
-         #       THEN  orderdate - '1 day'::interval
-         #     ELSE  orderdate
-         #   END"),
+         orderdate = sql("SELECT CASE WHEN EXTRACT(DAY
+             FROM orderdate) = 1
+               THEN  orderdate - '1 day'::interval
+             ELSE  orderdate
+           END"),
          year = year(orderdate),
-         month = month(orderdate),
+         # month = month(orderdate),
          quarter = sql("DATE_PART('quarter', orderdate)")) %>% 
-   group_by(year, quarter, month) %>% 
+   group_by(year, quarter) %>% 
   summarize(subtotal = sum(subtotal), n = n()) %>% 
-  arrange(year, quarter, month) %>% 
+  arrange(year, quarter) %>% 
   show_query %>% 
   ungroup() %>% 
   collect()
-```
 
-```
-## <SQL>
-## SELECT "year", "quarter", "month", SUM("subtotal") AS "subtotal", COUNT(*) AS "n"
-## FROM (SELECT "salesorderid", "revisionnumber", "orderdate", "duedate", "shipdate", "status", "onlineorderflag", "purchaseordernumber", "accountnumber", "customerid", "salespersonid", "territoryid", "billtoaddressid", "shiptoaddressid", "shipmethodid", "creditcardid", "creditcardapprovalcode", "currencyrateid", "subtotal", "taxamt", "freight", "totaldue", "comment", "rowguid", "modifieddate", EXTRACT(year FROM "orderdate") AS "year", EXTRACT(MONTH FROM "orderdate") AS "month", DATE_PART('quarter', orderdate) AS "quarter"
-## FROM (SELECT "salesorderid", "revisionnumber", CAST("orderdate" AS DATE) AS "orderdate", "duedate", "shipdate", "status", "onlineorderflag", "purchaseordernumber", "accountnumber", "customerid", "salespersonid", "territoryid", "billtoaddressid", "shiptoaddressid", "shipmethodid", "creditcardid", "creditcardapprovalcode", "currencyrateid", "subtotal", "taxamt", "freight", "totaldue", "comment", "rowguid", "modifieddate"
-## FROM sales.salesorderheader) "dbplyr_013") "dbplyr_014"
-## GROUP BY "year", "quarter", "month"
-## ORDER BY "year", "quarter", "month"
-```
-
-```r
 by_q_correct_date
-```
-
-```
-## # A tibble: 38 x 5
-##     year quarter month subtotal     n
-##    <dbl>   <dbl> <dbl>    <dbl> <int>
-##  1  2011       2     5  503806.    43
-##  2  2011       2     6  458911.   141
-##  3  2011       3     7 2044600.   231
-##  4  2011       3     8 2495817.   250
-##  5  2011       3     9  502074.   157
-##  6  2011       4    10 4588762.   327
-##  7  2011       4    11  737840.   230
-##  8  2011       4    12 1309863.   228
-##  9  2012       1     1 3970627.   336
-## 10  2012       1     2 1475427.   219
-## # … with 28 more rows
-```
-
-```r
 by_q_raw_date
-```
-
-```
-## # A tibble: 38 x 5
-##     year quarter month subtotal     n
-##    <dbl>   <dbl> <dbl>    <dbl> <int>
-##  1  2011       2     5  503806.    43
-##  2  2011       2     6  458911.   141
-##  3  2011       3     7 2044600.   231
-##  4  2011       3     8 2495817.   250
-##  5  2011       3     9  502074.   157
-##  6  2011       4    10 4588762.   327
-##  7  2011       4    11  737840.   230
-##  8  2011       4    12 1309863.   228
-##  9  2012       1     1 3970627.   336
-## 10  2012       1     2 1475427.   219
-## # … with 28 more rows
 ```
   * What about by month? This could be motivation for creating a new view that does aggregation in the database, rather than in R.
   * See SQL code for 'vsalespersonsalesbyfiscalyearsdata'. Consider:

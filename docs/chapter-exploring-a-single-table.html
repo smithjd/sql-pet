@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<html lang="" xml:lang="">
 <head>
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 8 Asking Business Questions From a Single Table | Exploring Enterprise Databases with R: A Tidyverse Approach</title>
   <meta name="description" content="An introduction to Docker and PostgreSQL for R users to simulate use cases behind corporate walls." />
-  <meta name="generator" content="bookdown 0.16 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.17 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 8 Asking Business Questions From a Single Table | Exploring Enterprise Databases with R: A Tidyverse Approach" />
   <meta property="og:type" content="book" />
@@ -24,7 +24,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, and Ian Frantz" />
 
 
-<meta name="date" content="2020-01-16" />
+<meta name="date" content="2020-01-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -295,15 +295,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="11.2.1" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#why-database-views-are-useful"><i class="fa fa-check"></i><b>11.2.1</b> Why database <code>views</code> are useful</a></li>
 <li class="chapter" data-level="11.2.2" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#rely-on-and-be-critical-of-views"><i class="fa fa-check"></i><b>11.2.2</b> Rely on <strong>and</strong> be critical of <code>views</code></a></li>
 </ul></li>
-<li class="chapter" data-level="11.3" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#unpacking-the-elements-of-a-view-tidyverse"><i class="fa fa-check"></i><b>11.3</b> Unpacking the elements of a <code>view</code> Tidyverse</a><ul>
+<li class="chapter" data-level="11.3" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#unpacking-the-elements-of-a-view-in-the-tidyverse"><i class="fa fa-check"></i><b>11.3</b> Unpacking the elements of a <code>view</code> in the Tidyverse</a><ul>
 <li class="chapter" data-level="11.3.1" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#use-a-view-just-like-any-other-table"><i class="fa fa-check"></i><b>11.3.1</b> Use a <code>view</code> just like any other table</a></li>
 <li class="chapter" data-level="11.3.2" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#sql-source-code"><i class="fa fa-check"></i><b>11.3.2</b> SQL source code</a></li>
 <li class="chapter" data-level="11.3.3" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#the-erd-as-context-for-sql-code"><i class="fa fa-check"></i><b>11.3.3</b> The ERD as context for SQL code</a></li>
-<li class="chapter" data-level="11.3.4" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#tables-and-columns"><i class="fa fa-check"></i><b>11.3.4</b> Tables and columns</a></li>
+<li class="chapter" data-level="11.3.4" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#selecting-relevant-tables-and-columns"><i class="fa fa-check"></i><b>11.3.4</b> Selecting relevant tables and columns</a></li>
 <li class="chapter" data-level="11.3.5" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#join-the-tables-together"><i class="fa fa-check"></i><b>11.3.5</b> Join the tables together</a></li>
 </ul></li>
 <li class="chapter" data-level="11.4" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#compare-the-official-from-a-view-and-the-dplyr-output"><i class="fa fa-check"></i><b>11.4</b> Compare the official from a view and the dplyr output</a></li>
-<li class="chapter" data-level="11.5" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#revise-the-view"><i class="fa fa-check"></i><b>11.5</b> Revise the view</a></li>
+<li class="chapter" data-level="11.5" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#revise-the-view-to-summarize-by-quarter-not-fiscal-year"><i class="fa fa-check"></i><b>11.5</b> Revise the view to summarize by quarter not fiscal year</a></li>
 <li class="chapter" data-level="11.6" data-path="chapter-leveraging-database-views.html"><a href="chapter-leveraging-database-views.html#save-a-view-in-the-database"><i class="fa fa-check"></i><b>11.6</b> Save a <code>view</code> in the database</a></li>
 </ul></li>
 <li class="chapter" data-level="12" data-path="chapter-postgresql-metadata.html"><a href="chapter-postgresql-metadata.html"><i class="fa fa-check"></i><b>12</b> Getting metadata about and from PostgreSQL</a><ul>
@@ -553,9 +553,9 @@ Both 2011 and 2014 turn out to be are shorter time spans than the other two year
 <a class="sourceLine" id="cb119-8" data-line-number="8">    <span class="dt">y =</span> <span class="st">&quot;Total Number of Orders&quot;</span></a>
 <a class="sourceLine" id="cb119-9" data-line-number="9">  )</a></code></pre></div>
 <div class="figure">
-<img src="083-exploring-a-single-table_files/figure-html/average%20dollars%20per%20sale%20-%20v2-1.png" alt="Total Number of orders by year" width="384" />
+<img src="083-exploring-a-single-table_files/figure-html/Average%20dollars%20per%20sale%20-%20v2-1.png" alt="Total Number of orders by year" width="384" />
 <p class="caption">
-(#fig:average dollars per sale - v2)Total Number of orders by year
+(#fig:Average dollars per sale - v2)Total Number of orders by year
 </p>
 </div>
 <p>Although 2013 was the best year in terms of total number of orders, there were many more in 2014 compared with 2012. That suggests looking at the average dollars per sale for each year.</p>
