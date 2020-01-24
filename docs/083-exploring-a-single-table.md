@@ -35,6 +35,7 @@ library(here)
 library(lubridate)
 library(gt)
 library(scales)
+library(patchwork)
 theme_set(theme_light())
 ```
 
@@ -123,11 +124,11 @@ min_soh_dt <- min(annual_sales$min_soh_orderdate)
 max_soh_dt <- max(annual_sales$max_soh_orderdate)
 ```
 
-### Total sales by year
+### Annual summary of sales, number of transactions and average sale
 
 
 ```r
-ggplot(data = annual_sales, aes(x = year, y = total_soh_dollars)) +
+tot_sales <- ggplot(data = annual_sales, aes(x = year, y = total_soh_dollars)) +
   geom_col() +
   geom_text(aes(label = round(as.numeric(total_soh_dollars), digits = 0)), vjust = -0.25) +
   scale_y_continuous(labels = scales::dollar_format()) +
@@ -138,53 +139,23 @@ ggplot(data = annual_sales, aes(x = year, y = total_soh_dollars)) +
     y = "Sales $"
   )
 ```
-
-<img src="083-exploring-a-single-table_files/figure-html/AdventureWorks Annual Sales-1.png" width="480" />
 Both 2011 and 2014 turn out to be are shorter time spans than the other two years, making comparison interpretation difficult.  Still, it's clear that 2013 was the best year for annual sales dollars.
-
-### Total order volume
 
 Comparing the number of orders per year has roughly the same overall pattern (2013 ranks highest, etc.) but the proportions between the years are quite different.
 
 
-```r
-ggplot(data = annual_sales, aes(x = year, y = as.numeric(soh_count))) +
-  geom_col() +
-  geom_text(aes(label = round(as.numeric(soh_count), digits = 0)), vjust = -0.25) +
-  labs(
-    title = "Total Number of orders by year",
-    x = glue("Years between ", {format(min_soh_dt, "%B %d, %Y")} , " and  ", 
-            {format(max_soh_dt, "%B %d, %Y")}),
-    y = "Total Number of Orders"
-  )
-```
-
-<div class="figure">
-<img src="083-exploring-a-single-table_files/figure-html/Average dollars per sale - v2-1.png" alt="Total Number of orders by year" width="384" />
-<p class="caption">(\#fig:Average dollars per sale - v2)Total Number of orders by year</p>
-</div>
 
 Although 2013 was the best year in terms of total number of orders, there were many more in 2014 compared with 2012.  That suggests looking at the average dollars per sale for each year.
 
 ### Average dollars per sale
 
+
+
 ```r
-ggplot(data = annual_sales, aes(x = year, y = avg_total_soh_dollars)) +
-  geom_col() +
-  scale_y_continuous(labels = scales::dollar_format()) +
-  geom_text(aes(label = round(avg_total_soh_dollars, digits = 0)), vjust = -0.25) +
-  labs(
-    title = "Yearly Average Dollars per Sale",
-    x = glue("Years between ", {format(min_soh_dt, "%B %d, %Y")} , " to  ", 
-            {format(max_soh_dt, "%B %d, %Y")}),
-    y = "Average Sale Amount"
-  )
+(tot_sales + num_orders) / avg_sale
 ```
 
-<div class="figure">
-<img src="083-exploring-a-single-table_files/figure-html/average dollars per sale - -1.png" alt="Yearly Average Dollars per Sale" width="384" />
-<p class="caption">(\#fig:average dollars per sale - )Yearly Average Dollars per Sale</p>
-</div>
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-2-1.png" width="672" />
 
 That's a big drop between average sale of more than $7,000 in the first two years down to the $3,000 range in the last two.  There has been a remarkable change in this business.  At the same time the total number of orders shot up from less than 4,000 a year to more than 14,000.  **Why are the number of orders increasing, but the average dollar amount of a sale is dropping?  **
 
@@ -309,8 +280,8 @@ ggplot(monthly_sales_lagged, aes(x = orderdate, y = monthly_sales_change)) +
 ```
 
 <div class="figure">
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-4-1.png" alt="Monthly Sales Change" width="672" />
-<p class="caption">(\#fig:unnamed-chunk-4)Monthly Sales Change</p>
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-6-1.png" alt="Monthly Sales Change" width="672" />
+<p class="caption">(\#fig:unnamed-chunk-6)Monthly Sales Change</p>
 </div>
 
 It looks like the big change in the business occurred in the summer of 2013 when the number of orders jumped but the dollar volume just continued to bump along.
@@ -385,8 +356,8 @@ monthly_sales_base_year_normalized_to_2011 %>%
 ```
 
 <div class="figure">
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-7-1.png" alt="Miscellaneous plots" width="672" />
-<p class="caption">(\#fig:unnamed-chunk-7)Miscellaneous plots</p>
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-9-1.png" alt="Miscellaneous plots" width="672" />
+<p class="caption">(\#fig:unnamed-chunk-9)Miscellaneous plots</p>
 </div>
 
 ## The effect of online sales
@@ -1068,58 +1039,7 @@ monthly_sales_w_channel_lagged_by_month <- monthly_sales_w_channel %>%
   )
 ```
 
-
-
-```r
-ggplot(monthly_sales_w_channel_lagged_by_month, aes(x = orderdate, y = pct_monthly_soh_dollar_change)) +
-  scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
-  scale_y_continuous() +
-  facet_grid("onlineorderflag", scale = "free") +
-  geom_line() +
-  theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
-  labs(
-    title = glue(
-      "Monthly Percent Sales Change \n",
-      "Comparing Online to Sales Rep Sales"
-    ),
-    x = paste0("Month - between ", 
-               glue({format(min_soh_dt, "%B %d, %Y")} , " - ", 
-           {format(max_soh_dt, "%B %d, %Y")})),
-    y = "% Dollar Change"
-  )
-```
-
-<div class="figure">
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-10-1.png" alt="Percent change - Channel Comparison" width="672" />
-<p class="caption">(\#fig:unnamed-chunk-10)Percent change - Channel Comparison</p>
-</div>
-
-For **Sales Reps** it looks like the variation is in the number of orders, not just dollars, as shown in the following plot.
-
-```r
-ggplot(monthly_sales_w_channel_lagged_by_month, aes(x = orderdate, y = pct_monthly_soh_count_change)) +
-  scale_x_date(date_breaks = "year", date_labels = "%Y", date_minor_breaks = "3 months") +
-  facet_grid("onlineorderflag" , scales = "free") +
-  geom_line() +
-  theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
-  labs(
-    title = glue(
-      "Monthly Order Volume Change \n",
-      "Comparing Online to Sales Rep Sales\n",
-      glue({format(min_soh_dt, "%B %d, %Y")} , " - ", 
-           {format(max_soh_dt, "%B %d, %Y")})
-    ),
-    x = "Month",
-    y = "Change number of orders"
-  )
-```
-
-<div class="figure">
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-11-1.png" alt="Number of Sales Orders by Channel" width="672" />
-<p class="caption">(\#fig:unnamed-chunk-11)Number of Sales Orders by Channel</p>
-</div>
-
-The last two plots may not be so illuminating.  Here's a table that might be improved.
+The following table shows some wild changes in dollar amounts and number of sales from one month to the next.
 
 
 ```r
@@ -1678,51 +1598,6 @@ monthly_sales_w_channel_lagged_by_month %>%
   
 </table></div><!--/html_preserve-->
 
-Let's examine whether there is a large year-to-year change.
-
-
-```r
-monthly_sales_w_channel_lagged_by_year <- monthly_sales_w_channel %>%
-  group_by(onlineorderflag) %>%
-  mutate(
-    pct_monthly_soh_dollar_change =
-      total_soh_dollars / (lag(total_soh_dollars, 12)) * 100,
-    pct_monthly_soh_count_change =
-      soh_count / (lag(soh_count, 12)) * 100
-  )
-
-ggplot(
-  monthly_sales_w_channel_lagged_by_year,
-  aes(x = orderdate, y = pct_monthly_soh_dollar_change)
-) +
-  scale_x_date(
-    date_breaks = "year", date_labels = "%Y",
-    date_minor_breaks = "3 months"
-  ) +
-   scale_y_continuous(limits = c(-50, 400)) +
-  facet_grid("onlineorderflag") +
-  geom_line() +
-  theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
-  labs(
-    title = glue(
-      "Year-on-Year Change in Total Monthly Sales\n",
-      "Comparing Online to Sales Rep Sales"
-    ),
-    x = paste0("Month - between ", min_soh_dt, " - ", max_soh_dt),
-    y = "% Dollar Change"
-  )
-```
-
-<div class="figure">
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-12-1.png" alt="Lagged Sales by Channel" width="672" />
-<p class="caption">(\#fig:unnamed-chunk-12)Lagged Sales by Channel</p>
-</div>
-
-That's much more stable than the month-to-month change.
-
-> ??? Comparing the number of sales orders year over year by month for 2013 and 2012, one can see that the 2013 sales are between 1.2 and 1.8 times larger than the corresponding month of 2012 from January through June.  In July the 2013 sales are 5 to 6 times the 2012 sales orders. ???
-
-This trend continues into 2014 before the number of sales plummet to just 1.3 time in June.
 
 We suspect that the business has changed a lot with the advent of **Online** orders.
 
@@ -1759,8 +1634,8 @@ Look at the dates when sales are entered for sales by **Sales Reps**.  The follo
 ```
 
 <div class="figure">
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-13-1.png" alt="Days of the month with Sales Rep activity recorded" width="672" />
-<p class="caption">(\#fig:unnamed-chunk-13)Days of the month with Sales Rep activity recorded</p>
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-12-1.png" alt="Days of the month with Sales Rep activity recorded" width="672" />
+<p class="caption">(\#fig:unnamed-chunk-12)Days of the month with Sales Rep activity recorded</p>
 </div>
 
 We can check on which months have orders entered on the first of the month.
@@ -2191,7 +2066,7 @@ ggplot(
   )
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-24-1.png" width="672" />
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-23-1.png" width="672" />
 
 
 ```r
@@ -2200,55 +2075,6 @@ mon_sales <- monthly_sales_rep_adjusted %>%
 
 sales_original_and_adjusted <- bind_rows(mon_sales, monthly_sales_rep_as_is, .id = "date_kind")
 ```
-
-Does this graph add anything important?
-
-
-```r
-ggplot(
-  data = sales_original_and_adjusted,
-  aes(x = orderdate, y = soh_count, fill = date_kind)
-) +
-  geom_col(position = "dodge") +
-  theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
-  labs(
-    title = glue(
-      "Number of Sales per month using corrected dates\n",
-      "Counting Sales Order Header records"
-    ),
-    subtitle = glue("Subtitle"),
-    caption = glue("Datasets Include: \n
-                   monthly_sales_rep_adjusted, monthly_sales_rep_as_is"),
-    x = paste0("Monthly - between ", min_soh_dt, " - ", max_soh_dt),
-    y = "Number of Sales Recorded",
-    fill = "Date\nadjustment"
-  ) 
-```
-
-<div class="figure">
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-26-1.png" alt="Could be dumped?" width="672" />
-<p class="caption">(\#fig:unnamed-chunk-26)Could be dumped?</p>
-</div>
-
-additive graph showing how correction adds in some months and subtracts in others.
-
-only show months where there is a mis-match.
-
-
-```r
-ggplot(data = monthly_sales_rep_adjusted, aes(x = year_month, y = total_soh_dollars)) +
-  geom_line() +
-  scale_y_continuous(labels = dollar) +
-  theme(plot.title = element_text(hjust = 0.5)) + # Center the title
-  labs(
-    title = glue("Sales by Month - Sales Reps only\n", {format(min_soh_dt, "%B %d, %Y")} , " to  ", 
-            {format(max_soh_dt, "%B %d, %Y")}),
-    x = "Month - Adjusted dates",
-    y = "Sales Dollars"
-  )
-```
-
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-27-1.png" width="672" />
 
 Sales still seem to gyrate!  We have found that sales rep sales data is often very strange.
 

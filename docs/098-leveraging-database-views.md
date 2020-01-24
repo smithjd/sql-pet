@@ -25,9 +25,7 @@ require(knitr)
 library(dbplyr)
 library(sqlpetr)
 library(bookdown)
-library(here)
 library(lubridate)
-library(skimr)
 library(gt)
 ```
 
@@ -55,7 +53,7 @@ con <- dbConnect(          # use in other settings
   dbname = "adventureworks"
 )
 
-dbExecute(con, "set search_path to sales;")
+dbExecute(con, "set search_path to sales;") # so that `dbListFields()` works
 ```
 
 ```
@@ -64,7 +62,7 @@ dbExecute(con, "set search_path to sales;")
 
 ## The role of database `views`
 
-A database `view` is an SQL query that is stored in the database.  Most `views` are used for data retrieval, since they usually denormalize the tables involved.  Because they are standardized and well-understood, they can save you a lot of work.
+A database `view` is an SQL query that is stored in the database.  Most `views` are used for data retrieval, since they usually denormalize the tables involved.  Because they are standardized and well-understood, they can save you a lot of work and document a query that can serve as a model to build on.
 
 ### Why database `views` are useful
 
@@ -77,13 +75,13 @@ Database `views` are useful for many reasons.
   * **Security**: a view can give selective access to someone who does not have access to underlying tables or columns.
   * **Provenance**: `views` standardize data provenance.  For example, the `AdventureWorks` database all of them are named in a consistent way that suggests the underlying tables that they query.  And they all start with a **v**.
 
-### Rely on **and** be critical of `views`
+### Rely on -- **and** be critical of -- `views`
 
-Because they represent a conventional view of the database, it might seem like a `view` is beneath notice.  Even though they are conventional and authorized, they may still need verification or auditing, especially when used for a purpose other than the original intent. They can guide you toward what you need from the database but they could also mislead because they are easy to use and available.  People may forget why a specific view exists and who is using it. Therefore any given view might be a forgotten vestige or part of a production data pipeline or a priceless nugget of insight. How can you tell? Consider the owner and schema, whether it's a materialized index view or not, if it has a trigger and try to deduce the intention behind the view.
+Because they represent a commonly used view of the database, it might seem like a `view` is always right.  Even though they are conventional and authorized, they may still need verification or auditing, especially when used for a purpose other than the original intent. They can guide you toward what you need from the database but they could also mislead because they are easy to use and available.  People may forget why a specific view exists and who is using it. Therefore any given view might be a forgotten vestige. part of a production data pipeline or a priceless nugget of insight. Who knows? Consider the `view`'s owner, schema, whether it's a materialized index view or not, if it has a trigger and what the likely intention was behind the view.
 
 ## Unpacking the elements of a `view` in the Tidyverse
 
-Since a view is just like an ordinary table, we can use the same tools in the same way as they are used on a database table.  For example, the simplest way of getting a list of columns in a view is the same as it is for a regular table:
+Since a view is in some ways just like an ordinary table, we can use familiar tools in the same way as they are used on a database table.  For example, the simplest way of getting a list of columns in a `view` is the same as it is for a regular table:
 
 
 ```r
@@ -118,23 +116,31 @@ str(v_salesperson_sales_by_fiscal_years_data)
 ##  $ fiscalyear    : num  2011 2012 2013 2014 2011 ...
 ```
 
-As we will see, our sample `view`,  `vsalespersonsalesbyfiscalyearsdata` joins 5 different tables.  We can expect that subsetting or calculation on any of the columns in the component tables will behave as expected, doing the work on the database side.  For example, the following query filters on a column that exists in one of the `view`'s component tables.
+As we will see, our sample `view`,  `vsalespersonsalesbyfiscalyearsdata` joins 5 different tables.  We can assume that subsetting or calculation on any of the columns in the component tables will happen behind the scenes, on the database side, and done correctly.  For example, the following query filters on a column that exists in only one of the `view`'s component tables.
 
 
 ```r
 tbl(con, in_schema("sales","vsalespersonsalesbyfiscalyearsdata")) %>% 
-  filter(salesterritory == "Northeast") %>% 
-  collect()
+  count(salesterritory, fiscalyear) %>% 
+  collect() %>% # ---- pull data here ---- # 
+  pivot_wider(names_from = fiscalyear, values_from = n, names_prefix = "FY_")
 ```
 
 ```
-## # A tibble: 4 x 6
-##   salespersonid fullname     jobtitle       salesterritory salestotal fiscalyear
-##           <int> <chr>        <chr>          <chr>               <dbl>      <dbl>
-## 1           275 Michael G B… Sales Represe… Northeast        2399593.       2012
-## 2           275 Michael G B… Sales Represe… Northeast        3065088.       2014
-## 3           275 Michael G B… Sales Represe… Northeast          63763.       2011
-## 4           275 Michael G B… Sales Represe… Northeast        3765459.       2013
+## # A tibble: 10 x 5
+## # Groups:   salesterritory [10]
+##    salesterritory FY_2014 FY_2011 FY_2013 FY_2012
+##    <chr>            <int>   <int>   <int>   <int>
+##  1 Southwest            2       2       2       2
+##  2 Northeast            1       1       1       1
+##  3 Southeast            1       1       1       1
+##  4 France               1      NA       1       1
+##  5 Canada               2       2       2       2
+##  6 United Kingdom       1      NA       1       1
+##  7 Northwest            3       2       3       2
+##  8 Central              1       1       1       1
+##  9 Australia            1      NA       1      NA
+## 10 Germany              1      NA       1      NA
 ```
 Although finding out what a view does behind the scenes requires that you use functions that are **not** standard, doing so has several general purposes: 
 
@@ -144,7 +150,7 @@ Although finding out what a view does behind the scenes requires that you use fu
 
 ### SQL source code
 
-Database-specific idioms for looking at a view itself will vary.  Here is the code to retrieve a PostgreSQL view (using the `pg_get_viewdef` function):
+Functions for inspecting a view itself are not part of the ANSI standard, so they will be [database-specific](https://www.postgresql.org/docs/9.5/functions-info.html).  Here is the code to retrieve a PostgreSQL view (using the `pg_get_viewdef` function):
 
 
 ```r
@@ -202,7 +208,7 @@ Define each table that is involved and identify the columns that will be needed 
   4. employee
   5. person
 
-For each of the tables in the `view`, we select the columns that appear in the `sales.vsalespersonsalesbyfiscalyearsdata`.  Selecting columns in this way prevents joins that `dbplyr` would make automatically based on common column names such as `rowguid` and `ModifiedDate` columns, which appear in almost all `AdventureWorks` tables.  In the following code we follow the convention that any column that we change or create on the fly uses a snake case naming convention.
+For each of the tables in the `view`, we select the columns that appear in the `sales.vsalespersonsalesbyfiscalyearsdata`.  Selecting columns in this way prevents joins that `dbplyr` would make automatically based on common column names, such as `rowguid` and `ModifiedDate` columns, which appear in almost all `AdventureWorks` tables.  In the following code we follow the convention that any column that we change or create on the fly uses a snake case naming convention.
 
 ```r
 sales_order_header <- tbl(con, in_schema("sales", "salesorderheader")) %>% 
@@ -233,12 +239,14 @@ person <- tbl(con, in_schema("person", "person")) %>%
   select(businessentityid, full_name)
 ```
 
-Double check on the names that are defined in each `tbl` object.  First define a function to show the names of columns you will retrieve.
+Double-check on the names that are defined in each `tbl` object.  The following function will show the names of columns in the tables we've defined:
 
 
 ```r
 getnames <- function(table) {
-  {table} %>% collect(n = 5) %>% names()
+  {table} %>% 
+    collect(n = 5) %>% # ---- pull data here ---- #
+    names()
 }
 ```
 
@@ -286,7 +294,7 @@ getnames(person)
 
 ### Join the tables together
 
-Join all of the data pertaining to a person.  Notice that since each of these 4 tables contain `businessentityid`, dplyr will join them all on that common column automatically.  And since we know that all of these tables are small, we don't mind a query that joins and downloads all the data.
+First, join and download all of the data pertaining to a person.  Notice that since each of these 4 tables contain `businessentityid`, dplyr will join them all on that common column automatically.  And since we know that all of these tables are small, we don't mind a query that joins and downloads all the data.
 
 
 ```r
@@ -320,19 +328,8 @@ The one part of the view that we haven't replicated is:
   `date_part('year'::text, soh.orderdate`
   `+ '6 mons'::interval) AS fiscalyear`
 
-For now we can skip the fiscalyear calculation and just aggregate and download the data by `orderdate`. That will collapse many rows into a much smaller table since we know from our previous investigation into how sales are recorded for Sales Reps that all sales are recorded more or less once a month.  Therefore most of the crunching happens on the database server side.
 
-
-```r
-sales_data_year <- sales_person %>% 
-  left_join(sales_order_header, by = c("businessentityid" = "salespersonid")) %>% 
-  group_by(businessentityid, orderdate) %>% 
-  summarize(sales_total = sum(subtotal, na.rm = TRUE))  %>%
-  collect()
-```
-
-Lubridate makes it very easy to convert `orderdate` to `fiscal_year`.  Doing that conversion interleaving dplyr and **ANSI-STANDARD** SQL is harder.  Too lazy!  Therefore we just pull the data from the server after the `left_join` and do the rest of the job on the R side.
-
+The `lubridate` package makes it very easy to convert `orderdate` to `fiscal_year`.  Doing that same conversion without lubridate (e.g., only dplyr and  **ANSI-STANDARD** SQL) is harder.  Therefore we just pull the data from the server after the `left_join` and do the rest of the job on the R side.  Note that this query doesn't correct the problematic entry dates that we explored in the chapter on [Asking Business Questions From a Single Table](#chapter_exploring-a-single-table). That will collapse many rows into a much smaller table. We know from our previous investigation that Sales Rep into sales are recorded more or less once a month.  Therefore most of the crunching in this query happens on the database server side.
 
 
 ```r
@@ -344,7 +341,7 @@ sales_data_fiscal_year <- sales_person %>%
     orderdate = as.Date(orderdate),
     day = day(orderdate)
   ) %>%
-  collect() %>% 
+  collect() %>% # ---- pull data here ---- #
   mutate(
     fiscal_year = year(orderdate %m+% months(6))
   ) %>% 
@@ -353,6 +350,7 @@ sales_data_fiscal_year <- sales_person %>%
   summarize(sales_total = sum(sales_total, na.rm = FALSE)) %>% 
   ungroup()
 ```
+
 
 Put the two parts together: `sales_data_fiscal_year` and `person_info` to yield the final query.
 
@@ -366,11 +364,11 @@ salesperson_sales_by_fiscal_years_dplyr <- sales_data_fiscal_year %>%
 ```
 ## Joining, by = "businessentityid"
 ```
- Notice that we're dropping the Sales Managers -- who don't have a `territoryid`.
+ Notice that we're dropping the Sales Managers who appear in the `salesperson_info` data frame because they don't have a `territoryid`.
 
-## Compare the official from a view and the dplyr output
+## Compare the official view and the dplyr output
 
-Use `pivot_wider` to make it easier to compare the native view to our dplyr version.
+Use `pivot_wider` to make it easier to compare the native `view` to our dplyr replicate.
 
 
 ```r
@@ -391,8 +389,6 @@ salesperson_sales_by_fiscal_years_dplyr %>%
 ```
 
 ```r
-  # pivot_wider(names_from = fiscal_year, values_from = sales_total)
-
 v_salesperson_sales_by_fiscal_years_data %>% 
   select(-jobtitle, -salespersonid) %>%
   pivot_wider(names_from = fiscalyear, values_from = salestotal,
@@ -409,51 +405,41 @@ v_salesperson_sales_by_fiscal_years_data %>%
 ## 2 José Edvaldo Saraiva Canada         106252. 2171995. 1388793. 2259378.
 ```
 
-The column names don't match up, partly because we are using snake case convention for derived elements.
-
-NOTE: Figure out when to drop businessentityid  and territoryid
-
-
-```r
-names(salesperson_sales_by_fiscal_years_dplyr) %>% sort()
-```
-
-```
-## [1] "businessentityid" "fiscal_year"      "full_name"        "jobtitle"        
-## [5] "sales_total"      "territory_name"   "territoryid"
-```
-
-```r
-names(v_salesperson_sales_by_fiscal_years_data) %>% sort()
-```
-
-```
-## [1] "fiscalyear"     "fullname"       "jobtitle"       "salespersonid" 
-## [5] "salesterritory" "salestotal"
-```
+The yearly totals match exactly.  The column names don't match up, because we are using snake case convention for derived elements.  
 
 ## Revise the view to summarize by quarter not fiscal year
 
-sales in Canada
+To summarize sales data by SAles Rep and quarter requires the `%m+%` infix operator from lubridate.  The interleaved comments in the query below has hints that explain it.  The totals in this revised query are off by a rounding error from the totals shown above in the fiscal year summaries.
 
 
 ```r
 tbl(con, in_schema("sales", "salesorderheader")) %>% 
-  mutate(orderdate = as.Date(orderdate), 
+  group_by(salespersonid, orderdate) %>% 
+  summarize(subtotal = sum(subtotal, na.rm = TRUE), digits = 0) %>% 
+  
+  collect() %>% # ---- pull data here ---- #
+  
+  # Adding 6 months to orderdate requires a lubridate function
+  mutate(orderdate = as.Date(orderdate) %m+% months(6), 
          year = year(orderdate),
-         quarter = sql("DATE_PART('quarter', orderdate)")) %>% 
+         quarter = quarter(orderdate)) %>% 
+  ungroup() %>%
   group_by(salespersonid, year, quarter) %>% 
   summarize(subtotal = round(sum(subtotal, na.rm = TRUE), digits = 0)) %>% 
-  collect() %>% ungroup() %>% 
-  group_by(salespersonid, year) %>% ungroup() %>% 
+  ungroup() %>% 
+  
+  # Join with the person information previously gathered
   left_join(salesperson_info, by = c("salespersonid" = "businessentityid")) %>% 
   filter(territory_name == "Canada") %>% 
-  arrange(full_name, year) %>%
+  
+  # Pivot to make it easier to see what's going on
   pivot_wider(names_from = quarter, values_from = subtotal,
-              names_prefix = "Q") %>% 
-  select(full_name, year, Q1, Q2, Q3, Q4) %>%
+              values_fill = 0, names_prefix = "Q", id_cols = full_name:year) %>% 
+  select(`Name` = full_name, year, Q1, Q2, Q3, Q4) %>%
+  mutate(`Year Total` = Q1 + Q2 + Q3 + Q4) %>% 
   head(., n = 10) %>% 
-  gt()
+  gt() %>% 
+  fmt_number(use_seps = TRUE, decimals = 0, columns = vars(Q1,Q2, Q3, Q4, `Year Total`))
 ```
 
 <!--html_preserve--><style>html {
@@ -896,143 +882,94 @@ tbl(con, in_schema("sales", "salesorderheader")) %>%
   
   <thead class="gt_col_headings">
     <tr>
-      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">full_name</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">Name</th>
       <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">year</th>
       <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">Q1</th>
       <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">Q2</th>
       <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">Q3</th>
       <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">Q4</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">Year Total</th>
     </tr>
   </thead>
   <tbody class="gt_table_body">
     <tr>
       <td class="gt_row gt_left">Garrett R Vargas</td>
       <td class="gt_row gt_right">2011</td>
-      <td class="gt_row gt_right">NA</td>
-      <td class="gt_row gt_right">9109</td>
-      <td class="gt_row gt_right">233696</td>
-      <td class="gt_row gt_right">257287</td>
+      <td class="gt_row gt_right">0</td>
+      <td class="gt_row gt_right">0</td>
+      <td class="gt_row gt_right">0</td>
+      <td class="gt_row gt_right">9,109</td>
+      <td class="gt_row gt_right">9,109</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_striped">Garrett R Vargas</td>
       <td class="gt_row gt_right gt_striped">2012</td>
-      <td class="gt_row gt_right gt_striped">410518</td>
-      <td class="gt_row gt_right gt_striped">352587</td>
-      <td class="gt_row gt_right gt_striped">316818</td>
-      <td class="gt_row gt_right gt_striped">203647</td>
+      <td class="gt_row gt_right gt_striped">233,696</td>
+      <td class="gt_row gt_right gt_striped">257,287</td>
+      <td class="gt_row gt_right gt_striped">410,518</td>
+      <td class="gt_row gt_right gt_striped">352,587</td>
+      <td class="gt_row gt_right gt_striped">1,254,088</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">Garrett R Vargas</td>
       <td class="gt_row gt_right">2013</td>
-      <td class="gt_row gt_right">291333</td>
-      <td class="gt_row gt_right">367732</td>
-      <td class="gt_row gt_right">393788</td>
-      <td class="gt_row gt_right">336984</td>
+      <td class="gt_row gt_right">316,818</td>
+      <td class="gt_row gt_right">203,647</td>
+      <td class="gt_row gt_right">291,333</td>
+      <td class="gt_row gt_right">367,732</td>
+      <td class="gt_row gt_right">1,179,530</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_striped">Garrett R Vargas</td>
       <td class="gt_row gt_right gt_striped">2014</td>
-      <td class="gt_row gt_right gt_striped">290536</td>
-      <td class="gt_row gt_right gt_striped">145413</td>
-      <td class="gt_row gt_right gt_striped">NA</td>
-      <td class="gt_row gt_right gt_striped">NA</td>
+      <td class="gt_row gt_right gt_striped">393,788</td>
+      <td class="gt_row gt_right gt_striped">336,984</td>
+      <td class="gt_row gt_right gt_striped">290,536</td>
+      <td class="gt_row gt_right gt_striped">145,413</td>
+      <td class="gt_row gt_right gt_striped">1,166,721</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">José Edvaldo Saraiva</td>
       <td class="gt_row gt_right">2011</td>
-      <td class="gt_row gt_right">NA</td>
-      <td class="gt_row gt_right">106252</td>
-      <td class="gt_row gt_right">521794</td>
-      <td class="gt_row gt_right">546962</td>
+      <td class="gt_row gt_right">0</td>
+      <td class="gt_row gt_right">0</td>
+      <td class="gt_row gt_right">0</td>
+      <td class="gt_row gt_right">106,252</td>
+      <td class="gt_row gt_right">106,252</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_striped">José Edvaldo Saraiva</td>
       <td class="gt_row gt_right gt_striped">2012</td>
-      <td class="gt_row gt_right gt_striped">795861</td>
-      <td class="gt_row gt_right gt_striped">307379</td>
-      <td class="gt_row gt_right gt_striped">408415</td>
-      <td class="gt_row gt_right gt_striped">324062</td>
+      <td class="gt_row gt_right gt_striped">521,794</td>
+      <td class="gt_row gt_right gt_striped">546,962</td>
+      <td class="gt_row gt_right gt_striped">795,861</td>
+      <td class="gt_row gt_right gt_striped">307,379</td>
+      <td class="gt_row gt_right gt_striped">2,171,996</td>
     </tr>
     <tr>
       <td class="gt_row gt_left">José Edvaldo Saraiva</td>
       <td class="gt_row gt_right">2013</td>
-      <td class="gt_row gt_right">231991</td>
-      <td class="gt_row gt_right">424326</td>
-      <td class="gt_row gt_right">748430</td>
-      <td class="gt_row gt_right">466137</td>
+      <td class="gt_row gt_right">408,415</td>
+      <td class="gt_row gt_right">324,062</td>
+      <td class="gt_row gt_right">231,991</td>
+      <td class="gt_row gt_right">424,326</td>
+      <td class="gt_row gt_right">1,388,794</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_striped">José Edvaldo Saraiva</td>
       <td class="gt_row gt_right gt_striped">2014</td>
-      <td class="gt_row gt_right gt_striped">618832</td>
-      <td class="gt_row gt_right gt_striped">425979</td>
-      <td class="gt_row gt_right gt_striped">NA</td>
-      <td class="gt_row gt_right gt_striped">NA</td>
+      <td class="gt_row gt_right gt_striped">748,430</td>
+      <td class="gt_row gt_right gt_striped">466,137</td>
+      <td class="gt_row gt_right gt_striped">618,832</td>
+      <td class="gt_row gt_right gt_striped">425,979</td>
+      <td class="gt_row gt_right gt_striped">2,259,378</td>
     </tr>
   </tbody>
   
   
 </table></div><!--/html_preserve-->
 
-Maybe correcting the dates makes no difference.
-
-
-```r
-by_q_correct_date <- tbl(con, in_schema("sales", "salesorderheader")) %>% 
-  mutate(orderdate = as.Date(orderdate), 
-         orderdate = sql("dateadd(day,-1,orderdate)"),
-         year = year(orderdate),
-         quarter = quarter(orderdate)
-         ) %>% 
-  group_by(salespersonid, year, quarter) %>% 
-  summarize(subtotal = round(sum(subtotal, na.rm = TRUE), digits = 0)) %>% 
-  collect() %>% ungroup()
-
-by_q_correct_date %>% ungroup() %>% 
-  group_by(salespersonid, year) %>% ungroup() %>% 
-  arrange(salespersonid, year) %>% 
-  pivot_wider(names_from = quarter, values_from = subtotal,
-              names_prefix = "Q") %>% 
-  select(salespersonid, year, Q1, Q2, Q3, Q4) %>% 
-  head(., n = 10) %>% 
-  gt()
-```
-
-
-
-```r
-by_q_raw_date <- tbl(con, in_schema("sales", "salesorderheader")) %>% 
-  mutate(orderdate = as.Date(orderdate), 
-         orderdate = sql("SELECT CASE WHEN EXTRACT(DAY
-             FROM orderdate) = 1
-               THEN  orderdate - '1 day'::interval
-             ELSE  orderdate
-           END"),
-         year = year(orderdate),
-         # month = month(orderdate),
-         quarter = sql("DATE_PART('quarter', orderdate)")) %>% 
-   group_by(year, quarter) %>% 
-  summarize(subtotal = sum(subtotal), n = n()) %>% 
-  arrange(year, quarter) %>% 
-  show_query %>% 
-  ungroup() %>% 
-  collect()
-
-by_q_correct_date
-by_q_raw_date
-```
-  * What about by month? This could be motivation for creating a new view that does aggregation in the database, rather than in R.
-  * See SQL code for 'vsalespersonsalesbyfiscalyearsdata'. Consider:
-  * Modifying that to include quantity of sales.
-  * Modifying that to include monthly totals, in addition to the yearly totals that it already has.
-  * Why are 3 of the sales people from 'vsalesperson' missing in 'vsalespersonsalesbyfiscalyearsdata'?
-     * Amy Alberts
-     * Stephen Jiang
-     * Syed Abbas
-  * Making the change may not be your prerogative, but it's your responsibility to propose any reasonable changes to those who have the authority to make the make the change.
-
-
-## Save a `view` in the database
+## Clean up and close down
 
 
 ```r
