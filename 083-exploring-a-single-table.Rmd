@@ -572,7 +572,7 @@ sales_rep_day_of_month_sales <- tbl(con, in_schema("sales", "salesorderheader"))
   ) %>%
   count(year, month, day) %>% 
   collect() %>%
-  pivot_wider(names_from = day, values_from = n, names_prefix = "day_", values_fill = 0 ) %>% 
+  pivot_wider(names_from = day, values_from = n, names_prefix = "day_", values_fill = list(day_1 = 0, day_28 = 0, day_29 = 0, day_30 = 0, day_31 = 0) ) %>% 
   as.data.frame() %>% 
   select(year, month, day_1, day_28, day_29, day_30, day_31) %>% 
   filter(day_1 > 0) %>% 

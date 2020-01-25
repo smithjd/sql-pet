@@ -296,7 +296,7 @@ tbl(con, in_schema("sales", "salesorderheader")) %>%
   
   # Pivot to make it easier to see what's going on
   pivot_wider(names_from = quarter, values_from = subtotal,
-              values_fill = 0, names_prefix = "Q", id_cols = full_name:year) %>% 
+              values_fill = list(Q1 = 0, Q2 = 0, Q3 = 0, Q4 = 0), names_prefix = "Q", id_cols = full_name:year) %>% 
   select(`Name` = full_name, year, Q1, Q2, Q3, Q4) %>%
   mutate(`Year Total` = Q1 + Q2 + Q3 + Q4) %>% 
   head(., n = 10) %>% 
