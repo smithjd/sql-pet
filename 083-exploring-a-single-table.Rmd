@@ -777,7 +777,6 @@ ggplot(
  
  
 ```{r}
-
 monthly_sales_rep_as_is <- monthly_sales_w_channel %>%
   filter(onlineorderflag == "Sales Rep") %>% 
   mutate(orderdate = as.Date(floor_date(orderdate, unit = "month"))) %>% 
@@ -789,8 +788,10 @@ monthly_sales_rep_as_is <- monthly_sales_w_channel %>%
 
 monthly_sales_rep_as_is %>% 
   filter(year(orderdate) %in% c(2011,2014))
+```
 
 
+```{r, fig.cap="Comparing monthly_sales_rep_adjusted and monthly_sales_rep_as_is"}
 ggplot(
   data = monthly_sales_rep_adjusted,
   aes(x = year_month, y = soh_count)
@@ -802,15 +803,13 @@ ggplot(
       orderdate, soh_count), color = "red", alpha = .5) +
   theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
   annotate(geom = "text", y = 250, x = as.Date("2011-06-01"), 
-           label = "Green dots: corrected data\nOrange dots: original data\nBrown dots: unchanged",
+           label = "Orange dots: original data\nGreen dots: corrected data\nBrown dots: unchanged",
            hjust = 0) +
   labs(
     title = glue(
-      "Number of Sales per month \nOriginal and corrected amounts"
+      "Number of Sales per Month"
     ),
-    subtitle = glue("Subtitle"),
-    caption = glue("Datasets Include: \n
-                   monthly_sales_rep_adjusted, monthly_sales_rep_as_is"),
+    subtitle = "Original and corrected amounts",
     x = paste0("Monthly - between ", min_soh_dt, " - ", max_soh_dt),
     y = "Number of Sales Recorded"
   )
