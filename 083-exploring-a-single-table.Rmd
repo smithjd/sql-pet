@@ -116,16 +116,15 @@ max_soh_dt <- max(annual_sales$max_soh_orderdate)
 
 ### Annual summary of sales, number of transactions and average sale
 
-```{r AdventureWorks Annual Sales, fig.height=4, fig.width=5, fig.cap = ""}
-tot_sales <- ggplot(data = annual_sales, aes(x = year, y = total_soh_dollars)) +
+```{r , fig.height=4, fig.width=5, fig.cap = "AdventureWorks Annual Sales"}
+tot_sales <- ggplot(data = annual_sales, aes(x = year, y = total_soh_dollars/100000)) +
   geom_col() +
-  geom_text(aes(label = round(as.numeric(total_soh_dollars), digits = 0)), vjust = -0.25) +
+  geom_text(aes(label = round(as.numeric(total_soh_dollars/100000), digits = 0)), vjust = 1.5, color = "white") +
   scale_y_continuous(labels = scales::dollar_format()) +
   labs(
-    title = "AdventureWorks Total Sales by Year",
-    x = glue("Years between ", {format(min_soh_dt, "%B %d, %Y")} , " and  ", 
-            {format(max_soh_dt, "%B %d, %Y")}),
-    y = "Sales $"
+    title = "Total Sales per Year - Millions",
+    x = NULL,
+    y = "Sales $M"
   )
 ```
 Both 2011 and 2014 turn out to be are shorter time spans than the other two years, making comparison interpretation difficult.  Still, it's clear that 2013 was the best year for annual sales dollars.
@@ -135,38 +134,37 @@ Comparing the number of orders per year has roughly the same overall pattern (20
 ```{r number of orders, echo=FALSE}
 num_orders <- ggplot(data = annual_sales, aes(x = year, y = as.numeric(soh_count))) +
   geom_col() +
-  geom_text(aes(label = round(as.numeric(soh_count), digits = 0)), vjust = -0.25) +
+  geom_text(aes(label = round(as.numeric(soh_count), digits = 0)), vjust = 1.5, color = "white") +
   labs(
-    title = "Total Number of orders by year",
-    x = glue("Years between ", {format(min_soh_dt, "%B %d, %Y")} , " and  ", 
-            {format(max_soh_dt, "%B %d, %Y")}),
-    y = "Total Number of Orders"
+    title = "Number of Orders per Year",
+    y = "Total Number of Orders",
+    x = NULL
   )
 ```
 
 Although 2013 was the best year in terms of total number of orders, there were many more in 2014 compared with 2012.  That suggests looking at the average dollars per sale for each year.
 
 ### Average dollars per sale
-```{r , echo=FALSE}
+```{r , echo=FALSE, fig.cap="Average dollars per sale"}
 avg_sale <- ggplot(data = annual_sales, aes(x = year, y = avg_total_soh_dollars)) +
   geom_col() +
   scale_y_continuous(labels = scales::dollar_format()) +
-  geom_text(aes(label = round(avg_total_soh_dollars, digits = 0)), vjust = -0.25) +
+  geom_text(aes(label = round(avg_total_soh_dollars, digits = 0)), vjust = 1.5, color = "white") +
   labs(
-    title = "Yearly Average Dollars per Sale",
+    title = "Average Dollars per Sale",
     x = glue("Years between ", {format(min_soh_dt, "%B %d, %Y")} , " to  ", 
             {format(max_soh_dt, "%B %d, %Y")}),
     y = "Average Sale Amount"
   )
 ```
 
-```{r , fig.height=7}
+```{r , fig.height=7, fig.cap="AdventureWorks sales performance"}
 (tot_sales + num_orders) / avg_sale
 ```
 
 That's a big drop between average sale of more than $7,000 in the first two years down to the $3,000 range in the last two.  There has been a remarkable change in this business.  At the same time the total number of orders shot up from less than 4,000 a year to more than 14,000.  **Why are the number of orders increasing, but the average dollar amount of a sale is dropping?  **
 
-Perhaps monthly monthly sales has the anser.  We adapt the first query to group by month and year.
+Perhaps monthly monthly sales has the answer.  We adapt the first query to group by month and year.
 
 ## Monthly Sales
 
@@ -201,7 +199,7 @@ monthly_sales <-  monthly_sales %>%
 
 Next let's plot the monthly sales data:
 
-```{r Total monthly sales bar chart, fig.cap = "Total Monthly Sales"}
+```{r , fig.cap = "Total Monthly Sales"}
 
 ggplot(data = monthly_sales, aes(x = orderdate, y = total_soh_dollars)) +
   geom_col() +
@@ -263,32 +261,18 @@ It looks like the big change in the business occurred in the summer of 2013 when
 To look at dollars and the number of orders together, we compare the monthly data to the yearly average for 2011.
 
 ```{r}
-start_year <- monthly_sales %>%
-  mutate(yr = year(orderdate)) %>%
-  group_by(yr) %>%
-  summarize(
-    total_soh_dollars = sum(total_soh_dollars),
-    soh_count = sum(soh_count),
-    n_months = n(),
-    avg_dollars = total_soh_dollars / n_months,
-    avg_count = soh_count / n_months
-  ) %>%
-  filter(yr == min(yr))
+baseline_month <- "2011-07-01"
+start_month <- monthly_sales %>%
+  filter(orderdate == as.Date(baseline_month))
 ```
 
-Use 2011 as a baseline:
+Express monthly data relative to `r start_month`
 
-```{r}
-start_year
-```
-
-Express monthly data relative to 2011`
-
-```{r , fig.cap = "Miscellaneous plots"}
+```{r }
 monthly_sales_base_year_normalized_to_2011 <- monthly_sales %>%
   mutate(
-    dollars = (100 * total_soh_dollars) / start_year$avg_dollars,
-    number_of_orders = (100 * soh_count) / start_year$avg_count
+    dollars = (100 * total_soh_dollars) / start_month$total_soh_dollars,
+    number_of_orders = (100 * soh_count) / start_month$soh_count
   ) %>%
   ungroup()
 
@@ -298,7 +282,10 @@ monthly_sales_base_year_normalized_to_2011 <- monthly_sales_base_year_normalized
     names_to = "relative_to_2011_average",
     values_to = "amount"
   )
+```
 
+
+```{r , fig.cap = "Adventureworks Normalized Monthly Sales"}
 monthly_sales_base_year_normalized_to_2011 %>%
   ggplot(aes(orderdate, amount, color = relative_to_2011_average)) +
   geom_line() +
@@ -312,7 +299,7 @@ monthly_sales_base_year_normalized_to_2011 %>%
             {format(max_soh_dt, "%B %d, %Y")}),
     x = "Date",
     y = "",
-    color = "% change from\n 2011 average"
+    color = glue(baseline_month, " values = 100")
   ) +
   theme(legend.position = c(.3,.75))
 ```
@@ -329,7 +316,7 @@ annual_sales_w_channel <- tbl(con, in_schema("sales", "salesorderheader")) %>%
   collect() %>%
   mutate(
     orderdate = date(orderdate),
-    orderdate = round_date(orderdate, "year"),
+    orderdate = round_date(orderdate, "month"),
     onlineorderflag = if_else(onlineorderflag == FALSE,
       "Sales Rep", "Online"
     ),
@@ -363,7 +350,7 @@ ggplot(data = annual_sales_w_channel, aes(x = orderdate, y = total_soh_dollars))
   scale_y_continuous(labels = scales::dollar_format()) +
   facet_wrap("onlineorderflag") +
   labs(
-    title = "AdventureWorks Sales Dollars by Year",
+    title = "AdventureWorks Monthly Sales",
     caption = glue( "Between ", {format(min_soh_dt, "%B %d, %Y")} , " - ", 
             {format(max_soh_dt, "%B %d, %Y")}),
     subtitle = "Comparing Online and Sales Rep sales channels",
@@ -372,16 +359,16 @@ ggplot(data = annual_sales_w_channel, aes(x = orderdate, y = total_soh_dollars))
   )
 ```
 
-Based on annual sales, it looks like there are two businesses represented in the AdventureWorks database that have very different growth profiles. 
+It looks like there are two businesses represented in the AdventureWorks database that have very different growth profiles. 
 
 ### Order volume comparison
 
-```{r average dollars per sale - v4, fig.cap = "Average Dollars by Channel"}
+```{r, fig.cap = "AdventureWorks Monthly Orders by Channel"}
 ggplot(data = annual_sales_w_channel, aes(x = orderdate, y = as.numeric(soh_count))) +
   geom_col() +
   facet_wrap("onlineorderflag") +
   labs(
-    title = "AdventureWorks Number of orders per Year",
+    title = "AdventureWorks Monthly orders",
     caption = glue( "Between ", {format(min_soh_dt, "%B %d, %Y")} , " - ", 
             {format(max_soh_dt, "%B %d, %Y")}),
     subtitle = "Comparing Online and Sales Rep sales channels",
@@ -394,7 +381,7 @@ Comparing Online and Sales Rep sales, the difference in the number of orders is 
 
 ### Comparing average order size: **Sales Reps** to **Online** orders
 
-```{r average dollars per sale 3, fig.cap = "Sales Rep to Online comparison"}
+```{r , fig.cap = "Average dollar per Sale comparison"}
 ggplot(data = annual_sales_w_channel, aes(x = orderdate, y = avg_total_soh_dollars)) +
   geom_col() +
   facet_wrap("onlineorderflag") +
@@ -458,7 +445,7 @@ As this table shows, the **Sales Rep** dates don't match the **Online** dates.  
 
 Jumping to the trend line comparison, we see that the big the source of variation is on the Sales Rep side.
 
-```{r average dollars, warning=FALSE, message=FALSE, fig.cap = "Monthly Sales Trend"}
+```{r , warning=FALSE, message=FALSE, fig.cap = "Monthly Sales Trend"}
 
 ggplot(
   data = monthly_sales_w_channel,
@@ -557,7 +544,6 @@ Look at the dates when sales are entered for sales by **Sales Reps**.  The follo
   labs(title = "The first day of the month looks odd",
        x = "Day Number")
   
-
 ```
 
 We can check on which months have orders entered on the first of the month.
@@ -791,7 +777,6 @@ ggplot(
  
  
 ```{r}
-
 monthly_sales_rep_as_is <- monthly_sales_w_channel %>%
   filter(onlineorderflag == "Sales Rep") %>% 
   mutate(orderdate = as.Date(floor_date(orderdate, unit = "month"))) %>% 
@@ -803,8 +788,10 @@ monthly_sales_rep_as_is <- monthly_sales_w_channel %>%
 
 monthly_sales_rep_as_is %>% 
   filter(year(orderdate) %in% c(2011,2014))
+```
 
 
+```{r, fig.cap="Comparing monthly_sales_rep_adjusted and monthly_sales_rep_as_is"}
 ggplot(
   data = monthly_sales_rep_adjusted,
   aes(x = year_month, y = soh_count)
@@ -816,15 +803,13 @@ ggplot(
       orderdate, soh_count), color = "red", alpha = .5) +
   theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
   annotate(geom = "text", y = 250, x = as.Date("2011-06-01"), 
-           label = "Green dots: corrected data\nOrange dots: original data\nBrown dots: unchanged",
+           label = "Orange dots: original data\nGreen dots: corrected data\nBrown dots: unchanged",
            hjust = 0) +
   labs(
     title = glue(
-      "Number of Sales per month \nOriginal and corrected amounts"
+      "Number of Sales per Month"
     ),
-    subtitle = glue("Subtitle"),
-    caption = glue("Datasets Include: \n
-                   monthly_sales_rep_adjusted, monthly_sales_rep_as_is"),
+    subtitle = "Original and corrected amounts",
     x = paste0("Monthly - between ", min_soh_dt, " - ", max_soh_dt),
     y = "Number of Sales Recorded"
   )

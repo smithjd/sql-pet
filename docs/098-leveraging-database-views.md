@@ -75,6 +75,8 @@ Database `views` are useful for many reasons.
   * **Security**: a view can give selective access to someone who does not have access to underlying tables or columns.
   * **Provenance**: `views` standardize data provenance.  For example, the `AdventureWorks` database all of them are named in a consistent way that suggests the underlying tables that they query.  And they all start with a **v**.
 
+The bottom line is that `views` can save you a lot of work.
+
 ### Rely on -- **and** be critical of -- `views`
 
 Because they represent a commonly used view of the database, it might seem like a `view` is always right.  Even though they are conventional and authorized, they may still need verification or auditing, especially when used for a purpose other than the original intent. They can guide you toward what you need from the database but they could also mislead because they are easy to use and available.  People may forget why a specific view exists and who is using it. Therefore any given view might be a forgotten vestige. part of a production data pipeline or a priceless nugget of insight. Who knows? Consider the `view`'s owner, schema, whether it's a materialized index view or not, if it has a trigger and what the likely intention was behind the view.
@@ -162,7 +164,7 @@ The PostgreSQL `pg_get_viewdef` function returns a data frame with one column na
 
 
 ```r
-cat(str_replace_all(view_definition$pg_get_viewdef, "\\\\\\\\n", "\\\\n"))
+cat(unlist(view_definition$pg_get_viewdef))
 ```
 
 ```
@@ -306,8 +308,12 @@ salesperson_info <- sales_person %>%
 ```
 
 ```
-## Joining, by = "businessentityid"Joining, by = "businessentityid"Joining, by =
-## "territoryid"
+## Joining, by = "businessentityid"
+## Joining, by = "businessentityid"
+```
+
+```
+## Joining, by = "territoryid"
 ```
 
 ```r
@@ -434,7 +440,7 @@ tbl(con, in_schema("sales", "salesorderheader")) %>%
   
   # Pivot to make it easier to see what's going on
   pivot_wider(names_from = quarter, values_from = subtotal,
-              values_fill = 0, names_prefix = "Q", id_cols = full_name:year) %>% 
+              values_fill = list(Q1 = 0, Q2 = 0, Q3 = 0, Q4 = 0), names_prefix = "Q", id_cols = full_name:year) %>% 
   select(`Name` = full_name, year, Q1, Q2, Q3, Q4) %>%
   mutate(`Year Total` = Q1 + Q2 + Q3 + Q4) %>% 
   head(., n = 10) %>% 
@@ -895,11 +901,11 @@ tbl(con, in_schema("sales", "salesorderheader")) %>%
     <tr>
       <td class="gt_row gt_left">Garrett R Vargas</td>
       <td class="gt_row gt_right">2011</td>
-      <td class="gt_row gt_right">0</td>
-      <td class="gt_row gt_right">0</td>
-      <td class="gt_row gt_right">0</td>
+      <td class="gt_row gt_right">NA</td>
+      <td class="gt_row gt_right">NA</td>
+      <td class="gt_row gt_right">NA</td>
       <td class="gt_row gt_right">9,109</td>
-      <td class="gt_row gt_right">9,109</td>
+      <td class="gt_row gt_right">NA</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_striped">Garrett R Vargas</td>
@@ -931,11 +937,11 @@ tbl(con, in_schema("sales", "salesorderheader")) %>%
     <tr>
       <td class="gt_row gt_left">José Edvaldo Saraiva</td>
       <td class="gt_row gt_right">2011</td>
-      <td class="gt_row gt_right">0</td>
-      <td class="gt_row gt_right">0</td>
-      <td class="gt_row gt_right">0</td>
+      <td class="gt_row gt_right">NA</td>
+      <td class="gt_row gt_right">NA</td>
+      <td class="gt_row gt_right">NA</td>
       <td class="gt_row gt_right">106,252</td>
-      <td class="gt_row gt_right">106,252</td>
+      <td class="gt_row gt_right">NA</td>
     </tr>
     <tr>
       <td class="gt_row gt_left gt_striped">José Edvaldo Saraiva</td>
