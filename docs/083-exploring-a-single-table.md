@@ -128,15 +128,14 @@ max_soh_dt <- max(annual_sales$max_soh_orderdate)
 
 
 ```r
-tot_sales <- ggplot(data = annual_sales, aes(x = year, y = total_soh_dollars)) +
+tot_sales <- ggplot(data = annual_sales, aes(x = year, y = total_soh_dollars/100000)) +
   geom_col() +
-  geom_text(aes(label = round(as.numeric(total_soh_dollars), digits = 0)), vjust = -0.25) +
+  geom_text(aes(label = round(as.numeric(total_soh_dollars/100000), digits = 0)), vjust = 1.5, color = "white") +
   scale_y_continuous(labels = scales::dollar_format()) +
   labs(
-    title = "AdventureWorks Total Sales by Year",
-    x = glue("Years between ", {format(min_soh_dt, "%B %d, %Y")} , " and  ", 
-            {format(max_soh_dt, "%B %d, %Y")}),
-    y = "Sales $"
+    title = "Total Sales per Year - Millions",
+    x = NULL,
+    y = "Sales $M"
   )
 ```
 Both 2011 and 2014 turn out to be are shorter time spans than the other two years, making comparison interpretation difficult.  Still, it's clear that 2013 was the best year for annual sales dollars.
@@ -155,11 +154,14 @@ Although 2013 was the best year in terms of total number of orders, there were m
 (tot_sales + num_orders) / avg_sale
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-2-1.png" width="672" />
+<div class="figure">
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-3-1.png" alt="AdventureWorks sales performance" width="672" />
+<p class="caption">(\#fig:unnamed-chunk-3)AdventureWorks sales performance</p>
+</div>
 
 That's a big drop between average sale of more than $7,000 in the first two years down to the $3,000 range in the last two.  There has been a remarkable change in this business.  At the same time the total number of orders shot up from less than 4,000 a year to more than 14,000.  **Why are the number of orders increasing, but the average dollar amount of a sale is dropping?  **
 
-Perhaps monthly monthly sales has the anser.  We adapt the first query to group by month and year.
+Perhaps monthly monthly sales has the answer.  We adapt the first query to group by month and year.
 
 ## Monthly Sales
 
@@ -219,8 +221,8 @@ ggplot(data = monthly_sales, aes(x = orderdate, y = total_soh_dollars)) +
 ```
 
 <div class="figure">
-<img src="083-exploring-a-single-table_files/figure-html/Total monthly sales bar chart-1.png" alt="Total Monthly Sales" width="672" />
-<p class="caption">(\#fig:Total monthly sales bar chart)Total Monthly Sales</p>
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-5-1.png" alt="Total Monthly Sales" width="672" />
+<p class="caption">(\#fig:unnamed-chunk-5)Total Monthly Sales</p>
 </div>
 
 That graph doesn't show how the business might have changed, but it is remarkable how much variation there is from one month to another -- particularly in 2012 and 2014.
@@ -280,8 +282,8 @@ ggplot(monthly_sales_lagged, aes(x = orderdate, y = monthly_sales_change)) +
 ```
 
 <div class="figure">
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-6-1.png" alt="Monthly Sales Change" width="672" />
-<p class="caption">(\#fig:unnamed-chunk-6)Monthly Sales Change</p>
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-8-1.png" alt="Monthly Sales Change" width="672" />
+<p class="caption">(\#fig:unnamed-chunk-8)Monthly Sales Change</p>
 </div>
 
 It looks like the big change in the business occurred in the summer of 2013 when the number of orders jumped but the dollar volume just continued to bump along.
@@ -292,41 +294,19 @@ To look at dollars and the number of orders together, we compare the monthly dat
 
 
 ```r
-start_year <- monthly_sales %>%
-  mutate(yr = year(orderdate)) %>%
-  group_by(yr) %>%
-  summarize(
-    total_soh_dollars = sum(total_soh_dollars),
-    soh_count = sum(soh_count),
-    n_months = n(),
-    avg_dollars = total_soh_dollars / n_months,
-    avg_count = soh_count / n_months
-  ) %>%
-  filter(yr == min(yr))
+baseline_month <- "2011-07-01"
+start_month <- monthly_sales %>%
+  filter(orderdate == as.Date(baseline_month))
 ```
 
-Use 2011 as a baseline:
-
-
-```r
-start_year
-```
-
-```
-## # A tibble: 1 x 6
-##      yr total_soh_dollars soh_count n_months avg_dollars avg_count
-##   <dbl>             <dbl>     <int>    <int>       <dbl>     <dbl>
-## 1  2011         12641672.      1607        8    1580209.      201.
-```
-
-Express monthly data relative to 2011`
+Express monthly data relative to 2011-07-01, 2044600, 8851.08, 231
 
 
 ```r
 monthly_sales_base_year_normalized_to_2011 <- monthly_sales %>%
   mutate(
-    dollars = (100 * total_soh_dollars) / start_year$avg_dollars,
-    number_of_orders = (100 * soh_count) / start_year$avg_count
+    dollars = (100 * total_soh_dollars) / start_month$total_soh_dollars,
+    number_of_orders = (100 * soh_count) / start_month$soh_count
   ) %>%
   ungroup()
 
@@ -336,7 +316,11 @@ monthly_sales_base_year_normalized_to_2011 <- monthly_sales_base_year_normalized
     names_to = "relative_to_2011_average",
     values_to = "amount"
   )
+```
 
+
+
+```r
 monthly_sales_base_year_normalized_to_2011 %>%
   ggplot(aes(orderdate, amount, color = relative_to_2011_average)) +
   geom_line() +
@@ -350,14 +334,14 @@ monthly_sales_base_year_normalized_to_2011 %>%
             {format(max_soh_dt, "%B %d, %Y")}),
     x = "Date",
     y = "",
-    color = "% change from\n 2011 average"
+    color = glue(baseline_month, " values = 100")
   ) +
   theme(legend.position = c(.3,.75))
 ```
 
 <div class="figure">
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-9-1.png" alt="Miscellaneous plots" width="672" />
-<p class="caption">(\#fig:unnamed-chunk-9)Miscellaneous plots</p>
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-11-1.png" alt="Adventureworks Normalized Monthly Sales" width="672" />
+<p class="caption">(\#fig:unnamed-chunk-11)Adventureworks Normalized Monthly Sales</p>
 </div>
 
 ## The effect of online sales
@@ -373,7 +357,7 @@ annual_sales_w_channel <- tbl(con, in_schema("sales", "salesorderheader")) %>%
   collect() %>%
   mutate(
     orderdate = date(orderdate),
-    orderdate = round_date(orderdate, "year"),
+    orderdate = round_date(orderdate, "month"),
     onlineorderflag = if_else(onlineorderflag == FALSE,
       "Sales Rep", "Online"
     ),
@@ -407,7 +391,7 @@ ggplot(data = annual_sales_w_channel, aes(x = orderdate, y = total_soh_dollars))
   scale_y_continuous(labels = scales::dollar_format()) +
   facet_wrap("onlineorderflag") +
   labs(
-    title = "AdventureWorks Sales Dollars by Year",
+    title = "AdventureWorks Monthly Sales",
     caption = glue( "Between ", {format(min_soh_dt, "%B %d, %Y")} , " - ", 
             {format(max_soh_dt, "%B %d, %Y")}),
     subtitle = "Comparing Online and Sales Rep sales channels",
@@ -421,7 +405,7 @@ ggplot(data = annual_sales_w_channel, aes(x = orderdate, y = total_soh_dollars))
 <p class="caption">(\#fig:Calculate annual sales dollars )Sales Channel Breakdown</p>
 </div>
 
-Based on annual sales, it looks like there are two businesses represented in the AdventureWorks database that have very different growth profiles. 
+It looks like there are two businesses represented in the AdventureWorks database that have very different growth profiles. 
 
 ### Order volume comparison
 
@@ -431,7 +415,7 @@ ggplot(data = annual_sales_w_channel, aes(x = orderdate, y = as.numeric(soh_coun
   geom_col() +
   facet_wrap("onlineorderflag") +
   labs(
-    title = "AdventureWorks Number of orders per Year",
+    title = "AdventureWorks Monthly orders",
     caption = glue( "Between ", {format(min_soh_dt, "%B %d, %Y")} , " - ", 
             {format(max_soh_dt, "%B %d, %Y")}),
     subtitle = "Comparing Online and Sales Rep sales channels",
@@ -441,8 +425,8 @@ ggplot(data = annual_sales_w_channel, aes(x = orderdate, y = as.numeric(soh_coun
 ```
 
 <div class="figure">
-<img src="083-exploring-a-single-table_files/figure-html/average dollars per sale - v4-1.png" alt="Average Dollars by Channel" width="672" />
-<p class="caption">(\#fig:average dollars per sale - v4)Average Dollars by Channel</p>
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-12-1.png" alt="AdventureWorks Monthly Orders by Channel" width="672" />
+<p class="caption">(\#fig:unnamed-chunk-12)AdventureWorks Monthly Orders by Channel</p>
 </div>
 
 Comparing Online and Sales Rep sales, the difference in the number of orders is even more striking than the difference between annual sales.
@@ -464,8 +448,8 @@ ggplot(data = annual_sales_w_channel, aes(x = orderdate, y = avg_total_soh_dolla
 ```
 
 <div class="figure">
-<img src="083-exploring-a-single-table_files/figure-html/average dollars per sale 3-1.png" alt="Sales Rep to Online comparison" width="672" />
-<p class="caption">(\#fig:average dollars per sale 3)Sales Rep to Online comparison</p>
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-13-1.png" alt="Average dollar per Sale comparison" width="672" />
+<p class="caption">(\#fig:unnamed-chunk-13)Average dollar per Sale comparison</p>
 </div>
 
 
@@ -1016,8 +1000,8 @@ ggplot(
 ```
 
 <div class="figure">
-<img src="083-exploring-a-single-table_files/figure-html/average dollars-1.png" alt="Monthly Sales Trend" width="672" />
-<p class="caption">(\#fig:average dollars)Monthly Sales Trend</p>
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-16-1.png" alt="Monthly Sales Trend" width="672" />
+<p class="caption">(\#fig:unnamed-chunk-16)Monthly Sales Trend</p>
 </div>
 
 The **monthly** gyrations are much larger on the Sales Rep side, amounting to differences in a million dollars compared to small monthly variations of around $25,000 for the Online orders.
@@ -1634,8 +1618,8 @@ Look at the dates when sales are entered for sales by **Sales Reps**.  The follo
 ```
 
 <div class="figure">
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-12-1.png" alt="Days of the month with Sales Rep activity recorded" width="672" />
-<p class="caption">(\#fig:unnamed-chunk-12)Days of the month with Sales Rep activity recorded</p>
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-17-1.png" alt="Days of the month with Sales Rep activity recorded" width="672" />
+<p class="caption">(\#fig:unnamed-chunk-17)Days of the month with Sales Rep activity recorded</p>
 </div>
 
 We can check on which months have orders entered on the first of the month.
@@ -1651,7 +1635,7 @@ sales_rep_day_of_month_sales <- tbl(con, in_schema("sales", "salesorderheader"))
   ) %>%
   count(year, month, day) %>% 
   collect() %>%
-  pivot_wider(names_from = day, values_from = n, names_prefix = "day_", values_fill = 0 ) %>% 
+  pivot_wider(names_from = day, values_from = n, names_prefix = "day_", values_fill = list(day_1 = 0, day_28 = 0, day_29 = 0, day_30 = 0, day_31 = 0) ) %>% 
   as.data.frame() %>% 
   select(year, month, day_1, day_28, day_29, day_30, day_31) %>% 
   filter(day_1 > 0) %>% 
@@ -1662,13 +1646,13 @@ sales_rep_day_of_month_sales
 
 ```
 ##   year month day_1 day_28 day_29 day_30 day_31
-## 1 2011     7    75      0      0      0      0
-## 2 2011     8    60      0      0      0     40
-## 3 2011    10    90      0      0      0     63
-## 4 2011    12    40      0      0      0      0
-## 5 2012     1    79      0     64      0      0
-## 6 2014     3    91      0      0      2    178
-## 7 2014     5   179      0      0      0      0
+## 1 2011     7    75     NA     NA     NA     NA
+## 2 2011     8    60     NA     NA     NA     40
+## 3 2011    10    90     NA     NA     NA     63
+## 4 2011    12    40     NA     NA     NA     NA
+## 5 2012     1    79     NA     64     NA     NA
+## 6 2014     3    91     NA     NA      2    178
+## 7 2014     5   179     NA     NA     NA     NA
 ```
 
 There are two months with multiple sales rep order days for 2011, (11/08 and 11/10), one for 2012, (1201), and two in 2014, (14/01 and 14/03).  The 14/03 is the only three day sales rep order month.
@@ -2040,6 +2024,8 @@ monthly_sales_rep_as_is %>%
 ## 10 2014-05-01          3415479.       179
 ```
 
+
+
 ```r
 ggplot(
   data = monthly_sales_rep_adjusted,
@@ -2052,21 +2038,22 @@ ggplot(
       orderdate, soh_count), color = "red", alpha = .5) +
   theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
   annotate(geom = "text", y = 250, x = as.Date("2011-06-01"), 
-           label = "Green dots: corrected data\nOrange dots: original data\nBrown dots: unchanged",
+           label = "Orange dots: original data\nGreen dots: corrected data\nBrown dots: unchanged",
            hjust = 0) +
   labs(
     title = glue(
-      "Number of Sales per month \nOriginal and corrected amounts"
+      "Number of Sales per Month"
     ),
-    subtitle = glue("Subtitle"),
-    caption = glue("Datasets Include: \n
-                   monthly_sales_rep_adjusted, monthly_sales_rep_as_is"),
+    subtitle = "Original and corrected amounts",
     x = paste0("Monthly - between ", min_soh_dt, " - ", max_soh_dt),
     y = "Number of Sales Recorded"
   )
 ```
 
-<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-23-1.png" width="672" />
+<div class="figure">
+<img src="083-exploring-a-single-table_files/figure-html/unnamed-chunk-29-1.png" alt="Comparing monthly_sales_rep_adjusted and monthly_sales_rep_as_is" width="672" />
+<p class="caption">(\#fig:unnamed-chunk-29)Comparing monthly_sales_rep_adjusted and monthly_sales_rep_as_is</p>
+</div>
 
 
 ```r

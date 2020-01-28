@@ -24,7 +24,7 @@
 <meta name="author" content="John David Smith, Sophie Yang, M. Edward (Ed) Borasky, Jim Tyhurst, Scott Came, Mary Anne Thygesen, and Ian Frantz" />
 
 
-<meta name="date" content="2020-01-24" />
+<meta name="date" content="2020-01-27" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -475,7 +475,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>The <code>sp_check_that_docker_is_up</code> function from the <code>sqlpetr</code> package checks whether Docker is up and running. If it’s not, then you need to install, launch or re-install Docker.</p>
 </blockquote>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">sp_check_that_docker_is_up</span>()</a></code></pre></div>
-<pre><code>## [1] &quot;Docker is up but running no containers&quot;</code></pre>
+<pre><code>## [1] &quot;Docker is up, running these containers:&quot;                                                                                                           
+## [2] &quot;CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES&quot;           
+## [3] &quot;611b69c981a7        postgres:11         \&quot;docker-entrypoint.s…\&quot;   3 days ago          Up About a minute   0.0.0.0:5432-&gt;5432/tcp   adventureworks&quot;</code></pre>
 </div>
 <div id="clean-up-if-appropriate" class="section level2">
 <h2><span class="header-section-number">4.3</span> Clean up if appropriate</h2>
@@ -568,7 +570,7 @@ are kept private.</p>
 <p>Show that the container still exists even though it’s not running</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="kw">sp_show_all_docker_containers</span>()</a></code></pre></div>
 <pre><code>## CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                              PORTS               NAMES
-## 611b69c981a7        postgres:11         &quot;docker-entrypoint.s…&quot;   25 seconds ago      Exited (0) Less than a second ago                       adventureworks</code></pre>
+## 37f05f6c5c62        postgres:11         &quot;docker-entrypoint.s…&quot;   26 seconds ago      Exited (0) Less than a second ago                       adventureworks</code></pre>
 <p>Next time, you can just use this command to start the container:</p>
 <blockquote>
 <p><code>sp_docker_start(&quot;adventureworks&quot;)</code></p>
