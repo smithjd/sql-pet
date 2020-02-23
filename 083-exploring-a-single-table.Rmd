@@ -77,6 +77,22 @@ Some queries generate big integers, so we need to include `RPostgres::Postgres()
 
 We begin by looking at Sales on a yearly basis, then consider monthly sales.  We discover that half way through the period represented in the database, the business appears to begin selling online, which has very different characteristics than sales by Sales Reps.  We then look at the details of how Sales Rep sales are recorded in the system and discover a data anomaly that we can correct. 
 
+## Date range of the data
+
+As we begin to plot the businesses performance over time, let's get familiar with the date ranges we'll be working with. 
+
+```{r Date Table}
+dbGetQuery(con,
+"SELECT DATE_PART('year', ModifiedDate) as Year,
+  MIN(CAST(ModifiedDate AS DATE)) MinDate,
+  MAX(CAST(ModifiedDate AS DATE)) MaxDate
+FROM sales.SalesOrderDetail
+GROUP BY DATE_PART('year', ModifiedDate)
+Order by Year"
+)
+```
+
+
 ## Annual sales
 
 On an annual basis, are sales dollars trending up, down or flat? We begin with annual revenue and number of orders.  
@@ -795,21 +811,25 @@ monthly_sales_rep_as_is %>%
 ggplot(
   data = monthly_sales_rep_adjusted,
   aes(x = year_month, y = soh_count)
-) +
+  ) +
   geom_line(alpha = .5 , color = "green") +
-  geom_point(alpha = .5 , color = "green") +
+  geom_point(color = "green") +
   geom_point(
-    data = monthly_sales_rep_as_is, aes(
-      orderdate, soh_count), color = "red", alpha = .5) +
+    data = monthly_sales_rep_as_is,
+    aes(orderdate, soh_count
+    ), color = "red", alpha = .5
+  ) +
+  geom_smooth(aes(group=0), method="lm") +
+  #Labeling
   theme(plot.title = element_text(hjust = .5)) + # Center ggplot title
-  annotate(geom = "text", y = 250, x = as.Date("2011-06-01"), 
-           label = "Orange dots: original data\nGreen dots: corrected data\nBrown dots: unchanged",
-           hjust = 0) +
   labs(
     title = glue(
-      "Number of Sales per Month"
+      "Number of Sales per month using corrected dates\n",
+      "Counting Sales Order Header records"
     ),
-    subtitle = "Original and corrected amounts",
+    subtitle = glue("Red dots are Sales Reps as is. Green line is adjusted."),
+    caption = glue("Datasets Include: \n
+                   monthly_sales_rep_adjusted, monthly_sales_rep_as_is"),
     x = paste0("Monthly - between ", min_soh_dt, " - ", max_soh_dt),
     y = "Number of Sales Recorded"
   )
